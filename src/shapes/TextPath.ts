@@ -7,7 +7,6 @@ import { Text } from './Text';
 import { GetSet, Vector2d } from '../types';
 
 var EMPTY_STRING = '',
-  //CALIBRI = 'Calibri',
   NORMAL = 'normal';
 
 function _fillFunc(context) {
@@ -80,13 +79,6 @@ export class TextPath extends Shape {
     // call super constructor
     super(config);
 
-    // TODO: shouldn't this be on the prototype?
-    this._fillFunc = _fillFunc;
-    this._strokeFunc = _strokeFunc;
-    this._fillFuncHit = _fillFunc;
-    this._strokeFuncHit = _strokeFunc;
-    this.className = 'TextPath';
-
     this.dataArray = Path.parsePathData(this.attrs.data);
     this.on('dataChange.konva', function() {
       this.dataArray = Path.parsePathData(this.attrs.data);
@@ -107,8 +99,6 @@ export class TextPath extends Shape {
     }
 
     this._setTextData();
-    this.sceneFunc(this._sceneFunc);
-    this.hitFunc(this._hitFunc);
   }
 
   _sceneFunc(context) {
@@ -180,25 +170,19 @@ export class TextPath extends Shape {
   /**
    * get text width in pixels
    * @method
-   * @memberof Konva.TextPath.prototype
+   * @name Konva.TextPath#getTextWidth
    */
   getTextWidth() {
     return this.textWidth;
   }
   /**
-   * get text height in pixels
+   * get text line height in pixels
    * @method
-   * @memberof Konva.TextPath.prototype
+   * @name Konva.TextPath#getTextHeight
    */
   getTextHeight() {
     return this.textHeight;
   }
-  /**
-   * set text
-   * @method
-   * @memberof Konva.TextPath.prototype
-   * @param {String} text
-   */
   setText(text) {
     Text.prototype.setText.call(this, text);
   }
@@ -550,42 +534,57 @@ export class TextPath extends Shape {
   textDecoration: GetSet<string, this>;
 }
 
-// add setters and getters
-Factory.addGetterSetter(TextPath, 'data');
+TextPath.prototype._fillFunc = _fillFunc;
+TextPath.prototype._strokeFunc = _strokeFunc;
+TextPath.prototype._fillFuncHit = _fillFunc;
+TextPath.prototype._strokeFuncHit = _strokeFunc;
+TextPath.prototype.className = 'TextPath';
 
 /**
- * set SVG path data string.  This method
+ * get/set SVG path data string.  This method
  *  also automatically parses the data string
  *  into a data array.  Currently supported SVG data:
  *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
- * @name setData
+ * @name Konva.TextPath#data
  * @method
- * @memberof Konva.TextPath.prototype
- * @param {String} SVG path command string
+ * @param {String} data svg path string
+ * @returns {String}
+ * @example
+ * // get data
+ * var data = shape.data();
+ *
+ * // set data
+ * shape.data('M200,100h100v50z');
  */
+Factory.addGetterSetter(TextPath, 'data');
 
 /**
- * get SVG path data string
- * @name getData
+ * get/set font family
+ * @name Konva.TextPath#fontFamily
  * @method
- * @memberof Konva.TextPath.prototype
+ * @param {String} fontFamily
+ * @returns {String}
+ * @example
+ * // get font family
+ * var fontFamily = shape.fontFamily();
+ *
+ * // set font family
+ * shape.fontFamily('Arial');
  */
-
 Factory.addGetterSetter(TextPath, 'fontFamily', 'Arial');
 
 /**
- * set font family
- * @name setFontFamily
+ * get/set font size in pixels
+ * @name Konva.TextPath#fontSize
  * @method
- * @memberof Konva.TextPath.prototype
- * @param {String} fontFamily
- */
-
-/**
- * get font family
- * @name getFontFamily
- * @method
- * @memberof Konva.TextPath.prototype
+ * @param {Number} fontSize
+ * @returns {Number}
+ * @example
+ * // get font size
+ * var fontSize = shape.fontSize();
+ *
+ * // set font size to 22px
+ * shape.fontSize(22);
  */
 
 Factory.addGetterSetter(
@@ -596,36 +595,25 @@ Factory.addGetterSetter(
 );
 
 /**
- * set font size
- * @name setFontSize
+ * get/set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
+ * @name Konva.TextPath#fontStyle
  * @method
- * @memberof Konva.TextPath.prototype
- * @param {int} fontSize
- */
-
-/**
- * get font size
- * @name getFontSize
- * @method
- * @memberof Konva.TextPath.prototype
+ * @param {String} fontStyle
+ * @returns {String}
+ * @example
+ * // get font style
+ * var fontStyle = shape.fontStyle();
+ *
+ * // set font style
+ * shape.fontStyle('bold');
  */
 
 Factory.addGetterSetter(TextPath, 'fontStyle', NORMAL);
 
 /**
- * set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
- * @name setFontStyle
- * @method
- * @memberof Konva.TextPath.prototype
- * @param {String} fontStyle
- */
-Factory.addGetterSetter(TextPath, 'align', 'left');
-
-/**
  * get/set horizontal align of text.  Can be 'left', 'center', 'right' or 'justify'
- * @name align
+ * @name Konva.Text#align
  * @method
- * @memberof Konva.Text.prototype
  * @param {String} align
  * @returns {String}
  * @example
@@ -638,6 +626,21 @@ Factory.addGetterSetter(TextPath, 'align', 'left');
  * // align text to right
  * text.align('right');
  */
+Factory.addGetterSetter(TextPath, 'align', 'left');
+
+/**
+ * get/set letter spacing.  The default is 0.
+ * @name Konva.TextPath#letterSpacing
+ * @method
+ * @param {Number} letterSpacing
+ * @returns {Number}
+ * @example
+ * // get line height
+ * var letterSpacing = shape.letterSpacing();
+ *
+ * // set the line height
+ * shape.letterSpacing(2);
+ */
 
 Factory.addGetterSetter(
   TextPath,
@@ -647,81 +650,69 @@ Factory.addGetterSetter(
 );
 
 /**
- * set letter spacing property. Default value is 0.
- * @name letterSpacing
+ * get/set text baselineg.  The default is 'middle'. Can be 'top', 'bottom', 'middle', 'alphabetic', 'hanging'
+ * @name Konva.TextPath#textBaseline
  * @method
- * @memberof Konva.TextPath.prototype
- * @param {Number} letterSpacing
+ * @param {String} textBaseline
+ * @returns {String}
+ * @example
+ * // get line height
+ * var textBaseline = shape.textBaseline();
+ *
+ * // set the line height
+ * shape.textBaseline('top');
  */
-
 Factory.addGetterSetter(TextPath, 'textBaseline', 'middle');
 
 /**
- * set textBaseline property. Default value is 'middle'.
- * Can be 'top', 'bottom', 'middle', 'alphabetic', 'hanging'
- * @name textBaseline
+ * get/set font variant.  Can be 'normal' or 'small-caps'.  'normal' is the default.
+ * @name Konva.TextPath#fontVariant
  * @method
- * @memberof Konva.TextPath.prototype
- * @param {Number} textBaseline
+ * @param {String} fontVariant
+ * @returns {String}
+ * @example
+ * // get font variant
+ * var fontVariant = shape.fontVariant();
+ *
+ * // set font variant
+ * shape.fontVariant('small-caps');
  */
-
-/**
- * get font style
- * @name getFontStyle
- * @method
- * @memberof Konva.TextPath.prototype
- */
-
 Factory.addGetterSetter(TextPath, 'fontVariant', NORMAL);
 
 /**
- * set font variant.  Can be 'normal' or 'small-caps'.  'normal' is the default.
- * @name setFontVariant
+ * get/set text
+ * @name Konva.TextPath#getText
  * @method
- * @memberof Konva.TextPath.prototype
- * @param {String} fontVariant
+ * @param {String} text
+ * @returns {String}
+ * @example
+ * // get text
+ * var text = text.text();
+ *
+ * // set text
+ * text.text('Hello world!');
  */
-
-/**
- * @get font variant
- * @name getFontVariant
- * @method
- * @memberof Konva.TextPath.prototype
- */
-
 Factory.addGetterSetter(TextPath, 'text', EMPTY_STRING);
 
 /**
- * get text
- * @name getText
+ * get/set text decoration of a text.  Can be '' or 'underline'.
+ * @name Konva.TextPath#textDecoration
  * @method
- * @memberof Konva.TextPath.prototype
- */
-
-Factory.addGetterSetter(TextPath, 'textDecoration', null);
-
-/**
- * get/set text decoration of a text.  Can be '' or 'underline'
- * @name textDecoration
- * @method
- * @memberof Konva.TextPath.prototype
  * @param {String} textDecoration
  * @returns {String}
  * @example
  * // get text decoration
- * var textDecoration = text.textDecoration();
+ * var textDecoration = shape.textDecoration();
  *
- * // center text
- * text.textDecoration('underline');
+ * // underline text
+ * shape.textDecoration('underline');
  */
-
-Factory.addGetterSetter(TextPath, 'kerningFunc', null);
+Factory.addGetterSetter(TextPath, 'textDecoration', null);
 
 /**
  * get/set kerning function.
- * @name kerningFunc
+ * @name Konva.TextPath#kerningFunc
  * @method
- * @memberof Konva.Text.prototype
  * @param {String} kerningFunc
  * @returns {String}
  * @example
@@ -733,5 +724,6 @@ Factory.addGetterSetter(TextPath, 'kerningFunc', null);
  *   return 1;
  * });
  */
+Factory.addGetterSetter(TextPath, 'kerningFunc', null);
 
 Collection.mapMethods(TextPath);

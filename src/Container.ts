@@ -17,15 +17,11 @@ import { GetSet, Vector2d, IRect } from './types';
  */
 export abstract class Container extends Node {
   children = new Collection();
-  constructor(config) {
-    super(config);
-  }
 
-  __init(config) {}
   /**
    * returns a {@link Konva.Collection} of direct descendant nodes
    * @method
-   * @memberof Konva.Container.prototype
+   * @name Konva.Container#getChildren
    * @param {Function} [filterFunc] filter function
    * @returns {Konva.Collection}
    * @example
@@ -53,7 +49,7 @@ export abstract class Container extends Node {
   /**
    * determine if node has children
    * @method
-   * @memberof Konva.Container.prototype
+   * @name Konva.Container#hasChildren
    * @returns {Boolean}
    */
   hasChildren() {
@@ -62,7 +58,7 @@ export abstract class Container extends Node {
   /**
    * remove all children
    * @method
-   * @memberof Konva.Container.prototype
+   * @name Konva.Container#removeChildren
    */
   removeChildren() {
     var children = Collection.toCollection(this.children);
@@ -81,7 +77,7 @@ export abstract class Container extends Node {
   /**
    * destroy all children
    * @method
-   * @memberof Konva.Container.prototype
+   * @name Konva.Container#destroyChildren
    */
   destroyChildren() {
     var children = Collection.toCollection(this.children);
@@ -99,13 +95,16 @@ export abstract class Container extends Node {
   }
   abstract _validateAdd(node: Node): void;
   /**
-   * Add node or nodes to container.
+   * add a child and children into container
+   * @name Konva.Container#add
    * @method
-   * @memberof Konva.Container.prototype
    * @param {...Konva.Node} child
    * @returns {Container}
    * @example
+   * layer.add(rect);
    * layer.add(shape1, shape2, shape3);
+   * // remember to redraw layer if you changed something
+   * layer.draw();
    */
   add(child) {
     if (arguments.length > 1) {
@@ -136,12 +135,10 @@ export abstract class Container extends Node {
     return this;
   }
   destroy() {
-    // destroy children
     if (this.hasChildren()) {
       this.destroyChildren();
     }
-    // then destroy self
-    Node.prototype.destroy.call(this);
+    super.destroy();
     return this;
   }
   /**
@@ -151,7 +148,7 @@ export abstract class Container extends Node {
    * With strings you can also select by type or class name. Pass multiple selectors
    * separated by a space.
    * @method
-   * @memberof Konva.Container.prototype
+   * @name Konva.Container#find
    * @param {String | Function} selector
    * @returns {Collection}
    * @example
@@ -174,7 +171,7 @@ export abstract class Container extends Node {
    *
    * Passing a function as a selector
    *
-   * // get all Groups
+   * // get all groups with a function
    * var groups = stage.find(node => {
    *  return node.getType() === 'Group';
    * });
@@ -189,10 +186,17 @@ export abstract class Container extends Node {
     // second argument and getting unexpected `findOne` result
     return this._generalFind(selector, false);
   }
+
+  get(selector) {
+    Util.warn(
+      'collection.get() method is deprecated. Please use collection.find() instead.'
+    );
+    return this.find(selector);
+  }
   /**
    * return a first node from `find` method
    * @method
-   * @memberof Konva.Container.prototype
+   * @name Konva.Container#findOne
    * @param {String | Function} selector
    * @returns {Konva.Node | Undefined}
    * @example
@@ -345,7 +349,7 @@ export abstract class Container extends Node {
    * determine if node is an ancestor
    * of descendant
    * @method
-   * @memberof Konva.Container.prototype
+   * @name Konva.Container#isAncestorOf
    * @param {Konva.Node} node
    */
   isAncestorOf(node) {
@@ -370,11 +374,11 @@ export abstract class Container extends Node {
   }
   /**
    * get all shapes that intersect a point.  Note: because this method must clear a temporary
-   * canvas and redraw every shape inside the container, it should only be used for special sitations
+   * canvas and redraw every shape inside the container, it should only be used for special situations
    * because it performs very poorly.  Please use the {@link Konva.Stage#getIntersection} method if at all possible
    * because it performs much better
    * @method
-   * @memberof Konva.Container.prototype
+   * @name Konva.Container#getIntersection
    * @param {Object} pos
    * @param {Number} pos.x
    * @param {Number} pos.y
@@ -573,10 +577,6 @@ export abstract class Container extends Node {
   clipFunc: GetSet<(ctx: CanvasRenderingContext2D, shape: this) => void, this>;
 }
 
-// deprecated methods
-// TODO: remove it
-(<any>Container.prototype).get = Container.prototype.find;
-
 // add getters setters
 Factory.addComponentsGetterSetter(Container, 'clip', [
   'x',
@@ -587,8 +587,7 @@ Factory.addComponentsGetterSetter(Container, 'clip', [
 /**
  * get/set clip
  * @method
- * @name clip
- * @memberof Konva.Container.prototype
+ * @name Konva.Container#clip
  * @param {Object} clip
  * @param {Number} clip.x
  * @param {Number} clip.y
@@ -600,7 +599,7 @@ Factory.addComponentsGetterSetter(Container, 'clip', [
  * var clip = container.clip();
  *
  * // set clip
- * container.setClip({
+ * container.clip({
  *   x: 20,
  *   y: 20,
  *   width: 20,
@@ -616,9 +615,8 @@ Factory.addGetterSetter(
 );
 /**
  * get/set clip x
- * @name clipX
+ * @name Konva.Container#clipX
  * @method
- * @memberof Konva.Container.prototype
  * @param {Number} x
  * @returns {Number}
  * @example
@@ -637,9 +635,8 @@ Factory.addGetterSetter(
 );
 /**
  * get/set clip y
- * @name clipY
+ * @name Konva.Container#clipY
  * @method
- * @memberof Konva.Container.prototype
  * @param {Number} y
  * @returns {Number}
  * @example
@@ -658,9 +655,8 @@ Factory.addGetterSetter(
 );
 /**
  * get/set clip width
- * @name clipWidth
+ * @name Konva.Container#clipWidth
  * @method
- * @memberof Konva.Container.prototype
  * @param {Number} width
  * @returns {Number}
  * @example
@@ -679,9 +675,8 @@ Factory.addGetterSetter(
 );
 /**
  * get/set clip height
- * @name clipHeight
+ * @name Konva.Container#clipHeight
  * @method
- * @memberof Konva.Container.prototype
  * @param {Number} height
  * @returns {Number}
  * @example
@@ -695,9 +690,8 @@ Factory.addGetterSetter(
 Factory.addGetterSetter(Container, 'clipFunc');
 /**
  * get/set clip function
- * @name clipFunc
+ * @name Konva.Container#clipFunc
  * @method
- * @memberof Konva.Container.prototype
  * @param {Function} function
  * @returns {Function}
  * @example

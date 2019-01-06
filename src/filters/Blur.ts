@@ -844,9 +844,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set blur radius. Use with {@link Konva.Filters.Blur} filter
- * @name blurRadius
+ * @name Konva.Node#blurRadius
  * @method
- * @memberof Konva.Node.prototype
  * @param {Integer} radius
  * @returns {Integer}
  */

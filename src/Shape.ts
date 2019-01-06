@@ -57,15 +57,13 @@ function _clearGetShadowRGBACache() {
  *});
  */
 export class Shape extends Node {
-  nodeType = 'Shape';
   _centroid: boolean;
-
-  _fillFunc = _fillFunc;
-  _strokeFunc = _strokeFunc;
-  _fillFuncHit = _fillFuncHit;
-  _strokeFuncHit = _strokeFuncHit;
-
   colorKey: string;
+
+  _fillFunc: (ctx: Context) => void;
+  _strokeFunc: (ctx: Context) => void;
+  _fillFuncHit: (ctx: Context) => void;
+  _strokeFuncHit: (ctx: Context) => void;
 
   constructor(config) {
     super(config);
@@ -92,22 +90,11 @@ export class Shape extends Node {
       _clearGetShadowRGBACache
     );
   }
-  __init(config) {
-    // TODO: remove it
-    Shape.call(this, config);
-  }
-  hasChildren() {
-    return false;
-  }
 
-  // TODO: should we return null?
-  getChildren() {
-    return [];
-  }
   /**
    * get canvas context tied to the layer
    * @method
-   * @memberof Konva.Shape.prototype
+   * @name Konva.Shape#getContext
    * @returns {Konva.Context}
    */
   getContext() {
@@ -116,16 +103,20 @@ export class Shape extends Node {
   /**
    * get canvas renderer tied to the layer.  Note that this returns a canvas renderer, not a canvas element
    * @method
-   * @memberof Konva.Shape.prototype
+   * @name Konva.Shape#getCanvas
    * @returns {Konva.Canvas}
    */
   getCanvas() {
     return this.getLayer().getCanvas();
   }
+
+  getSceneFunc() {
+    return this.attrs.sceneFunc || this['_sceneFunc'];
+  }
   /**
    * returns whether or not a shadow will be rendered
    * @method
-   * @memberof Konva.Shape.prototype
+   * @name Konva.Shape#hasShadow
    * @returns {Boolean}
    */
   hasShadow() {
@@ -165,7 +156,7 @@ export class Shape extends Node {
   /**
    * returns whether or not the shape will be filled
    * @method
-   * @memberof Konva.Shape.prototype
+   * @name Konva.Shape#hasFill
    * @returns {Boolean}
    */
   hasFill() {
@@ -179,7 +170,7 @@ export class Shape extends Node {
   /**
    * returns whether or not the shape will be stroked
    * @method
-   * @memberof Konva.Shape.prototype
+   * @name Konva.Shape#hasStroke
    * @returns {Boolean}
    */
   hasStroke() {
@@ -196,7 +187,7 @@ export class Shape extends Node {
    *  consecutively.  Please use the {@link Konva.Stage#getIntersection} method if at all possible
    *  because it performs much better
    * @method
-   * @memberof Konva.Shape.prototype
+   * @name Konva.Shape#intersects
    * @param {Object} point
    * @param {Number} point.x
    * @param {Number} point.y
@@ -217,7 +208,7 @@ export class Shape extends Node {
     ).data;
     return p[3] > 0;
   }
-  // extends Node.prototype.destroy
+
   destroy() {
     Node.prototype.destroy.call(this);
     delete shapes[this.colorKey];
@@ -243,7 +234,7 @@ export class Shape extends Node {
    * return self rectangle (x, y, width, height) of shape.
    * This method are not taken into account transformation and styles.
    * @method
-   * @memberof Konva.Shape.prototype
+   * @name Konva.Shape#getSelfRect
    * @returns {Object} rect with {x, y, width, height} properties
    * @example
    *
@@ -270,17 +261,6 @@ export class Shape extends Node {
 
     var applyStroke = !attrs.skipStroke && this.hasStroke();
     var strokeWidth = (applyStroke && this.strokeWidth()) || 0;
-
-    // var scale = {
-    //   x: 1,
-    //   y: 1
-    // };
-    // if (!this.strokeScaleEnabled()) {
-    //   var scale = this.getAbsoluteScale();
-    //   // scale = {
-    //   //   x: Math.abs(scale.x)
-    //   // }
-    // }
 
     var fillAndStrokeWidth = fillRect.width + strokeWidth;
     var fillAndStrokeHeight = fillRect.height + strokeWidth;
@@ -482,7 +462,7 @@ export class Shape extends Node {
   /**
    * draw hit graph using the cached scene canvas
    * @method
-   * @memberof Konva.Shape.prototype
+   * @name Konva.Shape#drawHitFromCache
    * @param {Integer} alphaThreshold alpha channel threshold that determines whether or not
    *  a pixel should be drawn onto the hit graph.  Must be a value between 0 and 255.
    *  The default is 0
@@ -593,6 +573,14 @@ export class Shape extends Node {
   strokeLinearGradientColorStops: GetSet<Array<number | string>, this>;
 }
 
+Shape.prototype._fillFunc = _fillFunc;
+Shape.prototype._strokeFunc = _strokeFunc;
+Shape.prototype._fillFuncHit = _fillFuncHit;
+Shape.prototype._strokeFuncHit = _strokeFuncHit;
+
+Shape.prototype._centroid = false;
+Shape.prototype.nodeType = 'Shape';
+
 // add getters and setters
 Factory.addGetterSetter(
   Shape,
@@ -603,9 +591,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set stroke color
- * @name stroke
+ * @name Konva.Shape#stroke
  * @method
- * @memberof Konva.Shape.prototype
  * @param {String} color
  * @returns {String}
  * @example
@@ -634,9 +621,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set stroke width
- * @name strokeWidth
+ * @name Konva.Shape#strokeWidth
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} strokeWidth
  * @returns {Number}
  * @example
@@ -660,9 +646,8 @@ Factory.addGetterSetter(
  * of shape will be decreased (by lineWidth / 2). Remember that non closed line with `strokeHitEnabled = false`
  * will be not drawn on hit canvas, that is mean line will no trigger pointer events (like mouseover)
  * Default value is true
- * @name strokeHitEnabled
+ * @name Konva.Shape#strokeHitEnabled
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Boolean} strokeHitEnabled
  * @returns {Boolean}
  * @example
@@ -684,9 +669,8 @@ Factory.addGetterSetter(
  * get/set perfectDrawEnabled. If a shape has fill, stroke and opacity you may set `perfectDrawEnabled` to false to improve performance.
  * See http://konvajs.github.io/docs/performance/Disable_Perfect_Draw.html for more information.
  * Default value is true
- * @name perfectDrawEnabled
+ * @name Konva.Shape#perfectDrawEnabled
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Boolean} perfectDrawEnabled
  * @returns {Boolean}
  * @example
@@ -709,9 +693,8 @@ Factory.addGetterSetter(
  * You may set `shape.shadowForStrokeEnabled(false)`. In this case stroke will be no draw shadow for stroke.
  * Remember if you set `shadowForStrokeEnabled = false` for non closed line - that line with have no shadow!.
  * Default value is true
- * @name shadowForStrokeEnabled
+ * @name Konva.Shape#shadowForStrokeEnabled
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Boolean} shadowForStrokeEnabled
  * @returns {Boolean}
  * @example
@@ -727,9 +710,8 @@ Factory.addGetterSetter(Shape, 'lineJoin');
 /**
  * get/set line join.  Can be miter, round, or bevel.  The
  *  default is miter
- * @name lineJoin
+ * @name Konva.Shape#lineJoin
  * @method
- * @memberof Konva.Shape.prototype
  * @param {String} lineJoin
  * @returns {String}
  * @example
@@ -744,9 +726,8 @@ Factory.addGetterSetter(Shape, 'lineCap');
 
 /**
  * get/set line cap.  Can be butt, round, or square
- * @name lineCap
+ * @name Konva.Shape#lineCap
  * @method
- * @memberof Konva.Shape.prototype
  * @param {String} lineCap
  * @returns {String}
  * @example
@@ -761,9 +742,8 @@ Factory.addGetterSetter(Shape, 'sceneFunc');
 
 /**
  * get/set scene draw function
- * @name sceneFunc
+ * @name Konva.Shape#sceneFunc
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Function} drawFunc drawing function
  * @returns {Function}
  * @example
@@ -771,11 +751,12 @@ Factory.addGetterSetter(Shape, 'sceneFunc');
  * var sceneFunc = shape.sceneFunc();
  *
  * // set scene draw function
- * shape.sceneFunc(function(context) {
+ * shape.sceneFunc(function(context, shape) {
  *   context.beginPath();
- *   context.rect(0, 0, this.width(), this.height());
+ *   context.rect(0, 0, shape.width(), shape.height());
  *   context.closePath();
- *   context.fillStrokeShape(this);
+ *   // important Konva method that fill and stroke shape from its properties
+ *   context.fillStrokeShape(shape);
  * });
  */
 
@@ -783,9 +764,8 @@ Factory.addGetterSetter(Shape, 'hitFunc');
 
 /**
  * get/set hit draw function
- * @name hitFunc
+ * @name Konva.Shape#hitFunc
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Function} drawFunc drawing function
  * @returns {Function}
  * @example
@@ -795,9 +775,10 @@ Factory.addGetterSetter(Shape, 'hitFunc');
  * // set hit draw function
  * shape.hitFunc(function(context) {
  *   context.beginPath();
- *   context.rect(0, 0, this.width(), this.height());
+ *   context.rect(0, 0, shape.width(), shape.height());
  *   context.closePath();
- *   context.fillStrokeShape(this);
+ *   // important Konva method that fill and stroke shape from its properties
+ *   context.fillStrokeShape(shape);
  * });
  */
 
@@ -805,9 +786,8 @@ Factory.addGetterSetter(Shape, 'dash');
 
 /**
  * get/set dash array for stroke.
- * @name dash
+ * @name Konva.Shape#dash
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Array} dash
  * @returns {Array}
  * @example
@@ -828,9 +808,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set dash offset for stroke.
- * @name dash
+ * @name Konva.Shape#dash
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} dash offset
  * @returns {Number}
  * @example
@@ -848,9 +827,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set shadow color
- * @name shadowColor
+ * @name Konva.Shape#shadowColor
  * @method
- * @memberof Konva.Shape.prototype
  * @param {String} color
  * @returns {String}
  * @example
@@ -879,9 +857,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set shadow blur
- * @name shadowBlur
+ * @name Konva.Shape#shadowBlur
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} blur
  * @returns {Number}
  * @example
@@ -901,9 +878,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set shadow opacity.  must be a value between 0 and 1
- * @name shadowOpacity
+ * @name Konva.Shape#shadowOpacity
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} opacity
  * @returns {Number}
  * @example
@@ -918,9 +894,8 @@ Factory.addComponentsGetterSetter(Shape, 'shadowOffset', ['x', 'y']);
 
 /**
  * get/set shadow offset
- * @name shadowOffset
+ * @name Konva.Shape#shadowOffset
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Object} offset
  * @param {Number} offset.x
  * @param {Number} offset.y
@@ -945,9 +920,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set shadow offset x
- * @name shadowOffsetX
+ * @name Konva.Shape#shadowOffsetX
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} x
  * @returns {Number}
  * @example
@@ -967,9 +941,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set shadow offset y
- * @name shadowOffsetY
+ * @name Konva.Shape#shadowOffsetY
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} y
  * @returns {Number}
  * @example
@@ -984,9 +957,8 @@ Factory.addGetterSetter(Shape, 'fillPatternImage');
 
 /**
  * get/set fill pattern image
- * @name fillPatternImage
+ * @name Konva.Shape#fillPatternImage
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Image} image object
  * @returns {Image}
  * @example
@@ -1010,9 +982,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set fill color
- * @name fill
+ * @name Konva.Shape#fill
  * @method
- * @memberof Konva.Shape.prototype
  * @param {String} color
  * @returns {String}
  * @example
@@ -1044,9 +1015,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set fill pattern x
- * @name fillPatternX
+ * @name Konva.Shape#fillPatternX
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} x
  * @returns {Number}
  * @example
@@ -1065,9 +1035,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set fill pattern y
- * @name fillPatternY
+ * @name Konva.Shape#fillPatternY
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} y
  * @returns {Number}
  * @example
@@ -1081,9 +1050,8 @@ Factory.addGetterSetter(Shape, 'fillLinearGradientColorStops');
 
 /**
  * get/set fill linear gradient color stops
- * @name fillLinearGradientColorStops
+ * @name Konva.Shape#fillLinearGradientColorStops
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Array} colorStops
  * @returns {Array} colorStops
  * @example
@@ -1099,9 +1067,8 @@ Factory.addGetterSetter(Shape, 'strokeLinearGradientColorStops');
 
 /**
  * get/set stroke linear gradient color stops
- * @name strokeLinearGradientColorStops
+ * @name Konva.Shape#strokeLinearGradientColorStops
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Array} colorStops
  * @returns {Array} colorStops
  * @example
@@ -1117,9 +1084,8 @@ Factory.addGetterSetter(Shape, 'fillRadialGradientStartRadius', 0);
 
 /**
  * get/set fill radial gradient start radius
- * @name fillRadialGradientStartRadius
+ * @name Konva.Shape#fillRadialGradientStartRadius
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} radius
  * @returns {Number}
  * @example
@@ -1134,9 +1100,8 @@ Factory.addGetterSetter(Shape, 'fillRadialGradientEndRadius', 0);
 
 /**
  * get/set fill radial gradient end radius
- * @name fillRadialGradientEndRadius
+ * @name Konva.Shape#fillRadialGradientEndRadius
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} radius
  * @returns {Number}
  * @example
@@ -1151,9 +1116,8 @@ Factory.addGetterSetter(Shape, 'fillRadialGradientColorStops');
 
 /**
  * get/set fill radial gradient color stops
- * @name fillRadialGradientColorStops
+ * @name Konva.Shape#fillRadialGradientColorStops
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} colorStops
  * @returns {Array}
  * @example
@@ -1169,9 +1133,8 @@ Factory.addGetterSetter(Shape, 'fillPatternRepeat', 'repeat');
 
 /**
  * get/set fill pattern repeat.  Can be 'repeat', 'repeat-x', 'repeat-y', or 'no-repeat'.  The default is 'repeat'
- * @name fillPatternRepeat
+ * @name Konva.Shape#fillPatternRepeat
  * @method
- * @memberof Konva.Shape.prototype
  * @param {String} repeat
  * @returns {String}
  * @example
@@ -1189,9 +1152,8 @@ Factory.addGetterSetter(Shape, 'fillEnabled', true);
 
 /**
  * get/set fill enabled flag
- * @name fillEnabled
+ * @name Konva.Shape#fillEnabled
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Boolean} enabled
  * @returns {Boolean}
  * @example
@@ -1209,9 +1171,8 @@ Factory.addGetterSetter(Shape, 'strokeEnabled', true);
 
 /**
  * get/set stroke enabled flag
- * @name strokeEnabled
+ * @name Konva.Shape#strokeEnabled
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Boolean} enabled
  * @returns {Boolean}
  * @example
@@ -1229,9 +1190,8 @@ Factory.addGetterSetter(Shape, 'shadowEnabled', true);
 
 /**
  * get/set shadow enabled flag
- * @name shadowEnabled
+ * @name Konva.Shape#shadowEnabled
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Boolean} enabled
  * @returns {Boolean}
  * @example
@@ -1249,9 +1209,8 @@ Factory.addGetterSetter(Shape, 'dashEnabled', true);
 
 /**
  * get/set dash enabled flag
- * @name dashEnabled
+ * @name Konva.Shape#dashEnabled
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Boolean} enabled
  * @returns {Boolean}
  * @example
@@ -1269,9 +1228,8 @@ Factory.addGetterSetter(Shape, 'strokeScaleEnabled', true);
 
 /**
  * get/set strokeScale enabled flag
- * @name strokeScaleEnabled
+ * @name Konva.Shape#strokeScaleEnabled
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Boolean} enabled
  * @returns {Boolean}
  * @example
@@ -1290,9 +1248,8 @@ Factory.addGetterSetter(Shape, 'fillPriority', 'color');
 /**
  * get/set fill priority.  can be color, pattern, linear-gradient, or radial-gradient.  The default is color.
  *   This is handy if you want to toggle between different fill types.
- * @name fillPriority
+ * @name Konva.Shape#fillPriority
  * @method
- * @memberof Konva.Shape.prototype
  * @param {String} priority
  * @returns {String}
  * @example
@@ -1307,9 +1264,8 @@ Factory.addComponentsGetterSetter(Shape, 'fillPatternOffset', ['x', 'y']);
 
 /**
  * get/set fill pattern offset
- * @name fillPatternOffset
+ * @name Konva.Shape#fillPatternOffset
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Object} offset
  * @param {Number} offset.x
  * @param {Number} offset.y
@@ -1334,9 +1290,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set fill pattern offset x
- * @name fillPatternOffsetX
+ * @name Konva.Shape#fillPatternOffsetX
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} x
  * @returns {Number}
  * @example
@@ -1356,9 +1311,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set fill pattern offset y
- * @name fillPatternOffsetY
+ * @name Konva.Shape#fillPatternOffsetY
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} y
  * @returns {Number}
  * @example
@@ -1373,9 +1327,8 @@ Factory.addComponentsGetterSetter(Shape, 'fillPatternScale', ['x', 'y']);
 
 /**
  * get/set fill pattern scale
- * @name fillPatternScale
+ * @name Konva.Shape#fillPatternScale
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Object} scale
  * @param {Number} scale.x
  * @param {Number} scale.y
@@ -1400,9 +1353,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set fill pattern scale x
- * @name fillPatternScaleX
+ * @name Konva.Shape#fillPatternScaleX
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} x
  * @returns {Number}
  * @example
@@ -1422,9 +1374,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set fill pattern scale y
- * @name fillPatternScaleY
+ * @name Konva.Shape#fillPatternScaleY
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} y
  * @returns {Number}
  * @example
@@ -1442,9 +1393,8 @@ Factory.addComponentsGetterSetter(Shape, 'fillLinearGradientStartPoint', [
 
 /**
  * get/set fill linear gradient start point
- * @name fillLinearGradientStartPoint
+ * @name Konva.Shape#fillLinearGradientStartPoint
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Object} startPoint
  * @param {Number} startPoint.x
  * @param {Number} startPoint.y
@@ -1467,9 +1417,8 @@ Factory.addComponentsGetterSetter(Shape, 'strokeLinearGradientStartPoint', [
 
 /**
  * get/set stroke linear gradient start point
- * @name strokeLinearGradientStartPoint
+ * @name Konva.Shape#strokeLinearGradientStartPoint
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Object} startPoint
  * @param {Number} startPoint.x
  * @param {Number} startPoint.y
@@ -1489,9 +1438,8 @@ Factory.addGetterSetter(Shape, 'fillLinearGradientStartPointX', 0);
 
 /**
  * get/set fill linear gradient start point x
- * @name fillLinearGradientStartPointX
+ * @name Konva.Shape#fillLinearGradientStartPointX
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} x
  * @returns {Number}
  * @example
@@ -1506,9 +1454,8 @@ Factory.addGetterSetter(Shape, 'strokeLinearGradientStartPointX', 0);
 
 /**
  * get/set stroke linear gradient start point x
- * @name linearLinearGradientStartPointX
+ * @name Konva.Shape#linearLinearGradientStartPointX
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} x
  * @returns {Number}
  * @example
@@ -1523,9 +1470,8 @@ Factory.addGetterSetter(Shape, 'fillLinearGradientStartPointY', 0);
 
 /**
  * get/set fill linear gradient start point y
- * @name fillLinearGradientStartPointY
+ * @name Konva.Shape#fillLinearGradientStartPointY
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} y
  * @returns {Number}
  * @example
@@ -1539,9 +1485,8 @@ Factory.addGetterSetter(Shape, 'fillLinearGradientStartPointY', 0);
 Factory.addGetterSetter(Shape, 'strokeLinearGradientStartPointY', 0);
 /**
  * get/set stroke linear gradient start point y
- * @name strokeLinearGradientStartPointY
+ * @name Konva.Shape#strokeLinearGradientStartPointY
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} y
  * @returns {Number}
  * @example
@@ -1559,9 +1504,8 @@ Factory.addComponentsGetterSetter(Shape, 'fillLinearGradientEndPoint', [
 
 /**
  * get/set fill linear gradient end point
- * @name fillLinearGradientEndPoint
+ * @name Konva.Shape#fillLinearGradientEndPoint
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Object} endPoint
  * @param {Number} endPoint.x
  * @param {Number} endPoint.y
@@ -1584,9 +1528,8 @@ Factory.addComponentsGetterSetter(Shape, 'strokeLinearGradientEndPoint', [
 
 /**
  * get/set stroke linear gradient end point
- * @name strokeLinearGradientEndPoint
+ * @name Konva.Shape#strokeLinearGradientEndPoint
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Object} endPoint
  * @param {Number} endPoint.x
  * @param {Number} endPoint.y
@@ -1605,9 +1548,8 @@ Factory.addComponentsGetterSetter(Shape, 'strokeLinearGradientEndPoint', [
 Factory.addGetterSetter(Shape, 'fillLinearGradientEndPointX', 0);
 /**
  * get/set fill linear gradient end point x
- * @name fillLinearGradientEndPointX
+ * @name Konva.Shape#fillLinearGradientEndPointX
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} x
  * @returns {Number}
  * @example
@@ -1621,9 +1563,8 @@ Factory.addGetterSetter(Shape, 'fillLinearGradientEndPointX', 0);
 Factory.addGetterSetter(Shape, 'strokeLinearGradientEndPointX', 0);
 /**
  * get/set fill linear gradient end point x
- * @name strokeLinearGradientEndPointX
+ * @name Konva.Shape#strokeLinearGradientEndPointX
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} x
  * @returns {Number}
  * @example
@@ -1637,9 +1578,8 @@ Factory.addGetterSetter(Shape, 'strokeLinearGradientEndPointX', 0);
 Factory.addGetterSetter(Shape, 'fillLinearGradientEndPointY', 0);
 /**
  * get/set fill linear gradient end point y
- * @name fillLinearGradientEndPointY
+ * @name Konva.Shape#fillLinearGradientEndPointY
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} y
  * @returns {Number}
  * @example
@@ -1653,9 +1593,8 @@ Factory.addGetterSetter(Shape, 'fillLinearGradientEndPointY', 0);
 Factory.addGetterSetter(Shape, 'strokeLinearGradientEndPointY', 0);
 /**
  * get/set stroke linear gradient end point y
- * @name strokeLinearGradientEndPointY
+ * @name Konva.Shape#strokeLinearGradientEndPointY
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} y
  * @returns {Number}
  * @example
@@ -1673,9 +1612,8 @@ Factory.addComponentsGetterSetter(Shape, 'fillRadialGradientStartPoint', [
 
 /**
  * get/set fill radial gradient start point
- * @name fillRadialGradientStartPoint
+ * @name Konva.Shape#fillRadialGradientStartPoint
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Object} startPoint
  * @param {Number} startPoint.x
  * @param {Number} startPoint.y
@@ -1694,9 +1632,8 @@ Factory.addComponentsGetterSetter(Shape, 'fillRadialGradientStartPoint', [
 Factory.addGetterSetter(Shape, 'fillRadialGradientStartPointX', 0);
 /**
  * get/set fill radial gradient start point x
- * @name fillRadialGradientStartPointX
+ * @name Konva.Shape#fillRadialGradientStartPointX
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} x
  * @returns {Number}
  * @example
@@ -1710,9 +1647,8 @@ Factory.addGetterSetter(Shape, 'fillRadialGradientStartPointX', 0);
 Factory.addGetterSetter(Shape, 'fillRadialGradientStartPointY', 0);
 /**
  * get/set fill radial gradient start point y
- * @name fillRadialGradientStartPointY
+ * @name Konva.Shape#fillRadialGradientStartPointY
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} y
  * @returns {Number}
  * @example
@@ -1730,9 +1666,8 @@ Factory.addComponentsGetterSetter(Shape, 'fillRadialGradientEndPoint', [
 
 /**
  * get/set fill radial gradient end point
- * @name fillRadialGradientEndPoint
+ * @name Konva.Shape#fillRadialGradientEndPoint
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Object} endPoint
  * @param {Number} endPoint.x
  * @param {Number} endPoint.y
@@ -1751,9 +1686,8 @@ Factory.addComponentsGetterSetter(Shape, 'fillRadialGradientEndPoint', [
 Factory.addGetterSetter(Shape, 'fillRadialGradientEndPointX', 0);
 /**
  * get/set fill radial gradient end point x
- * @name fillRadialGradientEndPointX
+ * @name Konva.Shape#fillRadialGradientEndPointX
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} x
  * @returns {Number}
  * @example
@@ -1767,9 +1701,8 @@ Factory.addGetterSetter(Shape, 'fillRadialGradientEndPointX', 0);
 Factory.addGetterSetter(Shape, 'fillRadialGradientEndPointY', 0);
 /**
  * get/set fill radial gradient end point y
- * @name fillRadialGradientEndPointY
+ * @name Konva.Shape#fillRadialGradientEndPointY
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} y
  * @returns {Number}
  * @example
@@ -1784,9 +1717,8 @@ Factory.addGetterSetter(Shape, 'fillPatternRotation', 0);
 
 /**
  * get/set fill pattern rotation in degrees
- * @name fillPatternRotation
+ * @name Konva.Shape#fillPatternRotation
  * @method
- * @memberof Konva.Shape.prototype
  * @param {Number} rotation
  * @returns {Konva.Shape}
  * @example

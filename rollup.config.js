@@ -33,7 +33,7 @@ export default {
       file: pkg.main,
       name: 'Konva',
       format: 'umd',
-      sourcemap: true,
+      sourcemap: false,
       freeze: false
     }
     // { file: pkg.module, format: 'es', sourcemap: true }
@@ -53,9 +53,9 @@ export default {
     // Allow node_modules resolution, so you can use 'external' to control
     // which external modules to include in the bundle
     // https://github.com/rollup/rollup-plugin-node-resolve#usage
-    resolve(),
+    resolve()
 
     // Resolve source maps to the original source
-    sourceMaps()
+    // sourceMaps()
   ]
 };

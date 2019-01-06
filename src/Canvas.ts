@@ -1,6 +1,7 @@
-import { Util, Collection } from './Util';
+import { Util } from './Util';
 import { SceneContext, HitContext, Context } from './Context';
 import { glob, getGlobalKonva } from './Global';
+import { Factory, Validators } from './Factory';
 
 // calculate pixel ratio
 var _pixelRatio;
@@ -31,20 +32,15 @@ interface ICanvasConfig {
 }
 
 /**
- * Canvas Renderer constructor
+ * Canvas Renderer constructor. It is a wrapper around native canvas element.
+ * Usually you don't need to use it manually.
  * @constructor
  * @abstract
  * @memberof Konva
  * @param {Object} config
  * @param {Number} config.width
  * @param {Number} config.height
- * @param {Number} config.pixelRatio KonvaJS automatically handles pixel ratio adjustments in order to render crisp drawings
- *  on all devices. Most desktops, low end tablets, and low end phones, have device pixel ratios
- *  of 1.  Some high end tablets and phones, like iPhones and iPads (not the mini) have a device pixel ratio
- *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel
- *  ratios of 2 or 3.  Some browsers like Firefox allow you to configure the pixel ratio of the viewport.  Unless otherwise
- *  specified, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
- *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.
+ * @param {Number} config.pixelRatio
  */
 export class Canvas {
   pixelRatio = 1;
@@ -56,7 +52,6 @@ export class Canvas {
   isCache = false;
 
   constructor(config: ICanvasConfig) {
-    this.init(config);
     var conf = config || {};
 
     var pixelRatio =
@@ -75,37 +70,18 @@ export class Canvas {
     this._canvas.style.left = '0';
   }
 
-  init(config) {}
   /**
    * get canvas context
    * @method
-   * @memberof Konva.Canvas.prototype
+   * @name Konva.Canvas#getContext
    * @returns {CanvasContext} context
    */
   getContext() {
     return this.context;
   }
-  /**
-   * get pixel ratio
-   * @method
-   * @memberof Konva.Canvas.prototype
-   * @returns {Number} pixel ratio
-   */
   getPixelRatio() {
     return this.pixelRatio;
   }
-  /**
-   * get pixel ratio
-   * @method
-   * @memberof Konva.Canvas.prototype
-   * @param {Number} pixelRatio KonvaJS automatically handles pixel ratio adustments in order to render crisp drawings
-   *  on all devices. Most desktops, low end tablets, and low end phones, have device pixel ratios
-   *  of 1.  Some high end tablets and phones, like iPhones and iPads have a device pixel ratio
-   *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel
-   *  ratios of 2 or 3.  Some browsers like Firefox allow you to configure the pixel ratio of the viewport.  Unless otherwise
-   *  specificed, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
-   *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.
-   */
   setPixelRatio(pixelRatio) {
     var previousRatio = this.pixelRatio;
     this.pixelRatio = pixelRatio;
@@ -114,12 +90,6 @@ export class Canvas {
       this.getHeight() / previousRatio
     );
   }
-  /**
-   * set width
-   * @method
-   * @memberof Konva.Canvas.prototype
-   * @param {Number} width
-   */
   setWidth(width) {
     // take into account pixel ratio
     this.width = this._canvas.width = width * this.pixelRatio;
@@ -129,12 +99,6 @@ export class Canvas {
       _context = this.getContext()._context;
     _context.scale(pixelRatio, pixelRatio);
   }
-  /**
-   * set height
-   * @method
-   * @memberof Konva.Canvas.prototype
-   * @param {Number} height
-   */
   setHeight(height) {
     // take into account pixel ratio
     this.height = this._canvas.height = height * this.pixelRatio;
@@ -143,31 +107,12 @@ export class Canvas {
       _context = this.getContext()._context;
     _context.scale(pixelRatio, pixelRatio);
   }
-  /**
-   * get width
-   * @method
-   * @memberof Konva.Canvas.prototype
-   * @returns {Number} width
-   */
   getWidth() {
     return this.width;
   }
-  /**
-   * get height
-   * @method
-   * @memberof Konva.Canvas.prototype
-   * @returns {Number} height
-   */
   getHeight() {
     return this.height;
   }
-  /**
-   * set size
-   * @method
-   * @memberof Konva.Canvas.prototype
-   * @param {Number} width
-   * @param {Number} height
-   */
   setSize(width, height) {
     this.setWidth(width);
     this.setHeight(height);
@@ -175,7 +120,7 @@ export class Canvas {
   /**
    * to data url
    * @method
-   * @memberof Konva.Canvas.prototype
+   * @name Konva.Canvas#toDataURL
    * @param {String} mimeType
    * @param {Number} quality between 0 and 1 for jpg mime types
    * @returns {String} data url string
@@ -195,6 +140,33 @@ export class Canvas {
     }
   }
 }
+
+/**
+ * get/set pixel ratio.
+ * KonvaJS automatically handles pixel ratio adustments in order to render crisp drawings
+ *  on all devices. Most desktops, low end tablets, and low end phones, have device pixel ratios
+ *  of 1.  Some high end tablets and phones, like iPhones and iPads have a device pixel ratio
+ *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel
+ *  ratios of 2 or 3.  Some browsers like Firefox allow you to configure the pixel ratio of the viewport.  Unless otherwise
+ *  specificed, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
+ *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.
+ * @name Konva.Canvas#pixelRatio
+ * @method
+ * @param {Number} pixelRatio
+ * @returns {Number}
+ * @example
+ * // get
+ * var pixelRatio = canvas.pixelRatio();
+ *
+ * // set
+ * canvas.pixelRatio(100);
+ */
+Factory.addGetterSetter(
+  Canvas,
+  'pixelRatio',
+  undefined,
+  Validators.getNumberValidator()
+);
 
 export class SceneCanvas extends Canvas {
   constructor(config: ICanvasConfig = { width: 0, height: 0 }) {

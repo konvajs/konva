@@ -9,9 +9,8 @@ Factory.addGetterSetter(
 );
 /**
  * get/set hsv hue in degrees. Use with {@link Konva.Filters.HSV} or {@link Konva.Filters.HSL} filter.
- * @name hue
+ * @name Konva.Node#hue
  * @method
- * @memberof Konva.Node.prototype
  * @param {Number} hue value between 0 and 359
  * @returns {Number}
  */
@@ -25,9 +24,8 @@ Factory.addGetterSetter(
 );
 /**
  * get/set hsv saturation. Use with {@link Konva.Filters.HSV} or {@link Konva.Filters.HSL} filter.
- * @name saturation
+ * @name Konva.Node#saturation
  * @method
- * @memberof Konva.Node.prototype
  * @param {Number} saturation 0 is no change, -1.0 halves the saturation, 1.0 doubles, etc..
  * @returns {Number}
  */
@@ -41,9 +39,8 @@ Factory.addGetterSetter(
 );
 /**
  * get/set hsl luminance. Use with {@link Konva.Filters.HSL} filter.
- * @name luminance
+ * @name Konva.Node#luminance
  * @method
- * @memberof Konva.Node.prototype
  * @param {Number} value from -1 to 1
  * @returns {Number}
  */

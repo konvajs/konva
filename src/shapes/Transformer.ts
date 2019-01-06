@@ -8,7 +8,6 @@ import { getAngle, getGlobalKonva } from '../Global';
 
 import { GetSet } from '../types';
 
-
 var ATTR_CHANGE_LIST = [
   'resizeEnabledChange',
   'rotateAnchorOffsetChange',
@@ -174,7 +173,6 @@ export class Transformer extends Group {
   constructor(config) {
     // call super constructor
     super(config);
-    this.className = 'Transformer';
     this._createElements();
 
     // bindings
@@ -189,28 +187,18 @@ export class Transformer extends Group {
       this.update();
     }
   }
-
-  _centroid = false;
-  ____init(config) {}
   /**
    * alias to `setNode`
    * @method
-   * @memberof Konva.Transformer.prototype
+   * @name Konva.Transformer#attachTo
    * @returns {Konva.Transformer}
    * @example
    * transformer.attachTo(shape);
    */
   attachTo(node) {
     this.setNode(node);
+    return this;
   }
-  /**
-   * attach transformer to a Konva.Node. Transformer will adapt to its size and listen its events
-   * @method
-   * @memberof Konva.Transformer.prototype
-   * @returns {Konva.Transformer}
-   * @example
-   * transformer.setNode(shape);
-   */
   setNode(node) {
     if (this._node) {
       this.detach();
@@ -239,9 +227,9 @@ export class Transformer extends Group {
     return this._node;
   }
   /**
-   * detach transformer from a attached node
+   * detach transformer from an attached node
    * @method
-   * @memberof Konva.Transformer.prototype
+   * @name Konva.Transformer#detach
    * @returns {Konva.Transformer}
    * @example
    * transformer.detach();
@@ -683,7 +671,7 @@ export class Transformer extends Group {
    * force update of Konva.Transformer.
    * Use it when you updated attached Konva.Group and now you need to reset transformer size
    * @method
-   * @memberof Konva.Transformer.prototype
+   * @name Konva.Transformer#forceUpdate
    */
   forceUpdate() {
     this._resetTransformCache();
@@ -792,7 +780,7 @@ export class Transformer extends Group {
   /**
    * determine if transformer is in active transform
    * @method
-   * @memberof Konva.Transformer.prototype
+   * @name Konva.Transformer#isTransforming
    * @returns {Boolean}
    */
   isTransforming() {
@@ -801,7 +789,7 @@ export class Transformer extends Group {
   /**
    * Stop active transform action
    * @method
-   * @memberof Konva.Transformer.prototype
+   * @name Konva.Transformer#stopTransform
    * @returns {Boolean}
    */
   stopTransform() {
@@ -814,7 +802,6 @@ export class Transformer extends Group {
     }
   }
   destroy() {
-    // console.log(this.isTransforming() && this.getStage());
     if (this.getStage() && this._cursorChange) {
       this.getStage().content.style.cursor = '';
     }
@@ -851,7 +838,7 @@ export class Transformer extends Group {
   boundBoxFunc: GetSet<Function, this>;
 }
 
-function validateResizers(val) {
+function validateAnchors(val) {
   if (!(val instanceof Array)) {
     Util.warn('enabledAnchors value should be an array');
   }
@@ -870,11 +857,12 @@ function validateResizers(val) {
   return val || [];
 }
 
+Transformer.prototype.className = 'Transformer';
+
 /**
  * get/set enabled handlers
- * @name enabledAnchors
+ * @name Konva.Transformer#enabledAnchors
  * @method
- * @memberof Konva.Transformer.prototype
  * @param {Array} array
  * @returns {Array}
  * @example
@@ -888,14 +876,13 @@ Factory.addGetterSetter(
   Transformer,
   'enabledAnchors',
   ANCHORS_NAMES,
-  validateResizers
+  validateAnchors
 );
 
 /**
  * get/set resize ability. If false it will automatically hide resizing handlers
- * @name resizeEnabled
+ * @name Konva.Transformer#resizeEnabled
  * @method
- * @memberof Konva.Transformer.prototype
  * @param {Array} array
  * @returns {Array}
  * @example
@@ -908,9 +895,8 @@ Factory.addGetterSetter(
 Factory.addGetterSetter(Transformer, 'resizeEnabled', true);
 /**
  * get/set anchor size. Default is 10
- * @name validateAnchors
+ * @name Konva.Transformer#validateAnchors
  * @method
- * @memberof Konva.Transformer.prototype
  * @param {Number} 10
  * @returns {Number}
  * @example
@@ -929,9 +915,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set ability to rotate.
- * @name rotateEnabled
+ * @name Konva.Transformer#rotateEnabled
  * @method
- * @memberof Konva.Transformer.prototype
  * @param {Boolean} enabled
  * @returns {Boolean}
  * @example
@@ -945,9 +930,8 @@ Factory.addGetterSetter(Transformer, 'rotateEnabled', true);
 
 /**
  * get/set rotation snaps angles.
- * @name rotationSnaps
+ * @name Konva.Transformer#rotationSnaps
  * @method
- * @memberof Konva.Transformer.prototype
  * @param {Array} array
  * @returns {Array}
  * @example
@@ -961,9 +945,8 @@ Factory.addGetterSetter(Transformer, 'rotationSnaps', []);
 
 /**
  * get/set distance for rotation handler
- * @name rotateAnchorOffset
+ * @name Konva.Transformer#rotateAnchorOffset
  * @method
- * @memberof Konva.Transformer.prototype
  * @param {Number} offset
  * @returns {Number}
  * @example
@@ -982,9 +965,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set visibility of border
- * @name borderEnabled
+ * @name Konva.Transformer#borderEnabled
  * @method
- * @memberof Konva.Transformer.prototype
  * @param {Boolean} enabled
  * @returns {Boolean}
  * @example
@@ -998,9 +980,8 @@ Factory.addGetterSetter(Transformer, 'borderEnabled', true);
 
 /**
  * get/set anchor stroke color
- * @name anchorStroke
+ * @name Konva.Transformer#anchorStroke
  * @method
- * @memberof Konva.Transformer.prototype
  * @param {Boolean} enabled
  * @returns {Boolean}
  * @example
@@ -1014,9 +995,8 @@ Factory.addGetterSetter(Transformer, 'anchorStroke', 'rgb(0, 161, 255)');
 
 /**
  * get/set anchor stroke width
- * @name anchorStrokeWidth
+ * @name Konva.Transformer#anchorStrokeWidth
  * @method
- * @memberof Konva.Transformer.prototype
  * @param {Boolean} enabled
  * @returns {Boolean}
  * @example
@@ -1035,9 +1015,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set anchor fill color
- * @name anchorFill
+ * @name Konva.Transformer#anchorFill
  * @method
- * @memberof Konva.Transformer.prototype
  * @param {Boolean} enabled
  * @returns {Boolean}
  * @example
@@ -1051,9 +1030,8 @@ Factory.addGetterSetter(Transformer, 'anchorFill', 'white');
 
 /**
  * get/set anchor corner radius
- * @name anchorCornerRadius
+ * @name Konva.Transformer#anchorCornerRadius
  * @method
- * @memberof Konva.Transformer.prototype
  * @param {Number} enabled
  * @returns {Number}
  * @example
@@ -1072,9 +1050,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set border stroke color
- * @name borderStroke
+ * @name Konva.Transformer#borderStroke
  * @method
- * @memberof Konva.Transformer.prototype
  * @param {Boolean} enabled
  * @returns {Boolean}
  * @example
@@ -1088,9 +1065,8 @@ Factory.addGetterSetter(Transformer, 'borderStroke', 'rgb(0, 161, 255)');
 
 /**
  * get/set border stroke width
- * @name borderStrokeWidth
+ * @name Konva.Transformer#borderStrokeWidth
  * @method
- * @memberof Konva.Transformer.prototype
  * @param {Boolean} enabled
  * @returns {Boolean}
  * @example
@@ -1109,9 +1085,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set border dash array
- * @name borderDash
+ * @name Konva.Transformer#borderDash
  * @method
- * @memberof Konva.Transformer.prototype
  * @param {Boolean} enabled
  * @returns {Boolean}
  * @example
@@ -1125,9 +1100,8 @@ Factory.addGetterSetter(Transformer, 'borderDash');
 
 /**
  * get/set should we keep ratio while resize anchors at corners
- * @name keepRatio
+ * @name Konva.Transformer#keepRatio
  * @method
- * @memberof Konva.Transformer.prototype
  * @param {Boolean} keepRatio
  * @returns {Boolean}
  * @example
@@ -1141,9 +1115,8 @@ Factory.addGetterSetter(Transformer, 'keepRatio', true);
 
 /**
  * get/set should we resize relative to node's center?
- * @name centeredScaling
+ * @name Konva.Transformer#centeredScaling
  * @method
- * @memberof Konva.Transformer.prototype
  * @param {Boolean} centeredScaling
  * @returns {Boolean}
  * @example
@@ -1158,9 +1131,8 @@ Factory.addGetterSetter(Transformer, 'centeredScaling', false);
 /**
  * get/set should we think about stroke while resize? Good to use when a shape has strokeScaleEnabled = false
  * default is false
- * @name ignoreStroke
+ * @name Konva.Transformer#ignoreStroke
  * @method
- * @memberof Konva.Transformer.prototype
  * @param {Boolean} ignoreStroke
  * @returns {Boolean}
  * @example
@@ -1174,9 +1146,8 @@ Factory.addGetterSetter(Transformer, 'ignoreStroke', false);
 
 /**
  * get/set padding
- * @name padding
+ * @name Konva.Transformer#padding
  * @method
- * @memberof Konva.Transformer.prototype
  * @param {Number} padding
  * @returns {Number}
  * @example
@@ -1193,13 +1164,25 @@ Factory.addGetterSetter(
   Validators.getNumberValidator()
 );
 
-Factory.addOverloadedGetterSetter(Transformer, 'node');
+/**
+ * get/set attached node of the Transformer. Transformer will adapt to its size and listen to its events
+ * @method
+ * @name Konva.Transformer#Konva.Transformer#node
+ * @returns {Konva.Node}
+ * @example
+ * // get
+ * const node = transformer.node();
+ *
+ * // set
+ * transformer.node(shape);
+ */
+
+Factory.addGetterSetter(Transformer, 'node');
 
 /**
  * get/set bounding box function
- * @name boundBoxFunc
+ * @name Konva.Transformer#boundBoxFunc
  * @method
- * @memberof Konva.Transformer.prototype
  * @param {Function} func
  * @returns {Function}
  * @example

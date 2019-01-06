@@ -38,9 +38,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set levels.  Must be a number between 0 and 1.  Use with {@link Konva.Filters.Posterize} filter.
- * @name levels
+ * @name Konva.Node#levels
  * @method
- * @memberof Konva.Node.prototype
  * @param {Number} level between 0 and 1
  * @returns {Number}
  */

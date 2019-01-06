@@ -77,8 +77,8 @@ export class Animation {
   /**
    * set layers to be redrawn on each animation frame
    * @method
-   * @memberof Konva.Animation.prototype
-   * @param {Konva.Layer|Array} [layers] layer(s) to be redrawn.&nbsp; Can be a layer, an array of layers, or null.  Not specifying a node will result in no redraw.
+   * @name Konva.Animation#setLayers
+   * @param {Konva.Layer|Array} [layers] layer(s) to be redrawn. Can be a layer, an array of layers, or null.  Not specifying a node will result in no redraw.
    * @return {Konva.Animation} this
    */
   setLayers(layers) {
@@ -102,7 +102,7 @@ export class Animation {
   /**
    * get layers
    * @method
-   * @memberof Konva.Animation.prototype
+   * @name Konva.Animation#getLayers
    * @return {Array} Array of Konva.Layer
    */
   getLayers() {
@@ -111,7 +111,7 @@ export class Animation {
   /**
    * add layer.  Returns true if the layer was added, and false if it was not
    * @method
-   * @memberof Konva.Animation.prototype
+   * @name Konva.Animation#addLayer
    * @param {Konva.Layer} layer to add
    * @return {Bool} true if layer is added to animation, otherwise false
    */
@@ -133,7 +133,7 @@ export class Animation {
   /**
    * determine if animation is running or not.  returns true or false
    * @method
-   * @memberof Konva.Animation.prototype
+   * @name Konva.Animation#isRunning
    * @return {Bool} is animation running?
    */
   isRunning() {
@@ -152,7 +152,7 @@ export class Animation {
   /**
    * start animation
    * @method
-   * @memberof Konva.Animation.prototype
+   * @name Konva.Animation#start
    * @return {Konva.Animation} this
    */
   start() {
@@ -165,7 +165,7 @@ export class Animation {
   /**
    * stop animation
    * @method
-   * @memberof Konva.Animation.prototype
+   * @name Konva.Animation#stop
    * @return {Konva.Animation} this
    */
   stop() {
@@ -280,10 +280,10 @@ export class Animation {
  * batch draw. this function will not do immediate draw
  * but it will schedule drawing to next tick (requestAnimFrame)
  * @method
- * @name batchDraw
+ * @name Konva.BaseLayer#batchDraw
  * @return {Konva.Layer} this
- * @memberof Konva.BaseLayer.prototype
  */
+// TODO: don't use animation or make sure they all run at the same time
 BaseLayer.prototype.batchDraw = function() {
   var that = this,
     Anim = Animation;
@@ -304,9 +304,8 @@ BaseLayer.prototype.batchDraw = function() {
 /**
  * batch draw
  * @method
- * @name batchDraw
+ * @name Konva.BaseLayer#batchDraw
  * @return {Konva.Stage} this
- * @memberof Konva.Stage.prototype
  */
 Stage.prototype.batchDraw = function() {
   this.getChildren().each(function(layer) {

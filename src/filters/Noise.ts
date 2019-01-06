@@ -35,9 +35,8 @@ Factory.addGetterSetter(
 );
 /**
  * get/set noise amount.  Must be a value between 0 and 1. Use with {@link Konva.Filters.Noise} filter.
- * @name noise
+ * @name Konva.Node#noise
  * @method
- * @memberof Konva.Node.prototype
  * @param {Number} noise
  * @returns {Number}
  */

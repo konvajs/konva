@@ -13,22 +13,20 @@ export interface RectConf {
   height: number;
 }
 
-// class XArray<T> implements Array<T> {
-//   length: number;
-//   constructor() {
-//     Array.apply(this, arguments);
-//   }
-// }
-
-// XArray.prototype = [];
-
 // TODO: document collection and give examples
 
 /**
- * Collection constructor.  Collection extends
- *  Array.  This class is used in conjunction with {@link Konva.Container#find}
+ * Collection constructor. Collection extends Array.
+ * This class is used in conjunction with {@link Konva.Container#find}
+ * The good thing about collection is that it has ALL methods of all Konva nodes. Take a look into examples.
  * @constructor
  * @memberof Konva
+ * @example
+ *
+ * // find all rectangles and return them as Collection
+ * const shapes = layer.find('Rect');
+ * // fill all rectangles with a single function
+ * shapes.fill('red');
  */
 export class Collection<Child extends Node> {
   [index: number]: Child;
@@ -84,7 +82,7 @@ Collection.prototype = [] as any;
  * iterate through node array and run a function for each node.
  *  The node and index is passed into the function
  * @method
- * @memberof Konva.Collection.prototype
+ * @name Konva.Collection#each
  * @param {Function} func
  * @example
  * // get all nodes with name foo inside layer, and set x to 10 for each
@@ -100,7 +98,7 @@ Collection.prototype.each = function(func) {
 /**
  * convert collection into an array
  * @method
- * @memberof Konva.Collection.prototype
+ * @name Konva.Collection#toArray
  */
 Collection.prototype.toArray = function() {
   var arr = [],
@@ -129,8 +127,8 @@ Collection.prototype.toArray = function() {
  */
 
 /**
- * Transform constructor. Transform object is a private class of Konva framework.
- * In most of the cases you don't need to use it in your app.
+ * Transform constructor.
+ * In most of the cases you don't need to use it in your app. Because it is for internal usage in Konva core.
  * But there is a documentation for that class in case you still want
  * to make some manual calculations.
  * @constructor
@@ -145,8 +143,10 @@ export class Transform {
   /**
    * Copy Konva.Transform object
    * @method
-   * @memberof Konva.Transform.prototype
+   * @name Konva.Transform#copy
    * @returns {Konva.Transform}
+   * @example
+   * const tr = shape.getTransform().copy()
    */
   copy() {
     return new Transform(this.m);
@@ -154,7 +154,7 @@ export class Transform {
   /**
    * Transform point
    * @method
-   * @memberof Konva.Transform.prototype
+   * @name Konva.Transform#point
    * @param {Object} point 2D point(x, y)
    * @returns {Object} 2D point(x, y)
    */
@@ -168,7 +168,7 @@ export class Transform {
   /**
    * Apply translation
    * @method
-   * @memberof Konva.Transform.prototype
+   * @name Konva.Transform#translate
    * @param {Number} x
    * @param {Number} y
    * @returns {Konva.Transform}
@@ -181,7 +181,7 @@ export class Transform {
   /**
    * Apply scale
    * @method
-   * @memberof Konva.Transform.prototype
+   * @name Konva.Transform#scale
    * @param {Number} sx
    * @param {Number} sy
    * @returns {Konva.Transform}
@@ -196,7 +196,7 @@ export class Transform {
   /**
    * Apply rotation
    * @method
-   * @memberof Konva.Transform.prototype
+   * @name Konva.Transform#rotate
    * @param {Number} rad  Angle in radians
    * @returns {Konva.Transform}
    */
@@ -216,7 +216,7 @@ export class Transform {
   /**
    * Returns the translation
    * @method
-   * @memberof Konva.Transform.prototype
+   * @name Konva.Transform#getTranslation
    * @returns {Object} 2D point(x, y)
    */
   getTranslation() {
@@ -228,7 +228,7 @@ export class Transform {
   /**
    * Apply skew
    * @method
-   * @memberof Konva.Transform.prototype
+   * @name Konva.Transform#skew
    * @param {Number} sx
    * @param {Number} sy
    * @returns {Konva.Transform}
@@ -247,7 +247,7 @@ export class Transform {
   /**
    * Transform multiplication
    * @method
-   * @memberof Konva.Transform.prototype
+   * @name Konva.Transform#multiply
    * @param {Konva.Transform} matrix
    * @returns {Konva.Transform}
    */
@@ -272,7 +272,7 @@ export class Transform {
   /**
    * Invert the matrix
    * @method
-   * @memberof Konva.Transform.prototype
+   * @name Konva.Transform#invert
    * @returns {Konva.Transform}
    */
   invert() {
@@ -294,7 +294,7 @@ export class Transform {
   /**
    * return matrix
    * @method
-   * @memberof Konva.Transform.prototype
+   * @name Konva.Transform#getMatrix
    */
   getMatrix() {
     return this.m;
@@ -302,7 +302,7 @@ export class Transform {
   /**
    * set to absolute position via translation
    * @method
-   * @memberof Konva.Transform.prototype
+   * @name Konva.Transform#setAbsolutePosition
    * @returns {Konva.Transform}
    * @author ericdrowell
    */
@@ -589,6 +589,7 @@ export const Util = {
   /*
    * arg can be an image object or image data
    */
+  // TODO: use it only for data url
   _getImage(arg, callback) {
     var imageObj, canvas;
 
@@ -617,6 +618,7 @@ export const Util = {
       callback(null);
     }
   },
+  // TODO: remove
   _getRGBAString(obj) {
     var red = obj.red || 0,
       green = obj.green || 0,
@@ -642,7 +644,9 @@ export const Util = {
   /**
    * return random hex color
    * @method
-   * @memberof Util.prototype
+   * @memberof Konva.Util
+   * @example
+   * shape.fill(Konva.Util.getRandomColor());
    */
   getRandomColor() {
     var randColor = ((Math.random() * 0xffffff) << 0).toString(16);
@@ -651,11 +655,7 @@ export const Util = {
     }
     return HASH + randColor;
   },
-  /**
-   * return value with default fallback
-   * @method
-   * @memberof Util.prototype
-   */
+
   get(val, def) {
     if (val === undefined) {
       return def;
@@ -666,13 +666,13 @@ export const Util = {
   /**
    * get RGB components of a color
    * @method
-   * @memberof Util.prototype
+   * @memberof Konva.Util
    * @param {String} color
    * @example
    * // each of the following examples return {r:0, g:0, b:255}
-   * var rgb = Util.getRGB('blue');
-   * var rgb = Util.getRGB('#0000ff');
-   * var rgb = Util.getRGB('rgb(0,0,255)');
+   * var rgb = Konva.Util.getRGB('blue');
+   * var rgb = Konva.Util.getRGB('#0000ff');
+   * var rgb = Konva.Util.getRGB('rgb(0,0,255)');
    */
   getRGB(color) {
     var rgb;
@@ -777,6 +777,7 @@ export const Util = {
       };
     }
   },
+  // TODO: remove it
   // o1 takes precedence over o2
   _merge(o1, o2) {
     var retObj = this._clone(o2);
@@ -792,7 +793,11 @@ export const Util = {
   /**
    * check intersection of two client rectangles
    * @method
-   * @memberof Util.prototype
+   * @memberof Konva.Util
+   * @param {Object} r1 - { x, y, width, height } client rectangle
+   * @param {Object} r2 - { x, y, width, height } client rectangle
+   * @example
+   * const overlapping = Konva.Util.haveIntersection(shape1.getClientRect(), shape2.getClientRect());
    */
   haveIntersection(r1, r2) {
     return !(
@@ -834,10 +839,6 @@ export const Util = {
     console.error(KONVA_ERROR + str);
   },
   warn(str) {
-    /*
-     * IE9 on Windows7 64bit will throw a JS error
-     * if we don't use window.console in the conditional
-     */
     console.warn(KONVA_WARNING + str);
   },
   extend(child, parent) {
@@ -856,20 +857,7 @@ export const Util = {
     // create reference to parent
     child.super = parent;
   },
-  /**
-   * adds methods to a constructor prototype
-   * @method
-   * @memberof Util.prototype
-   * @param {Function} constructor
-   * @param {Object} methods
-   */
-  addMethods(constructor, methods) {
-    var key;
 
-    for (key in methods) {
-      constructor.prototype[key] = methods[key];
-    }
-  },
   _getControlPoints(x0, y0, x1, y1, x2, y2, t) {
     var d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2)),
       d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)),
@@ -907,9 +895,6 @@ export const Util = {
     }
 
     return allPoints;
-  },
-  _removeLastLetter(str) {
-    return str.substring(0, str.length - 1);
   },
   each(obj, func) {
     for (var key in obj) {

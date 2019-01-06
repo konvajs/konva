@@ -57,8 +57,6 @@ export class Sprite extends Shape {
   interval: any;
   constructor(config) {
     super(config);
-    this.className = 'Sprite';
-
     this.anim = new Animation(() => {
       // if we don't need to redraw layer we should return false
       var updated = this._updated;
@@ -85,7 +83,6 @@ export class Sprite extends Shape {
     this.hitFunc(this._hitFunc);
   }
 
-  ___init(config) {}
   _sceneFunc(context) {
     var anim = this.animation(),
       index = this.frameIndex(),
@@ -159,7 +156,7 @@ export class Sprite extends Shape {
   /**
    * start sprite animation
    * @method
-   * @memberof Konva.Sprite.prototype
+   * @name Konva.Sprite#start
    */
   start() {
     if (this.isRunning()) {
@@ -180,7 +177,7 @@ export class Sprite extends Shape {
   /**
    * stop sprite animation
    * @method
-   * @memberof Konva.Sprite.prototype
+   * @name Konva.Sprite#stop
    */
   stop() {
     this.anim.stop();
@@ -189,7 +186,7 @@ export class Sprite extends Shape {
   /**
    * determine if animation of sprite is running or not.  returns true or false
    * @method
-   * @memberof Konva.Sprite.prototype
+   * @name Konva.Sprite#isRunning
    * @returns {Boolean}
    */
   isRunning() {
@@ -218,14 +215,15 @@ export class Sprite extends Shape {
   frameRate: GetSet<number, this>;
 }
 
+Sprite.prototype.className = 'Sprite';
+
 // add getters setters
 Factory.addGetterSetter(Sprite, 'animation');
 
 /**
  * get/set animation key
- * @name animation
+ * @name Konva.Sprite#animation
  * @method
- * @memberof Konva.Sprite.prototype
  * @param {String} anim animation key
  * @returns {String}
  * @example
@@ -240,9 +238,8 @@ Factory.addGetterSetter(Sprite, 'animations');
 
 /**
  * get/set animations map
- * @name animations
+ * @name Konva.Sprite#animations
  * @method
- * @memberof Konva.Sprite.prototype
  * @param {Object} animations
  * @returns {Object}
  * @example
@@ -276,9 +273,8 @@ Factory.addGetterSetter(Sprite, 'frameOffsets');
 
 /**
  * get/set offsets map
- * @name offsets
+ * @name Konva.Sprite#offsets
  * @method
- * @memberof Konva.Sprite.prototype
  * @param {Object} offsets
  * @returns {Object}
  * @example
@@ -312,9 +308,8 @@ Factory.addGetterSetter(Sprite, 'image');
 
 /**
  * get/set image
- * @name image
+ * @name Konva.Sprite#image
  * @method
- * @memberof Konva.Sprite.prototype
  * @param {Image} image
  * @returns {Image}
  * @example
@@ -334,9 +329,8 @@ Factory.addGetterSetter(
 
 /**
  * set/set animation frame index
- * @name frameIndex
+ * @name Konva.Sprite#frameIndex
  * @method
- * @memberof Konva.Sprite.prototype
  * @param {Integer} frameIndex
  * @returns {Integer}
  * @example
@@ -358,9 +352,8 @@ Factory.addGetterSetter(
  * get/set frame rate in frames per second.  Increase this number to make the sprite
  *  animation run faster, and decrease the number to make the sprite animation run slower
  *  The default is 17 frames per second
- * @name frameRate
+ * @name Konva.Sprite#frameRate
  * @method
- * @memberof Konva.Sprite.prototype
  * @param {Integer} frameRate
  * @returns {Integer}
  * @example

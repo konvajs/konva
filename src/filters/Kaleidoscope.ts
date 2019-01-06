@@ -265,9 +265,8 @@ export const Kaleidoscope = function(imageData) {
 
 /**
  * get/set kaleidoscope power. Use with {@link Konva.Filters.Kaleidoscope} filter.
- * @name kaleidoscopePower
+ * @name Konva.Node#kaleidoscopePower
  * @method
- * @memberof Konva.Node.prototype
  * @param {Integer} power of kaleidoscope
  * @returns {Integer}
  */
@@ -281,9 +280,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set kaleidoscope angle. Use with {@link Konva.Filters.Kaleidoscope} filter.
- * @name kaleidoscopeAngle
+ * @name Konva.Node#kaleidoscopeAngle
  * @method
- * @memberof Konva.Node.prototype
  * @param {Integer} degrees
  * @returns {Integer}
  */

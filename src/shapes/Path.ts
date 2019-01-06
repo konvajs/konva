@@ -28,10 +28,7 @@ export class Path extends Shape {
   pathLength = 0;
 
   constructor(config) {
-    // call super constructor
     super(config);
-    this.className = 'Path';
-
     this.dataArray = Path.parsePathData(this.data());
     this.pathLength = 0;
     for (var i = 0; i < this.dataArray.length; ++i) {
@@ -44,8 +41,6 @@ export class Path extends Shape {
         this.pathLength += this.dataArray[i].pathLength;
       }
     });
-
-    this.sceneFunc(this._sceneFunc);
   }
 
   _sceneFunc(context) {
@@ -115,7 +110,6 @@ export class Path extends Shape {
       y = points[i * 2 + 1];
 
       // skip bad values
-      // TODO: prevent them from parsing function
       if (!isNaN(x)) {
         minX = Math.min(minX, x);
         maxX = Math.max(maxX, x);
@@ -135,7 +129,7 @@ export class Path extends Shape {
   /**
    * Return length of the path.
    * @method
-   * @memberof Konva.Path.prototype
+   * @name Konva.Path#getLength
    * @returns {Number} length
    * @example
    * var length = path.getLength();
@@ -146,7 +140,7 @@ export class Path extends Shape {
   /**
    * Get point on path at specific length of the path
    * @method
-   * @memberof Konva.Path.prototype
+   * @name Konva.Path#getPointAtLength
    * @param {Number} length length
    * @returns {Object} point {x,y} point
    * @example
@@ -873,25 +867,24 @@ export class Path extends Shape {
   }
 }
 
-// add getters setters
-Factory.addGetterSetter(Path, 'data');
+Path.prototype.className = 'Path';
 
 /**
- * set SVG path data string.  This method
+ * get/set SVG path data string.  This method
  *  also automatically parses the data string
  *  into a data array.  Currently supported SVG data:
  *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
- * @name setData
+ * @name Konva.Path#data
  * @method
- * @memberof Konva.Path.prototype
- * @param {String} SVG path command string
+ * @param {String} data svg path string
+ * @returns {String}
+ * @example
+ * // get data
+ * var data = path.data();
+ *
+ * // set data
+ * path.data('M200,100h100v50z');
  */
-
-/**
- * get SVG path data string
- * @name getData
- * @method
- * @memberof Konva.Path.prototype
- */
+Factory.addGetterSetter(Path, 'data');
 
 Collection.mapMethods(Path);

@@ -36,9 +36,9 @@ Factory.addGetterSetter(
 /**
  * get/set filter brightness.  The brightness is a number between -1 and 1.&nbsp; Positive values
  *  brighten the pixels and negative values darken them. Use with {@link Konva.Filters.Brighten} filter.
- * @name brightness
+ * @name Konva.Node#brightness
  * @method
- * @memberof Konva.Node.prototype
+
  * @param {Number} brightness value between -1 and 1
  * @returns {Number}
  */

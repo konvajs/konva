@@ -29,15 +29,6 @@ import { GetSet } from '../types';
  * });
  */
 export class Star extends Shape {
-  _centroid = true;
-
-  constructor(config) {
-    // call super constructor
-    super(config);
-    this.className = 'Star';
-    this.sceneFunc(this._sceneFunc);
-  }
-
   _sceneFunc(context) {
     var innerRadius = this.innerRadius(),
       outerRadius = this.outerRadius(),
@@ -56,21 +47,17 @@ export class Star extends Shape {
 
     context.fillStrokeShape(this);
   }
-  // implements Shape.prototype.getWidth()
   getWidth() {
     return this.outerRadius() * 2;
   }
-  // implements Shape.prototype.getHeight()
   getHeight() {
     return this.outerRadius() * 2;
   }
-  // implements Shape.prototype.setWidth()
   setWidth(width) {
     if (this.outerRadius() !== width / 2) {
       this.outerRadius(width / 2);
     }
   }
-  // implements Shape.prototype.setHeight()
   setHeight(height) {
     if (this.outerRadius() !== height / 2) {
       this.outerRadius(height / 2);
@@ -82,11 +69,13 @@ export class Star extends Shape {
   numPoints: GetSet<number, this>;
 }
 
+Star.prototype.className = 'Star';
+Star.prototype._centroid = true;
+
 /**
  * get/set number of points
- * @name numPoints
+ * @name Konva.Ring#numPoints
  * @method
- * @memberof Konva.Ring.prototype
  * @param {Number} numPoints
  * @returns {Number}
  * @example
@@ -100,9 +89,8 @@ Factory.addGetterSetter(Star, 'numPoints', 5, Validators.getNumberValidator());
 
 /**
  * get/set innerRadius
- * @name innerRadius
+ * @name Konva.Ring#innerRadius
  * @method
- * @memberof Konva.Ring.prototype
  * @param {Number} innerRadius
  * @returns {Number}
  * @example
@@ -121,9 +109,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set outerRadius
- * @name outerRadius
+ * @name Konva.Ring#outerRadius
  * @method
- * @memberof Konva.Ring.prototype
  * @param {Number} outerRadius
  * @returns {Number}
  * @example

@@ -136,9 +136,8 @@ export const Enhance = function(imageData) {
 
 /**
  * get/set enhance. Use with {@link Konva.Filters.Enhance} filter. -1 to 1 values
- * @name enhance
+ * @name Konva.Node#enhance
  * @method
- * @memberof Konva.Node.prototype
  * @param {Float} amount
  * @returns {Float}
  */

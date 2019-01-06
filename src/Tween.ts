@@ -438,7 +438,7 @@ export class Tween {
   /**
    * play
    * @method
-   * @memberof Konva.Tween.prototype
+   * @name Konva.Tween#play
    * @returns {Tween}
    */
   play() {
@@ -448,7 +448,7 @@ export class Tween {
   /**
    * reverse
    * @method
-   * @memberof Konva.Tween.prototype
+   * @name Konva.Tween#reverse
    * @returns {Tween}
    */
   reverse() {
@@ -458,7 +458,7 @@ export class Tween {
   /**
    * reset
    * @method
-   * @memberof Konva.Tween.prototype
+   * @name Konva.Tween#reset
    * @returns {Tween}
    */
   reset() {
@@ -468,7 +468,7 @@ export class Tween {
   /**
    * seek
    * @method
-   * @memberof Konva.Tween.prototype
+   * @name Konva.Tween#seek(
    * @param {Integer} t time in seconds between 0 and the duration
    * @returns {Tween}
    */
@@ -479,7 +479,7 @@ export class Tween {
   /**
    * pause
    * @method
-   * @memberof Konva.Tween.prototype
+   * @name Konva.Tween#pause
    * @returns {Tween}
    */
   pause() {
@@ -489,7 +489,7 @@ export class Tween {
   /**
    * finish
    * @method
-   * @memberof Konva.Tween.prototype
+   * @name Konva.Tween#finish
    * @returns {Tween}
    */
   finish() {
@@ -499,7 +499,7 @@ export class Tween {
   /**
    * destroy
    * @method
-   * @memberof Konva.Tween.prototype
+   * @name Konva.Tween#destroy
    */
   destroy() {
     var nodeId = this.node._id,
@@ -521,7 +521,6 @@ export class Tween {
  * Tween node properties. Shorter usage of {@link Konva.Tween} object.
  *
  * @method Konva.Node#to
- * @memberof Konva.Node
  * @param {Object} [params] tween params
  * @example
  *

@@ -1,12 +1,9 @@
-import { Util, Collection } from '../Util';
+import { Collection } from '../Util';
 import { Factory, Validators } from '../Factory';
-import { Node } from '../Node';
 import { Shape } from '../Shape';
 import { GetSet } from '../types';
 
-// TODO: remove offset
-// the 0.0001 offset fixes a bug in Chrome 27
-var PIx2 = Math.PI * 2 - 0.0001;
+var PIx2 = Math.PI * 2;
 /**
  * Ring constructor
  * @constructor
@@ -27,15 +24,6 @@ var PIx2 = Math.PI * 2 - 0.0001;
  * });
  */
 export class Ring extends Shape {
-  _centroid = true;
-
-  constructor(config) {
-    // call super constructor
-    super(config);
-    this.className = 'Ring';
-    this.sceneFunc(this._sceneFunc);
-  }
-
   _sceneFunc(context) {
     context.beginPath();
     context.arc(0, 0, this.innerRadius(), 0, PIx2, false);
@@ -65,11 +53,13 @@ export class Ring extends Shape {
   innerRadius: GetSet<number, this>;
 }
 
+Ring.prototype.className = 'Ring';
+Ring.prototype._centroid = true;
+
 /**
  * get/set innerRadius
- * @name innerRadius
  * @method
- * @memberof Konva.Ring.prototype
+ * @name Konva.Ring#innerRadius
  * @param {Number} innerRadius
  * @returns {Number}
  * @example
@@ -79,6 +69,7 @@ export class Ring extends Shape {
  * // set inner radius
  * ring.innerRadius(20);
  */
+
 Factory.addGetterSetter(
   Ring,
   'innerRadius',
@@ -88,9 +79,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set outerRadius
- * @name outerRadius
+ * @name Konva.Ring#outerRadius
  * @method
- * @memberof Konva.Ring.prototype
  * @param {Number} outerRadius
  * @returns {Number}
  * @example

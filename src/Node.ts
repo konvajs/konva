@@ -46,10 +46,6 @@ var ABSOLUTE_OPACITY = 'absoluteOpacity',
   ABSOLUTE_SCALE = 'absoluteScale',
   CHANGE = 'Change',
   CHILDREN = 'children',
-  DOT = '.',
-  EMPTY_STRING = '',
-  GET = 'get',
-  ID = 'id',
   KONVA = 'konva',
   LISTENING = 'listening',
   MOUSEENTER = 'mouseenter',
@@ -77,6 +73,8 @@ var ABSOLUTE_OPACITY = 'absoluteOpacity',
   ].join(SPACE),
   SCALE_CHANGE_STR = ['scaleXChange.konva', 'scaleYChange.konva'].join(SPACE);
 
+const emptyChildren = new Collection<Node>();
+
 let idCounter = 1;
 /**
  * Node constructor. Nodes are entities that can be transformed, layered,
@@ -86,7 +84,6 @@ let idCounter = 1;
  * @param {Object} config
  * @@nodeParams
  */
-
 export abstract class Node {
   _id = idCounter++;
   eventListeners = {};
@@ -97,7 +94,7 @@ export abstract class Node {
 
   _filterUpToDate = false;
   _isUnderCache = false;
-  children?: Collection<Node>;
+  children = emptyChildren;
   nodeType: string;
   className: string;
 
@@ -125,10 +122,15 @@ export abstract class Node {
     });
   }
 
-  _init(config) {
-    // TODO: remove it
-    Node.call(this, config);
+  hasChildren() {
+    return false;
   }
+
+  getChildren() {
+    return emptyChildren;
+  }
+
+  /** @lends Konva.Node.prototype */
   _clearCache(attr) {
     if (attr) {
       delete this._cache[attr];
@@ -166,7 +168,7 @@ export abstract class Node {
   /**
    * clear cached canvas
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#clearCache
    * @returns {Konva.Node}
    * @example
    * node.clearCache();
@@ -181,9 +183,9 @@ export abstract class Node {
    *  cache node to improve drawing performance, apply filters, or create more accurate
    *  hit regions. For all basic shapes size of cache canvas will be automatically detected.
    *  If you need to cache your custom `Konva.Shape` instance you have to pass shape's bounding box
-   *  properties. Look at [https://konvajs.github.io/docs/performance/Shape_Caching.html](link to demo page) for more information.
+   *  properties. Look at [https://konvajs.github.io/docs/performance/Shape_Caching.html](https://konvajs.github.io/docs/performance/Shape_Caching.html) for more information.
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#cache
    * @param {Object} [config]
    * @param {Number} [config.x]
    * @param {Number} [config.y]
@@ -328,7 +330,7 @@ export abstract class Node {
    * The rectangle position is relative to parent container.
    * The purpose of the method is similar to getBoundingClientRect API of the DOM.
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#getClientRect
    * @param {Object} config
    * @param {Boolean} [config.skipTransform] should we apply transform to node for calculating rect?
    * @param {Boolean} [config.skipShadow] should we apply shadow to the node for calculating bound box?
@@ -492,7 +494,7 @@ export abstract class Node {
    *  such as 'mousedown mouseup mousemove'. Include a namespace to bind an
    *  event by name such as 'click.foobar'.
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#on
    * @param {String} evtStr e.g. 'click', 'mousedown touchstart', 'mousedown.foo touchstart.foo'
    * @param {Function} handler The handler function is passed an event object
    * @returns {Konva.Node}
@@ -564,9 +566,9 @@ export abstract class Node {
      */
     for (n = 0; n < len; n++) {
       event = events[n];
-      parts = event.split(DOT);
+      parts = event.split('.');
       baseEvent = parts[0];
-      name = parts[1] || EMPTY_STRING;
+      name = parts[1] || '';
 
       // create events array if it doesn't exist
       if (!this.eventListeners[baseEvent]) {
@@ -589,7 +591,7 @@ export abstract class Node {
    *  such as 'click.foobar'. If you only give a name like '.foobar',
    *  all events in that namespace will be removed.
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#off
    * @param {String} evtStr e.g. 'click', 'mousedown touchstart', '.foobar'
    * @returns {Konva.Node}
    * @example
@@ -620,7 +622,7 @@ export abstract class Node {
     }
     for (n = 0; n < len; n++) {
       event = events[n];
-      parts = event.split(DOT);
+      parts = event.split('.');
       baseEvent = parts[0];
       name = parts[1];
 
@@ -670,9 +672,9 @@ export abstract class Node {
     });
   }
   /**
-   * remove self from parent, but don't destroy. You can reuse node later.
+   * remove a node from parent, but don't destroy. You can reuse the node later.
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#remove
    * @returns {Konva.Node}
    * @example
    * node.remove();
@@ -699,7 +701,7 @@ export abstract class Node {
   /**
    * remove and destroy a node. Kill it and delete forever! You should not reuse node after destroy().
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#destroy
    * @example
    * node.destroy();
    */
@@ -720,14 +722,14 @@ export abstract class Node {
   /**
    * get attr
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#getAttr
    * @param {String} attr
    * @returns {Integer|String|Object|Array}
    * @example
    * var x = node.getAttr('x');
    */
   getAttr(attr) {
-    var method = GET + Util._capitalize(attr);
+    var method = 'get' + Util._capitalize(attr);
     if (Util._isFunction(this[method])) {
       return this[method]();
     }
@@ -737,7 +739,7 @@ export abstract class Node {
   /**
    * get ancestors
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#getAncestors
    * @returns {Konva.Collection}
    * @example
    * shape.getAncestors().each(function(node) {
@@ -758,7 +760,7 @@ export abstract class Node {
   /**
    * get attrs object literal
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#getAttrs
    * @returns {Object}
    */
   getAttrs() {
@@ -767,7 +769,7 @@ export abstract class Node {
   /**
    * set multiple attrs at once using an object literal
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#setAttrs
    * @param {Object} config object containing key value pairs
    * @returns {Konva.Node}
    * @example
@@ -813,7 +815,7 @@ export abstract class Node {
    * I         | I         | T
    *
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#isListening
    * @returns {Boolean}
    */
   isListening() {
@@ -851,7 +853,7 @@ export abstract class Node {
      * I         | I         | T
 
       * @method
-      * @memberof Konva.Node.prototype
+      * @name Konva.Node#isVisible
       * @returns {Boolean}
       */
   isVisible() {
@@ -882,7 +884,7 @@ export abstract class Node {
    * determine if listening is enabled by taking into account descendants.  If self or any children
    * have _isListeningEnabled set to true, then self also has listening enabled.
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#shouldDrawHit
    * @returns {Boolean}
    */
   shouldDrawHit() {
@@ -897,9 +899,9 @@ export abstract class Node {
     );
   }
   /**
-   * show node
+   * show node. set visible = true
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#show
    * @returns {Konva.Node}
    */
   show() {
@@ -909,19 +911,13 @@ export abstract class Node {
   /**
    * hide node.  Hidden nodes are no longer detectable
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#hide
    * @returns {Konva.Node}
    */
   hide() {
     this.visible(false);
     return this;
   }
-  /**
-   * get zIndex relative to the node's siblings who share the same parent
-   * @method
-   * @memberof Konva.Node.prototype
-   * @returns {Integer}
-   */
   getZIndex() {
     return this.index || 0;
   }
@@ -929,7 +925,7 @@ export abstract class Node {
    * get absolute z-index which takes into account sibling
    *  and ancestor indices
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#getAbsoluteZIndex
    * @returns {Integer}
    */
   getAbsoluteZIndex() {
@@ -972,7 +968,7 @@ export abstract class Node {
    *  e.g. Stage depth will always be 0.  Layers will always be 1.  Groups and Shapes will always
    *  be >= 2
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#getDepth
    * @returns {Integer}
    */
   getDepth() {
@@ -996,14 +992,6 @@ export abstract class Node {
       y: this.y()
     };
   }
-  /**
-   * get absolute position relative to the top left corner of the stage container div
-   * or relative to passed node
-   * @method
-   * @param {Object} [top] optional parent node
-   * @memberof Konva.Node.prototype
-   * @returns {Object}
-   */
   getAbsolutePosition(top) {
     var absoluteMatrix = this.getAbsoluteTransform(top).getMatrix(),
       absoluteTransform = new Transform(),
@@ -1015,15 +1003,6 @@ export abstract class Node {
 
     return absoluteTransform.getTranslation();
   }
-  /**
-   * set absolute position
-   * @method
-   * @memberof Konva.Node.prototype
-   * @param {Object} pos
-   * @param {Number} pos.x
-   * @param {Number} pos.y
-   * @returns {Konva.Node}
-   */
   setAbsolutePosition(pos) {
     var origTrans = this._clearTransform(),
       it;
@@ -1091,7 +1070,7 @@ export abstract class Node {
   /**
    * move node by an amount relative to its current position
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#move
    * @param {Object} change
    * @param {Number} change.x
    * @param {Number} change.y
@@ -1149,7 +1128,7 @@ export abstract class Node {
   /**
    * rotate node by an amount in degrees relative to its current rotation
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#rotate
    * @param {Number} theta
    * @returns {Konva.Node}
    */
@@ -1160,7 +1139,7 @@ export abstract class Node {
   /**
    * move node to the top of its siblings
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#moveToTop
    * @returns {Boolean}
    */
   moveToTop() {
@@ -1177,7 +1156,7 @@ export abstract class Node {
   /**
    * move node up
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#moveUp
    * @returns {Boolean} flag is moved or not
    */
   moveUp() {
@@ -1198,7 +1177,7 @@ export abstract class Node {
   /**
    * move node down
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#moveDown
    * @returns {Boolean}
    */
   moveDown() {
@@ -1218,7 +1197,7 @@ export abstract class Node {
   /**
    * move node to the bottom of its siblings
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#moveToBottom
    * @returns {Boolean}
    */
   moveToBottom() {
@@ -1235,13 +1214,6 @@ export abstract class Node {
     }
     return false;
   }
-  /**
-   * set zIndex relative to siblings
-   * @method
-   * @memberof Konva.Node.prototype
-   * @param {Integer} zIndex
-   * @returns {Konva.Node}
-   */
   setZIndex(zIndex) {
     if (!this.parent) {
       Util.warn('Node has no parent. zIndex parameter is ignored.');
@@ -1256,7 +1228,7 @@ export abstract class Node {
   /**
    * get absolute opacity
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#getAbsoluteOpacity
    * @returns {Number}
    */
   getAbsoluteOpacity() {
@@ -1273,7 +1245,7 @@ export abstract class Node {
   /**
    * move node to another container
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#moveTo
    * @param {Container} newContainer
    * @returns {Konva.Node}
    * @example
@@ -1293,7 +1265,7 @@ export abstract class Node {
   /**
    * convert Node into an object for serialization.  Returns an object.
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#toObject
    * @returns {Object}
    */
   toObject() {
@@ -1325,8 +1297,8 @@ export abstract class Node {
   /**
    * convert Node into a JSON string.  Returns a JSON string.
    * @method
-   * @memberof Konva.Node.prototype
-   * @returns {String}}
+   * @name Konva.Node#toJSON
+   * @returns {String}
    */
   toJSON() {
     return JSON.stringify(this.toObject());
@@ -1334,7 +1306,7 @@ export abstract class Node {
   /**
    * get parent container
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#getParent
    * @returns {Konva.Node}
    */
   getParent() {
@@ -1343,7 +1315,7 @@ export abstract class Node {
   /**
    * get all ancestros (parent then parent of the parent, etc) of the node
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#findAncestors
    * @param {String} [selector] selector for search
    * @param {Boolean} [includeSelf] show we think that node is ancestro itself?
    * @param {Konva.Node} [stopNode] optional node where we need to stop searching (one of ancestors)
@@ -1377,7 +1349,7 @@ export abstract class Node {
   /**
    * get ancestor (parent or parent of the parent, etc) of the node that match passed selector
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#findAncestor
    * @param {String} [selector] selector for search
    * @param {Boolean} [includeSelf] show we think that node is ancestro itself?
    * @param {Konva.Node} [stopNode] optional node where we need to stop searching (one of ancestors)
@@ -1431,7 +1403,7 @@ export abstract class Node {
   /**
    * get layer ancestor
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#getLayer
    * @returns {Konva.Layer}
    */
   getLayer() {
@@ -1441,7 +1413,7 @@ export abstract class Node {
   /**
    * get stage ancestor
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#getStage
    * @returns {Konva.Stage}
    */
   getStage() {
@@ -1458,7 +1430,7 @@ export abstract class Node {
   /**
    * fire event
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#fire
    * @param {String} eventType event type.  can be a regular event, like click, mouseover, or mouseout, or it can be a custom event, like myCustomEvent
    * @param {Event} [evt] event object
    * @param {Boolean} [bubble] setting the value to false, or leaving it undefined, will result in the event
@@ -1495,7 +1467,7 @@ export abstract class Node {
    * get absolute transform of the node which takes into
    *  account its ancestor transforms
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#getAbsoluteTransform
    * @returns {Konva.Transform}
    */
   getAbsoluteTransform(top?) {
@@ -1529,7 +1501,7 @@ export abstract class Node {
    * get absolute scale of the node which takes into
    *  account its ancestor scales
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#getAbsoluteScale
    * @returns {Konva.Transform}
    */
   getAbsoluteScale(top?) {
@@ -1567,7 +1539,7 @@ export abstract class Node {
   /**
    * get transform of the node
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#getTransform
    * @returns {Konva.Transform}
    */
   getTransform() {
@@ -1608,7 +1580,7 @@ export abstract class Node {
    *  the node properties with an object literal, enabling you to use an existing node as a template
    *  for another node
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#clone
    * @param {Object} obj override attrs
    * @returns {Konva.Node}
    * @example
@@ -1690,7 +1662,7 @@ export abstract class Node {
   /**
    * converts node into an canvas element.
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#toCanvas
    * @param {Object} config
    * @param {Function} config.callback function executed when the composite has completed
    * @param {Number} [config.x] x position of canvas section
@@ -1709,7 +1681,7 @@ export abstract class Node {
    * specified, then "image/png" will result. For "image/jpeg", specify a quality
    * level as quality (range 0.0 - 1.0)
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#toDataURL
    * @param {Object} config
    * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
    *  "image/png" is the default
@@ -1738,7 +1710,7 @@ export abstract class Node {
    *  method is asynchronous, a callback is required.  toImage is most commonly used
    *  to cache complex drawings as an image so that they don't have to constantly be redrawn
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#toImage
    * @param {Object} config
    * @param {Function} config.callback function executed when the composite has completed
    * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
@@ -1768,6 +1740,7 @@ export abstract class Node {
       callback(img);
     });
   }
+  // TODO: create overloaded method
   setSize(size) {
     this.width(size.width);
     this.height(size.height);
@@ -1775,29 +1748,23 @@ export abstract class Node {
   }
   getSize() {
     return {
-      width: this.getWidth(),
-      height: this.getHeight()
+      width: this.width(),
+      height: this.height()
     };
-  }
-  getWidth() {
-    return this.attrs.width || 0;
-  }
-  getHeight() {
-    return this.attrs.height || 0;
   }
   /**
    * get class name, which may return Stage, Layer, Group, or shape class names like Rect, Circle, Text, etc.
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#getClassName
    * @returns {String}
    */
   getClassName() {
     return this.className || this.nodeType;
   }
   /**
-   * get the node type, which may return Stage, Layer, Group, or Node
+   * get the node type, which may return Stage, Layer, Group, or Shape
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#getTranslation
    * @returns {String}
    */
   getType() {
@@ -1857,7 +1824,7 @@ export abstract class Node {
 
     _removeId(oldId);
     _addId(this, id);
-    this._setAttr(ID, id);
+    this._setAttr('id', id);
     return this;
   }
   setName(name) {
@@ -1883,11 +1850,10 @@ export abstract class Node {
     this._setAttr(NAME, name);
     return this;
   }
-  // naming methods
   /**
    * add name to node
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#addName
    * @param {String} name
    * @returns {Konva.Node}
    * @example
@@ -1906,7 +1872,7 @@ export abstract class Node {
   /**
    * check is node has name
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#hasName
    * @param {String} name
    * @returns {Boolean}
    * @example
@@ -1921,7 +1887,7 @@ export abstract class Node {
   /**
    * remove name from node
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#removeName
    * @param {String} name
    * @returns {Konva.Node}
    * @example
@@ -1942,7 +1908,7 @@ export abstract class Node {
   /**
    * set attr
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#setAttr
    * @param {String} attr
    * @param {*} val
    * @returns {Konva.Node}
@@ -2057,7 +2023,7 @@ export abstract class Node {
   /**
    * draw both scene and hit graphs.  If the node being drawn is the stage, all of the layers will be cleared and redrawn
    * @method
-   * @memberof Konva.Node.prototype
+   * @name Konva.Node#draw
    * @returns {Konva.Node}
    */
   draw() {
@@ -2107,6 +2073,7 @@ export abstract class Node {
   opacity: GetSet<number, this>;
 
   rotation: GetSet<number, this>;
+  zIndex: GetSet<number, this>;
 
   scale: GetSet<Vector2d, this>;
   scaleX: GetSet<number, this>;
@@ -2183,14 +2150,48 @@ export abstract class Node {
   }
 }
 
-// =========================== add getters setters ===========================
+Node.prototype.nodeType = 'Node';
 
-Factory.addOverloadedGetterSetter(Node, 'position');
+/**
+ * get/set zIndex relative to the node's siblings who share the same parent
+ * @name Konva.Node#zIndex
+ * @method
+ * @param {Number} index
+ * @returns {Number}
+ * @example
+ * // get index
+ * var index = node.zIndex();
+ *
+ * // set index
+ * node.zIndex(2);
+ */
+Factory.addGetterSetter(Node, 'zIndex');
+
+/**
+ * get/set node absolute position
+ * @name Konva.Node#absolutePosition
+ * @method
+ * @param {Object} pos
+ * @param {Number} pos.x
+ * @param {Number} pos.y
+ * @returns {Object}
+ * @example
+ * // get position
+ * var position = node.absolutePosition();
+ *
+ * // set position
+ * node.absolutePosition({
+ *   x: 5
+ *   y: 10
+ * });
+ */
+Factory.addGetterSetter(Node, 'absolutePosition');
+
+Factory.addGetterSetter(Node, 'position');
 /**
  * get/set node position relative to parent
- * @name position
+ * @name Konva.Node#position
  * @method
- * @memberof Konva.Node.prototype
  * @param {Object} pos
  * @param {Number} pos.x
  * @param {Number} pos.y
@@ -2210,9 +2211,8 @@ Factory.addGetterSetter(Node, 'x', 0, Validators.getNumberValidator());
 
 /**
  * get/set x position
- * @name x
+ * @name Konva.Node#x
  * @method
- * @memberof Konva.Node.prototype
  * @param {Number} x
  * @returns {Object}
  * @example
@@ -2227,9 +2227,8 @@ Factory.addGetterSetter(Node, 'y', 0, Validators.getNumberValidator());
 
 /**
  * get/set y position
- * @name y
+ * @name Konva.Node#y
  * @method
- * @memberof Konva.Node.prototype
  * @param {Number} y
  * @returns {Integer}
  * @example
@@ -2249,9 +2248,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set globalCompositeOperation of a shape
- * @name globalCompositeOperation
+ * @name Konva.Node#globalCompositeOperation
  * @method
- * @memberof Konva.Node.prototype
  * @param {String} type
  * @returns {String}
  * @example
@@ -2267,9 +2265,8 @@ Factory.addGetterSetter(Node, 'opacity', 1, Validators.getNumberValidator());
  * get/set opacity.  Opacity values range from 0 to 1.
  *  A node with an opacity of 0 is fully transparent, and a node
  *  with an opacity of 1 is fully opaque
- * @name opacity
+ * @name Konva.Node#opacity
  * @method
- * @memberof Konva.Node.prototype
  * @param {Object} opacity
  * @returns {Number}
  * @example
@@ -2280,14 +2277,18 @@ Factory.addGetterSetter(Node, 'opacity', 1, Validators.getNumberValidator());
  * node.opacity(0.5);
  */
 
-Factory.addGetter(Node, 'name');
-Factory.addOverloadedGetterSetter(Node, 'name');
+// TODO: should default name be empty string?
+Factory.addGetterSetter(
+  Node,
+  'name',
+  undefined,
+  Validators.getStringValidator()
+);
 
 /**
  * get/set name
- * @name name
+ * @name Konva.Node#name
  * @method
- * @memberof Konva.Node.prototype
  * @param {String} name
  * @returns {String}
  * @example
@@ -2301,14 +2302,12 @@ Factory.addOverloadedGetterSetter(Node, 'name');
  * node.name('foo bar');
  */
 
-Factory.addGetter(Node, 'id');
-Factory.addOverloadedGetterSetter(Node, 'id');
+Factory.addGetterSetter(Node, 'id');
 
 /**
  * get/set id. Id is global for whole page.
- * @name id
+ * @name Konva.Node#id
  * @method
- * @memberof Konva.Node.prototype
  * @param {String} id
  * @returns {String}
  * @example
@@ -2323,9 +2322,8 @@ Factory.addGetterSetter(Node, 'rotation', 0, Validators.getNumberValidator());
 
 /**
  * get/set rotation in degrees
- * @name rotation
+ * @name Konva.Node#rotation
  * @method
- * @memberof Konva.Node.prototype
  * @param {Number} rotation
  * @returns {Number}
  * @example
@@ -2340,12 +2338,11 @@ Factory.addComponentsGetterSetter(Node, 'scale', ['x', 'y']);
 
 /**
  * get/set scale
- * @name scale
+ * @name Konva.Node#scale
  * @param {Object} scale
  * @param {Number} scale.x
  * @param {Number} scale.y
  * @method
- * @memberof Konva.Node.prototype
  * @returns {Object}
  * @example
  * // get scale
@@ -2362,10 +2359,9 @@ Factory.addGetterSetter(Node, 'scaleX', 1, Validators.getNumberValidator());
 
 /**
  * get/set scale x
- * @name scaleX
+ * @name Konva.Node#scaleX
  * @param {Number} x
  * @method
- * @memberof Konva.Node.prototype
  * @returns {Number}
  * @example
  * // get scale x
@@ -2379,10 +2375,9 @@ Factory.addGetterSetter(Node, 'scaleY', 1, Validators.getNumberValidator());
 
 /**
  * get/set scale y
- * @name scaleY
+ * @name Konva.Node#scaleY
  * @param {Number} y
  * @method
- * @memberof Konva.Node.prototype
  * @returns {Number}
  * @example
  * // get scale y
@@ -2396,12 +2391,11 @@ Factory.addComponentsGetterSetter(Node, 'skew', ['x', 'y']);
 
 /**
  * get/set skew
- * @name skew
+ * @name Konva.Node#skew
  * @param {Object} skew
  * @param {Number} skew.x
  * @param {Number} skew.y
  * @method
- * @memberof Konva.Node.prototype
  * @returns {Object}
  * @example
  * // get skew
@@ -2418,10 +2412,9 @@ Factory.addGetterSetter(Node, 'skewX', 0, Validators.getNumberValidator());
 
 /**
  * get/set skew x
- * @name skewX
+ * @name Konva.Node#skewX
  * @param {Number} x
  * @method
- * @memberof Konva.Node.prototype
  * @returns {Number}
  * @example
  * // get skew x
@@ -2435,10 +2428,9 @@ Factory.addGetterSetter(Node, 'skewY', 0, Validators.getNumberValidator());
 
 /**
  * get/set skew y
- * @name skewY
+ * @name Konva.Node#skewY
  * @param {Number} y
  * @method
- * @memberof Konva.Node.prototype
  * @returns {Number}
  * @example
  * // get skew y
@@ -2453,7 +2445,6 @@ Factory.addComponentsGetterSetter(Node, 'offset', ['x', 'y']);
 /**
  * get/set offset.  Offsets the default position and rotation point
  * @method
- * @memberof Konva.Node.prototype
  * @param {Object} offset
  * @param {Number} offset.x
  * @param {Number} offset.y
@@ -2473,9 +2464,8 @@ Factory.addGetterSetter(Node, 'offsetX', 0, Validators.getNumberValidator());
 
 /**
  * get/set offset x
- * @name offsetX
+ * @name Konva.Node#offsetX
  * @method
- * @memberof Konva.Node.prototype
  * @param {Number} x
  * @returns {Number}
  * @example
@@ -2490,9 +2480,8 @@ Factory.addGetterSetter(Node, 'offsetY', 0, Validators.getNumberValidator());
 
 /**
  * get/set offset y
- * @name offsetY
+ * @name Konva.Node#offsetY
  * @method
- * @memberof Konva.Node.prototype
  * @param {Number} y
  * @returns {Number}
  * @example
@@ -2503,14 +2492,17 @@ Factory.addGetterSetter(Node, 'offsetY', 0, Validators.getNumberValidator());
  * node.offsetY(3);
  */
 
-Factory.addSetter(Node, 'dragDistance', Validators.getNumberValidator());
-Factory.addOverloadedGetterSetter(Node, 'dragDistance');
+Factory.addGetterSetter(
+  Node,
+  'dragDistance',
+  null,
+  Validators.getNumberValidator()
+);
 
 /**
  * get/set drag distance
- * @name dragDistance
+ * @name Konva.Node#dragDistance
  * @method
- * @memberof Konva.Node.prototype
  * @param {Number} distance
  * @returns {Number}
  * @example
@@ -2524,13 +2516,11 @@ Factory.addOverloadedGetterSetter(Node, 'dragDistance');
  * Konva.dragDistance = 3;
  */
 
-Factory.addSetter(Node, 'width', Validators.getNumberValidator());
-Factory.addOverloadedGetterSetter(Node, 'width');
+Factory.addGetterSetter(Node, 'width', 0, Validators.getNumberValidator());
 /**
  * get/set width
- * @name width
+ * @name Konva.Node#width
  * @method
- * @memberof Konva.Node.prototype
  * @param {Number} width
  * @returns {Number}
  * @example
@@ -2541,13 +2531,11 @@ Factory.addOverloadedGetterSetter(Node, 'width');
  * node.width(100);
  */
 
-Factory.addSetter(Node, 'height', Validators.getNumberValidator());
-Factory.addOverloadedGetterSetter(Node, 'height');
+Factory.addGetterSetter(Node, 'height', 0, Validators.getNumberValidator());
 /**
  * get/set height
- * @name height
+ * @name Konva.Node#height
  * @method
- * @memberof Konva.Node.prototype
  * @param {Number} height
  * @returns {Number}
  * @example
@@ -2571,9 +2559,8 @@ Factory.addGetterSetter(Node, 'listening', 'inherit', function(val) {
 /**
  * get/set listenig attr.  If you need to determine if a node is listening or not
  *   by taking into account its parents, use the isListening() method
- * @name listening
+ * @name Konva.Node#listening
  * @method
- * @memberof Konva.Node.prototype
  * @param {Boolean|String} listening Can be "inherit", true, or false.  The default is "inherit".
  * @returns {Boolean|String}
  * @example
@@ -2597,9 +2584,8 @@ Factory.addGetterSetter(Node, 'listening', 'inherit', function(val) {
  * that will prevent native scrolling when you are trying to drag&drop a node
  * but sometimes you may need to enable default actions
  * in that case you can set the property to false
- * @name preventDefault
+ * @name Konva.Node#preventDefault
  * @method
- * @memberof Konva.Node.prototype
  * @param {Number} preventDefault
  * @returns {Number}
  * @example
@@ -2623,9 +2609,8 @@ Factory.addGetterSetter(Node, 'filters', null, function(val) {
 });
 /**
  * get/set filters.  Filters are applied to cached canvases
- * @name filters
+ * @name Konva.Node#filters
  * @method
- * @memberof Konva.Node.prototype
  * @param {Array} filters array of filters
  * @returns {Array}
  * @example
@@ -2659,9 +2644,8 @@ Factory.addGetterSetter(Node, 'visible', 'inherit', function(val) {
  * get/set visible attr.  Can be "inherit", true, or false.  The default is "inherit".
  *   If you need to determine if a node is visible or not
  *   by taking into account its parents, use the isVisible() method
- * @name visible
+ * @name Konva.Node#visible
  * @method
- * @memberof Konva.Node.prototype
  * @param {Boolean|String} visible
  * @returns {Boolean|String}
  * @example
@@ -2688,9 +2672,8 @@ Factory.addGetterSetter(
 /**
  * get/set transforms that are enabled.  Can be "all", "none", or "position".  The default
  *  is "all"
- * @name transformsEnabled
+ * @name Konva.Node#transformsEnabled
  * @method
- * @memberof Konva.Node.prototype
  * @param {String} enabled
  * @returns {String}
  * @example
@@ -2703,9 +2686,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set node size
- * @name size
+ * @name Konva.Node#size
  * @method
- * @memberof Konva.Node.prototype
  * @param {Object} size
  * @param {Number} size.width
  * @param {Number} size.height
@@ -2722,7 +2704,7 @@ Factory.addGetterSetter(
  *   height: 200
  * });
  */
-Factory.addOverloadedGetterSetter(Node, 'size');
+Factory.addGetterSetter(Node, 'size');
 
 Factory.backCompat(Node, {
   rotateDeg: 'rotate',

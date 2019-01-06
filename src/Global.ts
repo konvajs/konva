@@ -13,16 +13,12 @@ var PI_OVER_180 = Math.PI / 180;
 /**
  * @namespace Konva
  */
-// public
 export const version = '@@version';
 
 // private
-export const idCounter = 0;
 export const ids = {};
 export const names = {};
 export const shapes = {};
-export const listenClickTap = false;
-export const inDblClickWindow = false;
 
 export const isBrowser =
   typeof window !== 'undefined' &&
@@ -36,17 +32,8 @@ export const isUnminified = /comment/.test(
     /* comment */
   }.toString()
 );
-// configurations
 
 export const dblClickWindow = 400;
-
-/**
- * @namespace Filters
- * @memberof Konva
- */
-// namespace Filters {
-
-// }
 
 /**
  * returns whether or not drag and drop is currently active
@@ -202,28 +189,3 @@ export const document = glob.document;
 export const getGlobalKonva = () => {
   return glob.Konva;
 };
-
-// export const window = glob.window;
-
-// Konva.UA = ;
-
-//   if (glob.Konva) {
-//     console.error(
-//       'Konva instance is already exist in current eviroment. ' +
-//         'Please use only one instance.'
-//     );
-//   }
-//   glob.Konva = Konva;
-//   Konva.global = glob;
-//   Konva.window = glob;
-//   Konva.document = glob.document;
-// }
-
-// if (typeof exports === 'object') {
-//   module.exports = Konva;
-// } else if (typeof define === 'function' && define.amd) {
-//   // AMD. Register as an anonymous module.
-//   define(function() {
-//     return Konva;
-//   });
-// }

@@ -4,10 +4,6 @@ import { Node } from '../Node';
 import { Shape } from '../Shape';
 import { GetSet } from '../types';
 
-// the 0.0001 offset fixes a bug in Chrome 27
-var PIx2 = Math.PI * 2 - 0.0001,
-  CIRCLE = 'Circle';
-
 /**
  * Circle constructor
  * @constructor
@@ -27,17 +23,12 @@ var PIx2 = Math.PI * 2 - 0.0001,
  * });
  */
 export class Circle extends Shape {
+  className = 'Circle';
   _centroid = true;
-
-  constructor(config) {
-    super(config);
-    this.className = CIRCLE;
-    this.sceneFunc(this._sceneFunc);
-  }
 
   _sceneFunc(context) {
     context.beginPath();
-    context.arc(0, 0, this.radius(), 0, PIx2, false);
+    context.arc(0, 0, this.radius(), 0, Math.PI * 2, false);
     context.closePath();
     context.fillStrokeShape(this);
   }
@@ -48,15 +39,11 @@ export class Circle extends Shape {
     return this.radius() * 2;
   }
   setWidth(width) {
-    // TODO: remove this line?
-    Node.prototype['setWidth'].call(this, width);
     if (this.radius() !== width / 2) {
       this.radius(width / 2);
     }
   }
   setHeight(height) {
-    // TODO: remove this line?
-    Node.prototype['setHeight'].call(this, height);
     if (this.radius() !== height / 2) {
       this.radius(height / 2);
     }
@@ -65,15 +52,15 @@ export class Circle extends Shape {
   radius: GetSet<number, this>;
 }
 
+Circle.prototype.className = 'Circle';
+
 // add getters setters
 Factory.addGetterSetter(Circle, 'radius', 0, Validators.getNumberValidator());
-Factory.addOverloadedGetterSetter(Circle, 'radius');
 
 /**
  * get/set radius
- * @name radius
+ * @name Konva.Arrow#radius
  * @method
- * @memberof Konva.Circle.prototype
  * @param {Number} radius
  * @returns {Number}
  * @example

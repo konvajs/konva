@@ -13,10 +13,12 @@ export const Factory = {
   addGetter(constructor, attr, def?) {
     var method = GET + Util._capitalize(attr);
 
-    constructor.prototype[method] = function() {
-      var val = this.attrs[attr];
-      return val === undefined ? def : val;
-    };
+    constructor.prototype[method] =
+      constructor.prototype[method] ||
+      function() {
+        var val = this.attrs[attr];
+        return val === undefined ? def : val;
+      };
   },
   addSetter(constructor, attr, validator?, after?) {
     // if (!validator && validator !== null) {
@@ -24,19 +26,21 @@ export const Factory = {
     // }
     var method = SET + Util._capitalize(attr);
 
-    constructor.prototype[method] = function(val) {
-      if (validator && val !== undefined && val !== null) {
-        val = validator.call(this, val, attr);
-      }
+    constructor.prototype[method] =
+      constructor.prototype[method] ||
+      function(val) {
+        if (validator && val !== undefined && val !== null) {
+          val = validator.call(this, val, attr);
+        }
 
-      this._setAttr(attr, val);
+        this._setAttr(attr, val);
 
-      if (after) {
-        after.call(this);
-      }
+        if (after) {
+          after.call(this);
+        }
 
-      return this;
-    };
+        return this;
+      };
   },
   addComponentsGetterSetter(constructor, attr, components, validator?, after?) {
     var len = components.length,

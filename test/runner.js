@@ -223,6 +223,7 @@ beforeEach(function() {
 Konva.UA.mobile = false;
 
 afterEach(function() {
+  clearTimeout(Konva.stages[Konva.stages.length - 1].dblTimeout);
   //    Konva.stages.forEach(function(stage) {
   //        stage.destroy();
   //    });

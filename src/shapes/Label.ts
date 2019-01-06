@@ -21,7 +21,6 @@ var ATTR_CHANGE_LIST = [
   RIGHT = 'right',
   DOWN = 'down',
   LEFT = 'left',
-  LABEL = 'Label',
   // cached variables
   attrChangeListLen = ATTR_CHANGE_LIST.length;
 
@@ -66,7 +65,6 @@ var ATTR_CHANGE_LIST = [
 export class Label extends Group {
   constructor(config) {
     super(config);
-    this.className = LABEL;
     this.on('add.konva', function(evt) {
       this._addListeners(evt.child);
       this._sync();
@@ -76,9 +74,10 @@ export class Label extends Group {
   /**
    * get Text shape for the label.  You need to access the Text shape in order to update
    * the text properties
-   * @name getText
+   * @name Konva.Label#getText
    * @method
-   * @memberof Konva.Label.prototype
+   * @example
+   * label.getText().fill('red')
    */
   getText() {
     return this.find('Text')[0];
@@ -86,9 +85,8 @@ export class Label extends Group {
   /**
    * get Tag shape for the label.  You need to access the Tag shape in order to update
    * the pointer properties and the corner radius
-   * @name getTag
+   * @name Konva.Label#getTag
    * @method
-   * @memberof Konva.Label.prototype
    */
   getTag() {
     return this.find('Tag')[0] as Tag;
@@ -106,10 +104,10 @@ export class Label extends Group {
     }
   }
   getWidth() {
-    return this.getText().getWidth();
+    return this.getText().width();
   }
   getHeight() {
-    return this.getText().getHeight();
+    return this.getText().height();
   }
   _sync() {
     var text = this.getText(),
@@ -123,8 +121,8 @@ export class Label extends Group {
       pointerHeight;
 
     if (text && tag) {
-      width = text.getWidth();
-      height = text.getHeight();
+      width = text.width();
+      height = text.height();
       pointerDirection = tag.pointerDirection();
       pointerWidth = tag.pointerWidth();
       pointerHeight = tag.pointerHeight();
@@ -165,6 +163,8 @@ export class Label extends Group {
   }
 }
 
+Label.prototype.className = 'Label';
+
 Collection.mapMethods(Label);
 
 /**
@@ -180,15 +180,9 @@ Collection.mapMethods(Label);
  * @param {Number} [config.cornerRadius]
  */
 export class Tag extends Shape {
-  constructor(config) {
-    super(config);
-    this.className = 'Tag';
-    this.sceneFunc(this._sceneFunc);
-  }
-
   _sceneFunc(context) {
-    var width = this.getWidth(),
-      height = this.getHeight(),
+    var width = this.width(),
+      height = this.height(),
       pointerDirection = this.pointerDirection(),
       pointerWidth = this.pointerWidth(),
       pointerHeight = this.pointerHeight(),
@@ -288,8 +282,8 @@ export class Tag extends Shape {
       pointerWidth = this.pointerWidth(),
       pointerHeight = this.pointerHeight(),
       direction = this.pointerDirection(),
-      width = this.getWidth(),
-      height = this.getHeight();
+      width = this.width(),
+      height = this.height();
 
     if (direction === UP) {
       y -= pointerHeight;
@@ -318,24 +312,28 @@ export class Tag extends Shape {
   cornerRadius: GetSet<number, this>;
 }
 
+Tag.prototype.className = 'Tag';
+
+/**
+ * get/set pointer direction
+ * @name Konva.Tag#pointerDirection
+ * @method
+ * @param {String} pointerDirection can be up, right, down, left, or none.  The default is none.
+ * @returns {String}
+ * @example
+ * tag.pointerDirection('right');
+ */
 Factory.addGetterSetter(Tag, 'pointerDirection', NONE);
 
 /**
- * set pointer Direction
- * @name setPointerDirection
+ * get/set pointer width
+ * @name Konva.Tag#pointerWidth
  * @method
- * @memberof Konva.Tag.prototype
- * @param {String} pointerDirection can be up, right, down, left, or none.  The
- *  default is none
+ * @param {Number} pointerWidth
+ * @returns {Number}
+ * @example
+ * tag.pointerWidth(20);
  */
-
-/**
- * get pointer Direction
- * @name getPointerDirection
- * @method
- * @memberof Konva.Tag.prototype
- */
-
 Factory.addGetterSetter(
   Tag,
   'pointerWidth',
@@ -344,18 +342,13 @@ Factory.addGetterSetter(
 );
 
 /**
- * set pointer width
- * @name setPointerWidth
+ * get/set pointer height
  * @method
  * @memberof Konva.Tag.prototype
- * @param {Number} pointerWidth
- */
-
-/**
- * get pointer width
- * @name getPointerWidth
- * @method
- * @memberof Konva.Tag.prototype
+ * @param {Number} pointerHeight
+ * @returns {Number}
+ * @example
+ * tag.pointerHeight(20);
  */
 
 Factory.addGetterSetter(
@@ -366,18 +359,13 @@ Factory.addGetterSetter(
 );
 
 /**
- * set pointer height
- * @name setPointerHeight
+ * get/set cornerRadius
+ * @name Konva.Tag#cornerRadius
  * @method
- * @memberof Konva.Tag.prototype
- * @param {Number} pointerHeight
- */
-
-/**
- * get pointer height
- * @name getPointerHeight
- * @method
- * @memberof Konva.Tag.prototype
+ * @param {Number} cornerRadius
+ * @returns {Number}
+ * @example
+ * tag.cornerRadius(20);
  */
 
 Factory.addGetterSetter(
@@ -386,20 +374,5 @@ Factory.addGetterSetter(
   0,
   Validators.getNumberValidator()
 );
-
-/**
- * set corner radius
- * @name setCornerRadius
- * @method
- * @memberof Konva.Tag.prototype
- * @param {Number} corner radius
- */
-
-/**
- * get corner radius
- * @name getCornerRadius
- * @method
- * @memberof Konva.Tag.prototype
- */
 
 Collection.mapMethods(Tag);

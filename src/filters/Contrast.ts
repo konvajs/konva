@@ -60,9 +60,8 @@ export const Contrast = function(imageData) {
 /**
  * get/set filter contrast.  The contrast is a number between -100 and 100.
  * Use with {@link Konva.Filters.Contrast} filter.
- * @name contrast
+ * @name Konva.Node#contrast
  * @method
- * @memberof Konva.Node.prototype
  * @param {Number} contrast value between -100 and 100
  * @returns {Number}
  */

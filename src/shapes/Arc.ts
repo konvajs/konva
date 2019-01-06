@@ -31,11 +31,6 @@ import { GetSet } from '../types';
  */
 export class Arc extends Shape {
   _centroid = true;
-  constructor(config) {
-    super(config);
-    this.className = 'Arc';
-    this.sceneFunc(this._sceneFunc);
-  }
 
   _sceneFunc(context) {
     var angle = getAngle(this.angle()),
@@ -74,14 +69,15 @@ export class Arc extends Shape {
   clockwise: GetSet<boolean, this>;
 }
 
+Arc.prototype.className = 'Arc';
+
 // add getters setters
 Factory.addGetterSetter(Arc, 'innerRadius', 0, Validators.getNumberValidator());
 
 /**
  * get/set innerRadius
- * @name innerRadius
+ * @name Konva.Arc#innerRadius
  * @method
- * @memberof Konva.Arc.prototype
  * @param {Number} innerRadius
  * @returns {Number}
  * @example
@@ -96,9 +92,8 @@ Factory.addGetterSetter(Arc, 'outerRadius', 0, Validators.getNumberValidator());
 
 /**
  * get/set outerRadius
- * @name outerRadius
+ * @name Konva.Arc#outerRadius
  * @method
- * @memberof Konva.Arc.prototype
  * @param {Number} outerRadius
  * @returns {Number}
  * @example
@@ -113,9 +108,8 @@ Factory.addGetterSetter(Arc, 'angle', 0, Validators.getNumberValidator());
 
 /**
  * get/set angle in degrees
- * @name angle
+ * @name Konva.Arc#angle
  * @method
- * @memberof Konva.Arc.prototype
  * @param {Number} angle
  * @returns {Number}
  * @example
@@ -130,9 +124,8 @@ Factory.addGetterSetter(Arc, 'clockwise', false);
 
 /**
  * get/set clockwise flag
- * @name clockwise
+ * @name Konva.Arc#clockwise
  * @method
- * @memberof Konva.Arc.prototype
  * @param {Boolean} clockwise
  * @returns {Boolean}
  * @example

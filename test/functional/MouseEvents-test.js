@@ -1553,16 +1553,16 @@ suite('MouseEvents', function() {
     var group2 = new Konva.Group();
 
     /*
-         *   stage
-         *     |
-         *   layer
-         *     |
-         *  group2
-         *     |
-         *  group1
-         *     |
-         *  circle
-         */
+     *   stage
+     *     |
+     *   layer
+     *     |
+     *  group2
+     *     |
+     *  group1
+     *     |
+     *  circle
+     */
 
     group1.add(circle);
     group2.add(group1);
@@ -1951,7 +1951,7 @@ suite('MouseEvents', function() {
         assert.equal(smallDblClicks, 1, 'single dblclick on small rect');
 
         done();
-      });
+      }, 5);
     });
   });
 });

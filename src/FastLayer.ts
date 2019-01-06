@@ -1,8 +1,6 @@
 import { Util, Collection } from './Util';
 import { Container } from './Container';
-import { Node } from './Node';
 import { BaseLayer } from './BaseLayer';
-import { SceneCanvas } from './Canvas';
 
 // TODO: deprecate it
 

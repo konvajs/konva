@@ -5,10 +5,6 @@ import { Shape } from '../Shape';
 
 import { GetSet, Vector2d } from '../types';
 
-// the 0.0001 offset fixes a bug in Chrome 27
-var PIx2 = Math.PI * 2 - 0.0001,
-  ELLIPSE = 'Ellipse';
-
 /**
  * Ellipse constructor
  * @constructor
@@ -26,15 +22,6 @@ var PIx2 = Math.PI * 2 - 0.0001,
  * });
  */
 export class Ellipse extends Shape {
-  //TODO: move all centroids to prototype
-  _centroid = true;
-
-  constructor(config) {
-    super(config);
-    this.className = ELLIPSE;
-    this.sceneFunc(this._sceneFunc);
-  }
-
   _sceneFunc(context) {
     var rx = this.radiusX(),
       ry = this.radiusY();
@@ -44,7 +31,7 @@ export class Ellipse extends Shape {
     if (rx !== ry) {
       context.scale(1, ry / rx);
     }
-    context.arc(0, 0, rx, 0, PIx2, false);
+    context.arc(0, 0, rx, 0, Math.PI * 2, false);
     context.restore();
     context.closePath();
     context.fillStrokeShape(this);
@@ -71,14 +58,16 @@ export class Ellipse extends Shape {
   radiusY: GetSet<number, this>;
 }
 
+Ellipse.prototype.className = 'Ellipse';
+Ellipse.prototype._centroid = true;
+
 // add getters setters
 Factory.addComponentsGetterSetter(Ellipse, 'radius', ['x', 'y']);
 
 /**
  * get/set radius
- * @name radius
+ * @name Konva.Ellipse#radius
  * @method
- * @memberof Konva.Ellipse.prototype
  * @param {Object} radius
  * @param {Number} radius.x
  * @param {Number} radius.y
@@ -97,9 +86,8 @@ Factory.addComponentsGetterSetter(Ellipse, 'radius', ['x', 'y']);
 Factory.addGetterSetter(Ellipse, 'radiusX', 0, Validators.getNumberValidator());
 /**
  * get/set radius x
- * @name radiusX
+ * @name Konva.Ellipse#radiusX
  * @method
- * @memberof Konva.Ellipse.prototype
  * @param {Number} x
  * @returns {Number}
  * @example
@@ -113,9 +101,8 @@ Factory.addGetterSetter(Ellipse, 'radiusX', 0, Validators.getNumberValidator());
 Factory.addGetterSetter(Ellipse, 'radiusY', 0, Validators.getNumberValidator());
 /**
  * get/set radius y
- * @name radiusY
+ * @name Konva.Ellipse#radiusY
  * @method
- * @memberof Konva.Ellipse.prototype
  * @param {Number} y
  * @returns {Number}
  * @example

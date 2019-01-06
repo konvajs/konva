@@ -1,12 +1,10 @@
-import { Util, Collection } from '../Util';
+import { Collection } from '../Util';
 import { Factory, Validators } from '../Factory';
-import { Node } from '../Node';
 import { Shape } from '../Shape';
-
 import { GetSet } from '../types';
 
 /**
- * RegularPolygon constructor.&nbsp; Examples include triangles, squares, pentagons, hexagons, etc.
+ * RegularPolygon constructor. Examples include triangles, squares, pentagons, hexagons, etc.
  * @constructor
  * @memberof Konva
  * @augments Konva.Shape
@@ -27,15 +25,6 @@ import { GetSet } from '../types';
  * });
  */
 export class RegularPolygon extends Shape {
-  _centroid = true;
-
-  constructor(config) {
-    // call super constructor
-    super(config);
-    this.className = 'RegularPolygon';
-    this.sceneFunc(this._sceneFunc);
-  }
-
   _sceneFunc(context) {
     var sides = this.sides(),
       radius = this.radius(),
@@ -57,21 +46,15 @@ export class RegularPolygon extends Shape {
   getWidth() {
     return this.radius() * 2;
   }
-  // implements Shape.prototype.getHeight()
   getHeight() {
     return this.radius() * 2;
   }
-  // implements Shape.prototype.setWidth()
   setWidth(width) {
-    // TODO: remove this line
-    Node.prototype['setWidth'].call(this, width);
     if (this.radius() !== width / 2) {
       this.radius(width / 2);
     }
   }
-  // implements Shape.prototype.setHeight()
   setHeight(height) {
-    Node.prototype['setHeight'].call(this, height);
     if (this.radius() !== height / 2) {
       this.radius(height / 2);
     }
@@ -81,11 +64,13 @@ export class RegularPolygon extends Shape {
   sides: GetSet<number, this>;
 }
 
+RegularPolygon.prototype.className = 'RegularPolygon';
+RegularPolygon.prototype._centroid = true;
+
 /**
  * get/set radius
- * @name radius
  * @method
- * @memberof Konva.RegularPolygon.prototype
+ * @name Konva.RegularPolygon#radius
  * @param {Number} radius
  * @returns {Number}
  * @example
@@ -104,9 +89,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set sides
- * @name sides
  * @method
- * @memberof Konva.RegularPolygon.prototype
+ * @name Konva.RegularPolygon#sides
  * @param {Number} sides
  * @returns {Number}
  * @example

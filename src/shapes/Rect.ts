@@ -23,17 +23,10 @@ import { GetSet } from '../types';
  * });
  */
 export class Rect extends Shape {
-  constructor(config) {
-    super(config);
-    // TODO: all classnames to prototype
-    this.className = 'Rect';
-    this.sceneFunc(this._sceneFunc);
-  }
-
   _sceneFunc(context) {
     var cornerRadius = this.cornerRadius(),
-      width = this.getWidth(),
-      height = this.getHeight();
+      width = this.width(),
+      height = this.height();
 
     context.beginPath();
 
@@ -88,11 +81,12 @@ export class Rect extends Shape {
   cornerRadius: GetSet<number, this>;
 }
 
+Rect.prototype.className = 'Rect';
+
 /**
  * get/set corner radius
- * @name cornerRadius
  * @method
- * @memberof Konva.Rect.prototype
+ * @name Konva.Rect#cornerRadius
  * @param {Number} cornerRadius
  * @returns {Number}
  * @example

@@ -13,6 +13,7 @@ package-lock.json
 lib
 src_old
 *.zip
+*_cache
 
 # Numerous always-ignore extensions
 *.diff

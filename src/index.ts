@@ -4,6 +4,8 @@ const Konva: any = KonvaInternals;
 
 Konva.enableTrace = false;
 Konva.traceArrMax = 100;
+Konva.listenClickTap = false;
+Konva.inDblClickWindow = false;
 
 /**
  * Global pixel ratio configuration. KonvaJS automatically detect pixel ratio of current device.

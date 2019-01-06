@@ -27,19 +27,16 @@ import { GetSet } from '../types';
  *   tension: 1
  * });
  */
+
 export class Line extends Shape {
   constructor(config) {
     super(config);
-    this.className = 'Line';
-
     this.on(
       'pointsChange.konva tensionChange.konva closedChange.konva bezierChange.konva',
       function() {
         this._clearCache('tensionPoints');
       }
     );
-
-    this.sceneFunc(this._sceneFunc);
   }
 
   _sceneFunc(context) {
@@ -209,14 +206,15 @@ export class Line extends Shape {
   points: GetSet<number[], this>;
 }
 
+Line.prototype.className = 'Line';
+
 // add getters setters
 Factory.addGetterSetter(Line, 'closed', false);
 
 /**
  * get/set closed flag.  The default is false
- * @name closed
+ * @name Konva.Line#closed
  * @method
- * @memberof Konva.Line.prototype
  * @param {Boolean} closed
  * @returns {Boolean}
  * @example
@@ -234,9 +232,8 @@ Factory.addGetterSetter(Line, 'bezier', false);
 
 /**
  * get/set bezier flag.  The default is false
- * @name bezier
+ * @name Konva.Line#bezier
  * @method
- * @memberof Konva.Line.prototype
  * @param {Boolean} bezier
  * @returns {Boolean}
  * @example
@@ -251,11 +248,9 @@ Factory.addGetterSetter(Line, 'tension', 0, Validators.getNumberValidator());
 
 /**
  * get/set tension
- * @name tension
+ * @name Konva.Line#tension
  * @method
- * @memberof Konva.Line.prototype
- * @param {Number} Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
- *   The default is 0
+ * @param {Number} tension Higher values will result in a more curvy line.  A value of 0 will result in no interpolation. The default is 0
  * @returns {Number}
  * @example
  * // get tension
@@ -272,10 +267,9 @@ Factory.addGetterSetter(
   Validators.getNumberArrayValidator()
 );
 /**
- * get/set points array
- * @name points
+ * get/set points array. Points is a flat array [x1, y1, x2, y2]. It is flat for performance reasons.
+ * @name Konva.Line#points
  * @method
- * @memberof Konva.Line.prototype
  * @param {Array} points
  * @returns {Array}
  * @example

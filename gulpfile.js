@@ -90,7 +90,7 @@ var tsProject = ts.createProject('tsconfig.json');
 
 function build() {
   return gulp
-    .src(['./dist/konva.js'])
+    .src(['./konva.js'])
     .pipe(replace('@@shapeParams', ShapeParams))
     .pipe(replace('@@nodeParams', NodeParams))
     .pipe(replace('@@containerParams', ContainerParams))

@@ -110,6 +110,7 @@ export class Stage extends Container {
     this._buildDOM();
     this._bindContentEvents();
     stages.push(this);
+    this.on('widthChange heightChange', this._buildDOM);
   }
 
   _validateAdd(child) {
@@ -120,7 +121,7 @@ export class Stage extends Container {
   /**
    * set container dom element which contains the stage wrapper div element
    * @method
-   * @memberof Konva.Stage.prototype
+   * @name Konva.Stage#setContainer
    * @param {DomElement} container can pass in a dom element or id string
    */
   setContainer(container) {
@@ -148,50 +149,11 @@ export class Stage extends Container {
   shouldDrawHit() {
     return true;
   }
-  draw() {
-    Node.prototype.draw.call(this);
-    return this;
-  }
-  /**
-   * draw layer scene graphs
-   * @name draw
-   * @method
-   * @memberof Konva.Stage.prototype
-   */
 
-  /**
-   * draw layer hit graphs
-   * @name drawHit
-   * @method
-   * @memberof Konva.Stage.prototype
-   */
-
-  /**
-   * set height
-   * @method
-   * @memberof Konva.Stage.prototype
-   * @param {Number} height
-   */
-  setHeight(height) {
-    Node.prototype['setHeight'].call(this, height);
-    this._resizeDOM();
-    return this;
-  }
-  /**
-   * set width
-   * @method
-   * @memberof Konva.Stage.prototype
-   * @param {Number} width
-   */
-  setWidth(width) {
-    Node.prototype['setWidth'].call(this, width);
-    this._resizeDOM();
-    return this;
-  }
   /**
    * clear all layers
    * @method
-   * @memberof Konva.Stage.prototype
+   * @name Konva.Stage#clear
    */
   clear() {
     var layers = this.children,
@@ -210,15 +172,11 @@ export class Stage extends Container {
     obj.container = document.createElement(DIV);
     return Container.prototype.clone.call(this, obj);
   }
-  /**
-   * destroy stage
-   * @method
-   * @memberof Konva.Stage.prototype
-   */
-  destroy() {
-    var content = this.content;
-    Container.prototype.destroy.call(this);
 
+  destroy() {
+    super.destroy();
+
+    var content = this.content;
     if (content && Util._isInDocument(content)) {
       this.container().removeChild(content);
     }
@@ -231,21 +189,16 @@ export class Stage extends Container {
   /**
    * get pointer position which can be a touch position or mouse position
    * @method
-   * @memberof Konva.Stage.prototype
+   * @name Konva.Stage#getPointerPosition
    * @returns {Object}
    */
   getPointerPosition() {
+    // TODO: warn if it is undefined
     return this.pointerPos;
   }
   getStage() {
     return this;
   }
-  /**
-   * get stage content div element which has the
-   *  the class name "konvajs-content"
-   * @method
-   * @memberof Konva.Stage.prototype
-   */
   getContent() {
     return this.content;
   }
@@ -255,8 +208,8 @@ export class Stage extends Container {
     var x = config.x || 0,
       y = config.y || 0,
       canvas = new SceneCanvas({
-        width: config.width || this.getWidth(),
-        height: config.height || this.getHeight(),
+        width: config.width || this.width(),
+        height: config.height || this.height(),
         pixelRatio: config.pixelRatio || 1
       }),
       _context = canvas.getContext()._context,
@@ -281,37 +234,12 @@ export class Stage extends Container {
     });
     return canvas;
   }
-  /**
-   * converts stage into an image.
-   * @method
-   * @memberof Konva.Stage.prototype
-   * @param {Object} config
-   * @param {Function} config.callback function executed when the composite has completed
-   * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
-   *  "image/png" is the default
-   * @param {Number} [config.x] x position of canvas section
-   * @param {Number} [config.y] y position of canvas section
-   * @param {Number} [config.width] width of canvas section
-   * @param {Number} [config.height] height of canvas section
-   * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
-   *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
-   *  is very high quality
-   */
-  toImage(config) {
-    var cb = config.callback;
 
-    config.callback = function(dataUrl) {
-      Util._getImage(dataUrl, function(img) {
-        cb(img);
-      });
-    };
-    this.toDataURL(config);
-  }
   /**
    * get visible intersection shape. This is the preferred
    *  method for determining if a point intersects a shape or not
    * @method
-   * @memberof Konva.Stage.prototype
+   * @name Konva.Stage#getIntersection
    * @param {Object} pos
    * @param {Number} pos.x
    * @param {Number} pos.y
@@ -340,8 +268,8 @@ export class Stage extends Container {
   }
   _resizeDOM() {
     if (this.content) {
-      var width = this.getWidth(),
-        height = this.getHeight(),
+      var width = this.width(),
+        height = this.height(),
         layers = this.getChildren(),
         len = layers.length,
         n,
@@ -362,14 +290,6 @@ export class Stage extends Container {
       }
     }
   }
-  /**
-   * add layer or layers to stage
-   * @method
-   * @memberof Konva.Stage.prototype
-   * @param {...Konva.Layer} layer
-   * @example
-   * stage.add(layer1, layer2, layer3);
-   */
   add(layer) {
     if (arguments.length > 1) {
       for (var i = 0; i < arguments.length; i++) {
@@ -377,7 +297,7 @@ export class Stage extends Container {
       }
       return this;
     }
-    Container.prototype.add.call(this, layer);
+    super.add(layer);
     layer._setCanvasSize(this.width(), this.height());
 
     // draw layer and append canvas to container
@@ -399,7 +319,7 @@ export class Stage extends Container {
   /**
    * returns a {@link Konva.Collection} of layers
    * @method
-   * @memberof Konva.Stage.prototype
+   * @name Konva.Stage#getLayers
    */
   getLayers() {
     return this.getChildren();
@@ -827,16 +747,13 @@ export class Stage extends Container {
   batchDraw: () => void;
 }
 
-// TODO: can we just use second function?
-// add getters and setters
-Factory.addGetter(Stage, 'container');
-Factory.addOverloadedGetterSetter(Stage, 'container');
+// TODO: test for replacing container
+Factory.addGetterSetter(Stage, 'container');
 
 /**
- * get container DOM element
- * @name container
+ * get/set container DOM element
  * @method
- * @memberof Konva.Stage.prototype
+ * @name Konva.Stage#container
  * @returns {DomElement} container
  * @example
  * // get container

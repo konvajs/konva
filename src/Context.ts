@@ -64,13 +64,26 @@ var CONTEXT_PROPERTIES = [
   'globalCompositeOperation'
 ];
 
-// TODO: document all methods
-
 /**
- * Canvas Context constructor
+ * Konva wrapper around native 2d canvas context. It has almost the same API of 2d context with some additional functions.
+ * With core Konva shapes you don't need to use this object. But you have to use it if you want to create
+ * a custom shape or a custom hit regions.
  * @constructor
- * @abstract
  * @memberof Konva
+ * @example
+ * const rect = new Konva.Shape({
+ *    fill: 'red',
+ *    width: 100,
+ *    height: 100,
+ *    sceneFunc: (ctx, shape) => {
+ *      // ctx - is context wrapper
+ *      // shape - is instance of Konva.Shape, so it equals to "rect" variable
+ *      ctx.rect(0, 0, shape.getAttr('width'), shape.getAttr('height'));
+ *
+ *      // automatically fill shape from props and draw hit region
+ *      ctx.fillStrokeShape(shape);
+ *    }
+ * })
  */
 export class Context {
   canvas: Canvas;
@@ -93,7 +106,7 @@ export class Context {
   /**
    * fill shape
    * @method
-   * @memberof Konva.Context.prototype
+   * @name Konva.Context#fillShape
    * @param {Konva.Shape} shape
    */
   fillShape(shape) {
@@ -108,7 +121,7 @@ export class Context {
   /**
    * stroke shape
    * @method
-   * @memberof Konva.Context.prototype
+   * @name Konva.Context#strokeShape
    * @param {Konva.Shape} shape
    */
   strokeShape(shape) {
@@ -124,7 +137,7 @@ export class Context {
   /**
    * fill then stroke
    * @method
-   * @memberof Konva.Context.prototype
+   * @name Konva.Context#fillStrokeShape
    * @param {Konva.Shape} shape
    */
   fillStrokeShape(shape) {
@@ -136,15 +149,7 @@ export class Context {
       this._stroke(shape);
     }
   }
-  /**
-   * get context trace if trace is enabled
-   * @method
-   * @memberof Konva.Context.prototype
-   * @param {Boolean} relaxed if false, return strict context trace, which includes method names, method parameters
-   *  properties, and property values.  If true, return relaxed context trace, which only returns method names and
-   *  properites.
-   * @returns {String}
-   */
+
   getTrace(relaxed) {
     var traceArr = this.traceArr,
       len = traceArr.length,
@@ -184,11 +189,7 @@ export class Context {
 
     return str;
   }
-  /**
-   * clear trace if trace is enabled
-   * @method
-   * @memberof Konva.Context.prototype
-   */
+
   clearTrace() {
     this.traceArr = [];
   }
@@ -206,16 +207,16 @@ export class Context {
   /**
    * reset canvas context transform
    * @method
-   * @memberof Konva.Context.prototype
+   * @name Konva.Context#reset
    */
   reset() {
     var pixelRatio = this.getCanvas().getPixelRatio();
     this.setTransform(1 * pixelRatio, 0, 0, 1 * pixelRatio, 0, 0);
   }
   /**
-   * get canvas
+   * get canvas wrapper
    * @method
-   * @memberof Konva.Context.prototype
+   * @name Konva.Context#getCanvas
    * @returns {Konva.Canvas}
    */
   getCanvas() {
@@ -224,7 +225,7 @@ export class Context {
   /**
    * clear canvas
    * @method
-   * @memberof Konva.Context.prototype
+   * @name Konva.Context#clear
    * @param {Object} [bounds]
    * @param {Number} [bounds.x]
    * @param {Number} [bounds.y]
@@ -268,6 +269,7 @@ export class Context {
       this.setAttr('lineJoin', lineJoin);
     }
   }
+
   setAttr(attr, val) {
     this._context[attr] = val;
   }
@@ -465,10 +467,6 @@ CONTEXT_PROPERTIES.forEach(function(prop) {
 });
 
 export class SceneContext extends Context {
-  constructor(canvas) {
-    super(canvas);
-  }
-
   _fillColor(shape) {
     var fill = shape.fill();
 
@@ -664,10 +662,6 @@ export class SceneContext extends Context {
 }
 
 export class HitContext extends Context {
-  constructor(canvas) {
-    super(canvas);
-  }
-
   _fill(shape) {
     this.save();
     this.setAttr('fillStyle', shape.colorKey);

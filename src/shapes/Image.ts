@@ -32,13 +32,6 @@ var IMAGE = 'Image';
  * imageObj.src = '/path/to/image.jpg'
  */
 export class Image extends Shape {
-  constructor(config) {
-    super(config);
-    this.className = IMAGE;
-    this.sceneFunc(this._sceneFunc);
-    this.hitFunc(this._hitFunc);
-  }
-
   _useBufferCanvas() {
     return (
       (this.hasShadow() || this.getAbsoluteOpacity() !== 1) &&
@@ -47,8 +40,8 @@ export class Image extends Shape {
     );
   }
   _sceneFunc(context) {
-    var width = this.getWidth(),
-      height = this.getHeight(),
+    var width = this.width(),
+      height = this.height(),
       image = this.image(),
       cropWidth,
       cropHeight,
@@ -86,8 +79,8 @@ export class Image extends Shape {
     }
   }
   _hitFunc(context) {
-    var width = this.getWidth(),
-      height = this.getHeight();
+    var width = this.width(),
+      height = this.height();
 
     context.beginPath();
     context.rect(0, 0, width, height);
@@ -136,31 +129,28 @@ export class Image extends Shape {
   cropHeight: GetSet<number, this>;
 }
 
-// add getters setters
+Image.prototype.className = 'Image';
+
+/**
+ * get/set image source. It can be image, canvas or video element
+ * @name Konva.Image#image
+ * @method
+ * @param {Number} y
+ * @returns {Number}
+ * @example
+ * // get value
+ * var image = shape.image();
+ *
+ * // set value
+ * shape.image(img);
+ */
 Factory.addGetterSetter(Image, 'image');
-
-/**
- * set image
- * @name setImage
- * @method
- * @memberof Konva.Image.prototype
- * @param {Image} image
- */
-
-/**
- * get image
- * @name getImage
- * @method
- * @memberof Konva.Image.prototype
- * @returns {Image}
- */
 
 Factory.addComponentsGetterSetter(Image, 'crop', ['x', 'y', 'width', 'height']);
 /**
  * get/set crop
  * @method
- * @name crop
- * @memberof Konva.Image.prototype
+ * @name Konva.Image#crop
  * @param {Object} crop
  * @param {Number} crop.x
  * @param {Number} crop.y
@@ -184,8 +174,7 @@ Factory.addGetterSetter(Image, 'cropX', 0, Validators.getNumberValidator());
 /**
  * get/set crop x
  * @method
- * @name cropX
- * @memberof Konva.Image.prototype
+ * @name Konva.Image#cropX
  * @param {Number} x
  * @returns {Number}
  * @example
@@ -199,9 +188,8 @@ Factory.addGetterSetter(Image, 'cropX', 0, Validators.getNumberValidator());
 Factory.addGetterSetter(Image, 'cropY', 0, Validators.getNumberValidator());
 /**
  * get/set crop y
- * @name cropY
+ * @name Konva.Image#cropY
  * @method
- * @memberof Konva.Image.prototype
  * @param {Number} y
  * @returns {Number}
  * @example
@@ -215,9 +203,8 @@ Factory.addGetterSetter(Image, 'cropY', 0, Validators.getNumberValidator());
 Factory.addGetterSetter(Image, 'cropWidth', 0, Validators.getNumberValidator());
 /**
  * get/set crop width
- * @name cropWidth
+ * @name Konva.Image#cropWidth
  * @method
- * @memberof Konva.Image.prototype
  * @param {Number} width
  * @returns {Number}
  * @example
@@ -236,9 +223,8 @@ Factory.addGetterSetter(
 );
 /**
  * get/set crop height
- * @name cropHeight
+ * @name Konva.Image#cropHeight
  * @method
- * @memberof Konva.Image.prototype
  * @param {Number} height
  * @returns {Number}
  * @example

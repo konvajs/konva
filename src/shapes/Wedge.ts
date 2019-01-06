@@ -28,15 +28,6 @@ import { GetSet } from '../types';
  * });
  */
 export class Wedge extends Shape {
-  _centroid = true;
-
-  constructor(config) {
-    // call super constructor
-    super(config);
-    this.className = 'Wedge';
-    this.sceneFunc(this._sceneFunc);
-  }
-
   _sceneFunc(context) {
     context.beginPath();
     context.arc(
@@ -73,14 +64,13 @@ export class Wedge extends Shape {
   clockwise: GetSet<boolean, this>;
 }
 
-// add getters setters
-Factory.addGetterSetter(Wedge, 'radius', 0, Validators.getNumberValidator());
+Wedge.prototype.className = 'Wedge';
+Wedge.prototype._centroid = true;
 
 /**
  * get/set radius
- * @name radius
+ * @name Konva.Wedge#radius
  * @method
- * @memberof Konva.Wedge.prototype
  * @param {Number} radius
  * @returns {Number}
  * @example
@@ -90,14 +80,12 @@ Factory.addGetterSetter(Wedge, 'radius', 0, Validators.getNumberValidator());
  * // set radius
  * wedge.radius(10);
  */
-
-Factory.addGetterSetter(Wedge, 'angle', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Wedge, 'radius', 0, Validators.getNumberValidator());
 
 /**
  * get/set angle in degrees
- * @name angle
+ * @name Konva.Wedge#angle
  * @method
- * @memberof Konva.Wedge.prototype
  * @param {Number} angle
  * @returns {Number}
  * @example
@@ -107,14 +95,12 @@ Factory.addGetterSetter(Wedge, 'angle', 0, Validators.getNumberValidator());
  * // set angle
  * wedge.angle(20);
  */
-
-Factory.addGetterSetter(Wedge, 'clockwise', false);
+Factory.addGetterSetter(Wedge, 'angle', 0, Validators.getNumberValidator());
 
 /**
  * get/set clockwise flag
- * @name clockwise
+ * @name Konva.Wedge#clockwise
  * @method
- * @memberof Konva.Wedge.prototype
  * @param {Number} clockwise
  * @returns {Number}
  * @example
@@ -127,6 +113,7 @@ Factory.addGetterSetter(Wedge, 'clockwise', false);
  * // draw wedge clockwise
  * wedge.clockwise(true);
  */
+Factory.addGetterSetter(Wedge, 'clockwise', false);
 
 Factory.backCompat(Wedge, {
   angleDeg: 'angle',

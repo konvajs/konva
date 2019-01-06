@@ -57,6 +57,10 @@ import { Sepia } from './filters/Sepia';
 import { Solarize } from './filters/Solarize';
 import { Threshold } from './filters/Threshold';
 
+/**
+ * @namespace Filters
+ * @memberof Konva
+ */
 export const Filters = {
   Blur,
   Brighten,

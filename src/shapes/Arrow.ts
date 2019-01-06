@@ -27,13 +27,8 @@ import { GetSet } from '../types';
  * });
  */
 export class Arrow extends Line {
-  constructor(config) {
-    super(config);
-    this.className = 'Arrow';
-  }
-
   _sceneFunc(ctx) {
-    Line.prototype._sceneFunc.apply(this, arguments);
+    super._sceneFunc(ctx);
     var PI2 = Math.PI * 2;
     var points = this.points();
 
@@ -111,19 +106,19 @@ export class Arrow extends Line {
   pointerAtBeginning: GetSet<boolean, this>;
 }
 
+Arrow.prototype.className = 'Arrow';
+
 /**
  * get/set pointerLength
- * @name pointerLength
+ * @name Konva.Arrow#pointerLength
  * @method
- * @memberof Konva.Arrow.prototype
- * @param {Number} Length of pointer of arrow.
- *   The default is 10.
+ * @param {Number} Length of pointer of arrow. The default is 10.
  * @returns {Number}
  * @example
- * // get tension
+ * // get length
  * var pointerLength = line.pointerLength();
  *
- * // set tension
+ * // set length
  * line.pointerLength(15);
  */
 
@@ -135,17 +130,16 @@ Factory.addGetterSetter(
 );
 /**
  * get/set pointerWidth
- * @name pointerWidth
+ * @name Konva.Arrow#pointerWidth
  * @method
- * @memberof Konva.Arrow.prototype
  * @param {Number} Width of pointer of arrow.
  *   The default is 10.
  * @returns {Number}
  * @example
- * // get tension
+ * // get width
  * var pointerWidth = line.pointerWidth();
  *
- * // set tension
+ * // set width
  * line.pointerWidth(15);
  */
 
@@ -157,17 +151,15 @@ Factory.addGetterSetter(
 );
 /**
  * get/set pointerAtBeginning
- * @name pointerAtBeginning
+ * @name Konva.Arrow#pointerAtBeginning
  * @method
- * @memberof Konva.Arrow.prototype
- * @param {Number} Should pointer displayed at beginning of arrow.
- *   The default is false.
+ * @param {Number} Should pointer displayed at beginning of arrow. The default is false.
  * @returns {Boolean}
  * @example
- * // get tension
+ * // get value
  * var pointerAtBeginning = line.pointerAtBeginning();
  *
- * // set tension
+ * // set value
  * line.pointerAtBeginning(true);
  */
 

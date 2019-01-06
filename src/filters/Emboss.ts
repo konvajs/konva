@@ -148,9 +148,8 @@ Factory.addGetterSetter(
 );
 /**
  * get/set emboss strength. Use with {@link Konva.Filters.Emboss} filter.
- * @name embossStrength
+ * @name Konva.Node#embossStrength
  * @method
- * @memberof Konva.Node.prototype
  * @param {Number} level between 0 and 1.  Default is 0.5
  * @returns {Number}
  */
@@ -164,9 +163,8 @@ Factory.addGetterSetter(
 );
 /**
  * get/set emboss white level. Use with {@link Konva.Filters.Emboss} filter.
- * @name embossWhiteLevel
+ * @name Konva.Node#embossWhiteLevel
  * @method
- * @memberof Konva.Node.prototype
  * @param {Number} embossWhiteLevel between 0 and 1.  Default is 0.5
  * @returns {Number}
  */
@@ -180,9 +178,8 @@ Factory.addGetterSetter(
 );
 /**
  * get/set emboss direction. Use with {@link Konva.Filters.Emboss} filter.
- * @name embossDirection
+ * @name Konva.Node#embossDirection
  * @method
- * @memberof Konva.Node.prototype
  * @param {String} embossDirection can be top-left, top, top-right, right, bottom-right, bottom, bottom-left or left
  *   The default is top-left
  * @returns {String}
@@ -197,9 +194,8 @@ Factory.addGetterSetter(
 );
 /**
  * get/set emboss blend. Use with {@link Konva.Filters.Emboss} filter.
- * @name embossBlend
+ * @name Konva.Node#embossBlend
  * @method
- * @memberof Konva.Node.prototype
  * @param {Boolean} embossBlend
  * @returns {Boolean}
  */

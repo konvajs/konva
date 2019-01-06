@@ -36,9 +36,9 @@ export abstract class BaseLayer extends Container {
     return c.createPNGStream();
   }
   /**
-   * get layer canvas
+   * get layer canvas wrapper
    * @method
-   * @memberof Konva.BaseLayer.prototype
+   * @name Konva.BaseLayer#getCanvas
    */
   getCanvas() {
     return this.canvas;
@@ -46,7 +46,7 @@ export abstract class BaseLayer extends Container {
   /**
    * get layer hit canvas
    * @method
-   * @memberof Konva.BaseLayer.prototype
+   * @name Konva.BaseLayer#getHitCanvas
    */
   getHitCanvas() {
     return this.hitCanvas;
@@ -54,7 +54,7 @@ export abstract class BaseLayer extends Container {
   /**
    * get layer canvas context
    * @method
-   * @memberof Konva.BaseLayer.prototype
+   * @name Konva.BaseLayer#getContext
    */
   getContext() {
     return this.getCanvas().getContext();
@@ -62,7 +62,7 @@ export abstract class BaseLayer extends Container {
   /**
    * clear scene and hit canvas contexts tied to the layer
    * @method
-   * @memberof Konva.BaseLayer.prototype
+   * @name Konva.BaseLayer#clear
    * @param {Object} [bounds]
    * @param {Number} [bounds.x]
    * @param {Number} [bounds.y]
@@ -83,7 +83,7 @@ export abstract class BaseLayer extends Container {
   }
   // extend Node.prototype.setZIndex
   setZIndex(index) {
-    Node.prototype.setZIndex.call(this, index);
+    super.setZIndex(index);
     var stage = this.getStage();
     if (stage) {
       stage.content.removeChild(this.getCanvas()._canvas);
@@ -202,16 +202,15 @@ export abstract class BaseLayer extends Container {
   /**
    * get/set width of layer.getter return width of stage. setter doing nothing.
    * if you want change width use `stage.width(value);`
-   * @name width
+   * @name Konva.BaseLayer#width
    * @method
-   * @memberof Konva.BaseLayer.prototype
    * @returns {Number}
    * @example
    * var width = layer.width();
    */
   getWidth() {
     if (this.parent) {
-      return this.parent.getWidth();
+      return this.parent.width();
     }
   }
   setWidth() {
@@ -222,16 +221,15 @@ export abstract class BaseLayer extends Container {
   /**
    * get/set height of layer.getter return height of stage. setter doing nothing.
    * if you want change height use `stage.height(value);`
-   * @name height
+   * @name Konva.BaseLayer#height
    * @method
-   * @memberof Konva.BaseLayer.prototype
    * @returns {Number}
    * @example
    * var height = layer.height();
    */
   getHeight() {
     if (this.parent) {
-      return this.parent.getHeight();
+      return this.parent.height();
     }
   }
   setHeight() {
@@ -254,14 +252,11 @@ export abstract class BaseLayer extends Container {
   batchDraw: () => void;
 }
 
-// add getters and setters
-Factory.addGetterSetter(BaseLayer, 'clearBeforeDraw', true);
 /**
  * get/set clearBeforeDraw flag which determines if the layer is cleared or not
  *  before drawing
- * @name clearBeforeDraw
+ * @name Konva.BaseLayer#clearBeforeDraw
  * @method
- * @memberof Konva.BaseLayer.prototype
  * @param {Boolean} clearBeforeDraw
  * @returns {Boolean}
  * @example
@@ -274,5 +269,6 @@ Factory.addGetterSetter(BaseLayer, 'clearBeforeDraw', true);
  * // enable clear before draw
  * layer.clearBeforeDraw(true);
  */
+Factory.addGetterSetter(BaseLayer, 'clearBeforeDraw', true);
 
 Collection.mapMethods(BaseLayer);

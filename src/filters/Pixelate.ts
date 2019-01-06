@@ -112,9 +112,8 @@ Factory.addGetterSetter(
 );
 /**
  * get/set pixel size. Use with {@link Konva.Filters.Pixelate} filter.
- * @name pixelSize
+ * @name Konva.Node#pixelSize
  * @method
- * @memberof Konva.Node.prototype
  * @param {Integer} pixelSize
  * @returns {Integer}
  */

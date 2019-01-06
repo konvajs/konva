@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Fixes inconsistent `layer.setSize()` method. Now it has same arguments as any container.
 * Full rewrite to Typescript with tons of refactoring and small optimizations. The public API should be 100% the same
 
+### Removed
+* `Konva.Util.addMethods`
+* `Konva.Util._removeLastLetter`
+
 
 ### Fixed
 

@@ -13,7 +13,6 @@ var AUTO = 'auto',
   CHANGE_KONVA = 'Change.konva',
   CONTEXT_2D = '2d',
   DASH = '-',
-  EMPTY_STRING = '',
   LEFT = 'left',
   TEXT = 'text',
   TEXT_UPPER = 'Text',
@@ -108,20 +107,8 @@ export class Text extends Shape {
     ) {
       config.fill = config.fill || 'black';
     }
-    //
-    // if (config.width === undefined) {
-    //     config.width = AUTO;
-    // }
-    // if (config.height === undefined) {
-    //     config.height = AUTO;
-    // }
 
-    // call super constructor
     super(config);
-
-    this._fillFunc = _fillFunc;
-    this._strokeFunc = _strokeFunc;
-    this.className = TEXT_UPPER;
 
     // update text data for certain attr changes
     for (var n = 0; n < attrChangeListLen; n++) {
@@ -265,22 +252,10 @@ export class Text extends Shape {
     this._setAttr(TEXT, str);
     return this;
   }
-  /**
-   * get width of text area, which includes padding
-   * @method
-   * @memberof Konva.Text.prototype
-   * @returns {Number}
-   */
   getWidth() {
     var isAuto = this.attrs.width === AUTO || this.attrs.width === undefined;
     return isAuto ? this.getTextWidth() + this.padding() * 2 : this.attrs.width;
   }
-  /**
-   * get the height of the text area, which takes into account multi-line text, line heights, and padding
-   * @method
-   * @memberof Konva.Text.prototype
-   * @returns {Number}
-   */
   getHeight() {
     var isAuto = this.attrs.height === AUTO || this.attrs.height === undefined;
     return isAuto
@@ -289,18 +264,18 @@ export class Text extends Shape {
       : this.attrs.height;
   }
   /**
-   * get text width
+   * get pure text width without padding
    * @method
-   * @memberof Konva.Text.prototype
+   * @name Konva.Text#getTextWidth
    * @returns {Number}
    */
   getTextWidth() {
     return this.textWidth;
   }
   /**
-   * get height of one line text
+   * get height of one line of text
    * @method
-   * @memberof Konva.Text.prototype
+   * @name Konva.Text#getTextHeight
    * @returns {Number}
    */
   getTextHeight() {
@@ -514,18 +489,63 @@ export class Text extends Shape {
   ellipsis: GetSet<boolean, this>;
 }
 
-Factory.addSetter(Text, 'width', Validators.getNumberOrAutoValidator());
+Text.prototype._fillFunc = _fillFunc;
+Text.prototype._strokeFunc = _strokeFunc;
+Text.prototype.className = TEXT_UPPER;
 
-Factory.addSetter(Text, 'height', Validators.getNumberOrAutoValidator());
+/**
+ * get/set width of text area, which includes padding.
+ * @name Konva.Text#width
+ * @method
+ * @param {Number} width
+ * @returns {Number}
+ * @example
+ * // get width
+ * var width = text.width();
+ *
+ * // set width
+ * text.width(20);
+ *
+ * // set to auto
+ * text.width('auto');
+ * text.width() // will return calculated width, and not "auto"
+ */
+Factory.addGetterSetter(
+  Text,
+  'width',
+  undefined,
+  Validators.getNumberOrAutoValidator()
+);
 
-// add getters setters
-Factory.addGetterSetter(Text, 'fontFamily', 'Arial');
+/**
+ * get/set the height of the text area, which takes into account multi-line text, line heights, and padding.
+ * @name Konva.Text#height
+ * @method
+ * @param {Number} height
+ * @returns {Number}
+ * @example
+ * // get height
+ * var height = text.height();
+ *
+ * // set height
+ * text.height(20);
+ *
+ * // set to auto
+ * text.height('auto');
+ * text.height() // will return calculated height, and not "auto"
+ */
+
+Factory.addGetterSetter(
+  Text,
+  'height',
+  undefined,
+  Validators.getNumberOrAutoValidator()
+);
 
 /**
  * get/set font family
- * @name fontFamily
+ * @name Konva.Text#fontFamily
  * @method
- * @memberof Konva.Text.prototype
  * @param {String} fontFamily
  * @returns {String}
  * @example
@@ -535,14 +555,12 @@ Factory.addGetterSetter(Text, 'fontFamily', 'Arial');
  * // set font family
  * text.fontFamily('Arial');
  */
-
-Factory.addGetterSetter(Text, 'fontSize', 12, Validators.getNumberValidator());
+Factory.addGetterSetter(Text, 'fontFamily', 'Arial');
 
 /**
  * get/set font size in pixels
- * @name fontSize
+ * @name Konva.Text#fontSize
  * @method
- * @memberof Konva.Text.prototype
  * @param {Number} fontSize
  * @returns {Number}
  * @example
@@ -552,14 +570,12 @@ Factory.addGetterSetter(Text, 'fontSize', 12, Validators.getNumberValidator());
  * // set font size to 22px
  * text.fontSize(22);
  */
-
-Factory.addGetterSetter(Text, 'fontStyle', NORMAL);
+Factory.addGetterSetter(Text, 'fontSize', 12, Validators.getNumberValidator());
 
 /**
- * set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
- * @name fontStyle
+ * get/set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
+ * @name Konva.Text#fontStyle
  * @method
- * @memberof Konva.Text.prototype
  * @param {String} fontStyle
  * @returns {String}
  * @example
@@ -570,13 +586,12 @@ Factory.addGetterSetter(Text, 'fontStyle', NORMAL);
  * text.fontStyle('bold');
  */
 
-Factory.addGetterSetter(Text, 'fontVariant', NORMAL);
+Factory.addGetterSetter(Text, 'fontStyle', NORMAL);
 
 /**
- * set font variant.  Can be 'normal' or 'small-caps'.  'normal' is the default.
- * @name fontVariant
+ * get/set font variant.  Can be 'normal' or 'small-caps'.  'normal' is the default.
+ * @name Konva.Text#fontVariant
  * @method
- * @memberof Konva.Text.prototype
  * @param {String} fontVariant
  * @returns {String}
  * @example
@@ -587,13 +602,12 @@ Factory.addGetterSetter(Text, 'fontVariant', NORMAL);
  * text.fontVariant('small-caps');
  */
 
-Factory.addGetterSetter(Text, 'padding', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Text, 'fontVariant', NORMAL);
 
 /**
- * set padding
- * @name padding
+ * get/set padding
+ * @name Konva.Text#padding
  * @method
- * @memberof Konva.Text.prototype
  * @param {Number} padding
  * @returns {Number}
  * @example
@@ -604,13 +618,12 @@ Factory.addGetterSetter(Text, 'padding', 0, Validators.getNumberValidator());
  * text.padding(10);
  */
 
-Factory.addGetterSetter(Text, 'align', LEFT);
+Factory.addGetterSetter(Text, 'padding', 0, Validators.getNumberValidator());
 
 /**
  * get/set horizontal align of text.  Can be 'left', 'center', 'right' or 'justify'
- * @name align
+ * @name Konva.Text#align
  * @method
- * @memberof Konva.Text.prototype
  * @param {String} align
  * @returns {String}
  * @example
@@ -624,13 +637,12 @@ Factory.addGetterSetter(Text, 'align', LEFT);
  * text.align('right');
  */
 
-Factory.addGetterSetter(Text, 'verticalAlign', TOP);
+Factory.addGetterSetter(Text, 'align', LEFT);
 
 /**
  * get/set vertical align of text.  Can be 'top', 'middle', 'bottom'.
- * @name verticalAlign
+ * @name Konva.Text#verticalAlign
  * @method
- * @memberof Konva.Text.prototype
  * @param {String} verticalAlign
  * @returns {String}
  * @example
@@ -641,13 +653,12 @@ Factory.addGetterSetter(Text, 'verticalAlign', TOP);
  * text.verticalAlign('middle');
  */
 
-Factory.addGetterSetter(Text, 'lineHeight', 1, Validators.getNumberValidator());
+Factory.addGetterSetter(Text, 'verticalAlign', TOP);
 
 /**
  * get/set line height.  The default is 1.
- * @name lineHeight
+ * @name Konva.Text#lineHeight
  * @method
- * @memberof Konva.Text.prototype
  * @param {Number} lineHeight
  * @returns {Number}
  * @example
@@ -658,13 +669,12 @@ Factory.addGetterSetter(Text, 'lineHeight', 1, Validators.getNumberValidator());
  * text.lineHeight(2);
  */
 
-Factory.addGetterSetter(Text, 'wrap', WORD);
+Factory.addGetterSetter(Text, 'lineHeight', 1, Validators.getNumberValidator());
 
 /**
  * get/set wrap.  Can be word, char, or none. Default is word.
- * @name wrap
+ * @name Konva.Text#wrap
  * @method
- * @memberof Konva.Text.prototype
  * @param {String} wrap
  * @returns {String}
  * @example
@@ -675,14 +685,13 @@ Factory.addGetterSetter(Text, 'wrap', WORD);
  * text.wrap('word');
  */
 
-Factory.addGetterSetter(Text, 'ellipsis', false);
+Factory.addGetterSetter(Text, 'wrap', WORD);
 
 /**
  * get/set ellipsis.  Can be true or false. Default is false.
  * if Konva.Text config is set to wrap="none" and ellipsis=true, then it will add "..." to the end
- * @name ellipsis
+ * @name Konva.Text#ellipsis
  * @method
- * @memberof Konva.Text.prototype
  * @param {Boolean} ellipsis
  * @returns {Boolean}
  * @example
@@ -693,6 +702,15 @@ Factory.addGetterSetter(Text, 'ellipsis', false);
  * text.ellipsis(true);
  */
 
+Factory.addGetterSetter(Text, 'ellipsis', false);
+
+/**
+ * set letter spacing property. Default value is 0.
+ * @name Konva.Text#letterSpacing
+ * @method
+ * @param {Number} letterSpacing
+ */
+
 Factory.addGetterSetter(
   Text,
   'letterSpacing',
@@ -701,21 +719,9 @@ Factory.addGetterSetter(
 );
 
 /**
- * set letter spacing property. Default value is 0.
- * @name letterSpacing
- * @method
- * @memberof Konva.TextPath.prototype
- * @param {Number} letterSpacing
- */
-
-Factory.addGetter(Text, 'text', EMPTY_STRING);
-Factory.addOverloadedGetterSetter(Text, 'text');
-
-/**
  * get/set text
- * @name getText
+ * @name Konva.Text#text
  * @method
- * @memberof Konva.Text.prototype
  * @param {String} text
  * @returns {String}
  * @example
@@ -726,13 +732,12 @@ Factory.addOverloadedGetterSetter(Text, 'text');
  * text.text('Hello world!');
  */
 
-Factory.addGetterSetter(Text, 'textDecoration', EMPTY_STRING);
+Factory.addGetterSetter(Text, 'text', '', Validators.getStringValidator());
 
 /**
  * get/set text decoration of a text.  Possible values are 'underline', 'line-through' or combination of these values separated by space
- * @name textDecoration
+ * @name Konva.Text#textDecoration
  * @method
- * @memberof Konva.Text.prototype
  * @param {String} textDecoration
  * @returns {String}
  * @example
@@ -748,5 +753,7 @@ Factory.addGetterSetter(Text, 'textDecoration', EMPTY_STRING);
  * // underline and strike text
  * text.textDecoration('underline line-through');
  */
+
+Factory.addGetterSetter(Text, 'textDecoration', '');
 
 Collection.mapMethods(Text);

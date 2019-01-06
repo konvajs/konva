@@ -18,11 +18,6 @@ export class Group extends Container {
     this.nodeType = 'Group';
   }
 
-  ___init(config) {
-    // TODO: remove
-    // call super constructor
-    Container.call(this, config);
-  }
   _validateAdd(child) {
     var type = child.getType();
     if (type !== 'Group' && type !== 'Shape') {

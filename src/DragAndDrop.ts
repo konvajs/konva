@@ -1,8 +1,9 @@
 import { Animation } from './Animation';
 import { Node } from './Node';
-import { Factory } from './Factory';
+import { Factory, Validators } from './Factory';
 import { isBrowser, getGlobalKonva } from './Global';
-// import { getBl}
+
+// TODO: move it to core, move all node methods to Node class
 
 export const DD = {
   startPointerPos: {
@@ -128,7 +129,7 @@ export const DD = {
 /**
  * initiate drag and drop
  * @method
- * @memberof Konva.Node.prototype
+ * @name Konva.Node#startDrag
  */
 Node.prototype.startDrag = function() {
   var dd = DD,
@@ -184,7 +185,7 @@ Node.prototype._setDragPosition = function(evt) {
 /**
  * stop drag and drop
  * @method
- * @memberof Konva.Node.prototype
+ * @name Konva.Node#stopDrag
  */
 Node.prototype.stopDrag = function() {
   var dd = DD,
@@ -215,7 +216,7 @@ Node.prototype.remove = function() {
 /**
  * determine if node is currently in drag and drop mode
  * @method
- * @memberof Konva.Node.prototype
+ * @name Konva.Node#isDragging
  */
 Node.prototype.isDragging = function() {
   var dd = DD;
@@ -244,12 +245,6 @@ Node.prototype._listenDrag = function() {
       }
     });
   }
-
-  // listening is required for drag and drop
-  /*
-        this._listeningEnabled = true;
-        this._clearSelfAndAncestorCache('listeningEnabled');
-        */
 };
 
 Node.prototype._dragChange = function() {
@@ -287,9 +282,8 @@ Factory.addGetterSetter(Node, 'dragBoundFunc');
 /**
  * get/set drag bound function.  This is used to override the default
  *  drag and drop position.
- * @name dragBoundFunc
+ * @name Konva.Node#dragBoundFunc
  * @method
- * @memberof Konva.Node.prototype
  * @param {Function} dragBoundFunc
  * @returns {Function}
  * @example
@@ -307,14 +301,17 @@ Factory.addGetterSetter(Node, 'dragBoundFunc');
  * });
  */
 
-Factory.addGetter(Node, 'draggable', false);
-Factory.addOverloadedGetterSetter(Node, 'draggable');
+Factory.addGetterSetter(
+  Node,
+  'draggable',
+  false,
+  Validators.getBooleanValidator()
+);
 
 /**
  * get/set draggable flag
- * @name draggable
+ * @name Konva.Node#draggable
  * @method
- * @memberof Konva.Node.prototype
  * @param {Boolean} draggable
  * @returns {Boolean}
  * @example

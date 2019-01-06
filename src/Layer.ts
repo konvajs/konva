@@ -1,12 +1,11 @@
 import { Util, Collection } from './Util';
 import { Container } from './Container';
-import { Node } from './Node';
 import { Factory, Validators } from './Factory';
 import { BaseLayer } from './BaseLayer';
-import { SceneCanvas, HitCanvas } from './Canvas';
+import { HitCanvas } from './Canvas';
 import { shapes } from './Global';
 
-import { GetSet, Vector2d } from './types';
+import { GetSet } from './types';
 
 // constants
 var HASH = '#',
@@ -86,7 +85,6 @@ export class Layer extends BaseLayer {
     }
     // in some cases antialiased area may be bigger than 1px
     // it is possible if we will cache node, then scale it a lot
-    // TODO: check { 0; 0 } point before loop, and remove it from INTERSECTION_OFFSETS.
     var spiralSearchDistance = 1;
     var continueSearch = false;
     while (true) {
@@ -193,9 +191,8 @@ export class Layer extends BaseLayer {
   }
   /**
    * enable hit graph
-   * @name enableHitGraph
+   * @name Konva.Layer#enableHitGraph
    * @method
-   * @memberof Konva.Layer.prototype
    * @returns {Layer}
    */
   enableHitGraph() {
@@ -204,7 +201,7 @@ export class Layer extends BaseLayer {
   }
   /**
    * disable hit graph
-   * @name disableHitGraph
+   * @name Konva.Layer#disableHitGraph
    * @method
    * @memberof Konva.Layer.prototype
    * @returns {Layer}
@@ -222,14 +219,18 @@ export class Layer extends BaseLayer {
   hitGraphEnabled: GetSet<boolean, this>;
 }
 
-Factory.addGetterSetter(Layer, 'hitGraphEnabled', true);
+Factory.addGetterSetter(
+  Layer,
+  'hitGraphEnabled',
+  true,
+  Validators.getBooleanValidator()
+);
 /**
  * get/set hitGraphEnabled flag.  Disabling the hit graph will greatly increase
  *  draw performance because the hit graph will not be redrawn each time the layer is
  *  drawn.  This, however, also disables mouse/touch event detection
- * @name hitGraphEnabled
+ * @name Konva.Layer#hitGraphEnabled
  * @method
- * @memberof Konva.Layer.prototype
  * @param {Boolean} enabled
  * @returns {Boolean}
  * @example
