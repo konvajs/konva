@@ -356,11 +356,11 @@ export class Text extends Shape {
 
     this.textArr = [];
     getDummyContext().font = this._getContextFont();
+    var additionalWidth = shouldAddEllipsis
+      ? this._getTextWidth(ELLIPSIS)
+      : 0;
     for (var i = 0, max = lines.length; i < max; ++i) {
       var line = lines[i];
-      var additionalWidth = shouldAddEllipsis
-        ? this._getTextWidth(ELLIPSIS)
-        : 0;
 
       var lineWidth = this._getTextWidth(line);
       if (fixedWidth && lineWidth > maxWidth) {
