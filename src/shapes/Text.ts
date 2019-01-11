@@ -350,8 +350,8 @@ export class Text extends Shape {
       lineHeightPx = this.lineHeight() * fontSize,
       width = this.attrs.width,
       height = this.attrs.height,
-      fixedWidth = width !== AUTO,
-      fixedHeight = height !== AUTO,
+      fixedWidth = width !== AUTO && width !== undefined,
+      fixedHeight = height !== AUTO && height !== undefined,
       padding = this.padding(),
       maxWidth = width - padding * 2,
       maxHeightPx = height - padding * 2,
@@ -364,11 +364,11 @@ export class Text extends Shape {
 
     this.textArr = [];
     getDummyContext().font = this._getContextFont();
+    var additionalWidth = shouldAddEllipsis
+      ? this._getTextWidth(ELLIPSIS)
+      : 0;
     for (var i = 0, max = lines.length; i < max; ++i) {
       var line = lines[i];
-      var additionalWidth = shouldAddEllipsis
-        ? this._getTextWidth(ELLIPSIS)
-        : 0;
 
       var lineWidth = this._getTextWidth(line);
       if (fixedWidth && lineWidth > maxWidth) {
