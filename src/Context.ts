@@ -483,9 +483,14 @@ export class SceneContext extends Context {
     if (fillPatternX || fillPatternY) {
       this.translate(fillPatternX || 0, fillPatternY || 0);
     }
+
     if (fillPatternRotation) {
       this.rotate(fillPatternRotation);
     }
+
+    // TODO: optimize to fillPatternScaleX and fillPatternScaleY
+    // otherwise it is object (always true)
+    // do the same for offset
     if (fillPatternScale) {
       this.scale(fillPatternScale.x, fillPatternScale.y);
     }
@@ -500,7 +505,7 @@ export class SceneContext extends Context {
         shape.getFillPatternRepeat() || 'repeat'
       )
     );
-    this.fill();
+    shape._fillFunc(this);
   }
   _fillLinearGradient(shape) {
     var start = shape.getFillLinearGradientStartPoint(),
@@ -537,7 +542,7 @@ export class SceneContext extends Context {
       grd.addColorStop(colorStops[n], colorStops[n + 1]);
     }
     this.setAttr('fillStyle', grd);
-    this.fill();
+    shape._fillFunc(this);
   }
   _fill(shape) {
     var hasColor = shape.fill(),

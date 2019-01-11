@@ -9,6 +9,8 @@ import { Context } from './Context';
 var HAS_SHADOW = 'hasShadow';
 var SHADOW_RGBA = 'shadowRGBA';
 
+// TODO: cache gradient from context
+
 function _fillFunc(context) {
   context.fill();
 }

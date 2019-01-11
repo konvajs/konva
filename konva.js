@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v2.6.0
    * http://konvajs.github.io/
    * Licensed under the MIT
-   * Date: Sun Jan 06 2019
+   * Date: Fri Jan 11 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -1786,6 +1786,9 @@
           if (fillPatternRotation) {
               this.rotate(fillPatternRotation);
           }
+          // TODO: optimize to fillPatternScaleX and fillPatternScaleY
+          // otherwise it is object (always true)
+          // do the same for offset
           if (fillPatternScale) {
               this.scale(fillPatternScale.x, fillPatternScale.y);
           }
@@ -1793,7 +1796,7 @@
               this.translate(-1 * fillPatternOffset.x, -1 * fillPatternOffset.y);
           }
           this.setAttr('fillStyle', this.createPattern(shape.getFillPatternImage(), shape.getFillPatternRepeat() || 'repeat'));
-          this.fill();
+          shape._fillFunc(this);
       };
       SceneContext.prototype._fillLinearGradient = function (shape) {
           var start = shape.getFillLinearGradientStartPoint(), end = shape.getFillLinearGradientEndPoint(), colorStops = shape.getFillLinearGradientColorStops(), grd = this.createLinearGradient(start.x, start.y, end.x, end.y);
@@ -1813,7 +1816,7 @@
               grd.addColorStop(colorStops[n], colorStops[n + 1]);
           }
           this.setAttr('fillStyle', grd);
-          this.fill();
+          shape._fillFunc(this);
       };
       SceneContext.prototype._fill = function (shape) {
           var hasColor = shape.fill(), fillPriority = shape.getFillPriority();
@@ -3908,7 +3911,8 @@
   }());
   Node.prototype.nodeType = 'Node';
   /**
-   * get/set zIndex relative to the node's siblings who share the same parent
+   * get/set zIndex relative to the node's siblings who share the same parent.
+   * Please remember that zIndex is not absolute (like in CSS). It is relative to parent element only.
    * @name Konva.Node#zIndex
    * @method
    * @param {Number} index
@@ -5032,6 +5036,8 @@
    */
   Collection.mapMethods(Container);
 
+  // TODO: add a warning if stage has too many layers
+  // TODO: remove "content" events from docs
   // CONSTANTS
   var STAGE$1 = 'Stage', STRING = 'string', PX = 'px', MOUSEOUT = 'mouseout', MOUSELEAVE$1 = 'mouseleave', MOUSEOVER = 'mouseover', MOUSEENTER$1 = 'mouseenter', MOUSEMOVE = 'mousemove', MOUSEDOWN = 'mousedown', MOUSEUP = 'mouseup', CONTEXTMENU = 'contextmenu', CLICK = 'click', DBL_CLICK = 'dblclick', TOUCHSTART = 'touchstart', TOUCHEND = 'touchend', TAP = 'tap', DBL_TAP = 'dbltap', TOUCHMOVE = 'touchmove', WHEEL = 'wheel', CONTENT_MOUSEOUT = 'contentMouseout', CONTENT_MOUSEOVER = 'contentMouseover', CONTENT_MOUSEMOVE = 'contentMousemove', CONTENT_MOUSEDOWN = 'contentMousedown', CONTENT_MOUSEUP = 'contentMouseup', CONTENT_CONTEXTMENU = 'contentContextmenu', CONTENT_CLICK = 'contentClick', CONTENT_DBL_CLICK = 'contentDblclick', CONTENT_TOUCHSTART = 'contentTouchstart', CONTENT_TOUCHEND = 'contentTouchend', CONTENT_DBL_TAP = 'contentDbltap', CONTENT_TAP = 'contentTap', CONTENT_TOUCHMOVE = 'contentTouchmove', CONTENT_WHEEL = 'contentWheel', DIV = 'div', RELATIVE = 'relative', KONVA_CONTENT = 'konvajs-content', SPACE$1 = ' ', UNDERSCORE = '_', CONTAINER = 'container', EMPTY_STRING$1 = '', EVENTS = [
       MOUSEDOWN,
@@ -6821,6 +6827,7 @@
 
   var HAS_SHADOW = 'hasShadow';
   var SHADOW_RGBA = 'shadowRGBA';
+  // TODO: cache gradient from context
   function _fillFunc(context) {
       context.fill();
   }
@@ -12282,6 +12289,10 @@
   Factory.addGetterSetter(Star, 'outerRadius', 0, Validators.getNumberValidator());
   Collection.mapMethods(Star);
 
+  // TODO:
+  // deprecate fill pattern image and fill gradient for text (and textpath?)
+  // we have API for that in docs
+  // I guess we should show a error or warning
   // constants
   var AUTO = 'auto', 
   //CANVAS = 'canvas',
@@ -12333,7 +12344,7 @@
    * @param {String} [config.verticalAlign] can be top, middle or bottom
    * @param {Number} [config.padding]
    * @param {Number} [config.lineHeight] default is 1
-   * @param {String} [config.wrap] can be word, char, or none. Default is word
+   * @param {String} [config.wrap] can be "word", "char", or "none". Default is word
    * @param {Boolean} [config.ellipsis] can be true or false. Default is false. if Konva.Text config is set to wrap="none" and ellipsis=true, then it will add "..." to the end
    * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
@@ -12423,7 +12434,8 @@
           config = config || {};
           // set default color to black
           if (!config.fillLinearGradientColorStops &&
-              !config.fillRadialGradientColorStops) {
+              !config.fillRadialGradientColorStops &&
+              !config.fillPatternImage) {
               config.fill = config.fill || 'black';
           }
           _this = _super.call(this, config) || this;
@@ -12440,6 +12452,7 @@
           var padding = this.padding(), textHeight = this.getTextHeight(), lineHeightPx = this.lineHeight() * textHeight, textArr = this.textArr, textArrLen = textArr.length, verticalAlign = this.verticalAlign(), alignY = 0, align = this.align(), totalWidth = this.getWidth(), letterSpacing = this.letterSpacing(), textDecoration = this.textDecoration(), fill = this.fill(), fontSize = this.fontSize(), n;
           context.setAttr('font', this._getContextFont());
           context.setAttr('textBaseline', MIDDLE);
+          // TODO: do we have that property in context?
           context.setAttr('textAlign', LEFT$1);
           // handle vertical alignment
           if (verticalAlign === MIDDLE) {
@@ -12884,7 +12897,9 @@
    */
   Factory.addGetterSetter(Text, 'lineHeight', 1, Validators.getNumberValidator());
   /**
-   * get/set wrap.  Can be word, char, or none. Default is word.
+   * get/set wrap.  Can be "word", "char", or "none". Default is "word".
+   * In "word" wrapping any word still can be wrapped if it can't be placed in the required width
+   * without breaks.
    * @name Konva.Text#wrap
    * @method
    * @param {String} wrap
@@ -13171,10 +13186,10 @@
           return this.textHeight;
       };
       TextPath.prototype.setText = function (text) {
-          Text.prototype.setText.call(this, text);
+          return Text.prototype.setText.call(this, text);
       };
       TextPath.prototype._getContextFont = function () {
-          Text.prototype._getContextFont.call(this);
+          return Text.prototype._getContextFont.call(this);
       };
       TextPath.prototype._getTextSize = function (text) {
           var dummyCanvas = this.dummyCanvas;

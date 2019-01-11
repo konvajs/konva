@@ -5,6 +5,11 @@ import { UA } from '../Global';
 
 import { GetSet } from '../types';
 
+// TODO:
+// deprecate fill pattern image and fill gradient for text (and textpath?)
+// we have API for that in docs
+// I guess we should show a error or warning
+
 // constants
 var AUTO = 'auto',
   //CANVAS = 'canvas',
@@ -77,7 +82,7 @@ function _strokeFunc(context) {
  * @param {String} [config.verticalAlign] can be top, middle or bottom
  * @param {Number} [config.padding]
  * @param {Number} [config.lineHeight] default is 1
- * @param {String} [config.wrap] can be word, char, or none. Default is word
+ * @param {String} [config.wrap] can be "word", "char", or "none". Default is word
  * @param {Boolean} [config.ellipsis] can be true or false. Default is false. if Konva.Text config is set to wrap="none" and ellipsis=true, then it will add "..." to the end
  * @@shapeParams
  * @@nodeParams
@@ -103,7 +108,8 @@ export class Text extends Shape {
     // set default color to black
     if (
       !config.fillLinearGradientColorStops &&
-      !config.fillRadialGradientColorStops
+      !config.fillRadialGradientColorStops &&
+      !config.fillPatternImage
     ) {
       config.fill = config.fill || 'black';
     }
@@ -139,6 +145,8 @@ export class Text extends Shape {
     context.setAttr('font', this._getContextFont());
 
     context.setAttr('textBaseline', MIDDLE);
+
+    // TODO: do we have that property in context?
     context.setAttr('textAlign', LEFT);
 
     // handle vertical alignment
@@ -672,7 +680,9 @@ Factory.addGetterSetter(Text, 'verticalAlign', TOP);
 Factory.addGetterSetter(Text, 'lineHeight', 1, Validators.getNumberValidator());
 
 /**
- * get/set wrap.  Can be word, char, or none. Default is word.
+ * get/set wrap.  Can be "word", "char", or "none". Default is "word".
+ * In "word" wrapping any word still can be wrapped if it can't be placed in the required width
+ * without breaks.
  * @name Konva.Text#wrap
  * @method
  * @param {String} wrap

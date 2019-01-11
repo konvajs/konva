@@ -2153,7 +2153,8 @@ export abstract class Node {
 Node.prototype.nodeType = 'Node';
 
 /**
- * get/set zIndex relative to the node's siblings who share the same parent
+ * get/set zIndex relative to the node's siblings who share the same parent.
+ * Please remember that zIndex is not absolute (like in CSS). It is relative to parent element only.
  * @name Konva.Node#zIndex
  * @method
  * @param {Number} index

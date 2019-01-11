@@ -184,11 +184,11 @@ export class TextPath extends Shape {
     return this.textHeight;
   }
   setText(text) {
-    Text.prototype.setText.call(this, text);
+    return Text.prototype.setText.call(this, text);
   }
 
   _getContextFont() {
-    Text.prototype._getContextFont.call(this);
+    return Text.prototype._getContextFont.call(this);
   }
 
   _getTextSize(text) {

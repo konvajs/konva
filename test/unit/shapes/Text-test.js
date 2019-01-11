@@ -737,33 +737,148 @@ suite('Text', function() {
     });
   });
 
-  test('gradient', function() {
+  test('linear gradient', function() {
     Konva.pixelRatio = 1;
     var stage = addStage();
     var layer = new Konva.Layer();
 
     var text = new Konva.Text({
-      fontSize: 100,
+      fontSize: 50,
       y: 10,
       x: 10,
-      fillLinearGradientStartPoint: { x: -50, y: -50 },
-      fillLinearGradientEndPoint: { x: 50, y: 50 },
-      fillLinearGradientColorStops: [0, 'yellow', 1, 'yellow'],
+      fillLinearGradientStartPoint: { x: 0, y: 0 },
+      fillLinearGradientEndPoint: { x: 300, y: 0 },
+      fillLinearGradientColorStops: [0, 'yellow', 0.5, 'yellow', 1, 'red'],
       text: 'Text with gradient!!',
       draggable: true
     });
     layer.add(text);
     stage.add(layer);
 
-    //stage.on('mousemove', function() {
-    //    console.log(stage.getPointerPosition());
-    //});
-    var data = layer.getContext().getImageData(41, 50, 1, 1).data;
+    var canvas = createCanvas();
+    var ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = 'green';
+    ctx.font = 'normal 50px Arial';
+    ctx.textBaseline = 'middle';
+
+    var start = { x: 0, y: 0 };
+    var end = { x: 300, y: 0 };
+    var colorStops = [0, 'yellow', 0.5, 'yellow', 1, 'red'];
+    var grd = ctx.createLinearGradient(start.x, start.y, end.x, end.y);
+
+    // build color stops
+    for (var n = 0; n < colorStops.length; n += 2) {
+      grd.addColorStop(colorStops[n], colorStops[n + 1]);
+    }
+    ctx.fillStyle = grd;
+
+    ctx.fillText(text.text(), text.x(), text.y() + text.fontSize() / 2);
+
+    compareLayerAndCanvas(layer, canvas, 200);
+
+    var data = layer.getContext().getImageData(25, 41, 1, 1).data;
     delete Konva.pixelRatio;
     assert.equal(data[0], 255, 'full green');
     assert.equal(data[1], 255, 'full red');
     assert.equal(data[2], 0, 'no blue');
     assert.equal(data[3], 255, '255 alpha - fully visible');
+  });
+
+  // TODO: how to make correct behavior?
+  test.skip('linear gradient multiline', function() {
+    Konva.pixelRatio = 1;
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      fontSize: 50,
+      fillLinearGradientStartPoint: { x: 0, y: 0 },
+      fillLinearGradientEndPoint: { x: 0, y: 100 },
+      fillLinearGradientColorStops: [0, 'yellow', 1, 'red'],
+      text: 'Text with gradient!!\nText with gradient!!',
+      draggable: true
+    });
+    layer.add(text);
+    stage.add(layer);
+
+    var canvas = createCanvas();
+    var ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = 'green';
+    ctx.font = 'normal 50px Arial';
+    ctx.textBaseline = 'middle';
+
+    var start = { x: 0, y: 0 };
+    var end = { x: 0, y: 100 };
+    var colorStops = [0, 'yellow', 1, 'red'];
+    var grd = ctx.createLinearGradient(start.x, start.y, end.x, end.y);
+
+    // build color stops
+    for (var n = 0; n < colorStops.length; n += 2) {
+      grd.addColorStop(colorStops[n], colorStops[n + 1]);
+    }
+    ctx.fillStyle = grd;
+
+    ctx.fillText(text.text(), text.x(), text.y() + text.fontSize() / 2);
+    ctx.fillText(
+      text.text(),
+      text.x(),
+      text.y() + text.fontSize() / 2 + text.fontSize()
+    );
+
+    compareLayerAndCanvas(layer, canvas, 200);
+
+    var data = layer.getContext().getImageData(25, 41, 1, 1).data;
+    delete Konva.pixelRatio;
+    assert.equal(data[0], 255, 'full green');
+    assert.equal(data[1], 255, 'full red');
+    assert.equal(data[2], 0, 'no blue');
+    assert.equal(data[3], 255, '255 alpha - fully visible');
+  });
+
+  test('radial gradient', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      fontSize: 50,
+      y: 0,
+      x: 0,
+      fillRadialGradientStartPoint: { x: 100, y: 0 },
+      fillRadialGradientStartRadius: 0,
+      fillRadialGradientEndRadius: 100,
+      fillRadialGradientEndPoint: { x: 100, y: 0 },
+      fillRadialGradientColorStops: [0, 'yellow', 1, 'red'],
+      text: 'Text with gradient!!',
+      draggable: true
+    });
+    layer.add(text);
+    stage.add(layer);
+
+    var canvas = createCanvas();
+    var ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = 'green';
+    ctx.font = 'normal 50px Arial';
+    ctx.textBaseline = 'middle';
+
+    var start = { x: 100, y: 0 };
+    var end = { x: 100, y: 0 };
+    var colorStops = [0, 'yellow', 1, 'red'];
+    var grd = ctx.createRadialGradient(start.x, start.y, 0, end.x, end.y, 100);
+
+    // build color stops
+    for (var n = 0; n < colorStops.length; n += 2) {
+      grd.addColorStop(colorStops[n], colorStops[n + 1]);
+    }
+    ctx.fillStyle = grd;
+
+    ctx.translate(0, 25);
+
+    ctx.fillText(text.text(), 0, 0);
+
+    compareLayerAndCanvas(layer, canvas, 200);
   });
 
   test('text should be centered in line height', function() {
@@ -836,5 +951,40 @@ suite('Text', function() {
     assert.equal(lines[0].text, 'Hello, this is some');
     assert.equal(lines[1].text, 'good text');
     layer.draw();
+  });
+
+  test('image gradient for text', function(done) {
+    Konva.pixelRatio = 1;
+    var imageObj = new Image();
+    imageObj.onload = function() {
+      var stage = addStage();
+      var layer = new Konva.Layer();
+
+      var text = new Konva.Text({
+        text: 'Hello, this is some good text',
+        fontSize: 30,
+        fillPatternImage: imageObj
+      });
+      layer.add(text);
+      stage.add(layer);
+
+      var canvas = createCanvas();
+      var ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = 'green';
+      ctx.font = 'normal normal 30px Arial';
+      ctx.textBaseline = 'middle';
+
+      var grd = ctx.createPattern(imageObj, 'repeat');
+      ctx.translate(0, 15);
+      ctx.fillStyle = grd;
+
+      ctx.fillText(text.text(), 0, 0);
+
+      compareLayerAndCanvas(layer, canvas, 200);
+      delete Konva.pixelRatio;
+      done();
+    };
+    imageObj.src = 'assets/darth-vader.jpg';
   });
 });

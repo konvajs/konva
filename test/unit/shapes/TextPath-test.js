@@ -516,6 +516,30 @@ suite('TextPath', function() {
     assert.equal(called, true);
   });
 
+  test.skip('linear gradient for path', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    const text = new Konva.TextPath({
+      x: 0,
+      y: 30,
+      text: 'AV',
+      fontSize: 20,
+      data: 'M0,0 L200,0',
+      fillLinearGradientStartPoint: { x: 0, y: 0 },
+      fillLinearGradientEndPoint: { x: 200, y: 0 },
+      fillLinearGradientColorStops: [0, 'yellow', 1, 'red'],
+      text: 'Text with gradient!!'
+    });
+    layer.add(text);
+    layer.draw();
+
+    var trace = layer.getContext().getTrace();
+    console.log(trace);
+  });
+
   test('visual check for text path', function() {
     var stage = addStage();
 

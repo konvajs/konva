@@ -148,7 +148,30 @@ suite('Circle', function() {
     layer.add(group);
     stage.add(layer);
 
-    assert.equal(circle.getName(), 'myCircle');
+    var canvas = createCanvas();
+    var ctx = canvas.getContext('2d');
+
+    var start = { x: -35, y: -35 };
+    var end = { x: 35, y: 35 };
+    var colorStops = [0, 'red', 1, 'blue'];
+    var grd = ctx.createLinearGradient(start.x, start.y, end.x, end.y);
+
+    // build color stops
+    for (var n = 0; n < colorStops.length; n += 2) {
+      grd.addColorStop(colorStops[n], colorStops[n + 1]);
+    }
+    ctx.beginPath();
+    ctx.translate(circle.x(), circle.y());
+    ctx.arc(0, 0, 70, 0, Math.PI * 2, false);
+    ctx.closePath();
+
+    ctx.fillStyle = grd;
+    ctx.lineWidth = 4;
+
+    ctx.fill();
+    ctx.stroke();
+
+    compareLayerAndCanvas(layer, canvas, 200);
   });
 
   // ======================================================

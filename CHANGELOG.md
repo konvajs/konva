@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 * Fixes inconsistent `layer.setSize()` method. Now it has same arguments as any container.
 * Full rewrite to Typescript with tons of refactoring and small optimizations. The public API should be 100% the same
+* Fixed `patternImage` and `radialGradient` for `Konva.Text`
 
 ### Removed
 * `Konva.Util.addMethods`

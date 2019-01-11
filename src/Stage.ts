@@ -1,12 +1,14 @@
 import { Util, Collection } from './Util';
-import { Factory, Validators } from './Factory';
+import { Factory } from './Factory';
 import { Container } from './Container';
 import { document, isBrowser, getGlobalKonva, UA } from './Global';
-import { Node } from './Node';
 import { SceneCanvas, HitCanvas } from './Canvas';
 import { GetSet, Vector2d } from './types';
 import { Shape } from './Shape';
 import { BaseLayer } from './BaseLayer';
+
+// TODO: add a warning if stage has too many layers
+// TODO: remove "content" events from docs
 
 // CONSTANTS
 var STAGE = 'Stage',
