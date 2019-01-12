@@ -218,18 +218,12 @@ export class Shape extends Node {
   }
   _useBufferCanvas(caching) {
     return (
-      (!caching &&
-        (this.perfectDrawEnabled() &&
-          this.getAbsoluteOpacity() !== 1 &&
-          this.hasFill() &&
-          this.hasStroke() &&
-          this.getStage())) ||
-      (this.perfectDrawEnabled() &&
-        this.hasShadow() &&
-        this.getAbsoluteOpacity() !== 1 &&
-        this.hasFill() &&
-        this.hasStroke() &&
-        this.getStage())
+      (!caching || this.hasShadow()) &&
+      this.perfectDrawEnabled() &&
+      this.getAbsoluteOpacity() !== 1 &&
+      this.hasFill() &&
+      this.hasStroke() &&
+      this.getStage()
     );
   }
   /**
