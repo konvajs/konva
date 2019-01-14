@@ -336,11 +336,11 @@ export class Text extends Shape {
     return this.textArr.push({ text: line, width: width });
   }
   _getTextWidth(text) {
-    var latterSpacing = this.letterSpacing();
+    var letterSpacing = this.letterSpacing();
     var length = text.length;
     return (
       getDummyContext().measureText(text).width +
-      (length ? latterSpacing * (length - 1) : 0)
+      (length ? letterSpacing * (length - 1) : 0)
     );
   }
   _setTextData() {

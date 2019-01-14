@@ -220,18 +220,12 @@ export class Shape extends Node {
   // try to use it without stage (use global buffer canvas)
   _useBufferCanvas(caching) {
     return (
-      (!caching &&
-        (this.perfectDrawEnabled() &&
-          this.getAbsoluteOpacity() !== 1 &&
-          this.hasFill() &&
-          this.hasStroke() &&
-          this.getStage())) ||
-      (this.perfectDrawEnabled() &&
-        this.hasShadow() &&
-        this.getAbsoluteOpacity() !== 1 &&
-        this.hasFill() &&
-        this.hasStroke() &&
-        this.getStage())
+      (!caching || this.hasShadow()) &&
+      this.perfectDrawEnabled() &&
+      this.getAbsoluteOpacity() !== 1 &&
+      this.hasFill() &&
+      this.hasStroke() &&
+      this.getStage()
     );
   }
   /**
