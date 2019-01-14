@@ -216,6 +216,8 @@ export class Shape extends Node {
     delete shapes[this.colorKey];
     return this;
   }
+  // TODO: write why do we need it,
+  // try to use it without stage (use global buffer canvas)
   _useBufferCanvas(caching) {
     return (
       (!caching &&

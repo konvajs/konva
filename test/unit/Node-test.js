@@ -123,7 +123,7 @@ suite('Node', function() {
     var called = false;
     Konva.Util.warn = function() {
       called = true;
-    }
+    };
     var circle = new Konva.Circle({
       id: 'circle'
     });
@@ -132,7 +132,7 @@ suite('Node', function() {
     });
     assert.equal(called, true);
     Konva.Util.warn = oldWarn;
-  })
+  });
 
   // ======================================================
   test('transform cache', function() {
@@ -456,12 +456,12 @@ suite('Node', function() {
   // ======================================================
   test('test offset attr change', function() {
     /*
-         * the premise of this test to make sure that only
-         * root level attributes trigger an attr change event.
-         * for this test, we have two offset properties.  one
-         * is in the root level, and the other is inside the shadow
-         * object
-         */
+     * the premise of this test to make sure that only
+     * root level attributes trigger an attr change event.
+     * for this test, we have two offset properties.  one
+     * is in the root level, and the other is inside the shadow
+     * object
+     */
     var stage = addStage();
     var layer = new Konva.Layer();
     var rect = new Konva.Rect({
@@ -582,9 +582,9 @@ suite('Node', function() {
     clone.setShadowColor('green');
 
     /*
-         * Make sure that when we change a clone object attr that the rect object
-         * attr isn't updated by reference
-         */
+     * Make sure that when we change a clone object attr that the rect object
+     * attr isn't updated by reference
+     */
 
     assert.equal(rect.getShadowColor(), 'black');
     assert.equal(clone.getShadowColor(), 'green');
@@ -1154,18 +1154,18 @@ suite('Node', function() {
     stage.add(layer);
 
     /*
-         * add custom attr that points to self.  The setAttrs method should
-         * not inifinitely recurse causing a stack overflow
-         */
+     * add custom attr that points to self.  The setAttrs method should
+     * not inifinitely recurse causing a stack overflow
+     */
     circle.setAttrs({
       self: circle
     });
 
     /*
-         * serialize the stage.  The json should succeed because objects that have
-         * methods, such as self, are not serialized, and will therefore avoid
-         * circular json errors.
-         */
+     * serialize the stage.  The json should succeed because objects that have
+     * methods, such as self, are not serialized, and will therefore avoid
+     * circular json errors.
+     */
     var json = stage.toJSON();
   });
 
@@ -1665,7 +1665,7 @@ suite('Node', function() {
 
     var stage = addStage();
     var layer = new Konva.Layer({
-      name: 'layerName',
+      name: 'layerName'
     });
     var group = new Konva.Group({
       name: 'groupName',
@@ -1681,7 +1681,7 @@ suite('Node', function() {
       width: side,
       height: side,
       fill: 'red',
-      name: 'rectName',
+      name: 'rectName'
     });
     var marker = new Konva.Rect({
       x: side,
@@ -1737,7 +1737,7 @@ suite('Node', function() {
       width: 50,
       height: 50,
       fill: 'red',
-      name: 'rectName',
+      name: 'rectName'
     });
 
     group.add(rect);
@@ -1988,8 +1988,8 @@ suite('Node', function() {
     });
 
     /*
-         * test regular on and off
-         */
+     * test regular on and off
+     */
     assert.equal(circle.eventListeners['click'], undefined);
 
     circle.on('click', function() {});
@@ -2002,8 +2002,8 @@ suite('Node', function() {
     assert.equal(circle.eventListeners['click'], undefined);
 
     /*
-         * test name spacing
-         */
+     * test name spacing
+     */
     circle.on('click.foo', function() {});
     assert.equal(circle.eventListeners['click'].length, 1);
 
@@ -2019,8 +2019,8 @@ suite('Node', function() {
     assert.equal(circle.eventListeners['click'], undefined);
 
     /*
-         * test remove all events in name space
-         */
+     * test remove all events in name space
+     */
     circle.on('click.foo', function() {});
     circle.on('click.foo', function() {});
     circle.on('touch.foo', function() {});
@@ -2402,22 +2402,22 @@ suite('Node', function() {
     });
 
     /*
-         *        Stage(0)
-         *          |
-         *        Layer(1)
-         *          |
-         *    +-----+-----+
-         *    |           |
-         *   G1(2)       G2(3)
-         *    |           |
-         *    +       +---+---+
-         *    |       |       |
-         *   S1(4)   G3(5)  G4(6)
-         *            |
-         *            +
-         *            |
-         *           S2(7)
-         */
+     *        Stage(0)
+     *          |
+     *        Layer(1)
+     *          |
+     *    +-----+-----+
+     *    |           |
+     *   G1(2)       G2(3)
+     *    |           |
+     *    +       +---+---+
+     *    |       |       |
+     *   S1(4)   G3(5)  G4(6)
+     *            |
+     *            +
+     *            |
+     *           S2(7)
+     */
 
     group1.add(shape1);
     group2.add(group3);

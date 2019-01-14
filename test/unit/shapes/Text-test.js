@@ -518,8 +518,6 @@ suite('Text', function() {
   });
 
   // ======================================================
-  // skiping this test for now. It fails on travis. WHYYY??!?!?!
-  // TODO: restore it
   test('text multi line with underline and spacing', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -541,7 +539,6 @@ suite('Text', function() {
     var trace =
       'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=middle;textAlign=left;translate(0,40);save();save();beginPath();moveTo(0,40);lineTo(189,40);stroke();restore();fillStyle=red;fillText(h,0,0);translate(49,0);fillStyle=red;fillText(e,0,0);translate(49,0);fillStyle=red;fillText(l,0,0);translate(23,0);fillStyle=red;fillText(l,0,0);translate(23,0);fillStyle=red;fillText(o,0,0);translate(49,0);restore();translate(0,80);save();save();beginPath();moveTo(0,40);lineTo(211,40);stroke();restore();fillStyle=red;fillText(w,0,0);translate(63,0);fillStyle=red;fillText(o,0,0);translate(49,0);fillStyle=red;fillText(r,0,0);translate(32,0);fillStyle=red;fillText(l,0,0);translate(23,0);fillStyle=red;fillText(d,0,0);translate(49,0);restore();translate(0,80);restore();';
 
-    // console.log(layer.getContext().getTrace());
     assert.equal(layer.getContext().getTrace(), trace);
   });
 
