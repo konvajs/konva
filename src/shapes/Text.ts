@@ -137,9 +137,11 @@ export class Text extends Shape {
       align = this.align(),
       totalWidth = this.getWidth(),
       letterSpacing = this.letterSpacing(),
-      textDecoration = this.textDecoration(),
       fill = this.fill(),
       fontSize = this.fontSize(),
+      textDecoration = this.textDecoration(),
+      shouldUnderline = textDecoration.indexOf('underline') !== -1,
+      shouldLineThrough = textDecoration.indexOf('line-through') !== -1,
       n;
 
     context.setAttr('font', this._getContextFont());
@@ -181,7 +183,7 @@ export class Text extends Shape {
         context.translate((totalWidth - width - padding * 2) / 2, 0);
       }
 
-      if (textDecoration.indexOf('underline') !== -1) {
+      if (shouldUnderline) {
         context.save();
         context.beginPath();
 
@@ -200,7 +202,7 @@ export class Text extends Shape {
         context.stroke();
         context.restore();
       }
-      if (textDecoration.indexOf('line-through') !== -1) {
+      if (shouldLineThrough) {
         context.save();
         context.beginPath();
         context.moveTo(0, 0);
