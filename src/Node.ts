@@ -700,6 +700,7 @@ export abstract class Node {
   }
   /**
    * remove and destroy a node. Kill it and delete forever! You should not reuse node after destroy().
+   * If the node is a container (Group, Stage or Layer) it will destroy all children too.
    * @method
    * @name Konva.Node#destroy
    * @example
