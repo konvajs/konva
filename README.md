@@ -133,31 +133,25 @@ See file `resources/nodejs-demo.js` for example.
 
 See [CHANGELOG.md](https://github.com/konvajs/konva/blob/master/CHANGELOG.md).
 
-# Dev environment
-
-Before doing all dev stuff make sure you have node installed. After that, run `npm install` in the main directory to install the node module dependencies.
-
-Run `gulp -T` to see all build options.
-
 ## Building the Konva Framework
 
-To build a development version of the framework, run `gulp dev-build`. To run a full build, which also produces the minified version run `gulp build`.
-
-If you add a file in the src directory, be sure to add the filename to the sourceFiles array variable in `gulpfile.js`.
+To make a full build run `npm run build`. The command will compile all typescript files, combine then into one bundle and run minifier.
 
 ## Testing
 
 Konva uses Mocha for testing.
 
-* If you need run test only one time run `gulp test`.
-* While developing it is easy to use `gulp` default task with watch. Just run it and go to [http://localhost:8080/test/runner.html](http://localhost:8080/test/runner.html). After src file change konva-dev.js will be automatically created, so you just need refresh test the page.
+* If you need run test only one time run `npm run test`.
+* While developing it is easy to use `npm start`. Just run it and go to [http://localhost:8080/test/runner.html](http://localhost:8080/test/runner.html). If you need changed typescript sources you have to run `npm run build`.
+
+TODO: add watcher for typescript changes.
 
 Konva is covered with hundreds of tests and well over a thousand assertions.
 Konva uses TDD (test driven development) which means that every new feature or bug fix is accompanied with at least one new test.
 
 ## Generate documentation
 
-Run `gulp api` which will build the documentation files and place them in the `api` folder.
+Run `npx gulp api` which will build the documentation files and place them in the `api` folder.
 
 # Pull Requests
 
