@@ -653,7 +653,7 @@ suite('Text', function() {
     stage.add(layer);
 
     var trace =
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);beginPath();rect(0,0,200,100);closePath();lineWidth=2;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,10,10);font=normal normal 16px Arial;textBaseline=middle;textAlign=left;translate(10,0);translate(0,50);save();translate(17.523,0);fillStyle=#555;fillText(Some awesome text,0,0);restore();restore();';
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);beginPath();rect(0,0,200,100);closePath();lineWidth=2;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,10,10);font=normal normal 16px Arial;textBaseline=middle;textAlign=left;translate(10,50);save();translate(17.523,0);fillStyle=#555;fillText(Some awesome text,0,0);restore();restore();';
 
     assert.equal(layer.getContext().getTrace(), trace);
   });

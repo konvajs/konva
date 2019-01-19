@@ -143,10 +143,10 @@ export abstract class Node {
 
     // if not cached, we need to set it using the private getter method.
     if (cache === undefined) {
-      this._cache[attr] = privateGetter.call(this);
+      this._cache[attr] = cache = privateGetter.call(this);
     }
 
-    return this._cache[attr];
+    return cache;
   }
   /*
    * when the logic for a cached result depends on ancestor propagation, use this

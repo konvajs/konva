@@ -159,8 +159,7 @@ export class Text extends Shape {
     }
 
     if (padding) {
-      context.translate(padding, 0);
-      context.translate(0, alignY + padding + lineHeightPx / 2);
+      context.translate(padding, alignY + padding + lineHeightPx / 2);
     } else {
       context.translate(0, alignY + lineHeightPx / 2);
     }
