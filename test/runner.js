@@ -144,7 +144,7 @@ function compareCanvases(canvas1, canvas2, tol) {
     b.appendChild(canvas2);
     c.appendChild(diffCanvas);
 
-    var base64 = diffCanvas.getContext('2d').toDataURL();
+    var base64 = diffCanvas.toDataURL();
     console.error('Diff image:');
     console.error(base64);
 
