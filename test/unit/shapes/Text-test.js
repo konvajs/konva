@@ -772,13 +772,11 @@ suite('Text', function() {
 
     ctx.fillText(text.text(), text.x(), text.y() + text.fontSize() / 2);
 
-    // TODO: why this does't work in CI
+    // TODO: why this doesn't work in CI
     // TODO: remove all isPhantomJS
     if (!window.isPhantomJS) {
       compareLayerAndCanvas(layer, canvas, 250);
     }
-
-    // var data = layer.getContext().getImageData(25, 41, 1, 1).data;
     // delete Konva.pixelRatio;
   });
 

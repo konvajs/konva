@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v2.6.0
    * http://konvajs.github.io/
    * Licensed under the MIT
-   * Date: Fri Jan 11 2019
+   * Date: Sat Jan 19 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2200,9 +2200,9 @@
           var cache = this._cache[attr];
           // if not cached, we need to set it using the private getter method.
           if (cache === undefined) {
-              this._cache[attr] = privateGetter.call(this);
+              this._cache[attr] = cache = privateGetter.call(this);
           }
-          return this._cache[attr];
+          return cache;
       };
       /*
        * when the logic for a cached result depends on ancestor propagation, use this
@@ -2662,6 +2662,7 @@
       };
       /**
        * remove and destroy a node. Kill it and delete forever! You should not reuse node after destroy().
+       * If the node is a container (Group, Stage or Layer) it will destroy all children too.
        * @method
        * @name Konva.Node#destroy
        * @example
@@ -7063,19 +7064,15 @@
           delete shapes[this.colorKey];
           return this;
       };
+      // TODO: write why do we need it,
+      // try to use it without stage (use global buffer canvas)
       Shape.prototype._useBufferCanvas = function (caching) {
-          return ((!caching &&
-              (this.perfectDrawEnabled() &&
-                  this.getAbsoluteOpacity() !== 1 &&
-                  this.hasFill() &&
-                  this.hasStroke() &&
-                  this.getStage())) ||
-              (this.perfectDrawEnabled() &&
-                  this.hasShadow() &&
-                  this.getAbsoluteOpacity() !== 1 &&
-                  this.hasFill() &&
-                  this.hasStroke() &&
-                  this.getStage()));
+          return ((!caching || this.hasShadow()) &&
+              this.perfectDrawEnabled() &&
+              this.getAbsoluteOpacity() !== 1 &&
+              this.hasFill() &&
+              this.hasStroke() &&
+              this.getStage());
       };
       /**
        * return self rectangle (x, y, width, height) of shape.
@@ -12449,7 +12446,7 @@
           return _this;
       }
       Text.prototype._sceneFunc = function (context) {
-          var padding = this.padding(), textHeight = this.getTextHeight(), lineHeightPx = this.lineHeight() * textHeight, textArr = this.textArr, textArrLen = textArr.length, verticalAlign = this.verticalAlign(), alignY = 0, align = this.align(), totalWidth = this.getWidth(), letterSpacing = this.letterSpacing(), textDecoration = this.textDecoration(), fill = this.fill(), fontSize = this.fontSize(), n;
+          var padding = this.padding(), textHeight = this.getTextHeight(), lineHeightPx = this.lineHeight() * textHeight, textArr = this.textArr, textArrLen = textArr.length, verticalAlign = this.verticalAlign(), alignY = 0, align = this.align(), totalWidth = this.getWidth(), letterSpacing = this.letterSpacing(), fill = this.fill(), fontSize = this.fontSize(), textDecoration = this.textDecoration(), shouldUnderline = textDecoration.indexOf('underline') !== -1, shouldLineThrough = textDecoration.indexOf('line-through') !== -1, n;
           context.setAttr('font', this._getContextFont());
           context.setAttr('textBaseline', MIDDLE);
           // TODO: do we have that property in context?
@@ -12462,8 +12459,7 @@
               alignY = this.getHeight() - textArrLen * lineHeightPx - padding * 2;
           }
           if (padding) {
-              context.translate(padding, 0);
-              context.translate(0, alignY + padding + lineHeightPx / 2);
+              context.translate(padding, alignY + padding + lineHeightPx / 2);
           }
           else {
               context.translate(0, alignY + lineHeightPx / 2);
@@ -12479,7 +12475,7 @@
               else if (align === CENTER) {
                   context.translate((totalWidth - width - padding * 2) / 2, 0);
               }
-              if (textDecoration.indexOf('underline') !== -1) {
+              if (shouldUnderline) {
                   context.save();
                   context.beginPath();
                   context.moveTo(0, Math.round(lineHeightPx / 2));
@@ -12497,7 +12493,7 @@
                   context.stroke();
                   context.restore();
               }
-              if (textDecoration.indexOf('line-through') !== -1) {
+              if (shouldLineThrough) {
                   context.save();
                   context.beginPath();
                   context.moveTo(0, 0);
@@ -12617,22 +12613,22 @@
           return this.textArr.push({ text: line, width: width });
       };
       Text.prototype._getTextWidth = function (text) {
-          var latterSpacing = this.letterSpacing();
+          var letterSpacing = this.letterSpacing();
           var length = text.length;
           return (getDummyContext().measureText(text).width +
-              (length ? latterSpacing * (length - 1) : 0));
+              (length ? letterSpacing * (length - 1) : 0));
       };
       Text.prototype._setTextData = function () {
-          var lines = this.text().split('\n'), fontSize = +this.fontSize(), textWidth = 0, lineHeightPx = this.lineHeight() * fontSize, width = this.attrs.width, height = this.attrs.height, fixedWidth = width !== AUTO, fixedHeight = height !== AUTO, padding = this.padding(), maxWidth = width - padding * 2, maxHeightPx = height - padding * 2, currentHeightPx = 0, wrap = this.wrap(), 
+          var lines = this.text().split('\n'), fontSize = +this.fontSize(), textWidth = 0, lineHeightPx = this.lineHeight() * fontSize, width = this.attrs.width, height = this.attrs.height, fixedWidth = width !== AUTO && width !== undefined, fixedHeight = height !== AUTO && height !== undefined, padding = this.padding(), maxWidth = width - padding * 2, maxHeightPx = height - padding * 2, currentHeightPx = 0, wrap = this.wrap(), 
           // align = this.align(),
           shouldWrap = wrap !== NONE$1, wrapAtWord = wrap !== CHAR && shouldWrap, shouldAddEllipsis = this.ellipsis() && !shouldWrap;
           this.textArr = [];
           getDummyContext().font = this._getContextFont();
+          var additionalWidth = shouldAddEllipsis
+              ? this._getTextWidth(ELLIPSIS)
+              : 0;
           for (var i = 0, max = lines.length; i < max; ++i) {
               var line = lines[i];
-              var additionalWidth = shouldAddEllipsis
-                  ? this._getTextWidth(ELLIPSIS)
-                  : 0;
               var lineWidth = this._getTextWidth(line);
               if (fixedWidth && lineWidth > maxWidth) {
                   /*

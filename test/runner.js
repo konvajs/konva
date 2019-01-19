@@ -144,6 +144,10 @@ function compareCanvases(canvas1, canvas2, tol) {
     b.appendChild(canvas2);
     c.appendChild(diffCanvas);
 
+    var base64 = diffCanvas.getContext('2d').toDataURL();
+    console.error('Diff image:');
+    console.error(base64);
+
     div.appendChild(b);
     div.appendChild(c);
     konvaContainer.appendChild(div);
