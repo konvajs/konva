@@ -61,10 +61,8 @@ suite('Caching', function() {
     context.fillStyle = 'green';
     context.fill();
 
-    if (!window.isPhantomJS) {
-      compareLayerAndCanvas(layer, canvas, 200);
-      cloneAndCompareLayer(layer, 150);
-    }
+    compareLayerAndCanvas(layer, canvas, 200);
+    cloneAndCompareLayer(layer, 150);
   });
 
   test('cache rectangle with fill and stroke', function() {
@@ -178,9 +176,7 @@ suite('Caching', function() {
     layer.add(rect);
     stage.add(layer);
 
-    if (!window.isPhantomJS) {
       cloneAndCompareLayer(layer, 10);
-    }
   });
 
   test('cache rectangle with fill and simple shadow', function() {
@@ -390,9 +386,7 @@ suite('Caching', function() {
 
     layer.add(group);
     stage.add(layer);
-    if (!window.isPhantomJS) {
       cloneAndCompareLayer(layer, 200);
-    }
   });
 
   test('cache group with several shape with transform', function() {

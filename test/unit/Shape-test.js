@@ -804,9 +804,7 @@ suite('Shape', function() {
     context.strokeStyle = 'black';
     context.strokeText('Test TEXT', 50, 75);
 
-    if (!window.isPhantomJS) {
-      compareLayerAndCanvas(layer, canvas, 254);
-    }
+    compareLayerAndCanvas(layer, canvas, 254);
   });
 
   // ======================================================
@@ -1440,9 +1438,7 @@ suite('Shape', function() {
     layer2.add(rect2);
     stage.add(layer2);
 
-    if (!window.isPhantomJS) {
-      compareLayers(layer1, layer2, 30);
-    }
+    compareLayers(layer1, layer2, 30);
   });
 
   // ======================================================

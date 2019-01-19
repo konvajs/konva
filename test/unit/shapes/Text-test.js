@@ -140,9 +140,7 @@ suite('Text', function() {
     layer2.add(text1.clone().cache({ pixelRatio: 2 }));
     stage.add(layer1, layer2);
 
-    if (!window.isPhantomJS) {
-      compareLayers(layer1, layer2, 220);
-    }
+    compareLayers(layer1, layer2, 220);
   });
 
   test('text cache with fill and shadow and some scale', function() {
@@ -745,7 +743,7 @@ suite('Text', function() {
       x: 10,
       fillLinearGradientStartPoint: { x: 0, y: 0 },
       fillLinearGradientEndPoint: { x: 300, y: 0 },
-      fillLinearGradientColorStops: [0, 'yellow', 0.5, 'yellow', 1, 'red'],
+      fillLinearGradientColorStops: [0, 'yellow', 1, 'red'],
       text: 'Text with gradient!!',
       draggable: true
     });
@@ -761,7 +759,7 @@ suite('Text', function() {
 
     var start = { x: 0, y: 0 };
     var end = { x: 300, y: 0 };
-    var colorStops = [0, 'yellow', 0.5, 'yellow', 1, 'red'];
+    var colorStops = [0, 'yellow', 1, 'red'];
     var grd = ctx.createLinearGradient(start.x, start.y, end.x, end.y);
 
     // build color stops
@@ -772,11 +770,7 @@ suite('Text', function() {
 
     ctx.fillText(text.text(), text.x(), text.y() + text.fontSize() / 2);
 
-    // TODO: why this doesn't work in CI
-    // TODO: remove all isPhantomJS
-    if (!window.isPhantomJS) {
-      compareLayerAndCanvas(layer, canvas, 250);
-    }
+    compareLayerAndCanvas(layer, canvas, 250);
     // delete Konva.pixelRatio;
   });
 

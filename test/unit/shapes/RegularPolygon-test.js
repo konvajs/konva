@@ -142,9 +142,8 @@ suite('RegularPolygon', function() {
       height: 100,
       width: 100
     });
-    if (!window.isPhantomJS) {
-      cloneAndCompareLayer(layer, 254);
-    }
+
+    cloneAndCompareLayer(layer, 254);
     Konva.pixelRatio = undefined;
   });
 });
