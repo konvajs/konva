@@ -283,7 +283,7 @@ export class Animation {
  * @name Konva.BaseLayer#batchDraw
  * @return {Konva.Layer} this
  */
-// TODO: don't use animation or make sure they all run at the same time
+// TODO: don't use animation and make sure they all run at the same time
 BaseLayer.prototype.batchDraw = function() {
   var that = this,
     Anim = Animation;

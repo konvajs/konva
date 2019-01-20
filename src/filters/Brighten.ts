@@ -1,5 +1,6 @@
 import { Factory, Validators } from '../Factory';
-import { Node } from '../Node';
+import { Node, Filter } from '../Node';
+
 /**
  * Brighten Filter.
  * @function
@@ -10,7 +11,7 @@ import { Node } from '../Node';
  * node.filters([Konva.Filters.Brighten]);
  * node.brightness(0.8);
  */
-export const Brighten = function(imageData) {
+export const Brighten: Filter = function(imageData) {
   var brightness = this.brightness() * 255,
     data = imageData.data,
     len = data.length,

@@ -28,7 +28,7 @@ var ATTR_CHANGE_LIST = [
 var NODE_RECT = 'nodeRect';
 
 // TODO: check circles and text here!!!!
-// change text? change radius?
+// change text? change radius? change arc?
 
 var TRANSFORM_CHANGE_STR = [
   'xChange.resizer',

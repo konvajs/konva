@@ -5,11 +5,6 @@ import { UA } from '../Global';
 
 import { GetSet } from '../types';
 
-// TODO:
-// deprecate fill pattern image and fill gradient for text (and textpath?)
-// we have API for that in docs
-// I guess we should show a error or warning
-
 // constants
 var AUTO = 'auto',
   //CANVAS = 'canvas',
@@ -148,7 +143,6 @@ export class Text extends Shape {
 
     context.setAttr('textBaseline', MIDDLE);
 
-    // TODO: do we have that property in context?
     context.setAttr('textAlign', LEFT);
 
     // handle vertical alignment

@@ -11,6 +11,8 @@ import {
 import { Container } from './Container';
 import { GetSet, Vector2d } from './types';
 
+export type Filter = (this: Node, imageData: ImageData) => void;
+
 type globalCompositeOperationType =
   | ''
   | 'source-over'
@@ -1343,7 +1345,6 @@ export abstract class Node {
     }
     return res;
   }
-  // TODO: should we remove that function? it was added to resolve types
   isAncestorOf(node) {
     return false;
   }
@@ -1741,7 +1742,6 @@ export abstract class Node {
       callback(img);
     });
   }
-  // TODO: create overloaded method
   setSize(size) {
     this.width(size.width);
     this.height(size.height);

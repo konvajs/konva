@@ -3228,7 +3228,6 @@
           }
           return res;
       };
-      // TODO: should we remove that function? it was added to resolve types
       Node.prototype.isAncestorOf = function (node) {
           return false;
       };
@@ -3588,7 +3587,6 @@
               callback(img);
           });
       };
-      // TODO: create overloaded method
       Node.prototype.setSize = function (size) {
           this.width(size.width);
           this.height(size.height);
@@ -6390,7 +6388,7 @@
    * @name Konva.BaseLayer#batchDraw
    * @return {Konva.Layer} this
    */
-  // TODO: don't use animation or make sure they all run at the same time
+  // TODO: don't use animation and make sure they all run at the same time
   BaseLayer.prototype.batchDraw = function () {
       var that = this, Anim = Animation;
       if (!this.batchAnim) {
@@ -11226,10 +11224,6 @@
   Factory.addGetterSetter(Star, 'outerRadius', 0, Validators.getNumberValidator());
   Collection.mapMethods(Star);
 
-  // TODO:
-  // deprecate fill pattern image and fill gradient for text (and textpath?)
-  // we have API for that in docs
-  // I guess we should show a error or warning
   // constants
   var AUTO = 'auto', 
   //CANVAS = 'canvas',
@@ -11320,7 +11314,6 @@
           var padding = this.padding(), textHeight = this.getTextHeight(), lineHeightPx = this.lineHeight() * textHeight, textArr = this.textArr, textArrLen = textArr.length, verticalAlign = this.verticalAlign(), alignY = 0, align = this.align(), totalWidth = this.getWidth(), letterSpacing = this.letterSpacing(), fill = this.fill(), fontSize = this.fontSize(), textDecoration = this.textDecoration(), shouldUnderline = textDecoration.indexOf('underline') !== -1, shouldLineThrough = textDecoration.indexOf('line-through') !== -1, n;
           context.setAttr('font', this._getContextFont());
           context.setAttr('textBaseline', MIDDLE);
-          // TODO: do we have that property in context?
           context.setAttr('textAlign', LEFT$1);
           // handle vertical alignment
           if (verticalAlign === MIDDLE) {
@@ -12419,7 +12412,7 @@
   ].join(' ');
   var NODE_RECT = 'nodeRect';
   // TODO: check circles and text here!!!!
-  // change text? change radius?
+  // change text? change radius? change arc?
   var TRANSFORM_CHANGE_STR$1 = [
       'xChange.resizer',
       'yChange.resizer',
@@ -15167,7 +15160,6 @@
           mask = smoothEdgeMask(mask, imageData.width, imageData.height);
           // Apply mask
           applyMask(imageData, mask);
-          // todo : Update hit region function according to mask
       }
       return imageData;
   };

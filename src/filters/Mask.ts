@@ -194,8 +194,6 @@ export const Mask = function(imageData) {
 
     // Apply mask
     applyMask(imageData, mask);
-
-    // todo : Update hit region function according to mask
   }
 
   return imageData;
