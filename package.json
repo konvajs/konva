@@ -13,7 +13,7 @@
   "module": "konva.esm.js",
   "typings": "./konva.d.ts",
   "scripts": {
-    "start": "gulp",
+    "start": "npm run watch & gulp",
     "lint": "gulp lint",
     "build": "npm run compile && gulp build",
     "full-build": "npm run build && npm t",
@@ -21,7 +21,8 @@
     "prettier": "prettier --write \"src/**/*.js\" \"test/**/*.js\" --single-quote",
     "tsc": "tsc || echo \"tsc faild for some file(s).\"",
     "rollup": "rollup -c",
-    "compile": "npm run tsc && npm run rollup"
+    "compile": "npm run tsc && npm run rollup",
+    "watch": "rollup -c -w"
   },
   "devDependencies": {
     "chai": "4.1.2",
