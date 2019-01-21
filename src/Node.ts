@@ -710,7 +710,7 @@ export abstract class Node {
    */
   destroy() {
     // remove from ids and names hashes
-    _removeId(this.id());
+    _removeId(this.id(), this);
 
     // remove all names
     var names = (this.name() || '').split(/\s/g);
@@ -1277,12 +1277,19 @@ export abstract class Node {
       key,
       val,
       getter,
-      defaultValue;
+      defaultValue,
+      nonPlainObject;
 
     obj.attrs = {};
 
     for (key in attrs) {
       val = attrs[key];
+      // if value is object and object is not plain
+      // like class instance, we should skip it and to not inclide
+      nonPlainObject = Util.isObject(val) && !Util._isPlainObject(val);
+      if (nonPlainObject) {
+        continue;
+      }
       getter = typeof this[key] === 'function' && this[key];
       // remove attr value so that we can extract the default value from the getter
       delete attrs[key];
@@ -1823,7 +1830,7 @@ export abstract class Node {
   setId(id) {
     var oldId = this.id();
 
-    _removeId(oldId);
+    _removeId(oldId, this);
     _addId(this, id);
     this._setAttr('id', id);
     return this;

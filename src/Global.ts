@@ -71,8 +71,8 @@ export const _addId = function(node: any, id) {
     return;
   }
   // do we need this warning?
-  // if (this.ids[id]) {
-  //   Util.warn(
+  // if (ids[id]) {
+  //   console.warn(
   //     'Duplicate id "' +
   //       id +
   //       '". Please don not use same id several times. It may break find() method look up.'
@@ -81,11 +81,16 @@ export const _addId = function(node: any, id) {
   ids[id] = node;
 };
 
-// TODO: check node on remove
-export const _removeId = function(id: string) {
-  if (id !== undefined) {
-    delete ids[id];
+export const _removeId = function(id: string, node: any) {
+  // node has no id
+  if (!id) {
+    return;
   }
+  // another node is registered (possible for duplicate ids)
+  if (ids[id] !== node) {
+    return;
+  }
+  delete ids[id];
 };
 
 export const _addName = function(node: any, name) {

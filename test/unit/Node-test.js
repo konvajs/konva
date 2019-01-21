@@ -1153,6 +1153,8 @@ suite('Node', function() {
     layer.add(circle);
     stage.add(layer);
 
+    
+
     /*
      * add custom attr that points to self.  The setAttrs method should
      * not inifinitely recurse causing a stack overflow
@@ -1166,7 +1168,12 @@ suite('Node', function() {
      * methods, such as self, are not serialized, and will therefore avoid
      * circular json errors.
      */
+    // console.log(stage.children);
+    // return;
     var json = stage.toJSON();
+
+    // make sure children are ok after json
+    assert.equal(stage.children[0], layer);
   });
 
   // ======================================================
@@ -3045,6 +3052,44 @@ suite('Node', function() {
     assert.equal(Konva.names.myRect2, undefined);
     assert.equal(Konva.shapes[circleColorKey], undefined);
     assert.equal(Konva.shapes[rectColorKey], undefined);
+  });
+
+  // ======================================================
+  test('destroy should remove only required shape from ids regestry', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle({
+      x: stage.getWidth() / 2,
+      y: stage.getHeight() / 2,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      id: 'shape'
+    });
+
+    var rect = new Konva.Rect({
+      x: 300,
+      y: 100,
+      width: 100,
+      height: 50,
+      fill: 'purple',
+      stroke: 'black',
+      strokeWidth: 4,
+      id: 'shape'
+    });
+
+    layer.add(circle);
+    layer.add(rect);
+    stage.add(layer);
+
+    // last shape is registered
+    assert.equal(Konva.ids.shape, rect);
+    
+    // destroying circle should not remove rect from regiter
+    circle.destroy();
+
+    assert.equal(Konva.ids.shape, rect);
   });
 
   // ======================================================

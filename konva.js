@@ -67,8 +67,8 @@
           return;
       }
       // do we need this warning?
-      // if (this.ids[id]) {
-      //   Util.warn(
+      // if (ids[id]) {
+      //   console.warn(
       //     'Duplicate id "' +
       //       id +
       //       '". Please don not use same id several times. It may break find() method look up.'
@@ -76,11 +76,16 @@
       // }
       ids[id] = node;
   };
-  // TODO: check node on remove
-  var _removeId = function (id) {
-      if (id !== undefined) {
-          delete ids[id];
+  var _removeId = function (id, node) {
+      // node has no id
+      if (!id) {
+          return;
       }
+      // another node is registered (possible for duplicate ids)
+      if (ids[id] !== node) {
+          return;
+      }
+      delete ids[id];
   };
   var _addName = function (node, name) {
       if (name) {
@@ -607,7 +612,7 @@
       _isFunction: function (obj) {
           return !!(obj && obj.constructor && obj.call && obj.apply);
       },
-      _isObject: function (obj) {
+      _isPlainObject: function (obj) {
           return !!obj && obj.constructor === Object;
       },
       _isArray: function (obj) {
@@ -878,7 +883,7 @@
       _merge: function (o1, o2) {
           var retObj = this._clone(o2);
           for (var key in o1) {
-              if (this._isObject(o1[key])) {
+              if (this._isPlainObject(o1[key])) {
                   retObj[key] = this._merge(o1[key], retObj[key]);
               }
               else {
@@ -905,7 +910,7 @@
       cloneObject: function (obj) {
           var retObj = {};
           for (var key in obj) {
-              if (this._isObject(obj[key])) {
+              if (this._isPlainObject(obj[key])) {
                   retObj[key] = this.cloneObject(obj[key]);
               }
               else if (this._isArray(obj[key])) {
@@ -2651,7 +2656,7 @@
        */
       Node.prototype.destroy = function () {
           // remove from ids and names hashes
-          _removeId(this.id());
+          _removeId(this.id(), this);
           // remove all names
           var names$$1 = (this.name() || '').split(/\s/g);
           for (var i = 0; i < names$$1.length; i++) {
@@ -3164,10 +3169,16 @@
        * @returns {Object}
        */
       Node.prototype.toObject = function () {
-          var obj = {}, attrs = this.getAttrs(), key, val, getter, defaultValue;
+          var obj = {}, attrs = this.getAttrs(), key, val, getter, defaultValue, nonPlainObject;
           obj.attrs = {};
           for (key in attrs) {
               val = attrs[key];
+              // if value is object and object is not plain
+              // like class instance, we should skip it and to not inclide
+              nonPlainObject = Util.isObject(val) && !Util._isPlainObject(val);
+              if (nonPlainObject) {
+                  continue;
+              }
               getter = typeof this[key] === 'function' && this[key];
               // remove attr value so that we can extract the default value from the getter
               delete attrs[key];
@@ -3662,7 +3673,7 @@
       };
       Node.prototype.setId = function (id) {
           var oldId = this.id();
-          _removeId(oldId);
+          _removeId(oldId, this);
           _addId(this, id);
           this._setAttr('id', id);
           return this;
@@ -7175,8 +7186,8 @@
   Factory.addGetterSetter(Shape, 'shadowForStrokeEnabled', true, Validators.getBooleanValidator());
   /**
    * get/set shadowForStrokeEnabled. Useful for performance optimization.
-   * You may set `shape.shadowForStrokeEnabled(false)`. In this case stroke will be no draw shadow for stroke.
-   * Remember if you set `shadowForStrokeEnabled = false` for non closed line - that line with have no shadow!.
+   * You may set `shape.shadowForStrokeEnabled(false)`. In this case stroke will no effect shadow.
+   * Remember if you set `shadowForStrokeEnabled = false` for non closed line - that line will have no shadow!.
    * Default value is true
    * @name Konva.Shape#shadowForStrokeEnabled
    * @method
@@ -15581,6 +15592,51 @@
    * @returns {Number}
    */
 
+  var enableTrace = false;
+  var traceArrMax = 100;
+  var listenClickTap = false;
+  var inDblClickWindow = false;
+  /**
+   * Global pixel ratio configuration. KonvaJS automatically detect pixel ratio of current device.
+   * But you may override such property, if you want to use your value.
+   * @property pixelRatio
+   * @default undefined
+   * @name pixelRatio
+   * @memberof Konva
+   * @example
+   * Konva.pixelRatio = 1;
+   */
+  var pixelRatio = undefined;
+  /**
+   * Drag distance property. If you start to drag a node you may want to wait until pointer is moved to some distance from start point,
+   * only then start dragging. Default is 3px.
+   * @property dragDistance
+   * @default 0
+   * @memberof Konva
+   * @example
+   * Konva.dragDistance = 10;
+   */
+  var dragDistance = 3;
+  /**
+   * Use degree values for angle properties. You may set this property to false if you want to use radiant values.
+   * @property angleDeg
+   * @default true
+   * @memberof Konva
+   * @example
+   * node.rotation(45); // 45 degrees
+   * Konva.angleDeg = false;
+   * node.rotation(Math.PI / 2); // PI/2 radian
+   */
+  var angleDeg = true;
+  /**
+   * Show different warnings about errors or wrong API usage
+   * @property showWarnings
+   * @default true
+   * @memberof Konva
+   * @example
+   * Konva.showWarnings = false;
+   */
+  var showWarnings = true;
   /**
    * @namespace Filters
    * @memberof Konva
@@ -15607,7 +15663,15 @@
       Threshold: Threshold
   };
 
-  var KonvaInternals = ({
+  var Konva = ({
+    enableTrace: enableTrace,
+    traceArrMax: traceArrMax,
+    listenClickTap: listenClickTap,
+    inDblClickWindow: inDblClickWindow,
+    pixelRatio: pixelRatio,
+    dragDistance: dragDistance,
+    angleDeg: angleDeg,
+    showWarnings: showWarnings,
     Filters: Filters,
     Collection: Collection,
     Util: Util,
@@ -15663,53 +15727,6 @@
     getGlobalKonva: getGlobalKonva
   });
 
-  var Konva = KonvaInternals;
-  Konva.enableTrace = false;
-  Konva.traceArrMax = 100;
-  Konva.listenClickTap = false;
-  Konva.inDblClickWindow = false;
-  /**
-   * Global pixel ratio configuration. KonvaJS automatically detect pixel ratio of current device.
-   * But you may override such property, if you want to use your value.
-   * @property pixelRatio
-   * @default undefined
-   * @name pixelRatio
-   * @memberof Konva
-   * @example
-   * Konva.pixelRatio = 1;
-   */
-  Konva.pixelRatio = undefined;
-  /**
-   * Drag distance property. If you start to drag a node you may want to wait until pointer is moved to some distance from start point,
-   * only then start dragging. Default is 3px.
-   * @property dragDistance
-   * @default 0
-   * @memberof Konva
-   * @example
-   * Konva.dragDistance = 10;
-   */
-  Konva.dragDistance = 3;
-  /**
-   * Use degree values for angle properties. You may set this property to false if you want to use radiant values.
-   * @property angleDeg
-   * @default true
-   * @memberof Konva
-   * @example
-   * node.rotation(45); // 45 degrees
-   * Konva.angleDeg = false;
-   * node.rotation(Math.PI / 2); // PI/2 radian
-   */
-  Konva.angleDeg = true;
-  /**
-   * Show different warnings about errors or wrong API usage
-   * @property showWarnings
-   * @default true
-   * @memberof Konva
-   * @example
-   * Konva.showWarnings = false;
-   */
-  Konva.showWarnings = true;
-
-  return KonvaInternals;
+  return Konva;
 
 }));

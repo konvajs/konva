@@ -501,7 +501,7 @@ export const Util = {
   _isFunction(obj) {
     return !!(obj && obj.constructor && obj.call && obj.apply);
   },
-  _isObject(obj) {
+  _isPlainObject(obj) {
     return !!obj && obj.constructor === Object;
   },
   _isArray(obj) {
@@ -782,7 +782,7 @@ export const Util = {
   _merge(o1, o2) {
     var retObj = this._clone(o2);
     for (var key in o1) {
-      if (this._isObject(o1[key])) {
+      if (this._isPlainObject(o1[key])) {
         retObj[key] = this._merge(o1[key], retObj[key]);
       } else {
         retObj[key] = o1[key];
@@ -810,7 +810,7 @@ export const Util = {
   cloneObject<Any>(obj: Any): Any {
     var retObj: any = {};
     for (var key in obj) {
-      if (this._isObject(obj[key])) {
+      if (this._isPlainObject(obj[key])) {
         retObj[key] = this.cloneObject(obj[key]);
       } else if (this._isArray(obj[key])) {
         retObj[key] = this.cloneArray(obj[key]);

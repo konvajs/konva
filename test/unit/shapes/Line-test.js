@@ -146,17 +146,17 @@ suite('Line', function() {
     context.strokeStyle = 'blue';
 
     context.shadowColor = 'rgba(0,0,0,0.5)';
-    context.shadowBlur = 20;
-    context.shadowOffsetX = 10;
-    context.shadowOffsetY = 10;
+    context.shadowBlur = 40;
+    context.shadowOffsetX = 20;
+    context.shadowOffsetY = 20;
     context.moveTo(73, 160);
     context.lineTo(340, 23);
 
     context.stroke();
-    context.fill();
+    // context.fill();
     context.restore();
 
-    compareLayerAndCanvas(layer, canvas, 5);
+    compareLayerAndCanvas(layer, canvas, 50);
 
     var trace = layer.getContext().getTrace();
 
@@ -309,7 +309,8 @@ suite('Line', function() {
     assert.equal(rect.height, 52, 'check height');
   });
 
-  test('line caching', function() {
+  test.only('line caching', function() {
+    // Konva.pixelRatio = 1;
     var stage = addStage();
     var layer = new Konva.Layer();
     var blob = new Konva.Line({
@@ -330,7 +331,8 @@ suite('Line', function() {
     stage.add(layer);
     stage.add(layer2);
     layer2.hide();
-    compareLayers(layer, layer2);
+    compareLayers(layer, layer2, 100);
+    // Konva.pixelRatio = undefined;
   });
 
   test('updating points with old mutable array should trigger recalculations', function() {

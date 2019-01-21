@@ -688,8 +688,8 @@ Factory.addGetterSetter(
 
 /**
  * get/set shadowForStrokeEnabled. Useful for performance optimization.
- * You may set `shape.shadowForStrokeEnabled(false)`. In this case stroke will be no draw shadow for stroke.
- * Remember if you set `shadowForStrokeEnabled = false` for non closed line - that line with have no shadow!.
+ * You may set `shape.shadowForStrokeEnabled(false)`. In this case stroke will no effect shadow.
+ * Remember if you set `shadowForStrokeEnabled = false` for non closed line - that line will have no shadow!.
  * Default value is true
  * @name Konva.Shape#shadowForStrokeEnabled
  * @method

@@ -227,11 +227,18 @@ beforeEach(function() {
 Konva.UA.mobile = false;
 
 afterEach(function() {
-  // can we destroy stage?
-  clearTimeout(Konva.stages[Konva.stages.length - 1].dblTimeout);
-  //    Konva.stages.forEach(function(stage) {
-  //        stage.destroy();
-  //    });
+  var isFailed = this.currentTest.state == 'failed';
+  var isManual = this.currentTest.parent.title === 'Manual';
+
+  Konva.stages.forEach(function(stage) {
+    clearTimeout(stage.dblTimeout);
+  });
+
+  if (!isFailed && !isManual) {
+    Konva.stages.forEach(function(stage) {
+      stage.destroy();
+    });
+  }
 });
 
 Konva.Stage.prototype.simulateMouseDown = function(pos) {
