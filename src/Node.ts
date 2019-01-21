@@ -864,15 +864,10 @@ export abstract class Node {
     var visible = this.visible(),
       parent = this.getParent();
 
-    if (relativeTo === parent && visible === 'inherit') {
-      return true;
-    } else if (relativeTo === parent) {
-      return visible;
-    }
     // the following conditions are a simplification of the truth table above.
     // please modify carefully
     if (visible === 'inherit') {
-      if (parent) {
+      if (parent && parent !== relativeTo) {
         return parent._isVisible(relativeTo);
       } else {
         return true;
