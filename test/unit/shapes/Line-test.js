@@ -114,6 +114,7 @@ suite('Line', function() {
 
   // ======================================================
   test('add line with shadow', function() {
+    Konva.pixelRatio = 1;
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -146,15 +147,17 @@ suite('Line', function() {
     context.strokeStyle = 'blue';
 
     context.shadowColor = 'rgba(0,0,0,0.5)';
-    context.shadowBlur = 40;
-    context.shadowOffsetX = 20;
-    context.shadowOffsetY = 20;
+    context.shadowBlur = 20;
+    context.shadowOffsetX = 10;
+    context.shadowOffsetY = 10;
     context.moveTo(73, 160);
     context.lineTo(340, 23);
 
     context.stroke();
     // context.fill();
     context.restore();
+
+    Konva.pixelRatio = undefined;
 
     compareLayerAndCanvas(layer, canvas, 50);
 
@@ -309,7 +312,7 @@ suite('Line', function() {
     assert.equal(rect.height, 52, 'check height');
   });
 
-  test.only('line caching', function() {
+  test('line caching', function() {
     // Konva.pixelRatio = 1;
     var stage = addStage();
     var layer = new Konva.Layer();

@@ -111,6 +111,6 @@ suite('Blob', function() {
     layer.add(blob);
     stage.add(layer);
 
-    cloneAndCompareLayer(layer, 100);
+    cloneAndCompareLayer(layer, 150);
   });
 });
