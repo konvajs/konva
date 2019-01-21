@@ -50,4 +50,6 @@ Konva.angleDeg = true;
  */
 Konva.showWarnings = true;
 
+Konva.glob.Konva = Konva;
+
 export default KonvaInternals;
