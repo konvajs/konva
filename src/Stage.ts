@@ -112,7 +112,7 @@ export class Stage extends Container {
     this._buildDOM();
     this._bindContentEvents();
     stages.push(this);
-    this.on('widthChange heightChange', this._buildDOM);
+    this.on('widthChange heightChange', this._resizeDOM);
   }
 
   _validateAdd(child) {
