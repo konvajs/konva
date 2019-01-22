@@ -15,6 +15,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 * `Konva.Util.addMethods`
 * `Konva.Util._removeLastLetter`
+* `Konva.Util._getImage`
+* `Konv.Util._getRGBAString`
 
 ### Fixed
 

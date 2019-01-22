@@ -1740,7 +1740,7 @@ export abstract class Node {
     }
     var callback = config.callback;
     delete config.callback;
-    Util._getImage(this.toDataURL(config), function(img) {
+    Util._urlToImage(this.toDataURL(config), function(img) {
       callback(img);
     });
   }

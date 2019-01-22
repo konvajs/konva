@@ -13,8 +13,6 @@ export interface RectConf {
   height: number;
 }
 
-// TODO: document collection and give examples
-
 /**
  * Collection constructor. Collection extends Array.
  * This class is used in conjunction with {@link Konva.Container#find}
@@ -590,44 +588,15 @@ export const Util = {
    * arg can be an image object or image data
    */
   // TODO: use it only for data url
-  _getImage(arg, callback) {
-    var imageObj, canvas;
+  _urlToImage(url, callback) {
+    var imageObj;
 
-    // if arg is null or undefined
-    if (!arg) {
-      callback(null);
-    } else if (this._isElement(arg)) {
-      // if arg is already an image object
-      callback(arg);
-    } else if (this._isString(arg)) {
-      // if arg is a string, then it's a data url
-      imageObj = new glob.Image();
-      imageObj.onload = function() {
-        callback(imageObj);
-      };
-      imageObj.src = arg;
-    } else if (arg.data) {
-      //if arg is an object that contains the data property, it's an image object
-      canvas = Util.createCanvasElement();
-      canvas.width = arg.width;
-      canvas.height = arg.height;
-      var _context = canvas.getContext(CONTEXT_2D);
-      _context.putImageData(arg, 0, 0);
-      this._getImage(canvas.toDataURL(), callback);
-    } else {
-      callback(null);
-    }
-  },
-  // TODO: remove
-  _getRGBAString(obj) {
-    var red = obj.red || 0,
-      green = obj.green || 0,
-      blue = obj.blue || 0,
-      alpha = obj.alpha || 1;
-
-    return ['rgba(', red, ',', green, ',', blue, ',', alpha, ')'].join(
-      EMPTY_STRING
-    );
+    // if arg is a string, then it's a data url
+    imageObj = new glob.Image();
+    imageObj.onload = function() {
+      callback(imageObj);
+    };
+    imageObj.src = url;
   },
   _rgbToHex(r, g, b) {
     return ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
