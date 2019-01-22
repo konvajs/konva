@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+### Added
+* Show a warning when a stage has too many layers.
+
 ### Changed
 * Fixes inconsistent `layer.setSize()` method. Now it has same arguments as any container.
 * Full rewrite to Typescript with tons of refactoring and small optimizations. The public API should be 100% the same

@@ -1231,6 +1231,28 @@ suite('Stage', function() {
     image.src = url;
   });
 
+  test.only('show a warning if the stage has too many layers', function() {
+    var stage = addStage();
+    var oldWarn = Konva.Util.warn;
+    var called = false;
+    Konva.Util.warn = function() {
+      oldWarn.apply(null, arguments);
+      called = true;
+    };
+
+    // let say 5 is max number
+    stage.add(new Konva.Layer());
+    stage.add(new Konva.Layer());
+    stage.add(new Konva.Layer());
+    stage.add(new Konva.Layer());
+    stage.add(new Konva.Layer());
+    stage.add(new Konva.Layer());
+    stage.add(new Konva.Layer());
+
+    Konva.Util.warn = oldWarn;
+    assert.equal(called, true);
+  });
+
   // test.only('Warn when styles or stage are applied', function() {
   //   var stage = addStage();
   //   // var layer = new Konva.Layer();

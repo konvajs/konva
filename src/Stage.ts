@@ -50,6 +50,7 @@ var STAGE = 'Stage',
   SPACE = ' ',
   UNDERSCORE = '_',
   CONTAINER = 'container',
+  MAX_LAYERS_NUMBER = 5,
   EMPTY_STRING = '',
   EVENTS = [
     MOUSEDOWN,
@@ -75,6 +76,7 @@ function addEvent(ctx, eventName) {
     false
   );
 }
+
 export const stages: Stage[] = [];
 
 /**
@@ -300,6 +302,15 @@ export class Stage extends Container {
       return this;
     }
     super.add(layer);
+
+    var length = this.children.length;
+    if (length > MAX_LAYERS_NUMBER) {
+      Util.warn(
+        'The stage has ' +
+          length +
+          ' layers. Recommended maximin number of layers is 3-5. Adding more layers into the stage may drop the performance. Rethink your tree structure, you can use Konva.Group.'
+      );
+    }
     layer._setCanvasSize(this.width(), this.height());
 
     // draw layer and append canvas to container
