@@ -6,12 +6,12 @@
     "README.md",
     "konva.js",
     "konva.min.js",
-    "src",
-    "konva.d.ts"
+    "konva.d.ts",
+    "types"
   ],
   "main": "konva.js",
   "module": "konva.esm.js",
-  "typings": "./konva.d.ts",
+  "typings": "./types/index.d.ts",
   "scripts": {
     "start": "npm run watch & gulp",
     "lint": "gulp lint",
