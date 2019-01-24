@@ -11412,6 +11412,7 @@
       Text.prototype.getTextWidth = function () {
           return this.textWidth;
       };
+      // TODO: deprecate and remove the method
       /**
        * get height of one line of text
        * @method
@@ -11421,6 +11422,7 @@
       Text.prototype.getTextHeight = function () {
           return this.textHeight;
       };
+      // TODO: make it public?
       Text.prototype._getTextSize = function (text) {
           var _context = getDummyContext(), fontSize = this.fontSize(), metrics;
           _context.save();

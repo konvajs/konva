@@ -275,6 +275,7 @@ export class Text extends Shape {
   getTextWidth() {
     return this.textWidth;
   }
+  // TODO: deprecate and remove the method
   /**
    * get height of one line of text
    * @method
@@ -284,6 +285,8 @@ export class Text extends Shape {
   getTextHeight() {
     return this.textHeight;
   }
+
+  // TODO: make it public?
   _getTextSize(text) {
     var _context = getDummyContext(),
       fontSize = this.fontSize(),
