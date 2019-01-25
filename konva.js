@@ -20,8 +20,6 @@
    * @namespace Konva
    */
   var version = '@@version';
-  // private
-  var ids = {};
   var names = {};
   var shapes = {};
   var isBrowser = typeof window !== 'undefined' &&
@@ -61,31 +59,6 @@
           return !!dd.node;
       }
       return false;
-  };
-  var _addId = function (node, id) {
-      if (!id) {
-          return;
-      }
-      // do we need this warning?
-      // if (ids[id]) {
-      //   console.warn(
-      //     'Duplicate id "' +
-      //       id +
-      //       '". Please don not use same id several times. It may break find() method look up.'
-      //   );
-      // }
-      ids[id] = node;
-  };
-  var _removeId = function (id, node) {
-      // node has no id
-      if (!id) {
-          return;
-      }
-      // another node is registered (possible for duplicate ids)
-      if (ids[id] !== node) {
-          return;
-      }
-      delete ids[id];
   };
   var _addName = function (node, name) {
       if (name) {
@@ -2086,6 +2059,28 @@
       return HitCanvas;
   }(Canvas));
 
+  var ids = {};
+  var ID_WARNING = "Duplicate id \"{id}\".\nPlease do not use same id several times, it will break find() method look up.\nIf you have duplicates it is better to use \"name\" property instead.\n";
+  var _addId = function (node, id) {
+      if (!id) {
+          return;
+      }
+      if (ids[id]) {
+          Util.warn(ID_WARNING.replace('{id}', id));
+      }
+      ids[id] = node;
+  };
+  var _removeId = function (id, node) {
+      // node has no id
+      if (!id) {
+          return;
+      }
+      // another node is registered (possible for duplicate ids)
+      if (ids[id] !== node) {
+          return;
+      }
+      delete ids[id];
+  };
   // CONSTANTS
   var ABSOLUTE_OPACITY = 'absoluteOpacity', ABSOLUTE_TRANSFORM = 'absoluteTransform', ABSOLUTE_SCALE = 'absoluteScale', CHANGE = 'Change', CHILDREN = 'children', KONVA = 'konva', LISTENING = 'listening', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', NAME = 'name', SET$1 = 'set', SHAPE = 'Shape', SPACE = ' ', STAGE = 'stage', TRANSFORM = 'transform', UPPER_STAGE = 'Stage', VISIBLE = 'visible', CLONE_BLACK_LIST = ['id'], TRANSFORM_CHANGE_STR = [
       'xChange.konva',
@@ -15650,6 +15645,7 @@
     Collection: Collection,
     Util: Util,
     Node: Node,
+    ids: ids,
     Container: Container,
     Stage: Stage,
     stages: stages,
@@ -15680,7 +15676,6 @@
     Transformer: Transformer,
     Wedge: Wedge,
     version: version,
-    ids: ids,
     names: names,
     shapes: shapes,
     isBrowser: isBrowser,
@@ -15688,8 +15683,6 @@
     dblClickWindow: dblClickWindow,
     isDragging: isDragging,
     isDragReady: isDragReady,
-    _addId: _addId,
-    _removeId: _removeId,
     _addName: _addName,
     _removeName: _removeName,
     getAngle: getAngle,

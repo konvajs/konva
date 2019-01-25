@@ -118,20 +118,23 @@ suite('Node', function() {
     assert.equal(layer.getAbsoluteOpacity(), 0.5);
   });
 
-  test.skip('warn on duplicate id', function() {
+  test.only('warn on duplicate id', function() {
     var oldWarn = Konva.Util.warn;
     var called = false;
     Konva.Util.warn = function() {
       called = true;
     };
-    var circle = new Konva.Circle({
+    var circle1 = new Konva.Circle({
       id: 'circle'
     });
-    var circle = new Konva.Circle({
+    var circle2 = new Konva.Circle({
       id: 'circle'
     });
+
     assert.equal(called, true);
     Konva.Util.warn = oldWarn;
+    circle1.destroy();
+    circle2.destroy();
   });
 
   // ======================================================
@@ -1152,8 +1155,6 @@ suite('Node', function() {
     });
     layer.add(circle);
     stage.add(layer);
-
-    
 
     /*
      * add custom attr that points to self.  The setAttrs method should
@@ -3085,7 +3086,7 @@ suite('Node', function() {
 
     // last shape is registered
     assert.equal(Konva.ids.shape, rect);
-    
+
     // destroying circle should not remove rect from regiter
     circle.destroy();
 

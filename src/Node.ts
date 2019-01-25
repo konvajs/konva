@@ -1,15 +1,38 @@
 import { Util, Collection, Transform, RectConf, Point } from './Util';
 import { Factory, Validators } from './Factory';
 import { SceneCanvas, HitCanvas } from './Canvas';
-import {
-  _removeId,
-  _removeName,
-  _addId,
-  _addName,
-  getGlobalKonva
-} from './Global';
+import { _removeName, _addName, getGlobalKonva } from './Global';
 import { Container } from './Container';
 import { GetSet, Vector2d } from './types';
+
+export const ids = {};
+
+const ID_WARNING = `Duplicate id "{id}".
+Please do not use same id several times, it will break find() method look up.
+If you have duplicates it is better to use "name" property instead.
+`;
+
+const _addId = function(node: Node, id) {
+  if (!id) {
+    return;
+  }
+  if (ids[id]) {
+    Util.warn(ID_WARNING.replace('{id}', id));
+  }
+  ids[id] = node;
+};
+
+export const _removeId = function(id: string, node: any) {
+  // node has no id
+  if (!id) {
+    return;
+  }
+  // another node is registered (possible for duplicate ids)
+  if (ids[id] !== node) {
+    return;
+  }
+  delete ids[id];
+};
 
 export type Filter = (this: Node, imageData: ImageData) => void;
 

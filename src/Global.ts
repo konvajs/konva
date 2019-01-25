@@ -15,8 +15,6 @@ var PI_OVER_180 = Math.PI / 180;
  */
 export const version = '@@version';
 
-// private
-export const ids = {};
 export const names = {};
 export const shapes = {};
 
@@ -65,32 +63,6 @@ export const isDragReady = function() {
     return !!dd.node;
   }
   return false;
-};
-export const _addId = function(node: any, id) {
-  if (!id) {
-    return;
-  }
-  // do we need this warning?
-  // if (ids[id]) {
-  //   console.warn(
-  //     'Duplicate id "' +
-  //       id +
-  //       '". Please don not use same id several times. It may break find() method look up.'
-  //   );
-  // }
-  ids[id] = node;
-};
-
-export const _removeId = function(id: string, node: any) {
-  // node has no id
-  if (!id) {
-    return;
-  }
-  // another node is registered (possible for duplicate ids)
-  if (ids[id] !== node) {
-    return;
-  }
-  delete ids[id];
 };
 
 export const _addName = function(node: any, name) {

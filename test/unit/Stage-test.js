@@ -1231,12 +1231,11 @@ suite('Stage', function() {
     image.src = url;
   });
 
-  test.only('show a warning if the stage has too many layers', function() {
+  test('show a warning if the stage has too many layers', function() {
     var stage = addStage();
     var oldWarn = Konva.Util.warn;
     var called = false;
     Konva.Util.warn = function() {
-      oldWarn.apply(null, arguments);
       called = true;
     };
 

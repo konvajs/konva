@@ -1,9 +1,9 @@
 import { Util, Collection } from './Util';
 import { Factory, Validators } from './Factory';
-import { Node } from './Node';
-import { getGlobalKonva, ids, names } from './Global';
+import { Node, ids } from './Node';
+import { getGlobalKonva, names } from './Global';
 
-import { GetSet, Vector2d, IRect } from './types';
+import { GetSet, IRect } from './types';
 
 /**
  * Container constructor.&nbsp; Containers are used to contain nodes or other containers

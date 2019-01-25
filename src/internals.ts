@@ -1,7 +1,7 @@
 export * from './Global';
 
 export { Collection, Util } from './Util';
-export { Node } from './Node';
+export { Node, ids } from './Node';
 export { Container } from './Container';
 
 export { Stage, stages } from './Stage';
