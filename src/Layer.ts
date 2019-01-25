@@ -44,13 +44,10 @@ var HASH = '#',
  * // now you can add shapes, groups into the layer
  */
 export class Layer extends BaseLayer {
-  constructor(config) {
-    super(config);
-    this.nodeType = 'Layer';
-    this.hitCanvas = new HitCanvas({
-      pixelRatio: 1
-    });
-  }
+  hitCanvas = new HitCanvas({
+    pixelRatio: 1
+  });
+
   _setCanvasSize(width, height) {
     this.canvas.setSize(width, height);
     this.hitCanvas.setSize(width, height);

@@ -4,6 +4,7 @@ import { SceneCanvas, HitCanvas } from './Canvas';
 import { _removeName, _addName, getGlobalKonva } from './Global';
 import { Container } from './Container';
 import { GetSet, Vector2d } from './types';
+import { DD } from './DragAndDrop';
 
 export const ids = {};
 
@@ -116,6 +117,7 @@ export abstract class Node {
   index = 0;
   parent: Container = null;
   _cache: any = {};
+  _lastPos = null;
 
   _filterUpToDate = false;
   _isUnderCache = false;
@@ -705,6 +707,13 @@ export abstract class Node {
    * node.remove();
    */
   remove() {
+    if (DD.node && DD.node === this) {
+      this.stopDrag();
+    }
+    this._remove();
+    return this;
+  }
+  _remove() {
     var parent = this.getParent();
 
     if (parent && parent.children) {
@@ -720,8 +729,6 @@ export abstract class Node {
     this._clearSelfAndDescendantCache(VISIBLE);
     this._clearSelfAndDescendantCache(LISTENING);
     this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
-
-    return this;
   }
   /**
    * remove and destroy a node. Kill it and delete forever! You should not reuse node after destroy().
@@ -1013,7 +1020,7 @@ export abstract class Node {
       y: this.y()
     };
   }
-  getAbsolutePosition(top) {
+  getAbsolutePosition(top?) {
     var absoluteMatrix = this.getAbsoluteTransform(top).getMatrix(),
       absoluteTransform = new Transform(),
       offset = this.offset();
@@ -1276,9 +1283,7 @@ export abstract class Node {
   moveTo(newContainer) {
     // do nothing if new container is already parent
     if (this.getParent() !== newContainer) {
-      // this.remove my be overrided by drag and drop
-      // buy we need original
-      (this['__originalRemove'] || this.remove).call(this);
+      this._remove();
       newContainer.add(this);
     }
     return this;
@@ -2058,6 +2063,140 @@ export abstract class Node {
     return this;
   }
 
+  // drag & drop
+  /**
+   * initiate drag and drop
+   * @method
+   * @name Konva.Node#startDrag
+   */
+  startDrag() {
+    var stage = this.getStage(),
+      layer = this.getLayer(),
+      pos = stage.getPointerPosition(),
+      ap = this.getAbsolutePosition();
+
+    if (pos) {
+      if (DD.node) {
+        DD.node.stopDrag();
+      }
+
+      DD.node = this;
+      DD.startPointerPos = pos;
+      DD.offset.x = pos.x - ap.x;
+      DD.offset.y = pos.y - ap.y;
+      DD.anim.setLayers(layer || this['getLayers']());
+      DD.anim.start();
+
+      this._setDragPosition();
+    }
+  }
+
+  _setDragPosition(evt?) {
+    var pos = this.getStage().getPointerPosition(),
+      dbf = this.dragBoundFunc();
+    if (!pos) {
+      return;
+    }
+    var newNodePos = {
+      x: pos.x - DD.offset.x,
+      y: pos.y - DD.offset.y
+    };
+
+    if (dbf !== undefined) {
+      newNodePos = dbf.call(this, newNodePos, evt);
+    }
+    this.setAbsolutePosition(newNodePos);
+
+    if (
+      !this._lastPos ||
+      this._lastPos.x !== newNodePos.x ||
+      this._lastPos.y !== newNodePos.y
+    ) {
+      DD.anim['dirty'] = true;
+    }
+
+    this._lastPos = newNodePos;
+  }
+
+  /**
+   * stop drag and drop
+   * @method
+   * @name Konva.Node#stopDrag
+   */
+  stopDrag() {
+    var evt = {};
+    DD._endDragBefore(evt);
+    DD._endDragAfter(evt);
+  }
+
+  setDraggable(draggable) {
+    this._setAttr('draggable', draggable);
+    this._dragChange();
+  }
+
+  /**
+   * determine if node is currently in drag and drop mode
+   * @method
+   * @name Konva.Node#isDragging
+   */
+  isDragging() {
+    return !!(DD.node && DD.node === this && DD.isDragging);
+  }
+
+  _listenDrag() {
+    var that = this;
+
+    this._dragCleanup();
+
+    if (this.getClassName() === 'Stage') {
+      this.on('contentMousedown.konva contentTouchstart.konva', function(evt) {
+        if (!DD.node) {
+          that.startDrag();
+        }
+      });
+    } else {
+      this.on('mousedown.konva touchstart.konva', function(evt) {
+        // ignore right and middle buttons
+        if (evt.evt.button === 1 || evt.evt.button === 2) {
+          return;
+        }
+        if (!DD.node) {
+          that.startDrag();
+        }
+      });
+    }
+  }
+
+  _dragChange() {
+    if (this.attrs.draggable) {
+      this._listenDrag();
+    } else {
+      // remove event listeners
+      this._dragCleanup();
+
+      /*
+       * force drag and drop to end
+       * if this node is currently in
+       * drag and drop mode
+       */
+      var stage = this.getStage();
+      var dd = DD;
+      if (stage && dd.node && dd.node._id === this._id) {
+        dd.node.stopDrag();
+      }
+    }
+  }
+
+  _dragCleanup() {
+    if (this.getClassName() === 'Stage') {
+      this.off('contentMousedown.konva');
+      this.off('contentTouchstart.konva');
+    } else {
+      this.off('mousedown.konva');
+      this.off('touchstart.konva');
+    }
+  }
+
   preventDefault: GetSet<boolean, this>;
 
   // from filters
@@ -2084,8 +2223,7 @@ export abstract class Node {
   embossStrength: GetSet<number, this>;
   embossWhiteLevel: GetSet<number, this>;
   enhance: GetSet<number, this>;
-  // TODO: write correct type
-  filters: GetSet<any[], this>;
+  filters: GetSet<Filter[], this>;
   position: GetSet<Vector2d, this>;
   size: GetSet<Vector2d, this>;
 
@@ -2108,17 +2246,7 @@ export abstract class Node {
   skewX: GetSet<number, this>;
   skewY: GetSet<number, this>;
 
-  // TODO: move this method to that file
-  startDrag: () => void;
-  stopDrag: () => void;
-
   to: (params: any) => void;
-  _setDragPosition: (pos: Vector2d) => void;
-  setDraggable: (val: boolean) => void;
-  isDragging: () => boolean;
-  _listenDrag: () => void;
-  _dragChange: () => void;
-  _dragCleanup: () => void;
 
   transformsEnabled: GetSet<string, this>;
 
@@ -2162,8 +2290,17 @@ export abstract class Node {
       obj.attrs.container = container;
     }
 
-    // TODO: check is such className doesn't exist
+    if (!getGlobalKonva()[className]) {
+      Util.warn(
+        'Can not find a node with class name "' +
+          className +
+          '". Fallback to "Shape".'
+      );
+      className = 'Shape';
+    }
+
     const Class = getGlobalKonva()[className];
+
     no = new Class(obj.attrs);
     if (children) {
       len = children.length;
@@ -2305,12 +2442,7 @@ Factory.addGetterSetter(Node, 'opacity', 1, Validators.getNumberValidator());
  */
 
 // TODO: should default name be empty string?
-Factory.addGetterSetter(
-  Node,
-  'name',
-  undefined,
-  Validators.getStringValidator()
-);
+Factory.addGetterSetter(Node, 'name', '', Validators.getStringValidator());
 
 /**
  * get/set name
@@ -2329,7 +2461,7 @@ Factory.addGetterSetter(
  * node.name('foo bar');
  */
 
-Factory.addGetterSetter(Node, 'id');
+Factory.addGetterSetter(Node, 'id', '', Validators.getStringValidator());
 
 /**
  * get/set id. Id is global for whole page.
@@ -2732,6 +2864,52 @@ Factory.addGetterSetter(
  * });
  */
 Factory.addGetterSetter(Node, 'size');
+
+/**
+ * get/set drag bound function.  This is used to override the default
+ *  drag and drop position.
+ * @name Konva.Node#dragBoundFunc
+ * @method
+ * @param {Function} dragBoundFunc
+ * @returns {Function}
+ * @example
+ * // get drag bound function
+ * var dragBoundFunc = node.dragBoundFunc();
+ *
+ * // create vertical drag and drop
+ * node.dragBoundFunc(function(pos){
+ *   // important pos - is absolute position of the node
+ *   // you should return absolute position too
+ *   return {
+ *     x: this.getAbsolutePosition().x,
+ *     y: pos.y
+ *   };
+ * });
+ */
+Factory.addGetterSetter(Node, 'dragBoundFunc');
+
+/**
+ * get/set draggable flag
+ * @name Konva.Node#draggable
+ * @method
+ * @param {Boolean} draggable
+ * @returns {Boolean}
+ * @example
+ * // get draggable flag
+ * var draggable = node.draggable();
+ *
+ * // enable drag and drop
+ * node.draggable(true);
+ *
+ * // disable drag and drop
+ * node.draggable(false);
+ */
+Factory.addGetterSetter(
+  Node,
+  'draggable',
+  false,
+  Validators.getBooleanValidator()
+);
 
 Factory.backCompat(Node, {
   rotateDeg: 'rotate',

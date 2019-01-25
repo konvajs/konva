@@ -1,6 +1,4 @@
 import { glob } from './Global';
-import { BaseLayer } from './BaseLayer';
-import { Stage } from './Stage';
 import { Layer } from './Layer';
 
 var now = (function() {
@@ -14,25 +12,6 @@ var now = (function() {
     return new Date().getTime();
   };
 })();
-
-function FRAF(callback) {
-  setTimeout(callback, 1000 / 60);
-}
-
-var RAF = (function() {
-  return (
-    glob.requestAnimationFrame ||
-    glob.webkitRequestAnimationFrame ||
-    glob.mozRequestAnimationFrame ||
-    glob.oRequestAnimationFrame ||
-    glob.msRequestAnimationFrame ||
-    FRAF
-  );
-})();
-
-function requestAnimFrame(func) {
-  return RAF.call(glob, func);
-}
 
 /**
  * Animation constructor.  A stage is used to contain multiple layers and handle
@@ -263,7 +242,7 @@ export class Animation {
     var Anim = Animation;
     if (Anim.animations.length) {
       Anim._runFrames();
-      requestAnimFrame(Anim._animationLoop);
+      requestAnimationFrame(Anim._animationLoop);
     } else {
       Anim.animRunning = false;
     }
@@ -271,45 +250,7 @@ export class Animation {
   static _handleAnimation() {
     if (!this.animRunning) {
       this.animRunning = true;
-      requestAnimFrame(this._animationLoop);
+      requestAnimationFrame(this._animationLoop);
     }
   }
 }
-
-/**
- * batch draw. this function will not do immediate draw
- * but it will schedule drawing to next tick (requestAnimFrame)
- * @method
- * @name Konva.BaseLayer#batchDraw
- * @return {Konva.Layer} this
- */
-// TODO: don't use animation and make sure they all run at the same time
-BaseLayer.prototype.batchDraw = function() {
-  var that = this,
-    Anim = Animation;
-
-  if (!this.batchAnim) {
-    this.batchAnim = new Anim(function() {
-      // stop animation after first tick
-      that.batchAnim.stop();
-    }, this);
-  }
-
-  if (!this.batchAnim.isRunning()) {
-    this.batchAnim.start();
-  }
-  return this;
-};
-
-/**
- * batch draw
- * @method
- * @name Konva.BaseLayer#batchDraw
- * @return {Konva.Stage} this
- */
-Stage.prototype.batchDraw = function() {
-  this.getChildren().each(function(layer) {
-    layer.batchDraw();
-  });
-  return this;
-};

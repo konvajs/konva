@@ -319,8 +319,7 @@ export class Transform {
 }
 
 // CONSTANTS
-var CONTEXT_2D = '2d',
-  OBJECT_ARRAY = '[object Array]',
+var OBJECT_ARRAY = '[object Array]',
   OBJECT_NUMBER = '[object Number]',
   OBJECT_STRING = '[object String]',
   OBJECT_BOOLEAN = '[object Boolean]',
@@ -543,6 +542,21 @@ export const Util = {
       return -1;
     }
   },
+  _waiting: false,
+  animQueue: [],
+  requestAnimFrame(callback) {
+    Util.animQueue.push(callback);
+    if (Util._waiting) {
+      return;
+    }
+    requestAnimationFrame(() => {
+      Util.animQueue.forEach(cb => {
+        cb();
+      });
+      Util.animQueue = [];
+      Util._waiting = false;
+    });
+  },
   createCanvasElement() {
     var canvas = isBrowser
       ? document.createElement('canvas')
@@ -587,7 +601,6 @@ export const Util = {
   /*
    * arg can be an image object or image data
    */
-  // TODO: use it only for data url
   _urlToImage(url, callback) {
     var imageObj;
 

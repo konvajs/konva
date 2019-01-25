@@ -1,9 +1,5 @@
 import { Animation } from './Animation';
-import { Node } from './Node';
-import { Factory, Validators } from './Factory';
 import { isBrowser, getGlobalKonva } from './Global';
-
-// TODO: move it to core, move all node methods to Node class
 
 export const DD = {
   startPointerPos: {
@@ -26,10 +22,9 @@ export const DD = {
 
   // methods
   _drag(evt) {
-    var dd = DD,
-      node = dd.node;
+    var node = DD.node;
     if (node) {
-      if (!dd.isDragging) {
+      if (!DD.isDragging) {
         var pos = node.getStage().getPointerPosition();
         // it is possible that pos is undefined
         // reattach it
@@ -39,8 +34,8 @@ export const DD = {
         }
         var dragDistance = node.dragDistance();
         var distance = Math.max(
-          Math.abs(pos.x - dd.startPointerPos.x),
-          Math.abs(pos.y - dd.startPointerPos.y)
+          Math.abs(pos.x - DD.startPointerPos.x),
+          Math.abs(pos.y - DD.startPointerPos.y)
         );
         if (distance < dragDistance) {
           return;
@@ -48,8 +43,8 @@ export const DD = {
       }
 
       node.getStage()._setPointerPosition(evt);
-      if (!dd.isDragging) {
-        dd.isDragging = true;
+      if (!DD.isDragging) {
+        DD.isDragging = true;
         node.fire(
           'dragstart',
           {
@@ -79,19 +74,18 @@ export const DD = {
     }
   },
   _endDragBefore(evt) {
-    var dd = DD,
-      node = dd.node,
+    var node = DD.node,
       layer;
 
     if (node) {
       layer = node.getLayer();
-      dd.anim.stop();
+      DD.anim.stop();
 
       // only fire dragend event if the drag and drop
       // operation actually started.
-      if (dd.isDragging) {
-        dd.isDragging = false;
-        dd.justDragged = true;
+      if (DD.isDragging) {
+        DD.isDragging = false;
+        DD.justDragged = true;
         getGlobalKonva().listenClickTap = false;
 
         if (evt) {
@@ -99,7 +93,7 @@ export const DD = {
         }
       }
 
-      delete dd.node;
+      delete DD.node;
 
       if (layer || node instanceof getGlobalKonva().Stage) {
         (layer || node).draw();
@@ -123,207 +117,6 @@ export const DD = {
     }
   }
 };
-
-// Node extenders
-
-/**
- * initiate drag and drop
- * @method
- * @name Konva.Node#startDrag
- */
-Node.prototype.startDrag = function() {
-  var dd = DD,
-    stage = this.getStage(),
-    layer = this.getLayer(),
-    pos = stage.getPointerPosition(),
-    ap = this.getAbsolutePosition();
-
-  if (pos) {
-    if (dd.node) {
-      dd.node.stopDrag();
-    }
-
-    dd.node = this;
-    dd.startPointerPos = pos;
-    dd.offset.x = pos.x - ap.x;
-    dd.offset.y = pos.y - ap.y;
-    dd.anim.setLayers(layer || this.getLayers());
-    dd.anim.start();
-
-    this._setDragPosition();
-  }
-};
-
-Node.prototype._setDragPosition = function(evt) {
-  var dd = DD,
-    pos = this.getStage().getPointerPosition(),
-    dbf = this.getDragBoundFunc();
-  if (!pos) {
-    return;
-  }
-  var newNodePos = {
-    x: pos.x - dd.offset.x,
-    y: pos.y - dd.offset.y
-  };
-
-  if (dbf !== undefined) {
-    newNodePos = dbf.call(this, newNodePos, evt);
-  }
-  this.setAbsolutePosition(newNodePos);
-
-  if (
-    !this._lastPos ||
-    this._lastPos.x !== newNodePos.x ||
-    this._lastPos.y !== newNodePos.y
-  ) {
-    dd.anim['dirty'] = true;
-  }
-
-  this._lastPos = newNodePos;
-};
-
-/**
- * stop drag and drop
- * @method
- * @name Konva.Node#stopDrag
- */
-Node.prototype.stopDrag = function() {
-  var dd = DD,
-    evt = {};
-  dd._endDragBefore(evt);
-  dd._endDragAfter(evt);
-};
-
-Node.prototype.setDraggable = function(draggable) {
-  this._setAttr('draggable', draggable);
-  this._dragChange();
-};
-
-var origRemove = Node.prototype.remove;
-
-Node.prototype['__originalRemove'] = origRemove;
-Node.prototype.remove = function() {
-  var dd = DD;
-
-  // stop DD
-  if (dd.node && dd.node._id === this._id) {
-    this.stopDrag();
-  }
-
-  return origRemove.call(this);
-};
-
-/**
- * determine if node is currently in drag and drop mode
- * @method
- * @name Konva.Node#isDragging
- */
-Node.prototype.isDragging = function() {
-  var dd = DD;
-  return !!(dd.node && dd.node._id === this._id && dd.isDragging);
-};
-
-Node.prototype._listenDrag = function() {
-  var that = this;
-
-  this._dragCleanup();
-
-  if (this.getClassName() === 'Stage') {
-    this.on('contentMousedown.konva contentTouchstart.konva', function(evt) {
-      if (!DD.node) {
-        that.startDrag(evt);
-      }
-    });
-  } else {
-    this.on('mousedown.konva touchstart.konva', function(evt) {
-      // ignore right and middle buttons
-      if (evt.evt.button === 1 || evt.evt.button === 2) {
-        return;
-      }
-      if (!DD.node) {
-        that.startDrag(evt);
-      }
-    });
-  }
-};
-
-Node.prototype._dragChange = function() {
-  if (this.attrs.draggable) {
-    this._listenDrag();
-  } else {
-    // remove event listeners
-    this._dragCleanup();
-
-    /*
-     * force drag and drop to end
-     * if this node is currently in
-     * drag and drop mode
-     */
-    var stage = this.getStage();
-    var dd = DD;
-    if (stage && dd.node && dd.node._id === this._id) {
-      dd.node.stopDrag();
-    }
-  }
-};
-
-Node.prototype._dragCleanup = function() {
-  if (this.getClassName() === 'Stage') {
-    this.off('contentMousedown.konva');
-    this.off('contentTouchstart.konva');
-  } else {
-    this.off('mousedown.konva');
-    this.off('touchstart.konva');
-  }
-};
-
-Factory.addGetterSetter(Node, 'dragBoundFunc');
-
-/**
- * get/set drag bound function.  This is used to override the default
- *  drag and drop position.
- * @name Konva.Node#dragBoundFunc
- * @method
- * @param {Function} dragBoundFunc
- * @returns {Function}
- * @example
- * // get drag bound function
- * var dragBoundFunc = node.dragBoundFunc();
- *
- * // create vertical drag and drop
- * node.dragBoundFunc(function(pos){
- *   // important pos - is absolute position of the node
- *   // you should return absolute position too
- *   return {
- *     x: this.getAbsolutePosition().x,
- *     y: pos.y
- *   };
- * });
- */
-
-Factory.addGetterSetter(
-  Node,
-  'draggable',
-  false,
-  Validators.getBooleanValidator()
-);
-
-/**
- * get/set draggable flag
- * @name Konva.Node#draggable
- * @method
- * @param {Boolean} draggable
- * @returns {Boolean}
- * @example
- * // get draggable flag
- * var draggable = node.draggable();
- *
- * // enable drag and drop
- * node.draggable(true);
- *
- * // disable drag and drop
- * node.draggable(false);
- */
 
 if (isBrowser) {
   window.addEventListener('mouseup', DD._endDragBefore, true);

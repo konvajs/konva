@@ -19,14 +19,13 @@ import { GetSet } from './types';
  * @@containerParams
  */
 export abstract class BaseLayer extends Container {
-  canvas: SceneCanvas;
+  canvas = new SceneCanvas();
   hitCanvas: HitCanvas;
+
+  _waitingForDraw = false;
 
   constructor(config) {
     super(config);
-    this.nodeType = 'Layer';
-    this.canvas = new SceneCanvas();
-
     this.on('visibleChange', this._checkVisibility);
     this._checkVisibility();
   }
@@ -240,6 +239,25 @@ export abstract class BaseLayer extends Container {
   getIntersection(pos, selector?) {
     return null;
   }
+
+  /**
+   * batch draw. this function will not do immediate draw
+   * but it will schedule drawing to next tick (requestAnimFrame)
+   * @method
+   * @name Konva.BaseLayer#batchDraw
+   * @return {Konva.Layer} this
+   */
+  batchDraw() {
+    if (this._waitingForDraw) {
+      return;
+    }
+    Util.requestAnimFrame(() => {
+      this._waitingForDraw = false;
+      this.draw();
+    });
+    return this;
+  }
+
   // the apply transform method is handled by the Layer and FastLayer class
   // because it is up to the layer to decide if an absolute or relative transform
   // should be used
@@ -249,8 +267,9 @@ export abstract class BaseLayer extends Container {
   }
 
   clearBeforeDraw: GetSet<boolean, this>;
-  batchDraw: () => void;
 }
+
+BaseLayer.prototype.nodeType = 'Layer';
 
 /**
  * get/set clearBeforeDraw flag which determines if the layer is cleared or not

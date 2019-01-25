@@ -118,7 +118,7 @@ suite('Node', function() {
     assert.equal(layer.getAbsoluteOpacity(), 0.5);
   });
 
-  test.only('warn on duplicate id', function() {
+  test('warn on duplicate id', function() {
     var oldWarn = Konva.Util.warn;
     var called = false;
     Konva.Util.warn = function() {
@@ -580,7 +580,7 @@ suite('Node', function() {
     assert.equal(rect.getShadowColor(), 'black');
     assert.equal(clone.getShadowColor(), 'black');
 
-    assert.equal(clone.id() == undefined, true, 'do not clone id');
+    assert.equal(clone.id() == '', true, 'do not clone id');
 
     clone.setShadowColor('green');
 
@@ -1263,7 +1263,7 @@ suite('Node', function() {
 
     layer.add(circle);
     stage.add(layer);
-    assert.equal(circle.getName(), undefined);
+    assert.equal(circle.getName(), '');
 
     circle.addName('foo');
     assert.equal(circle.getName(), 'foo');
@@ -2593,7 +2593,7 @@ suite('Node', function() {
   test('load stage using json', function() {
     var container = addContainer();
     var json =
-      '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true},"className":"Shape"}]}]}]}';
+      '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true},"className":"Circle"}]}]}]}';
     var stage = Konva.Node.create(json, container);
 
     assert.equal(stage.toJSON(), json);
@@ -2608,6 +2608,14 @@ suite('Node', function() {
     var clone = Konva.Node.create(node.toObject());
 
     assert.deepEqual(node.toObject(), clone.toObject());
+  });
+
+  test('make sure we can create non existing node type', function() {
+    var json =
+      '{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true},"className":"WeirdShape"}]}]}';
+    var layer = Konva.Node.create(json);
+
+    assert.deepEqual(layer.find('Shape').length, 1);
   });
 
   // ======================================================

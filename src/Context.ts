@@ -476,9 +476,11 @@ export class SceneContext extends Context {
   _fillPattern(shape) {
     var fillPatternX = shape.getFillPatternX(),
       fillPatternY = shape.getFillPatternY(),
-      fillPatternScale = shape.getFillPatternScale(),
+      fillPatternScaleX = shape.getFillPatternScaleX(),
+      fillPatternScaleY = shape.getFillPatternScaleY(),
       fillPatternRotation = getAngle(shape.getFillPatternRotation()),
-      fillPatternOffset = shape.getFillPatternOffset();
+      fillPatternOffsetX = shape.getFillPatternOffsetX(),
+      fillPatternOffsetY = shape.getFillPatternOffsetY();
 
     if (fillPatternX || fillPatternY) {
       this.translate(fillPatternX || 0, fillPatternY || 0);
@@ -488,16 +490,14 @@ export class SceneContext extends Context {
       this.rotate(fillPatternRotation);
     }
 
-    // TODO: optimize to fillPatternScaleX and fillPatternScaleY
-    // otherwise it is object (always true)
-    // do the same for offset
-    if (fillPatternScale) {
-      this.scale(fillPatternScale.x, fillPatternScale.y);
+    if (fillPatternScaleX || fillPatternScaleY) {
+      this.scale(fillPatternScaleX, fillPatternScaleY);
     }
-    if (fillPatternOffset) {
-      this.translate(-1 * fillPatternOffset.x, -1 * fillPatternOffset.y);
+    if (fillPatternOffsetX || fillPatternOffsetY) {
+      this.translate(-1 * fillPatternOffsetX, -1 * fillPatternOffsetY);
     }
 
+    // TODO: cache pattern
     this.setAttr(
       'fillStyle',
       this.createPattern(

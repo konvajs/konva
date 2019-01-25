@@ -13,11 +13,6 @@ import { Container } from './Container';
  * var group = new Konva.Group();
  */
 export class Group extends Container {
-  constructor(config) {
-    super(config);
-    this.nodeType = 'Group';
-  }
-
   _validateAdd(child) {
     var type = child.getType();
     if (type !== 'Group' && type !== 'Shape') {
@@ -25,5 +20,7 @@ export class Group extends Container {
     }
   }
 }
+
+Group.prototype.nodeType = 'Group';
 
 Collection.mapMethods(Group);

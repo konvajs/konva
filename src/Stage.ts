@@ -755,9 +755,20 @@ export class Stage extends Container {
   clearCache() {
     return this;
   }
+  /**
+   * batch draw
+   * @method
+   * @name Konva.BaseLayer#batchDraw
+   * @return {Konva.Stage} this
+   */
+  batchDraw() {
+    this.children.each(function(layer) {
+      layer.batchDraw();
+    });
+    return this;
+  }
 
   container: GetSet<HTMLDivElement, this>;
-  batchDraw: () => void;
 }
 
 // TODO: test for replacing container
