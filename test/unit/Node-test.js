@@ -3789,4 +3789,18 @@ suite('Node', function() {
     assert.equal(layer.getChildren().length, 1);
     assert.equal(rect3.getZIndex(), 0);
   });
+
+  test('show warning when we are trying to use non-objects for component setters', function() {
+    var stage = addStage();
+
+    var callCount = 0;
+    var oldWarn = Konva.Util.warn;
+    Konva.Util.warn = function() {
+      callCount += 1;
+    };
+
+    stage.scale(0.5);
+    assert.equal(callCount, 1);
+    Konva.Util.warn = oldWarn;
+  });
 });

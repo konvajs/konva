@@ -188,7 +188,8 @@ export class Text extends Shape {
             ? totalWidth - padding * 2
             : width;
         context.lineTo(Math.round(lineWidth), Math.round(lineHeightPx / 2));
-        // TODO: I have no idea what is real ratio
+
+        // I have no idea what is real ratio
         // just /15 looks good enough
         context.lineWidth = fontSize / 15;
         context.strokeStyle = fill;
@@ -286,7 +287,7 @@ export class Text extends Shape {
     return this.textHeight;
   }
 
-  // TODO: make it public?
+  // TODO: make it public, rename to "measure text"?
   _getTextSize(text) {
     var _context = getDummyContext(),
       fontSize = this.fontSize(),

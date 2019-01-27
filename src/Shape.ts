@@ -179,7 +179,6 @@ export class Shape extends Node {
     return (
       this.strokeEnabled() &&
       !!(this.stroke() || this.strokeLinearGradientColorStops())
-      // TODO: do we need radial gradient
       // this.getStrokeRadialGradientColorStops()
     );
   }
@@ -216,8 +215,10 @@ export class Shape extends Node {
     delete shapes[this.colorKey];
     return this;
   }
-  // TODO: write why do we need it,
-  // try to use it without stage (use global buffer canvas)
+  // why do we need buffer canvas?
+  // it give better result when a shape has
+  // stroke with fill and with some opacity
+  // TODO: try to use it without stage (use global buffer canvas)
   _useBufferCanvas(caching) {
     return (
       (!caching || this.hasShadow()) &&
@@ -241,7 +242,7 @@ export class Shape extends Node {
    *
    */
   getSelfRect() {
-    var size = this.getSize();
+    var size = this.size();
     return {
       x: this._centroid ? Math.round(-size.width / 2) : 0,
       y: this._centroid ? Math.round(-size.height / 2) : 0,

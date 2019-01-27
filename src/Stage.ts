@@ -7,7 +7,6 @@ import { GetSet, Vector2d } from './types';
 import { Shape } from './Shape';
 import { BaseLayer } from './BaseLayer';
 
-// TODO: add a warning if stage has too many layers
 // TODO: remove "content" events from docs
 
 // CONSTANTS
@@ -110,7 +109,6 @@ export class Stage extends Container {
 
   constructor(config) {
     super(config);
-    this.nodeType = STAGE;
     this._buildDOM();
     this._bindContentEvents();
     stages.push(this);
@@ -745,7 +743,6 @@ export class Stage extends Container {
     }
   }
   // currently cache function is now working for stage, because stage has no its own canvas element
-  // TODO: may be it is better to cache all children layers?
   cache() {
     Util.warn(
       'Cache function is not allowed for stage. You may use cache only for layers, groups and shapes.'
@@ -770,6 +767,8 @@ export class Stage extends Container {
 
   container: GetSet<HTMLDivElement, this>;
 }
+
+Stage.prototype.nodeType = STAGE;
 
 // TODO: test for replacing container
 Factory.addGetterSetter(Stage, 'container');

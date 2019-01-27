@@ -2157,6 +2157,7 @@ export abstract class Node {
     } else {
       this.on('mousedown.konva touchstart.konva', function(evt) {
         // ignore right and middle buttons
+        // TODO: should we add a global config for buttons?
         if (evt.evt.button === 1 || evt.evt.button === 2) {
           return;
         }
@@ -2225,7 +2226,7 @@ export abstract class Node {
   enhance: GetSet<number, this>;
   filters: GetSet<Filter[], this>;
   position: GetSet<Vector2d, this>;
-  size: GetSet<Vector2d, this>;
+  size: GetSet<{ width: number; height: number }, this>;
 
   id: GetSet<string, this>;
 
@@ -2441,7 +2442,6 @@ Factory.addGetterSetter(Node, 'opacity', 1, Validators.getNumberValidator());
  * node.opacity(0.5);
  */
 
-// TODO: should default name be empty string?
 Factory.addGetterSetter(Node, 'name', '', Validators.getStringValidator());
 
 /**
@@ -2881,7 +2881,7 @@ Factory.addGetterSetter(Node, 'size');
  *   // important pos - is absolute position of the node
  *   // you should return absolute position too
  *   return {
- *     x: this.getAbsolutePosition().x,
+ *     x: this.absolutePosition().x,
  *     y: pos.y
  *   };
  * });

@@ -433,7 +433,7 @@ export class TextPath extends Shape {
     };
 
     // fake search for offset, this is very bad approach
-    // TODO: find other way to add offset from start (for align)
+    // find other way to add offset from start (for align)
     var testChar = 'C';
     var glyphWidth = that._getTextSize(testChar).width + letterSpacing;
     for (var k = 0; k < offset / glyphWidth; k++) {

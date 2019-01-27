@@ -1,5 +1,6 @@
 import { isUnminified } from './Global';
 import { Util } from './Util';
+import Konva from './index';
 
 var GET = 'get',
   SET = 'set';
@@ -62,6 +63,8 @@ export const Factory = {
       return ret;
     };
 
+    var basicValidator = Validators.getComponentValidator(components);
+
     // setter
     constructor.prototype[setter] = function(val) {
       var oldVal = this.attrs[attr],
@@ -69,6 +72,10 @@ export const Factory = {
 
       if (validator) {
         val = validator.call(this, val);
+      }
+
+      if (basicValidator) {
+        basicValidator.call(this, val, attr);
       }
 
       for (key in val) {
@@ -283,6 +290,22 @@ export const Validators = {
               ' is a not valid value for "' +
               attr +
               '" attribute. The value should be a boolean.'
+          );
+        }
+        return val;
+      };
+    }
+  },
+  getComponentValidator(components) {
+    if (isUnminified) {
+      return function(val, attr) {
+        if (!Util.isObject(val)) {
+          Util.warn(
+            Validators._formatValue(val) +
+              ' is a not valid value for "' +
+              attr +
+              '" attribute. The value should be an object with properties ' +
+              components
           );
         }
         return val;

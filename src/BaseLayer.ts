@@ -59,7 +59,8 @@ export abstract class BaseLayer extends Container {
     return this.getCanvas().getContext();
   }
   /**
-   * clear scene and hit canvas contexts tied to the layer
+   * clear scene and hit canvas contexts tied to the layer.
+   * This function doesn't remove any nodes. It just clear canvas element.
    * @method
    * @name Konva.BaseLayer#clear
    * @param {Object} [bounds]

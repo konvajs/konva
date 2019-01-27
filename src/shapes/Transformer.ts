@@ -6,7 +6,7 @@ import { Rect } from './Rect';
 import { Group } from '../Group';
 import { getAngle, getGlobalKonva } from '../Global';
 
-import { GetSet } from '../types';
+import { GetSet, IRect } from '../types';
 
 var ATTR_CHANGE_LIST = [
   'resizeEnabledChange',
@@ -107,7 +107,6 @@ function getCursor(anchorName, rad, isMirrored) {
     return 'nwse-resize';
   } else {
     // how can we can there?
-    // TODO: throw error
     Util.error('Transformer has unknown angle for cursor detection: ' + angle);
     return 'pointer';
   }
@@ -216,7 +215,8 @@ export class Transformer extends Group {
       }.bind(this)
     );
 
-    // TODO: why do we need this?
+    // we may need it if we set not in initial props
+    // so elements are not defined yet
     var elementsCreated = !!this.findOne('.top-left');
     if (elementsCreated) {
       this.update();
@@ -834,8 +834,7 @@ export class Transformer extends Group {
   keepRatio: GetSet<boolean, this>;
   centeredScaling: GetSet<boolean, this>;
   ignoreStroke: GetSet<boolean, this>;
-  // TODO: add better types
-  boundBoxFunc: GetSet<Function, this>;
+  boundBoxFunc: GetSet<(oldBox: IRect, newBox: IRect) => IRect, this>;
 }
 
 function validateAnchors(val) {

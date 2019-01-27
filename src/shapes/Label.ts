@@ -305,8 +305,7 @@ export class Tag extends Shape {
     };
   }
 
-  // TODO: not a string, but a strict set
-  pointerDirection: GetSet<string, this>;
+  pointerDirection: GetSet<'left' | 'top' | 'right' | 'bottom', this>;
   pointerWidth: GetSet<number, this>;
   pointerHeight: GetSet<number, this>;
   cornerRadius: GetSet<number, this>;
