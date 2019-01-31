@@ -6,7 +6,7 @@ declare namespace Konva {
   var DD: any;
 
   export interface KonvaEventObject<E> {
-    target: Konva.Shape;
+    target: Konva.Shape || Konva.Stage;
     evt: E;
     currentTarget: Konva.Node;
     cancelBubble: boolean;
