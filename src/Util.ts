@@ -542,20 +542,16 @@ export const Util = {
       return -1;
     }
   },
-  _waiting: false,
   animQueue: [],
   requestAnimFrame(callback) {
     Util.animQueue.push(callback);
-    if (Util._waiting) {
-      return;
-    }
-    requestAnimationFrame(() => {
-      Util.animQueue.forEach(cb => {
-        cb();
+    if (Util.animQueue.length === 1) {
+      requestAnimationFrame(function () {
+        const queue = Util.animQueue;
+        Util.animQueue = [];
+        queue.forEach(function (cb) { cb(); });
       });
-      Util.animQueue = [];
-      Util._waiting = false;
-    });
+    }
   },
   createCanvasElement() {
     var canvas = isBrowser
