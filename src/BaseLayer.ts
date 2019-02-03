@@ -249,13 +249,13 @@ export abstract class BaseLayer extends Container {
    * @return {Konva.Layer} this
    */
   batchDraw() {
-    if (this._waitingForDraw) {
-      return;
+    if (!this._waitingForDraw) {
+      this._waitingForDraw = true;
+      Util.requestAnimFrame(() => {
+        this.draw();
+        this._waitingForDraw = false;
+      });
     }
-    Util.requestAnimFrame(() => {
-      this._waitingForDraw = false;
-      this.draw();
-    });
     return this;
   }
 
