@@ -160,7 +160,7 @@ export abstract class Node {
   /** @lends Konva.Node.prototype */
   _clearCache(attr) {
     if (attr) {
-      delete this._cache[attr];
+      this._cache[attr] = undefined;
     } else {
       this._cache = {};
     }
