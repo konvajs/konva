@@ -66,7 +66,7 @@ export abstract class Container extends Node {
     for (var i = 0; i < children.length; i++) {
       child = children[i];
       // reset parent to prevent many _setChildrenIndices calls
-      delete child.parent;
+      child.parent = null;
       child.index = 0;
       child.remove();
     }
@@ -85,7 +85,7 @@ export abstract class Container extends Node {
     for (var i = 0; i < children.length; i++) {
       child = children[i];
       // reset parent to prevent many _setChildrenIndices calls
-      delete child.parent;
+      child.parent = null;
       child.index = 0;
       child.destroy();
     }
