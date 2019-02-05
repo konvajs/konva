@@ -719,7 +719,7 @@ export abstract class Node {
     if (parent && parent.children) {
       parent.children.splice(this.index, 1);
       parent._setChildrenIndices();
-      delete this.parent;
+      this.parent = null;
     }
 
     // every cached attr that is calculated via node tree
