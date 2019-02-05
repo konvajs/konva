@@ -525,8 +525,11 @@ export class Tween {
  * @example
  *
  * circle.to({
- *  x : 50,
- *  duration : 0.5
+ *   x : 50,
+ *   duration : 0.5,
+ *   onFinish: () => {
+ *      console.log('finished');
+ *   }
  * });
  */
 Node.prototype.to = function(params) {

@@ -223,6 +223,7 @@ export class Transformer extends Group {
     }
     return this;
   }
+  // TODO: add docs, use overloaded setter/getter
   getNode() {
     return this._node;
   }

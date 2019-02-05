@@ -1092,6 +1092,67 @@ suite('Stage', function() {
     assert.equal(dblicks, 1, 'first dbclick registered');
   });
 
+  test.only('test mouseover event on stage', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      width: stage.width(),
+      height: stage.height(),
+      fill: 'red'
+    });
+    layer.add(rect);
+    layer.draw();
+
+    var mouseover = 0;
+
+    stage.on('mouseover', function(e) {
+      mouseover += 1;
+
+      if (mouseover === 1) {
+        assert.equal(e.target, stage);
+        assert.equal(e.currentTarget, stage);
+      }
+      if (mouseover === 2) {
+        assert.equal(e.target, rect);
+        assert.equal(e.currentTarget, stage);
+      }
+    });
+
+    stage._mouseover({
+      clientX: 0,
+      clientY: 0
+    });
+
+    assert.equal(mouseover, 1, 'initial over');
+    stage.simulateMouseMove({
+      x: 10,
+      y: 10
+    });
+
+    assert.equal(mouseover, 1, 'moved inside stage - no new over events');
+
+    stage.simulateMouseMove({
+      x: 60,
+      y: 60
+    });
+
+    assert.equal(mouseover, 2, 'moved into inner shape, trigger new mouseover');
+
+    stage.simulateMouseMove({
+      x: 10,
+      y: 10
+    });
+
+    assert.equal(
+      mouseover,
+      3,
+      'moved out of inner shape, trigger new mouseover'
+    );
+  });
+
   test('toCanvas in sync way', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

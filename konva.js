@@ -3433,6 +3433,8 @@
           }
           return false;
       };
+      // TODO: validate z index
+      // it should be >= 0 and < length
       Node.prototype.setZIndex = function (zIndex) {
           if (!this.parent) {
               Util.warn('Node has no parent. zIndex parameter is ignored.');
@@ -3845,7 +3847,10 @@
        * @param {Number} [config.y] y position of canvas section
        * @param {Number} [config.width] width of canvas section
        * @param {Number} [config.height] height of canvas section
-       * @paremt {Number} [config.pixelRatio] pixelRatio of ouput image.  Default is 1.
+       * @param {Number} [config.pixelRatio] pixelRatio of output canvas. Default is 1.
+       * You can use that property to increase quality of the image, for example for super hight quality exports
+       * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
+       * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
        * @example
        * var canvas = node.toCanvas();
        */
@@ -3868,7 +3873,10 @@
        * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
        *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
        *  is very high quality
-       * @param {Number} [config.pixelRatio] pixelRatio of output image url. Default is 1
+       * @param {Number} [config.pixelRatio] pixelRatio of output image url. Default is 1.
+       * You can use that property to increase quality of the image, for example for super hight quality exports
+       * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
+       * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
        * @returns {String}
        */
       Node.prototype.toDataURL = function (config) {
@@ -3897,7 +3905,10 @@
        * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
        *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
        *  is very high quality
-       * @paremt {Number} [config.pixelRatio] pixelRatio of ouput image.  Default is 1.
+       * @param {Number} [config.pixelRatio] pixelRatio of output image. Default is 1.
+       * You can use that property to increase quality of the image, for example for super hight quality exports
+       * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
+       * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
        * @example
        * var image = node.toImage({
        *   callback(img) {
@@ -5716,7 +5727,12 @@
       };
       Stage.prototype._mouseover = function (evt) {
           this._setPointerPosition(evt);
+          // TODO: add test on mouseover
+          // I guess it should fire on:
+          // 1. mouseenter
+          // 2. leave or enter any shape
           this._fire(CONTENT_MOUSEOVER, { evt: evt });
+          this._fire(MOUSEOVER, { evt: evt, target: this, currentTarget: this });
       };
       Stage.prototype._mouseout = function (evt) {
           this._setPointerPosition(evt);
@@ -5739,8 +5755,8 @@
           if (!getGlobalKonva().isDragging()) {
               shape = this.getIntersection(this.getPointerPosition());
               if (shape && shape.isListening()) {
-                  if (!getGlobalKonva().isDragging() &&
-                      (!this.targetShape || this.targetShape._id !== shape._id)) {
+                  var differentTarget = !this.targetShape || this.targetShape !== shape;
+                  if (!getGlobalKonva().isDragging() && differentTarget) {
                       if (this.targetShape) {
                           this.targetShape._fireAndBubble(MOUSEOUT, { evt: evt }, shape);
                           this.targetShape._fireAndBubble(MOUSELEAVE$1, { evt: evt }, shape);
@@ -5761,6 +5777,11 @@
                   if (this.targetShape && !getGlobalKonva().isDragging()) {
                       this.targetShape._fireAndBubble(MOUSEOUT, { evt: evt });
                       this.targetShape._fireAndBubble(MOUSELEAVE$1, { evt: evt });
+                      this._fire(MOUSEOVER, {
+                          evt: evt,
+                          target: this,
+                          currentTarget: this
+                      });
                       this.targetShape = null;
                   }
                   this._fire(MOUSEMOVE, {
@@ -6670,6 +6691,13 @@
   var HAS_SHADOW = 'hasShadow';
   var SHADOW_RGBA = 'shadowRGBA';
   // TODO: cache gradient from context
+  // TODO: write a test for adding destroyed shape into the layer
+  // will it draw?
+  // will it pass hit test?
+  // show warning on adding destroyed shape?
+  // TODO: idea - use only "remove" (or destroy method)
+  // how? on add, check that every inner shape has reference in konva store with color
+  // on remove - clear that reference
   function _fillFunc(context) {
       context.fill();
   }
@@ -8489,8 +8517,11 @@
    * @example
    *
    * circle.to({
-   *  x : 50,
-   *  duration : 0.5
+   *   x : 50,
+   *   duration : 0.5,
+   *   onFinish: () => {
+   *      console.log('finished');
+   *   }
    * });
    */
   Node.prototype.to = function (params) {
@@ -12584,6 +12615,7 @@
           }
           return this;
       };
+      // TODO: add docs, use overloaded setter/getter
       Transformer.prototype.getNode = function () {
           return this._node;
       };

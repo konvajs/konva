@@ -1242,6 +1242,8 @@ export abstract class Node {
     }
     return false;
   }
+  // TODO: validate z index
+  // it should be >= 0 and < length
   setZIndex(zIndex) {
     if (!this.parent) {
       Util.warn('Node has no parent. zIndex parameter is ignored.');
@@ -1701,7 +1703,10 @@ export abstract class Node {
    * @param {Number} [config.y] y position of canvas section
    * @param {Number} [config.width] width of canvas section
    * @param {Number} [config.height] height of canvas section
-   * @paremt {Number} [config.pixelRatio] pixelRatio of ouput image.  Default is 1.
+   * @param {Number} [config.pixelRatio] pixelRatio of output canvas. Default is 1.
+   * You can use that property to increase quality of the image, for example for super hight quality exports
+   * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
+   * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
    * @example
    * var canvas = node.toCanvas();
    */
@@ -1724,7 +1729,10 @@ export abstract class Node {
    * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
    *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
    *  is very high quality
-   * @param {Number} [config.pixelRatio] pixelRatio of output image url. Default is 1
+   * @param {Number} [config.pixelRatio] pixelRatio of output image url. Default is 1.
+   * You can use that property to increase quality of the image, for example for super hight quality exports
+   * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
+   * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
    * @returns {String}
    */
   toDataURL(config) {
@@ -1754,7 +1762,10 @@ export abstract class Node {
    * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
    *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
    *  is very high quality
-   * @paremt {Number} [config.pixelRatio] pixelRatio of ouput image.  Default is 1.
+   * @param {Number} [config.pixelRatio] pixelRatio of output image. Default is 1.
+   * You can use that property to increase quality of the image, for example for super hight quality exports
+   * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
+   * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
    * @example
    * var image = node.toImage({
    *   callback(img) {

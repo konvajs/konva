@@ -345,7 +345,12 @@ export class Stage extends Container {
   }
   _mouseover(evt) {
     this._setPointerPosition(evt);
+    // TODO: add test on mouseover
+    // I guess it should fire on:
+    // 1. mouseenter
+    // 2. leave or enter any shape
     this._fire(CONTENT_MOUSEOVER, { evt: evt });
+    this._fire(MOUSEOVER, { evt: evt, target: this, currentTarget: this });
   }
   _mouseout(evt) {
     this._setPointerPosition(evt);
@@ -371,10 +376,8 @@ export class Stage extends Container {
     if (!getGlobalKonva().isDragging()) {
       shape = this.getIntersection(this.getPointerPosition());
       if (shape && shape.isListening()) {
-        if (
-          !getGlobalKonva().isDragging() &&
-          (!this.targetShape || this.targetShape._id !== shape._id)
-        ) {
+        var differentTarget = !this.targetShape || this.targetShape !== shape;
+        if (!getGlobalKonva().isDragging() && differentTarget) {
           if (this.targetShape) {
             this.targetShape._fireAndBubble(MOUSEOUT, { evt: evt }, shape);
             this.targetShape._fireAndBubble(MOUSELEAVE, { evt: evt }, shape);
@@ -393,6 +396,11 @@ export class Stage extends Container {
         if (this.targetShape && !getGlobalKonva().isDragging()) {
           this.targetShape._fireAndBubble(MOUSEOUT, { evt: evt });
           this.targetShape._fireAndBubble(MOUSELEAVE, { evt: evt });
+          this._fire(MOUSEOVER, {
+            evt: evt,
+            target: this,
+            currentTarget: this
+          });
           this.targetShape = null;
         }
         this._fire(MOUSEMOVE, {

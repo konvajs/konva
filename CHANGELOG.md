@@ -16,7 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Full rewrite to Typescript with tons of refactoring and small optimizations. The public API should be 100% the same
 * Fixed `patternImage` and `radialGradient` for `Konva.Text`
 * `Konva.Util._isObject` is renamed to `Konva.Util._isPlainObject`.
-* A bit changed behavior of `removeId` (private method), not it doesn't clear node ref, of id is changed.
+* A bit changed behavior of `removeId` (private method), now it doesn't clear node ref, if object is changed.
 * simplified `batchDraw` method (it doesn't use `Konva.Animation`) now.
 * `id` and `name` properties defaults are empty strings, not `undefined`
 
@@ -30,6 +30,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 * Better mouse support on mobile devices (yes, that is possible to connect mouse to mobile)
+* Better implementation of `mouseover` event for stage
 
 ## [2.6.0][2018-12-14]
 
