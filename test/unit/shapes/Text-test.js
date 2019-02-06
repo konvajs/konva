@@ -540,6 +540,37 @@ suite('Text', function() {
     assert.equal(layer.getContext().getTrace(), trace);
   });
 
+  // ======================================================
+  test('text with underline and large line height', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      fontFamily: 'Arial',
+      text: 'text',
+      fontSize: 80,
+      lineHeight: 2,
+      textDecoration: 'underline'
+    });
+
+    layer.add(text);
+    stage.add(layer);
+
+    var canvas = createCanvas();
+    var context = canvas.getContext('2d');
+    context.translate(0, 80);
+    context.lineWidth = 2;
+    context.font = '80px Arial';
+    context.textBaseline = 'middle';
+    context.fillText('text', 0, 0);
+    context.beginPath();
+    context.moveTo(0, 40);
+    context.lineTo(text.width(), 40);
+    context.lineWidth = 80 / 15;
+    context.stroke();
+    compareLayerAndCanvas(layer, canvas, 50);
+  });
+
   test('text multi line with strike', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

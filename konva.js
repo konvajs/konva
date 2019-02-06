@@ -12466,14 +12466,14 @@
               if (shouldUnderline) {
                   context.save();
                   context.beginPath();
-                  context.moveTo(0, Math.round(lineHeightPx / 2));
+                  context.moveTo(0, Math.round(fontSize / 2));
                   spacesNumber = text.split(' ').length - 1;
                   oneWord = spacesNumber === 0;
                   lineWidth =
                       align === JUSTIFY && lastLine && !oneWord
                           ? totalWidth - padding * 2
                           : width;
-                  context.lineTo(Math.round(lineWidth), Math.round(lineHeightPx / 2));
+                  context.lineTo(Math.round(lineWidth), Math.round(fontSize / 2));
                   // I have no idea what is real ratio
                   // just /15 looks good enough
                   context.lineWidth = fontSize / 15;

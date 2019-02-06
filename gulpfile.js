@@ -162,7 +162,7 @@ gulp.task('api', function() {
 });
 
 gulp.task('watch', function() {
-  gulp.watch(['src/**/*.js'], ['dev-build']);
+  gulp.watch(['src/**/*.js'], gulp.series(['dev-build']));
 });
 
-gulp.task('default', gulp.series(['dev-build', 'watch', 'server']));
+gulp.task('default', gulp.parallel(['dev-build', 'watch', 'server']));
