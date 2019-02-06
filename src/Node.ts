@@ -514,10 +514,8 @@ export abstract class Node {
   /**
    * bind events to the node. KonvaJS supports mouseover, mousemove,
    *  mouseout, mouseenter, mouseleave, mousedown, mouseup, wheel, contextmenu, click, dblclick, touchstart, touchmove,
-   *  touchend, tap, dbltap, dragstart, dragmove, and dragend events. The Konva Stage supports
-   *  contentMouseover, contentMousemove, contentMouseout, contentMousedown, contentMouseup, contentWheel, contentContextmenu
-   *  contentClick, contentDblclick, contentTouchstart, contentTouchmove, contentTouchend, contentTap,
-   *  and contentDblTap.  Pass in a string of events delimited by a space to bind multiple events at once
+   *  touchend, tap, dbltap, dragstart, dragmove, and dragend events.
+   *  Pass in a string of events delimited by a space to bind multiple events at once
    *  such as 'mousedown mouseup mousemove'. Include a namespace to bind an
    *  event by name such as 'click.foobar'.
    * @method
@@ -2159,24 +2157,16 @@ export abstract class Node {
 
     this._dragCleanup();
 
-    if (this.getClassName() === 'Stage') {
-      this.on('contentMousedown.konva contentTouchstart.konva', function(evt) {
-        if (!DD.node) {
-          that.startDrag();
-        }
-      });
-    } else {
-      this.on('mousedown.konva touchstart.konva', function(evt) {
-        // ignore right and middle buttons
-        // TODO: should we add a global config for buttons?
-        if (evt.evt.button === 1 || evt.evt.button === 2) {
-          return;
-        }
-        if (!DD.node) {
-          that.startDrag();
-        }
-      });
-    }
+    this.on('mousedown.konva touchstart.konva', function(evt) {
+      // ignore right and middle buttons
+      // TODO: should we add a global config for buttons?
+      if (evt.evt.button === 1 || evt.evt.button === 2) {
+        return;
+      }
+      if (!DD.node) {
+        that.startDrag();
+      }
+    });
   }
 
   _dragChange() {
@@ -2200,13 +2190,8 @@ export abstract class Node {
   }
 
   _dragCleanup() {
-    if (this.getClassName() === 'Stage') {
-      this.off('contentMousedown.konva');
-      this.off('contentTouchstart.konva');
-    } else {
-      this.off('mousedown.konva');
-      this.off('touchstart.konva');
-    }
+    this.off('mousedown.konva');
+    this.off('touchstart.konva');
   }
 
   preventDefault: GetSet<boolean, this>;

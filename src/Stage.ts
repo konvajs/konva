@@ -7,8 +7,6 @@ import { GetSet, Vector2d } from './types';
 import { Shape } from './Shape';
 import { BaseLayer } from './BaseLayer';
 
-// TODO: remove "content" events from docs
-
 // CONSTANTS
 var STAGE = 'Stage',
   STRING = 'string',
