@@ -31,6 +31,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 * Better mouse support on mobile devices (yes, that is possible to connect mouse to mobile)
 * Better implementation of `mouseover` event for stage
+* Fixed underline drawing for text with `lineHeight !== 1`
 
 ## [2.6.0][2018-12-14]
 
