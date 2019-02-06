@@ -1092,18 +1092,27 @@ suite('Stage', function() {
     assert.equal(dblicks, 1, 'first dbclick registered');
   });
 
-  test.only('test mouseover event on stage', function() {
+  test('test mouseover event on stage', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
-    var rect = new Konva.Rect({
+    var rect1 = new Konva.Rect({
       x: 50,
       y: 50,
-      width: stage.width(),
-      height: stage.height(),
+      width: 50,
+      height: 50,
       fill: 'red'
     });
-    layer.add(rect);
+    layer.add(rect1);
+
+    var rect2 = new Konva.Rect({
+      x: 100,
+      y: 100,
+      width: 50,
+      height: 50,
+      fill: 'red'
+    });
+    layer.add(rect2);
     layer.draw();
 
     var mouseover = 0;
@@ -1116,8 +1125,10 @@ suite('Stage', function() {
         assert.equal(e.currentTarget, stage);
       }
       if (mouseover === 2) {
-        assert.equal(e.target, rect);
-        assert.equal(e.currentTarget, stage);
+        assert.equal(e.target, rect1);
+      }
+      if (mouseover === 3) {
+        assert.equal(e.target, rect2);
       }
     });
 
@@ -1142,14 +1153,25 @@ suite('Stage', function() {
     assert.equal(mouseover, 2, 'moved into inner shape, trigger new mouseover');
 
     stage.simulateMouseMove({
+      x: 110,
+      y: 110
+    });
+
+    assert.equal(
+      mouseover,
+      3,
+      'moved into second shape, trigger new mouseover'
+    );
+
+    stage.simulateMouseMove({
       x: 10,
       y: 10
     });
 
     assert.equal(
       mouseover,
-      3,
-      'moved out of inner shape, trigger new mouseover'
+      4,
+      'moved to empty space shape, trigger new mouseover'
     );
   });
 

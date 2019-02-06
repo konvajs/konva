@@ -625,20 +625,16 @@
               return -1;
           }
       },
-      _waiting: false,
       animQueue: [],
       requestAnimFrame: function (callback) {
           Util.animQueue.push(callback);
-          if (Util._waiting) {
-              return;
-          }
-          requestAnimationFrame(function () {
-              Util.animQueue.forEach(function (cb) {
-                  cb();
+          if (Util.animQueue.length === 1) {
+              requestAnimationFrame(function () {
+                  var queue = Util.animQueue;
+                  Util.animQueue = [];
+                  queue.forEach(function (cb) { cb(); });
               });
-              Util.animQueue = [];
-              Util._waiting = false;
-          });
+          }
       },
       createCanvasElement: function () {
           var canvas = isBrowser
@@ -2961,7 +2957,7 @@
           if (parent && parent.children) {
               parent.children.splice(this.index, 1);
               parent._setChildrenIndices();
-              delete this.parent;
+              this.parent = null;
           }
           // every cached attr that is calculated via node tree
           // traversal must be cleared when removing a node
@@ -4938,7 +4934,7 @@
           for (var i = 0; i < children.length; i++) {
               child = children[i];
               // reset parent to prevent many _setChildrenIndices calls
-              delete child.parent;
+              child.parent = null;
               child.index = 0;
               child.remove();
           }
@@ -4957,7 +4953,7 @@
           for (var i = 0; i < children.length; i++) {
               child = children[i];
               // reset parent to prevent many _setChildrenIndices calls
-              delete child.parent;
+              child.parent = null;
               child.index = 0;
               child.destroy();
           }
@@ -5727,10 +5723,6 @@
       };
       Stage.prototype._mouseover = function (evt) {
           this._setPointerPosition(evt);
-          // TODO: add test on mouseover
-          // I guess it should fire on:
-          // 1. mouseenter
-          // 2. leave or enter any shape
           this._fire(CONTENT_MOUSEOVER, { evt: evt });
           this._fire(MOUSEOVER, { evt: evt, target: this, currentTarget: this });
       };
@@ -6355,13 +6347,13 @@
        */
       BaseLayer.prototype.batchDraw = function () {
           var _this = this;
-          if (this._waitingForDraw) {
-              return;
+          if (!this._waitingForDraw) {
+              this._waitingForDraw = true;
+              Util.requestAnimFrame(function () {
+                  _this.draw();
+                  _this._waitingForDraw = false;
+              });
           }
-          Util.requestAnimFrame(function () {
-              _this._waitingForDraw = false;
-              _this.draw();
-          });
           return this;
       };
       // the apply transform method is handled by the Layer and FastLayer class

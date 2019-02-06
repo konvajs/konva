@@ -345,10 +345,6 @@ export class Stage extends Container {
   }
   _mouseover(evt) {
     this._setPointerPosition(evt);
-    // TODO: add test on mouseover
-    // I guess it should fire on:
-    // 1. mouseenter
-    // 2. leave or enter any shape
     this._fire(CONTENT_MOUSEOVER, { evt: evt });
     this._fire(MOUSEOVER, { evt: evt, target: this, currentTarget: this });
   }
