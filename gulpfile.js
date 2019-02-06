@@ -165,4 +165,4 @@ gulp.task('watch', function() {
   gulp.watch(['src/**/*.js'], ['dev-build']);
 });
 
-gulp.task('default', ['dev-build', 'watch', 'server']);
+gulp.task('default', gulp.series(['dev-build', 'watch', 'server']));

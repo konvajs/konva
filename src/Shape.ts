@@ -18,6 +18,8 @@ var SHADOW_RGBA = 'shadowRGBA';
 // TODO: idea - use only "remove" (or destroy method)
 // how? on add, check that every inner shape has reference in konva store with color
 // on remove - clear that reference
+// the approach is good. But what if we want to cache the shape before we add it into the stage
+// what color to use for hit test?
 
 function _fillFunc(context) {
   context.fill();
