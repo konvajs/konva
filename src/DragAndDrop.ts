@@ -93,7 +93,7 @@ export const DD = {
         }
       }
 
-      delete DD.node;
+      DD.node = null;
 
       if (layer || node instanceof getGlobalKonva().Stage) {
         (layer || node).draw();
