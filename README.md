@@ -129,6 +129,11 @@ const Konva = require('konva-node');
 
 See file `resources/nodejs-demo.js` for example.
 
+# Backers
+
+[myposter GmbH](https://www.myposter.de/)
+
+
 # Change log
 
 See [CHANGELOG.md](https://github.com/konvajs/konva/blob/master/CHANGELOG.md).
