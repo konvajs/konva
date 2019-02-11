@@ -182,7 +182,7 @@ export abstract class Node {
   _clearSelfAndDescendantCache(attr?) {
     this._clearCache(attr);
 
-    // skip clearing of node is cached with canvas
+    // skip clearing if node is cached with canvas
     if (this._cache.canvas) {
       return;
     }
