@@ -1457,8 +1457,7 @@
        * @param {Konva.Shape} shape
        */
       Context.prototype.fillStrokeShape = function (shape) {
-          var fillEnabled = shape.getFillEnabled();
-          if (fillEnabled) {
+          if (shape.getFillEnabled()) {
               this._fill(shape);
           }
           if (shape.getStrokeEnabled()) {
@@ -2379,7 +2378,7 @@
                       evt.dragEndNode = node;
                   }
               }
-              delete DD.node;
+              DD.node = null;
               if (layer || node instanceof getGlobalKonva().Stage) {
                   (layer || node).draw();
               }
@@ -2530,7 +2529,7 @@
        */
       Node.prototype._clearSelfAndDescendantCache = function (attr) {
           this._clearCache(attr);
-          // skip clearing of node is cached with canvas
+          // skip clearing if node is cached with canvas
           if (this._cache.canvas) {
               return;
           }
