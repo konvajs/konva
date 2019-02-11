@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="../../konva.min.js"></script>
+    <meta charset="utf-8" />
+    <title>Konva Canvas Scrolling Demo</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #f0f0f0;
+        height: 100%;
+        overflow: auto;
+      }
+
+      #large-container {
+        width: 3000px;
+        height: 3000px;
+        overflow: hidden;
+      }
+
+      #scroll-container {
+        width: calc(100% - 22px);
+        height: calc(100vh - 22px);
+        overflow: auto;
+        margin: 10px;
+        border: 1px solid grey;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="scroll-container">
+      <div id="large-container"><div id="container"></div></div>
+    </div>
+    <script>
+      var WIDTH = 3000;
+      var HEIGHT = 3000;
+      var NUMBER = 200;
+
+      var stage = new Konva.Stage({
+        container: 'container',
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+
+      var layer = new Konva.Layer();
+      stage.add(layer);
+
+      function generateNode() {
+        return new Konva.Circle({
+          x: WIDTH * Math.random(),
+          y: HEIGHT * Math.random(),
+          radius: 50,
+          fill: 'red',
+          stroke: 'black'
+        });
+      }
+
+      for (var i = 0; i < NUMBER; i++) {
+        layer.add(generateNode());
+      }
+      layer.draw();
+
+      var scrollContainer = document.getElementById('scroll-container');
+      scrollContainer.addEventListener('scroll', function() {
+        var dx = scrollContainer.scrollLeft;
+        var dy = scrollContainer.scrollTop;
+        stage.container().style.transform =
+          'translate(' + dx + 'px, ' + dy + 'px)';
+        stage.x(-dx);
+        stage.y(-dy);
+        stage.batchDraw();
+      });
+    </script>
+  </body>
+</html>

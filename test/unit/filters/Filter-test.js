@@ -45,5 +45,9 @@ suite('Filter', function() {
     layer.draw();
 
     var json = circle.toJSON();
+
+    var newCircle = Konva.Node.create(json);
+
+    assert.deepEqual(newCircle.filters(), [Konva.Filters.Blur]);
   });
 });

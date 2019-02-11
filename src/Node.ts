@@ -1308,8 +1308,9 @@ export abstract class Node {
     for (key in attrs) {
       val = attrs[key];
       // if value is object and object is not plain
-      // like class instance, we should skip it and to not inclide
-      nonPlainObject = Util.isObject(val) && !Util._isPlainObject(val);
+      // like class instance, we should skip it and to not include
+      nonPlainObject =
+        Util.isObject(val) && !Util._isPlainObject(val) && !Util._isArray(val);
       if (nonPlainObject) {
         continue;
       }

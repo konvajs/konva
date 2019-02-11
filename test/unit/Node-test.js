@@ -2538,7 +2538,8 @@ suite('Node', function() {
       stroke: 'black',
       strokeWidth: 4,
       name: 'myCircle',
-      draggable: true
+      draggable: true,
+      dash: [5, 5]
     });
 
     stage.add(layer);
@@ -2547,7 +2548,7 @@ suite('Node', function() {
     layer.draw();
 
     var expectedJson =
-      '{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true},"className":"Circle"}';
+      '{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true,"dash":[5,5]},"className":"Circle"}';
 
     assert.equal(circle.toJSON(), expectedJson);
   });
