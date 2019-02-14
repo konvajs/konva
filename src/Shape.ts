@@ -319,6 +319,7 @@ export class Shape extends Node {
   destroy() {
     Node.prototype.destroy.call(this);
     delete shapes[this.colorKey];
+    delete this.colorKey;
     return this;
   }
   // why do we need buffer canvas?
@@ -536,6 +537,13 @@ export class Shape extends Node {
       drawFunc = this.hitFunc() || this.sceneFunc(),
       cachedCanvas = this._cache.canvas,
       cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
+
+    if (!this.colorKey) {
+      console.log(this);
+      Util.warn(
+        'Looks like your canvas has a destroyed shape in it. Do not reuse shape after you destroyed it. See the shape in logs above. If you want to reuse shape you should call remove() instead of destroy()'
+      );
+    }
 
     if (!this.shouldDrawHit() && !caching) {
       return this;

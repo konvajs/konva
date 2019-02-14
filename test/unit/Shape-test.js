@@ -988,7 +988,6 @@ suite('Shape', function() {
       y: 120
     });
 
-    //TODO: can't get this to pass
     assert.equal(
       click,
       true,
@@ -1773,5 +1772,38 @@ suite('Shape', function() {
     assert.notEqual(gradient7, gradient8);
 
     layer.draw();
+  });
+
+  test('try to add destroyed shape', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var star = new Konva.Star({
+      x: 200,
+      y: 100,
+      numPoints: 5,
+      innerRadius: 40,
+      outerRadius: 70,
+
+      stroke: 'blue',
+      strokeWidth: 5,
+      draggable: true
+    });
+
+    star.destroy();
+
+    var callCount = 0;
+    var oldWarn = Konva.Util.warn;
+    Konva.Util.warn = function() {
+      callCount += 1;
+    };
+
+    layer.add(star);
+
+    layer.draw();
+
+    assert.equal(callCount, 1);
+    Konva.Util.warn = oldWarn;
   });
 });

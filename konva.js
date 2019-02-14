@@ -632,7 +632,9 @@
               requestAnimationFrame(function () {
                   var queue = Util.animQueue;
                   Util.animQueue = [];
-                  queue.forEach(function (cb) { cb(); });
+                  queue.forEach(function (cb) {
+                      cb();
+                  });
               });
           }
       },
@@ -832,20 +834,6 @@
                   a: 1
               };
           }
-      },
-      // TODO: remove it
-      // o1 takes precedence over o2
-      _merge: function (o1, o2) {
-          var retObj = this._clone(o2);
-          for (var key in o1) {
-              if (this._isPlainObject(o1[key])) {
-                  retObj[key] = this._merge(o1[key], retObj[key]);
-              }
-              else {
-                  retObj[key] = o1[key];
-              }
-          }
-          return retObj;
       },
       /**
        * check intersection of two client rectangles
@@ -3438,12 +3426,17 @@
           }
           return false;
       };
-      // TODO: validate z index
-      // it should be >= 0 and < length
       Node.prototype.setZIndex = function (zIndex) {
           if (!this.parent) {
               Util.warn('Node has no parent. zIndex parameter is ignored.');
               return false;
+          }
+          if (zIndex < 0 || zIndex >= this.parent.children.length) {
+              Util.warn('Unexpected value ' +
+                  zIndex +
+                  ' for zIndex property. zIndex is just index of a node in children of its parent. Expected value is from 0 to ' +
+                  (this.parent.children.length - 1) +
+                  '.');
           }
           var index = this.index;
           this.parent.children.splice(index, 1);
@@ -6688,7 +6681,6 @@
    */
   Collection.mapMethods(Layer);
 
-  // TODO: deprecate it
   /**
    * FastLayer constructor. Layers are tied to their own canvas element and are used
    * to contain shapes only.  If you don't need node nesting, mouse and touch interactions,
@@ -7108,6 +7100,7 @@
       Shape.prototype.destroy = function () {
           Node.prototype.destroy.call(this);
           delete shapes[this.colorKey];
+          delete this.colorKey;
           return this;
       };
       // why do we need buffer canvas?
@@ -7286,6 +7279,10 @@
       };
       Shape.prototype.drawHit = function (can, top, caching) {
           var layer = this.getLayer(), canvas = can || layer.hitCanvas, context = canvas.getContext(), drawFunc = this.hitFunc() || this.sceneFunc(), cachedCanvas = this._cache.canvas, cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
+          if (!this.colorKey) {
+              console.log(this);
+              Util.warn('Looks like your canvas has a destroyed shape in it. Do not reuse shape after you destroyed it. See the shape in logs above. If you want to reuse shape you should call remove() instead of destroy()');
+          }
           if (!this.shouldDrawHit() && !caching) {
               return this;
           }
@@ -12566,7 +12563,7 @@
                       }
                       this.partialText = letter;
                       context.fillStrokeShape(this);
-                      context.translate(Math.round(this._getTextSize(letter).width) + letterSpacing, 0);
+                      context.translate(Math.round(this.measureSize(letter).width) + letterSpacing, 0);
                   }
               }
               else {
@@ -12621,8 +12618,15 @@
       Text.prototype.getTextHeight = function () {
           return this.textHeight;
       };
-      // TODO: make it public, rename to "measure text"?
-      Text.prototype._getTextSize = function (text) {
+      /**
+       * measure string with the font of current text shape.
+       * That method can't handle multiline text.
+       * @method
+       * @name Konva.Text#measureSize
+       * @param {Number} [text] text to measure
+       * @returns {Object} { width , height} of measured text
+       */
+      Text.prototype.measureSize = function (text) {
           var _context = getDummyContext$1(), fontSize = this.fontSize(), metrics;
           _context.save();
           _context.font = this._getContextFont();

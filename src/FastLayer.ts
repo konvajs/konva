@@ -2,8 +2,6 @@ import { Util, Collection } from './Util';
 import { Container } from './Container';
 import { BaseLayer } from './BaseLayer';
 
-// TODO: deprecate it
-
 /**
  * FastLayer constructor. Layers are tied to their own canvas element and are used
  * to contain shapes only.  If you don't need node nesting, mouse and touch interactions,

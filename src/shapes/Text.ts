@@ -227,7 +227,7 @@ export class Text extends Shape {
           this.partialText = letter;
           context.fillStrokeShape(this);
           context.translate(
-            Math.round(this._getTextSize(letter).width) + letterSpacing,
+            Math.round(this.measureSize(letter).width) + letterSpacing,
             0
           );
         }
@@ -287,8 +287,15 @@ export class Text extends Shape {
     return this.textHeight;
   }
 
-  // TODO: make it public, rename to "measure text"?
-  _getTextSize(text) {
+  /**
+   * measure string with the font of current text shape.
+   * That method can't handle multiline text.
+   * @method
+   * @name Konva.Text#measureSize
+   * @param {Number} [text] text to measure
+   * @returns {Object} { width , height} of measured text
+   */
+  measureSize(text) {
     var _context = getDummyContext(),
       fontSize = this.fontSize(),
       metrics;

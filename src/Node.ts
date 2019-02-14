@@ -1240,12 +1240,19 @@ export abstract class Node {
     }
     return false;
   }
-  // TODO: validate z index
-  // it should be >= 0 and < length
   setZIndex(zIndex) {
     if (!this.parent) {
       Util.warn('Node has no parent. zIndex parameter is ignored.');
       return false;
+    }
+    if (zIndex < 0 || zIndex >= this.parent.children.length) {
+      Util.warn(
+        'Unexpected value ' +
+          zIndex +
+          ' for zIndex property. zIndex is just index of a node in children of its parent. Expected value is from 0 to ' +
+          (this.parent.children.length - 1) +
+          '.'
+      );
     }
     var index = this.index;
     this.parent.children.splice(index, 1);

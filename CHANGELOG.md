@@ -9,7 +9,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Show a warning when a stage has too many layers
 * Show a warning on duplicate ids
 * Show a warning on weird class in `Node.create` parsing from JSON
-* Show a warning for incorrect value for component setters. 
+* Show a warning for incorrect value for component setters.
+* Show a warning for incorrect value for `zIndex` property.
+* Show a warning when user is trying to reuse destroyed shape.
+* new publish method `measureSize(string)` for `Konva.Text`
 
 ### Changed
 * Fixes inconsistent `layer.setSize()` method. Now it has same arguments as any container.
@@ -26,7 +29,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * `Konva.Util._removeLastLetter`
 * `Konva.Util._getImage`
 * `Konv.Util._getRGBAString`
-* Removed polyfill for `requestAnimationFrame`. 
+* `Konv.Util._merge`
+* Removed polyfill for `requestAnimationFrame`.
 
 ### Fixed
 

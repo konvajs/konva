@@ -546,10 +546,12 @@ export const Util = {
   requestAnimFrame(callback) {
     Util.animQueue.push(callback);
     if (Util.animQueue.length === 1) {
-      requestAnimationFrame(function () {
+      requestAnimationFrame(function() {
         const queue = Util.animQueue;
         Util.animQueue = [];
-        queue.forEach(function (cb) { cb(); });
+        queue.forEach(function(cb) {
+          cb();
+        });
       });
     }
   },
@@ -754,19 +756,6 @@ export const Util = {
         a: 1
       };
     }
-  },
-  // TODO: remove it
-  // o1 takes precedence over o2
-  _merge(o1, o2) {
-    var retObj = this._clone(o2);
-    for (var key in o1) {
-      if (this._isPlainObject(o1[key])) {
-        retObj[key] = this._merge(o1[key], retObj[key]);
-      } else {
-        retObj[key] = o1[key];
-      }
-    }
-    return retObj;
   },
   /**
    * check intersection of two client rectangles

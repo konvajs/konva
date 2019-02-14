@@ -3804,4 +3804,30 @@ suite('Node', function() {
     assert.equal(callCount, 1);
     Konva.Util.warn = oldWarn;
   });
+
+  test('show warning for unexpected zIndexes', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var shape = new Konva.Circle({
+      radius: 50,
+      fill: 'red'
+    });
+    layer.add(shape);
+
+    var callCount = 0;
+    var oldWarn = Konva.Util.warn;
+    Konva.Util.warn = function() {
+      callCount += 1;
+    };
+
+    shape.zIndex(-1);
+    shape.zIndex(0);
+    shape.zIndex(10);
+
+    assert.equal(callCount, 2);
+    Konva.Util.warn = oldWarn;
+  });
 });
