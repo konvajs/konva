@@ -65,6 +65,18 @@ export const angleDeg = true;
  */
 export const showWarnings = true;
 
+/**
+ * Configure what mouse buttons can be used for drag and drop.
+ * Default value is [0] - only left mouse button.
+ * @property dragButtons
+ * @default true
+ * @memberof Konva
+ * @example
+ * // enable left and right mouse buttons
+ * Konva.dragButtons = [0, 2];
+ */
+export const dragButtons = [0, 1];
+
 // export default KonvaInternals;
 
 // shapes

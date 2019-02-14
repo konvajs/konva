@@ -112,11 +112,34 @@ suite('DragAndDrop', function() {
 
     assert(circle.isDragging() === false, 'no dragging with right click');
 
+    Konva.dragButtons = [0, 2];
     stage.simulateMouseUp({
       x: 291,
       y: 112,
       button: 2
     });
+
+    // simulate buttons change
+    stage.simulateMouseDown({
+      x: 291,
+      y: 112,
+      button: 2
+    });
+
+    stage.simulateMouseMove({
+      x: 311,
+      y: 112,
+      button: 2
+    });
+
+    assert(circle.isDragging() === true, 'no dragging with right click');
+
+    stage.simulateMouseUp({
+      x: 291,
+      y: 112,
+      button: 2
+    });
+    Konva.dragButtons = [0];
   });
 
   // ======================================================

@@ -21,11 +21,6 @@ function getDummyContext() {
   return dummyContext;
 }
 
-// TODO: write a test for adding destroyed shape into the layer
-// will it draw?
-// will it pass hit test?
-// show warning on adding destroyed shape?
-
 // TODO: idea - use only "remove" (or destroy method)
 // how? on add, check that every inner shape has reference in konva store with color
 // on remove - clear that reference

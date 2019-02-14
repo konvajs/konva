@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Show a warning for incorrect value for `zIndex` property.
 * Show a warning when user is trying to reuse destroyed shape.
 * new publish method `measureSize(string)` for `Konva.Text`
+* You can configure what mouse buttons can be used for drag&drop. To enable right button you can use `Konva.dragButtons = [0, 1]`.
 
 ### Changed
 * Fixes inconsistent `layer.setSize()` method. Now it has same arguments as any container.

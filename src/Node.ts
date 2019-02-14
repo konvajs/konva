@@ -2161,18 +2161,15 @@ export abstract class Node {
   }
 
   _listenDrag() {
-    var that = this;
-
     this._dragCleanup();
 
     this.on('mousedown.konva touchstart.konva', function(evt) {
-      // ignore right and middle buttons
-      // TODO: should we add a global config for buttons?
-      if (evt.evt.button === 1 || evt.evt.button === 2) {
+      var canDrag = getGlobalKonva().dragButtons.indexOf(evt.evt.button) >= 0;
+      if (!canDrag) {
         return;
       }
       if (!DD.node) {
-        that.startDrag();
+        this.startDrag();
       }
     });
   }

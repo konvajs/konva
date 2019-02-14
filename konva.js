@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v3.0.0-0
    * http://konvajs.github.io/
    * Licensed under the MIT
-   * Date: Wed Feb 13 2019
+   * Date: Thu Feb 14 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -4253,16 +4253,14 @@
           return !!(DD.node && DD.node === this && DD.isDragging);
       };
       Node.prototype._listenDrag = function () {
-          var that = this;
           this._dragCleanup();
           this.on('mousedown.konva touchstart.konva', function (evt) {
-              // ignore right and middle buttons
-              // TODO: should we add a global config for buttons?
-              if (evt.evt.button === 1 || evt.evt.button === 2) {
+              var canDrag = getGlobalKonva().dragButtons.indexOf(evt.evt.button) >= 0;
+              if (!canDrag) {
                   return;
               }
               if (!DD.node) {
-                  that.startDrag();
+                  this.startDrag();
               }
           });
       };
@@ -6804,10 +6802,6 @@
       dummyContext = Util.createCanvasElement().getContext('2d');
       return dummyContext;
   }
-  // TODO: write a test for adding destroyed shape into the layer
-  // will it draw?
-  // will it pass hit test?
-  // show warning on adding destroyed shape?
   // TODO: idea - use only "remove" (or destroy method)
   // how? on add, check that every inner shape has reference in konva store with color
   // on remove - clear that reference
@@ -16954,6 +16948,17 @@
    */
   var showWarnings = true;
   /**
+   * Configure what mouse buttons can be used for drag and drop.
+   * Default value is [0] - only left mouse button.
+   * @property dragButtons
+   * @default true
+   * @memberof Konva
+   * @example
+   * // enable left and right mouse buttons
+   * Konva.dragButtons = [0, 2];
+   */
+  var dragButtons = [0, 1];
+  /**
    * @namespace Filters
    * @memberof Konva
    */
@@ -16988,6 +16993,7 @@
     dragDistance: dragDistance,
     angleDeg: angleDeg,
     showWarnings: showWarnings,
+    dragButtons: dragButtons,
     Filters: Filters,
     Collection: Collection,
     Util: Util,

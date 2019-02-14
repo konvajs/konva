@@ -247,7 +247,7 @@ Konva.Stage.prototype.simulateMouseDown = function(pos) {
   this._mousedown({
     clientX: pos.x,
     clientY: pos.y + top,
-    button: pos.button
+    button: pos.button || 0
   });
 };
 
@@ -257,7 +257,7 @@ Konva.Stage.prototype.simulateMouseMove = function(pos) {
   var evt = {
     clientX: pos.x,
     clientY: pos.y + top,
-    button: pos.button
+    button: pos.button || 0
   };
 
   this._mousemove(evt);
@@ -270,7 +270,7 @@ Konva.Stage.prototype.simulateMouseUp = function(pos) {
   var evt = {
     clientX: pos.x,
     clientY: pos.y + top,
-    button: pos.button
+    button: pos.button || 0
   };
 
   Konva.DD._endDragBefore(evt);
