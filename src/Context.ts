@@ -496,52 +496,23 @@ export class SceneContext extends Context {
       this.translate(-1 * fillPatternOffsetX, -1 * fillPatternOffsetY);
     }
 
-    // TODO: cache pattern
-    this.setAttr(
-      'fillStyle',
-      this.createPattern(
-        shape.getFillPatternImage(),
-        shape.getFillPatternRepeat() || 'repeat'
-      )
-    );
+    this.setAttr('fillStyle', shape._getFillPattern());
     shape._fillFunc(this);
   }
   _fillLinearGradient(shape) {
-    var start = shape.getFillLinearGradientStartPoint(),
-      end = shape.getFillLinearGradientEndPoint(),
-      colorStops = shape.getFillLinearGradientColorStops(),
-      grd = this.createLinearGradient(start.x, start.y, end.x, end.y);
+    var grd = shape._getLinearGradient();
 
-    if (colorStops) {
-      // build color stops
-      for (var n = 0; n < colorStops.length; n += 2) {
-        grd.addColorStop(colorStops[n], colorStops[n + 1]);
-      }
+    if (grd) {
       this.setAttr('fillStyle', grd);
       shape._fillFunc(this);
     }
   }
   _fillRadialGradient(shape) {
-    var start = shape.getFillRadialGradientStartPoint(),
-      end = shape.getFillRadialGradientEndPoint(),
-      startRadius = shape.getFillRadialGradientStartRadius(),
-      endRadius = shape.getFillRadialGradientEndRadius(),
-      colorStops = shape.getFillRadialGradientColorStops(),
-      grd = this.createRadialGradient(
-        start.x,
-        start.y,
-        startRadius,
-        end.x,
-        end.y,
-        endRadius
-      );
-
-    // build color stops
-    for (var n = 0; n < colorStops.length; n += 2) {
-      grd.addColorStop(colorStops[n], colorStops[n + 1]);
+    var grd = shape._getRadialGradient();
+    if (grd) {
+      this.setAttr('fillStyle', grd);
+      shape._fillFunc(this);
     }
-    this.setAttr('fillStyle', grd);
-    shape._fillFunc(this);
   }
   _fill(shape) {
     var hasColor = shape.fill(),

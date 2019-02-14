@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v3.0.0-0
    * http://konvajs.github.io/
    * Licensed under the MIT
-   * Date: Mon Feb 11 2019
+   * Date: Wed Feb 13 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -1769,29 +1769,22 @@
           if (fillPatternOffsetX || fillPatternOffsetY) {
               this.translate(-1 * fillPatternOffsetX, -1 * fillPatternOffsetY);
           }
-          // TODO: cache pattern
-          this.setAttr('fillStyle', this.createPattern(shape.getFillPatternImage(), shape.getFillPatternRepeat() || 'repeat'));
+          this.setAttr('fillStyle', shape._getFillPattern());
           shape._fillFunc(this);
       };
       SceneContext.prototype._fillLinearGradient = function (shape) {
-          var start = shape.getFillLinearGradientStartPoint(), end = shape.getFillLinearGradientEndPoint(), colorStops = shape.getFillLinearGradientColorStops(), grd = this.createLinearGradient(start.x, start.y, end.x, end.y);
-          if (colorStops) {
-              // build color stops
-              for (var n = 0; n < colorStops.length; n += 2) {
-                  grd.addColorStop(colorStops[n], colorStops[n + 1]);
-              }
+          var grd = shape._getLinearGradient();
+          if (grd) {
               this.setAttr('fillStyle', grd);
               shape._fillFunc(this);
           }
       };
       SceneContext.prototype._fillRadialGradient = function (shape) {
-          var start = shape.getFillRadialGradientStartPoint(), end = shape.getFillRadialGradientEndPoint(), startRadius = shape.getFillRadialGradientStartRadius(), endRadius = shape.getFillRadialGradientEndRadius(), colorStops = shape.getFillRadialGradientColorStops(), grd = this.createRadialGradient(start.x, start.y, startRadius, end.x, end.y, endRadius);
-          // build color stops
-          for (var n = 0; n < colorStops.length; n += 2) {
-              grd.addColorStop(colorStops[n], colorStops[n + 1]);
+          var grd = shape._getRadialGradient();
+          if (grd) {
+              this.setAttr('fillStyle', grd);
+              shape._fillFunc(this);
           }
-          this.setAttr('fillStyle', grd);
-          shape._fillFunc(this);
       };
       SceneContext.prototype._fill = function (shape) {
           var hasColor = shape.fill(), fillPriority = shape.getFillPriority();
@@ -6808,7 +6801,17 @@
 
   var HAS_SHADOW = 'hasShadow';
   var SHADOW_RGBA = 'shadowRGBA';
-  // TODO: cache gradient from context
+  var patternImage = 'patternImage';
+  var linearGradient = 'linearGradient';
+  var radialGradient = 'radialGradient';
+  var dummyContext;
+  function getDummyContext() {
+      if (dummyContext) {
+          return dummyContext;
+      }
+      dummyContext = Util.createCanvasElement().getContext('2d');
+      return dummyContext;
+  }
   // TODO: write a test for adding destroyed shape into the layer
   // will it draw?
   // will it pass hit test?
@@ -6835,6 +6838,15 @@
   }
   function _clearGetShadowRGBACache() {
       this._clearCache(SHADOW_RGBA);
+  }
+  function _clearFillPatternCache() {
+      this._clearCache(patternImage);
+  }
+  function _clearLinearGradientCache() {
+      this._clearCache(linearGradient);
+  }
+  function _clearRadialGradientCache() {
+      this._clearCache(radialGradient);
   }
   /**
    * Shape constructor.  Shapes are primitive objects such as rectangles,
@@ -6947,6 +6959,9 @@
           shapes[key] = _this;
           _this.on('shadowColorChange.konva shadowBlurChange.konva shadowOffsetChange.konva shadowOpacityChange.konva shadowEnabledChange.konva', _clearHasShadowCache);
           _this.on('shadowColorChange.konva shadowOpacityChange.konva shadowEnabledChange.konva', _clearGetShadowRGBACache);
+          _this.on('fillPriorityChange.konva fillPatternImageChange.konva fillPatternRepeatChange.konva', _clearFillPatternCache);
+          _this.on('fillPriorityChange.konva fillLinearGradientColorStopsChange.konva fillLinearGradientStartPointXChange.konva fillLinearGradientStartPointYChange.konva fillLinearGradientEndPointXChange.konva fillLinearGradientEndPointYChange.konva', _clearLinearGradientCache);
+          _this.on('fillPriorityChange.konva fillRadialGradientColorStopsChange.konva fillRadialGradientStartPointXChange.konva fillRadialGradientStartPointYChange.konva fillRadialGradientEndPointXChange.konva fillRadialGradientEndPointYChange.konva fillRadialGradientStartRadiusChange.konva fillRadialGradientEndRadiusChange.konva', _clearRadialGradientCache);
           return _this;
       }
       /**
@@ -6986,6 +7001,49 @@
                       this.shadowBlur() ||
                       this.shadowOffsetX() ||
                       this.shadowOffsetY())));
+      };
+      Shape.prototype._getFillPattern = function () {
+          return this._getCache(patternImage, this.__getFillPattern);
+      };
+      Shape.prototype.__getFillPattern = function () {
+          if (this.fillPatternImage()) {
+              var ctx = getDummyContext();
+              return ctx.createPattern(this.fillPatternImage(), this.fillPatternRepeat() || 'repeat');
+          }
+      };
+      Shape.prototype._getLinearGradient = function () {
+          return this._getCache(linearGradient, this.__getLinearGradient);
+      };
+      Shape.prototype.__getLinearGradient = function () {
+          var colorStops = this.fillLinearGradientColorStops();
+          if (colorStops) {
+              var ctx = getDummyContext();
+              var start = this.fillLinearGradientStartPoint();
+              var end = this.fillLinearGradientEndPoint();
+              var grd = ctx.createLinearGradient(start.x, start.y, end.x, end.y);
+              // build color stops
+              for (var n = 0; n < colorStops.length; n += 2) {
+                  grd.addColorStop(colorStops[n], colorStops[n + 1]);
+              }
+              return grd;
+          }
+      };
+      Shape.prototype._getRadialGradient = function () {
+          return this._getCache(radialGradient, this.__getRadialGradient);
+      };
+      Shape.prototype.__getRadialGradient = function () {
+          var colorStops = this.fillRadialGradientColorStops();
+          if (colorStops) {
+              var ctx = getDummyContext();
+              var start = this.fillRadialGradientStartPoint();
+              var end = this.fillRadialGradientEndPoint();
+              var grd = ctx.createRadialGradient(start.x, start.y, this.fillRadialGradientStartRadius(), end.x, end.y, this.fillRadialGradientEndRadius());
+              // build color stops
+              for (var n = 0; n < colorStops.length; n += 2) {
+                  grd.addColorStop(colorStops[n], colorStops[n + 1]);
+              }
+              return grd;
+          }
       };
       Shape.prototype.getShadowRGBA = function () {
           return this._getCache(SHADOW_RGBA, this._getShadowRGBA);
@@ -12300,13 +12358,13 @@
   ], 
   // cached variables
   attrChangeListLen$1 = ATTR_CHANGE_LIST$1.length;
-  var dummyContext;
-  function getDummyContext() {
-      if (dummyContext) {
-          return dummyContext;
+  var dummyContext$1;
+  function getDummyContext$1() {
+      if (dummyContext$1) {
+          return dummyContext$1;
       }
-      dummyContext = Util.createCanvasElement().getContext(CONTEXT_2D);
-      return dummyContext;
+      dummyContext$1 = Util.createCanvasElement().getContext(CONTEXT_2D);
+      return dummyContext$1;
   }
   function _fillFunc$1(context) {
       context.fillText(this.partialText, 0, 0);
@@ -12565,7 +12623,7 @@
       };
       // TODO: make it public, rename to "measure text"?
       Text.prototype._getTextSize = function (text) {
-          var _context = getDummyContext(), fontSize = this.fontSize(), metrics;
+          var _context = getDummyContext$1(), fontSize = this.fontSize(), metrics;
           _context.save();
           _context.font = this._getContextFont();
           metrics = _context.measureText(text);
@@ -12605,7 +12663,7 @@
       Text.prototype._getTextWidth = function (text) {
           var letterSpacing = this.letterSpacing();
           var length = text.length;
-          return (getDummyContext().measureText(text).width +
+          return (getDummyContext$1().measureText(text).width +
               (length ? letterSpacing * (length - 1) : 0));
       };
       Text.prototype._setTextData = function () {
@@ -12613,7 +12671,7 @@
           // align = this.align(),
           shouldWrap = wrap !== NONE$1, wrapAtWord = wrap !== CHAR && shouldWrap, shouldAddEllipsis = this.ellipsis() && !shouldWrap;
           this.textArr = [];
-          getDummyContext().font = this._getContextFont();
+          getDummyContext$1().font = this._getContextFont();
           var additionalWidth = shouldAddEllipsis ? this._getTextWidth(ELLIPSIS) : 0;
           for (var i = 0, max = lines.length; i < max; ++i) {
               var line = lines[i];

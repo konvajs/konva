@@ -8,8 +8,19 @@ import { Context } from './Context';
 
 var HAS_SHADOW = 'hasShadow';
 var SHADOW_RGBA = 'shadowRGBA';
+var patternImage = 'patternImage';
+var linearGradient = 'linearGradient';
+var radialGradient = 'radialGradient';
 
-// TODO: cache gradient from context
+var dummyContext;
+function getDummyContext() {
+  if (dummyContext) {
+    return dummyContext;
+  }
+  dummyContext = Util.createCanvasElement().getContext('2d');
+  return dummyContext;
+}
+
 // TODO: write a test for adding destroyed shape into the layer
 // will it draw?
 // will it pass hit test?
@@ -40,6 +51,18 @@ function _clearHasShadowCache() {
 
 function _clearGetShadowRGBACache() {
   this._clearCache(SHADOW_RGBA);
+}
+
+function _clearFillPatternCache() {
+  this._clearCache(patternImage);
+}
+
+function _clearLinearGradientCache() {
+  this._clearCache(linearGradient);
+}
+
+function _clearRadialGradientCache() {
+  this._clearCache(radialGradient);
 }
 
 /**
@@ -101,6 +124,21 @@ export class Shape extends Node {
       'shadowColorChange.konva shadowOpacityChange.konva shadowEnabledChange.konva',
       _clearGetShadowRGBACache
     );
+
+    this.on(
+      'fillPriorityChange.konva fillPatternImageChange.konva fillPatternRepeatChange.konva',
+      _clearFillPatternCache
+    );
+
+    this.on(
+      'fillPriorityChange.konva fillLinearGradientColorStopsChange.konva fillLinearGradientStartPointXChange.konva fillLinearGradientStartPointYChange.konva fillLinearGradientEndPointXChange.konva fillLinearGradientEndPointYChange.konva',
+      _clearLinearGradientCache
+    );
+
+    this.on(
+      'fillPriorityChange.konva fillRadialGradientColorStopsChange.konva fillRadialGradientStartPointXChange.konva fillRadialGradientStartPointYChange.konva fillRadialGradientEndPointXChange.konva fillRadialGradientEndPointYChange.konva fillRadialGradientStartRadiusChange.konva fillRadialGradientEndRadiusChange.konva',
+      _clearRadialGradientCache
+    );
   }
 
   /**
@@ -145,6 +183,64 @@ export class Shape extends Node {
           this.shadowOffsetY()
         ))
     );
+  }
+  _getFillPattern() {
+    return this._getCache(patternImage, this.__getFillPattern);
+  }
+  __getFillPattern() {
+    if (this.fillPatternImage()) {
+      var ctx = getDummyContext();
+      return ctx.createPattern(
+        this.fillPatternImage(),
+        this.fillPatternRepeat() || 'repeat'
+      );
+    }
+  }
+  _getLinearGradient() {
+    return this._getCache(linearGradient, this.__getLinearGradient);
+  }
+  __getLinearGradient() {
+    var colorStops = this.fillLinearGradientColorStops();
+    if (colorStops) {
+      var ctx = getDummyContext();
+
+      var start = this.fillLinearGradientStartPoint();
+      var end = this.fillLinearGradientEndPoint();
+      var grd = ctx.createLinearGradient(start.x, start.y, end.x, end.y);
+
+      // build color stops
+      for (var n = 0; n < colorStops.length; n += 2) {
+        grd.addColorStop(colorStops[n], colorStops[n + 1]);
+      }
+      return grd;
+    }
+  }
+
+  _getRadialGradient() {
+    return this._getCache(radialGradient, this.__getRadialGradient);
+  }
+  __getRadialGradient() {
+    var colorStops = this.fillRadialGradientColorStops();
+    if (colorStops) {
+      var ctx = getDummyContext();
+
+      var start = this.fillRadialGradientStartPoint();
+      var end = this.fillRadialGradientEndPoint();
+      var grd = ctx.createRadialGradient(
+        start.x,
+        start.y,
+        this.fillRadialGradientStartRadius(),
+        end.x,
+        end.y,
+        this.fillRadialGradientEndRadius()
+      );
+
+      // build color stops
+      for (var n = 0; n < colorStops.length; n += 2) {
+        grd.addColorStop(colorStops[n], colorStops[n + 1]);
+      }
+      return grd;
+    }
   }
   getShadowRGBA() {
     return this._getCache(SHADOW_RGBA, this._getShadowRGBA);
@@ -550,6 +646,12 @@ export class Shape extends Node {
   fillRadialGradientStartRadius: GetSet<number, this>;
   fillRadialGradientEndRadius: GetSet<number, this>;
   fillRadialGradientColorStops: GetSet<Array<number | string>, this>;
+  fillRadialGradientStartPoint: GetSet<Vector2d, this>;
+  fillRadialGradientStartPointX: GetSet<number, this>;
+  fillRadialGradientStartPointY: GetSet<number, this>;
+  fillRadialGradientEndPoint: GetSet<Vector2d, this>;
+  fillRadialGradientEndPointX: GetSet<number, this>;
+  fillRadialGradientEndPointY: GetSet<number, this>;
   fillPatternOffset: GetSet<Vector2d, this>;
   fillPatternOffsetX: GetSet<number, this>;
   fillPatternOffsetY: GetSet<number, this>;

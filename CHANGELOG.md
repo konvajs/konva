@@ -19,6 +19,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * A bit changed behavior of `removeId` (private method), now it doesn't clear node ref, if object is changed.
 * simplified `batchDraw` method (it doesn't use `Konva.Animation`) now.
 * `id` and `name` properties defaults are empty strings, not `undefined`
+* Performance improvements for shapes will image patterns, linear and radial fills
 
 ### Removed
 * `Konva.Util.addMethods`

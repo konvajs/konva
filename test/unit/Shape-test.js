@@ -377,7 +377,7 @@ suite('Shape', function() {
 
     assert.equal(
       trace,
-      'clearRect(0,0,578,200);save();transform(3,0,0,1.5,10,15);beginPath();rect(0,0,100,100);closePath();createLinearGradient(0,0,100,100);fillStyle=[object CanvasGradient];fill();lineWidth=2;createLinearGradient(0,0,100,100);strokeStyle=[object CanvasGradient];stroke();restore();'
+      'clearRect(0,0,578,200);save();transform(3,0,0,1.5,10,15);beginPath();rect(0,0,100,100);closePath();fillStyle=[object CanvasGradient];fill();lineWidth=2;createLinearGradient(0,0,100,100);strokeStyle=[object CanvasGradient];stroke();restore();'
     );
   });
 
@@ -1470,5 +1470,308 @@ suite('Shape', function() {
     });
     layer.add(rect);
     stage.add(layer);
+  });
+
+  // ======================================================
+  test('cache fill pattern', function(done) {
+    var imageObj = new Image();
+    imageObj.onload = function() {
+      var stage = addStage();
+      var layer = new Konva.Layer();
+
+      var star = new Konva.Star({
+        x: 200,
+        y: 100,
+        numPoints: 5,
+        innerRadius: 40,
+        outerRadius: 70,
+
+        fillPatternImage: imageObj,
+        fillPatternX: -20,
+        fillPatternY: -30,
+        fillPatternScale: { x: 0.5, y: 0.5 },
+        fillPatternOffset: { x: 219, y: 150 },
+        fillPatternRotation: 90,
+        fillPatternRepeat: 'no-repeat',
+
+        stroke: 'blue',
+        strokeWidth: 5,
+        draggable: true
+      });
+
+      layer.add(star);
+      stage.add(layer);
+
+      var ctx = layer.getContext();
+      var oldCreate = ctx.createPattern;
+
+      var callCount = 0;
+      ctx.createPattern = function() {
+        callCount += 1;
+        return oldCreate.apply(this, arguments);
+      };
+
+      layer.draw();
+      layer.draw();
+      assert.equal(callCount, 0);
+      done();
+    };
+    imageObj.src = 'assets/darth-vader.jpg';
+  });
+
+  test('recache fill pattern on changes', function(done) {
+    var imageObj = new Image();
+    imageObj.onload = function() {
+      var stage = addStage();
+      var layer = new Konva.Layer();
+
+      var star = new Konva.Star({
+        x: 200,
+        y: 100,
+        numPoints: 5,
+        innerRadius: 40,
+        outerRadius: 70,
+
+        fillPatternImage: imageObj,
+        fillPatternX: -20,
+        fillPatternY: -30,
+        fillPatternScale: { x: 0.5, y: 0.5 },
+        fillPatternOffset: { x: 219, y: 150 },
+        fillPatternRotation: 90,
+        fillPatternRepeat: 'no-repeat',
+
+        stroke: 'blue',
+        strokeWidth: 5,
+        draggable: true
+      });
+
+      layer.add(star);
+      stage.add(layer);
+
+      var pattern1 = star._getFillPattern();
+
+      star.fillPatternImage(document.createElement('canvas'));
+
+      var pattern2 = star._getFillPattern();
+
+      assert.notEqual(pattern1, pattern2);
+
+      star.fillPatternRepeat('repeat');
+
+      var pattern3 = star._getFillPattern();
+
+      assert.notEqual(pattern2, pattern3);
+
+      done();
+    };
+    imageObj.src = 'assets/darth-vader.jpg';
+  });
+
+  // ======================================================
+  test('cache linear gradient', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var star = new Konva.Star({
+      x: 200,
+      y: 100,
+      numPoints: 5,
+      innerRadius: 40,
+      outerRadius: 70,
+
+      fillLinearGradientStartPoint: { x: -50, y: -50 },
+      fillLinearGradientEndPoint: { x: 50, y: 50 },
+      fillLinearGradientColorStops: [0, 'red', 1, 'yellow'],
+
+      stroke: 'blue',
+      strokeWidth: 5,
+      draggable: true
+    });
+
+    layer.add(star);
+    stage.add(layer);
+
+    var ctx = layer.getContext();
+    var oldCreate = ctx.createLinearGradient;
+
+    var callCount = 0;
+    ctx.createLinearGradient = function() {
+      callCount += 1;
+      return oldCreate.apply(this, arguments);
+    };
+
+    layer.draw();
+    layer.draw();
+    assert.equal(callCount, 0);
+  });
+
+  test('recache linear gradient on changes', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var star = new Konva.Star({
+      x: 200,
+      y: 100,
+      numPoints: 5,
+      innerRadius: 40,
+      outerRadius: 70,
+
+      fillLinearGradientStartPoint: { x: -50, y: -50 },
+      fillLinearGradientEndPoint: { x: 50, y: 50 },
+      fillLinearGradientColorStops: [0, 'red', 1, 'yellow'],
+
+      stroke: 'blue',
+      strokeWidth: 5,
+      draggable: true
+    });
+
+    layer.add(star);
+    stage.add(layer);
+
+    var gradient1 = star._getLinearGradient();
+
+    star.fillLinearGradientStartPointX(-10);
+
+    var gradient2 = star._getLinearGradient();
+
+    assert.notEqual(gradient1, gradient2);
+
+    star.fillLinearGradientStartPointY(-10);
+
+    var gradient3 = star._getLinearGradient();
+
+    assert.notEqual(gradient2, gradient3);
+
+    star.fillLinearGradientEndPointX(100);
+
+    var gradient4 = star._getLinearGradient();
+
+    assert.notEqual(gradient3, gradient4);
+
+    star.fillLinearGradientEndPointY(100);
+
+    var gradient5 = star._getLinearGradient();
+
+    assert.notEqual(gradient4, gradient5);
+
+    star.fillLinearGradientColorStops([0, 'red', 1, 'green']);
+
+    var gradient6 = star._getLinearGradient();
+
+    assert.notEqual(gradient5, gradient6);
+
+    layer.draw();
+  });
+
+  // ======================================================
+  test('cache radial gradient', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var star = new Konva.Star({
+      x: 200,
+      y: 100,
+      numPoints: 5,
+      innerRadius: 40,
+      outerRadius: 70,
+
+      fillRadialGradientStartPoint: { x: 0, y: 0 },
+      fillRadialGradientStartRadius: 0,
+      fillRadialGradientEndPoint: { x: 0, y: 0 },
+      fillRadialGradientEndRadius: 70,
+      fillRadialGradientColorStops: [0, 'red', 0.5, 'yellow', 1, 'blue'],
+
+      stroke: 'blue',
+      strokeWidth: 5,
+      draggable: true
+    });
+
+    layer.add(star);
+    stage.add(layer);
+
+    var ctx = layer.getContext();
+    var oldCreate = ctx.createRadialGradient;
+
+    var callCount = 0;
+    ctx.createRadialGradient = function() {
+      callCount += 1;
+      return oldCreate.apply(this, arguments);
+    };
+
+    layer.draw();
+    layer.draw();
+    assert.equal(callCount, 0);
+  });
+
+  test('recache linear gradient on changes', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var star = new Konva.Star({
+      x: 200,
+      y: 100,
+      numPoints: 5,
+      innerRadius: 40,
+      outerRadius: 70,
+
+      fillRadialGradientStartPoint: { x: 0, y: 0 },
+      fillRadialGradientStartRadius: 0,
+      fillRadialGradientEndPoint: { x: 0, y: 0 },
+      fillRadialGradientEndRadius: 70,
+      fillRadialGradientColorStops: [0, 'red', 0.5, 'yellow', 1, 'blue'],
+
+      stroke: 'blue',
+      strokeWidth: 5,
+      draggable: true
+    });
+
+    layer.add(star);
+    stage.add(layer);
+
+    var gradient1 = star._getRadialGradient();
+
+    star.fillRadialGradientStartPointX(-10);
+
+    var gradient2 = star._getRadialGradient();
+
+    assert.notEqual(gradient1, gradient2);
+
+    star.fillRadialGradientStartPointY(-10);
+
+    var gradient3 = star._getRadialGradient();
+
+    assert.notEqual(gradient2, gradient3);
+
+    star.fillRadialGradientEndPointX(100);
+
+    var gradient4 = star._getRadialGradient();
+
+    assert.notEqual(gradient3, gradient4);
+
+    star.fillRadialGradientEndPointY(100);
+
+    var gradient5 = star._getRadialGradient();
+
+    assert.notEqual(gradient4, gradient5);
+
+    star.fillRadialGradientColorStops([0, 'red', 1, 'green']);
+
+    var gradient6 = star._getRadialGradient();
+
+    assert.notEqual(gradient5, gradient6);
+
+    star.fillRadialGradientStartRadius(10);
+
+    var gradient7 = star._getRadialGradient();
+
+    assert.notEqual(gradient6, gradient7);
+
+    star.fillRadialGradientEndRadius(200);
+
+    var gradient8 = star._getRadialGradient();
+
+    assert.notEqual(gradient7, gradient8);
+
+    layer.draw();
   });
 });
