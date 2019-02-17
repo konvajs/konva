@@ -904,7 +904,7 @@ suite('Shape', function() {
 
       lion.cache();
 
-      //document.body.appendChild(lion._cache.canvas.hit._canvas);
+      //document.body.appendChild(lion._getCanvasCache().hit._canvas);
 
       lion.drawHitFromCache();
 

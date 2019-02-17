@@ -150,17 +150,17 @@ suite('Node', function() {
       strokeWidth: 4
     });
 
-    assert.equal(circle._cache.transform, undefined);
+    assert.equal(circle._cache.get('transform'), undefined);
 
     layer.add(circle);
     stage.add(layer);
 
     // transform cache
-    assert.notEqual(circle._cache.transform, undefined);
+    assert.notEqual(circle._cache.get('transform'), undefined);
     circle.setX(100);
-    assert.equal(circle._cache.transform, undefined);
+    assert.equal(circle._cache.get('transform'), undefined);
     layer.draw();
-    assert.notEqual(circle._cache.transform, undefined);
+    assert.notEqual(circle._cache.get('transform'), undefined);
   });
 
   // ======================================================
@@ -179,15 +179,15 @@ suite('Node', function() {
     stage.add(layer);
 
     // visible cache
-    assert.equal(circle._cache.visible, true);
+    assert.equal(circle._cache.get('visible'), true);
     circle.hide();
-    assert.equal(circle._cache.visible, undefined);
+    assert.equal(circle._cache.get('visible'), undefined);
     stage.draw();
-    assert.equal(circle._cache.visible, false);
+    assert.equal(circle._cache.get('visible'), false);
     circle.show();
-    assert.equal(circle._cache.visible, undefined);
+    assert.equal(circle._cache.get('visible'), undefined);
     layer.draw();
-    assert.equal(circle._cache.visible, true);
+    assert.equal(circle._cache.get('visible'), true);
   });
 
   // ======================================================
@@ -206,14 +206,14 @@ suite('Node', function() {
     stage.add(layer);
 
     // shadow cache
-    assert.equal(circle._cache.hasShadow, false);
+    assert.equal(circle._cache.get('hasShadow'), false);
     circle.setShadowColor('red');
     circle.setShadowOffset(10);
-    assert.equal(circle._cache.hasShadow, undefined);
+    assert.equal(circle._cache.get('hasShadow'), undefined);
     layer.draw();
-    assert.equal(circle._cache.hasShadow, true);
+    assert.equal(circle._cache.get('hasShadow'), true);
     layer.draw();
-    assert.equal(circle._cache.hasShadow, true);
+    assert.equal(circle._cache.get('hasShadow'), true);
   });
 
   // ======================================================
@@ -255,11 +255,11 @@ suite('Node', function() {
     stage.add(layer);
 
     // opacity cache
-    assert.equal(circle._cache.absoluteOpacity, 1);
+    assert.equal(circle._cache.get('absoluteOpacity'), 1);
     circle.setOpacity(0.5);
-    assert.equal(circle._cache.absoluteOpacity, undefined);
+    assert.equal(circle._cache.get('absoluteOpacity'), undefined);
     layer.draw();
-    assert.equal(circle._cache.absoluteOpacity, 0.5);
+    assert.equal(circle._cache.get('absoluteOpacity'), 0.5);
   });
 
   // ======================================================
@@ -282,11 +282,11 @@ suite('Node', function() {
     // prime the cache
     circle.isListening();
 
-    assert.equal(circle._cache.listening, true);
+    assert.equal(circle._cache.get('listening'), true);
     circle.setListening(false);
-    assert.equal(circle._cache.listening, undefined);
+    assert.equal(circle._cache.get('listening'), undefined);
     circle.isListening();
-    assert.equal(circle._cache.listening, false);
+    assert.equal(circle._cache.get('listening'), false);
   });
 
   // ======================================================
@@ -306,7 +306,7 @@ suite('Node', function() {
 
     // stage cache
     var st = circle.getStage();
-    assert.equal(circle._cache.stage._id, stage._id);
+    assert.equal(circle._cache.get('stage')._id, stage._id);
   });
 
   // ======================================================
@@ -3405,7 +3405,7 @@ suite('Node', function() {
     layer.add(group);
     stage.add(layer);
 
-    assert.equal(circle._cache.canvas, undefined);
+    assert.equal(circle._getCanvasCache(), undefined);
 
     circle
       .cache({
@@ -3419,19 +3419,19 @@ suite('Node', function() {
         y: 74
       });
 
-    assert.notEqual(circle._cache.canvas.scene, undefined);
-    assert.notEqual(circle._cache.canvas.hit, undefined);
+    assert.notEqual(circle._getCanvasCache().scene, undefined);
+    assert.notEqual(circle._getCanvasCache().hit, undefined);
 
     layer.draw();
 
-    //document.body.appendChild(circle._cache.canvas.scene._canvas);
-    // document.body.appendChild(circle._cache.canvas.hit._canvas);
+    //document.body.appendChild(circle._getCanvasCache().scene._canvas);
+    // document.body.appendChild(circle._getCanvasCache().hit._canvas);
 
     showHit(layer);
 
     //assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);drawImage([object HTMLCanvasElement],0,0);restore();');
 
-    //assert.equal(circle._cache.canvas.scene.getContext().getTrace(), 'save();translate(74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
+    //assert.equal(circle._getCanvasCache().scene.getContext().getTrace(), 'save();translate(74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
   });
 
   test('cache shape before adding to layer', function() {
@@ -3457,7 +3457,7 @@ suite('Node', function() {
     });
     group.add(rect);
 
-    assert.equal(rect._cache.canvas, undefined);
+    assert.equal(rect._getCanvasCache(), undefined);
     group.cache({
       x: 0,
       y: 0,
@@ -3466,8 +3466,8 @@ suite('Node', function() {
     });
     stage.add(layer);
 
-    assert(group._cache.canvas.scene);
-    assert(group._cache.canvas.hit);
+    assert(group._getCanvasCache().scene);
+    assert(group._getCanvasCache().hit);
 
     layer.add(group);
     layer.draw();

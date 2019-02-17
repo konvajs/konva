@@ -70,6 +70,7 @@ type globalCompositeOperationType =
 var ABSOLUTE_OPACITY = 'absoluteOpacity',
   ABSOLUTE_TRANSFORM = 'absoluteTransform',
   ABSOLUTE_SCALE = 'absoluteScale',
+  CANVAS = 'canvas',
   CHANGE = 'Change',
   CHILDREN = 'children',
   KONVA = 'konva',
@@ -116,7 +117,7 @@ export abstract class Node {
   attrs: any = {};
   index = 0;
   parent: Container = null;
-  _cache: any = {};
+  _cache: Map<string, any> = new Map<string, any>();
   _lastPos = null;
 
   _filterUpToDate = false;
@@ -160,20 +161,24 @@ export abstract class Node {
   /** @lends Konva.Node.prototype */
   _clearCache(attr) {
     if (attr) {
-      delete this._cache[attr];
+      this._cache.delete(attr);
     } else {
-      this._cache = {};
+      this._cache.clear();
     }
   }
   _getCache(attr, privateGetter) {
-    var cache = this._cache[attr];
+    var cache = this._cache.get(attr);
 
     // if not cached, we need to set it using the private getter method.
     if (cache === undefined) {
-      this._cache[attr] = cache = privateGetter.call(this);
+      cache = privateGetter.call(this);
+      this._cache.set(attr, cache);
     }
 
     return cache;
+  }
+  _getCanvasCache() {
+    return this._cache.get(CANVAS);
   }
   /*
    * when the logic for a cached result depends on ancestor propagation, use this
@@ -183,7 +188,7 @@ export abstract class Node {
     this._clearCache(attr);
 
     // skip clearing if node is cached with canvas
-    if (this._cache.canvas) {
+    if (this._getCanvasCache()) {
       return;
     }
     if (this.children) {
@@ -201,7 +206,7 @@ export abstract class Node {
    * node.clearCache();
    */
   clearCache() {
-    delete this._cache.canvas;
+    this._cache.delete(CANVAS);
     this._filterUpToDate = false;
     this._clearSelfAndDescendantCache();
     return this;
@@ -339,13 +344,13 @@ export abstract class Node {
       sceneContext.restore();
     }
 
-    this._cache.canvas = {
+    this._cache.set(CANVAS, {
       scene: cachedSceneCanvas,
       filter: cachedFilterCanvas,
       hit: cachedHitCanvas,
       x: x,
       y: y
-    };
+    });
 
     return this;
   }
@@ -430,7 +435,9 @@ export abstract class Node {
     context.save();
     context._applyOpacity(this);
     context._applyGlobalCompositeOperation(this);
-    context.translate(this._cache.canvas.x, this._cache.canvas.y);
+
+    const canvasCache = this._getCanvasCache();
+    context.translate(canvasCache.x, canvasCache.y);
 
     var cacheCanvas = this._getCachedSceneCanvas();
     var ratio = cacheCanvas.pixelRatio;
@@ -445,16 +452,16 @@ export abstract class Node {
     context.restore();
   }
   _drawCachedHitCanvas(context) {
-    var cachedCanvas = this._cache.canvas,
-      hitCanvas = cachedCanvas.hit;
+    var canvasCache = this._getCanvasCache(),
+      hitCanvas = canvasCache.hit;
     context.save();
-    context.translate(this._cache.canvas.x, this._cache.canvas.y);
+    context.translate(canvasCache.x, canvasCache.y);
     context.drawImage(hitCanvas._canvas, 0, 0);
     context.restore();
   }
   _getCachedSceneCanvas() {
     var filters = this.filters(),
-      cachedCanvas = this._cache.canvas,
+      cachedCanvas = this._getCanvasCache(),
       sceneCanvas = cachedCanvas.scene,
       filterCanvas = cachedCanvas.filter,
       filterContext = filterCanvas.getContext(),

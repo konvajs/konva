@@ -406,7 +406,7 @@ export class Shape extends Node {
     var layer = this.getLayer(),
       canvas = can || layer.getCanvas(),
       context = canvas.getContext(),
-      cachedCanvas = this._cache.canvas,
+      cachedCanvas = this._getCanvasCache(),
       drawFunc = this.sceneFunc(),
       hasShadow = this.hasShadow(),
       hasStroke = this.hasStroke(),
@@ -530,7 +530,7 @@ export class Shape extends Node {
       canvas = can || layer.hitCanvas,
       context = canvas.getContext(),
       drawFunc = this.hitFunc() || this.sceneFunc(),
-      cachedCanvas = this._cache.canvas,
+      cachedCanvas = this._getCanvasCache(),
       cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
     if (!this.colorKey) {
@@ -581,7 +581,7 @@ export class Shape extends Node {
    */
   drawHitFromCache(alphaThreshold) {
     var threshold = alphaThreshold || 0,
-      cachedCanvas = this._cache.canvas,
+      cachedCanvas = this._getCanvasCache(),
       sceneCanvas = this._getCachedSceneCanvas(),
       hitCanvas = cachedCanvas.hit,
       hitContext = hitCanvas.getContext(),

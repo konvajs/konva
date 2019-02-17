@@ -404,7 +404,7 @@ export abstract class Container extends Node {
     var layer = this.getLayer(),
       canvas = can || (layer && layer.getCanvas()),
       context = canvas && canvas.getContext(),
-      cachedCanvas = this._cache.canvas,
+      cachedCanvas = this._getCanvasCache(),
       cachedSceneCanvas = cachedCanvas && cachedCanvas.scene;
 
     if (this.isVisible() || caching) {
@@ -423,7 +423,7 @@ export abstract class Container extends Node {
     var layer = this.getLayer(),
       canvas = can || (layer && layer.hitCanvas),
       context = canvas && canvas.getContext(),
-      cachedCanvas = this._cache.canvas,
+      cachedCanvas = this._getCanvasCache(),
       cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
     if (this.shouldDrawHit(canvas) || caching) {
