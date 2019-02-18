@@ -207,6 +207,20 @@ export class Layer extends BaseLayer {
     this.hitGraphEnabled(false);
     return this;
   }
+
+  // document it:
+  toggleHitCanvas() {
+    if (!this.parent) {
+      return;
+    }
+    var parent = this.parent as any;
+    var added = !!this.hitCanvas._canvas.parentNode;
+    if (added) {
+      parent.content.removeChild(this.hitCanvas._canvas);
+    } else {
+      parent.content.appendChild(this.hitCanvas._canvas);
+    }
+  }
   setSize({ width, height }) {
     super.setSize({ width, height });
     this.hitCanvas.setSize(width, height);

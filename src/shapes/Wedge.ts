@@ -9,6 +9,7 @@ import { GetSet } from '../types';
 /**
  * Wedge constructor
  * @constructor
+ * @memberof Konva
  * @augments Konva.Shape
  * @param {Object} config
  * @param {Number} config.angle in degrees

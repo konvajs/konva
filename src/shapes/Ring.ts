@@ -8,6 +8,7 @@ var PIx2 = Math.PI * 2;
  * Ring constructor
  * @constructor
  * @augments Konva.Shape
+ * @memberof Konva
  * @param {Object} config
  * @param {Number} config.innerRadius
  * @param {Number} config.outerRadius

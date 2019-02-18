@@ -452,6 +452,12 @@ export class Context {
       });
     };
   }
+  _applyGlobalCompositeOperation(node) {
+    var globalCompositeOperation = node.getGlobalCompositeOperation();
+    if (globalCompositeOperation !== 'source-over') {
+      this.setAttr('globalCompositeOperation', globalCompositeOperation);
+    }
+  }
 }
 
 CONTEXT_PROPERTIES.forEach(function(prop) {
@@ -627,12 +633,6 @@ export class SceneContext extends Context {
     );
     this.setAttr('shadowOffsetX', offset.x * scaleX);
     this.setAttr('shadowOffsetY', offset.y * scaleY);
-  }
-  _applyGlobalCompositeOperation(shape) {
-    var globalCompositeOperation = shape.getGlobalCompositeOperation();
-    if (globalCompositeOperation !== 'source-over') {
-      this.setAttr('globalCompositeOperation', globalCompositeOperation);
-    }
   }
 }
 

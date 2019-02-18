@@ -203,7 +203,7 @@ export abstract class Node {
   clearCache() {
     delete this._cache.canvas;
     this._filterUpToDate = false;
-    this._clearSelfAndDescendantCache();
+    this._clearSelfAndDescendantCache(undefined);
     return this;
   }
   /**
@@ -306,7 +306,7 @@ export abstract class Node {
 
     cachedHitCanvas.isCache = true;
 
-    this.clearCache();
+    // this.clearCache();
 
     sceneContext.save();
     hitContext.save();
@@ -448,6 +448,7 @@ export abstract class Node {
     var cachedCanvas = this._cache.canvas,
       hitCanvas = cachedCanvas.hit;
     context.save();
+    context._applyGlobalCompositeOperation(this);
     context.translate(this._cache.canvas.x, this._cache.canvas.y);
     context.drawImage(hitCanvas._canvas, 0, 0);
     context.restore();

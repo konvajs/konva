@@ -176,7 +176,7 @@ suite('Caching', function() {
     layer.add(rect);
     stage.add(layer);
 
-      cloneAndCompareLayer(layer, 10);
+    cloneAndCompareLayer(layer, 10);
   });
 
   test('cache rectangle with fill and simple shadow', function() {
@@ -386,7 +386,7 @@ suite('Caching', function() {
 
     layer.add(group);
     stage.add(layer);
-      cloneAndCompareLayer(layer, 200);
+    cloneAndCompareLayer(layer, 200);
   });
 
   test('cache group with several shape with transform', function() {
@@ -1026,5 +1026,80 @@ suite('Caching', function() {
     layer.clearCache();
     // make sure all cleared for children
     assert.equal(callCount, 1);
+  });
+
+  it.skip('check caching with global composite operation', function() {
+    var stage = addStage();
+
+    const layer = new Konva.Layer();
+    stage.add(layer);
+
+    const bg = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: stage.width(),
+      height: stage.height(),
+      fill: 'lightgray'
+    });
+    layer.add(bg);
+
+    const group = new Konva.Group();
+    layer.add(group);
+
+    const rect = new Konva.Rect({
+      x: 10,
+      y: 0,
+      width: 200,
+      height: 100,
+      fill: 'blue',
+      draggable: true
+    });
+    group.add(rect);
+
+    const maskgroup = new Konva.Group({});
+    group.add(maskgroup);
+
+    const mask = new Konva.Rect({
+      x: 50,
+      y: 0,
+      width: 100,
+      height: 100,
+      fill: 'black'
+    });
+    maskgroup.add(mask);
+
+    maskgroup.cache();
+    var canvasBefore = maskgroup._cache.canvas.scene._canvas;
+    maskgroup.globalCompositeOperation('destination-in');
+    maskgroup.cache();
+    var canvasAfter = maskgroup._cache.canvas.scene._canvas;
+    compareCanvases(canvasBefore, canvasAfter);
+
+    console.log(maskgroup);
+    // maskgroup.clearCache();
+
+    // layer.draw();
+    // // // no caches - mask group clipped all drawing
+    // assert.equal(stage.getIntersection({ x: 5, y: 20 }), null);
+    // assert.equal(stage.getIntersection({ x: 55, y: 20 }), rect);
+
+    // // cache inner mask group - same result
+    // maskgroup.cache();
+    // layer.draw();
+    // assert.equal(stage.getIntersection({ x: 5, y: 20 }), null);
+    // assert.equal(stage.getIntersection({ x: 55, y: 20 }), rect);
+
+    // cache group
+    // background will be visible now, because globalCompositeOperation
+    // will work inside cached parent only
+    // debugger;
+    // group.cache();
+    // layer.draw();
+
+    // console.log(group);
+    // assert.equal(stage.getIntersection({ x: 5, y: 20 }), bg);
+    // assert.equal(stage.getIntersection({ x: 55, y: 20 }), rect);
+
+    throw '';
   });
 });

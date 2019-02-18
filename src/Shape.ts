@@ -855,7 +855,8 @@ Factory.addGetterSetter(Shape, 'lineCap');
 Factory.addGetterSetter(Shape, 'sceneFunc');
 
 /**
- * get/set scene draw function
+ * get/set scene draw function. That function is used to draw the shape on a canvas.
+ * Also that function will be used to draw hit area of the shape, in case if hitFunc is not defined.
  * @name Konva.Shape#sceneFunc
  * @method
  * @param {Function} drawFunc drawing function
@@ -870,6 +871,7 @@ Factory.addGetterSetter(Shape, 'sceneFunc');
  *   context.rect(0, 0, shape.width(), shape.height());
  *   context.closePath();
  *   // important Konva method that fill and stroke shape from its properties
+ *   // like stroke and fill
  *   context.fillStrokeShape(shape);
  * });
  */
@@ -877,7 +879,7 @@ Factory.addGetterSetter(Shape, 'sceneFunc');
 Factory.addGetterSetter(Shape, 'hitFunc');
 
 /**
- * get/set hit draw function
+ * get/set hit draw function. That function is used to draw custom hit area of a shape.
  * @name Konva.Shape#hitFunc
  * @method
  * @param {Function} drawFunc drawing function

@@ -773,8 +773,6 @@ export class Stage extends Container {
 Stage.prototype.nodeType = STAGE;
 
 // TODO: test for replacing container
-Factory.addGetterSetter(Stage, 'container');
-
 /**
  * get/set container DOM element
  * @method
@@ -788,3 +786,6 @@ Factory.addGetterSetter(Stage, 'container');
  * body.appendChild(container);
  * stage.container(container);
  */
+Factory.addGetterSetter(Stage, 'container');
+
+

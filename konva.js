@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v3.0.0-0
    * http://konvajs.github.io/
    * Licensed under the MIT
-   * Date: Thu Feb 14 2019
+   * Date: Mon Feb 18 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -1721,6 +1721,12 @@
               });
           };
       };
+      Context.prototype._applyGlobalCompositeOperation = function (node) {
+          var globalCompositeOperation = node.getGlobalCompositeOperation();
+          if (globalCompositeOperation !== 'source-over') {
+              this.setAttr('globalCompositeOperation', globalCompositeOperation);
+          }
+      };
       return Context;
   }());
   CONTEXT_PROPERTIES.forEach(function (prop) {
@@ -1862,12 +1868,6 @@
           this.setAttr('shadowBlur', blur * Math.min(Math.abs(scaleX), Math.abs(scaleY)));
           this.setAttr('shadowOffsetX', offset.x * scaleX);
           this.setAttr('shadowOffsetY', offset.y * scaleY);
-      };
-      SceneContext.prototype._applyGlobalCompositeOperation = function (shape) {
-          var globalCompositeOperation = shape.getGlobalCompositeOperation();
-          if (globalCompositeOperation !== 'source-over') {
-              this.setAttr('globalCompositeOperation', globalCompositeOperation);
-          }
       };
       return SceneContext;
   }(Context));
@@ -2012,7 +2012,7 @@
                   return this._canvas.toDataURL();
               }
               catch (err) {
-                  Util.warn('Unable to get data URL. ' + err.message);
+                  Util.error('Unable to get data URL. ' + err.message);
                   return '';
               }
           }
@@ -2531,7 +2531,7 @@
       Node.prototype.clearCache = function () {
           delete this._cache.canvas;
           this._filterUpToDate = false;
-          this._clearSelfAndDescendantCache();
+          this._clearSelfAndDescendantCache(undefined);
           return this;
       };
       /**
@@ -2613,7 +2613,7 @@
               height: height
           }), sceneContext = cachedSceneCanvas.getContext(), hitContext = cachedHitCanvas.getContext();
           cachedHitCanvas.isCache = true;
-          this.clearCache();
+          // this.clearCache();
           sceneContext.save();
           hitContext.save();
           sceneContext.translate(-x, -y);
@@ -2730,6 +2730,7 @@
       Node.prototype._drawCachedHitCanvas = function (context) {
           var cachedCanvas = this._cache.canvas, hitCanvas = cachedCanvas.hit;
           context.save();
+          context._applyGlobalCompositeOperation(this);
           context.translate(this._cache.canvas.x, this._cache.canvas.y);
           context.drawImage(hitCanvas._canvas, 0, 0);
           context.restore();
@@ -5272,7 +5273,7 @@
                   context.restore();
               }
               else {
-                  this._drawChildren(canvas, 'drawHit', top);
+                  this._drawChildren(canvas, 'drawHit', top, false, caching);
               }
           }
           return this;
@@ -5301,10 +5302,18 @@
                   .getMatrix();
               context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
           }
+          var hasComposition = this.globalCompositeOperation() !== 'source-over' && !caching;
+          if (hasComposition && layer) {
+              context.save();
+              context._applyGlobalCompositeOperation(this);
+          }
           this.children.each(function (child) {
               child[drawMethod](canvas, top, caching, skipBuffer);
           });
-          if (hasClip) {
+          if (hasComposition && layer) {
+              context.restore();
+          }
+          if (hasClip && layer) {
               context.restore();
           }
       };
@@ -6138,7 +6147,6 @@
   }(Container));
   Stage.prototype.nodeType = STAGE$1;
   // TODO: test for replacing container
-  Factory.addGetterSetter(Stage, 'container');
   /**
    * get/set container DOM element
    * @method
@@ -6152,6 +6160,7 @@
    * body.appendChild(container);
    * stage.container(container);
    */
+  Factory.addGetterSetter(Stage, 'container');
 
   /**
    * BaseLayer constructor.
@@ -6649,6 +6658,20 @@
       Layer.prototype.disableHitGraph = function () {
           this.hitGraphEnabled(false);
           return this;
+      };
+      // document it:
+      Layer.prototype.toggleHitCanvas = function () {
+          if (!this.parent) {
+              return;
+          }
+          var parent = this.parent;
+          var added = !!this.hitCanvas._canvas.parentNode;
+          if (added) {
+              parent.content.removeChild(this.hitCanvas._canvas);
+          }
+          else {
+              parent.content.appendChild(this.hitCanvas._canvas);
+          }
       };
       Layer.prototype.setSize = function (_a) {
           var width = _a.width, height = _a.height;
@@ -7474,7 +7497,8 @@
    */
   Factory.addGetterSetter(Shape, 'sceneFunc');
   /**
-   * get/set scene draw function
+   * get/set scene draw function. That function is used to draw the shape on a canvas.
+   * Also that function will be used to draw hit area of the shape, in case if hitFunc is not defined.
    * @name Konva.Shape#sceneFunc
    * @method
    * @param {Function} drawFunc drawing function
@@ -7489,12 +7513,13 @@
    *   context.rect(0, 0, shape.width(), shape.height());
    *   context.closePath();
    *   // important Konva method that fill and stroke shape from its properties
+   *   // like stroke and fill
    *   context.fillStrokeShape(shape);
    * });
    */
   Factory.addGetterSetter(Shape, 'hitFunc');
   /**
-   * get/set hit draw function
+   * get/set hit draw function. That function is used to draw custom hit area of a shape.
    * @name Konva.Shape#hitFunc
    * @method
    * @param {Function} drawFunc drawing function
@@ -9831,6 +9856,7 @@
   /**
    * Ellipse constructor
    * @constructor
+   * @memberof Konva
    * @augments Konva.Shape
    * @param {Object} config
    * @param {Object} config.radius defines x and y radius
@@ -11639,6 +11665,7 @@
    * Ring constructor
    * @constructor
    * @augments Konva.Shape
+   * @memberof Konva
    * @param {Object} config
    * @param {Number} config.innerRadius
    * @param {Number} config.outerRadius
@@ -12617,7 +12644,7 @@
        * That method can't handle multiline text.
        * @method
        * @name Konva.Text#measureSize
-       * @param {Number} [text] text to measure
+       * @param {String} [text] text to measure
        * @returns {Object} { width , height} of measured text
        */
       Text.prototype.measureSize = function (text) {
@@ -14668,6 +14695,7 @@
   /**
    * Wedge constructor
    * @constructor
+   * @memberof Konva
    * @augments Konva.Shape
    * @param {Object} config
    * @param {Number} config.angle in degrees

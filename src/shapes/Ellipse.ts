@@ -8,6 +8,7 @@ import { GetSet, Vector2d } from '../types';
 /**
  * Ellipse constructor
  * @constructor
+ * @memberof Konva
  * @augments Konva.Shape
  * @param {Object} config
  * @param {Object} config.radius defines x and y radius

@@ -292,7 +292,7 @@ export class Text extends Shape {
    * That method can't handle multiline text.
    * @method
    * @name Konva.Text#measureSize
-   * @param {Number} [text] text to measure
+   * @param {String} [text] text to measure
    * @returns {Object} { width , height} of measured text
    */
   measureSize(text) {

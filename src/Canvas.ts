@@ -134,7 +134,7 @@ export class Canvas {
       try {
         return this._canvas.toDataURL();
       } catch (err) {
-        Util.warn('Unable to get data URL. ' + err.message);
+        Util.error('Unable to get data URL. ' + err.message);
         return '';
       }
     }

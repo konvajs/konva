@@ -433,7 +433,7 @@ export abstract class Container extends Node {
         this._drawCachedHitCanvas(context);
         context.restore();
       } else {
-        this._drawChildren(canvas, 'drawHit', top);
+        this._drawChildren(canvas, 'drawHit', top, false, caching);
       }
     }
     return this;
@@ -470,11 +470,21 @@ export abstract class Container extends Node {
       context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
     }
 
+    var hasComposition =
+      this.globalCompositeOperation() !== 'source-over' && !caching;
+    if (hasComposition && layer) {
+      context.save();
+      context._applyGlobalCompositeOperation(this);
+    }
+
     this.children.each(function(child) {
       child[drawMethod](canvas, top, caching, skipBuffer);
     });
+    if (hasComposition && layer) {
+      context.restore();
+    }
 
-    if (hasClip) {
+    if (hasClip && layer) {
       context.restore();
     }
   }
