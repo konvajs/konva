@@ -1028,7 +1028,7 @@ suite('Caching', function() {
     assert.equal(callCount, 1);
   });
 
-  it.skip('check caching with global composite operation', function() {
+  it('check caching with global composite operation', function() {
     var stage = addStage();
 
     const layer = new Konva.Layer();
@@ -1069,37 +1069,34 @@ suite('Caching', function() {
     maskgroup.add(mask);
 
     maskgroup.cache();
-    var canvasBefore = maskgroup._cache.canvas.scene._canvas;
+    var canvasBefore = maskgroup._cache.get('canvas').scene._canvas;
+
     maskgroup.globalCompositeOperation('destination-in');
     maskgroup.cache();
-    var canvasAfter = maskgroup._cache.canvas.scene._canvas;
+    var canvasAfter = maskgroup._cache.get('canvas').scene._canvas;
+
     compareCanvases(canvasBefore, canvasAfter);
 
-    console.log(maskgroup);
-    // maskgroup.clearCache();
+    maskgroup.clearCache();
 
-    // layer.draw();
-    // // // no caches - mask group clipped all drawing
-    // assert.equal(stage.getIntersection({ x: 5, y: 20 }), null);
-    // assert.equal(stage.getIntersection({ x: 55, y: 20 }), rect);
+    layer.draw();
+    // no caches - mask group clipped all drawing
+    assert.equal(stage.getIntersection({ x: 5, y: 20 }), null);
+    assert.equal(stage.getIntersection({ x: 55, y: 20 }), rect);
 
-    // // cache inner mask group - same result
-    // maskgroup.cache();
-    // layer.draw();
-    // assert.equal(stage.getIntersection({ x: 5, y: 20 }), null);
-    // assert.equal(stage.getIntersection({ x: 55, y: 20 }), rect);
+    // cache inner mask group - same result
+    maskgroup.cache();
+    layer.draw();
+    assert.equal(stage.getIntersection({ x: 5, y: 20 }), null);
+    assert.equal(stage.getIntersection({ x: 55, y: 20 }), rect);
 
     // cache group
     // background will be visible now, because globalCompositeOperation
     // will work inside cached parent only
-    // debugger;
-    // group.cache();
-    // layer.draw();
+    group.cache();
+    layer.draw();
 
-    // console.log(group);
-    // assert.equal(stage.getIntersection({ x: 5, y: 20 }), bg);
-    // assert.equal(stage.getIntersection({ x: 55, y: 20 }), rect);
-
-    throw '';
+    assert.equal(stage.getIntersection({ x: 5, y: 20 }), bg);
+    assert.equal(stage.getIntersection({ x: 55, y: 20 }), rect);
   });
 });

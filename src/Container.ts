@@ -414,7 +414,10 @@ export abstract class Container extends Node {
         this._drawCachedSceneCanvas(context);
         context.restore();
       } else {
-        this._drawChildren(canvas, 'drawScene', top, false, caching);
+        // TODO: comment all arguments here
+        // describe why we use false for caching
+        // and why we use caching for skipBuffer, skipComposition
+        this._drawChildren(canvas, 'drawScene', top, false, caching, caching);
       }
     }
     return this;
@@ -433,13 +436,23 @@ export abstract class Container extends Node {
         this._drawCachedHitCanvas(context);
         context.restore();
       } else {
-        this._drawChildren(canvas, 'drawHit', top, false, caching);
+        // TODO: comment all arguments here
+        // describe why we use false for caching
+        // and why we use caching for skipBuffer, skipComposition
+        this._drawChildren(canvas, 'drawHit', top, false, caching, caching);
       }
     }
     return this;
   }
   // TODO: create ClipContainer
-  _drawChildren(canvas, drawMethod, top, caching?, skipBuffer?) {
+  _drawChildren(
+    canvas,
+    drawMethod,
+    top,
+    caching?,
+    skipBuffer?,
+    skipComposition?
+  ) {
     var layer = this.getLayer(),
       context = canvas && canvas.getContext(),
       clipWidth = this.clipWidth(),
@@ -471,7 +484,7 @@ export abstract class Container extends Node {
     }
 
     var hasComposition =
-      this.globalCompositeOperation() !== 'source-over' && !caching;
+      this.globalCompositeOperation() !== 'source-over' && !skipComposition;
     if (hasComposition && layer) {
       context.save();
       context._applyGlobalCompositeOperation(this);

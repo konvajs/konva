@@ -5263,7 +5263,10 @@
                   context.restore();
               }
               else {
-                  this._drawChildren(canvas, 'drawScene', top, false, caching);
+                  // TODO: comment all arguments here
+                  // describe why we use false for caching
+                  // and why we use caching for skipBuffer, skipComposition
+                  this._drawChildren(canvas, 'drawScene', top, false, caching, caching);
               }
           }
           return this;
@@ -5278,13 +5281,16 @@
                   context.restore();
               }
               else {
-                  this._drawChildren(canvas, 'drawHit', top, false, caching);
+                  // TODO: comment all arguments here
+                  // describe why we use false for caching
+                  // and why we use caching for skipBuffer, skipComposition
+                  this._drawChildren(canvas, 'drawHit', top, false, caching, caching);
               }
           }
           return this;
       };
       // TODO: create ClipContainer
-      Container.prototype._drawChildren = function (canvas, drawMethod, top, caching, skipBuffer) {
+      Container.prototype._drawChildren = function (canvas, drawMethod, top, caching, skipBuffer, skipComposition) {
           var layer = this.getLayer(), context = canvas && canvas.getContext(), clipWidth = this.clipWidth(), clipHeight = this.clipHeight(), clipFunc = this.clipFunc(), hasClip = (clipWidth && clipHeight) || clipFunc, clipX, clipY;
           if (hasClip && layer) {
               context.save();
@@ -5307,7 +5313,7 @@
                   .getMatrix();
               context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
           }
-          var hasComposition = this.globalCompositeOperation() !== 'source-over' && !caching;
+          var hasComposition = this.globalCompositeOperation() !== 'source-over' && !skipComposition;
           if (hasComposition && layer) {
               context.save();
               context._applyGlobalCompositeOperation(this);
