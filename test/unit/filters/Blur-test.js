@@ -108,7 +108,7 @@ suite('Blur', function() {
 
     layer.draw();
 
-    //document.body.appendChild(group._cache.canvas.hit._canvas);
+    //document.body.appendChild(group._getCanvasCache().hit._canvas);
 
     //showHit(layer);
   });
@@ -293,11 +293,11 @@ suite('Blur', function() {
       darth.drawHitFromCache(100);
       layer.draw();
 
-      showCanvas(darth._cache.canvas.hit._canvas);
+      showCanvas(darth._getCanvasCache().hit._canvas);
 
-      //console.log(darth._cache.canvas.hit.getContext().getTrace());
+      //console.log(darth._getCanvasCache().hit.getContext().getTrace());
 
-      //assert.equal(darth._cache.canvas.hit.getContext().getTrace(true), 'save();translate();beginPath();rect();closePath();save();fillStyle;fill();restore();restore();clearRect();getImageData();putImageData();');
+      //assert.equal(darth._getCanvasCache().hit.getContext().getTrace(true), 'save();translate();beginPath();rect();closePath();save();fillStyle;fill();restore();restore();clearRect();getImageData();putImageData();');
 
       done();
     };

@@ -210,8 +210,8 @@ suite('Caching', function() {
     context.shadowBlur = 10;
     context.fill();
 
-    showCanvas(rect._cache.canvas.scene._canvas);
-    showCanvas(rect._cache.canvas.hit._canvas);
+    showCanvas(rect._getCanvasCache().scene._canvas);
+    showCanvas(rect._getCanvasCache().hit._canvas);
     showHit(layer);
     compareLayerAndCanvas(layer, canvas, 10);
     Konva.pixelRatio = undefined;
@@ -596,7 +596,7 @@ suite('Caching', function() {
     layer.add(group);
     stage.add(layer);
 
-    assert.equal(circle._cache.canvas, undefined);
+    assert.equal(circle._getCanvasCache(), undefined);
 
     var canvas = createCanvas();
     var context = canvas.getContext('2d');

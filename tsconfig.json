@@ -4,7 +4,8 @@
     "module": "ES2015",
     // "allowJs": true,
     "target": "es5",
-    "noEmitOnError": true
+    "noEmitOnError": true,
+    "lib": ["es2015", "dom"]
   },
   "include": [
     "src/index.ts"

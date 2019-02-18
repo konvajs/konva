@@ -2409,7 +2409,7 @@
       delete ids[id];
   };
   // CONSTANTS
-  var ABSOLUTE_OPACITY = 'absoluteOpacity', ABSOLUTE_TRANSFORM = 'absoluteTransform', ABSOLUTE_SCALE = 'absoluteScale', CHANGE = 'Change', CHILDREN = 'children', KONVA = 'konva', LISTENING = 'listening', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', NAME = 'name', SET$1 = 'set', SHAPE = 'Shape', SPACE = ' ', STAGE = 'stage', TRANSFORM = 'transform', UPPER_STAGE = 'Stage', VISIBLE = 'visible', CLONE_BLACK_LIST = ['id'], TRANSFORM_CHANGE_STR = [
+  var ABSOLUTE_OPACITY = 'absoluteOpacity', ABSOLUTE_TRANSFORM = 'absoluteTransform', ABSOLUTE_SCALE = 'absoluteScale', CANVAS = 'canvas', CHANGE = 'Change', CHILDREN = 'children', KONVA = 'konva', LISTENING = 'listening', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', NAME = 'name', SET$1 = 'set', SHAPE = 'Shape', SPACE = ' ', STAGE = 'stage', TRANSFORM = 'transform', UPPER_STAGE = 'Stage', VISIBLE = 'visible', CLONE_BLACK_LIST = ['id'], TRANSFORM_CHANGE_STR = [
       'xChange.konva',
       'yChange.konva',
       'scaleXChange.konva',
@@ -2457,7 +2457,7 @@
           this.attrs = {};
           this.index = 0;
           this.parent = null;
-          this._cache = {};
+          this._cache = new Map();
           this._lastPos = null;
           this._filterUpToDate = false;
           this._isUnderCache = false;
@@ -2490,19 +2490,23 @@
       /** @lends Konva.Node.prototype */
       Node.prototype._clearCache = function (attr) {
           if (attr) {
-              delete this._cache[attr];
+              this._cache.delete(attr);
           }
           else {
-              this._cache = {};
+              this._cache.clear();
           }
       };
       Node.prototype._getCache = function (attr, privateGetter) {
-          var cache = this._cache[attr];
+          var cache = this._cache.get(attr);
           // if not cached, we need to set it using the private getter method.
           if (cache === undefined) {
-              this._cache[attr] = cache = privateGetter.call(this);
+              cache = privateGetter.call(this);
+              this._cache.set(attr, cache);
           }
           return cache;
+      };
+      Node.prototype._getCanvasCache = function () {
+          return this._cache.get(CANVAS);
       };
       /*
        * when the logic for a cached result depends on ancestor propagation, use this
@@ -2511,7 +2515,7 @@
       Node.prototype._clearSelfAndDescendantCache = function (attr) {
           this._clearCache(attr);
           // skip clearing if node is cached with canvas
-          if (this._cache.canvas) {
+          if (this._getCanvasCache()) {
               return;
           }
           if (this.children) {
@@ -2529,7 +2533,7 @@
        * node.clearCache();
        */
       Node.prototype.clearCache = function () {
-          delete this._cache.canvas;
+          this._cache.delete(CANVAS);
           this._filterUpToDate = false;
           this._clearSelfAndDescendantCache(undefined);
           return this;
@@ -2639,13 +2643,13 @@
               sceneContext.stroke();
               sceneContext.restore();
           }
-          this._cache.canvas = {
+          this._cache.set(CANVAS, {
               scene: cachedSceneCanvas,
               filter: cachedFilterCanvas,
               hit: cachedHitCanvas,
               x: x,
               y: y
-          };
+          });
           return this;
       };
       /**
@@ -2721,22 +2725,23 @@
           context.save();
           context._applyOpacity(this);
           context._applyGlobalCompositeOperation(this);
-          context.translate(this._cache.canvas.x, this._cache.canvas.y);
+          var canvasCache = this._getCanvasCache();
+          context.translate(canvasCache.x, canvasCache.y);
           var cacheCanvas = this._getCachedSceneCanvas();
           var ratio = cacheCanvas.pixelRatio;
           context.drawImage(cacheCanvas._canvas, 0, 0, cacheCanvas.width / ratio, cacheCanvas.height / ratio);
           context.restore();
       };
       Node.prototype._drawCachedHitCanvas = function (context) {
-          var cachedCanvas = this._cache.canvas, hitCanvas = cachedCanvas.hit;
+          var canvasCache = this._getCanvasCache(), hitCanvas = canvasCache.hit;
           context.save();
           context._applyGlobalCompositeOperation(this);
-          context.translate(this._cache.canvas.x, this._cache.canvas.y);
+          context.translate(canvasCache.x, canvasCache.y);
           context.drawImage(hitCanvas._canvas, 0, 0);
           context.restore();
       };
       Node.prototype._getCachedSceneCanvas = function () {
-          var filters = this.filters(), cachedCanvas = this._cache.canvas, sceneCanvas = cachedCanvas.scene, filterCanvas = cachedCanvas.filter, filterContext = filterCanvas.getContext(), len, imageData, n, filter;
+          var filters = this.filters(), cachedCanvas = this._getCanvasCache(), sceneCanvas = cachedCanvas.scene, filterCanvas = cachedCanvas.filter, filterContext = filterCanvas.getContext(), len, imageData, n, filter;
           if (filters) {
               if (!this._filterUpToDate) {
                   var ratio = sceneCanvas.pixelRatio;
@@ -5249,7 +5254,7 @@
           });
       };
       Container.prototype.drawScene = function (can, top, caching) {
-          var layer = this.getLayer(), canvas = can || (layer && layer.getCanvas()), context = canvas && canvas.getContext(), cachedCanvas = this._cache.canvas, cachedSceneCanvas = cachedCanvas && cachedCanvas.scene;
+          var layer = this.getLayer(), canvas = can || (layer && layer.getCanvas()), context = canvas && canvas.getContext(), cachedCanvas = this._getCanvasCache(), cachedSceneCanvas = cachedCanvas && cachedCanvas.scene;
           if (this.isVisible() || caching) {
               if (!caching && cachedSceneCanvas) {
                   context.save();
@@ -5264,7 +5269,7 @@
           return this;
       };
       Container.prototype.drawHit = function (can, top, caching) {
-          var layer = this.getLayer(), canvas = can || (layer && layer.hitCanvas), context = canvas && canvas.getContext(), cachedCanvas = this._cache.canvas, cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
+          var layer = this.getLayer(), canvas = can || (layer && layer.hitCanvas), context = canvas && canvas.getContext(), cachedCanvas = this._getCanvasCache(), cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
           if (this.shouldDrawHit(canvas) || caching) {
               if (!caching && cachedHitCanvas) {
                   context.save();
@@ -7193,7 +7198,7 @@
           return rect;
       };
       Shape.prototype.drawScene = function (can, top, caching, skipBuffer) {
-          var layer = this.getLayer(), canvas = can || layer.getCanvas(), context = canvas.getContext(), cachedCanvas = this._cache.canvas, drawFunc = this.sceneFunc(), hasShadow = this.hasShadow(), hasStroke = this.hasStroke(), stage, bufferCanvas, bufferContext;
+          var layer = this.getLayer(), canvas = can || layer.getCanvas(), context = canvas.getContext(), cachedCanvas = this._getCanvasCache(), drawFunc = this.sceneFunc(), hasShadow = this.hasShadow(), hasStroke = this.hasStroke(), stage, bufferCanvas, bufferContext;
           if (!this.isVisible() && !caching) {
               return this;
           }
@@ -7295,7 +7300,7 @@
           return this;
       };
       Shape.prototype.drawHit = function (can, top, caching) {
-          var layer = this.getLayer(), canvas = can || layer.hitCanvas, context = canvas.getContext(), drawFunc = this.hitFunc() || this.sceneFunc(), cachedCanvas = this._cache.canvas, cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
+          var layer = this.getLayer(), canvas = can || layer.hitCanvas, context = canvas.getContext(), drawFunc = this.hitFunc() || this.sceneFunc(), cachedCanvas = this._getCanvasCache(), cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
           if (!this.colorKey) {
               console.log(this);
               Util.warn('Looks like your canvas has a destroyed shape in it. Do not reuse shape after you destroyed it. See the shape in logs above. If you want to reuse shape you should call remove() instead of destroy()');
@@ -7341,7 +7346,7 @@
        * shape.drawHitFromCache();
        */
       Shape.prototype.drawHitFromCache = function (alphaThreshold) {
-          var threshold = alphaThreshold || 0, cachedCanvas = this._cache.canvas, sceneCanvas = this._getCachedSceneCanvas(), hitCanvas = cachedCanvas.hit, hitContext = hitCanvas.getContext(), hitWidth = hitCanvas.getWidth(), hitHeight = hitCanvas.getHeight(), hitImageData, hitData, len, rgbColorKey, i, alpha;
+          var threshold = alphaThreshold || 0, cachedCanvas = this._getCanvasCache(), sceneCanvas = this._getCachedSceneCanvas(), hitCanvas = cachedCanvas.hit, hitContext = hitCanvas.getContext(), hitWidth = hitCanvas.getWidth(), hitHeight = hitCanvas.getHeight(), hitImageData, hitData, len, rgbColorKey, i, alpha;
           hitContext.clear();
           hitContext.drawImage(sceneCanvas._canvas, 0, 0, hitWidth, hitHeight);
           try {

@@ -1294,7 +1294,7 @@ suite('Transformer', function() {
 
     layer.draw();
 
-    assert.equal(tr._cache.transform.m[4], 50);
+    assert.equal(tr._cache.get('transform').m[4], 50);
 
     var rect = new Konva.Rect({
       x: 50,
@@ -1308,7 +1308,7 @@ suite('Transformer', function() {
     tr.forceUpdate();
     layer.draw();
 
-    assert.equal(tr._cache.transform.m[4], 100);
+    assert.equal(tr._cache.get('transform').m[4], 100);
 
     // tr._fitNodeInto({
     //   x: 100,
