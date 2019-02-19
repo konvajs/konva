@@ -17,6 +17,7 @@ That changes are private and internal specific. They should not break most of `K
 * Removed polyfill for `requestAnimationFrame`.
 * `id` and `name` properties defaults are empty strings, not `undefined`
 * internal `_cache` property was updated to use es2015 `Map` instead of `{}`.
+* `text.getTextHeight()` is deprecated. Use `text.height()` or `text.fontSize()` instead.
 
 ### Added
 * Show a warning when a stage has too many layers

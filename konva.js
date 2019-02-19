@@ -12502,7 +12502,7 @@
           return _this;
       }
       Text.prototype._sceneFunc = function (context) {
-          var padding = this.padding(), textHeight = this.getTextHeight(), lineHeightPx = this.lineHeight() * textHeight, textArr = this.textArr, textArrLen = textArr.length, verticalAlign = this.verticalAlign(), alignY = 0, align = this.align(), totalWidth = this.getWidth(), letterSpacing = this.letterSpacing(), fill = this.fill(), fontSize = this.fontSize(), textDecoration = this.textDecoration(), shouldUnderline = textDecoration.indexOf('underline') !== -1, shouldLineThrough = textDecoration.indexOf('line-through') !== -1, n;
+          var padding = this.padding(), fontSize = this.fontSize(), lineHeightPx = this.lineHeight() * fontSize, textArr = this.textArr, textArrLen = textArr.length, verticalAlign = this.verticalAlign(), alignY = 0, align = this.align(), totalWidth = this.getWidth(), letterSpacing = this.letterSpacing(), fill = this.fill(), textDecoration = this.textDecoration(), shouldUnderline = textDecoration.indexOf('underline') !== -1, shouldLineThrough = textDecoration.indexOf('line-through') !== -1, n;
           context.setAttr('font', this._getContextFont());
           context.setAttr('textBaseline', MIDDLE);
           context.setAttr('textAlign', LEFT$1);
@@ -12607,7 +12607,7 @@
       Text.prototype.getHeight = function () {
           var isAuto = this.attrs.height === AUTO || this.attrs.height === undefined;
           return isAuto
-              ? this.getTextHeight() * this.textArr.length * this.lineHeight() +
+              ? this.fontSize() * this.textArr.length * this.lineHeight() +
                   this.padding() * 2
               : this.attrs.height;
       };
@@ -12620,14 +12620,8 @@
       Text.prototype.getTextWidth = function () {
           return this.textWidth;
       };
-      // TODO: deprecate and remove the method
-      /**
-       * get height of one line of text
-       * @method
-       * @name Konva.Text#getTextHeight
-       * @returns {Number}
-       */
       Text.prototype.getTextHeight = function () {
+          Util.warn('text.getTextHeight() method is deprecated. Use text.height() - for full height and text.fontSize() - for one line height.');
           return this.textHeight;
       };
       /**

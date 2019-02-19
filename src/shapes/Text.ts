@@ -123,8 +123,8 @@ export class Text extends Shape {
 
   _sceneFunc(context) {
     var padding = this.padding(),
-      textHeight = this.getTextHeight(),
-      lineHeightPx = this.lineHeight() * textHeight,
+      fontSize = this.fontSize(),
+      lineHeightPx = this.lineHeight() * fontSize,
       textArr = this.textArr,
       textArrLen = textArr.length,
       verticalAlign = this.verticalAlign(),
@@ -133,7 +133,6 @@ export class Text extends Shape {
       totalWidth = this.getWidth(),
       letterSpacing = this.letterSpacing(),
       fill = this.fill(),
-      fontSize = this.fontSize(),
       textDecoration = this.textDecoration(),
       shouldUnderline = textDecoration.indexOf('underline') !== -1,
       shouldLineThrough = textDecoration.indexOf('line-through') !== -1,
@@ -263,7 +262,7 @@ export class Text extends Shape {
   getHeight() {
     var isAuto = this.attrs.height === AUTO || this.attrs.height === undefined;
     return isAuto
-      ? this.getTextHeight() * this.textArr.length * this.lineHeight() +
+      ? this.fontSize() * this.textArr.length * this.lineHeight() +
           this.padding() * 2
       : this.attrs.height;
   }
@@ -276,14 +275,10 @@ export class Text extends Shape {
   getTextWidth() {
     return this.textWidth;
   }
-  // TODO: deprecate and remove the method
-  /**
-   * get height of one line of text
-   * @method
-   * @name Konva.Text#getTextHeight
-   * @returns {Number}
-   */
   getTextHeight() {
+    Util.warn(
+      'text.getTextHeight() method is deprecated. Use text.height() - for full height and text.fontSize() - for one line height.'
+    );
     return this.textHeight;
   }
 
