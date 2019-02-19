@@ -23,9 +23,6 @@ import { GetSet } from '../types';
  * });
  */
 export class Circle extends Shape {
-  className = 'Circle';
-  _centroid = true;
-
   _sceneFunc(context) {
     context.beginPath();
     context.arc(0, 0, this.radius(), 0, Math.PI * 2, false);
@@ -52,10 +49,9 @@ export class Circle extends Shape {
   radius: GetSet<number, this>;
 }
 
+Circle.prototype._centroid = true;
 Circle.prototype.className = 'Circle';
-
-// add getters setters
-Factory.addGetterSetter(Circle, 'radius', 0, Validators.getNumberValidator());
+Circle.prototype._attrsAffectingSize = ['radius'];
 
 /**
  * get/set radius
@@ -70,5 +66,6 @@ Factory.addGetterSetter(Circle, 'radius', 0, Validators.getNumberValidator());
  * // set radius
  * circle.radius(10);
  */
+Factory.addGetterSetter(Circle, 'radius', 0, Validators.getNumberValidator());
 
 Collection.mapMethods(Circle);

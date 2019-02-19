@@ -209,7 +209,6 @@ export class Sprite extends Shape {
   frameIndex: GetSet<number, this>;
   animation: GetSet<string, this>;
   image: GetSet<CanvasImageSource, this>;
-  // TODO: write better type
   animations: GetSet<any, this>;
   frameOffsets: GetSet<any, this>;
   frameRate: GetSet<number, this>;

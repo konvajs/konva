@@ -50,14 +50,10 @@ export class RegularPolygon extends Shape {
     return this.radius() * 2;
   }
   setWidth(width) {
-    if (this.radius() !== width / 2) {
-      this.radius(width / 2);
-    }
+    this.radius(width / 2);
   }
   setHeight(height) {
-    if (this.radius() !== height / 2) {
-      this.radius(height / 2);
-    }
+    this.radius(height / 2);
   }
 
   radius: GetSet<number, this>;
@@ -66,6 +62,7 @@ export class RegularPolygon extends Shape {
 
 RegularPolygon.prototype.className = 'RegularPolygon';
 RegularPolygon.prototype._centroid = true;
+RegularPolygon.prototype._attrsAffectingSize = ['radius'];
 
 /**
  * get/set radius

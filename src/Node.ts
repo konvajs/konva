@@ -119,6 +119,7 @@ export abstract class Node {
   parent: Container = null;
   _cache: Map<string, any> = new Map<string, any>();
   _lastPos = null;
+  _attrsAffectingSize: string[];
 
   _filterUpToDate = false;
   _isUnderCache = false;
@@ -2324,6 +2325,7 @@ export abstract class Node {
 }
 
 Node.prototype.nodeType = 'Node';
+Node.prototype._attrsAffectingSize = [];
 
 /**
  * get/set zIndex relative to the node's siblings who share the same parent.

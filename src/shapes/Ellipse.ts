@@ -44,13 +44,9 @@ export class Ellipse extends Shape {
     return this.radiusY() * 2;
   }
   setWidth(width) {
-    // TODO: remove this line?
-    Node.prototype['setWidth'].call(this, width);
     this.radiusX(width / 2);
   }
   setHeight(height) {
-    // TODO: remove this line?
-    Node.prototype['setHeight'].call(this, height);
     this.radiusY(height / 2);
   }
 
@@ -61,6 +57,7 @@ export class Ellipse extends Shape {
 
 Ellipse.prototype.className = 'Ellipse';
 Ellipse.prototype._centroid = true;
+Ellipse.prototype._attrsAffectingSize = ['radiusX', 'radiusY'];
 
 // add getters setters
 Factory.addComponentsGetterSetter(Ellipse, 'radius', ['x', 'y']);

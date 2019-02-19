@@ -5,6 +5,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+### Possibly breaking
+
+That changes are private and internal specific. They should not break most of `Konva` apps.
+
+* `Konva.Util.addMethods`
+* `Konva.Util._removeLastLetter`
+* `Konva.Util._getImage`
+* `Konv.Util._getRGBAString`
+* `Konv.Util._merge`
+* Removed polyfill for `requestAnimationFrame`.
+* `id` and `name` properties defaults are empty strings, not `undefined`
+* internal `_cache` property was updated to use es2015 `Map` instead of `{}`.
+
 ### Added
 * Show a warning when a stage has too many layers
 * Show a warning on duplicate ids
@@ -16,28 +29,20 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * You can configure what mouse buttons can be used for drag&drop. To enable right button you can use `Konva.dragButtons = [0, 1]`.
 
 ### Changed
-* Fixes inconsistent `layer.setSize()` method. Now it has same arguments as any container.
 * Full rewrite to Typescript with tons of refactoring and small optimizations. The public API should be 100% the same
 * Fixed `patternImage` and `radialGradient` for `Konva.Text`
 * `Konva.Util._isObject` is renamed to `Konva.Util._isPlainObject`.
 * A bit changed behavior of `removeId` (private method), now it doesn't clear node ref, if object is changed.
 * simplified `batchDraw` method (it doesn't use `Konva.Animation`) now.
-* `id` and `name` properties defaults are empty strings, not `undefined`
 * Performance improvements for shapes will image patterns, linear and radial fills
-
-### Removed
-* `Konva.Util.addMethods`
-* `Konva.Util._removeLastLetter`
-* `Konva.Util._getImage`
-* `Konv.Util._getRGBAString`
-* `Konv.Util._merge`
-* Removed polyfill for `requestAnimationFrame`.
 
 ### Fixed
 
 * Better mouse support on mobile devices (yes, that is possible to connect mouse to mobile)
 * Better implementation of `mouseover` event for stage
 * Fixed underline drawing for text with `lineHeight !== 1`
+* Fixed some caching behavior when a node has `globalCompositeOperation`.
+* Fixed automatic updates for `Konva.Transformer`
 
 ## [2.6.0][2018-12-14]
 

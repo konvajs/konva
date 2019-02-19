@@ -539,6 +539,7 @@ TextPath.prototype._strokeFunc = _strokeFunc;
 TextPath.prototype._fillFuncHit = _fillFunc;
 TextPath.prototype._strokeFuncHit = _strokeFunc;
 TextPath.prototype.className = 'TextPath';
+TextPath.prototype._attrsAffectingSize = ['text', 'fontSize', 'data'];
 
 /**
  * get/set SVG path data string.  This method

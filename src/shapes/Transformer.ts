@@ -27,34 +27,20 @@ var ATTR_CHANGE_LIST = [
 
 var NODE_RECT = 'nodeRect';
 
-// TODO: check circles and text here!!!!
-// change text? change radius? change arc?
-
 var TRANSFORM_CHANGE_STR = [
-  'xChange.resizer',
-  'yChange.resizer',
-  'widthChange.resizer',
-  'heightChange.resizer',
-  'scaleXChange.resizer',
-  'scaleYChange.resizer',
-  'skewXChange.resizer',
-  'skewYChange.resizer',
-  'rotationChange.resizer',
-  'offsetXChange.resizer',
-  'offsetYChange.resizer',
-  'transformsEnabledChange.resizer'
-].join(' ');
-
-var REDRAW_CHANGE_STR = [
-  'widthChange.resizer',
-  'heightChange.resizer',
-  'scaleXChange.resizer',
-  'scaleYChange.resizer',
-  'skewXChange.resizer',
-  'skewYChange.resizer',
-  'rotationChange.resizer',
-  'offsetXChange.resizer',
-  'offsetYChange.resizer'
+  'xChange.tr',
+  'yChange.tr',
+  'widthChange.tr',
+  'heightChange.tr',
+  'scaleXChange.tr',
+  'scaleYChange.tr',
+  'skewXChange.tr',
+  'skewYChange.tr',
+  'rotationChange.tr',
+  'offsetXChange.tr',
+  'offsetYChange.tr',
+  'transformsEnabledChange.tr',
+  'strokeWidthChange.tr'
 ].join(' ');
 
 var ANGLES = {
@@ -205,15 +191,36 @@ export class Transformer extends Group {
     this._node = node;
     this._resetTransformCache();
 
-    node.on(TRANSFORM_CHANGE_STR, this._resetTransformCache.bind(this));
-    node.on(
-      REDRAW_CHANGE_STR,
-      function() {
-        if (!this._transforming) {
-          this.update();
-        }
-      }.bind(this)
-    );
+    const additionalEvents = node._attrsAffectingSize
+      .map(prop => prop + 'Change.tr')
+      .join(' ');
+
+    const upChange = () => {
+      this._resetTransformCache();
+      if (!this._transforming) {
+        this.update();
+      }
+    };
+    node.on(additionalEvents, upChange);
+
+    node.on(TRANSFORM_CHANGE_STR, upChange);
+
+    // node.on(
+    //   additionalEvents,
+    //   function() {
+    //     if (!this._transforming) {
+    //       this.update();
+    //     }
+    //   }.bind(this)
+    // );
+    // node.on(
+    //   REDRAW_CHANGE_STR,
+    //   function() {
+    //     if (!this._transforming) {
+    //       this.update();
+    //     }
+    //   }.bind(this)
+    // );
 
     // we may need it if we set not in initial props
     // so elements are not defined yet
@@ -221,7 +228,7 @@ export class Transformer extends Group {
     if (elementsCreated) {
       this.update();
     }
-    return this;
+    return this;  
   }
   // TODO: add docs, use overloaded setter/getter
   getNode() {
@@ -237,7 +244,7 @@ export class Transformer extends Group {
    */
   detach() {
     if (this.getNode()) {
-      this.getNode().off('.resizer');
+      this.getNode().off('.tr');
       this._node = undefined;
     }
     this._resetTransformCache();

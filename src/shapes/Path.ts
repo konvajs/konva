@@ -868,6 +868,7 @@ export class Path extends Shape {
 }
 
 Path.prototype.className = 'Path';
+Path.prototype._attrsAffectingSize = ['data'];
 
 /**
  * get/set SVG path data string.  This method

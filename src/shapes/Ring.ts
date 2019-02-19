@@ -40,14 +40,10 @@ export class Ring extends Shape {
     return this.outerRadius() * 2;
   }
   setWidth(width) {
-    if (this.outerRadius() !== width / 2) {
-      this.outerRadius(width / 2);
-    }
+    this.outerRadius(width / 2);
   }
   setHeight(height) {
-    if (this.outerRadius() !== height / 2) {
-      this.outerRadius(height / 2);
-    }
+    this.outerRadius(height / 2);
   }
 
   outerRadius: GetSet<number, this>;
@@ -56,6 +52,7 @@ export class Ring extends Shape {
 
 Ring.prototype.className = 'Ring';
 Ring.prototype._centroid = true;
+Ring.prototype._attrsAffectingSize = ['innerRadius', 'outerRadius'];
 
 /**
  * get/set innerRadius

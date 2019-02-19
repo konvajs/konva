@@ -30,8 +30,6 @@ import { GetSet } from '../types';
  * });
  */
 export class Arc extends Shape {
-  _centroid = true;
-
   _sceneFunc(context) {
     var angle = getAngle(this.angle()),
       clockwise = this.clockwise();
@@ -49,18 +47,10 @@ export class Arc extends Shape {
     return this.outerRadius() * 2;
   }
   setWidth(width) {
-    // TODO: remove this line?
-    Node.prototype['setWidth'].call(this, width);
-    if (this.outerRadius() !== width / 2) {
-      this.outerRadius(width / 2);
-    }
+    this.outerRadius(width / 2);
   }
   setHeight(height) {
-    // TODO: remove this line?
-    Node.prototype['setHeight'].call(this, height);
-    if (this.outerRadius() !== height / 2) {
-      this.outerRadius(height / 2);
-    }
+    this.outerRadius(height / 2);
   }
 
   innerRadius: GetSet<number, this>;
@@ -69,7 +59,9 @@ export class Arc extends Shape {
   clockwise: GetSet<boolean, this>;
 }
 
+Arc.prototype._centroid = true;
 Arc.prototype.className = 'Arc';
+Arc.prototype._attrsAffectingSize = ['innerRadius', 'outerRadius'];
 
 // add getters setters
 Factory.addGetterSetter(Arc, 'innerRadius', 0, Validators.getNumberValidator());

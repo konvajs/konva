@@ -320,7 +320,6 @@ export class Shape extends Node {
   // why do we need buffer canvas?
   // it give better result when a shape has
   // stroke with fill and with some opacity
-  // TODO: try to use it without stage (use global buffer canvas)
   _useBufferCanvas(caching) {
     return (
       (!caching || this.hasShadow()) &&

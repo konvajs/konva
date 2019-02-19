@@ -1713,4 +1713,435 @@ suite('Transformer', function() {
     assert.equal(rect.width(), 100);
     assert.equal(rect.height(), 100);
   });
+
+  test('attrs change - arc', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var shape = new Konva.Arc({
+      x: stage.getWidth() / 2,
+      y: stage.getHeight() / 2,
+      innerRadius: 40,
+      outerRadius: 70,
+      angle: 60,
+      fill: 'yellow',
+      stroke: 'black',
+      strokeWidth: 4
+    });
+    layer.add(shape);
+
+    var tr = new Konva.Transformer({
+      node: shape
+    });
+    layer.add(tr);
+
+    shape.outerRadius(100);
+
+    layer.draw();
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect);
+
+    shape.innerRadius(200);
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect);
+
+    layer.draw();
+  });
+
+  test('attrs change - line', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var shape = new Konva.Arrow({
+      x: stage.getWidth() / 4,
+      y: stage.getHeight() / 4,
+      points: [0, 0, stage.width() / 2, stage.height() / 2],
+      pointerLength: 20,
+      pointerWidth: 20,
+      fill: 'black',
+      stroke: 'black',
+      strokeWidth: 4,
+      draggable: true
+    });
+    layer.add(shape);
+
+    var tr = new Konva.Transformer({
+      node: shape
+    });
+    layer.add(tr);
+
+    layer.draw();
+
+    shape.points([10, 10, 100, 10]);
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    layer.draw();
+    assert.deepEqual(shape.getClientRect(), rect);
+
+    shape.strokeWidth(10);
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    layer.draw();
+    assert.deepEqual(shape.getClientRect(), rect);
+  });
+
+  test('attrs change - circle', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var shape = new Konva.Circle({
+      x: stage.getWidth() / 2,
+      y: stage.getHeight() / 2,
+      radius: 40,
+      fill: 'yellow',
+      stroke: 'black',
+      strokeWidth: 4
+    });
+    layer.add(shape);
+
+    var tr = new Konva.Transformer({
+      node: shape
+    });
+    layer.add(tr);
+
+    shape.radius(100);
+    layer.draw();
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect);
+  });
+
+  test('attrs change - ellipse', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var shape = new Konva.Ellipse({
+      x: stage.getWidth() / 2,
+      y: stage.getHeight() / 2,
+      radius: {
+        x: 100,
+        y: 50
+      },
+      fill: 'yellow',
+      stroke: 'black',
+      strokeWidth: 4
+    });
+    layer.add(shape);
+
+    var tr = new Konva.Transformer({
+      node: shape
+    });
+    layer.add(tr);
+
+    shape.radiusX(120);
+
+    layer.draw();
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect);
+
+    shape.radiusY(100);
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect);
+
+    layer.draw();
+  });
+
+  test('attrs change - rect', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var shape = new Konva.Rect({
+      x: stage.getWidth() / 2,
+      y: stage.getHeight() / 2,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+      stroke: 'black',
+      strokeWidth: 4
+    });
+    layer.add(shape);
+
+    var tr = new Konva.Transformer({
+      node: shape
+    });
+    layer.add(tr);
+
+    shape.width(120);
+
+    layer.draw();
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect);
+
+    shape.height(110);
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect);
+
+    layer.draw();
+  });
+
+  test('attrs change - path', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var shape = new Konva.Path({
+      x: 50,
+      y: 40,
+      data:
+        'M12.582,9.551C3.251,16.237,0.921,29.021,7.08,38.564l-2.36,1.689l4.893,2.262l4.893,2.262l-0.568-5.36l-0.567-5.359l-2.365,1.694c-4.657-7.375-2.83-17.185,4.352-22.33c7.451-5.338,17.817-3.625,23.156,3.824c5.337,7.449,3.625,17.813-3.821,23.152l2.857,3.988c9.617-6.893,11.827-20.277,4.935-29.896C35.591,4.87,22.204,2.658,12.582,9.551z',
+      fill: 'green'
+    });
+    layer.add(shape);
+
+    var tr = new Konva.Transformer({
+      node: shape
+    });
+    layer.add(tr);
+
+    shape.data('M200,100h100v50z');
+    layer.draw();
+
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect);
+  });
+
+  test('attrs change - regular polygon', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var shape = new Konva.RegularPolygon({
+      x: 100,
+      y: 150,
+      sides: 6,
+      radius: 70,
+      fill: 'red',
+      stroke: 'black',
+      strokeWidth: 4
+    });
+    layer.add(shape);
+
+    var tr = new Konva.Transformer({
+      node: shape
+    });
+    layer.add(tr);
+
+    shape.radius(100);
+    layer.draw();
+
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect);
+  });
+
+  test('attrs change - ring', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var shape = new Konva.Ring({
+      x: stage.getWidth() / 2,
+      y: stage.getHeight() / 2,
+      innerRadius: 40,
+      outerRadius: 70,
+      fill: 'yellow',
+      stroke: 'black',
+      strokeWidth: 4
+    });
+    layer.add(shape);
+
+    var tr = new Konva.Transformer({
+      node: shape
+    });
+    layer.add(tr);
+
+    shape.outerRadius(100);
+
+    layer.draw();
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect);
+
+    shape.innerRadius(200);
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect);
+
+    layer.draw();
+  });
+
+  test('attrs change - star', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var shape = new Konva.Star({
+      x: stage.getWidth() / 2,
+      y: stage.getHeight() / 2,
+      numPoints: 6,
+      innerRadius: 40,
+      outerRadius: 70,
+      fill: 'yellow',
+      stroke: 'black',
+      strokeWidth: 4
+    });
+    layer.add(shape);
+
+    var tr = new Konva.Transformer({
+      node: shape
+    });
+    layer.add(tr);
+
+    shape.outerRadius(100);
+
+    layer.draw();
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect);
+
+    shape.innerRadius(200);
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect);
+
+    layer.draw();
+  });
+
+  test('attrs change - wedge', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var shape = new Konva.Wedge({
+      x: stage.getWidth() / 2,
+      y: stage.getHeight() / 2,
+      radius: 70,
+      angle: 60,
+      fill: 'red',
+      stroke: 'black',
+      strokeWidth: 4
+    });
+    layer.add(shape);
+
+    var tr = new Konva.Transformer({
+      node: shape
+    });
+    layer.add(tr);
+
+    shape.radius(100);
+    layer.draw();
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect);
+  });
+
+  test('attrs change - text', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var shape = new Konva.Text({
+      x: stage.getWidth() / 2,
+      y: 15,
+      text: 'Simple Text',
+      fontSize: 60,
+      fontFamily: 'Calibri',
+      fill: 'green'
+    });
+    layer.add(shape);
+
+    var tr = new Konva.Transformer({
+      node: shape
+    });
+    layer.add(tr);
+
+    shape.text('Simple');
+    layer.draw();
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect, 'change text');
+
+    shape.fontSize(30);
+    layer.draw();
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect, 'change font size');
+
+    shape.padding(10);
+    layer.draw();
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect, 'change padding');
+
+    shape.lineHeight(2);
+    layer.draw();
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect, 'change line height');
+
+    shape.width(30);
+    layer.draw();
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect), 'change width';
+
+    shape.height(30);
+    layer.draw();
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect, 'change height');
+  });
+
+  test('attrs change - text path', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var shape = new Konva.TextPath({
+      x: 0,
+      y: 50,
+      fill: '#333',
+      fontSize: 16,
+      fontFamily: 'Arial',
+      text:
+        "All the world's a stage, and all the men and women merely players.",
+      data: 'M10,10 C0,0 10,150 100,100 S300,150 400,50'
+    });
+    layer.add(shape);
+
+    var tr = new Konva.Transformer({
+      node: shape
+    });
+    layer.add(tr);
+
+    shape.text('Simple');
+    layer.draw();
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect, 'change text');
+
+    shape.fontSize(30);
+    layer.draw();
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect, 'change font size');
+
+    shape.data('M10,10 C0,0 10,150 100,100 S300,150 400,50');
+    layer.draw();
+    var rect = Object.assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect), 'change data';
+  });
 });

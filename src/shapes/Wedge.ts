@@ -50,14 +50,10 @@ export class Wedge extends Shape {
     return this.radius() * 2;
   }
   setWidth(width) {
-    if (this.radius() !== width / 2) {
-      this.radius(width / 2);
-    }
+    this.radius(width / 2);
   }
   setHeight(height) {
-    if (this.radius() !== height / 2) {
-      this.radius(height / 2);
-    }
+    this.radius(height / 2);
   }
 
   radius: GetSet<number, this>;
@@ -67,6 +63,7 @@ export class Wedge extends Shape {
 
 Wedge.prototype.className = 'Wedge';
 Wedge.prototype._centroid = true;
+Wedge.prototype._attrsAffectingSize = ['radius'];
 
 /**
  * get/set radius

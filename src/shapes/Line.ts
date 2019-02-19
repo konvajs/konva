@@ -207,6 +207,7 @@ export class Line extends Shape {
 }
 
 Line.prototype.className = 'Line';
+Line.prototype._attrsAffectingSize = ['points', 'bezier', 'tension'];
 
 // add getters setters
 Factory.addGetterSetter(Line, 'closed', false);

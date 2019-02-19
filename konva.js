@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v3.0.0-0
    * http://konvajs.github.io/
    * Licensed under the MIT
-   * Date: Mon Feb 18 2019
+   * Date: Tue Feb 19 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -4337,6 +4337,7 @@
       return Node;
   }());
   Node.prototype.nodeType = 'Node';
+  Node.prototype._attrsAffectingSize = [];
   /**
    * get/set zIndex relative to the node's siblings who share the same parent.
    * Please remember that zIndex is not absolute (like in CSS). It is relative to parent element only.
@@ -7134,7 +7135,6 @@
       // why do we need buffer canvas?
       // it give better result when a shape has
       // stroke with fill and with some opacity
-      // TODO: try to use it without stage (use global buffer canvas)
       Shape.prototype._useBufferCanvas = function (caching) {
           return ((!caching || this.hasShadow()) &&
               this.perfectDrawEnabled() &&
@@ -9143,9 +9143,7 @@
   var Arc = /** @class */ (function (_super) {
       __extends(Arc, _super);
       function Arc() {
-          var _this = _super !== null && _super.apply(this, arguments) || this;
-          _this._centroid = true;
-          return _this;
+          return _super !== null && _super.apply(this, arguments) || this;
       }
       Arc.prototype._sceneFunc = function (context) {
           var angle = getAngle(this.angle()), clockwise = this.clockwise();
@@ -9162,22 +9160,16 @@
           return this.outerRadius() * 2;
       };
       Arc.prototype.setWidth = function (width) {
-          // TODO: remove this line?
-          Node.prototype['setWidth'].call(this, width);
-          if (this.outerRadius() !== width / 2) {
-              this.outerRadius(width / 2);
-          }
+          this.outerRadius(width / 2);
       };
       Arc.prototype.setHeight = function (height) {
-          // TODO: remove this line?
-          Node.prototype['setHeight'].call(this, height);
-          if (this.outerRadius() !== height / 2) {
-              this.outerRadius(height / 2);
-          }
+          this.outerRadius(height / 2);
       };
       return Arc;
   }(Shape));
+  Arc.prototype._centroid = true;
   Arc.prototype.className = 'Arc';
+  Arc.prototype._attrsAffectingSize = ['innerRadius', 'outerRadius'];
   // add getters setters
   Factory.addGetterSetter(Arc, 'innerRadius', 0, Validators.getNumberValidator());
   /**
@@ -9452,6 +9444,7 @@
       return Line;
   }(Shape));
   Line.prototype.className = 'Line';
+  Line.prototype._attrsAffectingSize = ['points', 'bezier', 'tension'];
   // add getters setters
   Factory.addGetterSetter(Line, 'closed', false);
   /**
@@ -9817,10 +9810,7 @@
   var Circle = /** @class */ (function (_super) {
       __extends(Circle, _super);
       function Circle() {
-          var _this = _super !== null && _super.apply(this, arguments) || this;
-          _this.className = 'Circle';
-          _this._centroid = true;
-          return _this;
+          return _super !== null && _super.apply(this, arguments) || this;
       }
       Circle.prototype._sceneFunc = function (context) {
           context.beginPath();
@@ -9846,9 +9836,9 @@
       };
       return Circle;
   }(Shape));
+  Circle.prototype._centroid = true;
   Circle.prototype.className = 'Circle';
-  // add getters setters
-  Factory.addGetterSetter(Circle, 'radius', 0, Validators.getNumberValidator());
+  Circle.prototype._attrsAffectingSize = ['radius'];
   /**
    * get/set radius
    * @name Konva.Arrow#radius
@@ -9862,6 +9852,7 @@
    * // set radius
    * circle.radius(10);
    */
+  Factory.addGetterSetter(Circle, 'radius', 0, Validators.getNumberValidator());
   Collection.mapMethods(Circle);
 
   /**
@@ -9974,19 +9965,16 @@
           return this.radiusY() * 2;
       };
       Ellipse.prototype.setWidth = function (width) {
-          // TODO: remove this line?
-          Node.prototype['setWidth'].call(this, width);
           this.radiusX(width / 2);
       };
       Ellipse.prototype.setHeight = function (height) {
-          // TODO: remove this line?
-          Node.prototype['setHeight'].call(this, height);
           this.radiusY(height / 2);
       };
       return Ellipse;
   }(Shape));
   Ellipse.prototype.className = 'Ellipse';
   Ellipse.prototype._centroid = true;
+  Ellipse.prototype._attrsAffectingSize = ['radiusX', 'radiusY'];
   // add getters setters
   Factory.addComponentsGetterSetter(Ellipse, 'radius', ['x', 'y']);
   /**
@@ -11361,6 +11349,7 @@
       return Path;
   }(Shape));
   Path.prototype.className = 'Path';
+  Path.prototype._attrsAffectingSize = ['data'];
   /**
    * get/set SVG path data string.  This method
    *  also automatically parses the data string
@@ -11628,19 +11617,16 @@
           return this.radius() * 2;
       };
       RegularPolygon.prototype.setWidth = function (width) {
-          if (this.radius() !== width / 2) {
-              this.radius(width / 2);
-          }
+          this.radius(width / 2);
       };
       RegularPolygon.prototype.setHeight = function (height) {
-          if (this.radius() !== height / 2) {
-              this.radius(height / 2);
-          }
+          this.radius(height / 2);
       };
       return RegularPolygon;
   }(Shape));
   RegularPolygon.prototype.className = 'RegularPolygon';
   RegularPolygon.prototype._centroid = true;
+  RegularPolygon.prototype._attrsAffectingSize = ['radius'];
   /**
    * get/set radius
    * @method
@@ -11781,19 +11767,16 @@
           return this.outerRadius() * 2;
       };
       Ring.prototype.setWidth = function (width) {
-          if (this.outerRadius() !== width / 2) {
-              this.outerRadius(width / 2);
-          }
+          this.outerRadius(width / 2);
       };
       Ring.prototype.setHeight = function (height) {
-          if (this.outerRadius() !== height / 2) {
-              this.outerRadius(height / 2);
-          }
+          this.outerRadius(height / 2);
       };
       return Ring;
   }(Shape));
   Ring.prototype.className = 'Ring';
   Ring.prototype._centroid = true;
+  Ring.prototype._attrsAffectingSize = ['innerRadius', 'outerRadius'];
   /**
    * get/set innerRadius
    * @method
@@ -12309,19 +12292,16 @@
           return this.outerRadius() * 2;
       };
       Star.prototype.setWidth = function (width) {
-          if (this.outerRadius() !== width / 2) {
-              this.outerRadius(width / 2);
-          }
+          this.outerRadius(width / 2);
       };
       Star.prototype.setHeight = function (height) {
-          if (this.outerRadius() !== height / 2) {
-              this.outerRadius(height / 2);
-          }
+          this.outerRadius(height / 2);
       };
       return Star;
   }(Shape));
   Star.prototype.className = 'Star';
   Star.prototype._centroid = true;
+  Star.prototype._attrsAffectingSize = ['innerRadius', 'outerRadius'];
   /**
    * get/set number of points
    * @name Konva.Ring#numPoints
@@ -12823,6 +12803,13 @@
   Text.prototype._fillFunc = _fillFunc$1;
   Text.prototype._strokeFunc = _strokeFunc$1;
   Text.prototype.className = TEXT_UPPER;
+  Text.prototype._attrsAffectingSize = [
+      'text',
+      'fontSize',
+      'padding',
+      'wrap',
+      'lineHeight'
+  ];
   /**
    * get/set width of text area, which includes padding.
    * @name Konva.Text#width
@@ -13519,6 +13506,7 @@
   TextPath.prototype._fillFuncHit = _fillFunc$2;
   TextPath.prototype._strokeFuncHit = _strokeFunc$2;
   TextPath.prototype.className = 'TextPath';
+  TextPath.prototype._attrsAffectingSize = ['text', 'fontSize', 'data'];
   /**
    * get/set SVG path data string.  This method
    *  also automatically parses the data string
@@ -13700,32 +13688,20 @@
       'ignoreStrokeChange'
   ].join(' ');
   var NODE_RECT = 'nodeRect';
-  // TODO: check circles and text here!!!!
-  // change text? change radius? change arc?
   var TRANSFORM_CHANGE_STR$1 = [
-      'xChange.resizer',
-      'yChange.resizer',
-      'widthChange.resizer',
-      'heightChange.resizer',
-      'scaleXChange.resizer',
-      'scaleYChange.resizer',
-      'skewXChange.resizer',
-      'skewYChange.resizer',
-      'rotationChange.resizer',
-      'offsetXChange.resizer',
-      'offsetYChange.resizer',
-      'transformsEnabledChange.resizer'
-  ].join(' ');
-  var REDRAW_CHANGE_STR = [
-      'widthChange.resizer',
-      'heightChange.resizer',
-      'scaleXChange.resizer',
-      'scaleYChange.resizer',
-      'skewXChange.resizer',
-      'skewYChange.resizer',
-      'rotationChange.resizer',
-      'offsetXChange.resizer',
-      'offsetYChange.resizer'
+      'xChange.tr',
+      'yChange.tr',
+      'widthChange.tr',
+      'heightChange.tr',
+      'scaleXChange.tr',
+      'scaleYChange.tr',
+      'skewXChange.tr',
+      'skewYChange.tr',
+      'rotationChange.tr',
+      'offsetXChange.tr',
+      'offsetYChange.tr',
+      'transformsEnabledChange.tr',
+      'strokeWidthChange.tr'
   ].join(' ');
   var ANGLES = {
       'top-left': -45,
@@ -13864,17 +13840,39 @@
           return this;
       };
       Transformer.prototype.setNode = function (node) {
+          var _this = this;
           if (this._node) {
               this.detach();
           }
           this._node = node;
           this._resetTransformCache();
-          node.on(TRANSFORM_CHANGE_STR$1, this._resetTransformCache.bind(this));
-          node.on(REDRAW_CHANGE_STR, function () {
-              if (!this._transforming) {
-                  this.update();
+          var additionalEvents = node._attrsAffectingSize
+              .map(function (prop) { return prop + 'Change.tr'; })
+              .join(' ');
+          var upChange = function () {
+              _this._resetTransformCache();
+              if (!_this._transforming) {
+                  _this.update();
               }
-          }.bind(this));
+          };
+          node.on(additionalEvents, upChange);
+          node.on(TRANSFORM_CHANGE_STR$1, upChange);
+          // node.on(
+          //   additionalEvents,
+          //   function() {
+          //     if (!this._transforming) {
+          //       this.update();
+          //     }
+          //   }.bind(this)
+          // );
+          // node.on(
+          //   REDRAW_CHANGE_STR,
+          //   function() {
+          //     if (!this._transforming) {
+          //       this.update();
+          //     }
+          //   }.bind(this)
+          // );
           // we may need it if we set not in initial props
           // so elements are not defined yet
           var elementsCreated = !!this.findOne('.top-left');
@@ -13897,7 +13895,7 @@
        */
       Transformer.prototype.detach = function () {
           if (this.getNode()) {
-              this.getNode().off('.resizer');
+              this.getNode().off('.tr');
               this._node = undefined;
           }
           this._resetTransformCache();
@@ -14813,19 +14811,16 @@
           return this.radius() * 2;
       };
       Wedge.prototype.setWidth = function (width) {
-          if (this.radius() !== width / 2) {
-              this.radius(width / 2);
-          }
+          this.radius(width / 2);
       };
       Wedge.prototype.setHeight = function (height) {
-          if (this.radius() !== height / 2) {
-              this.radius(height / 2);
-          }
+          this.radius(height / 2);
       };
       return Wedge;
   }(Shape));
   Wedge.prototype.className = 'Wedge';
   Wedge.prototype._centroid = true;
+  Wedge.prototype._attrsAffectingSize = ['radius'];
   /**
    * get/set radius
    * @name Konva.Wedge#radius

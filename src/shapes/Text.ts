@@ -504,6 +504,13 @@ export class Text extends Shape {
 Text.prototype._fillFunc = _fillFunc;
 Text.prototype._strokeFunc = _strokeFunc;
 Text.prototype.className = TEXT_UPPER;
+Text.prototype._attrsAffectingSize = [
+  'text',
+  'fontSize',
+  'padding',
+  'wrap',
+  'lineHeight'
+];
 
 /**
  * get/set width of text area, which includes padding.
