@@ -597,8 +597,6 @@ export class SceneContext extends Context {
         this.setAttr('shadowColor', 'rgba(0,0,0,0)');
       }
 
-      // TODO - do we need to make like a fill function?
-
       var hasLinearGradient = shape.getStrokeLinearGradientColorStops();
       if (hasLinearGradient) {
         this._strokeLinearGradient(shape);

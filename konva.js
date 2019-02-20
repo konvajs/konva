@@ -1845,7 +1845,6 @@
               if (!shape.getShadowForStrokeEnabled()) {
                   this.setAttr('shadowColor', 'rgba(0,0,0,0)');
               }
-              // TODO - do we need to make like a fill function?
               var hasLinearGradient = shape.getStrokeLinearGradientColorStops();
               if (hasLinearGradient) {
                   this._strokeLinearGradient(shape);
@@ -5620,6 +5619,10 @@
               }
           }
           this._setAttr(CONTAINER, container);
+          if (this.content) {
+              this.content.parentElement.removeChild(this.content);
+              container.appendChild(this.content);
+          }
           return this;
       };
       Stage.prototype.shouldDrawHit = function () {
@@ -5870,13 +5873,11 @@
           }
           // content event
           this._fire(CONTENT_MOUSEDOWN, { evt: evt });
-          // always call preventDefault for desktop events because some browsers
-          // try to drag and drop the canvas element
-          // TODO: if we preventDefault() it will cancel event detection outside of window inside iframe
-          // but we need it for better drag&drop
-          // can we disable native drag&drop somehow differently?
+          // Do not prevent default behavior, because it will prevent listening events outside of window iframe
+          // we used preventDefault for disabling native drag&drop
+          // but userSelect = none style will do the trick
           // if (evt.cancelable) {
-          // evt.preventDefault();
+          //   evt.preventDefault();
           // }
       };
       Stage.prototype._mouseup = function (evt) {

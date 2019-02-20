@@ -162,6 +162,48 @@ suite('Stage', function() {
     assert.equal(stage.getContent().className, 'konvajs-content');
   });
 
+  test('try to move stage ', function() {
+    var stage = addStage();
+    var container = document.createElement('div');
+    var wrap = stage.container().parentNode;
+    wrap.appendChild(container);
+
+    stage.container(container);
+
+    assert.equal(stage.container(), container);
+
+    assert.equal(stage.content, container.children[0]);
+  });
+
+  test('clone stage ', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var shape = new Konva.Circle({
+      x: stage.width() / 2,
+      y: stage.height() / 2,
+      radius: 70,
+      strokeWidth: 4,
+      fill: 'red',
+      stroke: 'black',
+      id: 'redCircle'
+    });
+    layer.add(shape);
+    layer.draw();
+
+    var container = document.createElement('div');
+    var wrap = stage.container().parentNode;
+    wrap.appendChild(container);
+
+    var clone = stage.clone();
+    clone.container(container);
+
+    assert.equal(clone.container(), container);
+
+    assert.equal(clone.content, container.children[0]);
+  });
+
   // ======================================================
   test('stage getIntersection()', function() {
     var stage = addStage();

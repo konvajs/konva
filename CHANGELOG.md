@@ -47,6 +47,7 @@ That changes are private and internal specific. They should not break most of `K
 * Fixed underline drawing for text with `lineHeight !== 1`
 * Fixed some caching behavior when a node has `globalCompositeOperation`.
 * Fixed automatic updates for `Konva.Transformer`
+* Fixed container change for a stage.
 
 ## [2.6.0][2018-12-14]
 
