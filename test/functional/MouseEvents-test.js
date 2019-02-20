@@ -380,7 +380,6 @@ suite('MouseEvents', function() {
     });
     Konva.DD._endDragAfter({ dragEndNode: text });
 
-    //TODO: can't get this to pass
     assert.equal(
       click,
       true,

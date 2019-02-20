@@ -709,9 +709,7 @@ suite('Caching', function() {
     var circle = new Konva.Circle({
       radius: 10,
       // fill: 'white',
-      fillRadialGradientStartPoint: 0,
       fillRadialGradientStartRadius: 0,
-      fillRadialGradientEndPoint: 0,
       fillRadialGradientEndRadius: 10,
       fillRadialGradientColorStops: [0, 'red', 0.5, 'yellow', 1, 'black'],
       opacity: 0.4,
@@ -739,9 +737,7 @@ suite('Caching', function() {
 
     var circle = new Konva.Circle({
       radius: 10,
-      fillRadialGradientStartPoint: 0,
       fillRadialGradientStartRadius: 0,
-      fillRadialGradientEndPoint: 0,
       fillRadialGradientEndRadius: 10,
       fillRadialGradientColorStops: [0, 'red', 0.5, 'yellow', 1, 'black'],
       opacity: 0.4,

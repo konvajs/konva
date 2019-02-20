@@ -56,7 +56,7 @@ suite('Star', function() {
       lineJoin: 'round',
       shadowColor: 'black',
       shadowBlur: 10,
-      shadowOffset: [20, 20],
+      shadowOffset: { x: 20, y: 20 },
       shadowOpacity: 0.5,
       draggable: true
     });
@@ -90,7 +90,7 @@ suite('Star', function() {
       lineJoin: 'round',
       shadowColor: 'black',
       shadowBlur: 10,
-      shadowOffset: [20, 20],
+      shadowOffset: { x: 20, y: 20 },
       shadowOpacity: 0.5,
       draggable: true
     });
@@ -123,12 +123,12 @@ suite('Star', function() {
       innerRadius: 30,
       outerRadius: 50,
       fill: 'green',
-      stroke: 'blue',
+      stroke: 'black',
       strokeWidth: 5,
       lineJoin: 'round',
       shadowColor: 'black',
       shadowBlur: 10,
-      shadowOffset: [20, 20],
+      shadowOffset: { x: 20, y: 20 },
       shadowOpacity: 0.5,
       draggable: true
     });
@@ -143,6 +143,6 @@ suite('Star', function() {
       height: 100,
       width: 100
     });
-    cloneAndCompareLayer(layer, 50);
+    cloneAndCompareLayer(layer, 100);
   });
 });

@@ -16,7 +16,7 @@ suite('Label', function() {
         fill: '#bbb',
         shadowColor: 'black',
         shadowBlur: 10,
-        shadowOffset: [10, 10],
+        shadowOffset: { x: 10, y: 10 },
         shadowOpacity: 0.2,
         lineJoin: 'round',
         pointerDirection: 'up',
@@ -124,7 +124,7 @@ suite('Label', function() {
         lineJoin: 'round',
         shadowColor: 'black',
         shadowBlur: 10,
-        shadowOffset: 10,
+        shadowOffsetX: 10,
         shadowOpacity: 0.5
       })
     );
@@ -152,7 +152,7 @@ suite('Label', function() {
         lineJoin: 'round',
         shadowColor: 'black',
         shadowBlur: 10,
-        shadowOffset: 10,
+        shadowOffsetX: 10,
         shadowOpacity: 0.5
       })
     );

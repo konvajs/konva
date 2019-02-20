@@ -125,7 +125,7 @@ suite('Image', function() {
         height: 75,
         crop: { x: 186, y: 211, width: 106, height: 74 },
         draggable: true,
-        scale: [0.5, 0.5]
+        scale: { x: 0.5, y: 0.5 }
       });
 
       layer.add(darth);
@@ -186,7 +186,7 @@ suite('Image', function() {
         y: 0,
         image: imageObj,
         draggable: true,
-        scale: 0.25
+        scale: { x: 0.25, y: 0.25 }
       });
 
       layer.add(tiger);
@@ -218,7 +218,7 @@ suite('Image', function() {
         y: 0,
         image: imageObj,
         draggable: true,
-        scale: 0.25,
+        scaleX: 0.25,
         opacity: 0.5
       });
 

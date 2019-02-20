@@ -1702,7 +1702,6 @@ suite('Transformer', function() {
     assert.equal(rect.height(), 100);
   });
 
-  // TODO: current I am not sure how to better resolve that task
   test.skip('transformer should skip scale on stroke if strokeScaleEnabled = false', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

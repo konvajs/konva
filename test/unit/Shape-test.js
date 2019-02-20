@@ -81,7 +81,7 @@ suite('Shape', function() {
       stroke: 'blue',
       strokeWidth: 5,
       shadowColor: 'black',
-      shadowOffset: 10,
+      shadowOffsetX: 10,
       shadowOpacity: 0
     });
 
@@ -327,7 +327,7 @@ suite('Shape', function() {
       circle.setFillLinearGradientEndPoint({ x: 35, y: 35 });
       circle.setFillLinearGradientColorStops([0, 'red', 1, 'blue']);
 
-      circle.setFillLinearGradientStartPoint(null);
+      circle.setFillLinearGradientStartPoint({ x: 0, y: 0 });
       circle.setFillPatternImage(imageObj);
       circle.setFillPatternRepeat('repeat');
       circle.setFillPatternOffset({ x: 0, y: 0 });
@@ -890,7 +890,7 @@ suite('Shape', function() {
         draggable: true,
         shadowColor: 'black',
         shadowBlur: 10,
-        shadowOffset: 20,
+        shadowOffsetX: 20,
         shadowOpacity: 0.2
       });
 

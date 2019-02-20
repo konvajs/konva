@@ -41,7 +41,7 @@ suite('Text', function() {
       height: 100,
       shadowColor: 'black',
       shadowBlur: 1,
-      shadowOffset: [10, 10],
+      shadowOffset: { x: 10, y: 10 },
       shadowOpacity: 0.2,
       cornerRadius: 10
     });
@@ -62,7 +62,7 @@ suite('Text', function() {
       padding: 10,
       shadowColor: 'red',
       shadowBlur: 1,
-      shadowOffset: [10, 10],
+      shadowOffset: { x: 10, y: 10 },
       shadowOpacity: 0.2
     });
 
@@ -71,8 +71,7 @@ suite('Text', function() {
     });
 
     // center text box
-    rect.offset(text.getWidth() / 2, text.getHeight() / 2);
-    text.offset(text.getWidth() / 2, text.getHeight() / 2);
+    rect.offsetX(text.getWidth() / 2, text.getHeight() / 2);
 
     group.add(rect);
     group.add(text);
@@ -223,13 +222,13 @@ suite('Text', function() {
       padding: 10,
       shadowColor: 'black',
       shadowBlur: 1,
-      shadowOffset: [10, 10],
+      shadowOffset: { X: 10, y: 10 },
       shadowOpacity: 0.2,
       draggable: true
     });
 
     // center text box
-    text.offset(text.getWidth() / 2, text.getHeight() / 2);
+    text.offsetX(text.getWidth() / 2, text.getHeight() / 2);
 
     layer.add(text);
     stage.add(layer);
@@ -257,7 +256,7 @@ suite('Text', function() {
     assert.equal(text.getWidth(), 400);
     assert.equal(text.getHeight(), 100);
     assert(text.getTextWidth() > 0, 'text width should be greater than 0');
-    assert(text.getTextHeight() > 0, 'text height should be greater than 0');
+    assert(text.fontSize() > 0, 'text height should be greater than 0');
 
     text.setX(1);
     text.setY(2);
@@ -505,7 +504,7 @@ suite('Text', function() {
       align: 'center',
       shadowColor: 'red',
       shadowBlur: 1,
-      shadowOffset: [10, 10],
+      shadowOffset: { x: 10, y: 10 },
       shadowOpacity: 0.5,
       draggable: true
     });
@@ -801,10 +800,7 @@ suite('Text', function() {
 
     ctx.fillText(text.text(), text.x(), text.y() + text.fontSize() / 2);
 
-    // TODO: fails on CI, so tol is very large
-    // TODO: how to make it smaller or skip in CI?
-    compareLayerAndCanvas(layer, canvas, 256);
-    // delete Konva.pixelRatio;
+    compareLayerAndCanvas(layer, canvas, 200);
   });
 
   // TODO: how to make correct behavior?

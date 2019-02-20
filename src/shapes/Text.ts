@@ -524,12 +524,7 @@ Text.prototype._attrsAffectingSize = [
  * text.width('auto');
  * text.width() // will return calculated width, and not "auto"
  */
-Factory.addGetterSetter(
-  Text,
-  'width',
-  undefined,
-  Validators.getNumberOrAutoValidator()
-);
+Factory.overWriteSetter(Text, 'width', Validators.getNumberOrAutoValidator());
 
 /**
  * get/set the height of the text area, which takes into account multi-line text, line heights, and padding.
@@ -549,12 +544,7 @@ Factory.addGetterSetter(
  * text.height() // will return calculated height, and not "auto"
  */
 
-Factory.addGetterSetter(
-  Text,
-  'height',
-  undefined,
-  Validators.getNumberOrAutoValidator()
-);
+Factory.overWriteSetter(Text, 'height', Validators.getNumberOrAutoValidator());
 
 /**
  * get/set font family

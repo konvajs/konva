@@ -61,9 +61,9 @@ export class Layer extends BaseLayer {
   /**
    * get visible intersection shape. This is the preferred
    * method for determining if a point intersects a shape or not
-   * also you may pass optional selector parametr to return ancestor of intersected shape
+   * also you may pass optional selector parameter to return ancestor of intersected shape
    * @method
-   * @memberof Konva.Layer.prototype
+   * @name Konva.Layer#getIntersection
    * @param {Object} pos
    * @param {Number} pos.x
    * @param {Number} pos.y
@@ -200,7 +200,6 @@ export class Layer extends BaseLayer {
    * disable hit graph
    * @name Konva.Layer#disableHitGraph
    * @method
-   * @memberof Konva.Layer.prototype
    * @returns {Layer}
    */
   disableHitGraph() {
@@ -208,7 +207,11 @@ export class Layer extends BaseLayer {
     return this;
   }
 
-  // document it:
+  /**
+   * Show or hide hit canvas over the stage. May be useful for debugging custom hitFunc
+   * @name Konva.Layer#toggleHitCanvas
+   * @method
+   */
   toggleHitCanvas() {
     if (!this.parent) {
       return;

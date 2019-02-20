@@ -208,7 +208,7 @@ suite('Node', function() {
     // shadow cache
     assert.equal(circle._cache.get('hasShadow'), false);
     circle.setShadowColor('red');
-    circle.setShadowOffset(10);
+    circle.setShadowOffsetX(10);
     assert.equal(circle._cache.get('hasShadow'), undefined);
     layer.draw();
     assert.equal(circle._cache.get('hasShadow'), true);
@@ -1175,43 +1175,6 @@ suite('Node', function() {
 
     // make sure children are ok after json
     assert.equal(stage.children[0], layer);
-  });
-
-  // ======================================================
-  test('scale shape by half', function() {
-    var stage = addStage();
-    var layer = new Konva.Layer();
-    var circle = new Konva.Circle({
-      x: stage.getWidth() / 2,
-      y: stage.getHeight() / 2,
-      radius: 70,
-      fill: 'green',
-      stroke: 'black',
-      strokeWidth: 4
-    });
-
-    circle.setScale(0.5, 1);
-    layer.add(circle);
-    stage.add(layer);
-  });
-
-  // ======================================================
-  test('scale shape by half then back to 1', function() {
-    var stage = addStage();
-    var layer = new Konva.Layer();
-    var circle = new Konva.Circle({
-      x: stage.getWidth() / 2,
-      y: stage.getHeight() / 2,
-      radius: 70,
-      fill: 'green',
-      stroke: 'black',
-      strokeWidth: 4
-    });
-
-    circle.setScale(0.5, 1);
-    circle.setScale(1, 1);
-    layer.add(circle);
-    stage.add(layer);
   });
 
   // ======================================================
@@ -3132,7 +3095,7 @@ suite('Node', function() {
     stage.add(layer);
 
     assert.equal(stage.content.style.display, 'none');
-    
+
     stage.show();
     stage.draw();
     assert.equal(stage.content.style.display, '');
@@ -3140,10 +3103,6 @@ suite('Node', function() {
     stage.hide();
     stage.draw();
     assert.equal(stage.content.style.display, 'none');
-    
-    
-
-    // TODO: stage hide() fails.  also need to find a good way to test this
   });
 
   // ======================================================

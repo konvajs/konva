@@ -940,7 +940,7 @@ suite('Container', function() {
       strokeWidth: 2,
       shadowColor: 'black',
       shadowBlur: 2,
-      shadowOffset: [10, 10],
+      shadowOffset: { x: 10, y: 10 },
       shadowOpacity: 0.5
     });
 
@@ -1335,40 +1335,6 @@ suite('Container', function() {
       stage.find('#layerId')[0].attrs.id,
       'layerId',
       'problem with layer id selector'
-    );
-  });
-
-  // ======================================================
-  test('test deprecated get() method', function() {
-    var stage = addStage();
-    var layer = new Konva.Layer({
-      name: 'layerName',
-      id: 'layerId'
-    });
-    var group = new Konva.Group({
-      name: 'groupName',
-      id: 'groupId'
-    });
-    var rect = new Konva.Rect({
-      x: 200,
-      y: 20,
-      width: 100,
-      height: 50,
-      fill: 'red',
-      stroke: 'black',
-      strokeWidth: 4,
-      name: 'rectName',
-      id: 'rectId'
-    });
-
-    layer.add(group);
-    group.add(rect);
-    stage.add(layer);
-
-    assert.equal(
-      stage.get('.rectName')[0].attrs.id,
-      'rectId',
-      'problem with shape name selector'
     );
   });
 

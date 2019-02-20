@@ -343,7 +343,7 @@ Factory.addGetterSetter(
 /**
  * get/set pointer height
  * @method
- * @memberof Konva.Tag.prototype
+ * @name Konva.Tag#pointerHeight
  * @param {Number} pointerHeight
  * @returns {Number}
  * @example

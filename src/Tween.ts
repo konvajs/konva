@@ -394,44 +394,41 @@ export class Tween {
     }
   }
   _addListeners() {
-    var that = this;
-
     // start listeners
-    this.tween.onPlay = function() {
-      that.anim.start();
+    this.tween.onPlay = () => {
+      this.anim.start();
     };
-    this.tween.onReverse = function() {
-      that.anim.start();
+    this.tween.onReverse = () => {
+      this.anim.start();
     };
 
     // stop listeners
-    this.tween.onPause = function() {
-      that.anim.stop();
+    this.tween.onPause = () => {
+      this.anim.stop();
     };
-    this.tween.onFinish = function() {
-      // TODO: remove that any
-      var node = that.node as any;
+    this.tween.onFinish = () => {
+      var node = this.node as Node;
 
       // after tweening  points of line we need to set original end
-      var attrs = Tween.attrs[node._id][that._id];
+      var attrs = Tween.attrs[node._id][this._id];
       if (attrs.points && attrs.points.trueEnd) {
-        node.points(attrs.points.trueEnd);
+        node.setAttr('points', attrs.points.trueEnd);
       }
 
-      if (that.onFinish) {
-        that.onFinish.call(that);
+      if (this.onFinish) {
+        this.onFinish.call(this);
       }
     };
-    this.tween.onReset = function() {
-      var node = that.node as any;
+    this.tween.onReset = () => {
+      var node = this.node as any;
       // after tweening  points of line we need to set original start
-      var attrs = Tween.attrs[node._id][that._id];
+      var attrs = Tween.attrs[node._id][this._id];
       if (attrs.points && attrs.points.trueStart) {
         node.points(attrs.points.trueStart);
       }
 
-      if (that.onReset) {
-        that.onReset();
+      if (this.onReset) {
+        this.onReset();
       }
     };
   }

@@ -419,7 +419,7 @@ suite('TextPath', function() {
       text: 'AV',
       fontSize: 60,
       data: 'M0,0 L200,0',
-      getKerning: function(leftChar, rightChar) {
+      kerningFunc: function(leftChar, rightChar) {
         return pairs.hasOwnProperty(leftChar)
           ? pairs[leftChar][rightChar] || 0
           : 0;
@@ -460,7 +460,7 @@ suite('TextPath', function() {
       text: 'AV',
       fontSize: 60,
       data: 'M0,0 L200,0',
-      getKerning: function(leftChar, rightChar) {
+      kerningFunc: function(leftChar, rightChar) {
         // getter that fails
         throw new Error('something went wrong');
       }

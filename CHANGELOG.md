@@ -31,6 +31,7 @@ That changes are private and internal specific. They should not break most of `K
 * You can configure what mouse buttons can be used for drag&drop. To enable right button you can use `Konva.dragButtons = [0, 1]`.
 * Now you can hide stage `stage.visible(false)`. It will set its container display style to "none".
 * New method `stage.setPointersPositions(event)`. Usually you don't need to use it manually.
+* New method `layer.toggleHitCanvas()` to show and debug hit areas
 
 ### Changed
 * Full rewrite to Typescript with tons of refactoring and small optimizations. The public API should be 100% the same
@@ -48,6 +49,7 @@ That changes are private and internal specific. They should not break most of `K
 * Fixed some caching behavior when a node has `globalCompositeOperation`.
 * Fixed automatic updates for `Konva.Transformer`
 * Fixed container change for a stage.
+* Fixed warning for `width` and `height` attributes for `Konva.Text`
 
 ## [2.6.0][2018-12-14]
 

@@ -186,8 +186,7 @@ suite('Stage', function() {
       radius: 70,
       strokeWidth: 4,
       fill: 'red',
-      stroke: 'black',
-      id: 'redCircle'
+      stroke: 'black'
     });
     layer.add(shape);
     layer.draw();
@@ -215,8 +214,7 @@ suite('Stage', function() {
       radius: 70,
       strokeWidth: 4,
       fill: 'red',
-      stroke: 'black',
-      id: 'redCircle'
+      stroke: 'black'
     });
 
     var greenCircle = new Konva.Circle({
@@ -225,8 +223,7 @@ suite('Stage', function() {
       radius: 70,
       strokeWidth: 4,
       fill: 'green',
-      stroke: 'black',
-      id: 'greenCircle'
+      stroke: 'black'
     });
 
     layer.add(redCircle);
@@ -234,13 +231,13 @@ suite('Stage', function() {
     stage.add(layer);
 
     assert.equal(
-      stage.getIntersection({ x: 300, y: 100 }).getId(),
-      'greenCircle',
+      stage.getIntersection({ x: 300, y: 100 }),
+      greenCircle,
       'shape should be greenCircle'
     );
     assert.equal(
-      stage.getIntersection({ x: 380, y: 100 }).getId(),
-      'redCircle',
+      stage.getIntersection({ x: 380, y: 100 }),
+      redCircle,
       'shape should be redCircle'
     );
     assert.equal(
@@ -311,8 +308,7 @@ suite('Stage', function() {
       radius: 70,
       strokeWidth: 4,
       fill: 'red',
-      stroke: 'black',
-      id: 'redCircle'
+      stroke: 'black'
     });
 
     var greenCircle = new Konva.Circle({
@@ -321,8 +317,7 @@ suite('Stage', function() {
       radius: 70,
       strokeWidth: 4,
       fill: 'green',
-      stroke: 'black',
-      id: 'greenCircle'
+      stroke: 'black'
     });
 
     stage.on('contentMousemove', function() {
@@ -338,19 +333,20 @@ suite('Stage', function() {
     stage.add(layer);
 
     assert.equal(
-      stage.getIntersection({ x: 370, y: 93 }).getId(),
-      'greenCircle',
+      stage.getIntersection({ x: 370, y: 93 }),
+      greenCircle,
       'shape should be greenCircle'
     );
-    // TODO: this passes in the browser but fails in phantomjs.  no idea why.
-    //assert.equal(stage.getIntersection(371, 93).getId(), 'greenCircle', 'shape should be greenCircle');
     assert.equal(
-      stage.getIntersection({ x: 372, y: 93 }).getId(),
-      'redCircle',
+      stage.getIntersection({ x: 371, y: 93 }),
+      greenCircle,
+      'shape should be greenCircle'
+    );
+    assert.equal(
+      stage.getIntersection({ x: 372, y: 93 }),
+      redCircle,
       'shape should be redCircle'
     );
-
-    //console.log(layer.hitCanvas.context._context.getImageData(1, 1, 1, 1).data)
   });
 
   // ======================================================
@@ -684,7 +680,7 @@ suite('Stage', function() {
     var layer = new Konva.Layer();
 
     stage.add(layer);
-    stage.setScale(0.5);
+    stage.setScaleX(0.5);
 
     stage.draw();
   });

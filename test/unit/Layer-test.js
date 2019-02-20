@@ -239,7 +239,7 @@ suite('Layer', function() {
       fill: 'green',
       stroke: 'black',
       strokeWidth: 4,
-      scale: [3, 1],
+      scale: { x: 3, y: 1 },
       draggable: true,
       strokeScaleEnabled: false
     });

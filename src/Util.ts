@@ -84,7 +84,7 @@ Collection.prototype = [] as any;
  * @param {Function} func
  * @example
  * // get all nodes with name foo inside layer, and set x to 10 for each
- * layer.get('.foo').each(function(shape, n) {
+ * layer.find('.foo').each(function(shape, n) {
  *   shape.setX(10);
  * });
  */
@@ -806,6 +806,9 @@ export const Util = {
     console.error(KONVA_ERROR + str);
   },
   warn(str) {
+    if (!getGlobalKonva().showWarnings) {
+      return;
+    }
     console.warn(KONVA_WARNING + str);
   },
   extend(child, parent) {

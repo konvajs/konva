@@ -804,7 +804,6 @@ export class Stage extends Container {
 
 Stage.prototype.nodeType = STAGE;
 
-// TODO: test for replacing container
 /**
  * get/set container DOM element
  * @method

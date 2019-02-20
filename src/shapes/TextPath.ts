@@ -175,12 +175,10 @@ export class TextPath extends Shape {
   getTextWidth() {
     return this.textWidth;
   }
-  /**
-   * get text line height in pixels
-   * @method
-   * @name Konva.TextPath#getTextHeight
-   */
   getTextHeight() {
+    Util.warn(
+      'text.getTextHeight() method is deprecated. Use text.height() - for full height and text.fontSize() - for one line height.'
+    );
     return this.textHeight;
   }
   setText(text) {

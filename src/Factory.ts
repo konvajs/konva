@@ -21,27 +21,29 @@ export const Factory = {
         return val === undefined ? def : val;
       };
   },
+
   addSetter(constructor, attr, validator?, after?) {
-    // if (!validator && validator !== null) {
-    //   console.error(constructor, attr, 'has no validator.');
-    // }
     var method = SET + Util._capitalize(attr);
 
-    constructor.prototype[method] =
-      constructor.prototype[method] ||
-      function(val) {
-        if (validator && val !== undefined && val !== null) {
-          val = validator.call(this, val, attr);
-        }
+    if (!constructor.prototype[method]) {
+      Factory.overWriteSetter(constructor, attr, validator, after);
+    }
+  },
+  overWriteSetter(constructor, attr, validator?, after?) {
+    var method = SET + Util._capitalize(attr);
+    constructor.prototype[method] = function(val) {
+      if (validator && val !== undefined && val !== null) {
+        val = validator.call(this, val, attr);
+      }
 
-        this._setAttr(attr, val);
+      this._setAttr(attr, val);
 
-        if (after) {
-          after.call(this);
-        }
+      if (after) {
+        after.call(this);
+      }
 
-        return this;
-      };
+      return this;
+    };
   },
   addComponentsGetterSetter(constructor, attr, components, validator?, after?) {
     var len = components.length,
