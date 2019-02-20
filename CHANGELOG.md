@@ -18,6 +18,7 @@ That changes are private and internal specific. They should not break most of `K
 * `id` and `name` properties defaults are empty strings, not `undefined`
 * internal `_cache` property was updated to use es2015 `Map` instead of `{}`.
 * `text.getTextHeight()` is deprecated. Use `text.height()` or `text.fontSize()` instead.
+* Private method `stage._setPointerPosition()` is deprecated. Use `stage.setPointersPositions(event)`;
 
 ### Added
 * Show a warning when a stage has too many layers
@@ -28,6 +29,8 @@ That changes are private and internal specific. They should not break most of `K
 * Show a warning when user is trying to reuse destroyed shape.
 * new publish method `measureSize(string)` for `Konva.Text`
 * You can configure what mouse buttons can be used for drag&drop. To enable right button you can use `Konva.dragButtons = [0, 1]`.
+* Now you can hide stage `stage.visible(false)`. It will set its container display style to "none".
+* New method `stage.setPointersPositions(event)`. Usually you don't need to use it manually.
 
 ### Changed
 * Full rewrite to Typescript with tons of refactoring and small optimizations. The public API should be 100% the same

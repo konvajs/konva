@@ -87,13 +87,18 @@ function addStats() {
   animate();
 }
 
-function addStage() {
-  var container = document.createElement('div'),
-    stage = new Konva.Stage({
+function addStage(attrs) {
+  var container = document.createElement('div');
+  const props = Object.assign(
+    {
       container: container,
       width: 578,
       height: 200
-    });
+    },
+    attrs
+  );
+
+  var stage = new Konva.Stage(props);
 
   konvaContainer.appendChild(container);
   return stage;

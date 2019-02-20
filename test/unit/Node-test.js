@@ -3104,7 +3104,9 @@ suite('Node', function() {
 
   // ======================================================
   test('hide stage', function() {
-    var stage = addStage();
+    var stage = addStage({
+      visible: false
+    });
     var layer = new Konva.Layer();
     var group = new Konva.Group();
 
@@ -3121,15 +3123,25 @@ suite('Node', function() {
       scale: {
         x: 2,
         y: 1
-      }
+      },
+      visible: false
     });
 
     group.add(rect);
     layer.add(group);
     stage.add(layer);
 
+    assert.equal(stage.content.style.display, 'none');
+    
+    stage.show();
+    stage.draw();
+    assert.equal(stage.content.style.display, '');
+
     stage.hide();
     stage.draw();
+    assert.equal(stage.content.style.display, 'none');
+    
+    
 
     // TODO: stage hide() fails.  also need to find a good way to test this
   });

@@ -29,7 +29,7 @@ export const DD = {
         // it is possible that pos is undefined
         // reattach it
         if (!pos) {
-          node.getStage()._setPointerPosition(evt);
+          node.getStage().setPointersPositions(evt);
           pos = node.getStage().getPointerPosition();
         }
         var dragDistance = node.dragDistance();
@@ -42,7 +42,7 @@ export const DD = {
         }
       }
 
-      node.getStage()._setPointerPosition(evt);
+      node.getStage().setPointersPositions(evt);
       if (!DD.isDragging) {
         DD.isDragging = true;
         node.fire(

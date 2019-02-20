@@ -173,7 +173,7 @@ export class Transformer extends Group {
     }
   }
   /**
-   * alias to `setNode`
+   * alias to `tr.node(shape)`
    * @method
    * @name Konva.Transformer#attachTo
    * @returns {Konva.Transformer}
@@ -204,33 +204,14 @@ export class Transformer extends Group {
     node.on(additionalEvents, upChange);
 
     node.on(TRANSFORM_CHANGE_STR, upChange);
-
-    // node.on(
-    //   additionalEvents,
-    //   function() {
-    //     if (!this._transforming) {
-    //       this.update();
-    //     }
-    //   }.bind(this)
-    // );
-    // node.on(
-    //   REDRAW_CHANGE_STR,
-    //   function() {
-    //     if (!this._transforming) {
-    //       this.update();
-    //     }
-    //   }.bind(this)
-    // );
-
-    // we may need it if we set not in initial props
+    // we may need it if we set node in initial props
     // so elements are not defined yet
     var elementsCreated = !!this.findOne('.top-left');
     if (elementsCreated) {
       this.update();
     }
-    return this;  
+    return this;
   }
-  // TODO: add docs, use overloaded setter/getter
   getNode() {
     return this._node;
   }

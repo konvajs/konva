@@ -528,8 +528,7 @@ export class TextPath extends Shape {
   text: GetSet<string, this>;
   data: GetSet<string, this>;
 
-  // TODO: add better types
-  kerningFunc: GetSet<Function, this>;
+  kerningFunc: GetSet<(leftChar: string, rightChar: string) => number, this>;
   textBaseline: GetSet<string, this>;
   textDecoration: GetSet<string, this>;
 }

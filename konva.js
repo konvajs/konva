@@ -2313,7 +2313,7 @@
                   // it is possible that pos is undefined
                   // reattach it
                   if (!pos) {
-                      node.getStage()._setPointerPosition(evt);
+                      node.getStage().setPointersPositions(evt);
                       pos = node.getStage().getPointerPosition();
                   }
                   var dragDistance = node.dragDistance();
@@ -2322,7 +2322,7 @@
                       return;
                   }
               }
-              node.getStage()._setPointerPosition(evt);
+              node.getStage().setPointersPositions(evt);
               if (!DD.isDragging) {
                   DD.isDragging = true;
                   node.fire('dragstart', {
@@ -5536,6 +5536,7 @@
           ctx[UNDERSCORE + eventName](evt);
       }, false);
   }
+  var NO_POINTERS_MESSAGE = "Pointer position is missing and not registered by the stage. Looks like it is outside of the stage container. You can set it manually from event: stage.setPointersPositions(event);";
   var stages = [];
   /**
    * Stage constructor.  A stage is used to contain multiple layers
@@ -5578,13 +5579,19 @@
           _this._buildDOM();
           _this._bindContentEvents();
           stages.push(_this);
-          _this.on('widthChange heightChange', _this._resizeDOM);
+          _this.on('widthChange.konva heightChange.konva', _this._resizeDOM);
+          _this.on('visibleChange.konva', _this._checkVisibility);
+          _this._checkVisibility();
           return _this;
       }
       Stage.prototype._validateAdd = function (child) {
           if (child.getType() !== 'Layer') {
               Util.throw('You may only add layers to the stage.');
           }
+      };
+      Stage.prototype._checkVisibility = function () {
+          var style = this.visible() ? '' : 'none';
+          this.content.style.display = style;
       };
       /**
        * set container dom element which contains the stage wrapper div element
@@ -5594,7 +5601,6 @@
        */
       Stage.prototype.setContainer = function (container) {
           if (typeof container === STRING) {
-              // TODO: use simple query selector
               if (container.charAt(0) === '.') {
                   var className = container.slice(1);
                   container = document.getElementsByClassName(className)[0];
@@ -5657,7 +5663,9 @@
        * @returns {Object}
        */
       Stage.prototype.getPointerPosition = function () {
-          // TODO: warn if it is undefined
+          if (!this.pointerPos) {
+              Util.warn(NO_POINTERS_MESSAGE);
+          }
           return this.pointerPos;
       };
       Stage.prototype.getStage = function () {
@@ -5772,12 +5780,12 @@
           }
       };
       Stage.prototype._mouseover = function (evt) {
-          this._setPointerPosition(evt);
+          this.setPointersPositions(evt);
           this._fire(CONTENT_MOUSEOVER, { evt: evt });
           this._fire(MOUSEOVER, { evt: evt, target: this, currentTarget: this });
       };
       Stage.prototype._mouseout = function (evt) {
-          this._setPointerPosition(evt);
+          this.setPointersPositions(evt);
           var targetShape = this.targetShape;
           if (targetShape && !getGlobalKonva().isDragging()) {
               targetShape._fireAndBubble(MOUSEOUT, { evt: evt });
@@ -5792,7 +5800,7 @@
           if (UA.ieMobile) {
               return this._touchmove(evt);
           }
-          this._setPointerPosition(evt);
+          this.setPointersPositions(evt);
           var shape;
           if (!getGlobalKonva().isDragging()) {
               shape = this.getIntersection(this.getPointerPosition());
@@ -5846,7 +5854,7 @@
           if (UA.ieMobile) {
               return this._touchstart(evt);
           }
-          this._setPointerPosition(evt);
+          this.setPointersPositions(evt);
           var shape = this.getIntersection(this.getPointerPosition());
           getGlobalKonva().listenClickTap = true;
           if (shape && shape.isListening()) {
@@ -5876,7 +5884,7 @@
           if (UA.ieMobile) {
               return this._touchend(evt);
           }
-          this._setPointerPosition(evt);
+          this.setPointersPositions(evt);
           var shape = this.getIntersection(this.getPointerPosition()), clickStartShape = this.clickStartShape, clickEndShape = this.clickEndShape, fireDblClick = false, dd = getGlobalKonva().DD;
           if (getGlobalKonva().inDblClickWindow) {
               fireDblClick = true;
@@ -5936,7 +5944,7 @@
           }
       };
       Stage.prototype._contextmenu = function (evt) {
-          this._setPointerPosition(evt);
+          this.setPointersPositions(evt);
           var shape = this.getIntersection(this.getPointerPosition());
           if (shape && shape.isListening()) {
               shape._fireAndBubble(CONTEXTMENU, { evt: evt });
@@ -5951,7 +5959,7 @@
           this._fire(CONTENT_CONTEXTMENU, { evt: evt });
       };
       Stage.prototype._touchstart = function (evt) {
-          this._setPointerPosition(evt);
+          this.setPointersPositions(evt);
           var shape = this.getIntersection(this.getPointerPosition());
           getGlobalKonva().listenClickTap = true;
           if (shape && shape.isListening()) {
@@ -5973,7 +5981,7 @@
           this._fire(CONTENT_TOUCHSTART, { evt: evt });
       };
       Stage.prototype._touchend = function (evt) {
-          this._setPointerPosition(evt);
+          this.setPointersPositions(evt);
           var shape = this.getIntersection(this.getPointerPosition()), fireDblClick = false;
           if (getGlobalKonva().inDblClickWindow) {
               fireDblClick = true;
@@ -6027,7 +6035,7 @@
           getGlobalKonva().listenClickTap = false;
       };
       Stage.prototype._touchmove = function (evt) {
-          this._setPointerPosition(evt);
+          this.setPointersPositions(evt);
           var dd = getGlobalKonva().DD, shape;
           if (!getGlobalKonva().isDragging()) {
               shape = this.getIntersection(this.getPointerPosition());
@@ -6056,7 +6064,7 @@
           }
       };
       Stage.prototype._wheel = function (evt) {
-          this._setPointerPosition(evt);
+          this.setPointersPositions(evt);
           var shape = this.getIntersection(this.getPointerPosition());
           if (shape && shape.isListening()) {
               shape._fireAndBubble(WHEEL, { evt: evt });
@@ -6070,7 +6078,21 @@
           }
           this._fire(CONTENT_WHEEL, { evt: evt });
       };
-      Stage.prototype._setPointerPosition = function (evt) {
+      /**
+       * manually register pointers positions (mouse/touch) in the stage.
+       * So you can use stage.getPointerPosition(). Usually you don't need to use that method
+       * because all internal events are automatically registered. It may be useful if event
+       * is triggered outside of the stage, but you still want to use Konva methods to get pointers position.
+       * @method
+       * @name Konva.Stage#setPointersPositions
+       * @param {Object} event Event object
+       * @example
+       *
+       * window.addEventListener('mousemove', (e) => {
+       *   stage.setPointersPositions(e);
+       * });
+       */
+      Stage.prototype.setPointersPositions = function (evt) {
           var contentPosition = this._getContentPosition(), x = null, y = null;
           evt = evt ? evt : window.event;
           // touch events
@@ -6094,6 +6116,10 @@
                   y: y
               };
           }
+      };
+      Stage.prototype._setPointerPosition = function (evt) {
+          Util.warn('Method _setPointerPosition is deprecated. Use "stage.setPointersPositions(event)" instead.');
+          this.setPointersPositions(evt);
       };
       Stage.prototype._getContentPosition = function () {
           var rect = this.content.getBoundingClientRect
@@ -13822,7 +13848,7 @@
           return _this;
       }
       /**
-       * alias to `setNode`
+       * alias to `tr.node(shape)`
        * @method
        * @name Konva.Transformer#attachTo
        * @returns {Konva.Transformer}
@@ -13851,23 +13877,7 @@
           };
           node.on(additionalEvents, upChange);
           node.on(TRANSFORM_CHANGE_STR$1, upChange);
-          // node.on(
-          //   additionalEvents,
-          //   function() {
-          //     if (!this._transforming) {
-          //       this.update();
-          //     }
-          //   }.bind(this)
-          // );
-          // node.on(
-          //   REDRAW_CHANGE_STR,
-          //   function() {
-          //     if (!this._transforming) {
-          //       this.update();
-          //     }
-          //   }.bind(this)
-          // );
-          // we may need it if we set not in initial props
+          // we may need it if we set node in initial props
           // so elements are not defined yet
           var elementsCreated = !!this.findOne('.top-left');
           if (elementsCreated) {
@@ -13875,7 +13885,6 @@
           }
           return this;
       };
-      // TODO: add docs, use overloaded setter/getter
       Transformer.prototype.getNode = function () {
           return this._node;
       };

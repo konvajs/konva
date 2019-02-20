@@ -74,6 +74,8 @@ function addEvent(ctx, eventName) {
   );
 }
 
+const NO_POINTERS_MESSAGE = `Pointer position is missing and not registered by the stage. Looks like it is outside of the stage container. You can set it manually from event: stage.setPointersPositions(event);`;
+
 export const stages: Stage[] = [];
 
 /**
@@ -110,13 +112,20 @@ export class Stage extends Container {
     this._buildDOM();
     this._bindContentEvents();
     stages.push(this);
-    this.on('widthChange heightChange', this._resizeDOM);
+    this.on('widthChange.konva heightChange.konva', this._resizeDOM);
+    this.on('visibleChange.konva', this._checkVisibility);
+    this._checkVisibility();
   }
 
   _validateAdd(child) {
     if (child.getType() !== 'Layer') {
       Util.throw('You may only add layers to the stage.');
     }
+  }
+
+  _checkVisibility() {
+    const style = this.visible() ? '' : 'none';
+    this.content.style.display = style;
   }
   /**
    * set container dom element which contains the stage wrapper div element
@@ -126,7 +135,6 @@ export class Stage extends Container {
    */
   setContainer(container) {
     if (typeof container === STRING) {
-      // TODO: use simple query selector
       if (container.charAt(0) === '.') {
         var className = container.slice(1);
         container = document.getElementsByClassName(className)[0];
@@ -193,7 +201,9 @@ export class Stage extends Container {
    * @returns {Object}
    */
   getPointerPosition() {
-    // TODO: warn if it is undefined
+    if (!this.pointerPos) {
+      Util.warn(NO_POINTERS_MESSAGE);
+    }
     return this.pointerPos;
   }
   getStage() {
@@ -342,12 +352,12 @@ export class Stage extends Container {
     }
   }
   _mouseover(evt) {
-    this._setPointerPosition(evt);
+    this.setPointersPositions(evt);
     this._fire(CONTENT_MOUSEOVER, { evt: evt });
     this._fire(MOUSEOVER, { evt: evt, target: this, currentTarget: this });
   }
   _mouseout(evt) {
-    this._setPointerPosition(evt);
+    this.setPointersPositions(evt);
     var targetShape = this.targetShape;
 
     if (targetShape && !getGlobalKonva().isDragging()) {
@@ -364,7 +374,7 @@ export class Stage extends Container {
     if (UA.ieMobile) {
       return this._touchmove(evt);
     }
-    this._setPointerPosition(evt);
+    this.setPointersPositions(evt);
     var shape;
 
     if (!getGlobalKonva().isDragging()) {
@@ -419,7 +429,7 @@ export class Stage extends Container {
     if (UA.ieMobile) {
       return this._touchstart(evt);
     }
-    this._setPointerPosition(evt);
+    this.setPointersPositions(evt);
     var shape = this.getIntersection(this.getPointerPosition());
 
     getGlobalKonva().listenClickTap = true;
@@ -452,7 +462,7 @@ export class Stage extends Container {
     if (UA.ieMobile) {
       return this._touchend(evt);
     }
-    this._setPointerPosition(evt);
+    this.setPointersPositions(evt);
     var shape = this.getIntersection(this.getPointerPosition()),
       clickStartShape = this.clickStartShape,
       clickEndShape = this.clickEndShape,
@@ -523,7 +533,7 @@ export class Stage extends Container {
     }
   }
   _contextmenu(evt) {
-    this._setPointerPosition(evt);
+    this.setPointersPositions(evt);
     var shape = this.getIntersection(this.getPointerPosition());
 
     if (shape && shape.isListening()) {
@@ -538,7 +548,7 @@ export class Stage extends Container {
     this._fire(CONTENT_CONTEXTMENU, { evt: evt });
   }
   _touchstart(evt) {
-    this._setPointerPosition(evt);
+    this.setPointersPositions(evt);
     var shape = this.getIntersection(this.getPointerPosition());
 
     getGlobalKonva().listenClickTap = true;
@@ -562,7 +572,7 @@ export class Stage extends Container {
     this._fire(CONTENT_TOUCHSTART, { evt: evt });
   }
   _touchend(evt) {
-    this._setPointerPosition(evt);
+    this.setPointersPositions(evt);
     var shape = this.getIntersection(this.getPointerPosition()),
       fireDblClick = false;
 
@@ -623,7 +633,7 @@ export class Stage extends Container {
     getGlobalKonva().listenClickTap = false;
   }
   _touchmove(evt) {
-    this._setPointerPosition(evt);
+    this.setPointersPositions(evt);
     var dd = getGlobalKonva().DD,
       shape;
     if (!getGlobalKonva().isDragging()) {
@@ -654,7 +664,7 @@ export class Stage extends Container {
     }
   }
   _wheel(evt) {
-    this._setPointerPosition(evt);
+    this.setPointersPositions(evt);
     var shape = this.getIntersection(this.getPointerPosition());
 
     if (shape && shape.isListening()) {
@@ -668,7 +678,21 @@ export class Stage extends Container {
     }
     this._fire(CONTENT_WHEEL, { evt: evt });
   }
-  _setPointerPosition(evt) {
+  /**
+   * manually register pointers positions (mouse/touch) in the stage.
+   * So you can use stage.getPointerPosition(). Usually you don't need to use that method
+   * because all internal events are automatically registered. It may be useful if event
+   * is triggered outside of the stage, but you still want to use Konva methods to get pointers position.
+   * @method
+   * @name Konva.Stage#setPointersPositions
+   * @param {Object} event Event object
+   * @example
+   *
+   * window.addEventListener('mousemove', (e) => {
+   *   stage.setPointersPositions(e);
+   * });
+   */
+  setPointersPositions(evt) {
     var contentPosition = this._getContentPosition(),
       x = null,
       y = null;
@@ -694,6 +718,12 @@ export class Stage extends Container {
         y: y
       };
     }
+  }
+  _setPointerPosition(evt) {
+    Util.warn(
+      'Method _setPointerPosition is deprecated. Use "stage.setPointersPositions(event)" instead.'
+    );
+    this.setPointersPositions(evt);
   }
   _getContentPosition() {
     var rect = this.content.getBoundingClientRect
@@ -787,5 +817,3 @@ Stage.prototype.nodeType = STAGE;
  * stage.container(container);
  */
 Factory.addGetterSetter(Stage, 'container');
-
-

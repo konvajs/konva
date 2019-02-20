@@ -35,6 +35,41 @@ suite('Transformer', function() {
     assert.equal(pos.y, rect.y() + rect.height());
   });
 
+  test('try set/get node', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 60,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var circle = new Konva.Rect({
+      x: 10,
+      y: 60,
+      radius: 100,
+      fill: 'yellow'
+    });
+    layer.add(circle);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+
+    layer.draw();
+    assert.equal(tr.node(), rect);
+
+    tr.attachTo(circle);
+    assert.equal(tr.node(), circle);
+  });
+
   test('try to fit simple rectangle', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
