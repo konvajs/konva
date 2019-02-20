@@ -50,6 +50,7 @@ That changes are private and internal specific. They should not break most of `K
 * Fixed automatic updates for `Konva.Transformer`
 * Fixed container change for a stage.
 * Fixed warning for `width` and `height` attributes for `Konva.Text`
+* Fixed gradient drawing for `Konva.Text`
 
 ## [2.6.0][2018-12-14]
 

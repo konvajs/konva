@@ -158,6 +158,10 @@ export class Shape extends Node {
   getSceneFunc() {
     return this.attrs.sceneFunc || this['_sceneFunc'];
   }
+
+  getHitFunc() {
+    return this.attrs.hitFunc || this['_hitFunc'];
+  }
   /**
    * returns whether or not a shadow will be rendered
    * @method

@@ -55,10 +55,24 @@ function getDummyContext() {
 }
 
 function _fillFunc(context) {
-  context.fillText(this.partialText, 0, 0);
+  context.fillText(this.partialText, this._textX, this._textY);
 }
 function _strokeFunc(context) {
-  context.strokeText(this.partialText, 0, 0);
+  context.strokeText(this.partialText, this._textX, this._textY);
+}
+
+function checkDefaultFill(config) {
+  config = config || {};
+
+  // set default color to black
+  if (
+    !config.fillLinearGradientColorStops &&
+    !config.fillRadialGradientColorStops &&
+    !config.fillPatternImage
+  ) {
+    config.fill = config.fill || 'black';
+  }
+  return config;
 }
 
 /**
@@ -94,31 +108,18 @@ function _strokeFunc(context) {
 export class Text extends Shape {
   textArr: Array<{ text: string; width: number }>;
   partialText: string;
+  _textX = 0;
+  _textY = 0;
 
   textWidth: number;
   textHeight: number;
   constructor(config) {
-    config = config || {};
-
-    // set default color to black
-    if (
-      !config.fillLinearGradientColorStops &&
-      !config.fillRadialGradientColorStops &&
-      !config.fillPatternImage
-    ) {
-      config.fill = config.fill || 'black';
-    }
-
-    super(config);
-
+    super(checkDefaultFill(config));
     // update text data for certain attr changes
     for (var n = 0; n < attrChangeListLen; n++) {
       this.on(ATTR_CHANGE_LIST[n] + CHANGE_KONVA, this._setTextData);
     }
-
     this._setTextData();
-    this.sceneFunc(this._sceneFunc);
-    this.hitFunc(this._hitFunc);
   }
 
   _sceneFunc(context) {
@@ -138,6 +139,11 @@ export class Text extends Shape {
       shouldLineThrough = textDecoration.indexOf('line-through') !== -1,
       n;
 
+    var translateY = 0;
+
+    var lineTranslateX = 0;
+    var lineTranslateY = 0;
+
     context.setAttr('font', this._getContextFont());
 
     context.setAttr('textBaseline', MIDDLE);
@@ -151,14 +157,12 @@ export class Text extends Shape {
       alignY = this.getHeight() - textArrLen * lineHeightPx - padding * 2;
     }
 
-    if (padding) {
-      context.translate(padding, alignY + padding + lineHeightPx / 2);
-    } else {
-      context.translate(0, alignY + lineHeightPx / 2);
-    }
+    context.translate(padding, alignY + padding + lineHeightPx / 2);
 
     // draw text lines
     for (n = 0; n < textArrLen; n++) {
+      var lineTranslateX = 0;
+      var lineTranslateY = 0;
       var obj = textArr[n],
         text = obj.text,
         width = obj.width,
@@ -170,23 +174,29 @@ export class Text extends Shape {
       // horizontal alignment
       context.save();
       if (align === RIGHT) {
-        context.translate(totalWidth - width - padding * 2, 0);
+        lineTranslateX += totalWidth - width - padding * 2;
       } else if (align === CENTER) {
-        context.translate((totalWidth - width - padding * 2) / 2, 0);
+        lineTranslateX += (totalWidth - width - padding * 2) / 2;
       }
 
       if (shouldUnderline) {
         context.save();
         context.beginPath();
 
-        context.moveTo(0, Math.round(fontSize / 2));
+        context.moveTo(
+          lineTranslateX,
+          translateY + lineTranslateY + Math.round(fontSize / 2)
+        );
         spacesNumber = text.split(' ').length - 1;
         oneWord = spacesNumber === 0;
         lineWidth =
           align === JUSTIFY && lastLine && !oneWord
             ? totalWidth - padding * 2
             : width;
-        context.lineTo(Math.round(lineWidth), Math.round(fontSize / 2));
+        context.lineTo(
+          lineTranslateX + Math.round(lineWidth),
+          translateY + lineTranslateY + Math.round(fontSize / 2)
+        );
 
         // I have no idea what is real ratio
         // just /15 looks good enough
@@ -198,14 +208,17 @@ export class Text extends Shape {
       if (shouldLineThrough) {
         context.save();
         context.beginPath();
-        context.moveTo(0, 0);
+        context.moveTo(lineTranslateX, translateY + lineTranslateY);
         spacesNumber = text.split(' ').length - 1;
         oneWord = spacesNumber === 0;
         lineWidth =
           align === JUSTIFY && lastLine && !oneWord
             ? totalWidth - padding * 2
             : width;
-        context.lineTo(Math.round(lineWidth), 0);
+        context.lineTo(
+          lineTranslateX + Math.round(lineWidth),
+          translateY + lineTranslateY
+        );
         context.lineWidth = fontSize / 15;
         context.strokeStyle = fill;
         context.stroke();
@@ -218,26 +231,31 @@ export class Text extends Shape {
           var letter = text[li];
           // skip justify for the last line
           if (letter === ' ' && n !== textArrLen - 1 && align === JUSTIFY) {
-            context.translate(
-              Math.floor((totalWidth - padding * 2 - width) / spacesNumber),
-              0
+            lineTranslateX += Math.floor(
+              (totalWidth - padding * 2 - width) / spacesNumber
             );
+            // context.translate(
+            //   Math.floor((totalWidth - padding * 2 - width) / spacesNumber),
+            //   0
+            // );
           }
+          this._textX = lineTranslateX;
+          this._textY = translateY + lineTranslateY;
           this.partialText = letter;
           context.fillStrokeShape(this);
-          context.translate(
-            Math.round(this.measureSize(letter).width) + letterSpacing,
-            0
-          );
+          lineTranslateX +=
+            Math.round(this.measureSize(letter).width) + letterSpacing;
         }
       } else {
+        this._textX = lineTranslateX;
+        this._textY = translateY + lineTranslateY;
         this.partialText = text;
 
         context.fillStrokeShape(this);
       }
       context.restore();
       if (textArrLen > 1) {
-        context.translate(0, lineHeightPx);
+        translateY += lineHeightPx;
       }
     }
   }

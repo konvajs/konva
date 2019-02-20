@@ -433,7 +433,7 @@ suite('Text', function() {
     stage.add(layer);
 
     var trace =
-      'translate();fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();restore();translate();save();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();restore();translate();restore();';
+      'fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();restore();save();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();restore();restore();';
 
     assert.equal(layer.getContext().getTrace(true), trace);
   });
@@ -475,7 +475,7 @@ suite('Text', function() {
     stage.add(layer);
 
     var trace =
-      'fillText();translate();fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();restore();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();restore();translate();restore();';
+      'fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();restore();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();restore();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();restore();restore();';
 
     assert.equal(layer.getContext().getTrace(true), trace);
   });
@@ -534,7 +534,7 @@ suite('Text', function() {
     stage.add(layer);
 
     var trace =
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=middle;textAlign=left;translate(0,40);save();save();beginPath();moveTo(0,40);lineTo(189,40);stroke();restore();fillStyle=red;fillText(h,0,0);translate(49,0);fillStyle=red;fillText(e,0,0);translate(49,0);fillStyle=red;fillText(l,0,0);translate(23,0);fillStyle=red;fillText(l,0,0);translate(23,0);fillStyle=red;fillText(o,0,0);translate(49,0);restore();translate(0,80);save();save();beginPath();moveTo(0,40);lineTo(211,40);stroke();restore();fillStyle=red;fillText(w,0,0);translate(63,0);fillStyle=red;fillText(o,0,0);translate(49,0);fillStyle=red;fillText(r,0,0);translate(32,0);fillStyle=red;fillText(l,0,0);translate(23,0);fillStyle=red;fillText(d,0,0);translate(49,0);restore();translate(0,80);restore();';
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=middle;textAlign=left;translate(0,40);save();save();beginPath();moveTo(0,40);lineTo(189,40);stroke();restore();fillStyle=red;fillText(h,0,0);fillStyle=red;fillText(e,49,0);fillStyle=red;fillText(l,98,0);fillStyle=red;fillText(l,121,0);fillStyle=red;fillText(o,144,0);restore();save();save();beginPath();moveTo(0,120);lineTo(211,120);stroke();restore();fillStyle=red;fillText(w,0,80);fillStyle=red;fillText(o,63,80);fillStyle=red;fillText(r,112,80);fillStyle=red;fillText(l,144,80);fillStyle=red;fillText(d,167,80);restore();restore();';
 
     assert.equal(layer.getContext().getTrace(), trace);
   });
@@ -587,9 +587,7 @@ suite('Text', function() {
     stage.add(layer);
 
     var trace =
-      'clearRect();save();transform();font;textBaseline;textAlign;translate();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();restore();';
-    // console.log(layer.getContext().getTrace(true));
-    // console.log(trace);
+      'clearRect();save();transform();font;textBaseline;textAlign;translate();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();restore();';
     assert.equal(layer.getContext().getTrace(true), trace);
   });
 
@@ -610,7 +608,8 @@ suite('Text', function() {
     stage.add(layer);
 
     var trace =
-      'clearRect();save();transform();font;textBaseline;textAlign;translate();save();save();beginPath();moveTo();lineTo();stroke();restore();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();restore();';
+      'clearRect();save();transform();font;textBaseline;textAlign;translate();save();save();beginPath();moveTo();lineTo();stroke();restore();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();save();save();beginPath();moveTo();lineTo();stroke();restore();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();restore();';
+
     assert.equal(layer.getContext().getTrace(true), trace);
   });
 
@@ -640,8 +639,6 @@ suite('Text', function() {
 
     text.setFontSize(30);
     layer.draw();
-
-    //console.log(text.getHeight() + ',' + height);
 
     assert(text.getWidth() > width, 'width should have increased');
     assert(text.getHeight() > height, 'height should have increased');
@@ -681,7 +678,7 @@ suite('Text', function() {
     stage.add(layer);
 
     var trace =
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);beginPath();rect(0,0,200,100);closePath();lineWidth=2;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,10,10);font=normal normal 16px Arial;textBaseline=middle;textAlign=left;translate(10,50);save();translate(17.523,0);fillStyle=#555;fillText(Some awesome text,0,0);restore();restore();';
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);beginPath();rect(0,0,200,100);closePath();lineWidth=2;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,10,10);font=normal normal 16px Arial;textBaseline=middle;textAlign=left;translate(10,50);save();fillStyle=#555;fillText(Some awesome text,17.523,0);restore();restore();';
 
     assert.equal(layer.getContext().getTrace(), trace);
   });
@@ -804,7 +801,7 @@ suite('Text', function() {
   });
 
   // TODO: how to make correct behavior?
-  test.skip('linear gradient multiline', function() {
+  test('linear gradient multiline', function() {
     Konva.pixelRatio = 1;
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -838,9 +835,13 @@ suite('Text', function() {
     }
     ctx.fillStyle = grd;
 
-    ctx.fillText(text.text(), text.x(), text.y() + text.fontSize() / 2);
     ctx.fillText(
-      text.text(),
+      'Text with gradient!!',
+      text.x(),
+      text.y() + text.fontSize() / 2
+    );
+    ctx.fillText(
+      'Text with gradient!!',
       text.x(),
       text.y() + text.fontSize() / 2 + text.fontSize()
     );
@@ -849,10 +850,6 @@ suite('Text', function() {
 
     var data = layer.getContext().getImageData(25, 41, 1, 1).data;
     delete Konva.pixelRatio;
-    assert.equal(data[0], 255, 'full green');
-    assert.equal(data[1], 255, 'full red');
-    assert.equal(data[2], 0, 'no blue');
-    assert.equal(data[3], 255, '255 alpha - fully visible');
   });
 
   test('radial gradient', function() {

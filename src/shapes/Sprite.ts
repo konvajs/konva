@@ -78,9 +78,6 @@ export class Sprite extends Shape {
       clearInterval(this.interval);
       this._setInterval();
     });
-
-    this.sceneFunc(this._sceneFunc);
-    this.hitFunc(this._hitFunc);
   }
 
   _sceneFunc(context) {
