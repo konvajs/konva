@@ -140,6 +140,7 @@ export class Text extends Shape {
       n;
 
     var translateY = 0;
+    var translateY = lineHeightPx / 2;
 
     var lineTranslateX = 0;
     var lineTranslateY = 0;
@@ -157,7 +158,7 @@ export class Text extends Shape {
       alignY = this.getHeight() - textArrLen * lineHeightPx - padding * 2;
     }
 
-    context.translate(padding, alignY + padding + lineHeightPx / 2);
+    context.translate(padding, alignY + padding);
 
     // draw text lines
     for (n = 0; n < textArrLen; n++) {

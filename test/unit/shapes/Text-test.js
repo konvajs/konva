@@ -534,7 +534,7 @@ suite('Text', function() {
     stage.add(layer);
 
     var trace =
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=middle;textAlign=left;translate(0,40);save();save();beginPath();moveTo(0,40);lineTo(189,40);stroke();restore();fillStyle=red;fillText(h,0,0);fillStyle=red;fillText(e,49,0);fillStyle=red;fillText(l,98,0);fillStyle=red;fillText(l,121,0);fillStyle=red;fillText(o,144,0);restore();save();save();beginPath();moveTo(0,120);lineTo(211,120);stroke();restore();fillStyle=red;fillText(w,0,80);fillStyle=red;fillText(o,63,80);fillStyle=red;fillText(r,112,80);fillStyle=red;fillText(l,144,80);fillStyle=red;fillText(d,167,80);restore();restore();';
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,80);lineTo(189,80);stroke();restore();fillStyle=red;fillText(h,0,40);fillStyle=red;fillText(e,49,40);fillStyle=red;fillText(l,98,40);fillStyle=red;fillText(l,121,40);fillStyle=red;fillText(o,144,40);restore();save();save();beginPath();moveTo(0,160);lineTo(211,160);stroke();restore();fillStyle=red;fillText(w,0,120);fillStyle=red;fillText(o,63,120);fillStyle=red;fillText(r,112,120);fillStyle=red;fillText(l,144,120);fillStyle=red;fillText(d,167,120);restore();restore();';
 
     assert.equal(layer.getContext().getTrace(), trace);
   });
@@ -678,7 +678,7 @@ suite('Text', function() {
     stage.add(layer);
 
     var trace =
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);beginPath();rect(0,0,200,100);closePath();lineWidth=2;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,10,10);font=normal normal 16px Arial;textBaseline=middle;textAlign=left;translate(10,50);save();fillStyle=#555;fillText(Some awesome text,17.523,0);restore();restore();';
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);beginPath();rect(0,0,200,100);closePath();lineWidth=2;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,10,10);font=normal normal 16px Arial;textBaseline=middle;textAlign=left;translate(10,42);save();fillStyle=#555;fillText(Some awesome text,17.523,8);restore();restore();';
 
     assert.equal(layer.getContext().getTrace(), trace);
   });
@@ -766,8 +766,6 @@ suite('Text', function() {
 
     var text = new Konva.Text({
       fontSize: 50,
-      y: 10,
-      x: 10,
       fillLinearGradientStartPoint: { x: 0, y: 0 },
       fillLinearGradientEndPoint: { x: 300, y: 0 },
       fillLinearGradientColorStops: [0, 'black', 1, 'red'],
@@ -900,6 +898,14 @@ suite('Text', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
 
+    layer.add(
+      new Konva.Rect({
+        stroke: 'black',
+        width: 100,
+        height: 40 * 3
+      })
+    );
+
     var text = new Konva.Text({
       fontSize: 40,
       text: 'Some good text',
@@ -912,7 +918,7 @@ suite('Text', function() {
     // this text should look like it is positioned in y = 40
 
     var trace =
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);font=normal normal 40px Arial;textBaseline=middle;textAlign=left;translate(0,60);save();fillStyle=black;fillText(Some good text,0,0);restore();restore();';
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();rect(0,0,100,120);closePath();lineWidth=2;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,0,0);font=normal normal 40px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();fillStyle=black;fillText(Some good text,0,60);restore();restore();';
 
     assert.equal(layer.getContext().getTrace(), trace);
   });
@@ -991,10 +997,9 @@ suite('Text', function() {
       ctx.textBaseline = 'middle';
 
       var grd = ctx.createPattern(imageObj, 'repeat');
-      ctx.translate(0, 15);
       ctx.fillStyle = grd;
 
-      ctx.fillText(text.text(), 0, 0);
+      ctx.fillText(text.text(), 0, 15);
 
       compareLayerAndCanvas(layer, canvas, 200);
       delete Konva.pixelRatio;

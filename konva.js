@@ -12539,6 +12539,7 @@
       Text.prototype._sceneFunc = function (context) {
           var padding = this.padding(), fontSize = this.fontSize(), lineHeightPx = this.lineHeight() * fontSize, textArr = this.textArr, textArrLen = textArr.length, verticalAlign = this.verticalAlign(), alignY = 0, align = this.align(), totalWidth = this.getWidth(), letterSpacing = this.letterSpacing(), fill = this.fill(), textDecoration = this.textDecoration(), shouldUnderline = textDecoration.indexOf('underline') !== -1, shouldLineThrough = textDecoration.indexOf('line-through') !== -1, n;
           var translateY = 0;
+          var translateY = lineHeightPx / 2;
           var lineTranslateX = 0;
           var lineTranslateY = 0;
           context.setAttr('font', this._getContextFont());
@@ -12551,7 +12552,7 @@
           else if (verticalAlign === BOTTOM) {
               alignY = this.getHeight() - textArrLen * lineHeightPx - padding * 2;
           }
-          context.translate(padding, alignY + padding + lineHeightPx / 2);
+          context.translate(padding, alignY + padding);
           // draw text lines
           for (n = 0; n < textArrLen; n++) {
               var lineTranslateX = 0;
