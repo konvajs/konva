@@ -798,7 +798,6 @@ suite('Text', function() {
     compareLayerAndCanvas(layer, canvas, 200);
   });
 
-  // TODO: how to make correct behavior?
   test('linear gradient multiline', function() {
     Konva.pixelRatio = 1;
     var stage = addStage();

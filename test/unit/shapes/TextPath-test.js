@@ -284,12 +284,10 @@ suite('TextPath', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
 
-    var c = 'M10,10 C0,0 10,150 100,100 S300,150 400,50';
+    var c = 'M10,10 300, 10';
 
     var textpath = new Konva.TextPath({
-      stroke: 'black',
-      strokeWidth: 1,
-      fill: 'orange',
+      fill: 'black',
       fontSize: 10,
       fontFamily: 'Arial',
       letterSpacing: 5,
@@ -298,10 +296,13 @@ suite('TextPath', function() {
       data: c
     });
 
-    // TODO: add test case
-
     layer.add(textpath);
     stage.add(layer);
+
+    var trace =
+      'restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();restore();restore();';
+
+    assert.equal(layer.getContext().getTrace(true), trace);
   });
 
   test('Text path with justify align', function() {
@@ -322,12 +323,9 @@ suite('TextPath', function() {
       data: c
     });
 
-    // TODO: add test case
-
     layer.add(textpath);
     stage.add(layer);
 
-    // console.log(layer.getContext().getTrace(true));
     var trace =
       'rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();restore();restore();';
 

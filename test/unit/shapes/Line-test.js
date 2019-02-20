@@ -289,7 +289,7 @@ suite('Line', function() {
     });
   });
 
-  // TODO: FIX IT!!!
+  // should we calculate client rect for line differently?
   test.skip('getClientRect rotated', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
