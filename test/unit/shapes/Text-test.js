@@ -770,7 +770,7 @@ suite('Text', function() {
       x: 10,
       fillLinearGradientStartPoint: { x: 0, y: 0 },
       fillLinearGradientEndPoint: { x: 300, y: 0 },
-      fillLinearGradientColorStops: [0, 'yellow', 1, 'red'],
+      fillLinearGradientColorStops: [0, 'black', 1, 'red'],
       text: 'Text with gradient!!',
       draggable: true
     });
@@ -786,7 +786,7 @@ suite('Text', function() {
 
     var start = { x: 0, y: 0 };
     var end = { x: 300, y: 0 };
-    var colorStops = [0, 'yellow', 1, 'red'];
+    var colorStops = [0, 'black', 1, 'red'];
     var grd = ctx.createLinearGradient(start.x, start.y, end.x, end.y);
 
     // build color stops
