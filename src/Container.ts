@@ -61,16 +61,14 @@ export abstract class Container extends Node {
    * @name Konva.Container#removeChildren
    */
   removeChildren() {
-    var children = Collection.toCollection(this.children);
     var child;
-    for (var i = 0; i < children.length; i++) {
-      child = children[i];
+    for (var i = 0; i < this.children.length; i++) {
+      child = this.children[i];
       // reset parent to prevent many _setChildrenIndices calls
       child.parent = null;
       child.index = 0;
       child.remove();
     }
-    children = null;
     this.children = new Collection();
     return this;
   }
@@ -80,16 +78,14 @@ export abstract class Container extends Node {
    * @name Konva.Container#destroyChildren
    */
   destroyChildren() {
-    var children = Collection.toCollection(this.children);
     var child;
-    for (var i = 0; i < children.length; i++) {
-      child = children[i];
+    for (var i = 0; i < this.children.length; i++) {
+      child = this.children[i];
       // reset parent to prevent many _setChildrenIndices calls
       child.parent = null;
       child.index = 0;
       child.destroy();
     }
-    children = null;
     this.children = new Collection();
     return this;
   }

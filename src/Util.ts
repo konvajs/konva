@@ -29,11 +29,17 @@ export interface RectConf {
 export class Collection<Child extends Node> {
   [index: number]: Child;
 
+  // @ts-ignore
   length: number;
+  // @ts-ignore
   each: (f: Function) => void;
+  // @ts-ignore
   toArray: () => Array<any>;
+  // @ts-ignore
   push: (item: Child) => void;
+  // @ts-ignore
   unshift: (item: Child) => void;
+  // @ts-ignore
   splice: (start: number, length: number, replace?: any) => void;
 
   /**
@@ -42,7 +48,7 @@ export class Collection<Child extends Node> {
    * @memberof Konva.Collection
    * @param {Array} arr
    */
-  static toCollection(arr) {
+  static toCollection(arr: Array<Node>) {
     var collection = new Collection(),
       len = arr.length,
       n;
@@ -53,7 +59,7 @@ export class Collection<Child extends Node> {
     return collection;
   }
 
-  static _mapMethod(methodName) {
+  static _mapMethod(methodName: any) {
     Collection.prototype[methodName] = function() {
       var len = this.length,
         i;
@@ -67,7 +73,7 @@ export class Collection<Child extends Node> {
     };
   }
 
-  static mapMethods = function(constructor) {
+  static mapMethods = function(constructor: Function) {
     var prot = constructor.prototype;
     for (var methodName in prot) {
       Collection._mapMethod(methodName);
@@ -156,7 +162,7 @@ export class Transform {
    * @param {Object} point 2D point(x, y)
    * @returns {Object} 2D point(x, y)
    */
-  point(point) {
+  point(point: Point) {
     var m = this.m;
     return {
       x: m[0] * point.x + m[2] * point.y + m[4],
@@ -171,7 +177,7 @@ export class Transform {
    * @param {Number} y
    * @returns {Konva.Transform}
    */
-  translate(x, y) {
+  translate(x: number, y: number) {
     this.m[4] += this.m[0] * x + this.m[2] * y;
     this.m[5] += this.m[1] * x + this.m[3] * y;
     return this;
@@ -184,7 +190,7 @@ export class Transform {
    * @param {Number} sy
    * @returns {Konva.Transform}
    */
-  scale(sx, sy) {
+  scale(sx: number, sy: number) {
     this.m[0] *= sx;
     this.m[1] *= sx;
     this.m[2] *= sy;
@@ -198,7 +204,7 @@ export class Transform {
    * @param {Number} rad  Angle in radians
    * @returns {Konva.Transform}
    */
-  rotate(rad) {
+  rotate(rad: number) {
     var c = Math.cos(rad);
     var s = Math.sin(rad);
     var m11 = this.m[0] * c + this.m[2] * s;
@@ -231,7 +237,7 @@ export class Transform {
    * @param {Number} sy
    * @returns {Konva.Transform}
    */
-  skew(sx, sy) {
+  skew(sx: number, sy: number) {
     var m11 = this.m[0] + this.m[2] * sy;
     var m12 = this.m[1] + this.m[3] * sy;
     var m21 = this.m[2] + this.m[0] * sx;
@@ -249,7 +255,7 @@ export class Transform {
    * @param {Konva.Transform} matrix
    * @returns {Konva.Transform}
    */
-  multiply(matrix) {
+  multiply(matrix: Transform) {
     var m11 = this.m[0] * matrix.m[0] + this.m[2] * matrix.m[1];
     var m12 = this.m[1] * matrix.m[0] + this.m[3] * matrix.m[1];
 
@@ -304,7 +310,7 @@ export class Transform {
    * @returns {Konva.Transform}
    * @author ericdrowell
    */
-  setAbsolutePosition(x, y) {
+  setAbsolutePosition(x: number, y: number) {
     var m0 = this.m[0],
       m1 = this.m[1],
       m2 = this.m[2],
@@ -482,7 +488,8 @@ var OBJECT_ARRAY = '[object Array]',
     yellow: [255, 255, 0],
     yellowgreen: [154, 205, 5]
   },
-  RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/;
+  RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/,
+  animQueue: Array<Function> = [];
 
 /**
  * @namespace Util
@@ -492,36 +499,36 @@ export const Util = {
   /*
    * cherry-picked utilities from underscore.js
    */
-  _isElement(obj) {
+  _isElement(obj: any) {
     return !!(obj && obj.nodeType == 1);
   },
-  _isFunction(obj) {
+  _isFunction(obj: any) {
     return !!(obj && obj.constructor && obj.call && obj.apply);
   },
-  _isPlainObject(obj) {
+  _isPlainObject(obj: any) {
     return !!obj && obj.constructor === Object;
   },
-  _isArray(obj) {
+  _isArray(obj: any) {
     return Object.prototype.toString.call(obj) === OBJECT_ARRAY;
   },
-  _isNumber(obj) {
+  _isNumber(obj: any) {
     return (
       Object.prototype.toString.call(obj) === OBJECT_NUMBER &&
       !isNaN(obj) &&
       isFinite(obj)
     );
   },
-  _isString(obj) {
+  _isString(obj: any) {
     return Object.prototype.toString.call(obj) === OBJECT_STRING;
   },
-  _isBoolean(obj) {
+  _isBoolean(obj: any) {
     return Object.prototype.toString.call(obj) === OBJECT_BOOLEAN;
   },
   // arrays are objects too
-  isObject(val) {
+  isObject(val: any) {
     return val instanceof Object;
   },
-  isValidSelector(selector) {
+  isValidSelector(selector: any) {
     if (typeof selector !== 'string') {
       return false;
     }
@@ -532,7 +539,7 @@ export const Util = {
       firstChar === firstChar.toUpperCase()
     );
   },
-  _sign(number) {
+  _sign(number: number) {
     if (number === 0) {
       return 0;
     }
@@ -542,13 +549,13 @@ export const Util = {
       return -1;
     }
   },
-  animQueue: [],
-  requestAnimFrame(callback) {
-    Util.animQueue.push(callback);
-    if (Util.animQueue.length === 1) {
+
+  requestAnimFrame(callback: Function) {
+    animQueue.push(callback);
+    if (animQueue.length === 1) {
       requestAnimationFrame(function() {
-        const queue = Util.animQueue;
-        Util.animQueue = [];
+        const queue = animQueue;
+        animQueue = [];
         queue.forEach(function(cb) {
           cb();
         });
@@ -568,7 +575,7 @@ export const Util = {
   createImageElement() {
     return document.createElement('img');
   },
-  _isInDocument(el) {
+  _isInDocument(el: any) {
     while ((el = el.parentNode)) {
       if (el == document) {
         return true;
@@ -576,7 +583,7 @@ export const Util = {
     }
     return false;
   },
-  _simplifyArray(arr) {
+  _simplifyArray(arr: []) {
     var retArr = [],
       len = arr.length,
       util = Util,
@@ -599,20 +606,18 @@ export const Util = {
   /*
    * arg can be an image object or image data
    */
-  _urlToImage(url, callback) {
-    var imageObj;
-
+  _urlToImage(url: string, callback: Function) {
     // if arg is a string, then it's a data url
-    imageObj = new glob.Image();
+    var imageObj = new glob.Image();
     imageObj.onload = function() {
       callback(imageObj);
     };
     imageObj.src = url;
   },
-  _rgbToHex(r, g, b) {
+  _rgbToHex(r: number, g: number, b: number) {
     return ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   },
-  _hexToRgb(hex) {
+  _hexToRgb(hex: string) {
     hex = hex.replace(HASH, EMPTY_STRING);
     var bigint = parseInt(hex, 16);
     return {

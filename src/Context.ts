@@ -1,4 +1,4 @@
-import { Util, Collection } from './Util';
+import { Util } from './Util';
 import { getAngle, getGlobalKonva } from './Global';
 import { Canvas } from './Canvas';
 
@@ -90,19 +90,16 @@ export class Context {
   _context: CanvasRenderingContext2D;
   traceArr: Array<String>;
 
-  constructor(canvas) {
-    this.init(canvas);
-  }
-
-  init(canvas) {
+  constructor(canvas: Canvas) {
     this.canvas = canvas;
-    this._context = canvas._canvas.getContext('2d');
+    this._context = canvas._canvas.getContext('2d') as CanvasRenderingContext2D;
 
     if (getGlobalKonva().enableTrace) {
       this.traceArr = [];
       this._enableTrace();
     }
   }
+
   /**
    * fill shape
    * @method

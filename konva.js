@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v3.0.0-0
    * http://konvajs.github.io/
    * Licensed under the MIT
-   * Date: Wed Feb 20 2019
+   * Date: Fri Feb 22 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -569,7 +569,7 @@
       whitesmoke: [245, 245, 245],
       yellow: [255, 255, 0],
       yellowgreen: [154, 205, 5]
-  }, RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/;
+  }, RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/, animQueue = [];
   /**
    * @namespace Util
    * @memberof Konva
@@ -625,13 +625,12 @@
               return -1;
           }
       },
-      animQueue: [],
       requestAnimFrame: function (callback) {
-          Util.animQueue.push(callback);
-          if (Util.animQueue.length === 1) {
+          animQueue.push(callback);
+          if (animQueue.length === 1) {
               requestAnimationFrame(function () {
-                  var queue = Util.animQueue;
-                  Util.animQueue = [];
+                  var queue = animQueue;
+                  animQueue = [];
                   queue.forEach(function (cb) {
                       cb();
                   });
@@ -678,9 +677,8 @@
        * arg can be an image object or image data
        */
       _urlToImage: function (url, callback) {
-          var imageObj;
           // if arg is a string, then it's a data url
-          imageObj = new glob.Image();
+          var imageObj = new glob.Image();
           imageObj.onload = function () {
               callback(imageObj);
           };
@@ -1404,16 +1402,13 @@
    */
   var Context = /** @class */ (function () {
       function Context(canvas) {
-          this.init(canvas);
-      }
-      Context.prototype.init = function (canvas) {
           this.canvas = canvas;
           this._context = canvas._canvas.getContext('2d');
           if (getGlobalKonva().enableTrace) {
               this.traceArr = [];
               this._enableTrace();
           }
-      };
+      }
       /**
        * fill shape
        * @method
@@ -4950,16 +4945,14 @@
        * @name Konva.Container#removeChildren
        */
       Container.prototype.removeChildren = function () {
-          var children = Collection.toCollection(this.children);
           var child;
-          for (var i = 0; i < children.length; i++) {
-              child = children[i];
+          for (var i = 0; i < this.children.length; i++) {
+              child = this.children[i];
               // reset parent to prevent many _setChildrenIndices calls
               child.parent = null;
               child.index = 0;
               child.remove();
           }
-          children = null;
           this.children = new Collection();
           return this;
       };
@@ -4969,16 +4962,14 @@
        * @name Konva.Container#destroyChildren
        */
       Container.prototype.destroyChildren = function () {
-          var children = Collection.toCollection(this.children);
           var child;
-          for (var i = 0; i < children.length; i++) {
-              child = children[i];
+          for (var i = 0; i < this.children.length; i++) {
+              child = this.children[i];
               // reset parent to prevent many _setChildrenIndices calls
               child.parent = null;
               child.index = 0;
               child.destroy();
           }
-          children = null;
           this.children = new Collection();
           return this;
       };
@@ -7342,7 +7333,7 @@
           return this;
       };
       Shape.prototype.drawHit = function (can, top, caching) {
-          var layer = this.getLayer(), canvas = can || layer.hitCanvas, context = canvas.getContext(), drawFunc = this.hitFunc() || this.sceneFunc(), cachedCanvas = this._getCanvasCache(), cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
+          var layer = this.getLayer(), canvas = can || layer.hitCanvas, context = canvas && canvas.getContext(), drawFunc = this.hitFunc() || this.sceneFunc(), cachedCanvas = this._getCanvasCache(), cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
           if (!this.colorKey) {
               Util.warn('Looks like your canvas has a destroyed shape in it. Do not reuse shape after you destroyed it. See the shape in logs above. If you want to reuse shape you should call remove() instead of destroy()');
           }

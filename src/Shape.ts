@@ -531,7 +531,7 @@ export class Shape extends Node {
   drawHit(can, top?, caching?) {
     var layer = this.getLayer(),
       canvas = can || layer.hitCanvas,
-      context = canvas.getContext(),
+      context = canvas && canvas.getContext(),
       drawFunc = this.hitFunc() || this.sceneFunc(),
       cachedCanvas = this._getCanvasCache(),
       cachedHitCanvas = cachedCanvas && cachedCanvas.hit;

@@ -530,6 +530,26 @@ suite('Stage', function() {
   });
 
   // ======================================================
+  test('Should not throw on clip for stage', function() {
+    // no asserts, because we check throw
+    var stage = addStage({
+      clipFunc: () => {}
+    });
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      x: 0,
+      y: 0,
+      text: 'Hello world',
+      fontSize: 50,
+      name: 'intersectText'
+    });
+
+    layer.add(text);
+    stage.add(layer);
+  });
+
+  // ======================================================
   test('scale stage after add layer', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

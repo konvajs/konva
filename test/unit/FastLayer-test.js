@@ -18,6 +18,26 @@ suite('FastLayer', function() {
     stage.add(layer);
   });
 
+  test('should not throw on shape render', function() {
+    var stage = addStage();
+
+    var layer = new Konva.FastLayer();
+
+    var circle = new Konva.Circle({
+      x: 100,
+      y: stage.getHeight() / 2,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4
+    });
+
+    layer.add(circle);
+    stage.add(layer);
+
+    circle.draw();
+  });
+
   test('transform', function() {
     var stage = addStage();
 
