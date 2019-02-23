@@ -208,8 +208,7 @@ export abstract class Node {
    */
   clearCache() {
     this._cache.delete(CANVAS);
-    this._filterUpToDate = false;
-    this._clearSelfAndDescendantCache(undefined);
+    this._clearSelfAndDescendantCache();
     return this;
   }
   /**
@@ -313,7 +312,7 @@ export abstract class Node {
     cachedHitCanvas.isCache = true;
 
     this._cache.delete('canvas');
-    // this.clearCache();
+    this._filterUpToDate = false;
 
     sceneContext.save();
     hitContext.save();

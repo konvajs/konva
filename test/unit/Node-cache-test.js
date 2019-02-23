@@ -1126,4 +1126,32 @@ suite('Caching', function() {
     assert.equal(d[0], 0, 'no red');
     assert.equal(d[2], 255, 'see blue');
   });
+
+  it('recache with filters', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var bigCircle = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 100,
+      fill: 'red',
+      draggable: true
+    });
+    layer.add(bigCircle);
+
+    bigCircle.filters([Konva.Filters.Blur]);
+    bigCircle.blurRadius(10);
+    bigCircle.cache();
+
+    layer.draw();
+    bigCircle.cache();
+
+    layer.draw();
+
+    var d = layer.getContext().getImageData(100, 100, 1, 1).data;
+    assert.equal(d[0], 255, 'see red');
+  });
 });
