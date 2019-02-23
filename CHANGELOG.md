@@ -5,6 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+## Breaking
+
+It is not possible to make custom build of `Konva` from npm installation, like `import Konva from 'konva/src/Core';`
+The issue will be resolved later.
+
 ### Possibly breaking
 
 That changes are private and internal specific. They should not break most of `Konva` apps.
@@ -17,8 +22,9 @@ That changes are private and internal specific. They should not break most of `K
 * Removed polyfill for `requestAnimationFrame`.
 * `id` and `name` properties defaults are empty strings, not `undefined`
 * internal `_cache` property was updated to use es2015 `Map` instead of `{}`.
-* `text.getTextHeight()` is deprecated. Use `text.height()` or `text.fontSize()` instead.
-* Private method `stage._setPointerPosition()` is deprecated. Use `stage.setPointersPositions(event)`;
+
+
+
 
 ### Added
 * Show a warning when a stage has too many layers
@@ -40,6 +46,8 @@ That changes are private and internal specific. They should not break most of `K
 * A bit changed behavior of `removeId` (private method), now it doesn't clear node ref, if object is changed.
 * simplified `batchDraw` method (it doesn't use `Konva.Animation`) now.
 * Performance improvements for shapes will image patterns, linear and radial fills
+* `text.getTextHeight()` is deprecated. Use `text.height()` or `text.fontSize()` instead.
+* Private method `stage._setPointerPosition()` is deprecated. Use `stage.setPointersPositions(event)`;
 
 ### Fixed
 
