@@ -312,6 +312,7 @@ export abstract class Node {
 
     cachedHitCanvas.isCache = true;
 
+    this._cache.delete('canvas');
     // this.clearCache();
 
     sceneContext.save();

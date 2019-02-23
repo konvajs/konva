@@ -5,7 +5,7 @@
 }(this, function () { 'use strict';
 
   /*
-   * Konva JavaScript Framework v3.0.0-0
+   * Konva JavaScript Framework v3.0.0-1
    * http://konvajs.github.io/
    * Licensed under the MIT
    * Date: Fri Feb 22 2019
@@ -19,7 +19,7 @@
   /**
    * @namespace Konva
    */
-  var version = '3.0.0-0';
+  var version = '3.0.0-1';
   var names = {};
   var shapes = {};
   var isBrowser = typeof window !== 'undefined' &&
@@ -2615,6 +2615,7 @@
               height: height
           }), sceneContext = cachedSceneCanvas.getContext(), hitContext = cachedHitCanvas.getContext();
           cachedHitCanvas.isCache = true;
+          this._cache.delete('canvas');
           // this.clearCache();
           sceneContext.save();
           hitContext.save();
