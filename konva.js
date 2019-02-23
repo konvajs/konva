@@ -5532,6 +5532,13 @@
   }
   var NO_POINTERS_MESSAGE = "Pointer position is missing and not registered by the stage. Looks like it is outside of the stage container. You can set it manually from event: stage.setPointersPositions(event);";
   var stages = [];
+  function checkNoClip(attrs) {
+      if (attrs === void 0) { attrs = {}; }
+      if (attrs.clipFunc || attrs.clipWidth || attrs.clipHeight) {
+          Util.warn('Stage does not support clipping. Please use clip for Layers or Groups.');
+      }
+      return attrs;
+  }
   /**
    * Stage constructor.  A stage is used to contain multiple layers
    * @constructor
@@ -5569,12 +5576,15 @@
   var Stage = /** @class */ (function (_super) {
       __extends(Stage, _super);
       function Stage(config) {
-          var _this = _super.call(this, config) || this;
+          var _this = _super.call(this, checkNoClip(config)) || this;
           _this._buildDOM();
           _this._bindContentEvents();
           stages.push(_this);
           _this.on('widthChange.konva heightChange.konva', _this._resizeDOM);
           _this.on('visibleChange.konva', _this._checkVisibility);
+          _this.on('clipWidthChange.konva clipHeightChange.konva clipFuncChange.konva', function () {
+              checkNoClip(_this.attrs);
+          });
           _this._checkVisibility();
           return _this;
       }

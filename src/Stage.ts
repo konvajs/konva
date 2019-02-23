@@ -78,6 +78,15 @@ const NO_POINTERS_MESSAGE = `Pointer position is missing and not registered by t
 
 export const stages: Stage[] = [];
 
+function checkNoClip(attrs: any = {}) {
+  if (attrs.clipFunc || attrs.clipWidth || attrs.clipHeight) {
+    Util.warn(
+      'Stage does not support clipping. Please use clip for Layers or Groups.'
+    );
+  }
+  return attrs;
+}
+
 /**
  * Stage constructor.  A stage is used to contain multiple layers
  * @constructor
@@ -108,12 +117,18 @@ export class Stage extends Container {
   children: Collection<BaseLayer>;
 
   constructor(config) {
-    super(config);
+    super(checkNoClip(config));
     this._buildDOM();
     this._bindContentEvents();
     stages.push(this);
     this.on('widthChange.konva heightChange.konva', this._resizeDOM);
     this.on('visibleChange.konva', this._checkVisibility);
+    this.on(
+      'clipWidthChange.konva clipHeightChange.konva clipFuncChange.konva',
+      () => {
+        checkNoClip(this.attrs);
+      }
+    );
     this._checkVisibility();
   }
 
