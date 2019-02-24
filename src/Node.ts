@@ -1,12 +1,13 @@
 import { Util, Collection, Transform, RectConf, Point } from './Util';
 import { Factory, Validators } from './Factory';
 import { SceneCanvas, HitCanvas } from './Canvas';
-import { _removeName, _addName, getGlobalKonva } from './Global';
+import { getGlobalKonva } from './Global';
 import { Container } from './Container';
 import { GetSet, Vector2d } from './types';
 import { DD } from './DragAndDrop';
 
 export const ids = {};
+export const names = {};
 
 const ID_WARNING = `Duplicate id "{id}".
 Please do not use same id several times, it will break find() method look up.
@@ -33,6 +34,34 @@ export const _removeId = function(id: string, node: any) {
     return;
   }
   delete ids[id];
+};
+
+export const _addName = function(node: any, name) {
+  if (name) {
+    if (!names[name]) {
+      names[name] = [];
+    }
+    names[name].push(node);
+  }
+};
+
+export const _removeName = function(name, _id) {
+  if (!name) {
+    return;
+  }
+  var nodes = names[name];
+  if (!nodes) {
+    return;
+  }
+  for (var n = 0; n < nodes.length; n++) {
+    var no = nodes[n];
+    if (no._id === _id) {
+      nodes.splice(n, 1);
+    }
+  }
+  if (nodes.length === 0) {
+    delete names[name];
+  }
 };
 
 export type Filter = (this: Node, imageData: ImageData) => void;
@@ -215,7 +244,7 @@ export abstract class Node {
    *  cache node to improve drawing performance, apply filters, or create more accurate
    *  hit regions. For all basic shapes size of cache canvas will be automatically detected.
    *  If you need to cache your custom `Konva.Shape` instance you have to pass shape's bounding box
-   *  properties. Look at [https://konvajs.github.io/docs/performance/Shape_Caching.html](https://konvajs.github.io/docs/performance/Shape_Caching.html) for more information.
+   *  properties. Look at [https://konvajs.org/docs/performance/Shape_Caching.html](https://konvajs.org/docs/performance/Shape_Caching.html) for more information.
    * @method
    * @name Konva.Node#cache
    * @param {Object} [config]

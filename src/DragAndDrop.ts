@@ -1,6 +1,9 @@
 import { Animation } from './Animation';
 import { isBrowser, getGlobalKonva } from './Global';
 
+
+// TODO: make better module,
+// make sure other modules import it without global
 export const DD = {
   startPointerPos: {
     x: 0,

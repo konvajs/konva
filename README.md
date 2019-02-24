@@ -16,8 +16,8 @@ You can draw things onto the stage, add event listeners to them, move them, scal
 
 This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github.com/ericdrowell/KineticJS).
 
-* **Visit:** The [Home Page](http://konvajs.github.io/) and follow on [Twitter](https://twitter.com/lavrton)
-* **Discover:** [Tutorials](http://konvajs.github.io/docs), [API Documentation](http://konvajs.github.io/api)
+* **Visit:** The [Home Page](http://konvajs.org/) and follow on [Twitter](https://twitter.com/lavrton)
+* **Discover:** [Tutorials](http://konvajs.org/docs), [API Documentation](http://konvajs.org/api)
 * **Help:** [StackOverflow](http://stackoverflow.com/questions/tagged/konvajs), [Chat](https://gitter.im/konvajs/konva)
 
 # Quick Look

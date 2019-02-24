@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/konvajs/konva/issues"
   },
-  "homepage": "http://konvajs.github.io/",
+  "homepage": "http://konvajs.org/",
   "repository": {
     "type": "git",
     "url": "git://github.com/konvajs/konva.git"

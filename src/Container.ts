@@ -1,7 +1,7 @@
 import { Util, Collection } from './Util';
 import { Factory, Validators } from './Factory';
-import { Node, ids } from './Node';
-import { getGlobalKonva, names } from './Global';
+import { Node, ids, names } from './Node';
+import { getGlobalKonva } from './Global';
 
 import { GetSet, IRect } from './types';
 

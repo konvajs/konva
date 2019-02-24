@@ -1,6 +1,5 @@
 import { Util, Collection } from './Util';
 import { Factory, Validators } from './Factory';
-import { shapes } from './Global';
 import { Node } from './Node';
 
 import { GetSet, Vector2d } from './types';
@@ -20,6 +19,8 @@ function getDummyContext() {
   dummyContext = Util.createCanvasElement().getContext('2d');
   return dummyContext;
 }
+
+export const shapes = {};
 
 // TODO: idea - use only "remove" (or destroy method)
 // how? on add, check that every inner shape has reference in konva store with color
@@ -783,7 +784,7 @@ Factory.addGetterSetter(
 
 /**
  * get/set perfectDrawEnabled. If a shape has fill, stroke and opacity you may set `perfectDrawEnabled` to false to improve performance.
- * See http://konvajs.github.io/docs/performance/Disable_Perfect_Draw.html for more information.
+ * See http://konvajs.org/docs/performance/Disable_Perfect_Draw.html for more information.
  * Default value is true
  * @name Konva.Shape#perfectDrawEnabled
  * @method

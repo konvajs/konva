@@ -7,22 +7,21 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Breaking
 
-It is not possible to make custom build of `Konva` from npm installation, like `import Konva from 'konva/src/Core';`
-The issue will be resolved later.
+Customs builds are removed from npm package. You can not use `import Konva from 'konva/src/Core';`.
+This feature will be added back later.
 
 ### Possibly breaking
 
 That changes are private and internal specific. They should not break most of `Konva` apps.
 
-* `Konva.Util.addMethods`
-* `Konva.Util._removeLastLetter`
-* `Konva.Util._getImage`
-* `Konv.Util._getRGBAString`
-* `Konv.Util._merge`
+* `Konva.Util.addMethods` is removed
+* `Konva.Util._removeLastLetter`  is removed
+* `Konva.Util._getImage`  is removed
+* `Konv.Util._getRGBAString`  is removed
+* `Konv.Util._merge`  is removed
 * Removed polyfill for `requestAnimationFrame`.
 * `id` and `name` properties defaults are empty strings, not `undefined`
 * internal `_cache` property was updated to use es2015 `Map` instead of `{}`.
-
 
 
 
@@ -627,8 +626,8 @@ That changes are private and internal specific. They should not break most of `K
 ### Added
 
 * new methods for working with node's name: `addName`, `removeName`, `hasName`.
-* new `perfectDrawEnabled` property for shape. See [http://konvajs.github.io/docs/performance/Disable_Perfect_Draw.html](http://konvajs.github.io/docs/performance/Disable_Perfect_Draw.html)
-* new `shadowForStrokeEnabled` property for shape. See [http://konvajs.github.io/docs/performance/All_Performance_Tips.html](http://konvajs.github.io/docs/performance/All_Performance_Tips.html)
+* new `perfectDrawEnabled` property for shape. See [http://konvajs.org/docs/performance/Disable_Perfect_Draw.html](http://konvajs.org/docs/performance/Disable_Perfect_Draw.html)
+* new `shadowForStrokeEnabled` property for shape. See [http://konvajs.org/docs/performance/All_Performance_Tips.html](http://konvajs.org/docs/performance/All_Performance_Tips.html)
 * new `getClientRect` method.
 * new `to` method for every node for shorter tweening
 

@@ -1,7 +1,7 @@
 export * from './Global';
 
 export { Collection, Util } from './Util';
-export { Node, ids } from './Node';
+export { Node, ids, names } from './Node';
 export { Container } from './Container';
 
 export { Stage, stages } from './Stage';
@@ -12,13 +12,14 @@ export { FastLayer } from './FastLayer';
 export { Group } from './Group';
 
 export { DD } from './DragAndDrop';
-export { Shape } from './Shape';
+export { Shape, shapes } from './Shape';
 
 export { Animation } from './Animation';
 export { Tween, Easings } from './Tween';
 
 export const enableTrace = false;
-export const traceArrMax = 100;
+
+// TODO: move that to stage?
 export const listenClickTap = false;
 export const inDblClickWindow = false;
 
@@ -97,8 +98,8 @@ export { Text } from './shapes/Text';
 export { TextPath } from './shapes/TextPath';
 export { Transformer } from './shapes/Transformer';
 export { Wedge } from './shapes/Wedge';
-// filters
 
+// filters
 import { Blur } from './filters/Blur';
 import { Brighten } from './filters/Brighten';
 import { Contrast } from './filters/Contrast';

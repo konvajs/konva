@@ -3,7 +3,7 @@ import { Container } from './Container';
 import { Factory, Validators } from './Factory';
 import { BaseLayer } from './BaseLayer';
 import { HitCanvas } from './Canvas';
-import { shapes } from './Global';
+import { shapes } from './Shape';
 
 import { GetSet } from './types';
 

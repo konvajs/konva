@@ -64,6 +64,9 @@ var CONTEXT_PROPERTIES = [
   'globalCompositeOperation'
 ];
 
+// TODO: document all context methods
+
+const traceArrMax = 100;
 /**
  * Konva wrapper around native 2d canvas context. It has almost the same API of 2d context with some additional functions.
  * With core Konva shapes you don't need to use this object. But you have to use it if you want to create
@@ -196,7 +199,7 @@ export class Context {
     traceArr.push(str);
     len = traceArr.length;
 
-    if (len >= getGlobalKonva().traceArrMax) {
+    if (len >= traceArrMax) {
       traceArr.shift();
     }
   }

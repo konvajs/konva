@@ -6,7 +6,7 @@
 
   /*
    * Konva JavaScript Framework v3.0.0-3
-   * http://konvajs.github.io/
+   * http://konvajs.org/
    * Licensed under the MIT
    * Date: Sat Feb 23 2019
    *
@@ -20,8 +20,6 @@
    * @namespace Konva
    */
   var version = '3.0.0-3';
-  var names = {};
-  var shapes = {};
   var isBrowser = typeof window !== 'undefined' &&
       // browser case
       ({}.toString.call(window) === '[object Window]' ||
@@ -59,32 +57,6 @@
           return !!dd.node;
       }
       return false;
-  };
-  var _addName = function (node, name) {
-      if (name) {
-          if (!names[name]) {
-              names[name] = [];
-          }
-          names[name].push(node);
-      }
-  };
-  var _removeName = function (name, _id) {
-      if (!name) {
-          return;
-      }
-      var nodes = names[name];
-      if (!nodes) {
-          return;
-      }
-      for (var n = 0; n < nodes.length; n++) {
-          var no = nodes[n];
-          if (no._id === _id) {
-              nodes.splice(n, 1);
-          }
-      }
-      if (nodes.length === 0) {
-          delete names[name];
-      }
   };
   var getAngle = function (angle) {
       return getGlobalKonva().angleDeg ? angle * PI_OVER_180 : angle;
@@ -1379,6 +1351,8 @@
       'globalAlpha',
       'globalCompositeOperation'
   ];
+  // TODO: document all context methods
+  var traceArrMax = 100;
   /**
    * Konva wrapper around native 2d canvas context. It has almost the same API of 2d context with some additional functions.
    * With core Konva shapes you don't need to use this object. But you have to use it if you want to create
@@ -1490,7 +1464,7 @@
           var traceArr = this.traceArr, len;
           traceArr.push(str);
           len = traceArr.length;
-          if (len >= getGlobalKonva().traceArrMax) {
+          if (len >= traceArrMax) {
               traceArr.shift();
           }
       };
@@ -2284,6 +2258,8 @@
       return Animation;
   }());
 
+  // TODO: make better module,
+  // make sure other modules import it without global
   var DD = {
       startPointerPos: {
           x: 0,
@@ -2385,6 +2361,7 @@
   }
 
   var ids = {};
+  var names = {};
   var ID_WARNING = "Duplicate id \"{id}\".\nPlease do not use same id several times, it will break find() method look up.\nIf you have duplicates it is better to use \"name\" property instead.\n";
   var _addId = function (node, id) {
       if (!id) {
@@ -2405,6 +2382,32 @@
           return;
       }
       delete ids[id];
+  };
+  var _addName = function (node, name) {
+      if (name) {
+          if (!names[name]) {
+              names[name] = [];
+          }
+          names[name].push(node);
+      }
+  };
+  var _removeName = function (name, _id) {
+      if (!name) {
+          return;
+      }
+      var nodes = names[name];
+      if (!nodes) {
+          return;
+      }
+      for (var n = 0; n < nodes.length; n++) {
+          var no = nodes[n];
+          if (no._id === _id) {
+              nodes.splice(n, 1);
+          }
+      }
+      if (nodes.length === 0) {
+          delete names[name];
+      }
   };
   // CONSTANTS
   var ABSOLUTE_OPACITY = 'absoluteOpacity', ABSOLUTE_TRANSFORM = 'absoluteTransform', ABSOLUTE_SCALE = 'absoluteScale', CANVAS = 'canvas', CHANGE = 'Change', CHILDREN = 'children', KONVA = 'konva', LISTENING = 'listening', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', NAME = 'name', SET$1 = 'set', SHAPE = 'Shape', SPACE = ' ', STAGE = 'stage', TRANSFORM = 'transform', UPPER_STAGE = 'Stage', VISIBLE = 'visible', CLONE_BLACK_LIST = ['id'], TRANSFORM_CHANGE_STR = [
@@ -2539,7 +2542,7 @@
        *  cache node to improve drawing performance, apply filters, or create more accurate
        *  hit regions. For all basic shapes size of cache canvas will be automatically detected.
        *  If you need to cache your custom `Konva.Shape` instance you have to pass shape's bounding box
-       *  properties. Look at [https://konvajs.github.io/docs/performance/Shape_Caching.html](https://konvajs.github.io/docs/performance/Shape_Caching.html) for more information.
+       *  properties. Look at [https://konvajs.org/docs/performance/Shape_Caching.html](https://konvajs.org/docs/performance/Shape_Caching.html) for more information.
        * @method
        * @name Konva.Node#cache
        * @param {Object} [config]
@@ -2980,9 +2983,9 @@
           // remove from ids and names hashes
           _removeId(this.id(), this);
           // remove all names
-          var names$$1 = (this.name() || '').split(/\s/g);
-          for (var i = 0; i < names$$1.length; i++) {
-              var subname = names$$1[i];
+          var names = (this.name() || '').split(/\s/g);
+          for (var i = 0; i < names.length; i++) {
+              var subname = names[i];
               _removeName(subname, this._id);
           }
           this.remove();
@@ -4061,8 +4064,8 @@
        * node.hasName('selected'); // return false
        */
       Node.prototype.hasName = function (name) {
-          var names$$1 = (this.name() || '').split(/\s/g);
-          return names$$1.indexOf(name) !== -1;
+          var names = (this.name() || '').split(/\s/g);
+          return names.indexOf(name) !== -1;
       };
       /**
        * remove name from node
@@ -4077,11 +4080,11 @@
        * node.name(); // return 'red'
        */
       Node.prototype.removeName = function (name) {
-          var names$$1 = (this.name() || '').split(/\s/g);
-          var index = names$$1.indexOf(name);
+          var names = (this.name() || '').split(/\s/g);
+          var index = names.indexOf(name);
           if (index !== -1) {
-              names$$1.splice(index, 1);
-              this.setName(names$$1.join(' '));
+              names.splice(index, 1);
+              this.setName(names.join(' '));
           }
           return this;
       };
@@ -5375,10 +5378,10 @@
               }
           });
           // if child is group we need to make sure it has visible shapes inside
-          var shapes$$1 = this.find('Shape');
+          var shapes = this.find('Shape');
           var hasVisible = false;
-          for (var i = 0; i < shapes$$1.length; i++) {
-              var shape = shapes$$1[i];
+          for (var i = 0; i < shapes.length; i++) {
+              var shape = shapes[i];
               if (shape._isVisible(this)) {
                   hasVisible = true;
                   break;
@@ -6492,372 +6495,6 @@
   Factory.addGetterSetter(BaseLayer, 'clearBeforeDraw', true);
   Collection.mapMethods(BaseLayer);
 
-  // constants
-  var HASH$1 = '#', BEFORE_DRAW = 'beforeDraw', DRAW = 'draw', 
-  /*
-   * 2 - 3 - 4
-   * |       |
-   * 1 - 0   5
-   *         |
-   * 8 - 7 - 6
-   */
-  INTERSECTION_OFFSETS = [
-      { x: 0, y: 0 },
-      { x: -1, y: -1 },
-      { x: 1, y: -1 },
-      { x: 1, y: 1 },
-      { x: -1, y: 1 } // 8
-  ], INTERSECTION_OFFSETS_LEN = INTERSECTION_OFFSETS.length;
-  /**
-   * Layer constructor.  Layers are tied to their own canvas element and are used
-   * to contain groups or shapes.
-   * @constructor
-   * @memberof Konva
-   * @augments Konva.BaseLayer
-   * @param {Object} config
-   * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
-   * to clear the canvas before each layer draw.  The default value is true.
-   * @param {Number} [config.x]
-     * @param {Number} [config.y]
-     * @param {Number} [config.width]
-     * @param {Number} [config.height]
-     * @param {Boolean} [config.visible]
-     * @param {Boolean} [config.listening] whether or not the node is listening for events
-     * @param {String} [config.id] unique id
-     * @param {String} [config.name] non-unique name
-     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
-     * @param {Object} [config.scale] set scale
-     * @param {Number} [config.scaleX] set scale x
-     * @param {Number} [config.scaleY] set scale y
-     * @param {Number} [config.rotation] rotation in degrees
-     * @param {Object} [config.offset] offset from center point and rotation point
-     * @param {Number} [config.offsetX] set offset x
-     * @param {Number} [config.offsetY] set offset y
-     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
-     *  the entire stage by dragging any portion of the stage
-     * @param {Number} [config.dragDistance]
-     * @param {Function} [config.dragBoundFunc]
-   * * @param {Object} [config.clip] set clip
-     * @param {Number} [config.clipX] set clip x
-     * @param {Number} [config.clipY] set clip y
-     * @param {Number} [config.clipWidth] set clip width
-     * @param {Number} [config.clipHeight] set clip height
-     * @param {Function} [config.clipFunc] set clip func
-
-   * @example
-   * var layer = new Konva.Layer();
-   * stage.add(layer);
-   * // now you can add shapes, groups into the layer
-   */
-  var Layer = /** @class */ (function (_super) {
-      __extends(Layer, _super);
-      function Layer() {
-          var _this = _super !== null && _super.apply(this, arguments) || this;
-          _this.hitCanvas = new HitCanvas({
-              pixelRatio: 1
-          });
-          return _this;
-      }
-      Layer.prototype._setCanvasSize = function (width, height) {
-          this.canvas.setSize(width, height);
-          this.hitCanvas.setSize(width, height);
-      };
-      Layer.prototype._validateAdd = function (child) {
-          var type = child.getType();
-          if (type !== 'Group' && type !== 'Shape') {
-              Util.throw('You may only add groups and shapes to a layer.');
-          }
-      };
-      /**
-       * get visible intersection shape. This is the preferred
-       * method for determining if a point intersects a shape or not
-       * also you may pass optional selector parameter to return ancestor of intersected shape
-       * @method
-       * @name Konva.Layer#getIntersection
-       * @param {Object} pos
-       * @param {Number} pos.x
-       * @param {Number} pos.y
-       * @param {String} [selector]
-       * @returns {Konva.Node}
-       * @example
-       * var shape = layer.getIntersection({x: 50, y: 50});
-       * // or if you interested in shape parent:
-       * var group = layer.getIntersection({x: 50, y: 50}, 'Group');
-       */
-      Layer.prototype.getIntersection = function (pos, selector) {
-          var obj, i, intersectionOffset, shape;
-          if (!this.hitGraphEnabled() || !this.isVisible()) {
-              return null;
-          }
-          // in some cases antialiased area may be bigger than 1px
-          // it is possible if we will cache node, then scale it a lot
-          var spiralSearchDistance = 1;
-          var continueSearch = false;
-          while (true) {
-              for (i = 0; i < INTERSECTION_OFFSETS_LEN; i++) {
-                  intersectionOffset = INTERSECTION_OFFSETS[i];
-                  obj = this._getIntersection({
-                      x: pos.x + intersectionOffset.x * spiralSearchDistance,
-                      y: pos.y + intersectionOffset.y * spiralSearchDistance
-                  });
-                  shape = obj.shape;
-                  if (shape && selector) {
-                      return shape.findAncestor(selector, true);
-                  }
-                  else if (shape) {
-                      return shape;
-                  }
-                  // we should continue search if we found antialiased pixel
-                  // that means our node somewhere very close
-                  continueSearch = !!obj.antialiased;
-                  // stop search if found empty pixel
-                  if (!obj.antialiased) {
-                      break;
-                  }
-              }
-              // if no shape, and no antialiased pixel, we should end searching
-              if (continueSearch) {
-                  spiralSearchDistance += 1;
-              }
-              else {
-                  return null;
-              }
-          }
-      };
-      Layer.prototype._getIntersection = function (pos) {
-          var ratio = this.hitCanvas.pixelRatio;
-          var p = this.hitCanvas.context.getImageData(Math.round(pos.x * ratio), Math.round(pos.y * ratio), 1, 1).data, p3 = p[3], colorKey, shape;
-          // fully opaque pixel
-          if (p3 === 255) {
-              colorKey = Util._rgbToHex(p[0], p[1], p[2]);
-              shape = shapes[HASH$1 + colorKey];
-              if (shape) {
-                  return {
-                      shape: shape
-                  };
-              }
-              return {
-                  antialiased: true
-              };
-          }
-          else if (p3 > 0) {
-              // antialiased pixel
-              return {
-                  antialiased: true
-              };
-          }
-          // empty pixel
-          return {};
-      };
-      Layer.prototype.drawScene = function (can, top) {
-          var layer = this.getLayer(), canvas = can || (layer && layer.getCanvas());
-          this._fire(BEFORE_DRAW, {
-              node: this
-          });
-          if (this.clearBeforeDraw()) {
-              canvas.getContext().clear();
-          }
-          Container.prototype.drawScene.call(this, canvas, top);
-          this._fire(DRAW, {
-              node: this
-          });
-          return this;
-      };
-      Layer.prototype.drawHit = function (can, top) {
-          var layer = this.getLayer(), canvas = can || (layer && layer.hitCanvas);
-          if (layer && layer.clearBeforeDraw()) {
-              layer
-                  .getHitCanvas()
-                  .getContext()
-                  .clear();
-          }
-          Container.prototype.drawHit.call(this, canvas, top);
-          return this;
-      };
-      Layer.prototype.clear = function (bounds) {
-          BaseLayer.prototype.clear.call(this, bounds);
-          this.getHitCanvas()
-              .getContext()
-              .clear(bounds);
-          return this;
-      };
-      /**
-       * enable hit graph
-       * @name Konva.Layer#enableHitGraph
-       * @method
-       * @returns {Layer}
-       */
-      Layer.prototype.enableHitGraph = function () {
-          this.hitGraphEnabled(true);
-          return this;
-      };
-      /**
-       * disable hit graph
-       * @name Konva.Layer#disableHitGraph
-       * @method
-       * @returns {Layer}
-       */
-      Layer.prototype.disableHitGraph = function () {
-          this.hitGraphEnabled(false);
-          return this;
-      };
-      /**
-       * Show or hide hit canvas over the stage. May be useful for debugging custom hitFunc
-       * @name Konva.Layer#toggleHitCanvas
-       * @method
-       */
-      Layer.prototype.toggleHitCanvas = function () {
-          if (!this.parent) {
-              return;
-          }
-          var parent = this.parent;
-          var added = !!this.hitCanvas._canvas.parentNode;
-          if (added) {
-              parent.content.removeChild(this.hitCanvas._canvas);
-          }
-          else {
-              parent.content.appendChild(this.hitCanvas._canvas);
-          }
-      };
-      Layer.prototype.setSize = function (_a) {
-          var width = _a.width, height = _a.height;
-          _super.prototype.setSize.call(this, { width: width, height: height });
-          this.hitCanvas.setSize(width, height);
-          return this;
-      };
-      return Layer;
-  }(BaseLayer));
-  Factory.addGetterSetter(Layer, 'hitGraphEnabled', true, Validators.getBooleanValidator());
-  /**
-   * get/set hitGraphEnabled flag.  Disabling the hit graph will greatly increase
-   *  draw performance because the hit graph will not be redrawn each time the layer is
-   *  drawn.  This, however, also disables mouse/touch event detection
-   * @name Konva.Layer#hitGraphEnabled
-   * @method
-   * @param {Boolean} enabled
-   * @returns {Boolean}
-   * @example
-   * // get hitGraphEnabled flag
-   * var hitGraphEnabled = layer.hitGraphEnabled();
-   *
-   * // disable hit graph
-   * layer.hitGraphEnabled(false);
-   *
-   * // enable hit graph
-   * layer.hitGraphEnabled(true);
-   */
-  Collection.mapMethods(Layer);
-
-  /**
-   * FastLayer constructor. Layers are tied to their own canvas element and are used
-   * to contain shapes only.  If you don't need node nesting, mouse and touch interactions,
-   * or event pub/sub, you should use FastLayer instead of Layer to create your layers.
-   * It renders about 2x faster than normal layers.
-   * @constructor
-   * @memberof Konva
-   * @augments Konva.BaseLayer
-   * @param {Object} config
-   * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
-   * to clear the canvas before each layer draw.  The default value is true.
-   * @param {Boolean} [config.visible]
-   * @param {String} [config.id] unique id
-   * @param {String} [config.name] non-unique name
-   * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
-   * * @param {Object} [config.clip] set clip
-     * @param {Number} [config.clipX] set clip x
-     * @param {Number} [config.clipY] set clip y
-     * @param {Number} [config.clipWidth] set clip width
-     * @param {Number} [config.clipHeight] set clip height
-     * @param {Function} [config.clipFunc] set clip func
-
-   * @example
-   * var layer = new Konva.FastLayer();
-   */
-  var FastLayer = /** @class */ (function (_super) {
-      __extends(FastLayer, _super);
-      function FastLayer() {
-          return _super !== null && _super.apply(this, arguments) || this;
-      }
-      FastLayer.prototype._validateAdd = function (child) {
-          var type = child.getType();
-          if (type !== 'Shape') {
-              Util.throw('You may only add shapes to a fast layer.');
-          }
-      };
-      FastLayer.prototype._setCanvasSize = function (width, height) {
-          this.canvas.setSize(width, height);
-      };
-      FastLayer.prototype.hitGraphEnabled = function () {
-          return false;
-      };
-      FastLayer.prototype.drawScene = function (can) {
-          var layer = this.getLayer(), canvas = can || (layer && layer.getCanvas());
-          if (this.clearBeforeDraw()) {
-              canvas.getContext().clear();
-          }
-          Container.prototype.drawScene.call(this, canvas);
-          return this;
-      };
-      FastLayer.prototype.draw = function () {
-          this.drawScene();
-          return this;
-      };
-      return FastLayer;
-  }(BaseLayer));
-  Collection.mapMethods(FastLayer);
-
-  /**
-   * Group constructor.  Groups are used to contain shapes or other groups.
-   * @constructor
-   * @memberof Konva
-   * @augments Konva.Container
-   * @param {Object} config
-   * @param {Number} [config.x]
-     * @param {Number} [config.y]
-     * @param {Number} [config.width]
-     * @param {Number} [config.height]
-     * @param {Boolean} [config.visible]
-     * @param {Boolean} [config.listening] whether or not the node is listening for events
-     * @param {String} [config.id] unique id
-     * @param {String} [config.name] non-unique name
-     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
-     * @param {Object} [config.scale] set scale
-     * @param {Number} [config.scaleX] set scale x
-     * @param {Number} [config.scaleY] set scale y
-     * @param {Number} [config.rotation] rotation in degrees
-     * @param {Object} [config.offset] offset from center point and rotation point
-     * @param {Number} [config.offsetX] set offset x
-     * @param {Number} [config.offsetY] set offset y
-     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
-     *  the entire stage by dragging any portion of the stage
-     * @param {Number} [config.dragDistance]
-     * @param {Function} [config.dragBoundFunc]
-   * * @param {Object} [config.clip] set clip
-     * @param {Number} [config.clipX] set clip x
-     * @param {Number} [config.clipY] set clip y
-     * @param {Number} [config.clipWidth] set clip width
-     * @param {Number} [config.clipHeight] set clip height
-     * @param {Function} [config.clipFunc] set clip func
-
-   * @example
-   * var group = new Konva.Group();
-   */
-  var Group = /** @class */ (function (_super) {
-      __extends(Group, _super);
-      function Group() {
-          return _super !== null && _super.apply(this, arguments) || this;
-      }
-      Group.prototype._validateAdd = function (child) {
-          var type = child.getType();
-          if (type !== 'Group' && type !== 'Shape') {
-              Util.throw('You may only add groups and shapes to groups.');
-          }
-      };
-      return Group;
-  }(Container));
-  Group.prototype.nodeType = 'Group';
-  Collection.mapMethods(Group);
-
   var HAS_SHADOW = 'hasShadow';
   var SHADOW_RGBA = 'shadowRGBA';
   var patternImage = 'patternImage';
@@ -6871,6 +6508,7 @@
       dummyContext = Util.createCanvasElement().getContext('2d');
       return dummyContext;
   }
+  var shapes = {};
   // TODO: idea - use only "remove" (or destroy method)
   // how? on add, check that every inner shape has reference in konva store with color
   // on remove - clear that reference
@@ -7483,7 +7121,7 @@
   Factory.addGetterSetter(Shape, 'perfectDrawEnabled', true, Validators.getBooleanValidator());
   /**
    * get/set perfectDrawEnabled. If a shape has fill, stroke and opacity you may set `perfectDrawEnabled` to false to improve performance.
-   * See http://konvajs.github.io/docs/performance/Disable_Perfect_Draw.html for more information.
+   * See http://konvajs.org/docs/performance/Disable_Perfect_Draw.html for more information.
    * Default value is true
    * @name Konva.Shape#perfectDrawEnabled
    * @method
@@ -8389,6 +8027,372 @@
       setDrawHitFunc: 'setHitFunc'
   });
   Collection.mapMethods(Shape);
+
+  // constants
+  var HASH$1 = '#', BEFORE_DRAW = 'beforeDraw', DRAW = 'draw', 
+  /*
+   * 2 - 3 - 4
+   * |       |
+   * 1 - 0   5
+   *         |
+   * 8 - 7 - 6
+   */
+  INTERSECTION_OFFSETS = [
+      { x: 0, y: 0 },
+      { x: -1, y: -1 },
+      { x: 1, y: -1 },
+      { x: 1, y: 1 },
+      { x: -1, y: 1 } // 8
+  ], INTERSECTION_OFFSETS_LEN = INTERSECTION_OFFSETS.length;
+  /**
+   * Layer constructor.  Layers are tied to their own canvas element and are used
+   * to contain groups or shapes.
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.BaseLayer
+   * @param {Object} config
+   * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
+   * to clear the canvas before each layer draw.  The default value is true.
+   * @param {Number} [config.x]
+     * @param {Number} [config.y]
+     * @param {Number} [config.width]
+     * @param {Number} [config.height]
+     * @param {Boolean} [config.visible]
+     * @param {Boolean} [config.listening] whether or not the node is listening for events
+     * @param {String} [config.id] unique id
+     * @param {String} [config.name] non-unique name
+     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
+     * @param {Object} [config.scale] set scale
+     * @param {Number} [config.scaleX] set scale x
+     * @param {Number} [config.scaleY] set scale y
+     * @param {Number} [config.rotation] rotation in degrees
+     * @param {Object} [config.offset] offset from center point and rotation point
+     * @param {Number} [config.offsetX] set offset x
+     * @param {Number} [config.offsetY] set offset y
+     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
+     *  the entire stage by dragging any portion of the stage
+     * @param {Number} [config.dragDistance]
+     * @param {Function} [config.dragBoundFunc]
+   * * @param {Object} [config.clip] set clip
+     * @param {Number} [config.clipX] set clip x
+     * @param {Number} [config.clipY] set clip y
+     * @param {Number} [config.clipWidth] set clip width
+     * @param {Number} [config.clipHeight] set clip height
+     * @param {Function} [config.clipFunc] set clip func
+
+   * @example
+   * var layer = new Konva.Layer();
+   * stage.add(layer);
+   * // now you can add shapes, groups into the layer
+   */
+  var Layer = /** @class */ (function (_super) {
+      __extends(Layer, _super);
+      function Layer() {
+          var _this = _super !== null && _super.apply(this, arguments) || this;
+          _this.hitCanvas = new HitCanvas({
+              pixelRatio: 1
+          });
+          return _this;
+      }
+      Layer.prototype._setCanvasSize = function (width, height) {
+          this.canvas.setSize(width, height);
+          this.hitCanvas.setSize(width, height);
+      };
+      Layer.prototype._validateAdd = function (child) {
+          var type = child.getType();
+          if (type !== 'Group' && type !== 'Shape') {
+              Util.throw('You may only add groups and shapes to a layer.');
+          }
+      };
+      /**
+       * get visible intersection shape. This is the preferred
+       * method for determining if a point intersects a shape or not
+       * also you may pass optional selector parameter to return ancestor of intersected shape
+       * @method
+       * @name Konva.Layer#getIntersection
+       * @param {Object} pos
+       * @param {Number} pos.x
+       * @param {Number} pos.y
+       * @param {String} [selector]
+       * @returns {Konva.Node}
+       * @example
+       * var shape = layer.getIntersection({x: 50, y: 50});
+       * // or if you interested in shape parent:
+       * var group = layer.getIntersection({x: 50, y: 50}, 'Group');
+       */
+      Layer.prototype.getIntersection = function (pos, selector) {
+          var obj, i, intersectionOffset, shape;
+          if (!this.hitGraphEnabled() || !this.isVisible()) {
+              return null;
+          }
+          // in some cases antialiased area may be bigger than 1px
+          // it is possible if we will cache node, then scale it a lot
+          var spiralSearchDistance = 1;
+          var continueSearch = false;
+          while (true) {
+              for (i = 0; i < INTERSECTION_OFFSETS_LEN; i++) {
+                  intersectionOffset = INTERSECTION_OFFSETS[i];
+                  obj = this._getIntersection({
+                      x: pos.x + intersectionOffset.x * spiralSearchDistance,
+                      y: pos.y + intersectionOffset.y * spiralSearchDistance
+                  });
+                  shape = obj.shape;
+                  if (shape && selector) {
+                      return shape.findAncestor(selector, true);
+                  }
+                  else if (shape) {
+                      return shape;
+                  }
+                  // we should continue search if we found antialiased pixel
+                  // that means our node somewhere very close
+                  continueSearch = !!obj.antialiased;
+                  // stop search if found empty pixel
+                  if (!obj.antialiased) {
+                      break;
+                  }
+              }
+              // if no shape, and no antialiased pixel, we should end searching
+              if (continueSearch) {
+                  spiralSearchDistance += 1;
+              }
+              else {
+                  return null;
+              }
+          }
+      };
+      Layer.prototype._getIntersection = function (pos) {
+          var ratio = this.hitCanvas.pixelRatio;
+          var p = this.hitCanvas.context.getImageData(Math.round(pos.x * ratio), Math.round(pos.y * ratio), 1, 1).data, p3 = p[3], colorKey, shape;
+          // fully opaque pixel
+          if (p3 === 255) {
+              colorKey = Util._rgbToHex(p[0], p[1], p[2]);
+              shape = shapes[HASH$1 + colorKey];
+              if (shape) {
+                  return {
+                      shape: shape
+                  };
+              }
+              return {
+                  antialiased: true
+              };
+          }
+          else if (p3 > 0) {
+              // antialiased pixel
+              return {
+                  antialiased: true
+              };
+          }
+          // empty pixel
+          return {};
+      };
+      Layer.prototype.drawScene = function (can, top) {
+          var layer = this.getLayer(), canvas = can || (layer && layer.getCanvas());
+          this._fire(BEFORE_DRAW, {
+              node: this
+          });
+          if (this.clearBeforeDraw()) {
+              canvas.getContext().clear();
+          }
+          Container.prototype.drawScene.call(this, canvas, top);
+          this._fire(DRAW, {
+              node: this
+          });
+          return this;
+      };
+      Layer.prototype.drawHit = function (can, top) {
+          var layer = this.getLayer(), canvas = can || (layer && layer.hitCanvas);
+          if (layer && layer.clearBeforeDraw()) {
+              layer
+                  .getHitCanvas()
+                  .getContext()
+                  .clear();
+          }
+          Container.prototype.drawHit.call(this, canvas, top);
+          return this;
+      };
+      Layer.prototype.clear = function (bounds) {
+          BaseLayer.prototype.clear.call(this, bounds);
+          this.getHitCanvas()
+              .getContext()
+              .clear(bounds);
+          return this;
+      };
+      /**
+       * enable hit graph
+       * @name Konva.Layer#enableHitGraph
+       * @method
+       * @returns {Layer}
+       */
+      Layer.prototype.enableHitGraph = function () {
+          this.hitGraphEnabled(true);
+          return this;
+      };
+      /**
+       * disable hit graph
+       * @name Konva.Layer#disableHitGraph
+       * @method
+       * @returns {Layer}
+       */
+      Layer.prototype.disableHitGraph = function () {
+          this.hitGraphEnabled(false);
+          return this;
+      };
+      /**
+       * Show or hide hit canvas over the stage. May be useful for debugging custom hitFunc
+       * @name Konva.Layer#toggleHitCanvas
+       * @method
+       */
+      Layer.prototype.toggleHitCanvas = function () {
+          if (!this.parent) {
+              return;
+          }
+          var parent = this.parent;
+          var added = !!this.hitCanvas._canvas.parentNode;
+          if (added) {
+              parent.content.removeChild(this.hitCanvas._canvas);
+          }
+          else {
+              parent.content.appendChild(this.hitCanvas._canvas);
+          }
+      };
+      Layer.prototype.setSize = function (_a) {
+          var width = _a.width, height = _a.height;
+          _super.prototype.setSize.call(this, { width: width, height: height });
+          this.hitCanvas.setSize(width, height);
+          return this;
+      };
+      return Layer;
+  }(BaseLayer));
+  Factory.addGetterSetter(Layer, 'hitGraphEnabled', true, Validators.getBooleanValidator());
+  /**
+   * get/set hitGraphEnabled flag.  Disabling the hit graph will greatly increase
+   *  draw performance because the hit graph will not be redrawn each time the layer is
+   *  drawn.  This, however, also disables mouse/touch event detection
+   * @name Konva.Layer#hitGraphEnabled
+   * @method
+   * @param {Boolean} enabled
+   * @returns {Boolean}
+   * @example
+   * // get hitGraphEnabled flag
+   * var hitGraphEnabled = layer.hitGraphEnabled();
+   *
+   * // disable hit graph
+   * layer.hitGraphEnabled(false);
+   *
+   * // enable hit graph
+   * layer.hitGraphEnabled(true);
+   */
+  Collection.mapMethods(Layer);
+
+  /**
+   * FastLayer constructor. Layers are tied to their own canvas element and are used
+   * to contain shapes only.  If you don't need node nesting, mouse and touch interactions,
+   * or event pub/sub, you should use FastLayer instead of Layer to create your layers.
+   * It renders about 2x faster than normal layers.
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.BaseLayer
+   * @param {Object} config
+   * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
+   * to clear the canvas before each layer draw.  The default value is true.
+   * @param {Boolean} [config.visible]
+   * @param {String} [config.id] unique id
+   * @param {String} [config.name] non-unique name
+   * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
+   * * @param {Object} [config.clip] set clip
+     * @param {Number} [config.clipX] set clip x
+     * @param {Number} [config.clipY] set clip y
+     * @param {Number} [config.clipWidth] set clip width
+     * @param {Number} [config.clipHeight] set clip height
+     * @param {Function} [config.clipFunc] set clip func
+
+   * @example
+   * var layer = new Konva.FastLayer();
+   */
+  var FastLayer = /** @class */ (function (_super) {
+      __extends(FastLayer, _super);
+      function FastLayer() {
+          return _super !== null && _super.apply(this, arguments) || this;
+      }
+      FastLayer.prototype._validateAdd = function (child) {
+          var type = child.getType();
+          if (type !== 'Shape') {
+              Util.throw('You may only add shapes to a fast layer.');
+          }
+      };
+      FastLayer.prototype._setCanvasSize = function (width, height) {
+          this.canvas.setSize(width, height);
+      };
+      FastLayer.prototype.hitGraphEnabled = function () {
+          return false;
+      };
+      FastLayer.prototype.drawScene = function (can) {
+          var layer = this.getLayer(), canvas = can || (layer && layer.getCanvas());
+          if (this.clearBeforeDraw()) {
+              canvas.getContext().clear();
+          }
+          Container.prototype.drawScene.call(this, canvas);
+          return this;
+      };
+      FastLayer.prototype.draw = function () {
+          this.drawScene();
+          return this;
+      };
+      return FastLayer;
+  }(BaseLayer));
+  Collection.mapMethods(FastLayer);
+
+  /**
+   * Group constructor.  Groups are used to contain shapes or other groups.
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Container
+   * @param {Object} config
+   * @param {Number} [config.x]
+     * @param {Number} [config.y]
+     * @param {Number} [config.width]
+     * @param {Number} [config.height]
+     * @param {Boolean} [config.visible]
+     * @param {Boolean} [config.listening] whether or not the node is listening for events
+     * @param {String} [config.id] unique id
+     * @param {String} [config.name] non-unique name
+     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
+     * @param {Object} [config.scale] set scale
+     * @param {Number} [config.scaleX] set scale x
+     * @param {Number} [config.scaleY] set scale y
+     * @param {Number} [config.rotation] rotation in degrees
+     * @param {Object} [config.offset] offset from center point and rotation point
+     * @param {Number} [config.offsetX] set offset x
+     * @param {Number} [config.offsetY] set offset y
+     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
+     *  the entire stage by dragging any portion of the stage
+     * @param {Number} [config.dragDistance]
+     * @param {Function} [config.dragBoundFunc]
+   * * @param {Object} [config.clip] set clip
+     * @param {Number} [config.clipX] set clip x
+     * @param {Number} [config.clipY] set clip y
+     * @param {Number} [config.clipWidth] set clip width
+     * @param {Number} [config.clipHeight] set clip height
+     * @param {Function} [config.clipFunc] set clip func
+
+   * @example
+   * var group = new Konva.Group();
+   */
+  var Group = /** @class */ (function (_super) {
+      __extends(Group, _super);
+      function Group() {
+          return _super !== null && _super.apply(this, arguments) || this;
+      }
+      Group.prototype._validateAdd = function (child) {
+          var type = child.getType();
+          if (type !== 'Group' && type !== 'Shape') {
+              Util.throw('You may only add groups and shapes to groups.');
+          }
+      };
+      return Group;
+  }(Container));
+  Group.prototype.nodeType = 'Group';
+  Collection.mapMethods(Group);
 
   var blacklist = {
       node: 1,
@@ -12410,10 +12414,10 @@
       return dummyContext$1;
   }
   function _fillFunc$1(context) {
-      context.fillText(this.partialText, this._textX, this._textY);
+      context.fillText(this._partialText, this._partialTextX, this._partialTextY);
   }
   function _strokeFunc$1(context) {
-      context.strokeText(this.partialText, this._textX, this._textY);
+      context.strokeText(this._partialText, this._partialTextX, this._partialTextY);
   }
   function checkDefaultFill(config) {
       config = config || {};
@@ -12528,8 +12532,8 @@
       __extends(Text, _super);
       function Text(config) {
           var _this = _super.call(this, checkDefaultFill(config)) || this;
-          _this._textX = 0;
-          _this._textY = 0;
+          _this._partialTextX = 0;
+          _this._partialTextY = 0;
           // update text data for certain attr changes
           for (var n = 0; n < attrChangeListLen$1; n++) {
               _this.on(ATTR_CHANGE_LIST$1[n] + CHANGE_KONVA$1, _this._setTextData);
@@ -12614,18 +12618,18 @@
                           //   0
                           // );
                       }
-                      this._textX = lineTranslateX;
-                      this._textY = translateY + lineTranslateY;
-                      this.partialText = letter;
+                      this._partialTextX = lineTranslateX;
+                      this._partialTextY = translateY + lineTranslateY;
+                      this._partialText = letter;
                       context.fillStrokeShape(this);
                       lineTranslateX +=
                           Math.round(this.measureSize(letter).width) + letterSpacing;
                   }
               }
               else {
-                  this._textX = lineTranslateX;
-                  this._textY = translateY + lineTranslateY;
-                  this.partialText = text;
+                  this._partialTextX = lineTranslateX;
+                  this._partialTextY = translateY + lineTranslateY;
+                  this._partialText = text;
                   context.fillStrokeShape(this);
               }
               context.restore();
@@ -16943,7 +16947,7 @@
    */
 
   var enableTrace = false;
-  var traceArrMax = 100;
+  // TODO: move that to stage?
   var listenClickTap = false;
   var inDblClickWindow = false;
   /**
@@ -17026,7 +17030,6 @@
 
   var Konva = ({
     enableTrace: enableTrace,
-    traceArrMax: traceArrMax,
     listenClickTap: listenClickTap,
     inDblClickWindow: inDblClickWindow,
     pixelRatio: pixelRatio,
@@ -17039,6 +17042,7 @@
     Util: Util,
     Node: Node,
     ids: ids,
+    names: names,
     Container: Container,
     Stage: Stage,
     stages: stages,
@@ -17047,6 +17051,7 @@
     Group: Group,
     DD: DD,
     Shape: Shape,
+    shapes: shapes,
     Animation: Animation,
     Tween: Tween,
     Easings: Easings,
@@ -17069,15 +17074,11 @@
     Transformer: Transformer,
     Wedge: Wedge,
     version: version,
-    names: names,
-    shapes: shapes,
     isBrowser: isBrowser,
     isUnminified: isUnminified,
     dblClickWindow: dblClickWindow,
     isDragging: isDragging,
     isDragReady: isDragReady,
-    _addName: _addName,
-    _removeName: _removeName,
     getAngle: getAngle,
     _detectIE: _detectIE,
     _parseUA: _parseUA,

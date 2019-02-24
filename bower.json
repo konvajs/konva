@@ -3,7 +3,7 @@
   "authors": [
     "Anton Lavrenov", "Eric Rowell"
   ],
-  "homepage": "http://konvajs.github.io",
+  "homepage": "http://konvajs.org",
   "description": "Konva is an HTML5 Canvas JavaScript framework that enables high performance animations, transitions, node nesting, layering, filtering, caching, event handling for desktop and mobile applications, and much more.",
   "keywords": [
     "canvas",

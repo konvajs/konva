@@ -55,10 +55,10 @@ function getDummyContext() {
 }
 
 function _fillFunc(context) {
-  context.fillText(this.partialText, this._textX, this._textY);
+  context.fillText(this._partialText, this._partialTextX, this._partialTextY);
 }
 function _strokeFunc(context) {
-  context.strokeText(this.partialText, this._textX, this._textY);
+  context.strokeText(this._partialText, this._partialTextX, this._partialTextY);
 }
 
 function checkDefaultFill(config) {
@@ -107,9 +107,9 @@ function checkDefaultFill(config) {
  */
 export class Text extends Shape {
   textArr: Array<{ text: string; width: number }>;
-  partialText: string;
-  _textX = 0;
-  _textY = 0;
+  _partialText: string;
+  _partialTextX = 0;
+  _partialTextY = 0;
 
   textWidth: number;
   textHeight: number;
@@ -240,17 +240,17 @@ export class Text extends Shape {
             //   0
             // );
           }
-          this._textX = lineTranslateX;
-          this._textY = translateY + lineTranslateY;
-          this.partialText = letter;
+          this._partialTextX = lineTranslateX;
+          this._partialTextY = translateY + lineTranslateY;
+          this._partialText = letter;
           context.fillStrokeShape(this);
           lineTranslateX +=
             Math.round(this.measureSize(letter).width) + letterSpacing;
         }
       } else {
-        this._textX = lineTranslateX;
-        this._textY = translateY + lineTranslateY;
-        this.partialText = text;
+        this._partialTextX = lineTranslateX;
+        this._partialTextY = translateY + lineTranslateY;
+        this._partialText = text;
 
         context.fillStrokeShape(this);
       }

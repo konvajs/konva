@@ -1,6 +1,6 @@
 /*
  * Konva JavaScript Framework v@@version
- * http://konvajs.github.io/
+ * http://konvajs.org/
  * Licensed under the MIT
  * Date: @@date
  *
@@ -14,9 +14,6 @@ var PI_OVER_180 = Math.PI / 180;
  * @namespace Konva
  */
 export const version = '@@version';
-
-export const names = {};
-export const shapes = {};
 
 export const isBrowser =
   typeof window !== 'undefined' &&
@@ -63,34 +60,6 @@ export const isDragReady = function() {
     return !!dd.node;
   }
   return false;
-};
-
-export const _addName = function(node: any, name) {
-  if (name) {
-    if (!names[name]) {
-      names[name] = [];
-    }
-    names[name].push(node);
-  }
-};
-
-export const _removeName = function(name, _id) {
-  if (!name) {
-    return;
-  }
-  var nodes = names[name];
-  if (!nodes) {
-    return;
-  }
-  for (var n = 0; n < nodes.length; n++) {
-    var no = nodes[n];
-    if (no._id === _id) {
-      nodes.splice(n, 1);
-    }
-  }
-  if (nodes.length === 0) {
-    delete names[name];
-  }
 };
 
 export const getAngle = function(angle) {

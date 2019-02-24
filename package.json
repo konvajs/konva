@@ -57,7 +57,7 @@
   "bugs": {
     "url": "https://github.com/konvajs/konva/issues"
   },
-  "homepage": "http://konvajs.github.io/",
+  "homepage": "http://konvajs.org/",
   "readmeFilename": "README.md",
   "repository": {
     "type": "git",
