@@ -1,7 +1,7 @@
 import { Util, Collection } from './Util';
 import { Factory, Validators } from './Factory';
 import { Node, ids, names } from './Node';
-import { getGlobalKonva } from './Global';
+import { DD } from './DragAndDrop';
 
 import { GetSet, IRect } from './types';
 
@@ -123,8 +123,8 @@ export abstract class Container extends Node {
     });
 
     // if node under drag we need to update drag animation
-    if (getGlobalKonva().DD && child.isDragging()) {
-      getGlobalKonva().DD.anim.setLayers(child.getLayer());
+    if (child.isDragging()) {
+      DD.anim.setLayers(child.getLayer());
     }
 
     // chainable
@@ -499,12 +499,9 @@ export abstract class Container extends Node {
   }
   shouldDrawHit(canvas?) {
     var layer = this.getLayer();
-    var dd = getGlobalKonva().DD;
     var layerUnderDrag =
-      dd &&
-      getGlobalKonva().isDragging() &&
-      getGlobalKonva()
-        .DD.anim.getLayers()
+      DD.isDragging &&
+      DD.anim.getLayers()
         .indexOf(layer) !== -1;
     return (
       (canvas && canvas.isCache) ||

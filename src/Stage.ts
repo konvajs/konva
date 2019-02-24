@@ -6,6 +6,7 @@ import { SceneCanvas, HitCanvas } from './Canvas';
 import { GetSet, Vector2d } from './types';
 import { Shape } from './Shape';
 import { BaseLayer } from './BaseLayer';
+import { DD } from './DragAndDrop';
 
 // CONSTANTS
 var STAGE = 'Stage',
@@ -379,7 +380,7 @@ export class Stage extends Container {
     this.setPointersPositions(evt);
     var targetShape = this.targetShape;
 
-    if (targetShape && !getGlobalKonva().isDragging()) {
+    if (targetShape && !DD.isDragging) {
       targetShape._fireAndBubble(MOUSEOUT, { evt: evt });
       targetShape._fireAndBubble(MOUSELEAVE, { evt: evt });
       this.targetShape = null;
@@ -396,11 +397,11 @@ export class Stage extends Container {
     this.setPointersPositions(evt);
     var shape;
 
-    if (!getGlobalKonva().isDragging()) {
+    if (!DD.isDragging) {
       shape = this.getIntersection(this.getPointerPosition());
       if (shape && shape.isListening()) {
         var differentTarget = !this.targetShape || this.targetShape !== shape;
-        if (!getGlobalKonva().isDragging() && differentTarget) {
+        if (!DD.isDragging && differentTarget) {
           if (this.targetShape) {
             this.targetShape._fireAndBubble(MOUSEOUT, { evt: evt }, shape);
             this.targetShape._fireAndBubble(MOUSELEAVE, { evt: evt }, shape);
@@ -416,7 +417,7 @@ export class Stage extends Container {
          * if no shape was detected, clear target shape and try
          * to run mouseout from previous target shape
          */
-        if (this.targetShape && !getGlobalKonva().isDragging()) {
+        if (this.targetShape && !DD.isDragging) {
           this.targetShape._fireAndBubble(MOUSEOUT, { evt: evt });
           this.targetShape._fireAndBubble(MOUSELEAVE, { evt: evt });
           this._fire(MOUSEOVER, {
@@ -653,7 +654,7 @@ export class Stage extends Container {
     this.setPointersPositions(evt);
     var dd = getGlobalKonva().DD,
       shape;
-    if (!getGlobalKonva().isDragging()) {
+    if (!DD.isDragging) {
       shape = this.getIntersection(this.getPointerPosition());
       if (shape && shape.isListening()) {
         shape._fireAndBubble(TOUCHMOVE, { evt: evt });
@@ -672,7 +673,7 @@ export class Stage extends Container {
     }
     if (dd) {
       if (
-        getGlobalKonva().isDragging() &&
+        DD.isDragging &&
         getGlobalKonva().DD.node.preventDefault() &&
         evt.cancelable
       ) {

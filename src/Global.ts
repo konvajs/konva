@@ -30,43 +30,11 @@ export const isUnminified = /comment/.test(
 
 export const dblClickWindow = 400;
 
-/**
- * returns whether or not drag and drop is currently active
- * @method
- * @memberof Konva
- */
-export const isDragging = function() {
-  var dd = getGlobalKonva()['DD'];
-
-  // if DD is not included with the build, then
-  // drag and drop is not even possible
-  if (dd) {
-    return dd.isDragging;
-  }
-  return false;
-};
-/**
- * returns whether or not a drag and drop operation is ready, but may
- *  not necessarily have started
- * @method
- * @memberof Konva
- */
-export const isDragReady = function() {
-  var dd = getGlobalKonva()['DD'];
-
-  // if DD is not included with the build, then
-  // drag and drop is not even possible
-  if (dd) {
-    return !!dd.node;
-  }
-  return false;
-};
-
 export const getAngle = function(angle) {
   return getGlobalKonva().angleDeg ? angle * PI_OVER_180 : angle;
 };
 
-export const _detectIE = function(ua) {
+const _detectIE = function(ua) {
   var msie = ua.indexOf('msie ');
   if (msie > 0) {
     // IE 10 or older => return version number
@@ -89,6 +57,7 @@ export const _detectIE = function(ua) {
   // other browser
   return false;
 };
+
 export const _parseUA = function(userAgent) {
   var ua = userAgent.toLowerCase(),
     // jQuery UA regex

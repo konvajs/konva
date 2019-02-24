@@ -29,35 +29,6 @@
       /* comment */
   }.toString());
   var dblClickWindow = 400;
-  /**
-   * returns whether or not drag and drop is currently active
-   * @method
-   * @memberof Konva
-   */
-  var isDragging = function () {
-      var dd = getGlobalKonva()['DD'];
-      // if DD is not included with the build, then
-      // drag and drop is not even possible
-      if (dd) {
-          return dd.isDragging;
-      }
-      return false;
-  };
-  /**
-   * returns whether or not a drag and drop operation is ready, but may
-   *  not necessarily have started
-   * @method
-   * @memberof Konva
-   */
-  var isDragReady = function () {
-      var dd = getGlobalKonva()['DD'];
-      // if DD is not included with the build, then
-      // drag and drop is not even possible
-      if (dd) {
-          return !!dd.node;
-      }
-      return false;
-  };
   var getAngle = function (angle) {
       return getGlobalKonva().angleDeg ? angle * PI_OVER_180 : angle;
   };
@@ -5008,8 +4979,8 @@
               child: child
           });
           // if node under drag we need to update drag animation
-          if (getGlobalKonva().DD && child.isDragging()) {
-              getGlobalKonva().DD.anim.setLayers(child.getLayer());
+          if (child.isDragging()) {
+              DD.anim.setLayers(child.getLayer());
           }
           // chainable
           return this;
@@ -5328,11 +5299,8 @@
       };
       Container.prototype.shouldDrawHit = function (canvas) {
           var layer = this.getLayer();
-          var dd = getGlobalKonva().DD;
-          var layerUnderDrag = dd &&
-              getGlobalKonva().isDragging() &&
-              getGlobalKonva()
-                  .DD.anim.getLayers()
+          var layerUnderDrag = DD.isDragging &&
+              DD.anim.getLayers()
                   .indexOf(layer) !== -1;
           return ((canvas && canvas.isCache) ||
               (layer && layer.hitGraphEnabled() && this.isVisible() && !layerUnderDrag));
@@ -5798,7 +5766,7 @@
       Stage.prototype._mouseout = function (evt) {
           this.setPointersPositions(evt);
           var targetShape = this.targetShape;
-          if (targetShape && !getGlobalKonva().isDragging()) {
+          if (targetShape && !DD.isDragging) {
               targetShape._fireAndBubble(MOUSEOUT, { evt: evt });
               targetShape._fireAndBubble(MOUSELEAVE$1, { evt: evt });
               this.targetShape = null;
@@ -5813,11 +5781,11 @@
           }
           this.setPointersPositions(evt);
           var shape;
-          if (!getGlobalKonva().isDragging()) {
+          if (!DD.isDragging) {
               shape = this.getIntersection(this.getPointerPosition());
               if (shape && shape.isListening()) {
                   var differentTarget = !this.targetShape || this.targetShape !== shape;
-                  if (!getGlobalKonva().isDragging() && differentTarget) {
+                  if (!DD.isDragging && differentTarget) {
                       if (this.targetShape) {
                           this.targetShape._fireAndBubble(MOUSEOUT, { evt: evt }, shape);
                           this.targetShape._fireAndBubble(MOUSELEAVE$1, { evt: evt }, shape);
@@ -5835,7 +5803,7 @@
                    * if no shape was detected, clear target shape and try
                    * to run mouseout from previous target shape
                    */
-                  if (this.targetShape && !getGlobalKonva().isDragging()) {
+                  if (this.targetShape && !DD.isDragging) {
                       this.targetShape._fireAndBubble(MOUSEOUT, { evt: evt });
                       this.targetShape._fireAndBubble(MOUSELEAVE$1, { evt: evt });
                       this._fire(MOUSEOVER, {
@@ -6046,7 +6014,7 @@
       Stage.prototype._touchmove = function (evt) {
           this.setPointersPositions(evt);
           var dd = getGlobalKonva().DD, shape;
-          if (!getGlobalKonva().isDragging()) {
+          if (!DD.isDragging) {
               shape = this.getIntersection(this.getPointerPosition());
               if (shape && shape.isListening()) {
                   shape._fireAndBubble(TOUCHMOVE, { evt: evt });
@@ -6065,7 +6033,7 @@
               this._fire(CONTENT_TOUCHMOVE, { evt: evt });
           }
           if (dd) {
-              if (getGlobalKonva().isDragging() &&
+              if (DD.isDragging &&
                   getGlobalKonva().DD.node.preventDefault() &&
                   evt.cancelable) {
                   evt.preventDefault();
@@ -16946,6 +16914,7 @@
    * @returns {Number}
    */
 
+  var DD$1 = DD;
   var enableTrace = false;
   // TODO: move that to stage?
   var listenClickTap = false;
@@ -17003,6 +16972,23 @@
    */
   var dragButtons = [0, 1];
   /**
+   * returns whether or not drag and drop is currently active
+   * @method
+   * @memberof Konva
+   */
+  var isDragging = function () {
+      return DD.isDragging;
+  };
+  /**
+   * returns whether or not a drag and drop operation is ready, but may
+   *  not necessarily have started
+   * @method
+   * @memberof Konva
+   */
+  var isDragReady = function () {
+      return !!DD.node;
+  };
+  /**
    * @namespace Filters
    * @memberof Konva
    */
@@ -17029,6 +17015,7 @@
   };
 
   var Konva = ({
+    DD: DD$1,
     enableTrace: enableTrace,
     listenClickTap: listenClickTap,
     inDblClickWindow: inDblClickWindow,
@@ -17037,6 +17024,8 @@
     angleDeg: angleDeg,
     showWarnings: showWarnings,
     dragButtons: dragButtons,
+    isDragging: isDragging,
+    isDragReady: isDragReady,
     Filters: Filters,
     Collection: Collection,
     Util: Util,
@@ -17049,7 +17038,6 @@
     Layer: Layer,
     FastLayer: FastLayer,
     Group: Group,
-    DD: DD,
     Shape: Shape,
     shapes: shapes,
     Animation: Animation,
@@ -17077,10 +17065,7 @@
     isBrowser: isBrowser,
     isUnminified: isUnminified,
     dblClickWindow: dblClickWindow,
-    isDragging: isDragging,
-    isDragReady: isDragReady,
     getAngle: getAngle,
-    _detectIE: _detectIE,
     _parseUA: _parseUA,
     glob: glob,
     UA: UA,

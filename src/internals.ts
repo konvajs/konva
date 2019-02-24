@@ -11,7 +11,9 @@ export { FastLayer } from './FastLayer';
 
 export { Group } from './Group';
 
-export { DD } from './DragAndDrop';
+import { DD as dd } from './DragAndDrop';
+
+export const DD = dd;
 export { Shape, shapes } from './Shape';
 
 export { Animation } from './Animation';
@@ -78,7 +80,23 @@ export const showWarnings = true;
  */
 export const dragButtons = [0, 1];
 
-// export default KonvaInternals;
+/**
+ * returns whether or not drag and drop is currently active
+ * @method
+ * @memberof Konva
+ */
+export const isDragging = function() {
+  return dd.isDragging;
+};
+/**
+ * returns whether or not a drag and drop operation is ready, but may
+ *  not necessarily have started
+ * @method
+ * @memberof Konva
+ */
+export const isDragReady = function() {
+  return !!dd.node;
+};
 
 // shapes
 export { Arc } from './shapes/Arc';
