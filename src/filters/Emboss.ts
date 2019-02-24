@@ -1,6 +1,7 @@
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Node } from '../Node';
 import { Util } from '../Util';
+import { getNumberValidator } from '../Validators';
 /**
  * Emboss Filter.
  * Pixastic Lib - Emboss filter - v0.1.0
@@ -143,7 +144,7 @@ Factory.addGetterSetter(
   Node,
   'embossStrength',
   0.5,
-  Validators.getNumberValidator(),
+  getNumberValidator(),
   Factory.afterSetFilter
 );
 /**
@@ -158,7 +159,7 @@ Factory.addGetterSetter(
   Node,
   'embossWhiteLevel',
   0.5,
-  Validators.getNumberValidator(),
+  getNumberValidator(),
   Factory.afterSetFilter
 );
 /**

@@ -1,10 +1,11 @@
 import { Util, Collection } from '../Util';
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Node } from '../Node';
 import { Shape } from '../Shape';
 import { Rect } from './Rect';
 import { Group } from '../Group';
 import { getAngle, getGlobalKonva } from '../Global';
+import { getNumberValidator } from '../Validators';
 
 import { GetSet, IRect } from '../types';
 
@@ -894,12 +895,7 @@ Factory.addGetterSetter(Transformer, 'resizeEnabled', true);
  * // set
  * transformer.anchorSize(20)
  */
-Factory.addGetterSetter(
-  Transformer,
-  'anchorSize',
-  10,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Transformer, 'anchorSize', 10, getNumberValidator());
 
 /**
  * get/set ability to rotate.
@@ -948,7 +944,7 @@ Factory.addGetterSetter(
   Transformer,
   'rotateAnchorOffset',
   50,
-  Validators.getNumberValidator()
+  getNumberValidator()
 );
 
 /**
@@ -998,7 +994,7 @@ Factory.addGetterSetter(
   Transformer,
   'anchorStrokeWidth',
   1,
-  Validators.getNumberValidator()
+  getNumberValidator()
 );
 
 /**
@@ -1033,7 +1029,7 @@ Factory.addGetterSetter(
   Transformer,
   'anchorCornerRadius',
   0,
-  Validators.getNumberValidator()
+  getNumberValidator()
 );
 
 /**
@@ -1068,7 +1064,7 @@ Factory.addGetterSetter(
   Transformer,
   'borderStrokeWidth',
   1,
-  Validators.getNumberValidator()
+  getNumberValidator()
 );
 
 /**
@@ -1145,12 +1141,7 @@ Factory.addGetterSetter(Transformer, 'ignoreStroke', false);
  * // set
  * transformer.padding(10);
  */
-Factory.addGetterSetter(
-  Transformer,
-  'padding',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Transformer, 'padding', 0, getNumberValidator());
 
 /**
  * get/set attached node of the Transformer. Transformer will adapt to its size and listen to its events

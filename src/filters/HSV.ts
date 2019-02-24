@@ -1,5 +1,7 @@
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Node } from '../Node';
+import { getNumberValidator } from '../Validators';
+
 /**
  * HSV Filter. Adjusts the hue, saturation and value
  * @function
@@ -64,7 +66,7 @@ Factory.addGetterSetter(
   Node,
   'hue',
   0,
-  Validators.getNumberValidator(),
+  getNumberValidator(),
   Factory.afterSetFilter
 );
 /**
@@ -79,7 +81,7 @@ Factory.addGetterSetter(
   Node,
   'saturation',
   0,
-  Validators.getNumberValidator(),
+  getNumberValidator(),
   Factory.afterSetFilter
 );
 /**
@@ -94,7 +96,7 @@ Factory.addGetterSetter(
   Node,
   'value',
   0,
-  Validators.getNumberValidator(),
+  getNumberValidator(),
   Factory.afterSetFilter
 );
 /**

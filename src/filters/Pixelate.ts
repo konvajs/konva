@@ -1,7 +1,9 @@
 /*eslint-disable max-depth */
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Util } from '../Util';
 import { Node } from '../Node';
+import { getNumberValidator } from '../Validators';
+
 /**
  * Pixelate Filter. Averages groups of pixels and redraws
  *  them as larger pixels
@@ -107,7 +109,7 @@ Factory.addGetterSetter(
   Node,
   'pixelSize',
   8,
-  Validators.getNumberValidator(),
+  getNumberValidator(),
   Factory.afterSetFilter
 );
 /**

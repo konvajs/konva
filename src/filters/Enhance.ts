@@ -1,5 +1,7 @@
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Node } from '../Node';
+import { getNumberValidator } from '../Validators';
+
 function remap(fromValue, fromMin, fromMax, toMin, toMax) {
   // Compute the range of the data
   var fromRange = fromMax - fromMin,
@@ -145,6 +147,6 @@ Factory.addGetterSetter(
   Node,
   'enhance',
   0,
-  Validators.getNumberValidator(),
+  getNumberValidator(),
   Factory.afterSetFilter
 );

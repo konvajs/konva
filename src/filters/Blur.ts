@@ -1,5 +1,6 @@
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Node } from '../Node';
+import { getNumberValidator } from '../Validators';
 /*
  the Gauss filter
  master repo: https://github.com/pavelpower/kineticjsGaussFilter
@@ -838,7 +839,7 @@ Factory.addGetterSetter(
   Node,
   'blurRadius',
   0,
-  Validators.getNumberValidator(),
+  getNumberValidator(),
   Factory.afterSetFilter
 );
 

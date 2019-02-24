@@ -1,6 +1,8 @@
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Node } from '../Node';
 import { Util } from '../Util';
+import { getNumberValidator } from '../Validators';
+
 /*
  * ToPolar Filter. Converts image data to polar coordinates. Performs
  *  w*h*4 pixel reads and w*h pixel writes. The r axis is placed along
@@ -274,7 +276,7 @@ Factory.addGetterSetter(
   Node,
   'kaleidoscopePower',
   2,
-  Validators.getNumberValidator(),
+  getNumberValidator(),
   Factory.afterSetFilter
 );
 
@@ -289,6 +291,6 @@ Factory.addGetterSetter(
   Node,
   'kaleidoscopeAngle',
   0,
-  Validators.getNumberValidator(),
+  getNumberValidator(),
   Factory.afterSetFilter
 );

@@ -1,8 +1,9 @@
 import { Util, Collection } from '../Util';
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { Path } from './Path';
 import { Text } from './Text';
+import { getNumberValidator } from '../Validators';
 
 import { GetSet, Vector2d } from '../types';
 
@@ -585,12 +586,7 @@ Factory.addGetterSetter(TextPath, 'fontFamily', 'Arial');
  * shape.fontSize(22);
  */
 
-Factory.addGetterSetter(
-  TextPath,
-  'fontSize',
-  12,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(TextPath, 'fontSize', 12, getNumberValidator());
 
 /**
  * get/set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
@@ -640,12 +636,7 @@ Factory.addGetterSetter(TextPath, 'align', 'left');
  * shape.letterSpacing(2);
  */
 
-Factory.addGetterSetter(
-  TextPath,
-  'letterSpacing',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(TextPath, 'letterSpacing', 0, getNumberValidator());
 
 /**
  * get/set text baselineg.  The default is 'middle'. Can be 'top', 'bottom', 'middle', 'alphabetic', 'hanging'

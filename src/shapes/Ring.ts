@@ -1,7 +1,8 @@
 import { Collection } from '../Util';
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { GetSet } from '../types';
+import { getNumberValidator } from '../Validators';
 
 var PIx2 = Math.PI * 2;
 /**
@@ -68,12 +69,7 @@ Ring.prototype._attrsAffectingSize = ['innerRadius', 'outerRadius'];
  * ring.innerRadius(20);
  */
 
-Factory.addGetterSetter(
-  Ring,
-  'innerRadius',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Ring, 'innerRadius', 0, getNumberValidator());
 
 /**
  * get/set outerRadius
@@ -88,11 +84,6 @@ Factory.addGetterSetter(
  * // set outer radius
  * ring.outerRadius(20);
  */
-Factory.addGetterSetter(
-  Ring,
-  'outerRadius',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Ring, 'outerRadius', 0, getNumberValidator());
 
 Collection.mapMethods(Ring);

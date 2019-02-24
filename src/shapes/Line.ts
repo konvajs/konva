@@ -1,6 +1,7 @@
 import { Util, Collection } from '../Util';
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Shape } from '../Shape';
+import { getNumberValidator, getNumberArrayValidator } from '../Validators';
 
 import { GetSet } from '../types';
 
@@ -245,7 +246,7 @@ Factory.addGetterSetter(Line, 'bezier', false);
  * line.bezier(true);
  */
 
-Factory.addGetterSetter(Line, 'tension', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Line, 'tension', 0, getNumberValidator());
 
 /**
  * get/set tension
@@ -261,12 +262,7 @@ Factory.addGetterSetter(Line, 'tension', 0, Validators.getNumberValidator());
  * line.tension(3);
  */
 
-Factory.addGetterSetter(
-  Line,
-  'points',
-  [],
-  Validators.getNumberArrayValidator()
-);
+Factory.addGetterSetter(Line, 'points', [], getNumberArrayValidator());
 /**
  * get/set points array. Points is a flat array [x1, y1, x2, y2]. It is flat for performance reasons.
  * @name Konva.Line#points

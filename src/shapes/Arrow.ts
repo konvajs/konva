@@ -1,7 +1,8 @@
-import { Util, Collection } from '../Util';
-import { Factory, Validators } from '../Factory';
+import { Collection } from '../Util';
+import { Factory } from '../Factory';
 import { Line } from './Line';
 import { GetSet } from '../types';
+import { getNumberValidator } from '../Validators';
 
 /**
  * Arrow constructor
@@ -122,12 +123,7 @@ Arrow.prototype.className = 'Arrow';
  * line.pointerLength(15);
  */
 
-Factory.addGetterSetter(
-  Arrow,
-  'pointerLength',
-  10,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Arrow, 'pointerLength', 10, getNumberValidator());
 /**
  * get/set pointerWidth
  * @name Konva.Arrow#pointerWidth
@@ -143,12 +139,7 @@ Factory.addGetterSetter(
  * line.pointerWidth(15);
  */
 
-Factory.addGetterSetter(
-  Arrow,
-  'pointerWidth',
-  10,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Arrow, 'pointerWidth', 10, getNumberValidator());
 /**
  * get/set pointerAtBeginning
  * @name Konva.Arrow#pointerAtBeginning

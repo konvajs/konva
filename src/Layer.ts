@@ -1,9 +1,10 @@
 import { Util, Collection } from './Util';
 import { Container } from './Container';
-import { Factory, Validators } from './Factory';
+import { Factory } from './Factory';
 import { BaseLayer } from './BaseLayer';
 import { HitCanvas } from './Canvas';
 import { shapes } from './Shape';
+import { getBooleanValidator } from './Validators';
 
 import { GetSet } from './types';
 
@@ -233,12 +234,7 @@ export class Layer extends BaseLayer {
   hitGraphEnabled: GetSet<boolean, this>;
 }
 
-Factory.addGetterSetter(
-  Layer,
-  'hitGraphEnabled',
-  true,
-  Validators.getBooleanValidator()
-);
+Factory.addGetterSetter(Layer, 'hitGraphEnabled', true, getBooleanValidator());
 /**
  * get/set hitGraphEnabled flag.  Disabling the hit graph will greatly increase
  *  draw performance because the hit graph will not be redrawn each time the layer is

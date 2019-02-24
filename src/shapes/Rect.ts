@@ -1,6 +1,7 @@
-import { Util, Collection } from '../Util';
-import { Factory, Validators } from '../Factory';
+import { Collection } from '../Util';
+import { Factory } from '../Factory';
 import { Shape } from '../Shape';
+import { getNumberValidator } from '../Validators';
 
 import { GetSet } from '../types';
 
@@ -96,11 +97,6 @@ Rect.prototype.className = 'Rect';
  * // set corner radius
  * rect.cornerRadius(10);
  */
-Factory.addGetterSetter(
-  Rect,
-  'cornerRadius',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Rect, 'cornerRadius', 0, getNumberValidator());
 
 Collection.mapMethods(Rect);

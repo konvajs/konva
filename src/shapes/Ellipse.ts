@@ -1,7 +1,7 @@
-import { Util, Collection } from '../Util';
-import { Factory, Validators } from '../Factory';
-import { Node } from '../Node';
+import { Collection } from '../Util';
+import { Factory } from '../Factory';
 import { Shape } from '../Shape';
+import { getNumberValidator } from '../Validators';
 
 import { GetSet, Vector2d } from '../types';
 
@@ -81,7 +81,7 @@ Factory.addComponentsGetterSetter(Ellipse, 'radius', ['x', 'y']);
  * });
  */
 
-Factory.addGetterSetter(Ellipse, 'radiusX', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Ellipse, 'radiusX', 0, getNumberValidator());
 /**
  * get/set radius x
  * @name Konva.Ellipse#radiusX
@@ -96,7 +96,7 @@ Factory.addGetterSetter(Ellipse, 'radiusX', 0, Validators.getNumberValidator());
  * ellipse.radiusX(200);
  */
 
-Factory.addGetterSetter(Ellipse, 'radiusY', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Ellipse, 'radiusY', 0, getNumberValidator());
 /**
  * get/set radius y
  * @name Konva.Ellipse#radiusY

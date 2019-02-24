@@ -1,6 +1,6 @@
 import { Util, Collection } from './Util';
-import { Factory, Validators } from './Factory';
 import { Container } from './Container';
+
 /**
  * Group constructor.  Groups are used to contain shapes or other groups.
  * @constructor

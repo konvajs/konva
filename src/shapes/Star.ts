@@ -1,7 +1,7 @@
-import { Util, Collection } from '../Util';
-import { Factory, Validators } from '../Factory';
-import { Node } from '../Node';
+import { Collection } from '../Util';
+import { Factory } from '../Factory';
 import { Shape } from '../Shape';
+import { getNumberValidator } from '../Validators';
 
 import { GetSet } from '../types';
 
@@ -82,7 +82,7 @@ Star.prototype._attrsAffectingSize = ['innerRadius', 'outerRadius'];
  * // set inner radius
  * ring.numPoints(20);
  */
-Factory.addGetterSetter(Star, 'numPoints', 5, Validators.getNumberValidator());
+Factory.addGetterSetter(Star, 'numPoints', 5, getNumberValidator());
 
 /**
  * get/set innerRadius
@@ -97,12 +97,7 @@ Factory.addGetterSetter(Star, 'numPoints', 5, Validators.getNumberValidator());
  * // set inner radius
  * ring.innerRadius(20);
  */
-Factory.addGetterSetter(
-  Star,
-  'innerRadius',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Star, 'innerRadius', 0, getNumberValidator());
 
 /**
  * get/set outerRadius
@@ -118,11 +113,6 @@ Factory.addGetterSetter(
  * ring.outerRadius(20);
  */
 
-Factory.addGetterSetter(
-  Star,
-  'outerRadius',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Star, 'outerRadius', 0, getNumberValidator());
 
 Collection.mapMethods(Star);

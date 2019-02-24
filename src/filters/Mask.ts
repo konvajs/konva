@@ -1,5 +1,6 @@
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Node } from '../Node';
+import { getNumberValidator } from '../Validators';
 
 function pixelAt(idata, x, y) {
   var idx = (y * idata.width + x) * 4;
@@ -203,6 +204,6 @@ Factory.addGetterSetter(
   Node,
   'threshold',
   0,
-  Validators.getNumberValidator(),
+  getNumberValidator(),
   Factory.afterSetFilter
 );

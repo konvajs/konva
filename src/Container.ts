@@ -1,7 +1,8 @@
 import { Util, Collection } from './Util';
-import { Factory, Validators } from './Factory';
+import { Factory } from './Factory';
 import { Node, ids, names } from './Node';
 import { DD } from './DragAndDrop';
+import { getNumberValidator } from './Validators';
 
 import { GetSet, IRect } from './types';
 
@@ -500,9 +501,7 @@ export abstract class Container extends Node {
   shouldDrawHit(canvas?) {
     var layer = this.getLayer();
     var layerUnderDrag =
-      DD.isDragging &&
-      DD.anim.getLayers()
-        .indexOf(layer) !== -1;
+      DD.isDragging && DD.anim.getLayers().indexOf(layer) !== -1;
     return (
       (canvas && canvas.isCache) ||
       (layer && layer.hitGraphEnabled() && this.isVisible() && !layerUnderDrag)
@@ -623,12 +622,7 @@ Factory.addComponentsGetterSetter(Container, 'clip', [
  * });
  */
 
-Factory.addGetterSetter(
-  Container,
-  'clipX',
-  undefined,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Container, 'clipX', undefined, getNumberValidator());
 /**
  * get/set clip x
  * @name Konva.Container#clipX
@@ -643,12 +637,7 @@ Factory.addGetterSetter(
  * container.clipX(10);
  */
 
-Factory.addGetterSetter(
-  Container,
-  'clipY',
-  undefined,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Container, 'clipY', undefined, getNumberValidator());
 /**
  * get/set clip y
  * @name Konva.Container#clipY
@@ -667,7 +656,7 @@ Factory.addGetterSetter(
   Container,
   'clipWidth',
   undefined,
-  Validators.getNumberValidator()
+  getNumberValidator()
 );
 /**
  * get/set clip width
@@ -687,7 +676,7 @@ Factory.addGetterSetter(
   Container,
   'clipHeight',
   undefined,
-  Validators.getNumberValidator()
+  getNumberValidator()
 );
 /**
  * get/set clip height

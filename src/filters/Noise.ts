@@ -1,5 +1,7 @@
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Node } from '../Node';
+import { getNumberValidator } from '../Validators';
+
 /**
  * Noise Filter. Randomly adds or substracts to the color channels
  * @function
@@ -30,7 +32,7 @@ Factory.addGetterSetter(
   Node,
   'noise',
   0.2,
-  Validators.getNumberValidator(),
+  getNumberValidator(),
   Factory.afterSetFilter
 );
 /**

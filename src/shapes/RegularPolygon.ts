@@ -1,7 +1,8 @@
 import { Collection } from '../Util';
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { GetSet } from '../types';
+import { getNumberValidator } from '../Validators';
 
 /**
  * RegularPolygon constructor. Examples include triangles, squares, pentagons, hexagons, etc.
@@ -77,12 +78,7 @@ RegularPolygon.prototype._attrsAffectingSize = ['radius'];
  * // set radius
  * shape.radius(10);
  */
-Factory.addGetterSetter(
-  RegularPolygon,
-  'radius',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(RegularPolygon, 'radius', 0, getNumberValidator());
 
 /**
  * get/set sides
@@ -97,11 +93,6 @@ Factory.addGetterSetter(
  * // set sides
  * shape.sides(10);
  */
-Factory.addGetterSetter(
-  RegularPolygon,
-  'sides',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(RegularPolygon, 'sides', 0, getNumberValidator());
 
 Collection.mapMethods(RegularPolygon);

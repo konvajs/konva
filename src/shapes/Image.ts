@@ -1,7 +1,7 @@
 import { Util, Collection } from '../Util';
-import { Factory, Validators } from '../Factory';
-import { Node } from '../Node';
+import { Factory } from '../Factory';
 import { Shape } from '../Shape';
+import { getNumberValidator } from '../Validators';
 
 import { GetSet, IRect } from '../types';
 
@@ -170,7 +170,7 @@ Factory.addComponentsGetterSetter(Image, 'crop', ['x', 'y', 'width', 'height']);
  * });
  */
 
-Factory.addGetterSetter(Image, 'cropX', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Image, 'cropX', 0, getNumberValidator());
 /**
  * get/set crop x
  * @method
@@ -185,7 +185,7 @@ Factory.addGetterSetter(Image, 'cropX', 0, Validators.getNumberValidator());
  * image.cropX(20);
  */
 
-Factory.addGetterSetter(Image, 'cropY', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Image, 'cropY', 0, getNumberValidator());
 /**
  * get/set crop y
  * @name Konva.Image#cropY
@@ -200,7 +200,7 @@ Factory.addGetterSetter(Image, 'cropY', 0, Validators.getNumberValidator());
  * image.cropY(20);
  */
 
-Factory.addGetterSetter(Image, 'cropWidth', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Image, 'cropWidth', 0, getNumberValidator());
 /**
  * get/set crop width
  * @name Konva.Image#cropWidth
@@ -215,12 +215,7 @@ Factory.addGetterSetter(Image, 'cropWidth', 0, Validators.getNumberValidator());
  * image.cropWidth(20);
  */
 
-Factory.addGetterSetter(
-  Image,
-  'cropHeight',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Image, 'cropHeight', 0, getNumberValidator());
 /**
  * get/set crop height
  * @name Konva.Image#cropHeight

@@ -1,7 +1,8 @@
 import { Util } from './Util';
 import { SceneContext, HitContext, Context } from './Context';
 import { glob, getGlobalKonva } from './Global';
-import { Factory, Validators } from './Factory';
+import { Factory } from './Factory';
+import { getNumberValidator } from './Validators';
 
 // calculate pixel ratio
 var _pixelRatio;
@@ -161,12 +162,7 @@ export class Canvas {
  * // set
  * canvas.pixelRatio(100);
  */
-Factory.addGetterSetter(
-  Canvas,
-  'pixelRatio',
-  undefined,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Canvas, 'pixelRatio', undefined, getNumberValidator());
 
 export class SceneCanvas extends Canvas {
   constructor(config: ICanvasConfig = { width: 0, height: 0 }) {

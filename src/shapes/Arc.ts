@@ -1,9 +1,9 @@
-import { Util, Collection } from '../Util';
-import { Factory, Validators } from '../Factory';
-import { Node } from '../Node';
+import { Collection } from '../Util';
+import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { getAngle } from '../Global';
 import { GetSet } from '../types';
+import { getNumberValidator, getBooleanValidator } from '../Validators';
 
 /**
  * Arc constructor
@@ -64,7 +64,7 @@ Arc.prototype.className = 'Arc';
 Arc.prototype._attrsAffectingSize = ['innerRadius', 'outerRadius'];
 
 // add getters setters
-Factory.addGetterSetter(Arc, 'innerRadius', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Arc, 'innerRadius', 0, getNumberValidator());
 
 /**
  * get/set innerRadius
@@ -80,7 +80,7 @@ Factory.addGetterSetter(Arc, 'innerRadius', 0, Validators.getNumberValidator());
  * arc.innerRadius(20);
  */
 
-Factory.addGetterSetter(Arc, 'outerRadius', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Arc, 'outerRadius', 0, getNumberValidator());
 
 /**
  * get/set outerRadius
@@ -96,7 +96,7 @@ Factory.addGetterSetter(Arc, 'outerRadius', 0, Validators.getNumberValidator());
  * arc.outerRadius(20);
  */
 
-Factory.addGetterSetter(Arc, 'angle', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Arc, 'angle', 0, getNumberValidator());
 
 /**
  * get/set angle in degrees
@@ -112,7 +112,7 @@ Factory.addGetterSetter(Arc, 'angle', 0, Validators.getNumberValidator());
  * arc.angle(20);
  */
 
-Factory.addGetterSetter(Arc, 'clockwise', false);
+Factory.addGetterSetter(Arc, 'clockwise', false, getBooleanValidator());
 
 /**
  * get/set clockwise flag

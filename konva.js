@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v3.0.0-3
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Sat Feb 23 2019
+   * Date: Sun Feb 24 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -977,6 +977,121 @@
       }
   };
 
+  function _formatValue(val) {
+      if (Util._isString(val)) {
+          return '"' + val + '"';
+      }
+      if (Object.prototype.toString.call(val) === '[object Number]') {
+          return val;
+      }
+      if (Util._isBoolean(val)) {
+          return val;
+      }
+      return Object.prototype.toString.call(val);
+  }
+  function RGBComponent(val) {
+      if (val > 255) {
+          return 255;
+      }
+      else if (val < 0) {
+          return 0;
+      }
+      return Math.round(val);
+  }
+  function getNumberValidator() {
+      if (isUnminified) {
+          return function (val, attr) {
+              if (!Util._isNumber(val)) {
+                  Util.warn(_formatValue(val) +
+                      ' is a not valid value for "' +
+                      attr +
+                      '" attribute. The value should be a number.');
+              }
+              return val;
+          };
+      }
+  }
+  function getNumberOrAutoValidator() {
+      if (isUnminified) {
+          return function (val, attr) {
+              var isNumber = Util._isNumber(val);
+              var isAuto = val === 'auto';
+              if (!(isNumber || isAuto)) {
+                  Util.warn(_formatValue(val) +
+                      ' is a not valid value for "' +
+                      attr +
+                      '" attribute. The value should be a number or "auto".');
+              }
+              return val;
+          };
+      }
+  }
+  function getStringValidator() {
+      if (isUnminified) {
+          return function (val, attr) {
+              if (!Util._isString(val)) {
+                  Util.warn(_formatValue(val) +
+                      ' is a not valid value for "' +
+                      attr +
+                      '" attribute. The value should be a string.');
+              }
+              return val;
+          };
+      }
+  }
+  function getNumberArrayValidator() {
+      if (isUnminified) {
+          return function (val, attr) {
+              if (!Util._isArray(val)) {
+                  Util.warn(_formatValue(val) +
+                      ' is a not valid value for "' +
+                      attr +
+                      '" attribute. The value should be a array of numbers.');
+              }
+              else {
+                  val.forEach(function (item) {
+                      if (!Util._isNumber(item)) {
+                          Util.warn('"' +
+                              attr +
+                              '" attribute has non numeric element ' +
+                              item +
+                              '. Make sure that all elements are numbers.');
+                      }
+                  });
+              }
+              return val;
+          };
+      }
+  }
+  function getBooleanValidator() {
+      if (isUnminified) {
+          return function (val, attr) {
+              var isBool = val === true || val === false;
+              if (!isBool) {
+                  Util.warn(_formatValue(val) +
+                      ' is a not valid value for "' +
+                      attr +
+                      '" attribute. The value should be a boolean.');
+              }
+              return val;
+          };
+      }
+  }
+  function getComponentValidator(components) {
+      if (isUnminified) {
+          return function (val, attr) {
+              if (!Util.isObject(val)) {
+                  Util.warn(_formatValue(val) +
+                      ' is a not valid value for "' +
+                      attr +
+                      '" attribute. The value should be an object with properties ' +
+                      components);
+              }
+              return val;
+          };
+      }
+  }
+
   var GET = 'get', SET = 'set';
   var Factory = {
       addGetterSetter: function (constructor, attr, def, validator, after) {
@@ -1023,7 +1138,7 @@
               }
               return ret;
           };
-          var basicValidator = Validators.getComponentValidator(components);
+          var basicValidator = getComponentValidator(components);
           // setter
           constructor.prototype[setter] = function (val) {
               var oldVal = this.attrs[attr], key;
@@ -1094,148 +1209,6 @@
       },
       afterSetFilter: function () {
           this._filterUpToDate = false;
-      }
-  };
-  var Validators = {
-      /**
-       * @return {number}
-       */
-      RGBComponent: function (val) {
-          if (val > 255) {
-              return 255;
-          }
-          else if (val < 0) {
-              return 0;
-          }
-          return Math.round(val);
-      },
-      alphaComponent: function (val) {
-          if (val > 1) {
-              return 1;
-          }
-          else if (val < 0.0001) {
-              // chrome does not honor alpha values of 0
-              return 0.0001;
-          }
-          return val;
-      },
-      _formatValue: function (val) {
-          if (Util._isString(val)) {
-              return '"' + val + '"';
-          }
-          if (Object.prototype.toString.call(val) === '[object Number]') {
-              return val;
-          }
-          if (Util._isBoolean(val)) {
-              return val;
-          }
-          return Object.prototype.toString.call(val);
-      },
-      getNumberValidator: function () {
-          if (isUnminified) {
-              return function (val, attr) {
-                  if (!Util._isNumber(val)) {
-                      Util.warn(Validators._formatValue(val) +
-                          ' is a not valid value for "' +
-                          attr +
-                          '" attribute. The value should be a number.');
-                  }
-                  return val;
-              };
-          }
-      },
-      getNumberOrAutoValidator: function () {
-          if (isUnminified) {
-              return function (val, attr) {
-                  var isNumber = Util._isNumber(val);
-                  var isAuto = val === 'auto';
-                  if (!(isNumber || isAuto)) {
-                      Util.warn(Validators._formatValue(val) +
-                          ' is a not valid value for "' +
-                          attr +
-                          '" attribute. The value should be a number or "auto".');
-                  }
-                  return val;
-              };
-          }
-      },
-      getStringValidator: function () {
-          if (isUnminified) {
-              return function (val, attr) {
-                  if (!Util._isString(val)) {
-                      Util.warn(Validators._formatValue(val) +
-                          ' is a not valid value for "' +
-                          attr +
-                          '" attribute. The value should be a string.');
-                  }
-                  return val;
-              };
-          }
-      },
-      getFunctionValidator: function () {
-          if (isUnminified) {
-              return function (val, attr) {
-                  if (!Util._isFunction(val)) {
-                      Util.warn(Validators._formatValue(val) +
-                          ' is a not valid value for "' +
-                          attr +
-                          '" attribute. The value should be a function.');
-                  }
-                  return val;
-              };
-          }
-      },
-      getNumberArrayValidator: function () {
-          if (isUnminified) {
-              return function (val, attr) {
-                  if (!Util._isArray(val)) {
-                      Util.warn(Validators._formatValue(val) +
-                          ' is a not valid value for "' +
-                          attr +
-                          '" attribute. The value should be a array of numbers.');
-                  }
-                  else {
-                      val.forEach(function (item) {
-                          if (!Util._isNumber(item)) {
-                              Util.warn('"' +
-                                  attr +
-                                  '" attribute has non numeric element ' +
-                                  item +
-                                  '. Make sure that all elements are numbers.');
-                          }
-                      });
-                  }
-                  return val;
-              };
-          }
-      },
-      getBooleanValidator: function () {
-          if (isUnminified) {
-              return function (val, attr) {
-                  var isBool = val === true || val === false;
-                  if (!isBool) {
-                      Util.warn(Validators._formatValue(val) +
-                          ' is a not valid value for "' +
-                          attr +
-                          '" attribute. The value should be a boolean.');
-                  }
-                  return val;
-              };
-          }
-      },
-      getComponentValidator: function (components) {
-          if (isUnminified) {
-              return function (val, attr) {
-                  if (!Util.isObject(val)) {
-                      Util.warn(Validators._formatValue(val) +
-                          ' is a not valid value for "' +
-                          attr +
-                          '" attribute. The value should be an object with properties ' +
-                          components);
-                  }
-                  return val;
-              };
-          }
       }
   };
 
@@ -1982,7 +1955,7 @@
    * // set
    * canvas.pixelRatio(100);
    */
-  Factory.addGetterSetter(Canvas, 'pixelRatio', undefined, Validators.getNumberValidator());
+  Factory.addGetterSetter(Canvas, 'pixelRatio', undefined, getNumberValidator());
   var SceneCanvas = /** @class */ (function (_super) {
       __extends(SceneCanvas, _super);
       function SceneCanvas(config) {
@@ -4363,7 +4336,7 @@
    *   y: 10
    * });
    */
-  Factory.addGetterSetter(Node, 'x', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Node, 'x', 0, getNumberValidator());
   /**
    * get/set x position
    * @name Konva.Node#x
@@ -4377,7 +4350,7 @@
    * // set x
    * node.x(5);
    */
-  Factory.addGetterSetter(Node, 'y', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Node, 'y', 0, getNumberValidator());
   /**
    * get/set y position
    * @name Konva.Node#y
@@ -4391,7 +4364,7 @@
    * // set y
    * node.y(5);
    */
-  Factory.addGetterSetter(Node, 'globalCompositeOperation', 'source-over', Validators.getStringValidator());
+  Factory.addGetterSetter(Node, 'globalCompositeOperation', 'source-over', getStringValidator());
   /**
    * get/set globalCompositeOperation of a shape
    * @name Konva.Node#globalCompositeOperation
@@ -4405,7 +4378,7 @@
    * // set globalCompositeOperation
    * shape.globalCompositeOperation('source-in');
    */
-  Factory.addGetterSetter(Node, 'opacity', 1, Validators.getNumberValidator());
+  Factory.addGetterSetter(Node, 'opacity', 1, getNumberValidator());
   /**
    * get/set opacity.  Opacity values range from 0 to 1.
    *  A node with an opacity of 0 is fully transparent, and a node
@@ -4421,7 +4394,7 @@
    * // set opacity
    * node.opacity(0.5);
    */
-  Factory.addGetterSetter(Node, 'name', '', Validators.getStringValidator());
+  Factory.addGetterSetter(Node, 'name', '', getStringValidator());
   /**
    * get/set name
    * @name Konva.Node#name
@@ -4438,7 +4411,7 @@
    * // also node may have multiple names (as css classes)
    * node.name('foo bar');
    */
-  Factory.addGetterSetter(Node, 'id', '', Validators.getStringValidator());
+  Factory.addGetterSetter(Node, 'id', '', getStringValidator());
   /**
    * get/set id. Id is global for whole page.
    * @name Konva.Node#id
@@ -4452,7 +4425,7 @@
    * // set id
    * node.id('foo');
    */
-  Factory.addGetterSetter(Node, 'rotation', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Node, 'rotation', 0, getNumberValidator());
   /**
    * get/set rotation in degrees
    * @name Konva.Node#rotation
@@ -4485,7 +4458,7 @@
    *   y: 3
    * });
    */
-  Factory.addGetterSetter(Node, 'scaleX', 1, Validators.getNumberValidator());
+  Factory.addGetterSetter(Node, 'scaleX', 1, getNumberValidator());
   /**
    * get/set scale x
    * @name Konva.Node#scaleX
@@ -4499,7 +4472,7 @@
    * // set scale x
    * node.scaleX(2);
    */
-  Factory.addGetterSetter(Node, 'scaleY', 1, Validators.getNumberValidator());
+  Factory.addGetterSetter(Node, 'scaleY', 1, getNumberValidator());
   /**
    * get/set scale y
    * @name Konva.Node#scaleY
@@ -4532,7 +4505,7 @@
    *   y: 10
    * });
    */
-  Factory.addGetterSetter(Node, 'skewX', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Node, 'skewX', 0, getNumberValidator());
   /**
    * get/set skew x
    * @name Konva.Node#skewX
@@ -4546,7 +4519,7 @@
    * // set skew x
    * node.skewX(3);
    */
-  Factory.addGetterSetter(Node, 'skewY', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Node, 'skewY', 0, getNumberValidator());
   /**
    * get/set skew y
    * @name Konva.Node#skewY
@@ -4578,7 +4551,7 @@
    *   y: 10
    * });
    */
-  Factory.addGetterSetter(Node, 'offsetX', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Node, 'offsetX', 0, getNumberValidator());
   /**
    * get/set offset x
    * @name Konva.Node#offsetX
@@ -4592,7 +4565,7 @@
    * // set offset x
    * node.offsetX(3);
    */
-  Factory.addGetterSetter(Node, 'offsetY', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Node, 'offsetY', 0, getNumberValidator());
   /**
    * get/set offset y
    * @name Konva.Node#offsetY
@@ -4606,7 +4579,7 @@
    * // set offset y
    * node.offsetY(3);
    */
-  Factory.addGetterSetter(Node, 'dragDistance', null, Validators.getNumberValidator());
+  Factory.addGetterSetter(Node, 'dragDistance', null, getNumberValidator());
   /**
    * get/set drag distance
    * @name Konva.Node#dragDistance
@@ -4623,7 +4596,7 @@
    * // or set globally
    * Konva.dragDistance = 3;
    */
-  Factory.addGetterSetter(Node, 'width', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Node, 'width', 0, getNumberValidator());
   /**
    * get/set width
    * @name Konva.Node#width
@@ -4637,7 +4610,7 @@
    * // set width
    * node.width(100);
    */
-  Factory.addGetterSetter(Node, 'height', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Node, 'height', 0, getNumberValidator());
   /**
    * get/set height
    * @name Konva.Node#height
@@ -4697,7 +4670,7 @@
    * // set preventDefault
    * shape.preventDefault(false);
    */
-  Factory.addGetterSetter(Node, 'preventDefault', true, Validators.getBooleanValidator());
+  Factory.addGetterSetter(Node, 'preventDefault', true, getBooleanValidator());
   Factory.addGetterSetter(Node, 'filters', null, function (val) {
       this._filterUpToDate = false;
       return val;
@@ -4753,7 +4726,7 @@
    * // make visible according to the parent
    * node.visible('inherit');
    */
-  Factory.addGetterSetter(Node, 'transformsEnabled', 'all', Validators.getStringValidator());
+  Factory.addGetterSetter(Node, 'transformsEnabled', 'all', getStringValidator());
   /**
    * get/set transforms that are enabled.  Can be "all", "none", or "position".  The default
    *  is "all"
@@ -4827,7 +4800,7 @@
    * // disable drag and drop
    * node.draggable(false);
    */
-  Factory.addGetterSetter(Node, 'draggable', false, Validators.getBooleanValidator());
+  Factory.addGetterSetter(Node, 'draggable', false, getBooleanValidator());
   Factory.backCompat(Node, {
       rotateDeg: 'rotate',
       setRotationDeg: 'setRotation',
@@ -5299,9 +5272,7 @@
       };
       Container.prototype.shouldDrawHit = function (canvas) {
           var layer = this.getLayer();
-          var layerUnderDrag = DD.isDragging &&
-              DD.anim.getLayers()
-                  .indexOf(layer) !== -1;
+          var layerUnderDrag = DD.isDragging && DD.anim.getLayers().indexOf(layer) !== -1;
           return ((canvas && canvas.isCache) ||
               (layer && layer.hitGraphEnabled() && this.isVisible() && !layerUnderDrag));
       };
@@ -5407,7 +5378,7 @@
    *   height: 20
    * });
    */
-  Factory.addGetterSetter(Container, 'clipX', undefined, Validators.getNumberValidator());
+  Factory.addGetterSetter(Container, 'clipX', undefined, getNumberValidator());
   /**
    * get/set clip x
    * @name Konva.Container#clipX
@@ -5421,7 +5392,7 @@
    * // set clip x
    * container.clipX(10);
    */
-  Factory.addGetterSetter(Container, 'clipY', undefined, Validators.getNumberValidator());
+  Factory.addGetterSetter(Container, 'clipY', undefined, getNumberValidator());
   /**
    * get/set clip y
    * @name Konva.Container#clipY
@@ -5435,7 +5406,7 @@
    * // set clip y
    * container.clipY(10);
    */
-  Factory.addGetterSetter(Container, 'clipWidth', undefined, Validators.getNumberValidator());
+  Factory.addGetterSetter(Container, 'clipWidth', undefined, getNumberValidator());
   /**
    * get/set clip width
    * @name Konva.Container#clipWidth
@@ -5449,7 +5420,7 @@
    * // set clip width
    * container.clipWidth(100);
    */
-  Factory.addGetterSetter(Container, 'clipHeight', undefined, Validators.getNumberValidator());
+  Factory.addGetterSetter(Container, 'clipHeight', undefined, getNumberValidator());
   /**
    * get/set clip height
    * @name Konva.Container#clipHeight
@@ -7031,7 +7002,7 @@
   Shape.prototype._centroid = false;
   Shape.prototype.nodeType = 'Shape';
   // add getters and setters
-  Factory.addGetterSetter(Shape, 'stroke', undefined, Validators.getStringValidator());
+  Factory.addGetterSetter(Shape, 'stroke', undefined, getStringValidator());
   /**
    * get/set stroke color
    * @name Konva.Shape#stroke
@@ -7054,7 +7025,7 @@
    * // set stroke color with rgba and make it 50% opaque
    * shape.stroke('rgba(0,255,0,0.5');
    */
-  Factory.addGetterSetter(Shape, 'strokeWidth', 2, Validators.getNumberValidator());
+  Factory.addGetterSetter(Shape, 'strokeWidth', 2, getNumberValidator());
   /**
    * get/set stroke width
    * @name Konva.Shape#strokeWidth
@@ -7068,7 +7039,7 @@
    * // set stroke width
    * shape.strokeWidth();
    */
-  Factory.addGetterSetter(Shape, 'strokeHitEnabled', true, Validators.getBooleanValidator());
+  Factory.addGetterSetter(Shape, 'strokeHitEnabled', true, getBooleanValidator());
   /**
    * get/set strokeHitEnabled property. Useful for performance optimization.
    * You may set `shape.strokeHitEnabled(false)`. In this case stroke will be no draw on hit canvas, so hit area
@@ -7086,7 +7057,7 @@
    * // set strokeHitEnabled
    * shape.strokeHitEnabled();
    */
-  Factory.addGetterSetter(Shape, 'perfectDrawEnabled', true, Validators.getBooleanValidator());
+  Factory.addGetterSetter(Shape, 'perfectDrawEnabled', true, getBooleanValidator());
   /**
    * get/set perfectDrawEnabled. If a shape has fill, stroke and opacity you may set `perfectDrawEnabled` to false to improve performance.
    * See http://konvajs.org/docs/performance/Disable_Perfect_Draw.html for more information.
@@ -7102,7 +7073,7 @@
    * // set perfectDrawEnabled
    * shape.perfectDrawEnabled();
    */
-  Factory.addGetterSetter(Shape, 'shadowForStrokeEnabled', true, Validators.getBooleanValidator());
+  Factory.addGetterSetter(Shape, 'shadowForStrokeEnabled', true, getBooleanValidator());
   /**
    * get/set shadowForStrokeEnabled. Useful for performance optimization.
    * You may set `shape.shadowForStrokeEnabled(false)`. In this case stroke will no effect shadow.
@@ -7205,7 +7176,7 @@
    *  // a radius of 5px and are 20px apart
    *  line.dash([10, 20, 0.001, 20]);
    */
-  Factory.addGetterSetter(Shape, 'dashOffset', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Shape, 'dashOffset', 0, getNumberValidator());
   /**
    * get/set dash offset for stroke.
    * @name Konva.Shape#dash
@@ -7217,7 +7188,7 @@
    *  line.dash([10, 5]);
    *  line.dashOffset(5);
    */
-  Factory.addGetterSetter(Shape, 'shadowColor', undefined, Validators.getStringValidator());
+  Factory.addGetterSetter(Shape, 'shadowColor', undefined, getStringValidator());
   /**
    * get/set shadow color
    * @name Konva.Shape#shadowColor
@@ -7240,7 +7211,7 @@
    * // set shadow color with rgba and make it 50% opaque
    * shape.shadowColor('rgba(0,255,0,0.5');
    */
-  Factory.addGetterSetter(Shape, 'shadowBlur', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Shape, 'shadowBlur', 0, getNumberValidator());
   /**
    * get/set shadow blur
    * @name Konva.Shape#shadowBlur
@@ -7254,7 +7225,7 @@
    * // set shadow blur
    * shape.shadowBlur(10);
    */
-  Factory.addGetterSetter(Shape, 'shadowOpacity', 1, Validators.getNumberValidator());
+  Factory.addGetterSetter(Shape, 'shadowOpacity', 1, getNumberValidator());
   /**
    * get/set shadow opacity.  must be a value between 0 and 1
    * @name Konva.Shape#shadowOpacity
@@ -7287,7 +7258,7 @@
    *   y: 10
    * });
    */
-  Factory.addGetterSetter(Shape, 'shadowOffsetX', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Shape, 'shadowOffsetX', 0, getNumberValidator());
   /**
    * get/set shadow offset x
    * @name Konva.Shape#shadowOffsetX
@@ -7301,7 +7272,7 @@
    * // set shadow offset x
    * shape.shadowOffsetX(5);
    */
-  Factory.addGetterSetter(Shape, 'shadowOffsetY', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Shape, 'shadowOffsetY', 0, getNumberValidator());
   /**
    * get/set shadow offset y
    * @name Konva.Shape#shadowOffsetY
@@ -7333,7 +7304,7 @@
    * };
    * imageObj.src = 'path/to/image/jpg';
    */
-  Factory.addGetterSetter(Shape, 'fill', undefined, Validators.getStringValidator());
+  Factory.addGetterSetter(Shape, 'fill', undefined, getStringValidator());
   /**
    * get/set fill color
    * @name Konva.Shape#fill
@@ -7359,7 +7330,7 @@
    * // shape without fill
    * shape.fill(null);
    */
-  Factory.addGetterSetter(Shape, 'fillPatternX', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Shape, 'fillPatternX', 0, getNumberValidator());
   /**
    * get/set fill pattern x
    * @name Konva.Shape#fillPatternX
@@ -7372,7 +7343,7 @@
    * // set fill pattern x
    * shape.fillPatternX(20);
    */
-  Factory.addGetterSetter(Shape, 'fillPatternY', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Shape, 'fillPatternY', 0, getNumberValidator());
   /**
    * get/set fill pattern y
    * @name Konva.Shape#fillPatternY
@@ -7594,7 +7565,7 @@
    *   y: 10
    * });
    */
-  Factory.addGetterSetter(Shape, 'fillPatternOffsetX', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Shape, 'fillPatternOffsetX', 0, getNumberValidator());
   /**
    * get/set fill pattern offset x
    * @name Konva.Shape#fillPatternOffsetX
@@ -7608,7 +7579,7 @@
    * // set fill pattern offset x
    * shape.fillPatternOffsetX(20);
    */
-  Factory.addGetterSetter(Shape, 'fillPatternOffsetY', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Shape, 'fillPatternOffsetY', 0, getNumberValidator());
   /**
    * get/set fill pattern offset y
    * @name Konva.Shape#fillPatternOffsetY
@@ -7641,7 +7612,7 @@
    *   y: 2
    * });
    */
-  Factory.addGetterSetter(Shape, 'fillPatternScaleX', 1, Validators.getNumberValidator());
+  Factory.addGetterSetter(Shape, 'fillPatternScaleX', 1, getNumberValidator());
   /**
    * get/set fill pattern scale x
    * @name Konva.Shape#fillPatternScaleX
@@ -7655,7 +7626,7 @@
    * // set fill pattern scale x
    * shape.fillPatternScaleX(2);
    */
-  Factory.addGetterSetter(Shape, 'fillPatternScaleY', 1, Validators.getNumberValidator());
+  Factory.addGetterSetter(Shape, 'fillPatternScaleY', 1, getNumberValidator());
   /**
    * get/set fill pattern scale y
    * @name Konva.Shape#fillPatternScaleY
@@ -8231,7 +8202,7 @@
       };
       return Layer;
   }(BaseLayer));
-  Factory.addGetterSetter(Layer, 'hitGraphEnabled', true, Validators.getBooleanValidator());
+  Factory.addGetterSetter(Layer, 'hitGraphEnabled', true, getBooleanValidator());
   /**
    * get/set hitGraphEnabled flag.  Disabling the hit graph will greatly increase
    *  draw performance because the hit graph will not be redrawn each time the layer is
@@ -9178,7 +9149,7 @@
   Arc.prototype.className = 'Arc';
   Arc.prototype._attrsAffectingSize = ['innerRadius', 'outerRadius'];
   // add getters setters
-  Factory.addGetterSetter(Arc, 'innerRadius', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Arc, 'innerRadius', 0, getNumberValidator());
   /**
    * get/set innerRadius
    * @name Konva.Arc#innerRadius
@@ -9192,7 +9163,7 @@
    * // set inner radius
    * arc.innerRadius(20);
    */
-  Factory.addGetterSetter(Arc, 'outerRadius', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Arc, 'outerRadius', 0, getNumberValidator());
   /**
    * get/set outerRadius
    * @name Konva.Arc#outerRadius
@@ -9206,7 +9177,7 @@
    * // set outer radius
    * arc.outerRadius(20);
    */
-  Factory.addGetterSetter(Arc, 'angle', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Arc, 'angle', 0, getNumberValidator());
   /**
    * get/set angle in degrees
    * @name Konva.Arc#angle
@@ -9220,7 +9191,7 @@
    * // set angle
    * arc.angle(20);
    */
-  Factory.addGetterSetter(Arc, 'clockwise', false);
+  Factory.addGetterSetter(Arc, 'clockwise', false, getBooleanValidator());
   /**
    * get/set clockwise flag
    * @name Konva.Arc#clockwise
@@ -9484,7 +9455,7 @@
    * // set whether the line is a bezier
    * line.bezier(true);
    */
-  Factory.addGetterSetter(Line, 'tension', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Line, 'tension', 0, getNumberValidator());
   /**
    * get/set tension
    * @name Konva.Line#tension
@@ -9498,7 +9469,7 @@
    * // set tension
    * line.tension(3);
    */
-  Factory.addGetterSetter(Line, 'points', [], Validators.getNumberArrayValidator());
+  Factory.addGetterSetter(Line, 'points', [], getNumberArrayValidator());
   /**
    * get/set points array. Points is a flat array [x1, y1, x2, y2]. It is flat for performance reasons.
    * @name Konva.Line#points
@@ -9695,7 +9666,7 @@
    * // set length
    * line.pointerLength(15);
    */
-  Factory.addGetterSetter(Arrow, 'pointerLength', 10, Validators.getNumberValidator());
+  Factory.addGetterSetter(Arrow, 'pointerLength', 10, getNumberValidator());
   /**
    * get/set pointerWidth
    * @name Konva.Arrow#pointerWidth
@@ -9710,7 +9681,7 @@
    * // set width
    * line.pointerWidth(15);
    */
-  Factory.addGetterSetter(Arrow, 'pointerWidth', 10, Validators.getNumberValidator());
+  Factory.addGetterSetter(Arrow, 'pointerWidth', 10, getNumberValidator());
   /**
    * get/set pointerAtBeginning
    * @name Konva.Arrow#pointerAtBeginning
@@ -9859,7 +9830,7 @@
    * // set radius
    * circle.radius(10);
    */
-  Factory.addGetterSetter(Circle, 'radius', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Circle, 'radius', 0, getNumberValidator());
   Collection.mapMethods(Circle);
 
   /**
@@ -10002,7 +9973,7 @@
    *   y: 100
    * });
    */
-  Factory.addGetterSetter(Ellipse, 'radiusX', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Ellipse, 'radiusX', 0, getNumberValidator());
   /**
    * get/set radius x
    * @name Konva.Ellipse#radiusX
@@ -10016,7 +9987,7 @@
    * // set radius x
    * ellipse.radiusX(200);
    */
-  Factory.addGetterSetter(Ellipse, 'radiusY', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Ellipse, 'radiusY', 0, getNumberValidator());
   /**
    * get/set radius y
    * @name Konva.Ellipse#radiusY
@@ -10245,7 +10216,7 @@
    *   height: 20
    * });
    */
-  Factory.addGetterSetter(Image, 'cropX', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Image, 'cropX', 0, getNumberValidator());
   /**
    * get/set crop x
    * @method
@@ -10259,7 +10230,7 @@
    * // set crop x
    * image.cropX(20);
    */
-  Factory.addGetterSetter(Image, 'cropY', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Image, 'cropY', 0, getNumberValidator());
   /**
    * get/set crop y
    * @name Konva.Image#cropY
@@ -10273,7 +10244,7 @@
    * // set crop y
    * image.cropY(20);
    */
-  Factory.addGetterSetter(Image, 'cropWidth', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Image, 'cropWidth', 0, getNumberValidator());
   /**
    * get/set crop width
    * @name Konva.Image#cropWidth
@@ -10287,7 +10258,7 @@
    * // set crop width
    * image.cropWidth(20);
    */
-  Factory.addGetterSetter(Image, 'cropHeight', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Image, 'cropHeight', 0, getNumberValidator());
   /**
    * get/set crop height
    * @name Konva.Image#cropHeight
@@ -10582,7 +10553,7 @@
    * @example
    * tag.pointerWidth(20);
    */
-  Factory.addGetterSetter(Tag, 'pointerWidth', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Tag, 'pointerWidth', 0, getNumberValidator());
   /**
    * get/set pointer height
    * @method
@@ -10592,7 +10563,7 @@
    * @example
    * tag.pointerHeight(20);
    */
-  Factory.addGetterSetter(Tag, 'pointerHeight', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Tag, 'pointerHeight', 0, getNumberValidator());
   /**
    * get/set cornerRadius
    * @name Konva.Tag#cornerRadius
@@ -10602,7 +10573,7 @@
    * @example
    * tag.cornerRadius(20);
    */
-  Factory.addGetterSetter(Tag, 'cornerRadius', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Tag, 'cornerRadius', 0, getNumberValidator());
   Collection.mapMethods(Tag);
 
   /**
@@ -11508,7 +11479,7 @@
    * // set corner radius
    * rect.cornerRadius(10);
    */
-  Factory.addGetterSetter(Rect, 'cornerRadius', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Rect, 'cornerRadius', 0, getNumberValidator());
   Collection.mapMethods(Rect);
 
   /**
@@ -11648,7 +11619,7 @@
    * // set radius
    * shape.radius(10);
    */
-  Factory.addGetterSetter(RegularPolygon, 'radius', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(RegularPolygon, 'radius', 0, getNumberValidator());
   /**
    * get/set sides
    * @method
@@ -11662,7 +11633,7 @@
    * // set sides
    * shape.sides(10);
    */
-  Factory.addGetterSetter(RegularPolygon, 'sides', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(RegularPolygon, 'sides', 0, getNumberValidator());
   Collection.mapMethods(RegularPolygon);
 
   var PIx2 = Math.PI * 2;
@@ -11798,7 +11769,7 @@
    * // set inner radius
    * ring.innerRadius(20);
    */
-  Factory.addGetterSetter(Ring, 'innerRadius', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Ring, 'innerRadius', 0, getNumberValidator());
   /**
    * get/set outerRadius
    * @name Konva.Ring#outerRadius
@@ -11812,7 +11783,7 @@
    * // set outer radius
    * ring.outerRadius(20);
    */
-  Factory.addGetterSetter(Ring, 'outerRadius', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Ring, 'outerRadius', 0, getNumberValidator());
   Collection.mapMethods(Ring);
 
   /**
@@ -12144,7 +12115,7 @@
    * // set image
    * sprite.image(imageObj);
    */
-  Factory.addGetterSetter(Sprite, 'frameIndex', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Sprite, 'frameIndex', 0, getNumberValidator());
   /**
    * set/set animation frame index
    * @name Konva.Sprite#frameIndex
@@ -12158,7 +12129,7 @@
    * // set animation frame index
    * sprite.frameIndex(3);
    */
-  Factory.addGetterSetter(Sprite, 'frameRate', 17, Validators.getNumberValidator());
+  Factory.addGetterSetter(Sprite, 'frameRate', 17, getNumberValidator());
   /**
    * get/set frame rate in frames per second.  Increase this number to make the sprite
    *  animation run faster, and decrease the number to make the sprite animation run slower
@@ -12321,7 +12292,7 @@
    * // set inner radius
    * ring.numPoints(20);
    */
-  Factory.addGetterSetter(Star, 'numPoints', 5, Validators.getNumberValidator());
+  Factory.addGetterSetter(Star, 'numPoints', 5, getNumberValidator());
   /**
    * get/set innerRadius
    * @name Konva.Ring#innerRadius
@@ -12335,7 +12306,7 @@
    * // set inner radius
    * ring.innerRadius(20);
    */
-  Factory.addGetterSetter(Star, 'innerRadius', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Star, 'innerRadius', 0, getNumberValidator());
   /**
    * get/set outerRadius
    * @name Konva.Ring#outerRadius
@@ -12349,7 +12320,7 @@
    * // set inner radius
    * ring.outerRadius(20);
    */
-  Factory.addGetterSetter(Star, 'outerRadius', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Star, 'outerRadius', 0, getNumberValidator());
   Collection.mapMethods(Star);
 
   // constants
@@ -12839,7 +12810,7 @@
    * text.width('auto');
    * text.width() // will return calculated width, and not "auto"
    */
-  Factory.overWriteSetter(Text, 'width', Validators.getNumberOrAutoValidator());
+  Factory.overWriteSetter(Text, 'width', getNumberOrAutoValidator());
   /**
    * get/set the height of the text area, which takes into account multi-line text, line heights, and padding.
    * @name Konva.Text#height
@@ -12857,7 +12828,7 @@
    * text.height('auto');
    * text.height() // will return calculated height, and not "auto"
    */
-  Factory.overWriteSetter(Text, 'height', Validators.getNumberOrAutoValidator());
+  Factory.overWriteSetter(Text, 'height', getNumberOrAutoValidator());
   /**
    * get/set font family
    * @name Konva.Text#fontFamily
@@ -12885,7 +12856,7 @@
    * // set font size to 22px
    * text.fontSize(22);
    */
-  Factory.addGetterSetter(Text, 'fontSize', 12, Validators.getNumberValidator());
+  Factory.addGetterSetter(Text, 'fontSize', 12, getNumberValidator());
   /**
    * get/set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
    * @name Konva.Text#fontStyle
@@ -12927,7 +12898,7 @@
    * // set padding to 10 pixels
    * text.padding(10);
    */
-  Factory.addGetterSetter(Text, 'padding', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Text, 'padding', 0, getNumberValidator());
   /**
    * get/set horizontal align of text.  Can be 'left', 'center', 'right' or 'justify'
    * @name Konva.Text#align
@@ -12972,7 +12943,7 @@
    * // set the line height
    * text.lineHeight(2);
    */
-  Factory.addGetterSetter(Text, 'lineHeight', 1, Validators.getNumberValidator());
+  Factory.addGetterSetter(Text, 'lineHeight', 1, getNumberValidator());
   /**
    * get/set wrap.  Can be "word", "char", or "none". Default is "word".
    * In "word" wrapping any word still can be wrapped if it can't be placed in the required width
@@ -13010,7 +12981,7 @@
    * @method
    * @param {Number} letterSpacing
    */
-  Factory.addGetterSetter(Text, 'letterSpacing', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Text, 'letterSpacing', 0, getNumberValidator());
   /**
    * get/set text
    * @name Konva.Text#text
@@ -13024,7 +12995,7 @@
    * // set text
    * text.text('Hello world!');
    */
-  Factory.addGetterSetter(Text, 'text', '', Validators.getStringValidator());
+  Factory.addGetterSetter(Text, 'text', '', getStringValidator());
   /**
    * get/set text decoration of a text.  Possible values are 'underline', 'line-through' or combination of these values separated by space
    * @name Konva.Text#textDecoration
@@ -13559,7 +13530,7 @@
    * // set font size to 22px
    * shape.fontSize(22);
    */
-  Factory.addGetterSetter(TextPath, 'fontSize', 12, Validators.getNumberValidator());
+  Factory.addGetterSetter(TextPath, 'fontSize', 12, getNumberValidator());
   /**
    * get/set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
    * @name Konva.TextPath#fontStyle
@@ -13604,7 +13575,7 @@
    * // set the line height
    * shape.letterSpacing(2);
    */
-  Factory.addGetterSetter(TextPath, 'letterSpacing', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(TextPath, 'letterSpacing', 0, getNumberValidator());
   /**
    * get/set text baselineg.  The default is 'middle'. Can be 'top', 'bottom', 'middle', 'alphabetic', 'hanging'
    * @name Konva.TextPath#textBaseline
@@ -14441,7 +14412,7 @@
    * // set
    * transformer.anchorSize(20)
    */
-  Factory.addGetterSetter(Transformer, 'anchorSize', 10, Validators.getNumberValidator());
+  Factory.addGetterSetter(Transformer, 'anchorSize', 10, getNumberValidator());
   /**
    * get/set ability to rotate.
    * @name Konva.Transformer#rotateEnabled
@@ -14483,7 +14454,7 @@
    * // set
    * transformer.rotateAnchorOffset(100);
    */
-  Factory.addGetterSetter(Transformer, 'rotateAnchorOffset', 50, Validators.getNumberValidator());
+  Factory.addGetterSetter(Transformer, 'rotateAnchorOffset', 50, getNumberValidator());
   /**
    * get/set visibility of border
    * @name Konva.Transformer#borderEnabled
@@ -14525,7 +14496,7 @@
    * // set
    * transformer.anchorStrokeWidth(3);
    */
-  Factory.addGetterSetter(Transformer, 'anchorStrokeWidth', 1, Validators.getNumberValidator());
+  Factory.addGetterSetter(Transformer, 'anchorStrokeWidth', 1, getNumberValidator());
   /**
    * get/set anchor fill color
    * @name Konva.Transformer#anchorFill
@@ -14553,7 +14524,7 @@
    * // set
    * transformer.anchorCornerRadius(3);
    */
-  Factory.addGetterSetter(Transformer, 'anchorCornerRadius', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Transformer, 'anchorCornerRadius', 0, getNumberValidator());
   /**
    * get/set border stroke color
    * @name Konva.Transformer#borderStroke
@@ -14581,7 +14552,7 @@
    * // set
    * transformer.borderStrokeWidth(3);
    */
-  Factory.addGetterSetter(Transformer, 'borderStrokeWidth', 1, Validators.getNumberValidator());
+  Factory.addGetterSetter(Transformer, 'borderStrokeWidth', 1, getNumberValidator());
   /**
    * get/set border dash array
    * @name Konva.Transformer#borderDash
@@ -14652,7 +14623,7 @@
    * // set
    * transformer.padding(10);
    */
-  Factory.addGetterSetter(Transformer, 'padding', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Transformer, 'padding', 0, getNumberValidator());
   /**
    * get/set attached node of the Transformer. Transformer will adapt to its size and listen to its events
    * @method
@@ -14825,7 +14796,7 @@
    * // set radius
    * wedge.radius(10);
    */
-  Factory.addGetterSetter(Wedge, 'radius', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Wedge, 'radius', 0, getNumberValidator());
   /**
    * get/set angle in degrees
    * @name Konva.Wedge#angle
@@ -14839,7 +14810,7 @@
    * // set angle
    * wedge.angle(20);
    */
-  Factory.addGetterSetter(Wedge, 'angle', 0, Validators.getNumberValidator());
+  Factory.addGetterSetter(Wedge, 'angle', 0, getNumberValidator());
   /**
    * get/set clockwise flag
    * @name Konva.Wedge#clockwise
@@ -15612,7 +15583,7 @@
           filterGaussBlurRGBA(imageData, radius);
       }
   };
-  Factory.addGetterSetter(Node, 'blurRadius', 0, Validators.getNumberValidator(), Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'blurRadius', 0, getNumberValidator(), Factory.afterSetFilter);
   /**
    * get/set blur radius. Use with {@link Konva.Filters.Blur} filter
    * @name Konva.Node#blurRadius
@@ -15642,7 +15613,7 @@
           data[i + 2] += brightness;
       }
   };
-  Factory.addGetterSetter(Node, 'brightness', 0, Validators.getNumberValidator(), Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'brightness', 0, getNumberValidator(), Factory.afterSetFilter);
   /**
    * get/set filter brightness.  The brightness is a number between -1 and 1.&nbsp; Positive values
    *  brighten the pixels and negative values darken them. Use with {@link Konva.Filters.Brighten} filter.
@@ -15704,7 +15675,7 @@
    * @param {Number} contrast value between -100 and 100
    * @returns {Number}
    */
-  Factory.addGetterSetter(Node, 'contrast', 0, Validators.getNumberValidator(), Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'contrast', 0, getNumberValidator(), Factory.afterSetFilter);
 
   /**
    * Emboss Filter.
@@ -15820,7 +15791,7 @@
           } while (--x);
       } while (--y);
   };
-  Factory.addGetterSetter(Node, 'embossStrength', 0.5, Validators.getNumberValidator(), Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'embossStrength', 0.5, getNumberValidator(), Factory.afterSetFilter);
   /**
    * get/set emboss strength. Use with {@link Konva.Filters.Emboss} filter.
    * @name Konva.Node#embossStrength
@@ -15828,7 +15799,7 @@
    * @param {Number} level between 0 and 1.  Default is 0.5
    * @returns {Number}
    */
-  Factory.addGetterSetter(Node, 'embossWhiteLevel', 0.5, Validators.getNumberValidator(), Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'embossWhiteLevel', 0.5, getNumberValidator(), Factory.afterSetFilter);
   /**
    * get/set emboss white level. Use with {@link Konva.Filters.Emboss} filter.
    * @name Konva.Node#embossWhiteLevel
@@ -15967,7 +15938,7 @@
    * @param {Float} amount
    * @returns {Float}
    */
-  Factory.addGetterSetter(Node, 'enhance', 0, Validators.getNumberValidator(), Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'enhance', 0, getNumberValidator(), Factory.afterSetFilter);
 
   /**
    * Grayscale Filter
@@ -15991,7 +15962,7 @@
       }
   };
 
-  Factory.addGetterSetter(Node, 'hue', 0, Validators.getNumberValidator(), Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'hue', 0, getNumberValidator(), Factory.afterSetFilter);
   /**
    * get/set hsv hue in degrees. Use with {@link Konva.Filters.HSV} or {@link Konva.Filters.HSL} filter.
    * @name Konva.Node#hue
@@ -15999,7 +15970,7 @@
    * @param {Number} hue value between 0 and 359
    * @returns {Number}
    */
-  Factory.addGetterSetter(Node, 'saturation', 0, Validators.getNumberValidator(), Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'saturation', 0, getNumberValidator(), Factory.afterSetFilter);
   /**
    * get/set hsv saturation. Use with {@link Konva.Filters.HSV} or {@link Konva.Filters.HSL} filter.
    * @name Konva.Node#saturation
@@ -16007,7 +15978,7 @@
    * @param {Number} saturation 0 is no change, -1.0 halves the saturation, 1.0 doubles, etc..
    * @returns {Number}
    */
-  Factory.addGetterSetter(Node, 'luminance', 0, Validators.getNumberValidator(), Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'luminance', 0, getNumberValidator(), Factory.afterSetFilter);
   /**
    * get/set hsl luminance. Use with {@link Konva.Filters.HSL} filter.
    * @name Konva.Node#luminance
@@ -16097,7 +16068,7 @@
           data[i + 3] = a; // alpha
       }
   };
-  Factory.addGetterSetter(Node, 'hue', 0, Validators.getNumberValidator(), Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'hue', 0, getNumberValidator(), Factory.afterSetFilter);
   /**
    * get/set hsv hue in degrees. Use with {@link Konva.Filters.HSV} or {@link Konva.Filters.HSL} filter.
    * @name Konva.Node#hue
@@ -16105,7 +16076,7 @@
    * @param {Number} hue value between 0 and 359
    * @returns {Number}
    */
-  Factory.addGetterSetter(Node, 'saturation', 0, Validators.getNumberValidator(), Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'saturation', 0, getNumberValidator(), Factory.afterSetFilter);
   /**
    * get/set hsv saturation. Use with {@link Konva.Filters.HSV} or {@link Konva.Filters.HSL} filter.
    * @name Konva.Node#saturation
@@ -16113,7 +16084,7 @@
    * @param {Number} saturation 0 is no change, -1.0 halves the saturation, 1.0 doubles, etc..
    * @returns {Number}
    */
-  Factory.addGetterSetter(Node, 'value', 0, Validators.getNumberValidator(), Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'value', 0, getNumberValidator(), Factory.afterSetFilter);
   /**
    * get/set hsv value. Use with {@link Konva.Filters.HSV} filter.
    * @name Konva.Node#value
@@ -16345,7 +16316,7 @@
    * @param {Integer} power of kaleidoscope
    * @returns {Integer}
    */
-  Factory.addGetterSetter(Node, 'kaleidoscopePower', 2, Validators.getNumberValidator(), Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'kaleidoscopePower', 2, getNumberValidator(), Factory.afterSetFilter);
   /**
    * get/set kaleidoscope angle. Use with {@link Konva.Filters.Kaleidoscope} filter.
    * @name Konva.Node#kaleidoscopeAngle
@@ -16353,7 +16324,7 @@
    * @param {Integer} degrees
    * @returns {Integer}
    */
-  Factory.addGetterSetter(Node, 'kaleidoscopeAngle', 0, Validators.getNumberValidator(), Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'kaleidoscopeAngle', 0, getNumberValidator(), Factory.afterSetFilter);
 
   function pixelAt(idata, x, y) {
       var idx = (y * idata.width + x) * 4;
@@ -16509,7 +16480,7 @@
       }
       return imageData;
   };
-  Factory.addGetterSetter(Node, 'threshold', 0, Validators.getNumberValidator(), Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'threshold', 0, getNumberValidator(), Factory.afterSetFilter);
 
   /**
    * Noise Filter. Randomly adds or substracts to the color channels
@@ -16531,7 +16502,7 @@
           data[i + 2] += half - 2 * half * Math.random();
       }
   };
-  Factory.addGetterSetter(Node, 'noise', 0.2, Validators.getNumberValidator(), Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'noise', 0.2, getNumberValidator(), Factory.afterSetFilter);
   /**
    * get/set noise amount.  Must be a value between 0 and 1. Use with {@link Konva.Filters.Noise} filter.
    * @name Konva.Node#noise
@@ -16617,7 +16588,7 @@
           }
       }
   };
-  Factory.addGetterSetter(Node, 'pixelSize', 8, Validators.getNumberValidator(), Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'pixelSize', 8, getNumberValidator(), Factory.afterSetFilter);
   /**
    * get/set pixel size. Use with {@link Konva.Filters.Pixelate} filter.
    * @name Konva.Node#pixelSize
@@ -16647,7 +16618,7 @@
           data[i] = Math.floor(data[i] / scale) * scale;
       }
   };
-  Factory.addGetterSetter(Node, 'levels', 0.5, Validators.getNumberValidator(), Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'levels', 0.5, getNumberValidator(), Factory.afterSetFilter);
   /**
    * get/set levels.  Must be a number between 0 and 1.  Use with {@link Konva.Filters.Posterize} filter.
    * @name Konva.Node#levels
@@ -16720,7 +16691,7 @@
    * @param {Integer} green value between 0 and 255
    * @returns {Integer}
    */
-  Factory.addGetterSetter(Node, 'blue', 0, Validators.RGBComponent, Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'blue', 0, RGBComponent, Factory.afterSetFilter);
   /**
    * get/set filter blue value. Use with {@link Konva.Filters.RGB} filter.
    * @name blue
@@ -16793,7 +16764,7 @@
    * @param {Integer} green value between 0 and 255
    * @returns {Integer}
    */
-  Factory.addGetterSetter(Node, 'blue', 0, Validators.RGBComponent, Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'blue', 0, RGBComponent, Factory.afterSetFilter);
   /**
    * get/set filter blue value. Use with {@link Konva.Filters.RGBA} filter.
    * @name blue
@@ -16904,7 +16875,7 @@
           data[i] = data[i] < level ? 0 : 255;
       }
   };
-  Factory.addGetterSetter(Node, 'threshold', 0.5, Validators.getNumberValidator(), Factory.afterSetFilter);
+  Factory.addGetterSetter(Node, 'threshold', 0.5, getNumberValidator(), Factory.afterSetFilter);
   /**
    * get/set threshold.  Must be a value between 0 and 1. Use with {@link Konva.Filters.Threshold} or {@link Konva.Filters.Mask} filter.
    * @name threshold

@@ -1,7 +1,8 @@
-import { Util, Collection } from '../Util';
-import { Factory, Validators } from '../Factory';
+import { Collection } from '../Util';
+import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { Group } from '../Group';
+import { getNumberValidator } from '../Validators';
 
 import { GetSet } from '../types';
 
@@ -333,12 +334,7 @@ Factory.addGetterSetter(Tag, 'pointerDirection', NONE);
  * @example
  * tag.pointerWidth(20);
  */
-Factory.addGetterSetter(
-  Tag,
-  'pointerWidth',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Tag, 'pointerWidth', 0, getNumberValidator());
 
 /**
  * get/set pointer height
@@ -350,12 +346,7 @@ Factory.addGetterSetter(
  * tag.pointerHeight(20);
  */
 
-Factory.addGetterSetter(
-  Tag,
-  'pointerHeight',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Tag, 'pointerHeight', 0, getNumberValidator());
 
 /**
  * get/set cornerRadius
@@ -367,11 +358,6 @@ Factory.addGetterSetter(
  * tag.cornerRadius(20);
  */
 
-Factory.addGetterSetter(
-  Tag,
-  'cornerRadius',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Tag, 'cornerRadius', 0, getNumberValidator());
 
 Collection.mapMethods(Tag);

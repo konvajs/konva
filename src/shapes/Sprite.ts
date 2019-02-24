@@ -1,7 +1,8 @@
-import { Util, Collection } from '../Util';
-import { Factory, Validators } from '../Factory';
+import { Collection } from '../Util';
+import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { Animation } from '../Animation';
+import { getNumberValidator } from '../Validators';
 
 import { GetSet } from '../types';
 
@@ -316,12 +317,7 @@ Factory.addGetterSetter(Sprite, 'image');
  * sprite.image(imageObj);
  */
 
-Factory.addGetterSetter(
-  Sprite,
-  'frameIndex',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Sprite, 'frameIndex', 0, getNumberValidator());
 
 /**
  * set/set animation frame index
@@ -337,12 +333,7 @@ Factory.addGetterSetter(
  * sprite.frameIndex(3);
  */
 
-Factory.addGetterSetter(
-  Sprite,
-  'frameRate',
-  17,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Sprite, 'frameRate', 17, getNumberValidator());
 
 /**
  * get/set frame rate in frames per second.  Increase this number to make the sprite

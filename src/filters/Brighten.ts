@@ -1,5 +1,6 @@
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Node, Filter } from '../Node';
+import { getNumberValidator } from '../Validators';
 
 /**
  * Brighten Filter.
@@ -31,7 +32,7 @@ Factory.addGetterSetter(
   Node,
   'brightness',
   0,
-  Validators.getNumberValidator(),
+  getNumberValidator(),
   Factory.afterSetFilter
 );
 /**

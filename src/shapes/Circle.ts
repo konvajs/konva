@@ -1,8 +1,8 @@
-import { Util, Collection } from '../Util';
-import { Factory, Validators } from '../Factory';
-import { Node } from '../Node';
+import { Collection } from '../Util';
+import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { GetSet } from '../types';
+import { getNumberValidator } from '../Validators';
 
 /**
  * Circle constructor
@@ -66,6 +66,6 @@ Circle.prototype._attrsAffectingSize = ['radius'];
  * // set radius
  * circle.radius(10);
  */
-Factory.addGetterSetter(Circle, 'radius', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Circle, 'radius', 0, getNumberValidator());
 
 Collection.mapMethods(Circle);

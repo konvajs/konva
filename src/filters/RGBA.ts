@@ -1,5 +1,7 @@
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Node } from '../Node';
+import { RGBComponent } from '../Validators';
+
 /**
  * RGBA Filter
  * @function
@@ -72,13 +74,7 @@ Factory.addGetterSetter(Node, 'green', 0, function(val) {
  * @returns {Integer}
  */
 
-Factory.addGetterSetter(
-  Node,
-  'blue',
-  0,
-  Validators.RGBComponent,
-  Factory.afterSetFilter
-);
+Factory.addGetterSetter(Node, 'blue', 0, RGBComponent, Factory.afterSetFilter);
 /**
  * get/set filter blue value. Use with {@link Konva.Filters.RGBA} filter.
  * @name blue

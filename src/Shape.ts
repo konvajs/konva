@@ -1,6 +1,11 @@
 import { Util, Collection } from './Util';
-import { Factory, Validators } from './Factory';
+import { Factory } from './Factory';
 import { Node } from './Node';
+import {
+  getNumberValidator,
+  getStringValidator,
+  getBooleanValidator
+} from './Validators';
 
 import { GetSet, Vector2d } from './types';
 import { Context } from './Context';
@@ -699,12 +704,7 @@ Shape.prototype._centroid = false;
 Shape.prototype.nodeType = 'Shape';
 
 // add getters and setters
-Factory.addGetterSetter(
-  Shape,
-  'stroke',
-  undefined,
-  Validators.getStringValidator()
-);
+Factory.addGetterSetter(Shape, 'stroke', undefined, getStringValidator());
 
 /**
  * get/set stroke color
@@ -729,12 +729,7 @@ Factory.addGetterSetter(
  * shape.stroke('rgba(0,255,0,0.5');
  */
 
-Factory.addGetterSetter(
-  Shape,
-  'strokeWidth',
-  2,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Shape, 'strokeWidth', 2, getNumberValidator());
 
 /**
  * get/set stroke width
@@ -750,12 +745,7 @@ Factory.addGetterSetter(
  * shape.strokeWidth();
  */
 
-Factory.addGetterSetter(
-  Shape,
-  'strokeHitEnabled',
-  true,
-  Validators.getBooleanValidator()
-);
+Factory.addGetterSetter(Shape, 'strokeHitEnabled', true, getBooleanValidator());
 
 /**
  * get/set strokeHitEnabled property. Useful for performance optimization.
@@ -779,7 +769,7 @@ Factory.addGetterSetter(
   Shape,
   'perfectDrawEnabled',
   true,
-  Validators.getBooleanValidator()
+  getBooleanValidator()
 );
 
 /**
@@ -802,7 +792,7 @@ Factory.addGetterSetter(
   Shape,
   'shadowForStrokeEnabled',
   true,
-  Validators.getBooleanValidator()
+  getBooleanValidator()
 );
 
 /**
@@ -918,12 +908,7 @@ Factory.addGetterSetter(Shape, 'dash');
  *  line.dash([10, 20, 0.001, 20]);
  */
 
-Factory.addGetterSetter(
-  Shape,
-  'dashOffset',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Shape, 'dashOffset', 0, getNumberValidator());
 
 /**
  * get/set dash offset for stroke.
@@ -937,12 +922,7 @@ Factory.addGetterSetter(
  *  line.dashOffset(5);
  */
 
-Factory.addGetterSetter(
-  Shape,
-  'shadowColor',
-  undefined,
-  Validators.getStringValidator()
-);
+Factory.addGetterSetter(Shape, 'shadowColor', undefined, getStringValidator());
 
 /**
  * get/set shadow color
@@ -967,12 +947,7 @@ Factory.addGetterSetter(
  * shape.shadowColor('rgba(0,255,0,0.5');
  */
 
-Factory.addGetterSetter(
-  Shape,
-  'shadowBlur',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Shape, 'shadowBlur', 0, getNumberValidator());
 
 /**
  * get/set shadow blur
@@ -988,12 +963,7 @@ Factory.addGetterSetter(
  * shape.shadowBlur(10);
  */
 
-Factory.addGetterSetter(
-  Shape,
-  'shadowOpacity',
-  1,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Shape, 'shadowOpacity', 1, getNumberValidator());
 
 /**
  * get/set shadow opacity.  must be a value between 0 and 1
@@ -1030,12 +1000,7 @@ Factory.addComponentsGetterSetter(Shape, 'shadowOffset', ['x', 'y']);
  * });
  */
 
-Factory.addGetterSetter(
-  Shape,
-  'shadowOffsetX',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Shape, 'shadowOffsetX', 0, getNumberValidator());
 
 /**
  * get/set shadow offset x
@@ -1051,12 +1016,7 @@ Factory.addGetterSetter(
  * shape.shadowOffsetX(5);
  */
 
-Factory.addGetterSetter(
-  Shape,
-  'shadowOffsetY',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Shape, 'shadowOffsetY', 0, getNumberValidator());
 
 /**
  * get/set shadow offset y
@@ -1092,12 +1052,7 @@ Factory.addGetterSetter(Shape, 'fillPatternImage');
  * imageObj.src = 'path/to/image/jpg';
  */
 
-Factory.addGetterSetter(
-  Shape,
-  'fill',
-  undefined,
-  Validators.getStringValidator()
-);
+Factory.addGetterSetter(Shape, 'fill', undefined, getStringValidator());
 
 /**
  * get/set fill color
@@ -1125,12 +1080,7 @@ Factory.addGetterSetter(
  * shape.fill(null);
  */
 
-Factory.addGetterSetter(
-  Shape,
-  'fillPatternX',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Shape, 'fillPatternX', 0, getNumberValidator());
 
 /**
  * get/set fill pattern x
@@ -1145,12 +1095,7 @@ Factory.addGetterSetter(
  * shape.fillPatternX(20);
  */
 
-Factory.addGetterSetter(
-  Shape,
-  'fillPatternY',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Shape, 'fillPatternY', 0, getNumberValidator());
 
 /**
  * get/set fill pattern y
@@ -1400,12 +1345,7 @@ Factory.addComponentsGetterSetter(Shape, 'fillPatternOffset', ['x', 'y']);
  * });
  */
 
-Factory.addGetterSetter(
-  Shape,
-  'fillPatternOffsetX',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Shape, 'fillPatternOffsetX', 0, getNumberValidator());
 
 /**
  * get/set fill pattern offset x
@@ -1421,12 +1361,7 @@ Factory.addGetterSetter(
  * shape.fillPatternOffsetX(20);
  */
 
-Factory.addGetterSetter(
-  Shape,
-  'fillPatternOffsetY',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Shape, 'fillPatternOffsetY', 0, getNumberValidator());
 
 /**
  * get/set fill pattern offset y
@@ -1463,12 +1398,7 @@ Factory.addComponentsGetterSetter(Shape, 'fillPatternScale', ['x', 'y']);
  * });
  */
 
-Factory.addGetterSetter(
-  Shape,
-  'fillPatternScaleX',
-  1,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Shape, 'fillPatternScaleX', 1, getNumberValidator());
 
 /**
  * get/set fill pattern scale x
@@ -1484,12 +1414,7 @@ Factory.addGetterSetter(
  * shape.fillPatternScaleX(2);
  */
 
-Factory.addGetterSetter(
-  Shape,
-  'fillPatternScaleY',
-  1,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Shape, 'fillPatternScaleY', 1, getNumberValidator());
 
 /**
  * get/set fill pattern scale y

@@ -1,10 +1,12 @@
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Node } from '../Node';
+import { getNumberValidator } from '../Validators';
+
 Factory.addGetterSetter(
   Node,
   'hue',
   0,
-  Validators.getNumberValidator(),
+  getNumberValidator(),
   Factory.afterSetFilter
 );
 /**
@@ -19,7 +21,7 @@ Factory.addGetterSetter(
   Node,
   'saturation',
   0,
-  Validators.getNumberValidator(),
+  getNumberValidator(),
   Factory.afterSetFilter
 );
 /**
@@ -34,7 +36,7 @@ Factory.addGetterSetter(
   Node,
   'luminance',
   0,
-  Validators.getNumberValidator(),
+  getNumberValidator(),
   Factory.afterSetFilter
 );
 /**

@@ -1,10 +1,15 @@
 import { Util, Collection, Transform, RectConf, Point } from './Util';
-import { Factory, Validators } from './Factory';
+import { Factory } from './Factory';
 import { SceneCanvas, HitCanvas } from './Canvas';
 import { getGlobalKonva } from './Global';
 import { Container } from './Container';
 import { GetSet, Vector2d } from './types';
 import { DD } from './DragAndDrop';
+import {
+  getNumberValidator,
+  getStringValidator,
+  getBooleanValidator
+} from './Validators';
 
 export const ids = {};
 export const names = {};
@@ -2412,7 +2417,7 @@ Factory.addGetterSetter(Node, 'position');
  * });
  */
 
-Factory.addGetterSetter(Node, 'x', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Node, 'x', 0, getNumberValidator());
 
 /**
  * get/set x position
@@ -2428,7 +2433,7 @@ Factory.addGetterSetter(Node, 'x', 0, Validators.getNumberValidator());
  * node.x(5);
  */
 
-Factory.addGetterSetter(Node, 'y', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Node, 'y', 0, getNumberValidator());
 
 /**
  * get/set y position
@@ -2448,7 +2453,7 @@ Factory.addGetterSetter(
   Node,
   'globalCompositeOperation',
   'source-over',
-  Validators.getStringValidator()
+  getStringValidator()
 );
 
 /**
@@ -2464,7 +2469,7 @@ Factory.addGetterSetter(
  * // set globalCompositeOperation
  * shape.globalCompositeOperation('source-in');
  */
-Factory.addGetterSetter(Node, 'opacity', 1, Validators.getNumberValidator());
+Factory.addGetterSetter(Node, 'opacity', 1, getNumberValidator());
 
 /**
  * get/set opacity.  Opacity values range from 0 to 1.
@@ -2482,7 +2487,7 @@ Factory.addGetterSetter(Node, 'opacity', 1, Validators.getNumberValidator());
  * node.opacity(0.5);
  */
 
-Factory.addGetterSetter(Node, 'name', '', Validators.getStringValidator());
+Factory.addGetterSetter(Node, 'name', '', getStringValidator());
 
 /**
  * get/set name
@@ -2501,7 +2506,7 @@ Factory.addGetterSetter(Node, 'name', '', Validators.getStringValidator());
  * node.name('foo bar');
  */
 
-Factory.addGetterSetter(Node, 'id', '', Validators.getStringValidator());
+Factory.addGetterSetter(Node, 'id', '', getStringValidator());
 
 /**
  * get/set id. Id is global for whole page.
@@ -2517,7 +2522,7 @@ Factory.addGetterSetter(Node, 'id', '', Validators.getStringValidator());
  * node.id('foo');
  */
 
-Factory.addGetterSetter(Node, 'rotation', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Node, 'rotation', 0, getNumberValidator());
 
 /**
  * get/set rotation in degrees
@@ -2554,7 +2559,7 @@ Factory.addComponentsGetterSetter(Node, 'scale', ['x', 'y']);
  * });
  */
 
-Factory.addGetterSetter(Node, 'scaleX', 1, Validators.getNumberValidator());
+Factory.addGetterSetter(Node, 'scaleX', 1, getNumberValidator());
 
 /**
  * get/set scale x
@@ -2570,7 +2575,7 @@ Factory.addGetterSetter(Node, 'scaleX', 1, Validators.getNumberValidator());
  * node.scaleX(2);
  */
 
-Factory.addGetterSetter(Node, 'scaleY', 1, Validators.getNumberValidator());
+Factory.addGetterSetter(Node, 'scaleY', 1, getNumberValidator());
 
 /**
  * get/set scale y
@@ -2607,7 +2612,7 @@ Factory.addComponentsGetterSetter(Node, 'skew', ['x', 'y']);
  * });
  */
 
-Factory.addGetterSetter(Node, 'skewX', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Node, 'skewX', 0, getNumberValidator());
 
 /**
  * get/set skew x
@@ -2623,7 +2628,7 @@ Factory.addGetterSetter(Node, 'skewX', 0, Validators.getNumberValidator());
  * node.skewX(3);
  */
 
-Factory.addGetterSetter(Node, 'skewY', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Node, 'skewY', 0, getNumberValidator());
 
 /**
  * get/set skew y
@@ -2659,7 +2664,7 @@ Factory.addComponentsGetterSetter(Node, 'offset', ['x', 'y']);
  * });
  */
 
-Factory.addGetterSetter(Node, 'offsetX', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Node, 'offsetX', 0, getNumberValidator());
 
 /**
  * get/set offset x
@@ -2675,7 +2680,7 @@ Factory.addGetterSetter(Node, 'offsetX', 0, Validators.getNumberValidator());
  * node.offsetX(3);
  */
 
-Factory.addGetterSetter(Node, 'offsetY', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Node, 'offsetY', 0, getNumberValidator());
 
 /**
  * get/set offset y
@@ -2691,12 +2696,7 @@ Factory.addGetterSetter(Node, 'offsetY', 0, Validators.getNumberValidator());
  * node.offsetY(3);
  */
 
-Factory.addGetterSetter(
-  Node,
-  'dragDistance',
-  null,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Node, 'dragDistance', null, getNumberValidator());
 
 /**
  * get/set drag distance
@@ -2715,7 +2715,7 @@ Factory.addGetterSetter(
  * Konva.dragDistance = 3;
  */
 
-Factory.addGetterSetter(Node, 'width', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Node, 'width', 0, getNumberValidator());
 /**
  * get/set width
  * @name Konva.Node#width
@@ -2730,7 +2730,7 @@ Factory.addGetterSetter(Node, 'width', 0, Validators.getNumberValidator());
  * node.width(100);
  */
 
-Factory.addGetterSetter(Node, 'height', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Node, 'height', 0, getNumberValidator());
 /**
  * get/set height
  * @name Konva.Node#height
@@ -2795,12 +2795,7 @@ Factory.addGetterSetter(Node, 'listening', 'inherit', function(val) {
  * shape.preventDefault(false);
  */
 
-Factory.addGetterSetter(
-  Node,
-  'preventDefault',
-  true,
-  Validators.getBooleanValidator()
-);
+Factory.addGetterSetter(Node, 'preventDefault', true, getBooleanValidator());
 
 Factory.addGetterSetter(Node, 'filters', null, function(val) {
   this._filterUpToDate = false;
@@ -2861,12 +2856,7 @@ Factory.addGetterSetter(Node, 'visible', 'inherit', function(val) {
  * node.visible('inherit');
  */
 
-Factory.addGetterSetter(
-  Node,
-  'transformsEnabled',
-  'all',
-  Validators.getStringValidator()
-);
+Factory.addGetterSetter(Node, 'transformsEnabled', 'all', getStringValidator());
 
 /**
  * get/set transforms that are enabled.  Can be "all", "none", or "position".  The default
@@ -2944,12 +2934,7 @@ Factory.addGetterSetter(Node, 'dragBoundFunc');
  * // disable drag and drop
  * node.draggable(false);
  */
-Factory.addGetterSetter(
-  Node,
-  'draggable',
-  false,
-  Validators.getBooleanValidator()
-);
+Factory.addGetterSetter(Node, 'draggable', false, getBooleanValidator());
 
 Factory.backCompat(Node, {
   rotateDeg: 'rotate',

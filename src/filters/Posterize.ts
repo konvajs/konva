@@ -1,5 +1,6 @@
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Node } from '../Node';
+import { getNumberValidator } from '../Validators';
 /**
  * Posterize Filter. Adjusts the channels so that there are no more
  *  than n different values for that channel. This is also applied
@@ -32,7 +33,7 @@ Factory.addGetterSetter(
   Node,
   'levels',
   0.5,
-  Validators.getNumberValidator(),
+  getNumberValidator(),
   Factory.afterSetFilter
 );
 

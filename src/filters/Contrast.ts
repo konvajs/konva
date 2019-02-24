@@ -1,5 +1,6 @@
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Node } from '../Node';
+import { getNumberValidator } from '../Validators';
 /**
  * Contrast Filter.
  * @function
@@ -69,6 +70,6 @@ Factory.addGetterSetter(
   Node,
   'contrast',
   0,
-  Validators.getNumberValidator(),
+  getNumberValidator(),
   Factory.afterSetFilter
 );

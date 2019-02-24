@@ -1,8 +1,8 @@
-import { Util, Collection } from '../Util';
-import { Factory, Validators } from '../Factory';
-import { Node } from '../Node';
+import { Collection } from '../Util';
+import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { getAngle } from '../Global';
+import { getNumberValidator } from '../Validators';
 
 import { GetSet } from '../types';
 
@@ -78,7 +78,7 @@ Wedge.prototype._attrsAffectingSize = ['radius'];
  * // set radius
  * wedge.radius(10);
  */
-Factory.addGetterSetter(Wedge, 'radius', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Wedge, 'radius', 0, getNumberValidator());
 
 /**
  * get/set angle in degrees
@@ -93,7 +93,7 @@ Factory.addGetterSetter(Wedge, 'radius', 0, Validators.getNumberValidator());
  * // set angle
  * wedge.angle(20);
  */
-Factory.addGetterSetter(Wedge, 'angle', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Wedge, 'angle', 0, getNumberValidator());
 
 /**
  * get/set clockwise flag

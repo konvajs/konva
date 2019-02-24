@@ -1,5 +1,6 @@
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Node } from '../Node';
+import { getNumberValidator } from '../Validators';
 /**
  * Threshold Filter. Pushes any value above the mid point to
  *  the max and any value below the mid point to the min.
@@ -30,7 +31,7 @@ Factory.addGetterSetter(
   Node,
   'threshold',
   0.5,
-  Validators.getNumberValidator(),
+  getNumberValidator(),
   Factory.afterSetFilter
 );
 /**

@@ -1,7 +1,12 @@
 import { Util, Collection } from '../Util';
-import { Factory, Validators } from '../Factory';
+import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { UA } from '../Global';
+import {
+  getNumberValidator,
+  getStringValidator,
+  getNumberOrAutoValidator
+} from '../Validators';
 
 import { GetSet } from '../types';
 
@@ -543,7 +548,7 @@ Text.prototype._attrsAffectingSize = [
  * text.width('auto');
  * text.width() // will return calculated width, and not "auto"
  */
-Factory.overWriteSetter(Text, 'width', Validators.getNumberOrAutoValidator());
+Factory.overWriteSetter(Text, 'width', getNumberOrAutoValidator());
 
 /**
  * get/set the height of the text area, which takes into account multi-line text, line heights, and padding.
@@ -563,7 +568,7 @@ Factory.overWriteSetter(Text, 'width', Validators.getNumberOrAutoValidator());
  * text.height() // will return calculated height, and not "auto"
  */
 
-Factory.overWriteSetter(Text, 'height', Validators.getNumberOrAutoValidator());
+Factory.overWriteSetter(Text, 'height', getNumberOrAutoValidator());
 
 /**
  * get/set font family
@@ -593,7 +598,7 @@ Factory.addGetterSetter(Text, 'fontFamily', 'Arial');
  * // set font size to 22px
  * text.fontSize(22);
  */
-Factory.addGetterSetter(Text, 'fontSize', 12, Validators.getNumberValidator());
+Factory.addGetterSetter(Text, 'fontSize', 12, getNumberValidator());
 
 /**
  * get/set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
@@ -641,7 +646,7 @@ Factory.addGetterSetter(Text, 'fontVariant', NORMAL);
  * text.padding(10);
  */
 
-Factory.addGetterSetter(Text, 'padding', 0, Validators.getNumberValidator());
+Factory.addGetterSetter(Text, 'padding', 0, getNumberValidator());
 
 /**
  * get/set horizontal align of text.  Can be 'left', 'center', 'right' or 'justify'
@@ -692,7 +697,7 @@ Factory.addGetterSetter(Text, 'verticalAlign', TOP);
  * text.lineHeight(2);
  */
 
-Factory.addGetterSetter(Text, 'lineHeight', 1, Validators.getNumberValidator());
+Factory.addGetterSetter(Text, 'lineHeight', 1, getNumberValidator());
 
 /**
  * get/set wrap.  Can be "word", "char", or "none". Default is "word".
@@ -736,12 +741,7 @@ Factory.addGetterSetter(Text, 'ellipsis', false);
  * @param {Number} letterSpacing
  */
 
-Factory.addGetterSetter(
-  Text,
-  'letterSpacing',
-  0,
-  Validators.getNumberValidator()
-);
+Factory.addGetterSetter(Text, 'letterSpacing', 0, getNumberValidator());
 
 /**
  * get/set text
@@ -757,7 +757,7 @@ Factory.addGetterSetter(
  * text.text('Hello world!');
  */
 
-Factory.addGetterSetter(Text, 'text', '', Validators.getStringValidator());
+Factory.addGetterSetter(Text, 'text', '', getStringValidator());
 
 /**
  * get/set text decoration of a text.  Possible values are 'underline', 'line-through' or combination of these values separated by space
