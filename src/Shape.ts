@@ -289,6 +289,7 @@ export class Shape extends Node {
   hasStroke() {
     return (
       this.strokeEnabled() &&
+      this.strokeWidth() &&
       !!(this.stroke() || this.strokeLinearGradientColorStops())
       // this.getStrokeRadialGradientColorStops()
     );

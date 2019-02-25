@@ -515,6 +515,43 @@ suite('Shape', function() {
   });
 
   // ======================================================
+  test('test strokeWidth = 0', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 50,
+      width: 100,
+      height: 50,
+      fill: 'green',
+      strokeWidth: 0,
+      stroke: 'black'
+    });
+
+    layer.add(rect);
+    stage.add(layer);
+
+    var canvas = createCanvas();
+    var context = canvas.getContext('2d');
+    context.beginPath();
+    context.rect(100, 50, 100, 50);
+    context.closePath();
+
+    context.fillStyle = 'green';
+    context.fill();
+    var trace = layer.getContext().getTrace();
+
+    compareLayerAndCanvas(layer, canvas, 30);
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();restore();'
+    );
+  });
+
+  // ======================================================
   test('stroke with shadow and opacity', function() {
     Konva.pixelRatio = 1;
     var stage = addStage();

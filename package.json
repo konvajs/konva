@@ -38,6 +38,7 @@
     "gulp-util": "^3.0.8",
     "mocha": "5.2.0",
     "mocha-headless-chrome": "^2.0.2",
+    "parcel-bundler": "^1.11.0",
     "prettier": "^1.16.4",
     "typescript": "^3.3.1"
   },
