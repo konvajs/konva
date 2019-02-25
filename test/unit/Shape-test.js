@@ -695,7 +695,7 @@ suite('Shape', function() {
     // restroke without the shaodw
     context.stroke();
 
-    compareLayerAndCanvas(layer, canvas, 10);
+    compareLayerAndCanvas(layer, canvas, 50);
 
     var trace = layer.getContext().getTrace();
     //console.log(trace);

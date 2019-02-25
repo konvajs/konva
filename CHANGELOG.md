@@ -3,11 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [new version][unreleased]
+## [3.0.0][2019-02-25]
 
 ## Breaking
 
-Customs builds are removed from npm package. You can not use `import Konva from 'konva/src/Core';`.
+Customs builds are temporary removed from npm package. You can not use `import Konva from 'konva/src/Core';`.
 This feature will be added back later.
 
 ### Possibly breaking
@@ -23,7 +23,6 @@ That changes are private and internal specific. They should not break most of `K
 * `id` and `name` properties defaults are empty strings, not `undefined`
 * internal `_cache` property was updated to use es2015 `Map` instead of `{}`.
 * `Konva.Validators` is removed.
-
 
 
 ### Added
@@ -59,6 +58,7 @@ That changes are private and internal specific. They should not break most of `K
 * Fixed container change for a stage.
 * Fixed warning for `width` and `height` attributes for `Konva.Text`
 * Fixed gradient drawing for `Konva.Text`
+* Fixed rendering with `strokeWidth = 0`
 
 ## [2.6.0][2018-12-14]
 
