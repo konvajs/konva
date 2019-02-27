@@ -100,16 +100,22 @@ import * as Konva from 'konva';
 
 ### 4 Minimal bundle
 
-If you are using webpack or browserfy you can use this approach to load only required Konva's parts:
-
 ```javascript
-import Konva from 'konva/src/Core';
-// now you have Konva object with Stage, Layer, FastLayer, Group, Shape and some additional utils function
-// so there are no shapes (rect, circle, etc), no filters, no d&d support.
+import Konva from 'konva/lib/Core';
+// now you have Konva object with Stage, Layer, FastLayer, Group, Shape and some additional utils function.
+// Also core currently already have support for drag&drop and animations.
+// BUT there are no shapes (rect, circle, etc), no filters.
 
 // but you can simply add anything you need:
-import 'konva/src/shapes/rect';
-//now Konva.Rect is available to use
+import { Rect } from 'konva/lib/shapes/Rect';
+// importing a shape will automatically inject it into Konva object
+
+var rect1 = new Rect();
+// or:
+var shape = new Konva.Rect();
+
+// for filters you can use this:
+import { Blur } from 'konva/lib/filters/Blur';
 ```
 
 ### 5 NodeJS

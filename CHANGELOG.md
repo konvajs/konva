@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.0][2019-02-27]
+
+* Make `Konva` modular: `import Konva from 'konva/lib/Core';`;
+
 ## [3.0.0][2019-02-25]
 
 ## Breaking
