@@ -29,42 +29,44 @@ while true; do
 done
 
 echo "Pulling"
-git pull
+git pull >/dev/null
 
-echo "lint and test"
-npm run lint
-npm run build
+echo "Lint, build and test"
+npm run lint >/dev/null
+npm run build >/dev/null
 
 echo "commit change log updates"
-git commit -am "update CHANGELOG with new version" --allow-empty
+git commit -am "update CHANGELOG with new version" --allow-empty >/dev/null
 
 echo "npm version $1 --no-git-tag-version"
-npm version $1 --no-git-tag-version --allow-same-version
+npm version $1 --no-git-tag-version --allow-same-version >/dev/null
 
 echo "build for $1"
-npm run build
-git commit -am "build for $1" --allow-empty
+npm run build >/dev/null
+git commit -am "build for $1" --allow-empty >/dev/null
 
 echo "update CDN link in REAME"
-perl -i -pe "s|${old_cdn_min}|${new_cdn_min}|g" ./README.md
-git commit -am "update cdn link" --allow-empty
-
-echo "generate documentation"
-npm start api
+perl -i -pe "s|${old_cdn_min}|${new_cdn_min}|g" ./README.md >/dev/null
+git commit -am "update cdn link" --allow-empty >/dev/null
 
 echo "create new git tag"
-git tag $1
+git tag $1 >/dev/null
+
+echo "generate documentation"
+npm start api >/dev/null
+
+
 
 echo "archive documentation"
-zip -r konva-v${new_version}-documentation.zip ./api/*
-rm -r ./api
+zip -r konva-v${new_version}-documentation.zip ./api/* >/dev/null
+rm -r ./api >/dev/null
 
 echo "documentation is generated"
 echo "include konva-v${new_version}-documentation.zip into version in github"
 
 cd ../konva
-git push
-git push --tags
+git push >/dev/null
+git push --tags >/dev/null
 npm publish
 
 echo "copy konva.js into konva-site"
@@ -74,12 +76,11 @@ cd ../konva-site
 echo "replace CDN links"
 
 
-find source themes -exec perl -i -pe "s|${old_cdn}|${new_cdn}|g" {} +
-
-find source themes -exec perl -i -pe "s|${old_cdn_min}|${new_cdn_min}|g" {} +
+find source themes -exec perl -i -pe "s|${old_cdn}|${new_cdn}|g" {} + >/dev/null
+find source themes -exec perl -i -pe "s|${old_cdn_min}|${new_cdn_min}|g" {} + >/dev/null
 
 echo "regenerate site"
-./deploy.sh
+./deploy.sh >/dev/null
 
 echo "DONE!"
 
