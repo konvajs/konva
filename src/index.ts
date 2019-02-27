@@ -1,8 +1,8 @@
 import * as Konva from './_FullInternals';
 
-// add Konva to global viriable
+// add Konva to global variable
 // umd build will actually do it
 // but it may now it case of modules and bundlers
 Konva._injectGlobal(Konva);
 
-export default Konva;
+module.exports = Konva;
