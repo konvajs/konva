@@ -2207,7 +2207,10 @@ export abstract class Node {
     this._dragCleanup();
 
     this.on('mousedown.konva touchstart.konva', function(evt) {
-      var canDrag = _getGlobalKonva().dragButtons.indexOf(evt.evt.button) >= 0;
+      var shouldCheckButton = evt.evt.button !== undefined;
+      var canDrag =
+        !shouldCheckButton ||
+        _getGlobalKonva().dragButtons.indexOf(evt.evt.button) >= 0;
       if (!canDrag) {
         return;
       }

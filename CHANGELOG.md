@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [3.1.0][2019-02-27]
 
 * Make `Konva` modular: `import Konva from 'konva/lib/Core';`;
+* Fix incorrect `Transformer` behavior
+* Fix drag&drop for touch devices
 
 ## [3.0.0][2019-02-25]
 

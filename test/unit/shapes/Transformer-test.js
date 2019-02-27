@@ -1104,8 +1104,6 @@ suite('Transformer', function() {
       x: 30,
       y: 30
     });
-
-    throw '1';
   });
 
   test('on negative scaleY should move rotater', function() {

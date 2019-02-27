@@ -283,4 +283,50 @@ Konva.Stage.prototype.simulateMouseUp = function(pos) {
   Konva.DD._endDragAfter(evt);
 };
 
+Konva.Stage.prototype.simulateTouchStart = function(pos) {
+  var top = this.content.getBoundingClientRect().top;
+
+  this._touchstart({
+    touches: [
+      {
+        clientX: pos.x,
+        clientY: pos.y + top
+      }
+    ]
+  });
+};
+
+Konva.Stage.prototype.simulateTouchMove = function(pos) {
+  var top = this.content.getBoundingClientRect().top;
+
+  var evt = {
+    touches: [
+      {
+        clientX: pos.x,
+        clientY: pos.y + top
+      }
+    ]
+  };
+
+  this._touchmove(evt);
+  Konva.DD._drag(evt);
+};
+
+Konva.Stage.prototype.simulateTouchEnd = function(pos) {
+  var top = this.content.getBoundingClientRect().top;
+
+  var evt = {
+    touches: [
+      {
+        clientX: pos.x,
+        clientY: pos.y + top
+      }
+    ]
+  };
+
+  Konva.DD._endDragBefore(evt);
+  this._touchend(evt);
+  Konva.DD._endDragAfter(evt);
+};
+
 init();
