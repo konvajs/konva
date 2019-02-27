@@ -67,7 +67,7 @@ echo "include konva-v${new_version}-documentation.zip into version in github"
 cd ../konva
 git push >/dev/null
 git push --tags >/dev/null
-npm publish
+npm publish >/dev/null
 
 echo "copy konva.js into konva-site"
 cp ./konva.js ../konva-site/

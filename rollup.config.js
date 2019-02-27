@@ -8,7 +8,7 @@ export default {
   input: `src/index.ts`,
   output: [
     {
-      file: pkg.main,
+      file: 'konva.js',
       name: 'Konva',
       format: 'umd',
       sourcemap: false,

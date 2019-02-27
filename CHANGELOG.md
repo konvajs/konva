@@ -3,7 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [3.1.1][2019-02-27]
+## [3.1.2][2019-02-27]
+
+* Fix bundle
+
+## [3.1.0][2019-02-27]
 
 * Make `Konva` modular: `import Konva from 'konva/lib/Core';`;
 * Fix incorrect `Transformer` behavior
