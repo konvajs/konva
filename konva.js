@@ -4,7 +4,7 @@
 }(function () { 'use strict';
 
   /*
-   * Konva JavaScript Framework v3.1.3
+   * Konva JavaScript Framework v3.1.4
    * http://konvajs.org/
    * Licensed under the MIT
    * Date: Wed Feb 27 2019
@@ -18,7 +18,7 @@
   /**
    * @namespace Konva
    */
-  var version = '3.1.3';
+  var version = '3.1.4';
   var isBrowser = typeof window !== 'undefined' &&
       // browser case
       ({}.toString.call(window) === '[object Window]' ||
