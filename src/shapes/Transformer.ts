@@ -30,8 +30,6 @@ var ATTR_CHANGE_LIST = [
 var NODE_RECT = 'nodeRect';
 
 var TRANSFORM_CHANGE_STR = [
-  'xChange.tr',
-  'yChange.tr',
   'widthChange.tr',
   'heightChange.tr',
   'scaleXChange.tr',
@@ -197,15 +195,15 @@ export class Transformer extends Group {
       .map(prop => prop + 'Change.tr')
       .join(' ');
 
-    const upChange = () => {
+    const onChange = () => {
       this._resetTransformCache();
       if (!this._transforming) {
         this.update();
       }
     };
-    node.on(additionalEvents, upChange);
-
-    node.on(TRANSFORM_CHANGE_STR, upChange);
+    node.on(additionalEvents, onChange);
+    node.on(TRANSFORM_CHANGE_STR, onChange);
+    node.on('xChange.tr yChange.tr', () => this._resetTransformCache());
     // we may need it if we set node in initial props
     // so elements are not defined yet
     var elementsCreated = !!this.findOne('.top-left');

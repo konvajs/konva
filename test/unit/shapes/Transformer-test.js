@@ -1057,6 +1057,57 @@ suite('Transformer', function() {
     });
   });
 
+  test('check transformer with drag&drop and scaled shape', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100,
+      fill: 'green',
+      draggable: true,
+      scaleX: 2
+    });
+
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+
+    layer.draw();
+
+    stage.simulateMouseDown({
+      x: 20,
+      y: 20
+    });
+
+    stage.simulateMouseMove({
+      x: 30,
+      y: 30
+    });
+
+    assert.equal(rect.x(), 10);
+    assert.equal(rect.y(), 10);
+
+    assert.equal(tr.x(), 10);
+    assert.equal(tr.y(), 10);
+
+    assert.equal(tr.width(), 200);
+
+    stage.simulateMouseUp({
+      x: 30,
+      y: 30
+    });
+
+    throw '1';
+  });
+
   test('on negative scaleY should move rotater', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
