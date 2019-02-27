@@ -4,6 +4,7 @@ import { Shape } from '../Shape';
 import { Path } from './Path';
 import { Text } from './Text';
 import { getNumberValidator } from '../Validators';
+import { _registerNode } from '../Global';
 
 import { GetSet, Vector2d } from '../types';
 
@@ -538,6 +539,7 @@ TextPath.prototype._fillFuncHit = _fillFunc;
 TextPath.prototype._strokeFuncHit = _strokeFunc;
 TextPath.prototype.className = 'TextPath';
 TextPath.prototype._attrsAffectingSize = ['text', 'fontSize', 'data'];
+_registerNode(TextPath);
 
 /**
  * get/set SVG path data string.  This method

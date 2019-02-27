@@ -1,6 +1,7 @@
 import { Util, Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape } from '../Shape';
+import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
 
@@ -870,6 +871,7 @@ export class Path extends Shape {
 
 Path.prototype.className = 'Path';
 Path.prototype._attrsAffectingSize = ['data'];
+_registerNode(Path);
 
 /**
  * get/set SVG path data string.  This method

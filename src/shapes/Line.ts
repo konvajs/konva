@@ -2,6 +2,7 @@ import { Util, Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { getNumberValidator, getNumberArrayValidator } from '../Validators';
+import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
 
@@ -209,6 +210,7 @@ export class Line extends Shape {
 
 Line.prototype.className = 'Line';
 Line.prototype._attrsAffectingSize = ['points', 'bezier', 'tension'];
+_registerNode(Line);
 
 // add getters setters
 Factory.addGetterSetter(Line, 'closed', false);

@@ -9,6 +9,7 @@ import {
 
 import { GetSet, Vector2d } from './types';
 import { Context } from './Context';
+import { _registerNode } from './Global';
 
 var HAS_SHADOW = 'hasShadow';
 var SHADOW_RGBA = 'shadowRGBA';
@@ -703,6 +704,7 @@ Shape.prototype._strokeFuncHit = _strokeFuncHit;
 
 Shape.prototype._centroid = false;
 Shape.prototype.nodeType = 'Shape';
+_registerNode(Shape);
 
 // add getters and setters
 Factory.addGetterSetter(Shape, 'stroke', undefined, getStringValidator());

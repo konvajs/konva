@@ -2,6 +2,7 @@ import { Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { getNumberValidator } from '../Validators';
+import { _registerNode } from '../Global';
 
 import { GetSet, Vector2d } from '../types';
 
@@ -58,6 +59,7 @@ export class Ellipse extends Shape {
 Ellipse.prototype.className = 'Ellipse';
 Ellipse.prototype._centroid = true;
 Ellipse.prototype._attrsAffectingSize = ['radiusX', 'radiusY'];
+_registerNode(Ellipse);
 
 // add getters setters
 Factory.addComponentsGetterSetter(Ellipse, 'radius', ['x', 'y']);

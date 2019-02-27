@@ -3,6 +3,7 @@ import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { Group } from '../Group';
 import { getNumberValidator } from '../Validators';
+import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
 
@@ -165,6 +166,7 @@ export class Label extends Group {
 }
 
 Label.prototype.className = 'Label';
+_registerNode(Label);
 
 Collection.mapMethods(Label);
 
@@ -313,6 +315,7 @@ export class Tag extends Shape {
 }
 
 Tag.prototype.className = 'Tag';
+_registerNode(Tag);
 
 /**
  * get/set pointer direction

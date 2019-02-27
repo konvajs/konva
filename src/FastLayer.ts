@@ -1,6 +1,7 @@
 import { Util, Collection } from './Util';
 import { Container } from './Container';
 import { BaseLayer } from './BaseLayer';
+import { _registerNode } from './Global';
 
 /**
  * FastLayer constructor. Layers are tied to their own canvas element and are used
@@ -52,5 +53,8 @@ export class FastLayer extends BaseLayer {
     return this;
   }
 }
+
+FastLayer.prototype.nodeType = 'FastLayer';
+_registerNode(FastLayer);
 
 Collection.mapMethods(FastLayer);

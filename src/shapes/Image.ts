@@ -2,6 +2,7 @@ import { Util, Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { getNumberValidator } from '../Validators';
+import { _registerNode } from '../Global';
 
 import { GetSet, IRect } from '../types';
 
@@ -130,7 +131,7 @@ export class Image extends Shape {
 }
 
 Image.prototype.className = 'Image';
-
+_registerNode(Image);
 /**
  * get/set image source. It can be image, canvas or video element
  * @name Konva.Image#image

@@ -1,5 +1,6 @@
 import { Util, Collection } from './Util';
 import { Container } from './Container';
+import { _registerNode } from './Global';
 
 /**
  * Group constructor.  Groups are used to contain shapes or other groups.
@@ -22,5 +23,6 @@ export class Group extends Container {
 }
 
 Group.prototype.nodeType = 'Group';
+_registerNode(Group);
 
 Collection.mapMethods(Group);

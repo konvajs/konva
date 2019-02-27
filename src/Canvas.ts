@@ -1,6 +1,6 @@
 import { Util } from './Util';
 import { SceneContext, HitContext, Context } from './Context';
-import { glob, getGlobalKonva } from './Global';
+import { glob, _getGlobalKonva } from './Global';
 import { Factory } from './Factory';
 import { getNumberValidator } from './Validators';
 
@@ -56,7 +56,7 @@ export class Canvas {
     var conf = config || {};
 
     var pixelRatio =
-      conf.pixelRatio || getGlobalKonva().pixelRatio || getDevicePixelRatio();
+      conf.pixelRatio || _getGlobalKonva().pixelRatio || getDevicePixelRatio();
 
     this.pixelRatio = pixelRatio;
 

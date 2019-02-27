@@ -1,5 +1,5 @@
 import { Animation } from './Animation';
-import { isBrowser, getGlobalKonva } from './Global';
+import { isBrowser, _getGlobalKonva } from './Global';
 
 
 // TODO: make better module,
@@ -89,7 +89,7 @@ export const DD = {
       if (DD.isDragging) {
         DD.isDragging = false;
         DD.justDragged = true;
-        getGlobalKonva().listenClickTap = false;
+        _getGlobalKonva().listenClickTap = false;
 
         if (evt) {
           evt.dragEndNode = node;
@@ -98,7 +98,7 @@ export const DD = {
 
       DD.node = null;
 
-      if (layer || node instanceof getGlobalKonva().Stage) {
+      if (layer || node instanceof _getGlobalKonva().Stage) {
         (layer || node).draw();
       }
     }

@@ -1,4 +1,4 @@
-import * as Konva from './Full';
+import * as Konva from './_CoreInternals';
 
 // add Konva to global viriable
 // umd build will actually do it

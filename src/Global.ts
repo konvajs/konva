@@ -31,7 +31,7 @@ export const isUnminified = /comment/.test(
 export const dblClickWindow = 400;
 
 export const getAngle = function(angle) {
-  return getGlobalKonva().angleDeg ? angle * PI_OVER_180 : angle;
+  return _getGlobalKonva().angleDeg ? angle * PI_OVER_180 : angle;
 };
 
 const _detectIE = function(ua) {
@@ -101,6 +101,23 @@ export const UA = _parseUA((glob.navigator && glob.navigator.userAgent) || '');
 
 export const document = glob.document;
 
-export const getGlobalKonva = () => {
+// get global Konva instance
+export const _getGlobalKonva = () => {
   return glob.Konva;
+};
+
+export const _NODES_REGISTRY = {};
+let globalKonva = {};
+
+// insert Konva into global namaspace (window)
+// it is required for npm packages
+export const _injectGlobal = Konva => {
+  globalKonva = Konva;
+  glob.Konva = Konva;
+  Object.assign(glob.Konva, _NODES_REGISTRY);
+};
+
+export const _registerNode = NodeClass => {
+  _NODES_REGISTRY[NodeClass.prototype.getClassName()] = NodeClass;
+  globalKonva[NodeClass.prototype.getClassName()] = NodeClass;
 };

@@ -3,6 +3,7 @@ import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { GetSet } from '../types';
 import { getNumberValidator } from '../Validators';
+import { _registerNode } from '../Global';
 
 /**
  * RegularPolygon constructor. Examples include triangles, squares, pentagons, hexagons, etc.
@@ -64,6 +65,7 @@ export class RegularPolygon extends Shape {
 RegularPolygon.prototype.className = 'RegularPolygon';
 RegularPolygon.prototype._centroid = true;
 RegularPolygon.prototype._attrsAffectingSize = ['radius'];
+_registerNode(RegularPolygon)
 
 /**
  * get/set radius

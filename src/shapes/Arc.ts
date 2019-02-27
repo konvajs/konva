@@ -4,6 +4,7 @@ import { Shape } from '../Shape';
 import { getAngle } from '../Global';
 import { GetSet } from '../types';
 import { getNumberValidator, getBooleanValidator } from '../Validators';
+import { _registerNode } from '../Global';
 
 /**
  * Arc constructor
@@ -62,6 +63,7 @@ export class Arc extends Shape {
 Arc.prototype._centroid = true;
 Arc.prototype.className = 'Arc';
 Arc.prototype._attrsAffectingSize = ['innerRadius', 'outerRadius'];
+_registerNode(Arc);
 
 // add getters setters
 Factory.addGetterSetter(Arc, 'innerRadius', 0, getNumberValidator());

@@ -1,5 +1,5 @@
 import { Util } from './Util';
-import { getAngle, getGlobalKonva } from './Global';
+import { getAngle, _getGlobalKonva } from './Global';
 import { Canvas } from './Canvas';
 
 var COMMA = ',',
@@ -97,7 +97,7 @@ export class Context {
     this.canvas = canvas;
     this._context = canvas._canvas.getContext('2d') as CanvasRenderingContext2D;
 
-    if (getGlobalKonva().enableTrace) {
+    if (_getGlobalKonva().enableTrace) {
       this.traceArr = [];
       this._enableTrace();
     }

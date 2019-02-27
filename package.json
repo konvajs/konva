@@ -7,10 +7,10 @@
     "konva.js",
     "konva.min.js",
     "konva.d.ts",
-    "types"
+    "types",
+    "lib"
   ],
-  "main": "konva.js",
-  "module": "konva.esm.js",
+  "main": "./lib/Full.js",
   "typings": "./types/index.d.ts",
   "scripts": {
     "start": "npm run watch & gulp",
@@ -19,7 +19,7 @@
     "full-build": "npm run build && npm t",
     "test": "mocha-headless-chrome -f ./test/runner.html -a disable-web-security",
     "prettier": "prettier --write \"src/**/*.js\" \"test/**/*.js\" --single-quote",
-    "tsc": "tsc -d --declarationDir ./types --removeComments --noEmit || echo \"tsc faild for some file(s).\"",
+    "tsc": "tsc -d --declarationDir ./types --removeComments --module CommonJS || echo \"tsc faild for some file(s).\"",
     "rollup": "rollup -c",
     "compile": "npm run tsc && npm run rollup",
     "watch": "rollup -c -w"

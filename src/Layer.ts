@@ -5,6 +5,7 @@ import { BaseLayer } from './BaseLayer';
 import { HitCanvas } from './Canvas';
 import { shapes } from './Shape';
 import { getBooleanValidator } from './Validators';
+import { _registerNode } from './Global';
 
 import { GetSet } from './types';
 
@@ -233,6 +234,9 @@ export class Layer extends BaseLayer {
 
   hitGraphEnabled: GetSet<boolean, this>;
 }
+
+Layer.prototype.nodeType = 'Layer';
+_registerNode(Layer);
 
 Factory.addGetterSetter(Layer, 'hitGraphEnabled', true, getBooleanValidator());
 /**

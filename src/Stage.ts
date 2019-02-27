@@ -1,12 +1,13 @@
 import { Util, Collection } from './Util';
 import { Factory } from './Factory';
 import { Container } from './Container';
-import { document, isBrowser, getGlobalKonva, UA } from './Global';
+import { document, isBrowser, _getGlobalKonva, UA } from './Global';
 import { SceneCanvas, HitCanvas } from './Canvas';
 import { GetSet, Vector2d } from './types';
 import { Shape } from './Shape';
 import { BaseLayer } from './BaseLayer';
 import { DD } from './DragAndDrop';
+import { _registerNode } from './Global';
 
 // CONSTANTS
 var STAGE = 'Stage',
@@ -134,7 +135,10 @@ export class Stage extends Container {
   }
 
   _validateAdd(child) {
-    if (child.getType() !== 'Layer') {
+    const isLayer = child.getType() === 'Layer';
+    const isFastLayer = child.getType() === 'FastLayer';
+    const valid = isLayer || isFastLayer;
+    if (!valid) {
       Util.throw('You may only add layers to the stage.');
     }
   }
@@ -452,7 +456,7 @@ export class Stage extends Container {
     this.setPointersPositions(evt);
     var shape = this.getIntersection(this.getPointerPosition());
 
-    getGlobalKonva().listenClickTap = true;
+    _getGlobalKonva().listenClickTap = true;
 
     if (shape && shape.isListening()) {
       this.clickStartShape = shape;
@@ -485,23 +489,23 @@ export class Stage extends Container {
       clickStartShape = this.clickStartShape,
       clickEndShape = this.clickEndShape,
       fireDblClick = false,
-      dd = getGlobalKonva().DD;
+      dd = _getGlobalKonva().DD;
 
-    if (getGlobalKonva().inDblClickWindow) {
+    if (_getGlobalKonva().inDblClickWindow) {
       fireDblClick = true;
       clearTimeout(this.dblTimeout);
       // Konva.inDblClickWindow = false;
     } else if (!dd || !dd.justDragged) {
       // don't set inDblClickWindow after dragging
-      getGlobalKonva().inDblClickWindow = true;
+      _getGlobalKonva().inDblClickWindow = true;
       clearTimeout(this.dblTimeout);
     } else if (dd) {
       dd.justDragged = false;
     }
 
     this.dblTimeout = setTimeout(function() {
-      getGlobalKonva().inDblClickWindow = false;
-    }, getGlobalKonva().dblClickWindow);
+      _getGlobalKonva().inDblClickWindow = false;
+    }, _getGlobalKonva().dblClickWindow);
 
     if (shape && shape.isListening()) {
       this.clickEndShape = shape;
@@ -509,7 +513,7 @@ export class Stage extends Container {
 
       // detect if click or double click occurred
       if (
-        getGlobalKonva().listenClickTap &&
+        _getGlobalKonva().listenClickTap &&
         clickStartShape &&
         clickStartShape._id === shape._id
       ) {
@@ -521,7 +525,7 @@ export class Stage extends Container {
       }
     } else {
       this._fire(MOUSEUP, { evt: evt, target: this, currentTarget: this });
-      if (getGlobalKonva().listenClickTap) {
+      if (_getGlobalKonva().listenClickTap) {
         this._fire(CLICK, { evt: evt, target: this, currentTarget: this });
       }
 
@@ -535,14 +539,14 @@ export class Stage extends Container {
     }
     // content events
     this._fire(CONTENT_MOUSEUP, { evt: evt });
-    if (getGlobalKonva().listenClickTap) {
+    if (_getGlobalKonva().listenClickTap) {
       this._fire(CONTENT_CLICK, { evt: evt });
       if (fireDblClick) {
         this._fire(CONTENT_DBL_CLICK, { evt: evt });
       }
     }
 
-    getGlobalKonva().listenClickTap = false;
+    _getGlobalKonva().listenClickTap = false;
 
     // always call preventDefault for desktop events because some browsers
     // try to drag and drop the canvas element
@@ -569,7 +573,7 @@ export class Stage extends Container {
     this.setPointersPositions(evt);
     var shape = this.getIntersection(this.getPointerPosition());
 
-    getGlobalKonva().listenClickTap = true;
+    _getGlobalKonva().listenClickTap = true;
 
     if (shape && shape.isListening()) {
       this.tapStartShape = shape;
@@ -594,25 +598,25 @@ export class Stage extends Container {
     var shape = this.getIntersection(this.getPointerPosition()),
       fireDblClick = false;
 
-    if (getGlobalKonva().inDblClickWindow) {
+    if (_getGlobalKonva().inDblClickWindow) {
       fireDblClick = true;
       clearTimeout(this.dblTimeout);
-      // getGlobalKonva().inDblClickWindow = false;
+      // _getGlobalKonva().inDblClickWindow = false;
     } else {
-      getGlobalKonva().inDblClickWindow = true;
+      _getGlobalKonva().inDblClickWindow = true;
       clearTimeout(this.dblTimeout);
     }
 
     this.dblTimeout = setTimeout(function() {
-      getGlobalKonva().inDblClickWindow = false;
-    }, getGlobalKonva().dblClickWindow);
+      _getGlobalKonva().inDblClickWindow = false;
+    }, _getGlobalKonva().dblClickWindow);
 
     if (shape && shape.isListening()) {
       shape._fireAndBubble(TOUCHEND, { evt: evt });
 
       // detect if tap or double tap occurred
       if (
-        getGlobalKonva().listenClickTap &&
+        _getGlobalKonva().listenClickTap &&
         this.tapStartShape &&
         shape._id === this.tapStartShape._id
       ) {
@@ -628,7 +632,7 @@ export class Stage extends Container {
       }
     } else {
       this._fire(TOUCHEND, { evt: evt, target: this, currentTarget: this });
-      if (getGlobalKonva().listenClickTap) {
+      if (_getGlobalKonva().listenClickTap) {
         this._fire(TAP, { evt: evt, target: this, currentTarget: this });
       }
       if (fireDblClick) {
@@ -641,18 +645,18 @@ export class Stage extends Container {
     }
     // content events
     this._fire(CONTENT_TOUCHEND, { evt: evt });
-    if (getGlobalKonva().listenClickTap) {
+    if (_getGlobalKonva().listenClickTap) {
       this._fire(CONTENT_TAP, { evt: evt });
       if (fireDblClick) {
         this._fire(CONTENT_DBL_TAP, { evt: evt });
       }
     }
 
-    getGlobalKonva().listenClickTap = false;
+    _getGlobalKonva().listenClickTap = false;
   }
   _touchmove(evt) {
     this.setPointersPositions(evt);
-    var dd = getGlobalKonva().DD,
+    var dd = _getGlobalKonva().DD,
       shape;
     if (!DD.isDragging) {
       shape = this.getIntersection(this.getPointerPosition());
@@ -674,7 +678,7 @@ export class Stage extends Container {
     if (dd) {
       if (
         DD.isDragging &&
-        getGlobalKonva().DD.node.preventDefault() &&
+        _getGlobalKonva().DD.node.preventDefault() &&
         evt.cancelable
       ) {
         evt.preventDefault();
@@ -819,6 +823,7 @@ export class Stage extends Container {
 }
 
 Stage.prototype.nodeType = STAGE;
+_registerNode(Stage);
 
 /**
  * get/set container DOM element

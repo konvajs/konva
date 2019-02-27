@@ -270,7 +270,7 @@ export abstract class BaseLayer extends Container {
   clearBeforeDraw: GetSet<boolean, this>;
 }
 
-BaseLayer.prototype.nodeType = 'Layer';
+BaseLayer.prototype.nodeType = 'BaseLayer';
 
 /**
  * get/set clearBeforeDraw flag which determines if the layer is cleared or not

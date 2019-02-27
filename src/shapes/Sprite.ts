@@ -3,6 +3,7 @@ import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { Animation } from '../Animation';
 import { getNumberValidator } from '../Validators';
+import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
 
@@ -213,6 +214,8 @@ export class Sprite extends Shape {
 }
 
 Sprite.prototype.className = 'Sprite';
+_registerNode(Sprite);
+
 
 // add getters setters
 Factory.addGetterSetter(Sprite, 'animation');

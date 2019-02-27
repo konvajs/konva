@@ -1,4 +1,4 @@
-import { isBrowser, document, glob, getGlobalKonva } from './Global';
+import { isBrowser, document, glob, _getGlobalKonva } from './Global';
 import { Node } from './Node';
 
 export type Point = {
@@ -565,7 +565,7 @@ export const Util = {
   createCanvasElement() {
     var canvas = isBrowser
       ? document.createElement('canvas')
-      : new (getGlobalKonva()._nodeCanvas())();
+      : new (_getGlobalKonva()._nodeCanvas())();
     // on some environments canvas.style is readonly
     try {
       canvas.style = canvas.style || {};
@@ -811,7 +811,7 @@ export const Util = {
     console.error(KONVA_ERROR + str);
   },
   warn(str) {
-    if (!getGlobalKonva().showWarnings) {
+    if (!_getGlobalKonva().showWarnings) {
       return;
     }
     console.warn(KONVA_WARNING + str);

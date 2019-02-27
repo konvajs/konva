@@ -1,27 +1,5 @@
-// import commonjs from 'rollup-plugin-commonjs';
-// import resolve from 'rollup-plugin-node-resolve';
-
-// import pkg from './package.json';
-
-// export default [
-//   // browser-friendly UMD build
-//   {
-//     input: './lib/index.js',
-//     output: {
-//       name: 'Konva',
-//       file: pkg.main,
-//       format: 'umd'
-//     },
-//     plugins: [
-//       resolve(),
-//       commonjs() // so Rollup can convert `ms` to an ES module
-//     ]
-//   }
-// ];
-
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
-import sourceMaps from 'rollup-plugin-sourcemaps';
 import typescript from 'rollup-plugin-typescript2';
 
 const pkg = require('./package.json');

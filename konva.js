@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v3.0.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Mon Feb 25 2019
+   * Date: Tue Feb 26 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -30,7 +30,7 @@
   }.toString());
   var dblClickWindow = 400;
   var getAngle = function (angle) {
-      return getGlobalKonva().angleDeg ? angle * PI_OVER_180 : angle;
+      return _getGlobalKonva().angleDeg ? angle * PI_OVER_180 : angle;
   };
   var _detectIE = function (ua) {
       var msie = ua.indexOf('msie ');
@@ -83,8 +83,22 @@
   // user agent
   var UA = _parseUA((glob.navigator && glob.navigator.userAgent) || '');
   var document = glob.document;
-  var getGlobalKonva = function () {
+  // get global Konva instance
+  var _getGlobalKonva = function () {
       return glob.Konva;
+  };
+  var _NODES_REGISTRY = {};
+  var globalKonva = {};
+  // insert Konva into global namaspace (window)
+  // it is required for npm packages
+  var _injectGlobal = function (Konva) {
+      globalKonva = Konva;
+      glob.Konva = Konva;
+      Object.assign(glob.Konva, _NODES_REGISTRY);
+  };
+  var _registerNode = function (NodeClass) {
+      _NODES_REGISTRY[NodeClass.prototype.getClassName()] = NodeClass;
+      globalKonva[NodeClass.prototype.getClassName()] = NodeClass;
   };
 
   /**
@@ -583,7 +597,7 @@
       createCanvasElement: function () {
           var canvas = isBrowser
               ? document.createElement('canvas')
-              : new (getGlobalKonva()._nodeCanvas())();
+              : new (_getGlobalKonva()._nodeCanvas())();
           // on some environments canvas.style is readonly
           try {
               canvas.style = canvas.style || {};
@@ -825,7 +839,7 @@
           console.error(KONVA_ERROR + str);
       },
       warn: function (str) {
-          if (!getGlobalKonva().showWarnings) {
+          if (!_getGlobalKonva().showWarnings) {
               return;
           }
           console.warn(KONVA_WARNING + str);
@@ -1322,7 +1336,7 @@
       function Context(canvas) {
           this.canvas = canvas;
           this._context = canvas._canvas.getContext('2d');
-          if (getGlobalKonva().enableTrace) {
+          if (_getGlobalKonva().enableTrace) {
               this.traceArr = [];
               this._enableTrace();
           }
@@ -1856,7 +1870,7 @@
           this.height = 0;
           this.isCache = false;
           var conf = config || {};
-          var pixelRatio = conf.pixelRatio || getGlobalKonva().pixelRatio || getDevicePixelRatio();
+          var pixelRatio = conf.pixelRatio || _getGlobalKonva().pixelRatio || getDevicePixelRatio();
           this.pixelRatio = pixelRatio;
           this._canvas = Util.createCanvasElement();
           // set inline styles
@@ -2272,13 +2286,13 @@
               if (DD.isDragging) {
                   DD.isDragging = false;
                   DD.justDragged = true;
-                  getGlobalKonva().listenClickTap = false;
+                  _getGlobalKonva().listenClickTap = false;
                   if (evt) {
                       evt.dragEndNode = node;
                   }
               }
               DD.node = null;
-              if (layer || node instanceof getGlobalKonva().Stage) {
+              if (layer || node instanceof _getGlobalKonva().Stage) {
                   (layer || node).draw();
               }
           }
@@ -2776,7 +2790,7 @@
        * // with event delegations
        * layer.on('click', 'Group', function(evt) {
        *   var shape = evt.target;
-       *   var group = evtn.currentTarger;
+       *   var group = evt.currentTarget;
        * });
        */
       Node.prototype.on = function (evtStr, handler) {
@@ -3702,7 +3716,7 @@
           return this._getCache(TRANSFORM, this._getTransform);
       };
       Node.prototype._getTransform = function () {
-          var m = new Transform(), x = this.x(), y = this.y(), rotation = getGlobalKonva().getAngle(this.rotation()), scaleX = this.scaleX(), scaleY = this.scaleY(), skewX = this.skewX(), skewY = this.skewY(), offsetX = this.offsetX(), offsetY = this.offsetY();
+          var m = new Transform(), x = this.x(), y = this.y(), rotation = _getGlobalKonva().getAngle(this.rotation()), scaleX = this.scaleX(), scaleY = this.scaleY(), skewX = this.skewX(), skewY = this.skewY(), offsetX = this.offsetX(), offsetY = this.offsetY();
           if (x !== 0 || y !== 0) {
               m.translate(x, y);
           }
@@ -3914,7 +3928,7 @@
               return this.parent.getDragDistance();
           }
           else {
-              return getGlobalKonva().dragDistance;
+              return _getGlobalKonva().dragDistance;
           }
       };
       Node.prototype._get = function (selector) {
@@ -4206,7 +4220,7 @@
       Node.prototype._listenDrag = function () {
           this._dragCleanup();
           this.on('mousedown.konva touchstart.konva', function (evt) {
-              var canDrag = getGlobalKonva().dragButtons.indexOf(evt.evt.button) >= 0;
+              var canDrag = _getGlobalKonva().dragButtons.indexOf(evt.evt.button) >= 0;
               if (!canDrag) {
                   return;
               }
@@ -4263,13 +4277,13 @@
           if (container) {
               obj.attrs.container = container;
           }
-          if (!getGlobalKonva()[className]) {
+          if (!_NODES_REGISTRY[className]) {
               Util.warn('Can not find a node with class name "' +
                   className +
                   '". Fallback to "Shape".');
               className = 'Shape';
           }
-          var Class = getGlobalKonva()[className];
+          var Class = _NODES_REGISTRY[className];
           no = new Class(obj.attrs);
           if (children) {
               len = children.length;
@@ -5531,7 +5545,10 @@
           return _this;
       }
       Stage.prototype._validateAdd = function (child) {
-          if (child.getType() !== 'Layer') {
+          var isLayer = child.getType() === 'Layer';
+          var isFastLayer = child.getType() === 'FastLayer';
+          var valid = isLayer || isFastLayer;
+          if (!valid) {
               Util.throw('You may only add layers to the stage.');
           }
       };
@@ -5806,7 +5823,7 @@
           }
           this.setPointersPositions(evt);
           var shape = this.getIntersection(this.getPointerPosition());
-          getGlobalKonva().listenClickTap = true;
+          _getGlobalKonva().listenClickTap = true;
           if (shape && shape.isListening()) {
               this.clickStartShape = shape;
               shape._fireAndBubble(MOUSEDOWN, { evt: evt });
@@ -5833,28 +5850,28 @@
               return this._touchend(evt);
           }
           this.setPointersPositions(evt);
-          var shape = this.getIntersection(this.getPointerPosition()), clickStartShape = this.clickStartShape, clickEndShape = this.clickEndShape, fireDblClick = false, dd = getGlobalKonva().DD;
-          if (getGlobalKonva().inDblClickWindow) {
+          var shape = this.getIntersection(this.getPointerPosition()), clickStartShape = this.clickStartShape, clickEndShape = this.clickEndShape, fireDblClick = false, dd = _getGlobalKonva().DD;
+          if (_getGlobalKonva().inDblClickWindow) {
               fireDblClick = true;
               clearTimeout(this.dblTimeout);
               // Konva.inDblClickWindow = false;
           }
           else if (!dd || !dd.justDragged) {
               // don't set inDblClickWindow after dragging
-              getGlobalKonva().inDblClickWindow = true;
+              _getGlobalKonva().inDblClickWindow = true;
               clearTimeout(this.dblTimeout);
           }
           else if (dd) {
               dd.justDragged = false;
           }
           this.dblTimeout = setTimeout(function () {
-              getGlobalKonva().inDblClickWindow = false;
-          }, getGlobalKonva().dblClickWindow);
+              _getGlobalKonva().inDblClickWindow = false;
+          }, _getGlobalKonva().dblClickWindow);
           if (shape && shape.isListening()) {
               this.clickEndShape = shape;
               shape._fireAndBubble(MOUSEUP, { evt: evt });
               // detect if click or double click occurred
-              if (getGlobalKonva().listenClickTap &&
+              if (_getGlobalKonva().listenClickTap &&
                   clickStartShape &&
                   clickStartShape._id === shape._id) {
                   shape._fireAndBubble(CLICK, { evt: evt });
@@ -5865,7 +5882,7 @@
           }
           else {
               this._fire(MOUSEUP, { evt: evt, target: this, currentTarget: this });
-              if (getGlobalKonva().listenClickTap) {
+              if (_getGlobalKonva().listenClickTap) {
                   this._fire(CLICK, { evt: evt, target: this, currentTarget: this });
               }
               if (fireDblClick) {
@@ -5878,13 +5895,13 @@
           }
           // content events
           this._fire(CONTENT_MOUSEUP, { evt: evt });
-          if (getGlobalKonva().listenClickTap) {
+          if (_getGlobalKonva().listenClickTap) {
               this._fire(CONTENT_CLICK, { evt: evt });
               if (fireDblClick) {
                   this._fire(CONTENT_DBL_CLICK, { evt: evt });
               }
           }
-          getGlobalKonva().listenClickTap = false;
+          _getGlobalKonva().listenClickTap = false;
           // always call preventDefault for desktop events because some browsers
           // try to drag and drop the canvas element
           if (evt.cancelable) {
@@ -5909,7 +5926,7 @@
       Stage.prototype._touchstart = function (evt) {
           this.setPointersPositions(evt);
           var shape = this.getIntersection(this.getPointerPosition());
-          getGlobalKonva().listenClickTap = true;
+          _getGlobalKonva().listenClickTap = true;
           if (shape && shape.isListening()) {
               this.tapStartShape = shape;
               shape._fireAndBubble(TOUCHSTART, { evt: evt });
@@ -5931,22 +5948,22 @@
       Stage.prototype._touchend = function (evt) {
           this.setPointersPositions(evt);
           var shape = this.getIntersection(this.getPointerPosition()), fireDblClick = false;
-          if (getGlobalKonva().inDblClickWindow) {
+          if (_getGlobalKonva().inDblClickWindow) {
               fireDblClick = true;
               clearTimeout(this.dblTimeout);
-              // getGlobalKonva().inDblClickWindow = false;
+              // _getGlobalKonva().inDblClickWindow = false;
           }
           else {
-              getGlobalKonva().inDblClickWindow = true;
+              _getGlobalKonva().inDblClickWindow = true;
               clearTimeout(this.dblTimeout);
           }
           this.dblTimeout = setTimeout(function () {
-              getGlobalKonva().inDblClickWindow = false;
-          }, getGlobalKonva().dblClickWindow);
+              _getGlobalKonva().inDblClickWindow = false;
+          }, _getGlobalKonva().dblClickWindow);
           if (shape && shape.isListening()) {
               shape._fireAndBubble(TOUCHEND, { evt: evt });
               // detect if tap or double tap occurred
-              if (getGlobalKonva().listenClickTap &&
+              if (_getGlobalKonva().listenClickTap &&
                   this.tapStartShape &&
                   shape._id === this.tapStartShape._id) {
                   shape._fireAndBubble(TAP, { evt: evt });
@@ -5961,7 +5978,7 @@
           }
           else {
               this._fire(TOUCHEND, { evt: evt, target: this, currentTarget: this });
-              if (getGlobalKonva().listenClickTap) {
+              if (_getGlobalKonva().listenClickTap) {
                   this._fire(TAP, { evt: evt, target: this, currentTarget: this });
               }
               if (fireDblClick) {
@@ -5974,17 +5991,17 @@
           }
           // content events
           this._fire(CONTENT_TOUCHEND, { evt: evt });
-          if (getGlobalKonva().listenClickTap) {
+          if (_getGlobalKonva().listenClickTap) {
               this._fire(CONTENT_TAP, { evt: evt });
               if (fireDblClick) {
                   this._fire(CONTENT_DBL_TAP, { evt: evt });
               }
           }
-          getGlobalKonva().listenClickTap = false;
+          _getGlobalKonva().listenClickTap = false;
       };
       Stage.prototype._touchmove = function (evt) {
           this.setPointersPositions(evt);
-          var dd = getGlobalKonva().DD, shape;
+          var dd = _getGlobalKonva().DD, shape;
           if (!DD.isDragging) {
               shape = this.getIntersection(this.getPointerPosition());
               if (shape && shape.isListening()) {
@@ -6005,7 +6022,7 @@
           }
           if (dd) {
               if (DD.isDragging &&
-                  getGlobalKonva().DD.node.preventDefault() &&
+                  _getGlobalKonva().DD.node.preventDefault() &&
                   evt.cancelable) {
                   evt.preventDefault();
               }
@@ -6132,6 +6149,7 @@
       return Stage;
   }(Container));
   Stage.prototype.nodeType = STAGE$1;
+  _registerNode(Stage);
   /**
    * get/set container DOM element
    * @method
@@ -6413,7 +6431,7 @@
       };
       return BaseLayer;
   }(Container));
-  BaseLayer.prototype.nodeType = 'Layer';
+  BaseLayer.prototype.nodeType = 'BaseLayer';
   /**
    * get/set clearBeforeDraw flag which determines if the layer is cleared or not
    *  before drawing
@@ -7002,6 +7020,7 @@
   Shape.prototype._strokeFuncHit = _strokeFuncHit;
   Shape.prototype._centroid = false;
   Shape.prototype.nodeType = 'Shape';
+  _registerNode(Shape);
   // add getters and setters
   Factory.addGetterSetter(Shape, 'stroke', undefined, getStringValidator());
   /**
@@ -8203,6 +8222,8 @@
       };
       return Layer;
   }(BaseLayer));
+  Layer.prototype.nodeType = 'Layer';
+  _registerNode(Layer);
   Factory.addGetterSetter(Layer, 'hitGraphEnabled', true, getBooleanValidator());
   /**
    * get/set hitGraphEnabled flag.  Disabling the hit graph will greatly increase
@@ -8280,6 +8301,8 @@
       };
       return FastLayer;
   }(BaseLayer));
+  FastLayer.prototype.nodeType = 'FastLayer';
+  _registerNode(FastLayer);
   Collection.mapMethods(FastLayer);
 
   /**
@@ -8332,6 +8355,7 @@
       return Group;
   }(Container));
   Group.prototype.nodeType = 'Group';
+  _registerNode(Group);
   Collection.mapMethods(Group);
 
   var blacklist = {
@@ -8492,7 +8516,7 @@
           this.node = node;
           this._id = idCounter$1++;
           var layers = node.getLayer() ||
-              (node instanceof getGlobalKonva().Stage ? node.getLayers() : null);
+              (node instanceof _getGlobalKonva().Stage ? node.getLayers() : null);
           if (!layers) {
               Util.error('Tween constructor have `node` that is not in a layer. Please add node into layer first.');
           }
@@ -9026,6 +9050,81 @@
       }
   };
 
+  var DD$1 = DD;
+  var enableTrace = false;
+  // TODO: move that to stage?
+  var listenClickTap = false;
+  var inDblClickWindow = false;
+  /**
+   * Global pixel ratio configuration. KonvaJS automatically detect pixel ratio of current device.
+   * But you may override such property, if you want to use your value.
+   * @property pixelRatio
+   * @default undefined
+   * @name pixelRatio
+   * @memberof Konva
+   * @example
+   * Konva.pixelRatio = 1;
+   */
+  var pixelRatio = undefined;
+  /**
+   * Drag distance property. If you start to drag a node you may want to wait until pointer is moved to some distance from start point,
+   * only then start dragging. Default is 3px.
+   * @property dragDistance
+   * @default 0
+   * @memberof Konva
+   * @example
+   * Konva.dragDistance = 10;
+   */
+  var dragDistance = 3;
+  /**
+   * Use degree values for angle properties. You may set this property to false if you want to use radiant values.
+   * @property angleDeg
+   * @default true
+   * @memberof Konva
+   * @example
+   * node.rotation(45); // 45 degrees
+   * Konva.angleDeg = false;
+   * node.rotation(Math.PI / 2); // PI/2 radian
+   */
+  var angleDeg = true;
+  /**
+   * Show different warnings about errors or wrong API usage
+   * @property showWarnings
+   * @default true
+   * @memberof Konva
+   * @example
+   * Konva.showWarnings = false;
+   */
+  var showWarnings = true;
+  /**
+   * Configure what mouse buttons can be used for drag and drop.
+   * Default value is [0] - only left mouse button.
+   * @property dragButtons
+   * @default true
+   * @memberof Konva
+   * @example
+   * // enable left and right mouse buttons
+   * Konva.dragButtons = [0, 2];
+   */
+  var dragButtons = [0, 1];
+  /**
+   * returns whether or not drag and drop is currently active
+   * @method
+   * @memberof Konva
+   */
+  var isDragging = function () {
+      return DD.isDragging;
+  };
+  /**
+   * returns whether or not a drag and drop operation is ready, but may
+   *  not necessarily have started
+   * @method
+   * @memberof Konva
+   */
+  var isDragReady = function () {
+      return !!DD.node;
+  };
+
   /**
    * Arc constructor
    * @constructor
@@ -9149,6 +9248,7 @@
   Arc.prototype._centroid = true;
   Arc.prototype.className = 'Arc';
   Arc.prototype._attrsAffectingSize = ['innerRadius', 'outerRadius'];
+  _registerNode(Arc);
   // add getters setters
   Factory.addGetterSetter(Arc, 'innerRadius', 0, getNumberValidator());
   /**
@@ -9424,6 +9524,7 @@
   }(Shape));
   Line.prototype.className = 'Line';
   Line.prototype._attrsAffectingSize = ['points', 'bezier', 'tension'];
+  _registerNode(Line);
   // add getters setters
   Factory.addGetterSetter(Line, 'closed', false);
   /**
@@ -9654,6 +9755,7 @@
       return Arrow;
   }(Line));
   Arrow.prototype.className = 'Arrow';
+  _registerNode(Arrow);
   /**
    * get/set pointerLength
    * @name Konva.Arrow#pointerLength
@@ -9818,6 +9920,7 @@
   Circle.prototype._centroid = true;
   Circle.prototype.className = 'Circle';
   Circle.prototype._attrsAffectingSize = ['radius'];
+  _registerNode(Circle);
   /**
    * get/set radius
    * @name Konva.Arrow#radius
@@ -9954,6 +10057,7 @@
   Ellipse.prototype.className = 'Ellipse';
   Ellipse.prototype._centroid = true;
   Ellipse.prototype._attrsAffectingSize = ['radiusX', 'radiusY'];
+  _registerNode(Ellipse);
   // add getters setters
   Factory.addComponentsGetterSetter(Ellipse, 'radius', ['x', 'y']);
   /**
@@ -10180,6 +10284,7 @@
       return Image;
   }(Shape));
   Image.prototype.className = 'Image';
+  _registerNode(Image);
   /**
    * get/set image source. It can be image, canvas or video element
    * @name Konva.Image#image
@@ -10433,6 +10538,7 @@
       return Label;
   }(Group));
   Label.prototype.className = 'Label';
+  _registerNode(Label);
   Collection.mapMethods(Label);
   /**
    * Tag constructor.&nbsp; A Tag can be configured
@@ -10535,6 +10641,7 @@
       return Tag;
   }(Shape));
   Tag.prototype.className = 'Tag';
+  _registerNode(Tag);
   /**
    * get/set pointer direction
    * @name Konva.Tag#pointerDirection
@@ -11330,6 +11437,7 @@
   }(Shape));
   Path.prototype.className = 'Path';
   Path.prototype._attrsAffectingSize = ['data'];
+  _registerNode(Path);
   /**
    * get/set SVG path data string.  This method
    *  also automatically parses the data string
@@ -11467,6 +11575,7 @@
       return Rect;
   }(Shape));
   Rect.prototype.className = 'Rect';
+  _registerNode(Rect);
   /**
    * get/set corner radius
    * @method
@@ -11607,6 +11716,7 @@
   RegularPolygon.prototype.className = 'RegularPolygon';
   RegularPolygon.prototype._centroid = true;
   RegularPolygon.prototype._attrsAffectingSize = ['radius'];
+  _registerNode(RegularPolygon);
   /**
    * get/set radius
    * @method
@@ -11757,6 +11867,7 @@
   Ring.prototype.className = 'Ring';
   Ring.prototype._centroid = true;
   Ring.prototype._attrsAffectingSize = ['innerRadius', 'outerRadius'];
+  _registerNode(Ring);
   /**
    * get/set innerRadius
    * @method
@@ -12021,6 +12132,7 @@
       return Sprite;
   }(Shape));
   Sprite.prototype.className = 'Sprite';
+  _registerNode(Sprite);
   // add getters setters
   Factory.addGetterSetter(Sprite, 'animation');
   /**
@@ -12280,6 +12392,7 @@
   Star.prototype.className = 'Star';
   Star.prototype._centroid = true;
   Star.prototype._attrsAffectingSize = ['innerRadius', 'outerRadius'];
+  _registerNode(Star);
   /**
    * get/set number of points
    * @name Konva.Ring#numPoints
@@ -12794,6 +12907,7 @@
       'wrap',
       'lineHeight'
   ];
+  _registerNode(Text);
   /**
    * get/set width of text area, which includes padding.
    * @name Konva.Text#width
@@ -13487,6 +13601,7 @@
   TextPath.prototype._strokeFuncHit = _strokeFunc$2;
   TextPath.prototype.className = 'TextPath';
   TextPath.prototype._attrsAffectingSize = ['text', 'fontSize', 'data'];
+  _registerNode(TextPath);
   /**
    * get/set SVG path data string.  This method
    *  also automatically parses the data string
@@ -14103,7 +14218,7 @@
               var dx = padding;
               var dy = padding;
               this._fitNodeInto({
-                  rotation: getGlobalKonva().angleDeg
+                  rotation: _getGlobalKonva().angleDeg
                       ? newRotation
                       : Util._degToRad(newRotation),
                   x: attrs.x +
@@ -14372,6 +14487,7 @@
       return val || [];
   }
   Transformer.prototype.className = 'Transformer';
+  _registerNode(Transformer);
   /**
    * get/set enabled handlers
    * @name Konva.Transformer#enabledAnchors
@@ -14784,6 +14900,7 @@
   Wedge.prototype.className = 'Wedge';
   Wedge.prototype._centroid = true;
   Wedge.prototype._attrsAffectingSize = ['radius'];
+  _registerNode(Wedge);
   /**
    * get/set radius
    * @name Konva.Wedge#radius
@@ -16886,80 +17003,6 @@
    * @returns {Number}
    */
 
-  var DD$1 = DD;
-  var enableTrace = false;
-  // TODO: move that to stage?
-  var listenClickTap = false;
-  var inDblClickWindow = false;
-  /**
-   * Global pixel ratio configuration. KonvaJS automatically detect pixel ratio of current device.
-   * But you may override such property, if you want to use your value.
-   * @property pixelRatio
-   * @default undefined
-   * @name pixelRatio
-   * @memberof Konva
-   * @example
-   * Konva.pixelRatio = 1;
-   */
-  var pixelRatio = undefined;
-  /**
-   * Drag distance property. If you start to drag a node you may want to wait until pointer is moved to some distance from start point,
-   * only then start dragging. Default is 3px.
-   * @property dragDistance
-   * @default 0
-   * @memberof Konva
-   * @example
-   * Konva.dragDistance = 10;
-   */
-  var dragDistance = 3;
-  /**
-   * Use degree values for angle properties. You may set this property to false if you want to use radiant values.
-   * @property angleDeg
-   * @default true
-   * @memberof Konva
-   * @example
-   * node.rotation(45); // 45 degrees
-   * Konva.angleDeg = false;
-   * node.rotation(Math.PI / 2); // PI/2 radian
-   */
-  var angleDeg = true;
-  /**
-   * Show different warnings about errors or wrong API usage
-   * @property showWarnings
-   * @default true
-   * @memberof Konva
-   * @example
-   * Konva.showWarnings = false;
-   */
-  var showWarnings = true;
-  /**
-   * Configure what mouse buttons can be used for drag and drop.
-   * Default value is [0] - only left mouse button.
-   * @property dragButtons
-   * @default true
-   * @memberof Konva
-   * @example
-   * // enable left and right mouse buttons
-   * Konva.dragButtons = [0, 2];
-   */
-  var dragButtons = [0, 1];
-  /**
-   * returns whether or not drag and drop is currently active
-   * @method
-   * @memberof Konva
-   */
-  var isDragging = function () {
-      return DD.isDragging;
-  };
-  /**
-   * returns whether or not a drag and drop operation is ready, but may
-   *  not necessarily have started
-   * @method
-   * @memberof Konva
-   */
-  var isDragReady = function () {
-      return !!DD.node;
-  };
   /**
    * @namespace Filters
    * @memberof Konva
@@ -16987,34 +17030,7 @@
   };
 
   var Konva = ({
-    DD: DD$1,
-    enableTrace: enableTrace,
-    listenClickTap: listenClickTap,
-    inDblClickWindow: inDblClickWindow,
-    pixelRatio: pixelRatio,
-    dragDistance: dragDistance,
-    angleDeg: angleDeg,
-    showWarnings: showWarnings,
-    dragButtons: dragButtons,
-    isDragging: isDragging,
-    isDragReady: isDragReady,
     Filters: Filters,
-    Collection: Collection,
-    Util: Util,
-    Node: Node,
-    ids: ids,
-    names: names,
-    Container: Container,
-    Stage: Stage,
-    stages: stages,
-    Layer: Layer,
-    FastLayer: FastLayer,
-    Group: Group,
-    Shape: Shape,
-    shapes: shapes,
-    Animation: Animation,
-    Tween: Tween,
-    Easings: Easings,
     Arc: Arc,
     Arrow: Arrow,
     Circle: Circle,
@@ -17033,6 +17049,33 @@
     TextPath: TextPath,
     Transformer: Transformer,
     Wedge: Wedge,
+    DD: DD$1,
+    enableTrace: enableTrace,
+    listenClickTap: listenClickTap,
+    inDblClickWindow: inDblClickWindow,
+    pixelRatio: pixelRatio,
+    dragDistance: dragDistance,
+    angleDeg: angleDeg,
+    showWarnings: showWarnings,
+    dragButtons: dragButtons,
+    isDragging: isDragging,
+    isDragReady: isDragReady,
+    Collection: Collection,
+    Util: Util,
+    Node: Node,
+    ids: ids,
+    names: names,
+    Container: Container,
+    Stage: Stage,
+    stages: stages,
+    Layer: Layer,
+    FastLayer: FastLayer,
+    Group: Group,
+    Shape: Shape,
+    shapes: shapes,
+    Animation: Animation,
+    Tween: Tween,
+    Easings: Easings,
     version: version,
     isBrowser: isBrowser,
     isUnminified: isUnminified,
@@ -17042,13 +17085,16 @@
     glob: glob,
     UA: UA,
     document: document,
-    getGlobalKonva: getGlobalKonva
+    _getGlobalKonva: _getGlobalKonva,
+    _NODES_REGISTRY: _NODES_REGISTRY,
+    _injectGlobal: _injectGlobal,
+    _registerNode: _registerNode
   });
 
   // add Konva to global viriable
   // umd build will actually do it
   // but it may now it case of modules and bundlers
-  glob.Konva = Konva;
+  _injectGlobal(Konva);
 
   return Konva;
 

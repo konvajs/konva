@@ -3,6 +3,7 @@ import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { GetSet } from '../types';
 import { getNumberValidator } from '../Validators';
+import { _registerNode } from '../Global';
 
 var PIx2 = Math.PI * 2;
 /**
@@ -54,6 +55,7 @@ export class Ring extends Shape {
 Ring.prototype.className = 'Ring';
 Ring.prototype._centroid = true;
 Ring.prototype._attrsAffectingSize = ['innerRadius', 'outerRadius'];
+_registerNode(Ring);
 
 /**
  * get/set innerRadius

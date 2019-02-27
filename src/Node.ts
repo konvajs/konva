@@ -1,7 +1,7 @@
 import { Util, Collection, Transform, RectConf, Point } from './Util';
 import { Factory } from './Factory';
 import { SceneCanvas, HitCanvas } from './Canvas';
-import { getGlobalKonva } from './Global';
+import { _getGlobalKonva, _NODES_REGISTRY } from './Global';
 import { Container } from './Container';
 import { GetSet, Vector2d } from './types';
 import { DD } from './DragAndDrop';
@@ -612,7 +612,7 @@ export abstract class Node {
    * // with event delegations
    * layer.on('click', 'Group', function(evt) {
    *   var shape = evt.target;
-   *   var group = evtn.currentTarger;
+   *   var group = evt.currentTarget;
    * });
    */
   on(evtStr, handler) {
@@ -1632,7 +1632,7 @@ export abstract class Node {
     var m = new Transform(),
       x = this.x(),
       y = this.y(),
-      rotation = getGlobalKonva().getAngle(this.rotation()),
+      rotation = _getGlobalKonva().getAngle(this.rotation()),
       scaleX = this.scaleX(),
       scaleY = this.scaleY(),
       skewX = this.skewX(),
@@ -1868,7 +1868,7 @@ export abstract class Node {
     } else if (this.parent) {
       return this.parent.getDragDistance();
     } else {
-      return getGlobalKonva().dragDistance;
+      return _getGlobalKonva().dragDistance;
     }
   }
   _get(selector) {
@@ -2207,7 +2207,7 @@ export abstract class Node {
     this._dragCleanup();
 
     this.on('mousedown.konva touchstart.konva', function(evt) {
-      var canDrag = getGlobalKonva().dragButtons.indexOf(evt.evt.button) >= 0;
+      var canDrag = _getGlobalKonva().dragButtons.indexOf(evt.evt.button) >= 0;
       if (!canDrag) {
         return;
       }
@@ -2335,7 +2335,7 @@ export abstract class Node {
       obj.attrs.container = container;
     }
 
-    if (!getGlobalKonva()[className]) {
+    if (!_NODES_REGISTRY[className]) {
       Util.warn(
         'Can not find a node with class name "' +
           className +
@@ -2344,7 +2344,7 @@ export abstract class Node {
       className = 'Shape';
     }
 
-    const Class = getGlobalKonva()[className];
+    const Class = _NODES_REGISTRY[className];
 
     no = new Class(obj.attrs);
     if (children) {

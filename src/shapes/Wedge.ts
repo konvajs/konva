@@ -3,6 +3,7 @@ import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { getAngle } from '../Global';
 import { getNumberValidator } from '../Validators';
+import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
 
@@ -64,6 +65,7 @@ export class Wedge extends Shape {
 Wedge.prototype.className = 'Wedge';
 Wedge.prototype._centroid = true;
 Wedge.prototype._attrsAffectingSize = ['radius'];
+_registerNode(Wedge);
 
 /**
  * get/set radius

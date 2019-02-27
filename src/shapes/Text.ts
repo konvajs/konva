@@ -7,6 +7,7 @@ import {
   getStringValidator,
   getNumberOrAutoValidator
 } from '../Validators';
+import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
 
@@ -530,6 +531,7 @@ Text.prototype._attrsAffectingSize = [
   'wrap',
   'lineHeight'
 ];
+_registerNode(Text);
 
 /**
  * get/set width of text area, which includes padding.

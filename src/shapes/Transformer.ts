@@ -4,8 +4,9 @@ import { Node } from '../Node';
 import { Shape } from '../Shape';
 import { Rect } from './Rect';
 import { Group } from '../Group';
-import { getAngle, getGlobalKonva } from '../Global';
+import { getAngle, _getGlobalKonva } from '../Global';
 import { getNumberValidator } from '../Validators';
+import { _registerNode } from '../Global';
 
 import { GetSet, IRect } from '../types';
 
@@ -520,7 +521,7 @@ export class Transformer extends Group {
 
       this._fitNodeInto(
         {
-          rotation: getGlobalKonva().angleDeg
+          rotation: _getGlobalKonva().angleDeg
             ? newRotation
             : Util._degToRad(newRotation),
           x:
@@ -847,6 +848,7 @@ function validateAnchors(val) {
 }
 
 Transformer.prototype.className = 'Transformer';
+_registerNode(Transformer);
 
 /**
  * get/set enabled handlers

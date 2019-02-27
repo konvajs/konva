@@ -2,6 +2,7 @@ import { Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { getNumberValidator } from '../Validators';
+import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
 
@@ -83,6 +84,7 @@ export class Rect extends Shape {
 }
 
 Rect.prototype.className = 'Rect';
+_registerNode(Rect);
 
 /**
  * get/set corner radius

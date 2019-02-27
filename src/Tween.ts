@@ -1,7 +1,7 @@
 import { Util } from './Util';
 import { Animation } from './Animation';
 import { Node } from './Node';
-import { getGlobalKonva } from './Global';
+import { _getGlobalKonva } from './Global';
 
 var blacklist = {
     node: 1,
@@ -200,7 +200,7 @@ export class Tween {
 
     var layers =
       node.getLayer() ||
-      (node instanceof getGlobalKonva().Stage ? node.getLayers() : null);
+      (node instanceof _getGlobalKonva().Stage ? node.getLayers() : null);
     if (!layers) {
       Util.error(
         'Tween constructor have `node` that is not in a layer. Please add node into layer first.'

@@ -2,6 +2,7 @@ import { Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { getNumberValidator } from '../Validators';
+import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
 
@@ -68,6 +69,7 @@ export class Star extends Shape {
 Star.prototype.className = 'Star';
 Star.prototype._centroid = true;
 Star.prototype._attrsAffectingSize = ['innerRadius', 'outerRadius'];
+_registerNode(Star);
 
 /**
  * get/set number of points

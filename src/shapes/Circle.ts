@@ -3,6 +3,7 @@ import { Factory } from '../Factory';
 import { Shape } from '../Shape';
 import { GetSet } from '../types';
 import { getNumberValidator } from '../Validators';
+import { _registerNode } from '../Global';
 
 /**
  * Circle constructor
@@ -52,6 +53,7 @@ export class Circle extends Shape {
 Circle.prototype._centroid = true;
 Circle.prototype.className = 'Circle';
 Circle.prototype._attrsAffectingSize = ['radius'];
+_registerNode(Circle);
 
 /**
  * get/set radius

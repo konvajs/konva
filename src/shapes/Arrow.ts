@@ -3,6 +3,7 @@ import { Factory } from '../Factory';
 import { Line } from './Line';
 import { GetSet } from '../types';
 import { getNumberValidator } from '../Validators';
+import { _registerNode } from '../Global';
 
 /**
  * Arrow constructor
@@ -108,6 +109,7 @@ export class Arrow extends Line {
 }
 
 Arrow.prototype.className = 'Arrow';
+_registerNode(Arrow);
 
 /**
  * get/set pointerLength

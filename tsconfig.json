@@ -2,72 +2,10 @@
   "compilerOptions": {
     "outDir": "lib",
     "module": "ES2015",
-    // "allowJs": true,
     "target": "es5",
     "noEmitOnError": true,
     "lib": ["es2015", "dom"]
     // "strict": true
   },
-  "include": [
-    "src/index.ts"
-    // core
-    // "ts/Global.ts",
-    // "ts/Util.ts",
-    // "ts/Canvas.ts",
-    // "ts/Context.ts",
-    // "ts/Factory.ts",
-    // "ts/Node.ts",
-
-    // // filters
-    // "ts/filters/Grayscale.ts",
-    // "ts/filters/Brighten.ts",
-    // "ts/filters/Invert.ts",
-    // "ts/filters/Blur.ts",
-    // "ts/filters/Mask.ts",
-    // "ts/filters/RGB.ts",
-    // "ts/filters/RGBA.ts",
-    // "ts/filters/HSV.ts",
-    // "ts/filters/HSL.ts",
-    // "ts/filters/Emboss.ts",
-    // "ts/filters/Enhance.ts",
-    // "ts/filters/Posterize.ts",
-    // "ts/filters/Noise.ts",
-    // "ts/filters/Pixelate.ts",
-    // "ts/filters/Threshold.ts",
-    // "ts/filters/Sepia.ts",
-    // "ts/filters/Solarize.ts",
-    // "ts/filters/Kaleidoscope.ts",
-    // "ts/filters/Contrast.ts",
-
-    // // core
-    // "ts/Container.ts",
-    // "ts/Shape.ts",
-    // "ts/Stage.ts",
-    // "ts/BaseLayer.ts",
-    // "ts/Layer.ts",
-    // "ts/FastLayer.ts",
-    // "ts/Group.ts",
-    // "ts/Animation.ts",
-    // "ts/Tween.ts",
-    // "ts/DragAndDrop.ts",
-
-    // // shapes
-    // "ts/shapes/Rect.ts",
-    // "ts/shapes/Circle.ts",
-    // "ts/shapes/Ellipse.ts",
-    // "ts/shapes/Ring.ts",
-    // "ts/shapes/Wedge.ts",
-    // "ts/shapes/Arc.ts",
-    // "ts/shapes/Image.ts",
-    // "ts/shapes/Text.ts",
-    // "ts/shapes/Line.ts",
-    // "ts/shapes/Sprite.ts",
-    // "ts/shapes/Path.ts",
-    // "ts/shapes/TextPath.ts",
-    // "ts/shapes/RegularPolygon.ts",
-    // "ts/shapes/Star.ts",
-    // "ts/shapes/Label.ts",
-    // "ts/shapes/Arrow.ts",
-    // "ts/shapes/Transformer.ts"
-  ]
+  "include": ["src/index.ts", "src/Core.ts"]
 }
