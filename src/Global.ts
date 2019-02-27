@@ -114,7 +114,7 @@ let globalKonva = {};
 export const _injectGlobal = Konva => {
   globalKonva = Konva;
   glob.Konva = Konva;
-  Object.assign(glob.Konva, _NODES_REGISTRY);
+  Object.assign(Konva, _NODES_REGISTRY);
 };
 
 export const _registerNode = NodeClass => {

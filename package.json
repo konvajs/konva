@@ -10,7 +10,7 @@
     "types",
     "lib"
   ],
-  "main": "./lib/Full.js",
+  "main": "./lib/index.js",
   "typings": "./types/index.d.ts",
   "scripts": {
     "start": "npm run watch & gulp",

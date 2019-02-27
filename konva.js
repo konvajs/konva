@@ -94,7 +94,7 @@
   var _injectGlobal = function (Konva) {
       globalKonva = Konva;
       glob.Konva = Konva;
-      Object.assign(glob.Konva, _NODES_REGISTRY);
+      Object.assign(Konva, _NODES_REGISTRY);
   };
   var _registerNode = function (NodeClass) {
       _NODES_REGISTRY[NodeClass.prototype.getClassName()] = NodeClass;

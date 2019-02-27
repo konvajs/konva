@@ -9,7 +9,7 @@ old_cdn="https://unpkg.com/konva@${old_version}/konva.js"
 new_cdn="https://unpkg.com/konva@${new_version}/konva.js"
 
 old_cdn_min="https://unpkg.com/konva@${old_version}/konva.min.js"
-new_cdn_min="https://unpkg.com/konva@${old_version}/konva.min.js"
+new_cdn_min="https://unpkg.com/konva@${new_version}/konva.min.js"
 
 # make sure new version parameter is passed
 if [ -z "$1" ]
@@ -27,6 +27,9 @@ while true; do
         * ) echo "Please answer yes or no.";;
     esac
 done
+
+echo "Old version: ${old_version}"
+echo "New version: ${new_version}"
 
 echo "Pulling"
 git pull >/dev/null
