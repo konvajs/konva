@@ -1,7 +1,8 @@
-(function (factory) {
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
-  factory();
-}(function () { 'use strict';
+  (global = global || self, global.Konva = factory());
+}(this, function () { 'use strict';
 
   /*
    * Konva JavaScript Framework v3.1.4
@@ -17091,10 +17092,6 @@
     _registerNode: _registerNode
   });
 
-  // add Konva to global variable
-  // umd build will actually do it
-  // but it may now it case of modules and bundlers
-  _injectGlobal(Konva);
-  module.exports = Konva;
+  return Konva;
 
 }));

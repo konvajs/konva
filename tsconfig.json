@@ -5,7 +5,6 @@
     "target": "es5",
     "noEmitOnError": true,
     "lib": ["es2015", "dom"]
-    // "strict": true
   },
-  "include": ["src/index.ts", "src/Core.ts"]
+  "include": ["./src/*.ts"]
 }
