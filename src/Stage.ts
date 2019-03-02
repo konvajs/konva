@@ -785,17 +785,6 @@ export class Stage extends Container {
 
     this._resizeDOM();
   }
-  _onContent(typesStr, handler) {
-    var types = typesStr.split(SPACE),
-      len = types.length,
-      n,
-      baseEvent;
-
-    for (n = 0; n < len; n++) {
-      baseEvent = types[n];
-      this.content.addEventListener(baseEvent, handler, false);
-    }
-  }
   // currently cache function is now working for stage, because stage has no its own canvas element
   cache() {
     Util.warn(
