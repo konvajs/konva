@@ -1567,7 +1567,7 @@ export abstract class Node {
 
     // start with stage and traverse downwards to self
     this._eachAncestorReverse(function(node) {
-      var transformsEnabled = node.transformsEnabled();
+      var transformsEnabled = node.getTransformsEnabled();
 
       if (transformsEnabled === 'all') {
         at.multiply(node.getTransform());
@@ -2007,8 +2007,7 @@ export abstract class Node {
    * node.setAttr('x', 5);
    */
   setAttr(attr, val) {
-    var method = SET + Util._capitalize(attr),
-      func = this[method];
+    var func = this[SET + Util._capitalize(attr)];
 
     if (Util._isFunction(func)) {
       func.call(this, val);
@@ -2019,10 +2018,8 @@ export abstract class Node {
     return this;
   }
   _setAttr(key, val) {
-    var oldVal;
-    oldVal = this.attrs[key];
-    var same = oldVal === val;
-    if (same && !Util.isObject(val)) {
+    var oldVal = this.attrs[key];
+    if ((oldVal === val) && !Util.isObject(val)) {
       return;
     }
     if (val === undefined || val === null) {
@@ -2047,28 +2044,17 @@ export abstract class Node {
     }
   }
   _fireAndBubble(eventType, evt, compareShape?) {
-    var okayToRun = true;
-
     if (evt && this.nodeType === SHAPE) {
       evt.target = this;
     }
 
-    if (
-      eventType === MOUSEENTER &&
+    var shouldStop = 
+      (eventType === MOUSEENTER || eventType === MOUSELEAVE) &&
       compareShape &&
       (this._id === compareShape._id ||
-        (this.isAncestorOf && this.isAncestorOf(compareShape)))
-    ) {
-      okayToRun = false;
-    } else if (
-      eventType === MOUSELEAVE &&
-      compareShape &&
-      (this._id === compareShape._id ||
-        (this.isAncestorOf && this.isAncestorOf(compareShape)))
-    ) {
-      okayToRun = false;
-    }
-    if (okayToRun) {
+        (this.isAncestorOf && this.isAncestorOf(compareShape)));
+
+    if (!shouldStop) {
       this._fire(eventType, evt);
 
       // simulate event bubbling
@@ -2101,11 +2087,11 @@ export abstract class Node {
     var events = this.eventListeners[eventType],
       i;
 
-    evt = evt || {};
-    evt.currentTarget = this;
-    evt.type = eventType;
-
     if (events) {
+      evt = evt || {};
+      evt.currentTarget = this;
+      evt.type = eventType;
+
       for (i = 0; i < events.length; i++) {
         events[i].handler.call(this, evt);
       }
