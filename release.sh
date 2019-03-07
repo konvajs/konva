@@ -74,20 +74,20 @@ npm publish >/dev/null
 
 echo "copy konva.js into konva-site"
 cp ./konva.js ../konva-site/
-cd ../konva-site
+# cd ../konva-site
 
-echo "replace CDN links"
+# echo "replace CDN links"
 
 
-find source themes -exec perl -i -pe "s|${old_cdn}|${new_cdn}|g" {} + >/dev/null
-find source themes -exec perl -i -pe "s|${old_cdn_min}|${new_cdn_min}|g" {} + >/dev/null
+# find source themes -exec perl -i -pe "s|${old_cdn}|${new_cdn}|g" {} + >/dev/null
+# find source themes -exec perl -i -pe "s|${old_cdn_min}|${new_cdn_min}|g" {} + >/dev/null
 
-echo "regenerate site"
-./deploy.sh >/dev/null
+# echo "regenerate site"
+# ./deploy.sh >/dev/null
 
 echo "DONE!"
 
 echo "-------"
 echo "Now you need:"
-echo "create new relese in github and attach documentation https://github.com/konvajs/konva/releases"
-echo "update CDN link to ${new_cdn} at http://codepen.io/lavrton/pen/myBPGo"
+echo "1. Update CDN link to ${new_cdn} at http://codepen.io/lavrton/pen/myBPGo"
+echo "2. Update cdn links on konva website from ${old_version} to ${new_version}"
