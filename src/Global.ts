@@ -13,26 +13,16 @@ var PI_OVER_180 = Math.PI / 180;
 /**
  * @namespace Konva
  */
-export const version = '@@version';
 
-export const isBrowser =
-  typeof window !== 'undefined' &&
-  // browser case
-  ({}.toString.call(window) === '[object Window]' ||
-    // electron case
-    {}.toString.call(window) === '[object global]');
-
-export const isUnminified = /comment/.test(
-  function() {
-    /* comment */
-  }.toString()
-);
-
-export const dblClickWindow = 400;
-
-export const getAngle = function(angle) {
-  return _getGlobalKonva().angleDeg ? angle * PI_OVER_180 : angle;
-};
+function detectBrowser() {
+  return (
+    typeof window !== 'undefined' &&
+    // browser case
+    ({}.toString.call(window) === '[object Window]' ||
+      // electron case
+      {}.toString.call(window) === '[object global]')
+  );
+}
 
 const _detectIE = function(ua) {
   var msie = ua.indexOf('msie ');
@@ -96,28 +86,110 @@ export const glob: any =
     ? self
     : {};
 
-// user agent
-export const UA = _parseUA((glob.navigator && glob.navigator.userAgent) || '');
+export const Konva = {
+  version: '@@version',
+  isBrowser: detectBrowser(),
+  isUnminified: /comment/.test(
+    function() {
+      /* comment */
+    }.toString()
+  ),
+  dblClickWindow: 400,
+  getAngle(angle) {
+    return Konva.angleDeg ? angle * PI_OVER_180 : angle;
+  },
+  enableTrace: false,
 
-export const document = glob.document;
+  // TODO: move that to stage?
+  listenClickTap: false,
+  inDblClickWindow: false,
 
-// get global Konva instance
-export const _getGlobalKonva = () => {
-  return glob.Konva;
+  /**
+   * Global pixel ratio configuration. KonvaJS automatically detect pixel ratio of current device.
+   * But you may override such property, if you want to use your value.
+   * @property pixelRatio
+   * @default undefined
+   * @name pixelRatio
+   * @memberof Konva
+   * @example
+   * Konva.pixelRatio = 1;
+   */
+  pixelRatio: undefined,
+
+  /**
+   * Drag distance property. If you start to drag a node you may want to wait until pointer is moved to some distance from start point,
+   * only then start dragging. Default is 3px.
+   * @property dragDistance
+   * @default 0
+   * @memberof Konva
+   * @example
+   * Konva.dragDistance = 10;
+   */
+  dragDistance: 3,
+  /**
+   * Use degree values for angle properties. You may set this property to false if you want to use radiant values.
+   * @property angleDeg
+   * @default true
+   * @memberof Konva
+   * @example
+   * node.rotation(45); // 45 degrees
+   * Konva.angleDeg = false;
+   * node.rotation(Math.PI / 2); // PI/2 radian
+   */
+  angleDeg: true,
+  /**
+   * Show different warnings about errors or wrong API usage
+   * @property showWarnings
+   * @default true
+   * @memberof Konva
+   * @example
+   * Konva.showWarnings = false;
+   */
+  showWarnings: true,
+
+  /**
+   * Configure what mouse buttons can be used for drag and drop.
+   * Default value is [0] - only left mouse button.
+   * @property dragButtons
+   * @default true
+   * @memberof Konva
+   * @example
+   * // enable left and right mouse buttons
+   * Konva.dragButtons = [0, 2];
+   */
+  dragButtons: [0, 1],
+
+  /**
+   * returns whether or not drag and drop is currently active
+   * @method
+   * @memberof Konva
+   */
+  isDragging() {
+    return Konva['DD'].isDragging;
+  },
+  /**
+   * returns whether or not a drag and drop operation is ready, but may
+   *  not necessarily have started
+   * @method
+   * @memberof Konva
+   */
+  isDragReady() {
+    return !!Konva['DD'].node;
+  },
+  // user agent
+  UA: _parseUA((glob.navigator && glob.navigator.userAgent) || ''),
+  document: glob.document,
+  // insert Konva into global namaspace (window)
+  // it is required for npm packages
+  _injectGlobal(Konva) {
+    glob.Konva = Konva;
+  },
+  _parseUA
 };
 
 export const _NODES_REGISTRY = {};
-let globalKonva = {};
-
-// insert Konva into global namaspace (window)
-// it is required for npm packages
-export const _injectGlobal = Konva => {
-  globalKonva = Konva;
-  glob.Konva = Konva;
-  Object.assign(Konva, _NODES_REGISTRY);
-};
 
 export const _registerNode = NodeClass => {
   _NODES_REGISTRY[NodeClass.prototype.getClassName()] = NodeClass;
-  globalKonva[NodeClass.prototype.getClassName()] = NodeClass;
+  Konva[NodeClass.prototype.getClassName()] = NodeClass;
 };

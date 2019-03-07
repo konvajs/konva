@@ -1,7 +1,7 @@
 import { Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape } from '../Shape';
-import { getAngle } from '../Global';
+import { Konva } from '../Global';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
@@ -37,7 +37,7 @@ export class Wedge extends Shape {
       0,
       this.radius(),
       0,
-      getAngle(this.angle()),
+      Konva.getAngle(this.angle()),
       this.clockwise()
     );
     context.lineTo(0, 0);

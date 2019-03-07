@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v3.1.6
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Wed Feb 27 2019
+   * Date: Wed Mar 06 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -19,19 +19,13 @@
   /**
    * @namespace Konva
    */
-  var version = '3.1.6';
-  var isBrowser = typeof window !== 'undefined' &&
-      // browser case
-      ({}.toString.call(window) === '[object Window]' ||
-          // electron case
-          {}.toString.call(window) === '[object global]');
-  var isUnminified = /comment/.test(function () {
-      /* comment */
-  }.toString());
-  var dblClickWindow = 400;
-  var getAngle = function (angle) {
-      return _getGlobalKonva().angleDeg ? angle * PI_OVER_180 : angle;
-  };
+  function detectBrowser() {
+      return (typeof window !== 'undefined' &&
+          // browser case
+          ({}.toString.call(window) === '[object Window]' ||
+              // electron case
+              {}.toString.call(window) === '[object global]'));
+  }
   var _detectIE = function (ua) {
       var msie = ua.indexOf('msie ');
       if (msie > 0) {
@@ -80,25 +74,103 @@
           : typeof WorkerGlobalScope !== 'undefined'
               ? self
               : {};
-  // user agent
-  var UA = _parseUA((glob.navigator && glob.navigator.userAgent) || '');
-  var document = glob.document;
-  // get global Konva instance
-  var _getGlobalKonva = function () {
-      return glob.Konva;
+  var Konva = {
+      version: '3.1.6',
+      isBrowser: detectBrowser(),
+      isUnminified: /comment/.test(function () {
+          /* comment */
+      }.toString()),
+      dblClickWindow: 400,
+      getAngle: function (angle) {
+          return Konva.angleDeg ? angle * PI_OVER_180 : angle;
+      },
+      enableTrace: false,
+      // TODO: move that to stage?
+      listenClickTap: false,
+      inDblClickWindow: false,
+      /**
+       * Global pixel ratio configuration. KonvaJS automatically detect pixel ratio of current device.
+       * But you may override such property, if you want to use your value.
+       * @property pixelRatio
+       * @default undefined
+       * @name pixelRatio
+       * @memberof Konva
+       * @example
+       * Konva.pixelRatio = 1;
+       */
+      pixelRatio: undefined,
+      /**
+       * Drag distance property. If you start to drag a node you may want to wait until pointer is moved to some distance from start point,
+       * only then start dragging. Default is 3px.
+       * @property dragDistance
+       * @default 0
+       * @memberof Konva
+       * @example
+       * Konva.dragDistance = 10;
+       */
+      dragDistance: 3,
+      /**
+       * Use degree values for angle properties. You may set this property to false if you want to use radiant values.
+       * @property angleDeg
+       * @default true
+       * @memberof Konva
+       * @example
+       * node.rotation(45); // 45 degrees
+       * Konva.angleDeg = false;
+       * node.rotation(Math.PI / 2); // PI/2 radian
+       */
+      angleDeg: true,
+      /**
+       * Show different warnings about errors or wrong API usage
+       * @property showWarnings
+       * @default true
+       * @memberof Konva
+       * @example
+       * Konva.showWarnings = false;
+       */
+      showWarnings: true,
+      /**
+       * Configure what mouse buttons can be used for drag and drop.
+       * Default value is [0] - only left mouse button.
+       * @property dragButtons
+       * @default true
+       * @memberof Konva
+       * @example
+       * // enable left and right mouse buttons
+       * Konva.dragButtons = [0, 2];
+       */
+      dragButtons: [0, 1],
+      /**
+       * returns whether or not drag and drop is currently active
+       * @method
+       * @memberof Konva
+       */
+      isDragging: function () {
+          return Konva['DD'].isDragging;
+      },
+      /**
+       * returns whether or not a drag and drop operation is ready, but may
+       *  not necessarily have started
+       * @method
+       * @memberof Konva
+       */
+      isDragReady: function () {
+          return !!Konva['DD'].node;
+      },
+      // user agent
+      UA: _parseUA((glob.navigator && glob.navigator.userAgent) || ''),
+      document: glob.document,
+      // insert Konva into global namaspace (window)
+      // it is required for npm packages
+      _injectGlobal: function (Konva) {
+          glob.Konva = Konva;
+      },
+      _parseUA: _parseUA
   };
   var _NODES_REGISTRY = {};
-  var globalKonva = {};
-  // insert Konva into global namaspace (window)
-  // it is required for npm packages
-  var _injectGlobal = function (Konva) {
-      globalKonva = Konva;
-      glob.Konva = Konva;
-      Object.assign(Konva, _NODES_REGISTRY);
-  };
   var _registerNode = function (NodeClass) {
       _NODES_REGISTRY[NodeClass.prototype.getClassName()] = NodeClass;
-      globalKonva[NodeClass.prototype.getClassName()] = NodeClass;
+      Konva[NodeClass.prototype.getClassName()] = NodeClass;
   };
 
   /**
@@ -595,9 +667,9 @@
           }
       },
       createCanvasElement: function () {
-          var canvas = isBrowser
+          var canvas = Konva.isBrowser
               ? document.createElement('canvas')
-              : new (_getGlobalKonva()._nodeCanvas())();
+              : new (Konva['_nodeCanvas']())();
           // on some environments canvas.style is readonly
           try {
               canvas.style = canvas.style || {};
@@ -839,7 +911,7 @@
           console.error(KONVA_ERROR + str);
       },
       warn: function (str) {
-          if (!_getGlobalKonva().showWarnings) {
+          if (!Konva.showWarnings) {
               return;
           }
           console.warn(KONVA_WARNING + str);
@@ -1013,7 +1085,7 @@
       return Math.round(val);
   }
   function getNumberValidator() {
-      if (isUnminified) {
+      if (Konva.isUnminified) {
           return function (val, attr) {
               if (!Util._isNumber(val)) {
                   Util.warn(_formatValue(val) +
@@ -1026,7 +1098,7 @@
       }
   }
   function getNumberOrAutoValidator() {
-      if (isUnminified) {
+      if (Konva.isUnminified) {
           return function (val, attr) {
               var isNumber = Util._isNumber(val);
               var isAuto = val === 'auto';
@@ -1041,7 +1113,7 @@
       }
   }
   function getStringValidator() {
-      if (isUnminified) {
+      if (Konva.isUnminified) {
           return function (val, attr) {
               if (!Util._isString(val)) {
                   Util.warn(_formatValue(val) +
@@ -1054,7 +1126,7 @@
       }
   }
   function getNumberArrayValidator() {
-      if (isUnminified) {
+      if (Konva.isUnminified) {
           return function (val, attr) {
               if (!Util._isArray(val)) {
                   Util.warn(_formatValue(val) +
@@ -1078,7 +1150,7 @@
       }
   }
   function getBooleanValidator() {
-      if (isUnminified) {
+      if (Konva.isUnminified) {
           return function (val, attr) {
               var isBool = val === true || val === false;
               if (!isBool) {
@@ -1092,7 +1164,7 @@
       }
   }
   function getComponentValidator(components) {
-      if (isUnminified) {
+      if (Konva.isUnminified) {
           return function (val, attr) {
               if (!Util.isObject(val)) {
                   Util.warn(_formatValue(val) +
@@ -1336,7 +1408,7 @@
       function Context(canvas) {
           this.canvas = canvas;
           this._context = canvas._canvas.getContext('2d');
-          if (_getGlobalKonva().enableTrace) {
+          if (Konva.enableTrace) {
               this.traceArr = [];
               this._enableTrace();
           }
@@ -1681,7 +1753,7 @@
           shape._fillFunc(this);
       };
       SceneContext.prototype._fillPattern = function (shape) {
-          var fillPatternX = shape.getFillPatternX(), fillPatternY = shape.getFillPatternY(), fillPatternScaleX = shape.getFillPatternScaleX(), fillPatternScaleY = shape.getFillPatternScaleY(), fillPatternRotation = getAngle(shape.getFillPatternRotation()), fillPatternOffsetX = shape.getFillPatternOffsetX(), fillPatternOffsetY = shape.getFillPatternOffsetY();
+          var fillPatternX = shape.getFillPatternX(), fillPatternY = shape.getFillPatternY(), fillPatternScaleX = shape.getFillPatternScaleX(), fillPatternScaleY = shape.getFillPatternScaleY(), fillPatternRotation = Konva.getAngle(shape.getFillPatternRotation()), fillPatternOffsetX = shape.getFillPatternOffsetX(), fillPatternOffsetY = shape.getFillPatternOffsetY();
           if (fillPatternX || fillPatternY) {
               this.translate(fillPatternX || 0, fillPatternY || 0);
           }
@@ -1870,7 +1942,7 @@
           this.height = 0;
           this.isCache = false;
           var conf = config || {};
-          var pixelRatio = conf.pixelRatio || _getGlobalKonva().pixelRatio || getDevicePixelRatio();
+          var pixelRatio = conf.pixelRatio || Konva.pixelRatio || getDevicePixelRatio();
           this.pixelRatio = pixelRatio;
           this._canvas = Util.createCanvasElement();
           // set inline styles
@@ -2277,23 +2349,23 @@
           }
       },
       _endDragBefore: function (evt) {
-          var node = DD.node, layer;
+          var node = DD.node;
           if (node) {
-              layer = node.getLayer();
               DD.anim.stop();
               // only fire dragend event if the drag and drop
               // operation actually started.
               if (DD.isDragging) {
                   DD.isDragging = false;
                   DD.justDragged = true;
-                  _getGlobalKonva().listenClickTap = false;
+                  Konva.listenClickTap = false;
                   if (evt) {
                       evt.dragEndNode = node;
                   }
               }
               DD.node = null;
-              if (layer || node instanceof _getGlobalKonva().Stage) {
-                  (layer || node).draw();
+              var drawNode = node.getLayer() || (node instanceof Konva['Stage'] && node);
+              if (drawNode) {
+                  drawNode.draw();
               }
           }
       },
@@ -2309,7 +2381,7 @@
           }
       }
   };
-  if (isBrowser) {
+  if (Konva.isBrowser) {
       window.addEventListener('mouseup', DD._endDragBefore, true);
       window.addEventListener('touchend', DD._endDragBefore, true);
       window.addEventListener('mousemove', DD._drag);
@@ -2915,12 +2987,6 @@
           return this;
       };
       Node.prototype._remove = function () {
-          var parent = this.getParent();
-          if (parent && parent.children) {
-              parent.children.splice(this.index, 1);
-              parent._setChildrenIndices();
-              this.parent = null;
-          }
           // every cached attr that is calculated via node tree
           // traversal must be cleared when removing a node
           this._clearSelfAndDescendantCache(STAGE);
@@ -2928,6 +2994,12 @@
           this._clearSelfAndDescendantCache(VISIBLE);
           this._clearSelfAndDescendantCache(LISTENING);
           this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
+          var parent = this.getParent();
+          if (parent && parent.children) {
+              parent.children.splice(this.index, 1);
+              parent._setChildrenIndices();
+              this.parent = null;
+          }
       };
       /**
        * remove and destroy a node. Kill it and delete forever! You should not reuse node after destroy().
@@ -3659,7 +3731,7 @@
           var at = new Transform();
           // start with stage and traverse downwards to self
           this._eachAncestorReverse(function (node) {
-              var transformsEnabled = node.transformsEnabled();
+              var transformsEnabled = node.getTransformsEnabled();
               if (transformsEnabled === 'all') {
                   at.multiply(node.getTransform());
               }
@@ -3716,7 +3788,7 @@
           return this._getCache(TRANSFORM, this._getTransform);
       };
       Node.prototype._getTransform = function () {
-          var m = new Transform(), x = this.x(), y = this.y(), rotation = _getGlobalKonva().getAngle(this.rotation()), scaleX = this.scaleX(), scaleY = this.scaleY(), skewX = this.skewX(), skewY = this.skewY(), offsetX = this.offsetX(), offsetY = this.offsetY();
+          var m = new Transform(), x = this.x(), y = this.y(), rotation = Konva.getAngle(this.rotation()), scaleX = this.scaleX(), scaleY = this.scaleY(), skewX = this.skewX(), skewY = this.skewY(), offsetX = this.offsetX(), offsetY = this.offsetY();
           if (x !== 0 || y !== 0) {
               m.translate(x, y);
           }
@@ -3928,7 +4000,7 @@
               return this.parent.getDragDistance();
           }
           else {
-              return _getGlobalKonva().dragDistance;
+              return Konva.dragDistance;
           }
       };
       Node.prototype._get = function (selector) {
@@ -4057,7 +4129,7 @@
        * node.setAttr('x', 5);
        */
       Node.prototype.setAttr = function (attr, val) {
-          var method = SET$1 + Util._capitalize(attr), func = this[method];
+          var func = this[SET$1 + Util._capitalize(attr)];
           if (Util._isFunction(func)) {
               func.call(this, val);
           }
@@ -4068,10 +4140,8 @@
           return this;
       };
       Node.prototype._setAttr = function (key, val) {
-          var oldVal;
-          oldVal = this.attrs[key];
-          var same = oldVal === val;
-          if (same && !Util.isObject(val)) {
+          var oldVal = this.attrs[key];
+          if (oldVal === val && !Util.isObject(val)) {
               return;
           }
           if (val === undefined || val === null) {
@@ -4095,23 +4165,14 @@
           }
       };
       Node.prototype._fireAndBubble = function (eventType, evt, compareShape) {
-          var okayToRun = true;
           if (evt && this.nodeType === SHAPE) {
               evt.target = this;
           }
-          if (eventType === MOUSEENTER &&
+          var shouldStop = (eventType === MOUSEENTER || eventType === MOUSELEAVE) &&
               compareShape &&
               (this._id === compareShape._id ||
-                  (this.isAncestorOf && this.isAncestorOf(compareShape)))) {
-              okayToRun = false;
-          }
-          else if (eventType === MOUSELEAVE &&
-              compareShape &&
-              (this._id === compareShape._id ||
-                  (this.isAncestorOf && this.isAncestorOf(compareShape)))) {
-              okayToRun = false;
-          }
-          if (okayToRun) {
+                  (this.isAncestorOf && this.isAncestorOf(compareShape)));
+          if (!shouldStop) {
               this._fire(eventType, evt);
               // simulate event bubbling
               var stopBubble = (eventType === MOUSEENTER || eventType === MOUSELEAVE) &&
@@ -4134,10 +4195,10 @@
       };
       Node.prototype._fire = function (eventType, evt) {
           var events = this.eventListeners[eventType], i;
-          evt = evt || {};
-          evt.currentTarget = this;
-          evt.type = eventType;
           if (events) {
+              evt = evt || {};
+              evt.currentTarget = this;
+              evt.type = eventType;
               for (i = 0; i < events.length; i++) {
                   events[i].handler.call(this, evt);
               }
@@ -4221,8 +4282,7 @@
           this._dragCleanup();
           this.on('mousedown.konva touchstart.konva', function (evt) {
               var shouldCheckButton = evt.evt.button !== undefined;
-              var canDrag = !shouldCheckButton ||
-                  _getGlobalKonva().dragButtons.indexOf(evt.evt.button) >= 0;
+              var canDrag = !shouldCheckButton || Konva.dragButtons.indexOf(evt.evt.button) >= 0;
               if (!canDrag) {
                   return;
               }
@@ -5469,7 +5529,7 @@
   Collection.mapMethods(Container);
 
   // CONSTANTS
-  var STAGE$1 = 'Stage', STRING = 'string', PX = 'px', MOUSEOUT = 'mouseout', MOUSELEAVE$1 = 'mouseleave', MOUSEOVER = 'mouseover', MOUSEENTER$1 = 'mouseenter', MOUSEMOVE = 'mousemove', MOUSEDOWN = 'mousedown', MOUSEUP = 'mouseup', CONTEXTMENU = 'contextmenu', CLICK = 'click', DBL_CLICK = 'dblclick', TOUCHSTART = 'touchstart', TOUCHEND = 'touchend', TAP = 'tap', DBL_TAP = 'dbltap', TOUCHMOVE = 'touchmove', WHEEL = 'wheel', CONTENT_MOUSEOUT = 'contentMouseout', CONTENT_MOUSEOVER = 'contentMouseover', CONTENT_MOUSEMOVE = 'contentMousemove', CONTENT_MOUSEDOWN = 'contentMousedown', CONTENT_MOUSEUP = 'contentMouseup', CONTENT_CONTEXTMENU = 'contentContextmenu', CONTENT_CLICK = 'contentClick', CONTENT_DBL_CLICK = 'contentDblclick', CONTENT_TOUCHSTART = 'contentTouchstart', CONTENT_TOUCHEND = 'contentTouchend', CONTENT_DBL_TAP = 'contentDbltap', CONTENT_TAP = 'contentTap', CONTENT_TOUCHMOVE = 'contentTouchmove', CONTENT_WHEEL = 'contentWheel', DIV = 'div', RELATIVE = 'relative', KONVA_CONTENT = 'konvajs-content', SPACE$1 = ' ', UNDERSCORE = '_', CONTAINER = 'container', MAX_LAYERS_NUMBER = 5, EMPTY_STRING$1 = '', EVENTS = [
+  var STAGE$1 = 'Stage', STRING = 'string', PX = 'px', MOUSEOUT = 'mouseout', MOUSELEAVE$1 = 'mouseleave', MOUSEOVER = 'mouseover', MOUSEENTER$1 = 'mouseenter', MOUSEMOVE = 'mousemove', MOUSEDOWN = 'mousedown', MOUSEUP = 'mouseup', CONTEXTMENU = 'contextmenu', CLICK = 'click', DBL_CLICK = 'dblclick', TOUCHSTART = 'touchstart', TOUCHEND = 'touchend', TAP = 'tap', DBL_TAP = 'dbltap', TOUCHMOVE = 'touchmove', WHEEL = 'wheel', CONTENT_MOUSEOUT = 'contentMouseout', CONTENT_MOUSEOVER = 'contentMouseover', CONTENT_MOUSEMOVE = 'contentMousemove', CONTENT_MOUSEDOWN = 'contentMousedown', CONTENT_MOUSEUP = 'contentMouseup', CONTENT_CONTEXTMENU = 'contentContextmenu', CONTENT_CLICK = 'contentClick', CONTENT_DBL_CLICK = 'contentDblclick', CONTENT_TOUCHSTART = 'contentTouchstart', CONTENT_TOUCHEND = 'contentTouchend', CONTENT_DBL_TAP = 'contentDbltap', CONTENT_TAP = 'contentTap', CONTENT_TOUCHMOVE = 'contentTouchmove', CONTENT_WHEEL = 'contentWheel', RELATIVE = 'relative', KONVA_CONTENT = 'konvajs-content', UNDERSCORE = '_', CONTAINER = 'container', MAX_LAYERS_NUMBER = 5, EMPTY_STRING$1 = '', EVENTS = [
       MOUSEDOWN,
       MOUSEMOVE,
       MOUSEUP,
@@ -5610,7 +5670,7 @@
           if (!obj) {
               obj = {};
           }
-          obj.container = document.createElement(DIV);
+          obj.container = document.createElement('div');
           return Container.prototype.clone.call(this, obj);
       };
       Stage.prototype.destroy = function () {
@@ -5720,7 +5780,7 @@
           layer._setCanvasSize(this.width(), this.height());
           // draw layer and append canvas to container
           layer.draw();
-          if (isBrowser) {
+          if (Konva.isBrowser) {
               this.content.appendChild(layer.canvas._canvas);
           }
           // chainable
@@ -5741,7 +5801,7 @@
           return this.getChildren();
       };
       Stage.prototype._bindContentEvents = function () {
-          if (!isBrowser) {
+          if (!Konva.isBrowser) {
               return;
           }
           for (var n = 0; n < eventsLength; n++) {
@@ -5766,7 +5826,7 @@
       };
       Stage.prototype._mousemove = function (evt) {
           // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event
-          if (UA.ieMobile) {
+          if (Konva.UA.ieMobile) {
               return this._touchmove(evt);
           }
           this.setPointersPositions(evt);
@@ -5820,12 +5880,12 @@
       };
       Stage.prototype._mousedown = function (evt) {
           // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event
-          if (UA.ieMobile) {
+          if (Konva.UA.ieMobile) {
               return this._touchstart(evt);
           }
           this.setPointersPositions(evt);
           var shape = this.getIntersection(this.getPointerPosition());
-          _getGlobalKonva().listenClickTap = true;
+          Konva.listenClickTap = true;
           if (shape && shape.isListening()) {
               this.clickStartShape = shape;
               shape._fireAndBubble(MOUSEDOWN, { evt: evt });
@@ -5848,32 +5908,32 @@
       };
       Stage.prototype._mouseup = function (evt) {
           // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event
-          if (UA.ieMobile) {
+          if (Konva.UA.ieMobile) {
               return this._touchend(evt);
           }
           this.setPointersPositions(evt);
-          var shape = this.getIntersection(this.getPointerPosition()), clickStartShape = this.clickStartShape, clickEndShape = this.clickEndShape, fireDblClick = false, dd = _getGlobalKonva().DD;
-          if (_getGlobalKonva().inDblClickWindow) {
+          var shape = this.getIntersection(this.getPointerPosition()), clickStartShape = this.clickStartShape, clickEndShape = this.clickEndShape, fireDblClick = false;
+          if (Konva.inDblClickWindow) {
               fireDblClick = true;
               clearTimeout(this.dblTimeout);
               // Konva.inDblClickWindow = false;
           }
-          else if (!dd || !dd.justDragged) {
+          else if (!DD.justDragged) {
               // don't set inDblClickWindow after dragging
-              _getGlobalKonva().inDblClickWindow = true;
+              Konva.inDblClickWindow = true;
               clearTimeout(this.dblTimeout);
           }
-          else if (dd) {
-              dd.justDragged = false;
+          else if (DD) {
+              DD.justDragged = false;
           }
           this.dblTimeout = setTimeout(function () {
-              _getGlobalKonva().inDblClickWindow = false;
-          }, _getGlobalKonva().dblClickWindow);
+              Konva.inDblClickWindow = false;
+          }, Konva.dblClickWindow);
           if (shape && shape.isListening()) {
               this.clickEndShape = shape;
               shape._fireAndBubble(MOUSEUP, { evt: evt });
               // detect if click or double click occurred
-              if (_getGlobalKonva().listenClickTap &&
+              if (Konva.listenClickTap &&
                   clickStartShape &&
                   clickStartShape._id === shape._id) {
                   shape._fireAndBubble(CLICK, { evt: evt });
@@ -5884,7 +5944,7 @@
           }
           else {
               this._fire(MOUSEUP, { evt: evt, target: this, currentTarget: this });
-              if (_getGlobalKonva().listenClickTap) {
+              if (Konva.listenClickTap) {
                   this._fire(CLICK, { evt: evt, target: this, currentTarget: this });
               }
               if (fireDblClick) {
@@ -5897,13 +5957,13 @@
           }
           // content events
           this._fire(CONTENT_MOUSEUP, { evt: evt });
-          if (_getGlobalKonva().listenClickTap) {
+          if (Konva.listenClickTap) {
               this._fire(CONTENT_CLICK, { evt: evt });
               if (fireDblClick) {
                   this._fire(CONTENT_DBL_CLICK, { evt: evt });
               }
           }
-          _getGlobalKonva().listenClickTap = false;
+          Konva.listenClickTap = false;
           // always call preventDefault for desktop events because some browsers
           // try to drag and drop the canvas element
           if (evt.cancelable) {
@@ -5928,7 +5988,7 @@
       Stage.prototype._touchstart = function (evt) {
           this.setPointersPositions(evt);
           var shape = this.getIntersection(this.getPointerPosition());
-          _getGlobalKonva().listenClickTap = true;
+          Konva.listenClickTap = true;
           if (shape && shape.isListening()) {
               this.tapStartShape = shape;
               shape._fireAndBubble(TOUCHSTART, { evt: evt });
@@ -5950,22 +6010,22 @@
       Stage.prototype._touchend = function (evt) {
           this.setPointersPositions(evt);
           var shape = this.getIntersection(this.getPointerPosition()), fireDblClick = false;
-          if (_getGlobalKonva().inDblClickWindow) {
+          if (Konva.inDblClickWindow) {
               fireDblClick = true;
               clearTimeout(this.dblTimeout);
-              // _getGlobalKonva().inDblClickWindow = false;
+              // Konva.inDblClickWindow = false;
           }
           else {
-              _getGlobalKonva().inDblClickWindow = true;
+              Konva.inDblClickWindow = true;
               clearTimeout(this.dblTimeout);
           }
           this.dblTimeout = setTimeout(function () {
-              _getGlobalKonva().inDblClickWindow = false;
-          }, _getGlobalKonva().dblClickWindow);
+              Konva.inDblClickWindow = false;
+          }, Konva.dblClickWindow);
           if (shape && shape.isListening()) {
               shape._fireAndBubble(TOUCHEND, { evt: evt });
               // detect if tap or double tap occurred
-              if (_getGlobalKonva().listenClickTap &&
+              if (Konva.listenClickTap &&
                   this.tapStartShape &&
                   shape._id === this.tapStartShape._id) {
                   shape._fireAndBubble(TAP, { evt: evt });
@@ -5980,7 +6040,7 @@
           }
           else {
               this._fire(TOUCHEND, { evt: evt, target: this, currentTarget: this });
-              if (_getGlobalKonva().listenClickTap) {
+              if (Konva.listenClickTap) {
                   this._fire(TAP, { evt: evt, target: this, currentTarget: this });
               }
               if (fireDblClick) {
@@ -5993,17 +6053,17 @@
           }
           // content events
           this._fire(CONTENT_TOUCHEND, { evt: evt });
-          if (_getGlobalKonva().listenClickTap) {
+          if (Konva.listenClickTap) {
               this._fire(CONTENT_TAP, { evt: evt });
               if (fireDblClick) {
                   this._fire(CONTENT_DBL_TAP, { evt: evt });
               }
           }
-          _getGlobalKonva().listenClickTap = false;
+          Konva.listenClickTap = false;
       };
       Stage.prototype._touchmove = function (evt) {
           this.setPointersPositions(evt);
-          var dd = _getGlobalKonva().DD, shape;
+          var shape;
           if (!DD.isDragging) {
               shape = this.getIntersection(this.getPointerPosition());
               if (shape && shape.isListening()) {
@@ -6022,12 +6082,8 @@
               }
               this._fire(CONTENT_TOUCHMOVE, { evt: evt });
           }
-          if (dd) {
-              if (DD.isDragging &&
-                  _getGlobalKonva().DD.node.preventDefault() &&
-                  evt.cancelable) {
-                  evt.preventDefault();
-              }
+          if (DD.isDragging && DD.node.preventDefault() && evt.cancelable) {
+              evt.preventDefault();
           }
       };
       Stage.prototype._wheel = function (evt) {
@@ -6103,7 +6159,7 @@
           // not setting it to 1 will result in an over compensation
           this.bufferCanvas = new SceneCanvas();
           this.bufferHitCanvas = new HitCanvas({ pixelRatio: 1 });
-          if (!isBrowser) {
+          if (!Konva.isBrowser) {
               return;
           }
           var container = this.container();
@@ -6113,20 +6169,13 @@
           // clear content inside container
           container.innerHTML = EMPTY_STRING$1;
           // content
-          this.content = document.createElement(DIV);
+          this.content = document.createElement('div');
           this.content.style.position = RELATIVE;
           this.content.style.userSelect = 'none';
           this.content.className = KONVA_CONTENT;
           this.content.setAttribute('role', 'presentation');
           container.appendChild(this.content);
           this._resizeDOM();
-      };
-      Stage.prototype._onContent = function (typesStr, handler) {
-          var types = typesStr.split(SPACE$1), len = types.length, n, baseEvent;
-          for (n = 0; n < len; n++) {
-              baseEvent = types[n];
-              this.content.addEventListener(baseEvent, handler, false);
-          }
       };
       // currently cache function is now working for stage, because stage has no its own canvas element
       Stage.prototype.cache = function () {
@@ -8518,7 +8567,7 @@
           this.node = node;
           this._id = idCounter$1++;
           var layers = node.getLayer() ||
-              (node instanceof _getGlobalKonva().Stage ? node.getLayers() : null);
+              (node instanceof Konva['Stage'] ? node.getLayers() : null);
           if (!layers) {
               Util.error('Tween constructor have `node` that is not in a layer. Please add node into layer first.');
           }
@@ -9052,80 +9101,26 @@
       }
   };
 
-  var DD$1 = DD;
-  var enableTrace = false;
-  // TODO: move that to stage?
-  var listenClickTap = false;
-  var inDblClickWindow = false;
-  /**
-   * Global pixel ratio configuration. KonvaJS automatically detect pixel ratio of current device.
-   * But you may override such property, if you want to use your value.
-   * @property pixelRatio
-   * @default undefined
-   * @name pixelRatio
-   * @memberof Konva
-   * @example
-   * Konva.pixelRatio = 1;
-   */
-  var pixelRatio = undefined;
-  /**
-   * Drag distance property. If you start to drag a node you may want to wait until pointer is moved to some distance from start point,
-   * only then start dragging. Default is 3px.
-   * @property dragDistance
-   * @default 0
-   * @memberof Konva
-   * @example
-   * Konva.dragDistance = 10;
-   */
-  var dragDistance = 3;
-  /**
-   * Use degree values for angle properties. You may set this property to false if you want to use radiant values.
-   * @property angleDeg
-   * @default true
-   * @memberof Konva
-   * @example
-   * node.rotation(45); // 45 degrees
-   * Konva.angleDeg = false;
-   * node.rotation(Math.PI / 2); // PI/2 radian
-   */
-  var angleDeg = true;
-  /**
-   * Show different warnings about errors or wrong API usage
-   * @property showWarnings
-   * @default true
-   * @memberof Konva
-   * @example
-   * Konva.showWarnings = false;
-   */
-  var showWarnings = true;
-  /**
-   * Configure what mouse buttons can be used for drag and drop.
-   * Default value is [0] - only left mouse button.
-   * @property dragButtons
-   * @default true
-   * @memberof Konva
-   * @example
-   * // enable left and right mouse buttons
-   * Konva.dragButtons = [0, 2];
-   */
-  var dragButtons = [0, 1];
-  /**
-   * returns whether or not drag and drop is currently active
-   * @method
-   * @memberof Konva
-   */
-  var isDragging = function () {
-      return DD.isDragging;
-  };
-  /**
-   * returns whether or not a drag and drop operation is ready, but may
-   *  not necessarily have started
-   * @method
-   * @memberof Konva
-   */
-  var isDragReady = function () {
-      return !!DD.node;
-  };
+  // what is core parts of Konva?
+  var Konva$1 = Object.assign(Konva, {
+      Collection: Collection,
+      Util: Util,
+      Node: Node,
+      ids: ids,
+      names: names,
+      Container: Container,
+      Stage: Stage,
+      stages: stages,
+      Layer: Layer,
+      FastLayer: FastLayer,
+      Group: Group,
+      DD: DD,
+      Shape: Shape,
+      shapes: shapes,
+      Animation: Animation,
+      Tween: Tween,
+      Easings: Easings
+  });
 
   /**
    * Arc constructor
@@ -9226,7 +9221,7 @@
           return _super !== null && _super.apply(this, arguments) || this;
       }
       Arc.prototype._sceneFunc = function (context) {
-          var angle = getAngle(this.angle()), clockwise = this.clockwise();
+          var angle = Konva.getAngle(this.angle()), clockwise = this.clockwise();
           context.beginPath();
           context.arc(0, 0, this.outerRadius(), 0, angle, clockwise);
           context.arc(0, 0, this.innerRadius(), angle, 0, !clockwise);
@@ -12753,7 +12748,7 @@
           // bold was not working
           // removing font variant will solve
           // fix for: https://github.com/konvajs/konva/issues/94
-          if (UA.isIE) {
+          if (Konva.UA.isIE) {
               return (this.fontStyle() +
                   SPACE$2 +
                   this.fontSize() +
@@ -14003,7 +13998,7 @@
               skipShadow: true,
               skipStroke: this.ignoreStroke()
           });
-          var rotation = getAngle(node.rotation());
+          var rotation = Konva.getAngle(node.rotation());
           var dx = rect.x * node.scaleX() - node.offsetX() * node.scaleX();
           var dy = rect.y * node.scaleY() - node.offsetY() * node.scaleY();
           return {
@@ -14061,7 +14056,7 @@
           // add hover styling
           anchor.on('mouseenter', function () {
               var tr = this.getParent();
-              var rad = getAngle(tr.rotation());
+              var rad = Konva.getAngle(tr.rotation());
               var scale = tr.getNode().getAbsoluteScale();
               // If scale.y < 0 xor scale.x < 0 we need to flip (not rotate).
               var isMirrored = scale.y * scale.x < 0;
@@ -14202,14 +14197,14 @@
               if (attrs.height < 0) {
                   dAlpha -= Math.PI;
               }
-              var rot = getAngle(this.rotation());
+              var rot = Konva.getAngle(this.rotation());
               var newRotation = Util._radToDeg(rot) + Util._radToDeg(dAlpha);
-              var alpha = getAngle(this.getNode().rotation());
+              var alpha = Konva.getAngle(this.getNode().rotation());
               var newAlpha = Util._degToRad(newRotation);
               var snaps = this.rotationSnaps();
               var offset = 0.1;
               for (var i = 0; i < snaps.length; i++) {
-                  var angle = getAngle(snaps[i]);
+                  var angle = Konva.getAngle(snaps[i]);
                   var dif = Math.abs(angle - Util._degToRad(newRotation)) % (Math.PI * 2);
                   if (dif < offset) {
                       newRotation = Util._radToDeg(angle);
@@ -14219,9 +14214,7 @@
               var dx = padding;
               var dy = padding;
               this._fitNodeInto({
-                  rotation: _getGlobalKonva().angleDeg
-                      ? newRotation
-                      : Util._degToRad(newRotation),
+                  rotation: Konva.angleDeg ? newRotation : Util._degToRad(newRotation),
                   x: attrs.x +
                       (attrs.width / 2 + padding) *
                           (Math.cos(alpha) - Math.cos(newAlpha)) +
@@ -14312,7 +14305,7 @@
           var padding = this.padding();
           var scaleX = (newAttrs.width - padding * 2) / pure.width;
           var scaleY = (newAttrs.height - padding * 2) / pure.height;
-          var rotation = getAngle(node.rotation());
+          var rotation = Konva.getAngle(node.rotation());
           var dx = pure.x * scaleX - padding - node.offsetX() * scaleX;
           var dy = pure.y * scaleY - padding - node.offsetY() * scaleY;
           this.getNode().setAttrs({
@@ -14879,7 +14872,7 @@
       }
       Wedge.prototype._sceneFunc = function (context) {
           context.beginPath();
-          context.arc(0, 0, this.radius(), 0, getAngle(this.angle()), this.clockwise());
+          context.arc(0, 0, this.radius(), 0, Konva.getAngle(this.angle()), this.clockwise());
           context.lineTo(0, 0);
           context.closePath();
           context.fillStrokeShape(this);
@@ -17004,94 +16997,55 @@
    * @returns {Number}
    */
 
-  /**
-   * @namespace Filters
-   * @memberof Konva
-   */
-  var Filters = {
-      Blur: Blur,
-      Brighten: Brighten,
-      Contrast: Contrast,
-      Emboss: Emboss,
-      Enhance: Enhance,
-      Grayscale: Grayscale,
-      HSL: HSL,
-      HSV: HSV,
-      Invert: Invert,
-      Kaleidoscope: Kaleidoscope,
-      Mask: Mask,
-      Noise: Noise,
-      Pixelate: Pixelate,
-      Posterize: Posterize,
-      RGB: RGB,
-      RGBA: RGBA,
-      Sepia: Sepia,
-      Solarize: Solarize,
-      Threshold: Threshold
-  };
-
-  var Konva = ({
-    Filters: Filters,
-    Arc: Arc,
-    Arrow: Arrow,
-    Circle: Circle,
-    Ellipse: Ellipse,
-    Image: Image,
-    Label: Label,
-    Tag: Tag,
-    Line: Line,
-    Path: Path,
-    Rect: Rect,
-    RegularPolygon: RegularPolygon,
-    Ring: Ring,
-    Sprite: Sprite,
-    Star: Star,
-    Text: Text,
-    TextPath: TextPath,
-    Transformer: Transformer,
-    Wedge: Wedge,
-    DD: DD$1,
-    enableTrace: enableTrace,
-    listenClickTap: listenClickTap,
-    inDblClickWindow: inDblClickWindow,
-    pixelRatio: pixelRatio,
-    dragDistance: dragDistance,
-    angleDeg: angleDeg,
-    showWarnings: showWarnings,
-    dragButtons: dragButtons,
-    isDragging: isDragging,
-    isDragReady: isDragReady,
-    Collection: Collection,
-    Util: Util,
-    Node: Node,
-    ids: ids,
-    names: names,
-    Container: Container,
-    Stage: Stage,
-    stages: stages,
-    Layer: Layer,
-    FastLayer: FastLayer,
-    Group: Group,
-    Shape: Shape,
-    shapes: shapes,
-    Animation: Animation,
-    Tween: Tween,
-    Easings: Easings,
-    version: version,
-    isBrowser: isBrowser,
-    isUnminified: isUnminified,
-    dblClickWindow: dblClickWindow,
-    getAngle: getAngle,
-    _parseUA: _parseUA,
-    glob: glob,
-    UA: UA,
-    document: document,
-    _getGlobalKonva: _getGlobalKonva,
-    _NODES_REGISTRY: _NODES_REGISTRY,
-    _injectGlobal: _injectGlobal,
-    _registerNode: _registerNode
+  // we need to import core of the Konva and then extend it with all additional objects
+  var Konva$2 = Object.assign(Konva$1, {
+      Arc: Arc,
+      Arrow: Arrow,
+      Circle: Circle,
+      Ellipse: Ellipse,
+      Image: Image,
+      Label: Label,
+      Tag: Tag,
+      Line: Line,
+      Path: Path,
+      Rect: Rect,
+      RegularPolygon: RegularPolygon,
+      Ring: Ring,
+      Sprite: Sprite,
+      Star: Star,
+      Text: Text,
+      TextPath: TextPath,
+      Transformer: Transformer,
+      Wedge: Wedge,
+      /**
+       * @namespace Filters
+       * @memberof Konva
+       */
+      Filters: {
+          Blur: Blur,
+          Brighten: Brighten,
+          Contrast: Contrast,
+          Emboss: Emboss,
+          Enhance: Enhance,
+          Grayscale: Grayscale,
+          HSL: HSL,
+          HSV: HSV,
+          Invert: Invert,
+          Kaleidoscope: Kaleidoscope,
+          Mask: Mask,
+          Noise: Noise,
+          Pixelate: Pixelate,
+          Posterize: Posterize,
+          RGB: RGB,
+          RGBA: RGBA,
+          Sepia: Sepia,
+          Solarize: Solarize,
+          Threshold: Threshold
+      }
   });
 
-  return Konva;
+  // main entry for umd build for rollup
+
+  return Konva$2;
 
 }));

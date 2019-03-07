@@ -1,5 +1,5 @@
 import { Util } from './Util';
-import { getAngle, _getGlobalKonva } from './Global';
+import { Konva } from './Global';
 import { Canvas } from './Canvas';
 
 var COMMA = ',',
@@ -97,7 +97,7 @@ export class Context {
     this.canvas = canvas;
     this._context = canvas._canvas.getContext('2d') as CanvasRenderingContext2D;
 
-    if (_getGlobalKonva().enableTrace) {
+    if (Konva.enableTrace) {
       this.traceArr = [];
       this._enableTrace();
     }
@@ -483,7 +483,7 @@ export class SceneContext extends Context {
       fillPatternY = shape.getFillPatternY(),
       fillPatternScaleX = shape.getFillPatternScaleX(),
       fillPatternScaleY = shape.getFillPatternScaleY(),
-      fillPatternRotation = getAngle(shape.getFillPatternRotation()),
+      fillPatternRotation = Konva.getAngle(shape.getFillPatternRotation()),
       fillPatternOffsetX = shape.getFillPatternOffsetX(),
       fillPatternOffsetY = shape.getFillPatternOffsetY();
 

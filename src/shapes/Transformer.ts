@@ -4,7 +4,7 @@ import { Node } from '../Node';
 import { Shape } from '../Shape';
 import { Rect } from './Rect';
 import { Group } from '../Group';
-import { getAngle, _getGlobalKonva } from '../Global';
+import { Konva } from '../Global';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
@@ -254,7 +254,7 @@ export class Transformer extends Group {
       skipShadow: true,
       skipStroke: this.ignoreStroke()
     });
-    var rotation = getAngle(node.rotation());
+    var rotation = Konva.getAngle(node.rotation());
 
     var dx = rect.x * node.scaleX() - node.offsetX() * node.scaleX();
     var dy = rect.y * node.scaleY() - node.offsetY() * node.scaleY();
@@ -320,7 +320,7 @@ export class Transformer extends Group {
     anchor.on('mouseenter', function() {
       var tr = this.getParent();
 
-      var rad = getAngle(tr.rotation());
+      var rad = Konva.getAngle(tr.rotation());
 
       var scale = tr.getNode().getAbsoluteScale();
       // If scale.y < 0 xor scale.x < 0 we need to flip (not rotate).
@@ -494,17 +494,17 @@ export class Transformer extends Group {
         dAlpha -= Math.PI;
       }
 
-      var rot = getAngle(this.rotation());
+      var rot = Konva.getAngle(this.rotation());
 
       var newRotation = Util._radToDeg(rot) + Util._radToDeg(dAlpha);
 
-      var alpha = getAngle(this.getNode().rotation());
+      var alpha = Konva.getAngle(this.getNode().rotation());
       var newAlpha = Util._degToRad(newRotation);
 
       var snaps = this.rotationSnaps();
       var offset = 0.1;
       for (var i = 0; i < snaps.length; i++) {
-        var angle = getAngle(snaps[i]);
+        var angle = Konva.getAngle(snaps[i]);
 
         var dif = Math.abs(angle - Util._degToRad(newRotation)) % (Math.PI * 2);
 
@@ -519,9 +519,7 @@ export class Transformer extends Group {
 
       this._fitNodeInto(
         {
-          rotation: _getGlobalKonva().angleDeg
-            ? newRotation
-            : Util._degToRad(newRotation),
+          rotation: Konva.angleDeg ? newRotation : Util._degToRad(newRotation),
           x:
             attrs.x +
             (attrs.width / 2 + padding) *
@@ -640,7 +638,7 @@ export class Transformer extends Group {
     var scaleX = (newAttrs.width - padding * 2) / pure.width;
     var scaleY = (newAttrs.height - padding * 2) / pure.height;
 
-    var rotation = getAngle(node.rotation());
+    var rotation = Konva.getAngle(node.rotation());
     var dx = pure.x * scaleX - padding - node.offsetX() * scaleX;
     var dy = pure.y * scaleY - padding - node.offsetY() * scaleY;
 

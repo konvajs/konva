@@ -1,4 +1,4 @@
-import { isUnminified } from './Global';
+import { Konva } from './Global';
 import { Util } from './Util';
 
 function _formatValue(val) {
@@ -34,7 +34,7 @@ export function alphaComponent(val) {
 }
 
 export function getNumberValidator() {
-  if (isUnminified) {
+  if (Konva.isUnminified) {
     return function(val, attr) {
       if (!Util._isNumber(val)) {
         Util.warn(
@@ -49,7 +49,7 @@ export function getNumberValidator() {
   }
 }
 export function getNumberOrAutoValidator() {
-  if (isUnminified) {
+  if (Konva.isUnminified) {
     return function(val, attr) {
       var isNumber = Util._isNumber(val);
       var isAuto = val === 'auto';
@@ -67,7 +67,7 @@ export function getNumberOrAutoValidator() {
   }
 }
 export function getStringValidator() {
-  if (isUnminified) {
+  if (Konva.isUnminified) {
     return function(val, attr) {
       if (!Util._isString(val)) {
         Util.warn(
@@ -82,7 +82,7 @@ export function getStringValidator() {
   }
 }
 export function getFunctionValidator() {
-  if (isUnminified) {
+  if (Konva.isUnminified) {
     return function(val, attr) {
       if (!Util._isFunction(val)) {
         Util.warn(
@@ -97,7 +97,7 @@ export function getFunctionValidator() {
   }
 }
 export function getNumberArrayValidator() {
-  if (isUnminified) {
+  if (Konva.isUnminified) {
     return function(val, attr) {
       if (!Util._isArray(val)) {
         Util.warn(
@@ -124,7 +124,7 @@ export function getNumberArrayValidator() {
   }
 }
 export function getBooleanValidator() {
-  if (isUnminified) {
+  if (Konva.isUnminified) {
     return function(val, attr) {
       var isBool = val === true || val === false;
       if (!isBool) {
@@ -140,7 +140,7 @@ export function getBooleanValidator() {
   }
 }
 export function getComponentValidator(components) {
-  if (isUnminified) {
+  if (Konva.isUnminified) {
     return function(val, attr) {
       if (!Util.isObject(val)) {
         Util.warn(

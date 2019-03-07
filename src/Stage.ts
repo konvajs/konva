@@ -1,7 +1,7 @@
 import { Util, Collection } from './Util';
 import { Factory } from './Factory';
 import { Container } from './Container';
-import { document, isBrowser, _getGlobalKonva, UA } from './Global';
+import { Konva } from './Global';
 import { SceneCanvas, HitCanvas } from './Canvas';
 import { GetSet, Vector2d } from './types';
 import { Shape } from './Shape';
@@ -43,7 +43,6 @@ var STAGE = 'Stage',
   CONTENT_TAP = 'contentTap',
   CONTENT_TOUCHMOVE = 'contentTouchmove',
   CONTENT_WHEEL = 'contentWheel',
-  DIV = 'div',
   RELATIVE = 'relative',
   KONVA_CONTENT = 'konvajs-content',
   SPACE = ' ',
@@ -201,7 +200,7 @@ export class Stage extends Container {
     if (!obj) {
       obj = {};
     }
-    obj.container = document.createElement(DIV);
+    obj.container = document.createElement('div');
     return Container.prototype.clone.call(this, obj);
   }
 
@@ -346,7 +345,7 @@ export class Stage extends Container {
     // draw layer and append canvas to container
     layer.draw();
 
-    if (isBrowser) {
+    if (Konva.isBrowser) {
       this.content.appendChild(layer.canvas._canvas);
     }
 
@@ -368,7 +367,7 @@ export class Stage extends Container {
     return this.getChildren();
   }
   _bindContentEvents() {
-    if (!isBrowser) {
+    if (!Konva.isBrowser) {
       return;
     }
     for (var n = 0; n < eventsLength; n++) {
@@ -395,7 +394,7 @@ export class Stage extends Container {
   }
   _mousemove(evt) {
     // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event
-    if (UA.ieMobile) {
+    if (Konva.UA.ieMobile) {
       return this._touchmove(evt);
     }
     this.setPointersPositions(evt);
@@ -450,13 +449,13 @@ export class Stage extends Container {
   }
   _mousedown(evt) {
     // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event
-    if (UA.ieMobile) {
+    if (Konva.UA.ieMobile) {
       return this._touchstart(evt);
     }
     this.setPointersPositions(evt);
     var shape = this.getIntersection(this.getPointerPosition());
 
-    _getGlobalKonva().listenClickTap = true;
+    Konva.listenClickTap = true;
 
     if (shape && shape.isListening()) {
       this.clickStartShape = shape;
@@ -481,31 +480,30 @@ export class Stage extends Container {
   }
   _mouseup(evt) {
     // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event
-    if (UA.ieMobile) {
+    if (Konva.UA.ieMobile) {
       return this._touchend(evt);
     }
     this.setPointersPositions(evt);
     var shape = this.getIntersection(this.getPointerPosition()),
       clickStartShape = this.clickStartShape,
       clickEndShape = this.clickEndShape,
-      fireDblClick = false,
-      dd = _getGlobalKonva().DD;
+      fireDblClick = false;
 
-    if (_getGlobalKonva().inDblClickWindow) {
+    if (Konva.inDblClickWindow) {
       fireDblClick = true;
       clearTimeout(this.dblTimeout);
       // Konva.inDblClickWindow = false;
-    } else if (!dd || !dd.justDragged) {
+    } else if (!DD.justDragged) {
       // don't set inDblClickWindow after dragging
-      _getGlobalKonva().inDblClickWindow = true;
+      Konva.inDblClickWindow = true;
       clearTimeout(this.dblTimeout);
-    } else if (dd) {
-      dd.justDragged = false;
+    } else if (DD) {
+      DD.justDragged = false;
     }
 
     this.dblTimeout = setTimeout(function() {
-      _getGlobalKonva().inDblClickWindow = false;
-    }, _getGlobalKonva().dblClickWindow);
+      Konva.inDblClickWindow = false;
+    }, Konva.dblClickWindow);
 
     if (shape && shape.isListening()) {
       this.clickEndShape = shape;
@@ -513,7 +511,7 @@ export class Stage extends Container {
 
       // detect if click or double click occurred
       if (
-        _getGlobalKonva().listenClickTap &&
+        Konva.listenClickTap &&
         clickStartShape &&
         clickStartShape._id === shape._id
       ) {
@@ -525,7 +523,7 @@ export class Stage extends Container {
       }
     } else {
       this._fire(MOUSEUP, { evt: evt, target: this, currentTarget: this });
-      if (_getGlobalKonva().listenClickTap) {
+      if (Konva.listenClickTap) {
         this._fire(CLICK, { evt: evt, target: this, currentTarget: this });
       }
 
@@ -539,14 +537,14 @@ export class Stage extends Container {
     }
     // content events
     this._fire(CONTENT_MOUSEUP, { evt: evt });
-    if (_getGlobalKonva().listenClickTap) {
+    if (Konva.listenClickTap) {
       this._fire(CONTENT_CLICK, { evt: evt });
       if (fireDblClick) {
         this._fire(CONTENT_DBL_CLICK, { evt: evt });
       }
     }
 
-    _getGlobalKonva().listenClickTap = false;
+    Konva.listenClickTap = false;
 
     // always call preventDefault for desktop events because some browsers
     // try to drag and drop the canvas element
@@ -573,7 +571,7 @@ export class Stage extends Container {
     this.setPointersPositions(evt);
     var shape = this.getIntersection(this.getPointerPosition());
 
-    _getGlobalKonva().listenClickTap = true;
+    Konva.listenClickTap = true;
 
     if (shape && shape.isListening()) {
       this.tapStartShape = shape;
@@ -598,25 +596,25 @@ export class Stage extends Container {
     var shape = this.getIntersection(this.getPointerPosition()),
       fireDblClick = false;
 
-    if (_getGlobalKonva().inDblClickWindow) {
+    if (Konva.inDblClickWindow) {
       fireDblClick = true;
       clearTimeout(this.dblTimeout);
-      // _getGlobalKonva().inDblClickWindow = false;
+      // Konva.inDblClickWindow = false;
     } else {
-      _getGlobalKonva().inDblClickWindow = true;
+      Konva.inDblClickWindow = true;
       clearTimeout(this.dblTimeout);
     }
 
     this.dblTimeout = setTimeout(function() {
-      _getGlobalKonva().inDblClickWindow = false;
-    }, _getGlobalKonva().dblClickWindow);
+      Konva.inDblClickWindow = false;
+    }, Konva.dblClickWindow);
 
     if (shape && shape.isListening()) {
       shape._fireAndBubble(TOUCHEND, { evt: evt });
 
       // detect if tap or double tap occurred
       if (
-        _getGlobalKonva().listenClickTap &&
+        Konva.listenClickTap &&
         this.tapStartShape &&
         shape._id === this.tapStartShape._id
       ) {
@@ -632,7 +630,7 @@ export class Stage extends Container {
       }
     } else {
       this._fire(TOUCHEND, { evt: evt, target: this, currentTarget: this });
-      if (_getGlobalKonva().listenClickTap) {
+      if (Konva.listenClickTap) {
         this._fire(TAP, { evt: evt, target: this, currentTarget: this });
       }
       if (fireDblClick) {
@@ -645,19 +643,18 @@ export class Stage extends Container {
     }
     // content events
     this._fire(CONTENT_TOUCHEND, { evt: evt });
-    if (_getGlobalKonva().listenClickTap) {
+    if (Konva.listenClickTap) {
       this._fire(CONTENT_TAP, { evt: evt });
       if (fireDblClick) {
         this._fire(CONTENT_DBL_TAP, { evt: evt });
       }
     }
 
-    _getGlobalKonva().listenClickTap = false;
+    Konva.listenClickTap = false;
   }
   _touchmove(evt) {
     this.setPointersPositions(evt);
-    var dd = _getGlobalKonva().DD,
-      shape;
+    var shape;
     if (!DD.isDragging) {
       shape = this.getIntersection(this.getPointerPosition());
       if (shape && shape.isListening()) {
@@ -675,14 +672,8 @@ export class Stage extends Container {
       }
       this._fire(CONTENT_TOUCHMOVE, { evt: evt });
     }
-    if (dd) {
-      if (
-        DD.isDragging &&
-        _getGlobalKonva().DD.node.preventDefault() &&
-        evt.cancelable
-      ) {
-        evt.preventDefault();
-      }
+    if (DD.isDragging && DD.node.preventDefault() && evt.cancelable) {
+      evt.preventDefault();
     }
   }
   _wheel(evt) {
@@ -763,7 +754,7 @@ export class Stage extends Container {
     this.bufferCanvas = new SceneCanvas();
     this.bufferHitCanvas = new HitCanvas({ pixelRatio: 1 });
 
-    if (!isBrowser) {
+    if (!Konva.isBrowser) {
       return;
     }
     var container = this.container();
@@ -774,7 +765,7 @@ export class Stage extends Container {
     container.innerHTML = EMPTY_STRING;
 
     // content
-    this.content = document.createElement(DIV);
+    this.content = document.createElement('div');
     this.content.style.position = RELATIVE;
     this.content.style.userSelect = 'none';
     this.content.className = KONVA_CONTENT;

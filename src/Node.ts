@@ -1,7 +1,7 @@
-import { Util, Collection, Transform, RectConf, Point } from './Util';
+import { Util, Collection, Transform, RectConf } from './Util';
 import { Factory } from './Factory';
 import { SceneCanvas, HitCanvas } from './Canvas';
-import { _getGlobalKonva, _NODES_REGISTRY } from './Global';
+import { Konva, _NODES_REGISTRY } from './Global';
 import { Container } from './Container';
 import { GetSet, Vector2d } from './types';
 import { DD } from './DragAndDrop';
@@ -755,14 +755,6 @@ export abstract class Node {
     return this;
   }
   _remove() {
-    var parent = this.getParent();
-
-    if (parent && parent.children) {
-      parent.children.splice(this.index, 1);
-      parent._setChildrenIndices();
-      this.parent = null;
-    }
-
     // every cached attr that is calculated via node tree
     // traversal must be cleared when removing a node
     this._clearSelfAndDescendantCache(STAGE);
@@ -770,6 +762,13 @@ export abstract class Node {
     this._clearSelfAndDescendantCache(VISIBLE);
     this._clearSelfAndDescendantCache(LISTENING);
     this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
+    var parent = this.getParent();
+
+    if (parent && parent.children) {
+      parent.children.splice(this.index, 1);
+      parent._setChildrenIndices();
+      this.parent = null;
+    }
   }
   /**
    * remove and destroy a node. Kill it and delete forever! You should not reuse node after destroy().
@@ -1632,7 +1631,7 @@ export abstract class Node {
     var m = new Transform(),
       x = this.x(),
       y = this.y(),
-      rotation = _getGlobalKonva().getAngle(this.rotation()),
+      rotation = Konva.getAngle(this.rotation()),
       scaleX = this.scaleX(),
       scaleY = this.scaleY(),
       skewX = this.skewX(),
@@ -1868,7 +1867,7 @@ export abstract class Node {
     } else if (this.parent) {
       return this.parent.getDragDistance();
     } else {
-      return _getGlobalKonva().dragDistance;
+      return Konva.dragDistance;
     }
   }
   _get(selector) {
@@ -2019,7 +2018,7 @@ export abstract class Node {
   }
   _setAttr(key, val) {
     var oldVal = this.attrs[key];
-    if ((oldVal === val) && !Util.isObject(val)) {
+    if (oldVal === val && !Util.isObject(val)) {
       return;
     }
     if (val === undefined || val === null) {
@@ -2048,7 +2047,7 @@ export abstract class Node {
       evt.target = this;
     }
 
-    var shouldStop = 
+    var shouldStop =
       (eventType === MOUSEENTER || eventType === MOUSELEAVE) &&
       compareShape &&
       (this._id === compareShape._id ||
@@ -2195,8 +2194,7 @@ export abstract class Node {
     this.on('mousedown.konva touchstart.konva', function(evt) {
       var shouldCheckButton = evt.evt.button !== undefined;
       var canDrag =
-        !shouldCheckButton ||
-        _getGlobalKonva().dragButtons.indexOf(evt.evt.button) >= 0;
+        !shouldCheckButton || Konva.dragButtons.indexOf(evt.evt.button) >= 0;
       if (!canDrag) {
         return;
       }

@@ -1,23 +1,25 @@
-export * from './_CoreInternals';
+// we need to import core of the Konva and then extend it with all additional objects
+
+import { Konva as Core } from './_CoreInternals';
 
 // shapes
-export { Arc } from './shapes/Arc';
-export { Arrow } from './shapes/Arrow';
-export { Circle } from './shapes/Circle';
-export { Ellipse } from './shapes/Ellipse';
-export { Image } from './shapes/Image';
-export { Label, Tag } from './shapes/Label';
-export { Line } from './shapes/Line';
-export { Path } from './shapes/Path';
-export { Rect } from './shapes/Rect';
-export { RegularPolygon } from './shapes/RegularPolygon';
-export { Ring } from './shapes/Ring';
-export { Sprite } from './shapes/Sprite';
-export { Star } from './shapes/Star';
-export { Text } from './shapes/Text';
-export { TextPath } from './shapes/TextPath';
-export { Transformer } from './shapes/Transformer';
-export { Wedge } from './shapes/Wedge';
+import { Arc } from './shapes/Arc';
+import { Arrow } from './shapes/Arrow';
+import { Circle } from './shapes/Circle';
+import { Ellipse } from './shapes/Ellipse';
+import { Image } from './shapes/Image';
+import { Label, Tag } from './shapes/Label';
+import { Line } from './shapes/Line';
+import { Path } from './shapes/Path';
+import { Rect } from './shapes/Rect';
+import { RegularPolygon } from './shapes/RegularPolygon';
+import { Ring } from './shapes/Ring';
+import { Sprite } from './shapes/Sprite';
+import { Star } from './shapes/Star';
+import { Text } from './shapes/Text';
+import { TextPath } from './shapes/TextPath';
+import { Transformer } from './shapes/Transformer';
+import { Wedge } from './shapes/Wedge';
 
 // filters
 import { Blur } from './filters/Blur';
@@ -40,28 +42,48 @@ import { Sepia } from './filters/Sepia';
 import { Solarize } from './filters/Solarize';
 import { Threshold } from './filters/Threshold';
 
-/**
- * @namespace Filters
- * @memberof Konva
- */
-export const Filters = {
-  Blur,
-  Brighten,
-  Contrast,
-  Emboss,
-  Enhance,
-  Grayscale,
-  HSL,
-  HSV,
-  Invert,
-  Kaleidoscope,
-  Mask,
-  Noise,
-  Pixelate,
-  Posterize,
-  RGB,
-  RGBA,
-  Sepia,
-  Solarize,
-  Threshold
-};
+export const Konva = Object.assign(Core, {
+  Arc,
+  Arrow,
+  Circle,
+  Ellipse,
+  Image,
+  Label,
+  Tag,
+  Line,
+  Path,
+  Rect,
+  RegularPolygon,
+  Ring,
+  Sprite,
+  Star,
+  Text,
+  TextPath,
+  Transformer,
+  Wedge,
+  /**
+   * @namespace Filters
+   * @memberof Konva
+   */
+  Filters: {
+    Blur,
+    Brighten,
+    Contrast,
+    Emboss,
+    Enhance,
+    Grayscale,
+    HSL,
+    HSV,
+    Invert,
+    Kaleidoscope,
+    Mask,
+    Noise,
+    Pixelate,
+    Posterize,
+    RGB,
+    RGBA,
+    Sepia,
+    Solarize,
+    Threshold
+  }
+});

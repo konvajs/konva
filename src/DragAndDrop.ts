@@ -1,6 +1,5 @@
 import { Animation } from './Animation';
-import { isBrowser, _getGlobalKonva } from './Global';
-
+import { Konva } from './Global';
 
 // TODO: make better module,
 // make sure other modules import it without global
@@ -77,11 +76,9 @@ export const DD = {
     }
   },
   _endDragBefore(evt) {
-    var node = DD.node,
-      layer;
+    var node = DD.node;
 
     if (node) {
-      layer = node.getLayer();
       DD.anim.stop();
 
       // only fire dragend event if the drag and drop
@@ -89,7 +86,7 @@ export const DD = {
       if (DD.isDragging) {
         DD.isDragging = false;
         DD.justDragged = true;
-        _getGlobalKonva().listenClickTap = false;
+        Konva.listenClickTap = false;
 
         if (evt) {
           evt.dragEndNode = node;
@@ -98,8 +95,10 @@ export const DD = {
 
       DD.node = null;
 
-      if (layer || node instanceof _getGlobalKonva().Stage) {
-        (layer || node).draw();
+      const drawNode =
+        node.getLayer() || (node instanceof Konva['Stage'] && node);
+      if (drawNode) {
+        drawNode.draw();
       }
     }
   },
@@ -121,7 +120,7 @@ export const DD = {
   }
 };
 
-if (isBrowser) {
+if (Konva.isBrowser) {
   window.addEventListener('mouseup', DD._endDragBefore, true);
   window.addEventListener('touchend', DD._endDragBefore, true);
 

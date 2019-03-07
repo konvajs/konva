@@ -1,7 +1,7 @@
 import { Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape } from '../Shape';
-import { getAngle } from '../Global';
+import { Konva } from '../Global';
 import { GetSet } from '../types';
 import { getNumberValidator, getBooleanValidator } from '../Validators';
 import { _registerNode } from '../Global';
@@ -32,7 +32,7 @@ import { _registerNode } from '../Global';
  */
 export class Arc extends Shape {
   _sceneFunc(context) {
-    var angle = getAngle(this.angle()),
+    var angle = Konva.getAngle(this.angle()),
       clockwise = this.clockwise();
 
     context.beginPath();

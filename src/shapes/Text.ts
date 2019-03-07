@@ -1,7 +1,7 @@
 import { Util, Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape } from '../Shape';
-import { UA } from '../Global';
+import { Konva } from '../Global';
 import {
   getNumberValidator,
   getStringValidator,
@@ -335,7 +335,7 @@ export class Text extends Shape {
     // bold was not working
     // removing font variant will solve
     // fix for: https://github.com/konvajs/konva/issues/94
-    if (UA.isIE) {
+    if (Konva.UA.isIE) {
       return (
         this.fontStyle() +
         SPACE +
