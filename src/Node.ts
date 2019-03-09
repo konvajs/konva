@@ -1315,7 +1315,7 @@ export abstract class Node {
     var absOpacity = this.opacity();
     var parent = this.getParent();
     if (parent && !parent._isUnderCache) {
-      absOpacity *= this.getParent().getAbsoluteOpacity();
+      absOpacity *= parent.getAbsoluteOpacity();
     }
     return absOpacity;
   }
@@ -1552,16 +1552,16 @@ export abstract class Node {
    * @name Konva.Node#getAbsoluteTransform
    * @returns {Konva.Transform}
    */
-  getAbsoluteTransform(top?) {
+  getAbsoluteTransform(top?: Node): Transform {
     // if using an argument, we can't cache the result.
     if (top) {
       return this._getAbsoluteTransform(top);
     } else {
       // if no argument, we can cache the result
-      return this._getCache(ABSOLUTE_TRANSFORM, this._getAbsoluteTransform);
+      return this._getCache(ABSOLUTE_TRANSFORM, this._getAbsoluteTransform) as Transform;
     }
   }
-  _getAbsoluteTransform(top) {
+  _getAbsoluteTransform(top?: Node): Transform {
     var at = new Transform();
 
     // start with stage and traverse downwards to self
@@ -1624,10 +1624,10 @@ export abstract class Node {
    * @name Konva.Node#getTransform
    * @returns {Konva.Transform}
    */
-  getTransform() {
-    return this._getCache(TRANSFORM, this._getTransform);
+  getTransform(): Transform {
+    return this._getCache(TRANSFORM, this._getTransform) as Transform;
   }
-  _getTransform() {
+  _getTransform(): Transform {
     var m = new Transform(),
       x = this.x(),
       y = this.y(),
