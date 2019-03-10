@@ -1,11 +1,17 @@
 import { Collection } from '../Util';
 import { Factory } from '../Factory';
-import { Shape } from '../Shape';
+import { Shape, ShapeConfig } from '../Shape';
 import { Konva } from '../Global';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
+
+export interface WedgeConfig extends ShapeConfig {
+  angle: number;
+  radius: number;
+  clockwise?: boolean;
+}
 
 /**
  * Wedge constructor
@@ -29,7 +35,7 @@ import { GetSet } from '../types';
  *   rotationDeg: -120
  * });
  */
-export class Wedge extends Shape {
+export class Wedge extends Shape<WedgeConfig> {
   _sceneFunc(context) {
     context.beginPath();
     context.arc(

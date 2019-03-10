@@ -21,8 +21,8 @@
     "prettier": "prettier --write \"src/**/*.js\" \"test/**/*.js\" --single-quote",
     "tsc": "tsc -d --declarationDir ./types --removeComments --module CommonJS || echo \"tsc faild for some file(s).\"",
     "rollup": "rollup -c",
-    "clean": "rm -rf ./lib",
-    "compile": "npm run clean && npm run tsc && npm run rollup",
+    "clean": "rm -rf ./lib && rm -rf ./types",
+    "compile": "npm run clean && npm run tsc && cp ./src/index-types.d.ts ./types && npm run rollup",
     "watch": "rollup -c -w"
   },
   "devDependencies": {

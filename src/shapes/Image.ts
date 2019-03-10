@@ -1,13 +1,15 @@
 import { Util, Collection } from '../Util';
 import { Factory } from '../Factory';
-import { Shape } from '../Shape';
+import { Shape, ShapeConfig } from '../Shape';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
 import { GetSet, IRect } from '../types';
 
-// CONSTANTS
-var IMAGE = 'Image';
+export interface ImageConfig extends ShapeConfig {
+  image: ImageBitmapSource;
+  crop?: IRect;
+}
 
 /**
  * Image constructor
@@ -32,7 +34,7 @@ var IMAGE = 'Image';
  * };
  * imageObj.src = '/path/to/image.jpg'
  */
-export class Image extends Shape {
+export class Image extends Shape<ImageConfig> {
   _useBufferCanvas() {
     return (
       (this.hasShadow() || this.getAbsoluteOpacity() !== 1) &&

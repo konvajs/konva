@@ -100,6 +100,31 @@ type globalCompositeOperationType =
   | 'color'
   | 'luminosity';
 
+export interface NodeConfig {
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
+  visible?: boolean;
+  listening?: boolean;
+  id?: string;
+  name?: string;
+  opacity?: Number;
+  scale?: Vector2d;
+  scaleX?: number;
+  scaleY?: number;
+  rotation?: number;
+  rotationDeg?: number;
+  offset?: Vector2d;
+  offsetX?: number;
+  offsetY?: number;
+  draggable?: boolean;
+  dragDistance?: number;
+  dragBoundFunc?: (pos: Vector2d) => Vector2d;
+  preventDefault?: boolean;
+  globalCompositeOperation?: globalCompositeOperationType;
+}
+
 // CONSTANTS
 var ABSOLUTE_OPACITY = 'absoluteOpacity',
   ABSOLUTE_TRANSFORM = 'absoluteTransform',
@@ -145,7 +170,7 @@ let idCounter = 1;
  * @param {Object} config
  * @@nodeParams
  */
-export abstract class Node {
+export abstract class Node<Config extends NodeConfig = NodeConfig> {
   _id = idCounter++;
   eventListeners = {};
   attrs: any = {};
@@ -161,7 +186,7 @@ export abstract class Node {
   nodeType: string;
   className: string;
 
-  constructor(config) {
+  constructor(config?: Config) {
     this.setAttrs(config);
 
     // event bindings for cache handling

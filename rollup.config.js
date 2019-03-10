@@ -5,7 +5,7 @@ import typescript from 'rollup-plugin-typescript2';
 const pkg = require('./package.json');
 
 export default {
-  input: `src/_UMD.ts`,
+  input: `src/index-umd.ts`,
   output: [
     {
       file: 'konva.js',

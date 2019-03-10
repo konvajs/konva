@@ -4,11 +4,36 @@ import { Node } from '../Node';
 import { Shape } from '../Shape';
 import { Rect } from './Rect';
 import { Group } from '../Group';
+import { ContainerConfig } from '../Container';
 import { Konva } from '../Global';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
 import { GetSet, IRect } from '../types';
+
+interface Box extends IRect {
+  rotation: number;
+}
+
+export interface TransformerConfig extends ContainerConfig {
+  resizeEnabled?: boolean;
+  rotateEnabled?: boolean;
+  rotationSnaps?: Array<number>;
+  rotateAnchorOffset?: number;
+  borderEnabled?: boolean;
+  borderStroke?: string;
+  borderStrokeWidth?: number;
+  borderDash?: Array<number>;
+  anchorFill?: string;
+  anchorStroke?: string;
+  anchorStrokeWidth?: number;
+  anchorSize?: number;
+  keepRatio?: boolean;
+  centeredScaling?: boolean;
+  enabledAnchors?: Array<string>;
+  node?: Rect;
+  boundBoxFunc?: (oldBox: Box, newBox: Box) => Box;
+}
 
 var ATTR_CHANGE_LIST = [
   'resizeEnabledChange',
@@ -155,7 +180,7 @@ export class Transformer extends Group {
   cos: number;
   _cursorChange: boolean;
 
-  constructor(config) {
+  constructor(config?: TransformerConfig) {
     // call super constructor
     super(config);
     this._createElements();

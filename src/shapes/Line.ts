@@ -1,10 +1,17 @@
 import { Util, Collection } from '../Util';
 import { Factory } from '../Factory';
-import { Shape } from '../Shape';
+import { Shape, ShapeConfig } from '../Shape';
 import { getNumberValidator, getNumberArrayValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
+
+export interface LineConfig extends ShapeConfig {
+  points: number[];
+  tension?: number;
+  closed?: boolean;
+  bezier?: boolean;
+}
 
 /**
  * Line constructor.&nbsp; Lines are defined by an array of points and
@@ -30,8 +37,10 @@ import { GetSet } from '../types';
  * });
  */
 
-export class Line extends Shape {
-  constructor(config) {
+export class Line<Config extends LineConfig = LineConfig> extends Shape<
+  Config
+> {
+  constructor(config?: Config) {
     super(config);
     this.on(
       'pointsChange.konva tensionChange.konva closedChange.konva bezierChange.konva',

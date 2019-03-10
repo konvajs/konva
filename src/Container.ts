@@ -1,10 +1,19 @@
 import { Util, Collection } from './Util';
 import { Factory } from './Factory';
-import { Node, ids, names } from './Node';
+import { Node, ids, names, NodeConfig } from './Node';
 import { DD } from './DragAndDrop';
 import { getNumberValidator } from './Validators';
 
 import { GetSet, IRect } from './types';
+
+export interface ContainerConfig extends NodeConfig {
+  clearBeforeDraw?: boolean;
+  clipFunc?: (ctx: CanvasRenderingContext2D) => void;
+  clipX?: number;
+  clipY?: number;
+  clipWidth?: number;
+  clipHeight?: number;
+}
 
 /**
  * Container constructor.&nbsp; Containers are used to contain nodes or other containers
@@ -16,7 +25,7 @@ import { GetSet, IRect } from './types';
  * @@nodeParams
  * @@containerParams
  */
-export abstract class Container extends Node {
+export abstract class Container extends Node<ContainerConfig> {
   children = new Collection();
 
   /**

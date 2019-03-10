@@ -1,11 +1,16 @@
 import { Util, Collection } from './Util';
-import { Container } from './Container';
+import { Container, ContainerConfig } from './Container';
 import { Node } from './Node';
 import { Factory } from './Factory';
 import { SceneCanvas, HitCanvas } from './Canvas';
 import { Stage } from './Stage';
 
 import { GetSet } from './types';
+
+export interface LayerConfig extends ContainerConfig {
+  clearBeforeDraw?: boolean;
+  hitGraphEnabled?: boolean;
+}
 
 /**
  * BaseLayer constructor.
@@ -24,7 +29,7 @@ export abstract class BaseLayer extends Container {
 
   _waitingForDraw = false;
 
-  constructor(config) {
+  constructor(config?: LayerConfig) {
     super(config);
     this.on('visibleChange', this._checkVisibility);
     this._checkVisibility();

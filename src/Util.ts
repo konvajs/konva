@@ -997,5 +997,12 @@ export const Util = {
     delete obj.visitedByCircularReferenceRemoval;
 
     return obj;
+  },
+  // very simplified version of Object.assign
+  _assign<T, U>(target: T, source: U) {
+    for (var key in source) {
+      (<any>target)[key] = source[key];
+    }
+    return target as T & U;
   }
 };

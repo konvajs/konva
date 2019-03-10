@@ -42,7 +42,7 @@ import { Sepia } from './filters/Sepia';
 import { Solarize } from './filters/Solarize';
 import { Threshold } from './filters/Threshold';
 
-export const Konva = Object.assign(Core, {
+export const Konva = Core.Util._assign(Core, {
   Arc,
   Arrow,
   Circle,

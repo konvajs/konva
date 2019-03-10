@@ -1,11 +1,14 @@
 import { Collection } from '../Util';
 import { Factory } from '../Factory';
-import { Shape } from '../Shape';
+import { Shape, ShapeConfig } from '../Shape';
 import { Group } from '../Group';
+import { ContainerConfig } from '../Container';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
+
+export interface LabelConfig extends ContainerConfig {}
 
 // constants
 var ATTR_CHANGE_LIST = [
@@ -170,6 +173,13 @@ _registerNode(Label);
 
 Collection.mapMethods(Label);
 
+export interface TagConfig extends ShapeConfig {
+  pointerDirection?: string;
+  pointerWidth?: number;
+  pointerHeight?: number;
+  cornerRadius?: number;
+}
+
 /**
  * Tag constructor.&nbsp; A Tag can be configured
  *  to have a pointer element that points up, right, down, or left
@@ -182,7 +192,7 @@ Collection.mapMethods(Label);
  * @param {Number} [config.pointerHeight]
  * @param {Number} [config.cornerRadius]
  */
-export class Tag extends Shape {
+export class Tag extends Shape<TagConfig> {
   _sceneFunc(context) {
     var width = this.width(),
       height = this.height(),

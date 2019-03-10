@@ -1,11 +1,19 @@
 import { Collection } from '../Util';
 import { Factory } from '../Factory';
-import { Shape } from '../Shape';
+import { Shape, ShapeConfig } from '../Shape';
 import { Animation } from '../Animation';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
+
+export interface SpriteConfig extends ShapeConfig {
+  animation: string;
+  animations: any;
+  frameIndex?: number;
+  image: HTMLImageElement;
+  frameRate?: number;
+}
 
 /**
  * Sprite constructor
@@ -53,7 +61,7 @@ import { GetSet } from '../types';
  * };
  * imageObj.src = '/path/to/image.jpg'
  */
-export class Sprite extends Shape {
+export class Sprite extends Shape<SpriteConfig> {
   _updated = true;
   anim: Animation;
   interval: any;
@@ -215,7 +223,6 @@ export class Sprite extends Shape {
 
 Sprite.prototype.className = 'Sprite';
 _registerNode(Sprite);
-
 
 // add getters setters
 Factory.addGetterSetter(Sprite, 'animation');

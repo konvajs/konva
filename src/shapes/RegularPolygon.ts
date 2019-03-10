@@ -1,10 +1,14 @@
 import { Collection } from '../Util';
 import { Factory } from '../Factory';
-import { Shape } from '../Shape';
+import { Shape, ShapeConfig } from '../Shape';
 import { GetSet } from '../types';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
+export interface RegularPolygonConfig extends ShapeConfig {
+  sides: number;
+  radius: number;
+}
 /**
  * RegularPolygon constructor. Examples include triangles, squares, pentagons, hexagons, etc.
  * @constructor
@@ -26,7 +30,7 @@ import { _registerNode } from '../Global';
  *   strokeWidth: 4
  * });
  */
-export class RegularPolygon extends Shape {
+export class RegularPolygon extends Shape<RegularPolygonConfig> {
   _sceneFunc(context) {
     var sides = this.sides(),
       radius = this.radius(),
@@ -65,7 +69,7 @@ export class RegularPolygon extends Shape {
 RegularPolygon.prototype.className = 'RegularPolygon';
 RegularPolygon.prototype._centroid = true;
 RegularPolygon.prototype._attrsAffectingSize = ['radius'];
-_registerNode(RegularPolygon)
+_registerNode(RegularPolygon);
 
 /**
  * get/set radius

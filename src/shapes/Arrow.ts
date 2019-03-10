@@ -5,6 +5,17 @@ import { GetSet } from '../types';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
+import { ShapeConfig } from '../Shape';
+
+export interface ArrowConfig extends ShapeConfig {
+  points: number[];
+  tension?: number;
+  closed?: boolean;
+  pointerLength?: number;
+  pointerWidth?: number;
+  pointerAtBeginning?: boolean;
+}
+
 /**
  * Arrow constructor
  * @constructor
@@ -28,7 +39,7 @@ import { _registerNode } from '../Global';
  *   pointerWidth : 12
  * });
  */
-export class Arrow extends Line {
+export class Arrow extends Line<ArrowConfig> {
   _sceneFunc(ctx) {
     super._sceneFunc(ctx);
     var PI2 = Math.PI * 2;

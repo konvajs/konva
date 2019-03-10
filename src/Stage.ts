@@ -1,6 +1,6 @@
 import { Util, Collection } from './Util';
 import { Factory } from './Factory';
-import { Container } from './Container';
+import { Container, ContainerConfig } from './Container';
 import { Konva } from './Global';
 import { SceneCanvas, HitCanvas } from './Canvas';
 import { GetSet, Vector2d } from './types';
@@ -8,6 +8,10 @@ import { Shape } from './Shape';
 import { BaseLayer } from './BaseLayer';
 import { DD } from './DragAndDrop';
 import { _registerNode } from './Global';
+
+export interface StageConfig extends ContainerConfig {
+  container: HTMLDivElement | string;
+}
 
 // CONSTANTS
 var STAGE = 'Stage',
@@ -117,7 +121,7 @@ export class Stage extends Container {
 
   children: Collection<BaseLayer>;
 
-  constructor(config) {
+  constructor(config: StageConfig) {
     super(checkNoClip(config));
     this._buildDOM();
     this._bindContentEvents();

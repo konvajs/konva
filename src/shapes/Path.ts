@@ -1,10 +1,13 @@
-import { Util, Collection } from '../Util';
+import { Collection } from '../Util';
 import { Factory } from '../Factory';
-import { Shape } from '../Shape';
+import { Shape, ShapeConfig } from '../Shape';
 import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
 
+export interface PathConfig extends ShapeConfig {
+  data: string;
+}
 /**
  * Path constructor.
  * @author Jason Follas
@@ -25,11 +28,11 @@ import { GetSet } from '../types';
  *   scaleY: 2
  * });
  */
-export class Path extends Shape {
+export class Path extends Shape<PathConfig> {
   dataArray = [];
   pathLength = 0;
 
-  constructor(config) {
+  constructor(config?: PathConfig) {
     super(config);
     this.dataArray = Path.parsePathData(this.data());
     this.pathLength = 0;

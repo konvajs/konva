@@ -1,6 +1,6 @@
 import { Util, Collection } from '../Util';
 import { Factory } from '../Factory';
-import { Shape } from '../Shape';
+import { Shape, ShapeConfig } from '../Shape';
 import { Konva } from '../Global';
 import {
   getNumberValidator,
@@ -10,6 +10,19 @@ import {
 import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
+
+export interface TextConfig extends ShapeConfig {
+  text?: string;
+  fontFamily?: string;
+  fontSize?: number;
+  fontStyle?: string;
+  align?: string;
+  verticalAlign?: string;
+  padding?: number;
+  lineHeight?: number;
+  wrap?: string;
+  ellipsis?: boolean;
+}
 
 // constants
 var AUTO = 'auto',
@@ -111,7 +124,7 @@ function checkDefaultFill(config) {
  *   fill: 'green'
  * });
  */
-export class Text extends Shape {
+export class Text extends Shape<TextConfig> {
   textArr: Array<{ text: string; width: number }>;
   _partialText: string;
   _partialTextX = 0;
@@ -119,7 +132,7 @@ export class Text extends Shape {
 
   textWidth: number;
   textHeight: number;
-  constructor(config) {
+  constructor(config?: TextConfig) {
     super(checkDefaultFill(config));
     // update text data for certain attr changes
     for (var n = 0; n < attrChangeListLen; n++) {

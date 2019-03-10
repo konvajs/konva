@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v3.1.7
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Wed Mar 06 2019
+   * Date: Sun Mar 10 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -74,6 +74,10 @@
           : typeof WorkerGlobalScope !== 'undefined'
               ? self
               : {};
+  var Konva2;
+  (function (Konva2) {
+      Konva2.version = '3.1.7';
+  })(Konva2 || (Konva2 = {}));
   var Konva = {
       version: '3.1.7',
       isBrowser: detectBrowser(),
@@ -1060,6 +1064,13 @@
           }
           delete obj.visitedByCircularReferenceRemoval;
           return obj;
+      },
+      // very simplified version of Object.assign
+      _assign: function (target, source) {
+          for (var key in source) {
+              target[key] = source[key];
+          }
+          return target;
       }
   };
 
@@ -9102,7 +9113,7 @@
   };
 
   // what is core parts of Konva?
-  var Konva$1 = Object.assign(Konva, {
+  var Konva$1 = Util._assign(Konva, {
       Collection: Collection,
       Util: Util,
       Node: Node,
@@ -13265,9 +13276,9 @@
           });
           // update text data for certain attr changes
           _this.on('textChange.konva alignChange.konva letterSpacingChange.konva kerningFuncChange.konva', _this._setTextData);
-          if (config && config.getKerning) {
+          if (config && config['getKerning']) {
               Util.warn('getKerning TextPath API is deprecated. Please use "kerningFunc" instead.');
-              _this.kerningFunc(config.getKerning);
+              _this.kerningFunc(config['getKerning']);
           }
           _this._setTextData();
           return _this;
@@ -16998,7 +17009,7 @@
    */
 
   // we need to import core of the Konva and then extend it with all additional objects
-  var Konva$2 = Object.assign(Konva$1, {
+  var Konva$2 = Konva$1.Util._assign(Konva$1, {
       Arc: Arc,
       Arrow: Arrow,
       Circle: Circle,

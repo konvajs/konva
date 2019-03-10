@@ -1,10 +1,17 @@
 import { Collection } from '../Util';
 import { Factory } from '../Factory';
-import { Shape } from '../Shape';
+import { Shape, ShapeConfig } from '../Shape';
 import { Konva } from '../Global';
 import { GetSet } from '../types';
 import { getNumberValidator, getBooleanValidator } from '../Validators';
 import { _registerNode } from '../Global';
+
+export interface ArcConfig extends ShapeConfig {
+  angle: number;
+  innerRadius: number;
+  outerRadius: number;
+  clockwise?: boolean;
+}
 
 /**
  * Arc constructor
@@ -30,7 +37,7 @@ import { _registerNode } from '../Global';
  *   rotationDeg: -120
  * });
  */
-export class Arc extends Shape {
+export class Arc extends Shape<ArcConfig> {
   _sceneFunc(context) {
     var angle = Konva.getAngle(this.angle()),
       clockwise = this.clockwise();

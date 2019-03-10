@@ -1,10 +1,13 @@
 import { Collection } from '../Util';
 import { Factory } from '../Factory';
-import { Shape } from '../Shape';
+import { Shape, ShapeConfig } from '../Shape';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
+export interface RectConfig extends ShapeConfig {
+  cornerRadius?: number;
+}
 
 /**
  * Rect constructor
@@ -24,7 +27,7 @@ import { GetSet } from '../types';
  *   strokeWidth: 5
  * });
  */
-export class Rect extends Shape {
+export class Rect extends Shape<RectConfig> {
   _sceneFunc(context) {
     var cornerRadius = this.cornerRadius(),
       width = this.width(),

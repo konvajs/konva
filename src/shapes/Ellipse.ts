@@ -1,10 +1,15 @@
 import { Collection } from '../Util';
 import { Factory } from '../Factory';
-import { Shape } from '../Shape';
+import { Shape, ShapeConfig } from '../Shape';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
 import { GetSet, Vector2d } from '../types';
+
+export interface EllipseConfig extends ShapeConfig {
+  radiusX: number;
+  radiusY: number;
+}
 
 /**
  * Ellipse constructor
@@ -23,7 +28,7 @@ import { GetSet, Vector2d } from '../types';
  *   } *   fill: 'red'
  * });
  */
-export class Ellipse extends Shape {
+export class Ellipse extends Shape<EllipseConfig> {
   _sceneFunc(context) {
     var rx = this.radiusX(),
       ry = this.radiusY();

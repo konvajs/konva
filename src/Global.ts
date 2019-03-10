@@ -86,6 +86,10 @@ export const glob: any =
     ? self
     : {};
 
+export namespace Konva2 {
+  export const version = '@@version';
+}
+
 export const Konva = {
   version: '@@version',
   isBrowser: detectBrowser(),

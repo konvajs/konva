@@ -1,10 +1,16 @@
 import { Collection } from '../Util';
 import { Factory } from '../Factory';
-import { Shape } from '../Shape';
+import { Shape, ShapeConfig } from '../Shape';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
+
+export interface StarConfig extends ShapeConfig {
+  numPoints: number;
+  innerRadius: number;
+  outerRadius: number;
+}
 
 /**
  * Star constructor
@@ -29,7 +35,7 @@ import { GetSet } from '../types';
  *   strokeWidth: 4
  * });
  */
-export class Star extends Shape {
+export class Star extends Shape<StarConfig> {
   _sceneFunc(context) {
     var innerRadius = this.innerRadius(),
       outerRadius = this.outerRadius(),

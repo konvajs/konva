@@ -1,5 +1,4 @@
 // what is core parts of Konva?
-
 import { Konva as Global } from './Global';
 
 import { Collection, Util } from './Util';
@@ -20,7 +19,9 @@ import { Shape, shapes } from './Shape';
 import { Animation } from './Animation';
 import { Tween, Easings } from './Tween';
 
-export const Konva = Object.assign(Global, {
+Object.assign;
+
+export const Konva = Util._assign(Global, {
   Collection,
   Util,
   Node,

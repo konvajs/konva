@@ -1,12 +1,20 @@
 import { Util, Collection } from '../Util';
 import { Factory } from '../Factory';
-import { Shape } from '../Shape';
+import { Shape, ShapeConfig } from '../Shape';
 import { Path } from './Path';
 import { Text } from './Text';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
 import { GetSet, Vector2d } from '../types';
+
+export interface TextPathConfig extends ShapeConfig {
+  text?: string;
+  data?: string;
+  fontFamily?: string;
+  fontSize?: number;
+  fontStyle?: string;
+}
 
 var EMPTY_STRING = '',
   NORMAL = 'normal';
@@ -62,7 +70,7 @@ function _strokeFunc(context) {
  *   }
  * });
  */
-export class TextPath extends Shape {
+export class TextPath extends Shape<TextPathConfig> {
   dummyCanvas = Util.createCanvasElement();
   dataArray = [];
   glyphInfo: Array<{
@@ -77,7 +85,7 @@ export class TextPath extends Shape {
   textWidth: number;
   textHeight: number;
 
-  constructor(config) {
+  constructor(config?: TextPathConfig) {
     // call super constructor
     super(config);
 
@@ -93,11 +101,11 @@ export class TextPath extends Shape {
       this._setTextData
     );
 
-    if (config && config.getKerning) {
+    if (config && config['getKerning']) {
       Util.warn(
         'getKerning TextPath API is deprecated. Please use "kerningFunc" instead.'
       );
-      this.kerningFunc(config.getKerning);
+      this.kerningFunc(config['getKerning']);
     }
 
     this._setTextData();

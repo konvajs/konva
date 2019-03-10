@@ -1,9 +1,15 @@
 import { Collection } from '../Util';
 import { Factory } from '../Factory';
-import { Shape } from '../Shape';
+import { Shape, ShapeConfig } from '../Shape';
 import { GetSet } from '../types';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
+
+export interface RingConfig extends ShapeConfig {
+  innerRadius: number;
+  outerRadius: number;
+  clockwise?: boolean;
+}
 
 var PIx2 = Math.PI * 2;
 /**
@@ -26,7 +32,7 @@ var PIx2 = Math.PI * 2;
  *   strokeWidth: 5
  * });
  */
-export class Ring extends Shape {
+export class Ring extends Shape<RingConfig> {
   _sceneFunc(context) {
     context.beginPath();
     context.arc(0, 0, this.innerRadius(), 0, PIx2, false);

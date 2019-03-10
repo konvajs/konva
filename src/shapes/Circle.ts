@@ -1,9 +1,13 @@
 import { Collection } from '../Util';
 import { Factory } from '../Factory';
-import { Shape } from '../Shape';
+import { Shape, ShapeConfig } from '../Shape';
 import { GetSet } from '../types';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
+
+export interface CircleConfig extends ShapeConfig {
+  radius: number;
+}
 
 /**
  * Circle constructor
@@ -23,7 +27,7 @@ import { _registerNode } from '../Global';
  *   strokeWidth: 5
  * });
  */
-export class Circle extends Shape {
+export class Circle extends Shape<CircleConfig> {
   _sceneFunc(context) {
     context.beginPath();
     context.arc(0, 0, this.radius(), 0, Math.PI * 2, false);
