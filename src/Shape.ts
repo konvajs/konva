@@ -3,6 +3,7 @@ import { Factory } from './Factory';
 import { Node, NodeConfig } from './Node';
 import {
   getNumberValidator,
+  getNumberOrAutoValidator,
   getStringValidator,
   getBooleanValidator
 } from './Validators';
@@ -45,6 +46,7 @@ export interface ShapeConfig extends NodeConfig {
   fillPriority?: string;
   stroke?: string;
   strokeWidth?: number;
+  hitStrokeWidth?: number;
   strokeScaleEnabled?: boolean;
   strokeHitEnabled?: boolean;
   strokeEnabled?: boolean;
@@ -398,6 +400,20 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
       this.getStage()
     );
   }
+  setStrokeHitEnabled(val: number) {
+    if (val) {
+      this.hitStrokeWidth('auto');
+    } else {
+      this.hitStrokeWidth(0);
+    }
+  }
+  getStrokeHitEnabled() {
+    if (this.hitStrokeWidth() === 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
   /**
    * return self rectangle (x, y, width, height) of shape.
    * This method are not taken into account transformation and styles.
@@ -750,6 +766,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
   strokeScaleEnabled: GetSet<boolean, this>;
   strokeHitEnabled: GetSet<boolean, this>;
   strokeWidth: GetSet<number, this>;
+  hitStrokeWidth: GetSet<number | 'auto', this>;
   strokeLinearGradientColorStops: GetSet<Array<number | string>, this>;
 }
 
@@ -801,9 +818,33 @@ Factory.addGetterSetter(Shape, 'strokeWidth', 2, getNumberValidator());
  * var strokeWidth = shape.strokeWidth();
  *
  * // set stroke width
- * shape.strokeWidth();
+ * shape.strokeWidth(10);
  */
 
+Factory.addGetterSetter(
+  Shape,
+  'hitStrokeWidth',
+  'auto',
+  getNumberOrAutoValidator()
+);
+
+/**
+ * get/set stroke width for hit detection. Default value is "auto", it means it will be equals to strokeWidth
+ * @name Konva.Shape#hitStrokeWidth
+ * @method
+ * @param {Number} hitStrokeWidth
+ * @returns {Number}
+ * @example
+ * // get stroke width
+ * var hitStrokeWidth = shape.hitStrokeWidth();
+ *
+ * // set hit stroke width
+ * shape.hitStrokeWidth(20);
+ * // set hit stroke width always equals to scene stroke width
+ * shape.hitStrokeWidth('auto');
+ */
+
+// TODO: probably we should deprecate it
 Factory.addGetterSetter(Shape, 'strokeHitEnabled', true, getBooleanValidator());
 
 /**
@@ -811,7 +852,7 @@ Factory.addGetterSetter(Shape, 'strokeHitEnabled', true, getBooleanValidator());
  * You may set `shape.strokeHitEnabled(false)`. In this case stroke will be no draw on hit canvas, so hit area
  * of shape will be decreased (by lineWidth / 2). Remember that non closed line with `strokeHitEnabled = false`
  * will be not drawn on hit canvas, that is mean line will no trigger pointer events (like mouseover)
- * Default value is true
+ * Default value is true.
  * @name Konva.Shape#strokeHitEnabled
  * @method
  * @param {Boolean} strokeHitEnabled

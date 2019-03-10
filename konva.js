@@ -1896,7 +1896,7 @@
           this.restore();
       };
       HitContext.prototype._stroke = function (shape) {
-          if (shape.hasStroke() && shape.strokeHitEnabled()) {
+          if (shape.hasStroke() && shape.hitStrokeWidth()) {
               // ignore strokeScaleEnabled for Text
               var strokeScaleEnabled = shape.getStrokeScaleEnabled();
               if (!strokeScaleEnabled) {
@@ -1905,7 +1905,9 @@
                   this.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
               }
               this._applyLineCap(shape);
-              this.setAttr('lineWidth', shape.strokeWidth());
+              var hitStrokeWidth = shape.hitStrokeWidth();
+              var strokeWidth = hitStrokeWidth === 'auto' ? shape.strokeWidth() : hitStrokeWidth;
+              this.setAttr('lineWidth', strokeWidth);
               this.setAttr('strokeStyle', shape.colorKey);
               shape._strokeFuncHit(this);
               if (!strokeScaleEnabled) {
@@ -6837,6 +6839,22 @@
               this.hasStroke() &&
               this.getStage());
       };
+      Shape.prototype.setStrokeHitEnabled = function (val) {
+          if (val) {
+              this.hitStrokeWidth('auto');
+          }
+          else {
+              this.hitStrokeWidth(0);
+          }
+      };
+      Shape.prototype.getStrokeHitEnabled = function () {
+          if (this.hitStrokeWidth() === 0) {
+              return false;
+          }
+          else {
+              return true;
+          }
+      };
       /**
        * return self rectangle (x, y, width, height) of shape.
        * This method are not taken into account transformation and styles.
@@ -7118,15 +7136,32 @@
    * var strokeWidth = shape.strokeWidth();
    *
    * // set stroke width
-   * shape.strokeWidth();
+   * shape.strokeWidth(10);
    */
+  Factory.addGetterSetter(Shape, 'hitStrokeWidth', 'auto', getNumberOrAutoValidator());
+  /**
+   * get/set stroke width for hit detection. Default value is "auto", it means it will be equals to strokeWidth
+   * @name Konva.Shape#hitStrokeWidth
+   * @method
+   * @param {Number} hitStrokeWidth
+   * @returns {Number}
+   * @example
+   * // get stroke width
+   * var hitStrokeWidth = shape.hitStrokeWidth();
+   *
+   * // set hit stroke width
+   * shape.hitStrokeWidth(20);
+   * // set hit stroke width always equals to scene stroke width
+   * shape.hitStrokeWidth('auto');
+   */
+  // TODO: probably we should deprecate it
   Factory.addGetterSetter(Shape, 'strokeHitEnabled', true, getBooleanValidator());
   /**
    * get/set strokeHitEnabled property. Useful for performance optimization.
    * You may set `shape.strokeHitEnabled(false)`. In this case stroke will be no draw on hit canvas, so hit area
    * of shape will be decreased (by lineWidth / 2). Remember that non closed line with `strokeHitEnabled = false`
    * will be not drawn on hit canvas, that is mean line will no trigger pointer events (like mouseover)
-   * Default value is true
+   * Default value is true.
    * @name Konva.Shape#strokeHitEnabled
    * @method
    * @param {Boolean} strokeHitEnabled

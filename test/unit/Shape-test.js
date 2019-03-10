@@ -1057,6 +1057,7 @@ suite('Shape', function() {
 
     rect.strokeHitEnabled(false);
     assert.equal(rect.strokeHitEnabled(), false);
+
     layer.add(rect);
     stage.add(layer);
 
@@ -1070,6 +1071,56 @@ suite('Shape', function() {
       trace,
       'clearRect();save();transform();beginPath();rect();closePath();save();fillStyle;fill();restore();restore();'
     );
+  });
+
+  test('hitStrokeWidth', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+
+    var rect = new Konva.Rect({
+      x: 10,
+      y: 10,
+      width: 100,
+      height: 100,
+      stroke: 'red',
+      strokeWidth: 2
+    });
+    // default value
+    layer.add(rect);
+    stage.add(layer);
+
+    // default value is auto
+    assert.equal(rect.hitStrokeWidth(), 'auto');
+
+    // try to hit test near edge
+    assert.equal(stage.getIntersection({ x: 5, y: 5 }), null);
+
+    rect.hitStrokeWidth(20);
+    layer.draw();
+    // no we should hit the rect
+    assert.equal(stage.getIntersection({ x: 5, y: 5 }), rect);
+
+    rect.strokeHitEnabled(false);
+
+    assert.equal(rect.hitStrokeWidth(), 0);
+
+    rect.strokeHitEnabled(true);
+
+    assert.equal(rect.hitStrokeWidth(), 'auto');
+
+    rect.hitStrokeWidth(0);
+
+    assert.equal(rect.strokeHitEnabled(), false);
+
+    // var trace = layer
+    //   .getHitCanvas()
+    //   .getContext()
+    //   .getTrace(true);
+    // assert.equal(
+    //   trace,
+    //   'clearRect();save();transform();beginPath();rect();closePath();save();fillStyle;fill();restore();restore();'
+    // );
   });
 
   test('cache shadow color rgba', function() {

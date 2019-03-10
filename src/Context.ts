@@ -642,7 +642,7 @@ export class HitContext extends Context {
     this.restore();
   }
   _stroke(shape) {
-    if (shape.hasStroke() && shape.strokeHitEnabled()) {
+    if (shape.hasStroke() && shape.hitStrokeWidth()) {
       // ignore strokeScaleEnabled for Text
       var strokeScaleEnabled = shape.getStrokeScaleEnabled();
       if (!strokeScaleEnabled) {
@@ -651,7 +651,12 @@ export class HitContext extends Context {
         this.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
       }
       this._applyLineCap(shape);
-      this.setAttr('lineWidth', shape.strokeWidth());
+
+      var hitStrokeWidth = shape.hitStrokeWidth();
+      var strokeWidth =
+        hitStrokeWidth === 'auto' ? shape.strokeWidth() : hitStrokeWidth;
+
+      this.setAttr('lineWidth', strokeWidth);
       this.setAttr('strokeStyle', shape.colorKey);
       shape._strokeFuncHit(this);
       if (!strokeScaleEnabled) {
