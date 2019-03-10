@@ -3,8 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [3.1.8][2019-03-06]
+## [3.2.0][2019-03-10]
 
+* new property `shape.hitStrokeWidth(10)`
 * Better typescript definitions
 * Remove `Object.assign` usage (for IE11 support)
 
