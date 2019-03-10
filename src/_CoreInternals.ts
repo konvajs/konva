@@ -19,7 +19,8 @@ import { Shape, shapes } from './Shape';
 import { Animation } from './Animation';
 import { Tween, Easings } from './Tween';
 
-Object.assign;
+import { Context } from './Context';
+import { Canvas } from './Canvas';
 
 export const Konva = Util._assign(Global, {
   Collection,
@@ -38,5 +39,7 @@ export const Konva = Util._assign(Global, {
   shapes,
   Animation,
   Tween,
-  Easings
+  Easings,
+  Context,
+  Canvas
 });

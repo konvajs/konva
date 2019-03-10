@@ -179,6 +179,5 @@ export class HitCanvas extends Canvas {
 
     this.context = new HitContext(this);
     this.setSize(config.width, config.height);
-    this.hitCanvas = true;
   }
 }

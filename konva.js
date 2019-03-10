@@ -2072,7 +2072,6 @@
           _this.hitCanvas = true;
           _this.context = new HitContext(_this);
           _this.setSize(config.width, config.height);
-          _this.hitCanvas = true;
           return _this;
       }
       return HitCanvas;
@@ -9130,7 +9129,9 @@
       shapes: shapes,
       Animation: Animation,
       Tween: Tween,
-      Easings: Easings
+      Easings: Easings,
+      Context: Context,
+      Canvas: Canvas
   });
 
   /**
