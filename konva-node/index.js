@@ -12,11 +12,11 @@ Konva.document = {
     addEventListener: function() {}
   }
 };
-// Konva.window = new JSDOM(
-//   '<!DOCTYPE html><html><head></head><body></body></html>'
-// ).window;
-// Konva.document = Konva.window.document;
-// Konva.window.Image = Canvas.Image;
+Konva.window = new JSDOM(
+  '<!DOCTYPE html><html><head></head><body></body></html>'
+).window;
+Konva.document = Konva.window.document;
+Konva.window.Image = Canvas.Image;
 Konva._nodeCanvas = Canvas;
 
 module.exports = Konva;

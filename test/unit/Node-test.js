@@ -118,7 +118,8 @@ suite('Node', function() {
     assert.equal(layer.getAbsoluteOpacity(), 0.5);
   });
 
-  test('warn on duplicate id', function() {
+  // we don't need this test any more
+  test.skip('warn on duplicate id', function() {
     var oldWarn = Konva.Util.warn;
     var called = false;
     Konva.Util.warn = function() {

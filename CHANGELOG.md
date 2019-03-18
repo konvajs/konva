@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Not released:
+
+## [3.2.1][2019-03-18]
+
+* Better `find` and `findOne` lookup. Now we should not care about duplicate ids.
+* Better typescript definitions
+
 ## [3.2.0][2019-03-10]
 
 * new property `shape.hitStrokeWidth(10)`

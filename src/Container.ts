@@ -1,6 +1,6 @@
 import { Util, Collection } from './Util';
 import { Factory } from './Factory';
-import { Node, ids, names, NodeConfig } from './Node';
+import { Node, NodeConfig } from './Node';
 import { DD } from './DragAndDrop';
 import { getNumberValidator } from './Validators';
 
@@ -224,105 +224,36 @@ export abstract class Container extends Node<ContainerConfig> {
   _generalFind(selector, findOne) {
     var retArr = [];
 
-    if (typeof selector === 'string') {
-      retArr = this._findByString(selector);
-    } else if (typeof selector === 'function') {
-      retArr = this._findByFunction(selector, findOne);
-    }
+    this._descendants(node => {
+      const valid = node._isMatch(selector);
+      if (valid) {
+        retArr.push(node);
+      }
+      if (valid && findOne) {
+        return true;
+      }
+      return false;
+    });
 
     return Collection.toCollection(retArr);
   }
-  _findByString(selector) {
-    var retArr = [],
-      selectorArr = selector.replace(/ /g, '').split(','),
-      len = selectorArr.length,
-      n,
-      i,
-      sel,
-      arr,
-      node,
-      children,
-      clen;
-
-    for (n = 0; n < len; n++) {
-      sel = selectorArr[n];
-      if (!Util.isValidSelector(sel)) {
-        var message =
-          'Selector "' +
-          sel +
-          '" is invalid. Allowed selectors examples are "#foo", ".bar" or "Group".\n' +
-          'If you have a custom shape with such className, please change it to start with upper letter like "Triangle".\n' +
-          'Konva is awesome, right?';
-        Util.warn(message);
+  private _descendants(fn) {
+    let shouldStop = false;
+    for (var i = 0; i < this.children.length; i++) {
+      const child = this.children[i];
+      shouldStop = fn(child);
+      if (shouldStop) {
+        return true;
       }
-      // id selector
-      if (sel.charAt(0) === '#') {
-        node = this._getNodeById(sel.slice(1));
-        if (node) {
-          retArr.push(node);
-        }
-      } else if (sel.charAt(0) === '.') {
-        // name selector
-        arr = this._getNodesByName(sel.slice(1));
-        retArr = retArr.concat(arr);
-      } else {
-        // unrecognized selector, pass to children
-        children = this.getChildren();
-        clen = children.length;
-        for (i = 0; i < clen; i++) {
-          retArr = retArr.concat(children[i]._get(sel));
-        }
+      if (!child.hasChildren()) {
+        continue;
+      }
+      shouldStop = (child as Container)._descendants(fn);
+      if (shouldStop) {
+        return true;
       }
     }
-
-    return retArr;
-  }
-  // (fn: ((Node) => boolean, findOne?: boolean)
-  _findByFunction(fn, findOne) {
-    var retArr = [];
-
-    var addItems = function(el) {
-      // escape function if we've already found one.
-      if (findOne && retArr.length > 0) {
-        return;
-      }
-
-      var children = el.getChildren();
-      var clen = children.length;
-
-      if (fn(el)) {
-        retArr = retArr.concat(el);
-      }
-
-      for (var i = 0; i < clen; i++) {
-        addItems(children[i]);
-      }
-    };
-
-    addItems(this);
-
-    return retArr;
-  }
-  _getNodeById(key) {
-    var node = ids[key];
-
-    if (node !== undefined && this.isAncestorOf(node)) {
-      return node;
-    }
-    return null;
-  }
-  _getNodesByName(key) {
-    var arr = names[key] || [];
-    return this._getDescendants(arr);
-  }
-  _get(selector) {
-    var retArr = Node.prototype._get.call(this, selector);
-    var children = this.getChildren();
-    var len = children.length;
-    for (var n = 0; n < len; n++) {
-      retArr = retArr.concat(children[n]._get(selector));
-    }
-    return retArr;
+    return false;
   }
   // extenders
   toObject() {

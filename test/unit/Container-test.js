@@ -291,6 +291,50 @@ suite('Container', function() {
   });
 
   // ======================================================
+  test('select should return elements in their order', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    // create circle before any nodes
+    var circle = new Konva.Circle({
+      radius: 50,
+      fill: 'red',
+      name: 'node'
+    });
+
+    var group = new Konva.Group({
+      name: 'node'
+    });
+    layer.add(group);
+
+    var rect = new Konva.Rect({
+      x: 300,
+      y: 100,
+      width: 100,
+      height: 50,
+      fill: 'purple',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'node'
+    });
+    group.add(rect);
+    group.add(circle);
+
+    // move circle
+    circle.moveToBottom();
+
+    assert.equal(layer.findOne('.node'), group, 'group here');
+
+    var nodes = layer.find('.node');
+    assert.equal(nodes[0], group, 'group first');
+    assert.equal(nodes[1], circle, 'then circle');
+    assert.equal(nodes[2], rect, 'then rect');
+
+    assert.equal(layer.findOne('Shape'), circle, 'circle is first');
+  });
+
+  // ======================================================
   test('select shape with findOne', function() {
     var stage = addStage();
     var layer = new Konva.Layer({
@@ -385,8 +429,8 @@ suite('Container', function() {
 
     assert.equal(
       layer.find('#myCircle, Circle, .myRect, Rect').length,
-      4,
-      'should be 4 items in the array'
+      2,
+      'should be 2 items in the array'
     );
     assert.equal(
       layer.find('#myCircle, Circle, .myRect, Rect')[0]._id,
@@ -395,16 +439,6 @@ suite('Container', function() {
     );
     assert.equal(
       layer.find('#myCircle, Circle, .myRect, Rect')[1]._id,
-      circle._id,
-      'circle id is wrong'
-    );
-    assert.equal(
-      layer.find('#myCircle, Circle, .myRect, Rect')[2]._id,
-      rect._id,
-      'rect id is wrong'
-    );
-    assert.equal(
-      layer.find('#myCircle, Circle, .myRect, Rect')[3]._id,
       rect._id,
       'rect id is wrong'
     );
@@ -439,6 +473,42 @@ suite('Container', function() {
 
     assert.equal(stage.find(fn)[0], rect);
     assert.equal(stage.find(noOp).length, 0);
+  });
+
+  // ======================================================
+  test('select shape with duplicate id', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect1 = new Konva.Rect({
+      x: 300,
+      y: 100,
+      width: 100,
+      height: 50,
+      fill: 'purple',
+      stroke: 'black',
+      strokeWidth: 4,
+      id: 'myRect'
+    });
+    layer.add(rect1);
+
+    var rect2 = new Konva.Rect({
+      x: 300,
+      y: 100,
+      width: 100,
+      height: 50,
+      fill: 'purple',
+      stroke: 'black',
+      strokeWidth: 4,
+      id: 'myRect'
+    });
+    layer.add(rect2);
+    stage.draw();
+
+    assert.equal(stage.find('#myRect').length, 2);
+    assert.equal(stage.find('#myRect')[0], rect1);
+    assert.equal(stage.find('#myRect')[1], rect2);
   });
 
   // ======================================================

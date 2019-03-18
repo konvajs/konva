@@ -14,17 +14,9 @@ import {
 export const ids = {};
 export const names = {};
 
-const ID_WARNING = `Duplicate id "{id}".
-Please do not use same id several times, it will break find() method look up.
-If you have duplicates it is better to use "name" property instead.
-`;
-
 const _addId = function(node: Node, id) {
   if (!id) {
     return;
-  }
-  if (ids[id]) {
-    Util.warn(ID_WARNING.replace('{id}', id));
   }
   ids[id] = node;
 };
@@ -101,6 +93,8 @@ type globalCompositeOperationType =
   | 'luminosity';
 
 export interface NodeConfig {
+  // allow any custom attribute
+  [index: string]: any;
   x?: number;
   y?: number;
   width?: number;
@@ -123,6 +117,7 @@ export interface NodeConfig {
   dragBoundFunc?: (pos: Vector2d) => Vector2d;
   preventDefault?: boolean;
   globalCompositeOperation?: globalCompositeOperationType;
+  filters?: Array<Filter>;
 }
 
 // CONSTANTS
@@ -1473,6 +1468,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (!selector) {
       return false;
     }
+    if (typeof selector === 'function') {
+      return selector(this);
+    }
     var selectorArr = selector.replace(/ /g, '').split(','),
       len = selectorArr.length,
       n,
@@ -1501,7 +1499,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         if (this.hasName(sel.slice(1))) {
           return true;
         }
-      } else if (this._get(sel).length !== 0) {
+      } else if (this.className === selector || this.nodeType === selector) {
         return true;
       }
     }
@@ -1894,11 +1892,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     } else {
       return Konva.dragDistance;
     }
-  }
-  _get(selector) {
-    return this.className === selector || this.nodeType === selector
-      ? [this]
-      : [];
   }
   _off(type, name?, callback?) {
     var evtListeners = this.eventListeners[type],
