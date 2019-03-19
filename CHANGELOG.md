@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## [3.2.2][2019-03-19]
+
+* Remove `dependencies` from npm package
+
 ## [3.2.1][2019-03-18]
 
 * Better `find` and `findOne` lookup. Now we should not care about duplicate ids.

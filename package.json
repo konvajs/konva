@@ -26,7 +26,6 @@
     "watch": "rollup -c -w"
   },
   "devDependencies": {
-    "@pika/plugin-ts-standard-pkg": "^0.3.12",
     "chai": "4.2.0",
     "gulp": "^4.0.0",
     "gulp-concat": "^2.6.1",
@@ -42,7 +41,14 @@
     "mocha-headless-chrome": "^2.0.2",
     "parcel-bundler": "^1.11.0",
     "prettier": "^1.16.4",
-    "typescript": "^3.3.1"
+    "typescript": "^3.3.1",
+    "gulp-exec": "^3.0.2",
+    "gulp-typescript": "^5.0.0",
+    "rollup": "^1.1.2",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "rollup-plugin-sourcemaps": "^0.4.2",
+    "rollup-plugin-typescript2": "^0.20.1"
   },
   "keywords": [
     "canvas",
@@ -67,21 +73,5 @@
     "url": "git://github.com/konvajs/konva.git"
   },
   "license": "MIT",
-  "dependencies": {
-    "@pika/pack": "^0.3.3",
-    "gulp-exec": "^3.0.2",
-    "gulp-typescript": "^5.0.0",
-    "rollup": "^1.1.2",
-    "rollup-plugin-commonjs": "^9.2.0",
-    "rollup-plugin-node-resolve": "^4.0.0",
-    "rollup-plugin-sourcemaps": "^0.4.2",
-    "rollup-plugin-typescript2": "^0.20.1"
-  },
-  "@pika/pack": {
-    "pipeline": [
-      [
-        "@pika/plugin-ts-standard-pkg"
-      ]
-    ]
-  }
+  "dependencies": {}
 }
