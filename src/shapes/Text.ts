@@ -93,6 +93,17 @@ function checkDefaultFill(config) {
   }
   return config;
 }
+function checkSmallestSizeTwentyTwoPixel() {
+  var twentyTwoPixel = 'normal normal 12px Helvetica';
+  var sixPixel = 'normal normal 6px Helvetica';
+  getDummyContext().font = twentyTwoPixel;
+  var twentyTwoPixelWidth = getDummyContext().measureText('Konva').width;
+  getDummyContext().font = sixPixel;
+  var sixPixelWidth = getDummyContext().measureText('Konva').width;
+  return twentyTwoPixelWidth === sixPixelWidth
+}
+// Check the current browser minimum font is 12px
+var twentyTwoPixelIsSmallest = checkSmallestSizeTwentyTwoPixel();
 
 /**
  * Text constructor
@@ -343,7 +354,8 @@ export class Text extends Shape<TextConfig> {
       height: fontSize
     };
   }
-  _getContextFont() {
+  _getContextFont(fontSize?: Number) {
+    fontSize =  fontSize ||  this.fontSize();
     // IE don't want to work with usual font style
     // bold was not working
     // removing font variant will solve
@@ -352,7 +364,7 @@ export class Text extends Shape<TextConfig> {
       return (
         this.fontStyle() +
         SPACE +
-        this.fontSize() +
+        fontSize +
         PX_SPACE +
         this.fontFamily()
       );
@@ -362,7 +374,7 @@ export class Text extends Shape<TextConfig> {
       SPACE +
       this.fontVariant() +
       SPACE +
-      this.fontSize() +
+      fontSize +
       PX_SPACE +
       this.fontFamily()
     );
@@ -377,10 +389,21 @@ export class Text extends Shape<TextConfig> {
   _getTextWidth(text) {
     var letterSpacing = this.letterSpacing();
     var length = text.length;
-    return (
-      getDummyContext().measureText(text).width +
-      (length ? letterSpacing * (length - 1) : 0)
-    );
+    var fontSize = this.fontSize();
+    if(fontSize < 12 && twentyTwoPixelIsSmallest) {
+      // If the font size is less than 12px, calculate the actual width of the font based on the scale
+      var twentyTwoPixelConfig = this._getContextFont(fontSize);
+      getDummyContext().font = twentyTwoPixelConfig;
+      var twentyTwoPixelWidth = getDummyContext().measureText(text).width;
+      getDummyContext().font = this._getContextFont();
+      var textWidth = (fontSize/12) * twentyTwoPixelWidth;
+      return textWidth + (length ? letterSpacing * (length - 1) : 0);
+    } else {
+      return (
+        getDummyContext().measureText(text).width +
+        (length ? letterSpacing * (length - 1) : 0)
+      );
+    }
   }
   _setTextData() {
     var lines = this.text().split('\n'),
