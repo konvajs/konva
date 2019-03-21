@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v3.2.2
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Mar 19 2019
+   * Date: Thu Mar 21 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -4098,9 +4098,18 @@
        * node.name('red');
        * node.hasName('red');   // return true
        * node.hasName('selected'); // return false
+       * node.hasName(''); // return false
        */
       Node.prototype.hasName = function (name) {
-          var names = (this.name() || '').split(/\s/g);
+          if (!name) {
+              return false;
+          }
+          var fullName = this.name();
+          if (!fullName) {
+              return false;
+          }
+          // if name is '' the "names" will be [''], so I added extra check above
+          var names = (fullName || '').split(/\s/g);
           return names.indexOf(name) !== -1;
       };
       /**

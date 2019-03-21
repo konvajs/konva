@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## [3.2.3][2019-03-21]
+
+* Fix `hasName` method for empty name cases
+
 ## [3.2.2][2019-03-19]
 
 * Remove `dependencies` from npm package

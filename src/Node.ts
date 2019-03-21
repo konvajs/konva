@@ -1987,9 +1987,18 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * node.name('red');
    * node.hasName('red');   // return true
    * node.hasName('selected'); // return false
+   * node.hasName(''); // return false
    */
   hasName(name) {
-    var names = (this.name() || '').split(/\s/g);
+    if (!name) {
+      return false;
+    }
+    const fullName = this.name();
+    if (!fullName) {
+      return false;
+    }
+    // if name is '' the "names" will be [''], so I added extra check above
+    var names = (fullName || '').split(/\s/g);
     return names.indexOf(name) !== -1;
   }
   /**

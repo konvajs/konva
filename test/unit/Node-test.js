@@ -1242,6 +1242,8 @@ suite('Node', function() {
     assert.equal(circle.hasName('myCircle'), true);
     assert.equal(circle.hasName('foo'), true);
     assert.equal(circle.hasName('boo'), false);
+    // should return false for empty name
+    assert.equal(layer.hasName(''), false);
     assert.equal(stage.findOne('.foo'), circle);
 
     // removing name
