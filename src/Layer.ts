@@ -181,7 +181,7 @@ export class Layer extends BaseLayer {
     Container.prototype.drawHit.call(this, canvas, top);
     return this;
   }
-  clear(bounds) {
+  clear(bounds?) {
     BaseLayer.prototype.clear.call(this, bounds);
     this.getHitCanvas()
       .getContext()
