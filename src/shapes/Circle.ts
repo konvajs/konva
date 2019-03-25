@@ -23,7 +23,7 @@ export interface CircleConfig extends ShapeConfig {
  * var circle = new Konva.Circle({
  *   radius: 40,
  *   fill: 'red',
- *   stroke: 'black'
+ *   stroke: 'black',
  *   strokeWidth: 5
  * });
  */
