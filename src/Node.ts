@@ -1167,7 +1167,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // move node in x direction by 1px and y direction by 2px
    * node.move({
    *   x: 1,
-   *   y: 2)
+   *   y: 2
    * });
    */
   move(change) {
@@ -2568,7 +2568,7 @@ Factory.addComponentsGetterSetter(Node, 'scale', ['x', 'y']);
  *
  * // set scale
  * shape.scale({
- *   x: 2
+ *   x: 2,
  *   y: 3
  * });
  */
@@ -2621,7 +2621,7 @@ Factory.addComponentsGetterSetter(Node, 'skew', ['x', 'y']);
  *
  * // set skew
  * node.skew({
- *   x: 20
+ *   x: 20,
  *   y: 10
  * });
  */
@@ -2673,7 +2673,7 @@ Factory.addComponentsGetterSetter(Node, 'offset', ['x', 'y']);
  *
  * // set offset
  * node.offset({
- *   x: 20
+ *   x: 20,
  *   y: 10
  * });
  */
