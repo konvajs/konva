@@ -1095,7 +1095,7 @@ Factory.addComponentsGetterSetter(Shape, 'shadowOffset', ['x', 'y']);
  *
  * // set shadow offset
  * shape.shadowOffset({
- *   x: 20
+ *   x: 20,
  *   y: 10
  * });
  */
@@ -1440,7 +1440,7 @@ Factory.addComponentsGetterSetter(Shape, 'fillPatternOffset', ['x', 'y']);
  *
  * // set fill pattern offset
  * shape.fillPatternOffset({
- *   x: 20
+ *   x: 20,
  *   y: 10
  * });
  */
@@ -1493,7 +1493,7 @@ Factory.addComponentsGetterSetter(Shape, 'fillPatternScale', ['x', 'y']);
  *
  * // set fill pattern scale
  * shape.fillPatternScale({
- *   x: 2
+ *   x: 2,
  *   y: 2
  * });
  */
@@ -1549,7 +1549,7 @@ Factory.addComponentsGetterSetter(Shape, 'fillLinearGradientStartPoint', [
  *
  * // set fill linear gradient start point
  * shape.fillLinearGradientStartPoint({
- *   x: 20
+ *   x: 20,
  *   y: 10
  * });
  */
@@ -1573,7 +1573,7 @@ Factory.addComponentsGetterSetter(Shape, 'strokeLinearGradientStartPoint', [
  *
  * // set stroke linear gradient start point
  * shape.strokeLinearGradientStartPoint({
- *   x: 20
+ *   x: 20,
  *   y: 10
  * });
  */
@@ -1660,7 +1660,7 @@ Factory.addComponentsGetterSetter(Shape, 'fillLinearGradientEndPoint', [
  *
  * // set fill linear gradient end point
  * shape.fillLinearGradientEndPoint({
- *   x: 20
+ *   x: 20,
  *   y: 10
  * });
  */
@@ -1684,7 +1684,7 @@ Factory.addComponentsGetterSetter(Shape, 'strokeLinearGradientEndPoint', [
  *
  * // set stroke linear gradient end point
  * shape.strokeLinearGradientEndPoint({
- *   x: 20
+ *   x: 20,
  *   y: 10
  * });
  */
@@ -1768,7 +1768,7 @@ Factory.addComponentsGetterSetter(Shape, 'fillRadialGradientStartPoint', [
  *
  * // set fill radial gradient start point
  * shape.fillRadialGradientStartPoint({
- *   x: 20
+ *   x: 20,
  *   y: 10
  * });
  */
@@ -1822,7 +1822,7 @@ Factory.addComponentsGetterSetter(Shape, 'fillRadialGradientEndPoint', [
  *
  * // set fill radial gradient end point
  * shape.fillRadialGradientEndPoint({
- *   x: 20
+ *   x: 20,
  *   y: 10
  * });
  */
