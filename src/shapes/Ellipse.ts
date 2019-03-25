@@ -25,7 +25,8 @@ export interface EllipseConfig extends ShapeConfig {
  *   radius : {
  *     x : 50,
  *     y : 50
- *   } *   fill: 'red'
+ *   },
+ *   fill: 'red'
  * });
  */
 export class Ellipse extends Shape<EllipseConfig> {
