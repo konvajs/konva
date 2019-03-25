@@ -4403,7 +4403,7 @@
    *
    * // set position
    * node.absolutePosition({
-   *   x: 5
+   *   x: 5,
    *   y: 10
    * });
    */
@@ -4423,7 +4423,7 @@
    *
    * // set position
    * node.position({
-   *   x: 5
+   *   x: 5,
    *   y: 10
    * });
    */
@@ -4545,7 +4545,7 @@
    *
    * // set scale
    * shape.scale({
-   *   x: 2
+   *   x: 2,
    *   y: 3
    * });
    */
@@ -4592,7 +4592,7 @@
    *
    * // set skew
    * node.skew({
-   *   x: 20
+   *   x: 20,
    *   y: 10
    * });
    */
@@ -4638,7 +4638,7 @@
    *
    * // set offset
    * node.offset({
-   *   x: 20
+   *   x: 20,
    *   y: 10
    * });
    */
@@ -7321,7 +7321,7 @@
    *
    * // set shadow offset
    * shape.shadowOffset({
-   *   x: 20
+   *   x: 20,
    *   y: 10
    * });
    */
@@ -7628,7 +7628,7 @@
    *
    * // set fill pattern offset
    * shape.fillPatternOffset({
-   *   x: 20
+   *   x: 20,
    *   y: 10
    * });
    */
@@ -7675,7 +7675,7 @@
    *
    * // set fill pattern scale
    * shape.fillPatternScale({
-   *   x: 2
+   *   x: 2,
    *   y: 2
    * });
    */
@@ -7725,7 +7725,7 @@
    *
    * // set fill linear gradient start point
    * shape.fillLinearGradientStartPoint({
-   *   x: 20
+   *   x: 20,
    *   y: 10
    * });
    */
@@ -7747,7 +7747,7 @@
    *
    * // set stroke linear gradient start point
    * shape.strokeLinearGradientStartPoint({
-   *   x: 20
+   *   x: 20,
    *   y: 10
    * });
    */
@@ -7825,7 +7825,7 @@
    *
    * // set fill linear gradient end point
    * shape.fillLinearGradientEndPoint({
-   *   x: 20
+   *   x: 20,
    *   y: 10
    * });
    */
@@ -7847,7 +7847,7 @@
    *
    * // set stroke linear gradient end point
    * shape.strokeLinearGradientEndPoint({
-   *   x: 20
+   *   x: 20,
    *   y: 10
    * });
    */
@@ -7925,7 +7925,7 @@
    *
    * // set fill radial gradient start point
    * shape.fillRadialGradientStartPoint({
-   *   x: 20
+   *   x: 20,
    *   y: 10
    * });
    */
@@ -7975,7 +7975,7 @@
    *
    * // set fill radial gradient end point
    * shape.fillRadialGradientEndPoint({
-   *   x: 20
+   *   x: 20,
    *   y: 10
    * });
    */
@@ -9883,7 +9883,7 @@
    * var circle = new Konva.Circle({
    *   radius: 40,
    *   fill: 'red',
-   *   stroke: 'black'
+   *   stroke: 'black',
    *   strokeWidth: 5
    * });
    */
@@ -10020,7 +10020,8 @@
    *   radius : {
    *     x : 50,
    *     y : 50
-   *   } *   fill: 'red'
+   *   }, 
+   *   fill: 'red'
    * });
    */
   var Ellipse = /** @class */ (function (_super) {
@@ -12013,7 +12014,8 @@
    *         229, 109, 60, 98,
    *         287, 109, 41, 98
    *       ]
-   *     } *     frameRate: 7,
+   *     },
+   *     frameRate: 7,
    *     frameIndex: 0
    *   });
    * };
@@ -13241,12 +13243,13 @@
    *   'A': {
    *     ' ': -0.05517578125,
    *     'T': -0.07421875,
-   *     'V': -0.07421875,
-   *   } *   'V': {
+   *     'V': -0.07421875
+   *   },
+   *   'V': {
    *     ',': -0.091796875,
    *     ":": -0.037109375,
    *     ";": -0.037109375,
-   *     "A": -0.07421875,
+   *     "A": -0.07421875
    *   }
    * }
    * var textpath = new Konva.TextPath({
