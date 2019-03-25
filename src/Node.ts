@@ -2405,7 +2405,7 @@ Factory.addGetterSetter(Node, 'zIndex');
  *
  * // set position
  * node.absolutePosition({
- *   x: 5
+ *   x: 5,
  *   y: 10
  * });
  */
@@ -2426,7 +2426,7 @@ Factory.addGetterSetter(Node, 'position');
  *
  * // set position
  * node.position({
- *   x: 5
+ *   x: 5,
  *   y: 10
  * });
  */
