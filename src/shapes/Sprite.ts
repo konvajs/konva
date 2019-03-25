@@ -55,7 +55,8 @@ export interface SpriteConfig extends ShapeConfig {
  *         229, 109, 60, 98,
  *         287, 109, 41, 98
  *       ]
- *     } *     frameRate: 7,
+ *     },
+ *     frameRate: 7,
  *     frameIndex: 0
  *   });
  * };
