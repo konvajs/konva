@@ -10,6 +10,7 @@ import {
   getStringValidator,
   getBooleanValidator
 } from './Validators';
+import { Stage } from './Stage';
 
 export const ids: any = {};
 export const names: any = {};
@@ -1521,10 +1522,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#getStage
    * @returns {Konva.Stage}
    */
-  getStage() {
+  getStage(): Stage | undefined {
     return this._getCache(STAGE, this._getStage);
   }
-  _getStage() {
+
+  _getStage(): Stage | undefined {
     var parent = this.getParent();
     if (parent) {
       return parent.getStage();

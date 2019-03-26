@@ -8,6 +8,7 @@ import { Shape } from './Shape';
 import { BaseLayer } from './BaseLayer';
 import { DD } from './DragAndDrop';
 import { _registerNode } from './Global';
+import * as PointerEvents from './PointerEvents';
 
 export interface StageConfig extends ContainerConfig {
   container: HTMLDivElement | string;
@@ -24,6 +25,11 @@ var STAGE = 'Stage',
   MOUSEMOVE = 'mousemove',
   MOUSEDOWN = 'mousedown',
   MOUSEUP = 'mouseup',
+  POINTERMOVE = 'pointermove',
+  POINTERDOWN = 'pointerdown',
+  POINTERUP = 'pointerup',
+  POINTERCANCEL = 'pointercancel',
+  LOSTPOINTERCAPTURE = 'lostpointercapture',
   CONTEXTMENU = 'contextmenu',
   CLICK = 'click',
   DBL_CLICK = 'dblclick',
@@ -65,7 +71,12 @@ var STAGE = 'Stage',
     TOUCHEND,
     MOUSEOVER,
     WHEEL,
-    CONTEXTMENU
+    CONTEXTMENU,
+    POINTERDOWN,
+    POINTERMOVE,
+    POINTERUP,
+    POINTERCANCEL,
+    LOSTPOINTERCAPTURE
   ],
   // cached variables
   eventsLength = EVENTS.length;
@@ -379,10 +390,14 @@ export class Stage extends Container {
       addEvent(this, EVENTS[n]);
     }
   }
+<<<<<<< HEAD
   _mouseenter(evt) {
     this.setPointersPositions(evt);
     this._fire(MOUSEENTER, { evt: evt, target: this, currentTarget: this });
   }
+=======
+
+>>>>>>> WIP
   _mouseover(evt) {
     this.setPointersPositions(evt);
     this._fire(CONTENT_MOUSEOVER, { evt: evt });
@@ -711,6 +726,61 @@ export class Stage extends Container {
     }
     this._fire(CONTENT_WHEEL, { evt: evt });
   }
+
+  _pointerdown(evt: PointerEvent) {
+    this.setPointersPositions(evt);
+
+    const shape =
+      PointerEvents.getCapturedShape(evt.pointerId) ||
+      this.getIntersection(this.getPointerPosition());
+
+    if (shape) {
+      shape._fireAndBubble(POINTERDOWN, PointerEvents.createEvent(evt));
+    }
+  }
+
+  _pointermove(evt: PointerEvent) {
+    this.setPointersPositions(evt);
+
+    const shape =
+      PointerEvents.getCapturedShape(evt.pointerId) ||
+      this.getIntersection(this.getPointerPosition());
+
+    if (shape) {
+      shape._fireAndBubble(POINTERMOVE, PointerEvents.createEvent(evt));
+    }
+  }
+
+  _pointerup(evt: PointerEvent) {
+    this.setPointersPositions(evt);
+    const shape =
+      PointerEvents.getCapturedShape(evt.pointerId) ||
+      this.getIntersection(this.getPointerPosition());
+
+    if (shape) {
+      shape._fireAndBubble(POINTERUP, PointerEvents.createEvent(evt));
+    }
+
+    PointerEvents.releaseCapture(evt.pointerId);
+  }
+
+  _pointercancel(evt: PointerEvent) {
+    this.setPointersPositions(evt);
+    const shape =
+      PointerEvents.getCapturedShape(evt.pointerId) ||
+      this.getIntersection(this.getPointerPosition());
+
+    if (shape) {
+      shape._fireAndBubble(POINTERUP, PointerEvents.createEvent(evt));
+    }
+
+    PointerEvents.releaseCapture(evt.pointerId);
+  }
+
+  _lostpointercapture(evt: PointerEvent) {
+    PointerEvents.releaseCapture(evt.pointerId);
+  }
+
   /**
    * manually register pointers positions (mouse/touch) in the stage.
    * So you can use stage.getPointerPosition(). Usually you don't need to use that method
