@@ -33,6 +33,7 @@ export interface ShapeConfig extends NodeConfig {
   fillLinearGradientEndPointX?: number;
   fillLinearGradientEndPointY?: number;
   fillLinearGradientColorStops?: Array<number | string>;
+  fillRule?: string;
   fillRadialGradientStartPoint?: Vector2d;
   fillRadialGradientStartPointX?: number;
   fillRadialGradientStartPointY?: number;
@@ -91,13 +92,13 @@ export const shapes = {};
 // what color to use for hit test?
 
 function _fillFunc(context) {
-  context.fill();
+  context.fill(this.attrs.fillRule);
 }
 function _strokeFunc(context) {
   context.stroke();
 }
 function _fillFuncHit(context) {
-  context.fill();
+  context.fill(this.attrs.fillRule);
 }
 function _strokeFuncHit(context) {
   context.stroke();
@@ -727,6 +728,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
   fillLinearRadialEndPoint: GetSet<Vector2d, this>;
   fillLinearRadialEndPointX: GetSet<number, this>;
   fillLinearRadialEndPointY: GetSet<number, this>;
+  fillRule: GetSet<string, this>;
   fillPatternImage: GetSet<HTMLImageElement, this>;
   fillRadialGradientStartRadius: GetSet<number, this>;
   fillRadialGradientEndRadius: GetSet<number, this>;
@@ -1225,6 +1227,22 @@ Factory.addGetterSetter(Shape, 'fillLinearGradientColorStops');
  * // create a linear gradient that starts with red, changes to blue
  * // halfway through, and then changes to green
  * shape.fillLinearGradientColorStops(0, 'red', 0.5, 'blue', 1, 'green');
+ */
+
+Factory.addGetterSetter(Shape, 'fillRule');
+
+/**
+ * get/set fill method
+ * @name Konva.Shape#fillRule
+ * @method
+ * @param {string} fillRule. Must be 'nonzero', 'evenodd', or undefined. Default is undefined, which behaves like 'nonzero'
+ * @returns {string} fillRule
+ * @example
+ * // get fill rule. Undefined by default will use browser default (generally meaning 'nonzero')
+ * var colorStops = shape.fillRule();
+ *
+ * // change the fill rule (generally using 'evenodd'). Use this if you specify a shape that intersects with itself, and want the intersection area to be a hole. You can also use evenodd if you specify a single hole in a closed Line, and not worry about the winding direction.
+ * shape.fillRule('evenodd');
  */
 
 Factory.addGetterSetter(Shape, 'strokeLinearGradientColorStops');

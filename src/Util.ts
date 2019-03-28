@@ -595,7 +595,7 @@ export const Util = {
       if (util._isNumber(val)) {
         val = Math.round(val * 1000) / 1000;
       } else if (!util._isString(val)) {
-        val = val.toString();
+        val = val !== undefined ? val.toString() : undefined;
       }
 
       retArr.push(val);

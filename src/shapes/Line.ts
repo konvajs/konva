@@ -1,13 +1,14 @@
 import { Util, Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
-import { getNumberValidator, getNumberArrayValidator } from '../Validators';
+import { getNumberValidator, getNumberArrayValidator, getNumberArrayArrayValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
 
 export interface LineConfig extends ShapeConfig {
   points: number[];
+  holes: number[][];
   tension?: number;
   closed?: boolean;
   bezier?: boolean;
@@ -21,6 +22,7 @@ export interface LineConfig extends ShapeConfig {
  * @augments Konva.Shape
  * @param {Object} config
  * @param {Array} config.points Flat array of points coordinates. You should define them as [x1, y1, x2, y2, x3, y3].
+ * @param {Array} config.holes Nested array of array of hole coordinates. Each array of coordinates is a different hole, and should be wound in the opposite direction as the containing points array. You should define them as [[x1, y1, x2, y2, x3, y3]].
  * @param {Number} [config.tension] Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
  *   The default is 0
  * @param {Boolean} [config.closed] defines whether or not the line shape is closed, creating a polygon or blob
@@ -50,9 +52,8 @@ export class Line<Config extends LineConfig = LineConfig> extends Shape<
     );
   }
 
-  _sceneFunc(context) {
-    var points = this.points(),
-      length = points.length,
+  _drawLine(points, context) {
+    var length = points.length,
       tension = this.tension(),
       closed = this.closed(),
       bezier = this.bezier(),
@@ -64,7 +65,6 @@ export class Line<Config extends LineConfig = LineConfig> extends Shape<
       return;
     }
 
-    context.beginPath();
     context.moveTo(points[0], points[1]);
 
     // tension
@@ -116,10 +116,29 @@ export class Line<Config extends LineConfig = LineConfig> extends Shape<
         context.lineTo(points[n], points[n + 1]);
       }
     }
+  }
+  _sceneFunc(context) {
+    var points = this.points(),
+      holes = this.holes(),
+      closed = this.closed(),
+      h;
+
+    if (!points.length) {
+      return;
+    }
+
+    context.beginPath();
+    this._drawLine(points, context);
 
     // closed e.g. polygons and blobs
     if (closed) {
       context.closePath();
+      if (holes && holes.length) {
+        for (h = 0; h < holes.length; h++) {
+          this._drawLine(holes[h], context);
+          context.closePath();
+        }
+      }
       context.fillStrokeShape(this);
     } else {
       // open e.g. lines and splines
@@ -215,6 +234,7 @@ export class Line<Config extends LineConfig = LineConfig> extends Shape<
   bezier: GetSet<boolean, this>;
   tension: GetSet<number, this>;
   points: GetSet<number[], this>;
+  holes: GetSet<number[][], this>;
 }
 
 Line.prototype.className = 'Line';
@@ -289,6 +309,22 @@ Factory.addGetterSetter(Line, 'points', [], getNumberArrayValidator());
  *
  * // push a new point
  * line.points(line.points().concat([70, 80]));
+ */
+
+Factory.addGetterSetter(Line, 'holes', [], getNumberArrayArrayValidator());
+/**
+ * get/set holes array. Holes is a nested array of arrays [[x1, y1, x2, y2]]. It is nested to allow for multiple holes to be defined. They must be wound in opposite direcetions of the points array (i.e., if the points are defined clockwise, holes must all be defined counter-clockwise. You can ignore winding if you only have one hole, and you specify an 'evenodd' fillRule.
+ * @name Konva.Line#holes
+ * @method
+ * @param {Array} holes
+ * @returns {Array}
+ * @example
+ * // get points
+ * var holes = line.holes();
+ *
+ * // set holes
+ * line.holes([[10, 20, 30, 40, 50, 60]]);
+ *
  */
 
 Collection.mapMethods(Line);

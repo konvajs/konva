@@ -123,6 +123,26 @@ export function getNumberArrayValidator() {
     };
   }
 }
+export function getNumberArrayArrayValidator() {
+  if (Konva.isUnminified) {
+    return function(val, attr) {
+      var numberArrayValidator = getNumberArrayValidator();
+      if (!Util._isArray(val)) {
+        Util.warn(
+          _formatValue(val) +
+            ' is a not valid value for "' +
+            attr +
+            '" attribute. The value should be a array of numbers.'
+        );
+      } else {
+        val.forEach(function(item) {
+          numberArrayValidator(item, attr)
+        });
+      }
+      return val;
+    };
+  }
+}
 export function getBooleanValidator() {
   if (Konva.isUnminified) {
     return function(val, attr) {

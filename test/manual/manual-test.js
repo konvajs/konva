@@ -407,4 +407,54 @@ suite('Manual', function() {
 
     showHit(layer);
   });
+
+  // ======================================================
+  test('closed shape with holes (opposite direction)', function(done) {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle({
+      fill: 'red',
+      x: 150,
+      y: 150,
+      radius: 100
+    });
+    var line = new Konva.Line({
+      fill: 'blue',
+      closed: true
+    })
+    //In this example, we explicitly list holes, allowing for
+    //multiple holes to be specified. This depends on the 
+    //coordinates to be wound in opposite orders (i.e, outer
+    //polygon is clockwise, inner polygons are counter-clockwise)
+    line.points([0, 0, 300, 0, 300, 300, 0, 300]);
+    line.holes([[50, 50, 50, 100, 100, 100, 100, 50 ],
+                [200, 50, 200, 100, 250, 100, 250, 50 ]])
+    layer.add(circle);
+    layer.add(line);
+    stage.add(layer);
+    done();
+  });
+
+  // ======================================================
+  test('closed shape with holes (evenodd)', function(done) {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle({
+      fill: 'red',
+      x: 150,
+      y: 150,
+      radius: 100
+    });
+    var line = new Konva.Line({
+      fill: 'blue',
+      closed: true
+    })
+    line.fillRule('evenodd');
+    //In this example, the points cross each other to create a hole in the middle
+    line.points([30, 90, 110, 20, 240, 130, 60, 130, 190, 20, 270, 90]);
+    layer.add(circle);
+    layer.add(line);
+    stage.add(layer);
+    done();
+  });
 });
