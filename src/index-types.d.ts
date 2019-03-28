@@ -134,25 +134,25 @@ declare namespace Konva {
   export type KonvaEventObject<E> = import('./types').KonvaEventObject<E>;
 
   export const Filters: {
-    Blur;
-    Brighten;
-    Contrast;
-    Emboss;
-    Enhance;
-    Grayscale;
-    HSL;
-    HSV;
-    Invert;
-    Kaleidoscope;
-    Mask;
-    Noise;
-    Pixelate;
-    Posterize;
-    RGB;
-    RGBA;
-    Sepia;
-    Solarize;
-    Threshold;
+    Blur: typeof Blur;
+    Brighten: typeof Brighten;
+    Contrast: typeof Contrast;
+    Emboss: typeof Emboss;
+    Enhance: typeof Enhance;
+    Grayscale: typeof Grayscale;
+    HSL: typeof HSL;
+    HSV: typeof HSV;
+    Invert: typeof Invert;
+    Kaleidoscope: typeof Kaleidoscope;
+    Mask: typeof Mask;
+    Noise: typeof Noise;
+    Pixelate: typeof Pixelate;
+    Posterize: typeof Posterize;
+    RGB: typeof RGB;
+    RGBA: typeof RGBA;
+    Sepia: typeof Sepia;
+    Solarize: typeof Solarize;
+    Threshold: typeof Threshold;
   };
 }
 
