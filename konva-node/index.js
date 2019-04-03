@@ -17,6 +17,9 @@ Konva.window = new JSDOM(
 ).window;
 Konva.document = Konva.window.document;
 Konva.window.Image = Canvas.Image;
-Konva._nodeCanvas = Canvas;
+
+Konva.Util.createCanvasElement = () => {
+  return new Canvas();
+};
 
 module.exports = Konva;

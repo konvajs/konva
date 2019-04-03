@@ -35,6 +35,47 @@ suite('Transformer', function() {
     assert.equal(pos.y, rect.y() + rect.height());
   });
 
+  test.skip('try it on a parent of parent', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group({
+      x: 50,
+      y: 50
+    });
+    layer.add(group);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    group.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+
+    layer.draw();
+
+    assert.equal(tr.x(), rect.x() + group.x());
+    assert.equal(tr.y(), rect.y() + group.y());
+    assert.equal(tr.width(), rect.width());
+    assert.equal(tr.height(), rect.height());
+
+    // manual check of correct position of node
+    var handler = tr.findOne('.bottom-right');
+    var pos = handler.getAbsolutePosition();
+    assert.equal(pos.x, rect.x() + rect.width());
+    assert.equal(pos.y, rect.y() + rect.height());
+    throw '';
+  });
+
   test('try set/get node', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

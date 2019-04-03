@@ -1,5 +1,6 @@
 import { glob, Konva } from './Global';
 import { Node } from './Node';
+import { IRect } from './types';
 
 export type Point = {
   x: number;
@@ -563,12 +564,10 @@ export const Util = {
     }
   },
   createCanvasElement() {
-    var canvas = Konva.isBrowser
-      ? document.createElement('canvas')
-      : new (Konva['_nodeCanvas']())();
+    var canvas = document.createElement('canvas');
     // on some environments canvas.style is readonly
     try {
-      canvas.style = canvas.style || {};
+      (<any>canvas).style = canvas.style || {};
     } catch (e) {}
     return canvas;
   },
@@ -583,7 +582,7 @@ export const Util = {
     }
     return false;
   },
-  _simplifyArray(arr: []) {
+  _simplifyArray(arr: Array<any>) {
     var retArr = [],
       len = arr.length,
       util = Util,
@@ -641,7 +640,7 @@ export const Util = {
     return HASH + randColor;
   },
 
-  get(val, def) {
+  get(val: any, def: any) {
     if (val === undefined) {
       return def;
     } else {
@@ -659,7 +658,7 @@ export const Util = {
    * var rgb = Konva.Util.getRGB('#0000ff');
    * var rgb = Konva.Util.getRGB('rgb(0,0,255)');
    */
-  getRGB(color) {
+  getRGB(color: string) {
     var rgb;
     // color string
     if (color in COLORS) {
@@ -691,7 +690,7 @@ export const Util = {
   },
   // convert any color string to RGBA object
   // from https://github.com/component/color-parser
-  colorToRGBA(str) {
+  colorToRGBA(str: string) {
     str = str || 'black';
     return (
       Util._namedColorToRBA(str) ||
@@ -702,7 +701,7 @@ export const Util = {
     );
   },
   // Parse named css color. Like "green"
-  _namedColorToRBA(str) {
+  _namedColorToRBA(str: string) {
     var c = COLORS[str.toLowerCase()];
     if (!c) {
       return null;
@@ -715,7 +714,7 @@ export const Util = {
     };
   },
   // Parse rgb(n, n, n)
-  _rgbColorToRGBA(str) {
+  _rgbColorToRGBA(str: string) {
     if (str.indexOf('rgb(') === 0) {
       str = str.match(/rgb\(([^)]+)\)/)[1];
       var parts = str.split(/ *, */).map(Number);
@@ -728,7 +727,7 @@ export const Util = {
     }
   },
   // Parse rgba(n, n, n, n)
-  _rgbaColorToRGBA(str) {
+  _rgbaColorToRGBA(str: string) {
     if (str.indexOf('rgba(') === 0) {
       str = str.match(/rgba\(([^)]+)\)/)[1];
       var parts = str.split(/ *, */).map(Number);
@@ -741,7 +740,7 @@ export const Util = {
     }
   },
   // Parse #nnnnnn
-  _hex6ColorToRGBA(str) {
+  _hex6ColorToRGBA(str: string) {
     if (str[0] === '#' && str.length === 7) {
       return {
         r: parseInt(str.slice(1, 3), 16),
@@ -752,7 +751,7 @@ export const Util = {
     }
   },
   // Parse #nnn
-  _hex3ColorToRGBA(str) {
+  _hex3ColorToRGBA(str: string) {
     if (str[0] === '#' && str.length === 4) {
       return {
         r: parseInt(str[1] + str[1], 16),
@@ -771,7 +770,7 @@ export const Util = {
    * @example
    * const overlapping = Konva.Util.haveIntersection(shape1.getClientRect(), shape2.getClientRect());
    */
-  haveIntersection(r1, r2) {
+  haveIntersection(r1: IRect, r2: IRect) {
     return !(
       r2.x > r1.x + r1.width ||
       r2.x + r2.width < r1.x ||
@@ -792,31 +791,31 @@ export const Util = {
     }
     return retObj;
   },
-  cloneArray(arr) {
+  cloneArray(arr: Array<any>) {
     return arr.slice(0);
   },
-  _degToRad(deg) {
+  _degToRad(deg: number) {
     return deg * PI_OVER_DEG180;
   },
-  _radToDeg(rad) {
+  _radToDeg(rad: number) {
     return rad * DEG180_OVER_PI;
   },
-  _capitalize(str) {
+  _capitalize(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   },
-  throw(str) {
+  throw(str: string) {
     throw new Error(KONVA_ERROR + str);
   },
-  error(str) {
+  error(str: string) {
     console.error(KONVA_ERROR + str);
   },
-  warn(str) {
+  warn(str: string) {
     if (!Konva.showWarnings) {
       return;
     }
     console.warn(KONVA_WARNING + str);
   },
-  extend(child, parent) {
+  extend(child: any, parent: any) {
     function Ctor() {
       this.constructor = child;
     }
