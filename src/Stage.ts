@@ -55,6 +55,7 @@ var STAGE = 'Stage',
   MAX_LAYERS_NUMBER = 5,
   EMPTY_STRING = '',
   EVENTS = [
+    MOUSEENTER,
     MOUSEDOWN,
     MOUSEMOVE,
     MOUSEUP,
@@ -287,7 +288,7 @@ export class Stage extends Container {
    * // or if you interested in shape parent:
    * var group = stage.getIntersection({x: 50, y: 50}, 'Group');
    */
-  getIntersection(pos: Vector2d, selector?: string) {
+  getIntersection(pos: Vector2d, selector?: string): Shape | null {
     var layers = this.children,
       len = layers.length,
       end = len - 1,
@@ -378,6 +379,10 @@ export class Stage extends Container {
       addEvent(this, EVENTS[n]);
     }
   }
+  _mouseenter(evt) {
+    this.setPointersPositions(evt);
+    this._fire(MOUSEENTER, { evt: evt, target: this, currentTarget: this });
+  }
   _mouseover(evt) {
     this.setPointersPositions(evt);
     this._fire(CONTENT_MOUSEOVER, { evt: evt });
@@ -391,6 +396,17 @@ export class Stage extends Container {
       targetShape._fireAndBubble(MOUSEOUT, { evt: evt });
       targetShape._fireAndBubble(MOUSELEAVE, { evt: evt });
       this.targetShape = null;
+    } else if (!DD.isDragging) {
+      this._fire(MOUSELEAVE, {
+        evt: evt,
+        target: this,
+        currentTarget: this
+      });
+      this._fire(MOUSEOUT, {
+        evt: evt,
+        target: this,
+        currentTarget: this
+      });
     }
     this.pointerPos = undefined;
 
@@ -402,7 +418,7 @@ export class Stage extends Container {
       return this._touchmove(evt);
     }
     this.setPointersPositions(evt);
-    var shape;
+    var shape: Shape;
 
     if (!DD.isDragging) {
       shape = this.getIntersection(this.getPointerPosition());

@@ -1953,4 +1953,119 @@ suite('MouseEvents', function() {
       }, 5);
     });
   });
+
+  test('test mouseenter on empty stage', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var mouseenterCount = 0;
+    stage.on('mouseenter', function() {
+      mouseenterCount += 1;
+    });
+
+    var top = stage.content.getBoundingClientRect().top;
+    var evt = {
+      clientX: 10,
+      clientY: 10 + top,
+      button: 0
+    };
+
+    stage._mouseenter(evt);
+
+    assert.equal(mouseenterCount, 1, 'mouseenterCount should be 1');
+  });
+
+  test('test mouseleave on empty stage', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var mouseleave = 0;
+    stage.on('mouseleave', function() {
+      mouseleave += 1;
+    });
+
+    var top = stage.content.getBoundingClientRect().top;
+    var evt = {
+      clientX: 0,
+      clientY: 0 + top,
+      button: 0
+    };
+
+    stage._mouseout(evt);
+
+    assert.equal(mouseleave, 1, 'mouseleave should be 1');
+  });
+
+  test('should not trigger mouseenter on stage when we go to the shape from empty space', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      width: 50,
+      height: 50,
+      fill: 'red'
+    });
+    layer.add(rect);
+
+    layer.draw();
+
+    var mouseenter = 0;
+    stage.on('mouseenter', function() {
+      debugger;
+      mouseenter += 1;
+    });
+
+    stage.simulateMouseMove({
+      x: 100,
+      y: 100
+    });
+
+    stage.simulateMouseMove({
+      x: 25,
+      y: 25
+    });
+
+    assert.equal(mouseenter, 0, 'mouseenter should be 1');
+  });
+
+  test('should not trigger mouseenter on stage when we go to the shape directly', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      width: 50,
+      height: 50,
+      fill: 'red'
+    });
+    layer.add(rect);
+
+    layer.draw();
+
+    var mouseenter = 0;
+    stage.on('mouseenter', function() {
+      mouseenter += 1;
+    });
+
+    var top = stage.content.getBoundingClientRect().top;
+    var evt = {
+      clientX: 10,
+      clientY: 10 + top,
+      button: 0
+    };
+
+    stage._mouseenter(evt);
+
+    stage.simulateMouseMove({
+      x: 10,
+      y: 10
+    });
+
+    stage._mouseout(evt);
+
+    assert.equal(mouseenter, 1, 'mouseenter should be 1');
+  });
 });

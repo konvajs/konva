@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* Fix some stage events. `mouseenter` and `mouseleave` should work correctly on empty spaces
+* Fix some typescript types
+
 ## [3.2.3][2019-03-21]
 
 * Fix `hasName` method for empty name cases

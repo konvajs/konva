@@ -2076,9 +2076,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     var shouldStop =
       (eventType === MOUSEENTER || eventType === MOUSELEAVE) &&
-      compareShape &&
-      (this._id === compareShape._id ||
-        (this.isAncestorOf && this.isAncestorOf(compareShape)));
+      ((compareShape &&
+        (this === compareShape ||
+          (this.isAncestorOf && this.isAncestorOf(compareShape)))) ||
+        (this.nodeType === 'Stage' && !compareShape));
 
     if (!shouldStop) {
       this._fire(eventType, evt);
