@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 * Fix some stage events. `mouseenter` and `mouseleave` should work correctly on empty spaces
 * Fix some typescript types
+* Better detection of production mode (no extra warnings)
 
 ## [3.2.3][2019-03-21]
 

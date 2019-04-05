@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v3.2.3
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Wed Apr 03 2019
+   * Date: Fri Apr 05 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -74,16 +74,10 @@
           : typeof WorkerGlobalScope !== 'undefined'
               ? self
               : {};
-  var Konva2;
-  (function (Konva2) {
-      Konva2.version = '3.2.3';
-  })(Konva2 || (Konva2 = {}));
   var Konva = {
       version: '3.2.3',
       isBrowser: detectBrowser(),
-      isUnminified: /comment/.test(function () {
-          /* comment */
-      }.toString()),
+      isUnminified: /param/.test(function (param) { }.toString()),
       dblClickWindow: 400,
       getAngle: function (angle) {
           return Konva.angleDeg ? angle * PI_OVER_180 : angle;

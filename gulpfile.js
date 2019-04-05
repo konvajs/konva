@@ -3,13 +3,11 @@ var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 var replace = require('gulp-replace');
-// var mochaPhantomJS = require('gulp-mocha-phantomjs');
 var jsdoc = require('gulp-jsdoc3');
 var connect = require('gulp-connect');
 var jscpd = require('gulp-jscpd');
 var eslint = require('gulp-eslint');
 var gutil = require('gulp-util');
-var ts = require('gulp-typescript');
 
 var fs = require('fs');
 var NodeParams = fs
@@ -24,70 +22,6 @@ var ShapeParams = fs
 
 var conf = require('./package.json');
 
-var sourceFiles = [
-  // core
-  'src/Global.js',
-  'src/Util.js',
-  'src/Canvas.js',
-  'src/Context.js',
-  'src/Factory.js',
-  'src/Node.js',
-
-  // filters
-  'src/filters/Grayscale.js',
-  'src/filters/Brighten.js',
-  'src/filters/Invert.js',
-  'src/filters/Blur.js',
-  'src/filters/Mask.js',
-  'src/filters/RGB.js',
-  'src/filters/RGBA.js',
-  'src/filters/HSV.js',
-  'src/filters/HSL.js',
-  'src/filters/Emboss.js',
-  'src/filters/Enhance.js',
-  'src/filters/Posterize.js',
-  'src/filters/Noise.js',
-  'src/filters/Pixelate.js',
-  'src/filters/Threshold.js',
-  'src/filters/Sepia.js',
-  'src/filters/Solarize.js',
-  'src/filters/Kaleidoscope.js',
-  'src/filters/Contrast.js',
-
-  // core
-  'src/Container.js',
-  'src/Shape.js',
-  'src/Stage.js',
-  'src/BaseLayer.js',
-  'src/Layer.js',
-  'src/FastLayer.js',
-  'src/Group.js',
-  'src/Animation.js',
-  'src/Tween.js',
-  'src/DragAndDrop.js',
-
-  // shapes
-  'src/shapes/Rect.js',
-  'src/shapes/Circle.js',
-  'src/shapes/Ellipse.js',
-  'src/shapes/Ring.js',
-  'src/shapes/Wedge.js',
-  'src/shapes/Arc.js',
-  'src/shapes/Image.js',
-  'src/shapes/Text.js',
-  'src/shapes/Line.js',
-  'src/shapes/Sprite.js',
-  'src/shapes/Path.js',
-  'src/shapes/TextPath.js',
-  'src/shapes/RegularPolygon.js',
-  'src/shapes/Star.js',
-  'src/shapes/Label.js',
-  'src/shapes/Arrow.js',
-  'src/shapes/Transformer.js'
-];
-
-var tsProject = ts.createProject('tsconfig.json');
-
 function build() {
   return gulp
     .src(['./konva.js'])
@@ -98,13 +32,16 @@ function build() {
     .pipe(replace('@@date', new Date().toDateString()));
 }
 
-// create development build
-gulp.task('dev-build', function() {
-  return build().pipe(gulp.dest('./dist/'));
+gulp.task('update-version-lib', function() {
+  return gulp
+    .src(['./lib/Global.js'])
+    .pipe(replace('@@version', conf.version))
+    .pipe(rename('Global.js'))
+    .pipe(gulp.dest('./lib'));
 });
 
 // create usual build konva.js and konva.min.js
-gulp.task('build', function() {
+gulp.task('pre-build', function() {
   return build()
     .pipe(rename('konva.js'))
     .pipe(gulp.dest('./'))
@@ -115,6 +52,8 @@ gulp.task('build', function() {
     .pipe(rename('konva.min.js'))
     .pipe(gulp.dest('./'));
 });
+
+gulp.task('build', gulp.parallel(['update-version-lib', 'pre-build']));
 
 // local server for better development
 gulp.task('server', function() {
@@ -161,8 +100,4 @@ gulp.task('api', function() {
   );
 });
 
-gulp.task('watch', function() {
-  gulp.watch(['src/**/*.js'], gulp.series(['dev-build']));
-});
-
-gulp.task('default', gulp.parallel(['dev-build', 'watch', 'server']));
+gulp.task('default', gulp.parallel(['server']));

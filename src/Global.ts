@@ -86,18 +86,10 @@ export const glob: any =
     ? self
     : {};
 
-export namespace Konva2 {
-  export const version = '@@version';
-}
-
 export const Konva = {
   version: '@@version',
   isBrowser: detectBrowser(),
-  isUnminified: /comment/.test(
-    function() {
-      /* comment */
-    }.toString()
-  ),
+  isUnminified: /param/.test(function(param) {}.toString()),
   dblClickWindow: 400,
   getAngle(angle) {
     return Konva.angleDeg ? angle * PI_OVER_180 : angle;

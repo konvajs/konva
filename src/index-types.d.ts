@@ -36,6 +36,8 @@ declare namespace Konva {
   export const isDragging: () => boolean;
   export const isDragReady: () => boolean;
 
+  export type Vector2d = import('./types').Vector2d;
+
   export const Node: typeof import('./Node').Node;
   export type Node = import('./Node').Node;
   export type NodeConfig = import('./Node').NodeConfig;
