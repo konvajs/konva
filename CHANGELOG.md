@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## [3.2.4][2019-04-05]
+
 * Fix some stage events. `mouseenter` and `mouseleave` should work correctly on empty spaces
 * Fix some typescript types
 * Better detection of production mode (no extra warnings)
