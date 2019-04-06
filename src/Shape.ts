@@ -74,13 +74,6 @@ var linearGradient = 'linearGradient';
 var radialGradient = 'radialGradient';
 
 var dummyContext;
-function getDummyContext() {
-  if (dummyContext) {
-    return dummyContext;
-  }
-  dummyContext = Util.createCanvasElement().getContext('2d');
-  return dummyContext;
-}
 
 export const shapes = {};
 
@@ -201,6 +194,14 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
     );
   }
 
+  _getDummyContext() {
+    if (dummyContext) {
+      return dummyContext;
+    }
+    dummyContext = Util.createCanvasElement().getContext('2d');
+    return dummyContext;
+  }
+
   /**
    * get canvas context tied to the layer
    * @method
@@ -253,7 +254,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
   }
   __getFillPattern() {
     if (this.fillPatternImage()) {
-      var ctx = getDummyContext();
+      var ctx = this._getDummyContext();
       return ctx.createPattern(
         this.fillPatternImage(),
         this.fillPatternRepeat() || 'repeat'
@@ -266,7 +267,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
   __getLinearGradient() {
     var colorStops = this.fillLinearGradientColorStops();
     if (colorStops) {
-      var ctx = getDummyContext();
+      var ctx = this._getDummyContext();
 
       var start = this.fillLinearGradientStartPoint();
       var end = this.fillLinearGradientEndPoint();
@@ -286,7 +287,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
   __getRadialGradient() {
     var colorStops = this.fillRadialGradientColorStops();
     if (colorStops) {
-      var ctx = getDummyContext();
+      var ctx = this._getDummyContext();
 
       var start = this.fillRadialGradientStartPoint();
       var end = this.fillRadialGradientEndPoint();

@@ -64,14 +64,6 @@ var AUTO = 'auto',
   ],
   // cached variables
   attrChangeListLen = ATTR_CHANGE_LIST.length;
-var dummyContext;
-function getDummyContext() {
-  if (dummyContext) {
-    return dummyContext;
-  }
-  dummyContext = Util.createCanvasElement().getContext(CONTEXT_2D);
-  return dummyContext;
-}
 
 function _fillFunc(context) {
   context.fillText(this._partialText, this._partialTextX, this._partialTextY);
@@ -329,7 +321,7 @@ export class Text extends Shape<TextConfig> {
    * @returns {Object} { width , height} of measured text
    */
   measureSize(text) {
-    var _context = getDummyContext(),
+    var _context = this._getDummyContext(),
       fontSize = this.fontSize(),
       metrics;
 
@@ -378,7 +370,7 @@ export class Text extends Shape<TextConfig> {
     var letterSpacing = this.letterSpacing();
     var length = text.length;
     return (
-      getDummyContext().measureText(text).width +
+      this._getDummyContext().measureText(text).width +
       (length ? letterSpacing * (length - 1) : 0)
     );
   }
@@ -402,7 +394,7 @@ export class Text extends Shape<TextConfig> {
       shouldAddEllipsis = this.ellipsis() && !shouldWrap;
 
     this.textArr = [];
-    getDummyContext().font = this._getContextFont();
+    this._getDummyContext().font = this._getContextFont();
     var additionalWidth = shouldAddEllipsis ? this._getTextWidth(ELLIPSIS) : 0;
     for (var i = 0, max = lines.length; i < max; ++i) {
       var line = lines[i];
