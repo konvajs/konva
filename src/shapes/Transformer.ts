@@ -274,6 +274,12 @@ export class Transformer extends Group {
         rotation: 0
       };
     }
+
+    if (node.parent && this.parent && node.parent !== this.parent) {
+      Util.warn(
+        'Transformer and attached node have different parents. Konva does not support such case right now. Please move Transformer to the parent of attaching node.'
+      );
+    }
     var rect = node.getClientRect({
       skipTransform: true,
       skipShadow: true,

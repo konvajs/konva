@@ -35,7 +35,13 @@ suite('Transformer', function() {
     assert.equal(pos.y, rect.y() + rect.height());
   });
 
-  test.skip('try it on a parent of parent', function() {
+  test('try it on a parent of parent', function() {
+    var callCount = 0;
+    var oldWarn = Konva.Util.warn;
+    Konva.Util.warn = function() {
+      callCount += 1;
+    };
+
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -61,19 +67,22 @@ suite('Transformer', function() {
     });
     layer.add(tr);
 
+    rect.width(120);
     layer.draw();
 
-    assert.equal(tr.x(), rect.x() + group.x());
-    assert.equal(tr.y(), rect.y() + group.y());
-    assert.equal(tr.width(), rect.width());
-    assert.equal(tr.height(), rect.height());
+    assert.equal(callCount, 1);
+    Konva.Util.warn = oldWarn;
 
-    // manual check of correct position of node
-    var handler = tr.findOne('.bottom-right');
-    var pos = handler.getAbsolutePosition();
-    assert.equal(pos.x, rect.x() + rect.width());
-    assert.equal(pos.y, rect.y() + rect.height());
-    throw '';
+    // assert.equal(tr.x(), rect.x() + group.x());
+    // assert.equal(tr.y(), rect.y() + group.y());
+    // assert.equal(tr.width(), rect.width());
+    // assert.equal(tr.height(), rect.height());
+
+    // // manual check of correct position of node
+    // var handler = tr.findOne('.bottom-right');
+    // var pos = handler.getAbsolutePosition();
+    // assert.equal(pos.x, rect.x() + rect.width());
+    // assert.equal(pos.y, rect.y() + rect.height());
   });
 
   test('try set/get node', function() {

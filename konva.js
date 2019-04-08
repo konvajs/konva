@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v3.2.4
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Fri Apr 05 2019
+   * Date: Mon Apr 08 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -3466,7 +3466,7 @@
       Node.prototype.setZIndex = function (zIndex) {
           if (!this.parent) {
               Util.warn('Node has no parent. zIndex parameter is ignored.');
-              return false;
+              return this;
           }
           if (zIndex < 0 || zIndex >= this.parent.children.length) {
               Util.warn('Unexpected value ' +
@@ -5321,7 +5321,7 @@
           var that = this;
           this.children.each(function (child) {
               // skip invisible children
-              if (!child.getVisible()) {
+              if (!child.visible()) {
                   return;
               }
               var rect = child.getClientRect({
@@ -14017,6 +14017,9 @@
                   height: 0,
                   rotation: 0
               };
+          }
+          if (node.parent && this.parent && node.parent !== this.parent) {
+              Util.warn('Transformer and attached node have different parents. Konva does not support such case right now. Please move Transformer to the parent of attaching node.');
           }
           var rect = node.getClientRect({
               skipTransform: true,

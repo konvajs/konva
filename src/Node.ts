@@ -11,10 +11,10 @@ import {
   getBooleanValidator
 } from './Validators';
 
-export const ids = {};
-export const names = {};
+export const ids: any = {};
+export const names: any = {};
 
-const _addId = function(node: Node, id) {
+const _addId = function(node: Node, id: string | undefined) {
   if (!id) {
     return;
   }
@@ -170,7 +170,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   eventListeners = {};
   attrs: any = {};
   index = 0;
-  parent: Container = null;
+  parent: Container | null = null;
   _cache: Map<string, any> = new Map<string, any>();
   _lastPos = null;
   _attrsAffectingSize: string[];
@@ -1305,7 +1305,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   setZIndex(zIndex) {
     if (!this.parent) {
       Util.warn('Node has no parent. zIndex parameter is ignored.');
-      return false;
+      return this;
     }
     if (zIndex < 0 || zIndex >= this.parent.children.length) {
       Util.warn(
@@ -1428,7 +1428,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * var parentGroups = node.findAncestors('Group');
    */
   findAncestors(selector, includeSelf, stopNode) {
-    var res = [];
+    var res: Array<Node> = [];
 
     if (includeSelf && this._isMatch(selector)) {
       res.push(this);
@@ -1697,7 +1697,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *   x: 5
    * });
    */
-  clone(obj) {
+  clone(obj?) {
     // instantiate new node
     var attrs = Util.cloneObject(this.attrs),
       key,

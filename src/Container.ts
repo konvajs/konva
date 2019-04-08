@@ -5,6 +5,7 @@ import { DD } from './DragAndDrop';
 import { getNumberValidator } from './Validators';
 
 import { GetSet, IRect } from './types';
+import { Shape } from './Shape';
 
 export interface ContainerConfig extends NodeConfig {
   clearBeforeDraw?: boolean;
@@ -112,7 +113,7 @@ export abstract class Container extends Node<ContainerConfig> {
    * // remember to redraw layer if you changed something
    * layer.draw();
    */
-  add(child) {
+  add(child: Node) {
     if (arguments.length > 1) {
       for (var i = 0; i < arguments.length; i++) {
         this.add(arguments[i]);
@@ -300,7 +301,7 @@ export abstract class Container extends Node<ContainerConfig> {
 
     return false;
   }
-  clone(obj) {
+  clone(obj?) {
     // call super method
     var node = Node.prototype.clone.call(this, obj);
 
@@ -324,7 +325,7 @@ export abstract class Container extends Node<ContainerConfig> {
   getAllIntersections(pos) {
     var arr = [];
 
-    this.find('Shape').each(function(shape) {
+    this.find('Shape').each(function(shape: Shape) {
       if (shape.isVisible() && shape.intersects(pos)) {
         arr.push(shape);
       }
@@ -447,7 +448,7 @@ export abstract class Container extends Node<ContainerConfig> {
       (layer && layer.hitGraphEnabled() && this.isVisible() && !layerUnderDrag)
     );
   }
-  getClientRect(attrs) {
+  getClientRect(attrs): IRect {
     attrs = attrs || {};
     var skipTransform = attrs.skipTransform;
     var relativeTo = attrs.relativeTo;
@@ -462,7 +463,7 @@ export abstract class Container extends Node<ContainerConfig> {
     var that = this;
     this.children.each(function(child) {
       // skip invisible children
-      if (!child.getVisible()) {
+      if (!child.visible()) {
         return;
       }
 

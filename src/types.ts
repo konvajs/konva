@@ -2,8 +2,8 @@ import { Shape } from './Shape';
 import { Stage } from './Stage';
 
 export interface GetSet<Type, This> {
-  (this: This): Type;
-  (this: This, v: Type): This;
+  (): Type;
+  (v: Type): This;
 }
 
 export interface Vector2d {

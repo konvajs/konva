@@ -33,7 +33,7 @@ export class Collection<Child extends Node> {
   // @ts-ignore
   length: number;
   // @ts-ignore
-  each: (f: Function) => void;
+  each: (f: (child: Child, index: number) => void) => void;
   // @ts-ignore
   toArray: () => Array<any>;
   // @ts-ignore

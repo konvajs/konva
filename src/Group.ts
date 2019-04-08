@@ -1,6 +1,7 @@
 import { Util, Collection } from './Util';
 import { Container } from './Container';
 import { _registerNode } from './Global';
+import { Node } from './Node';
 
 /**
  * Group constructor.  Groups are used to contain shapes or other groups.
