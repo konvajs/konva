@@ -52,6 +52,9 @@ var STAGE = 'Stage',
   CONTENT_DBL_TAP = 'contentDbltap',
   CONTENT_TAP = 'contentTap',
   CONTENT_TOUCHMOVE = 'contentTouchmove',
+  CONTENT_POINTERMOVE = 'contentPointermove',
+  CONTENT_POINTERDOWN = 'contentPointerdown',
+  CONTENT_POINTERUP = 'contentPointerup',
   CONTENT_WHEEL = 'contentWheel',
   RELATIVE = 'relative',
   KONVA_CONTENT = 'konvajs-content',
@@ -390,14 +393,10 @@ export class Stage extends Container {
       addEvent(this, EVENTS[n]);
     }
   }
-<<<<<<< HEAD
   _mouseenter(evt) {
     this.setPointersPositions(evt);
     this._fire(MOUSEENTER, { evt: evt, target: this, currentTarget: this });
   }
-=======
-
->>>>>>> WIP
   _mouseover(evt) {
     this.setPointersPositions(evt);
     this._fire(CONTENT_MOUSEOVER, { evt: evt });

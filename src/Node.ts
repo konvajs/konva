@@ -1522,7 +1522,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#getStage
    * @returns {Konva.Stage}
    */
-  getStage(): Stage | undefined {
+  getStage(): any {
     return this._getCache(STAGE, this._getStage);
   }
 

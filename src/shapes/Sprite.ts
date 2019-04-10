@@ -150,11 +150,13 @@ export class Sprite extends Shape<SpriteConfig> {
     context.closePath();
     context.fillShape(this);
   }
+
   _useBufferCanvas() {
     return (
       (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasStroke()
     );
   }
+
   _setInterval() {
     var that = this;
     this.interval = setInterval(function() {
