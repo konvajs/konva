@@ -6,6 +6,8 @@ import { SceneCanvas, HitCanvas } from './Canvas';
 import { Stage } from './Stage';
 
 import { GetSet } from './types';
+import { Group } from './Group';
+import { Shape } from './Shape';
 
 export interface LayerConfig extends ContainerConfig {
   clearBeforeDraw?: boolean;
@@ -23,7 +25,7 @@ export interface LayerConfig extends ContainerConfig {
  * @@nodeParams
  * @@containerParams
  */
-export abstract class BaseLayer extends Container {
+export abstract class BaseLayer extends Container<Group | Shape> {
   canvas = new SceneCanvas();
   hitCanvas: HitCanvas;
 

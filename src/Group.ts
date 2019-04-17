@@ -2,6 +2,7 @@ import { Util, Collection } from './Util';
 import { Container } from './Container';
 import { _registerNode } from './Global';
 import { Node } from './Node';
+import { Shape } from './Shape';
 
 /**
  * Group constructor.  Groups are used to contain shapes or other groups.
@@ -14,8 +15,8 @@ import { Node } from './Node';
  * @example
  * var group = new Konva.Group();
  */
-export class Group extends Container {
-  _validateAdd(child) {
+export class Group extends Container<Group | Shape> {
+  _validateAdd(child: Group | Shape) {
     var type = child.getType();
     if (type !== 'Group' && type !== 'Shape') {
       Util.throw('You may only add groups and shapes to groups.');

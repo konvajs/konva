@@ -43,7 +43,7 @@ declare namespace Konva {
   export type NodeConfig = import('./Node').NodeConfig;
 
   export const Container: typeof import('./Container').Container;
-  export type Container = import('./Container').Container;
+  export type Container = import('./Container').Container<Node>;
   export type ContainerConfig = import('./Container').ContainerConfig;
 
   export const Collection: typeof import('./Util').Collection;

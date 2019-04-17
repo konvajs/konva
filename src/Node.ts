@@ -170,7 +170,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   eventListeners = {};
   attrs: any = {};
   index = 0;
-  parent: Container | null = null;
+  parent: Container<Node> | null = null;
   _cache: Map<string, any> = new Map<string, any>();
   _lastPos = null;
   _attrsAffectingSize: string[];
@@ -453,7 +453,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     skipTransform?: boolean;
     skipShadow?: boolean;
     skipStroke?: boolean;
-    relativeTo?: Container;
+    relativeTo?: Container<Node>;
   }): { x: number; y: number; width: number; height: number } {
     // abstract method
     // redefine in Container and Shape
@@ -466,7 +466,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       { x: rect.x + rect.width, y: rect.y + rect.height },
       { x: rect.x, y: rect.y + rect.height }
     ];
-    var minX, minY, maxX, maxY;
+    var minX: number, minY: number, maxX: number, maxY: number;
     var trans = this.getAbsoluteTransform(top);
     points.forEach(function(point) {
       var transformed = trans.point(point);
@@ -1877,7 +1877,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   /**
    * get the node type, which may return Stage, Layer, Group, or Shape
    * @method
-   * @name Konva.Node#getTranslation
+   * @name Konva.Node#getType
    * @returns {String}
    */
   getType() {

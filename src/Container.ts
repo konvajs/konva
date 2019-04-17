@@ -26,8 +26,10 @@ export interface ContainerConfig extends NodeConfig {
  * @@nodeParams
  * @@containerParams
  */
-export abstract class Container extends Node<ContainerConfig> {
-  children = new Collection();
+export abstract class Container<ChildType extends Node> extends Node<
+  ContainerConfig
+> {
+  children = new Collection<ChildType>();
 
   /**
    * returns a {@link Konva.Collection} of direct descendant nodes
@@ -113,7 +115,7 @@ export abstract class Container extends Node<ContainerConfig> {
    * // remember to redraw layer if you changed something
    * layer.draw();
    */
-  add(child: Node) {
+  add(child: ChildType) {
     if (arguments.length > 1) {
       for (var i = 0; i < arguments.length; i++) {
         this.add(arguments[i]);
@@ -249,7 +251,7 @@ export abstract class Container extends Node<ContainerConfig> {
       if (!child.hasChildren()) {
         continue;
       }
-      shouldStop = (child as Container)._descendants(fn);
+      shouldStop = (child as any)._descendants(fn);
       if (shouldStop) {
         return true;
       }

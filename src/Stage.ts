@@ -109,7 +109,7 @@ function checkNoClip(attrs: any = {}) {
  * });
  */
 
-export class Stage extends Container {
+export class Stage extends Container<BaseLayer> {
   content: HTMLDivElement;
   pointerPos: Vector2d | null;
   bufferCanvas: SceneCanvas;
@@ -119,8 +119,6 @@ export class Stage extends Container {
   clickEndShape: Shape;
   dblTimeout: any;
   tapStartShape: Shape;
-
-  children: Collection<BaseLayer>;
 
   constructor(config: StageConfig) {
     super(checkNoClip(config));
