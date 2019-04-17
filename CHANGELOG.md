@@ -5,7 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## [3.2.5][2019-04-17]
+
 * Show a warning when `Konva.Transformer` and attaching node have different parents.
+* Typescript fixes
 
 ## [3.2.4][2019-04-05]
 
