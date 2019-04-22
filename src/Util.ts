@@ -49,8 +49,8 @@ export class Collection<Child extends Node> {
    * @memberof Konva.Collection
    * @param {Array} arr
    */
-  static toCollection(arr: Array<Node>) {
-    var collection = new Collection(),
+  static toCollection<ChildNode extends Node = Node>(arr: Array<ChildNode>) {
+    var collection = new Collection<ChildNode>(),
       len = arr.length,
       n;
 

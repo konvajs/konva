@@ -190,10 +190,10 @@ export abstract class Container<ChildType extends Node> extends Node<
    *  return node.getType() === 'Node' && node.getAbsoluteOpacity() < 1;
    * });
    */
-  find(selector) {
+  find<ChildNode extends Node = Node>(selector): Collection<ChildNode> {
     // protecting _generalFind to prevent user from accidentally adding
     // second argument and getting unexpected `findOne` result
-    return this._generalFind(selector, false);
+    return this._generalFind<ChildNode>(selector, false);
   }
 
   get(selector) {
@@ -220,12 +220,12 @@ export abstract class Container<ChildType extends Node> extends Node<
    *  return node.getType() === 'Shape'
    * })
    */
-  findOne(selector) {
-    var result = this._generalFind(selector, true);
+  findOne<ChildNode extends Node = Node>(selector): ChildNode {
+    var result = this._generalFind<ChildNode>(selector, true);
     return result.length > 0 ? result[0] : undefined;
   }
-  _generalFind(selector, findOne) {
-    var retArr = [];
+  _generalFind<ChildNode extends Node = Node>(selector, findOne) {
+    var retArr: Array<ChildNode> = [];
 
     this._descendants(node => {
       const valid = node._isMatch(selector);
