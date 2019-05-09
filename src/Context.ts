@@ -24,6 +24,7 @@ var COMMA = ',',
     'createPattern',
     'createRadialGradient',
     'drawImage',
+    'ellipse',
     'fill',
     'fillText',
     'getImageData',
@@ -323,6 +324,9 @@ export class Context {
     } else if (a.length === 9) {
       _context.drawImage(a0, a1, a2, a3, a4, a5, a6, a7, a8);
     }
+  }
+  ellipse(a0, a1, a2, a3, a4, a5, a6, a7) {
+    this._context.ellipse(a0, a1, a2, a3, a4, a5, a6, a7);
   }
   isPointInPath(x, y) {
     return this._context.isPointInPath(x, y);
