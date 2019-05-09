@@ -13,6 +13,10 @@ import { _registerNode } from './Global';
 
 import { GetSet, Vector2d } from './types';
 
+export type ShapeConfigHandler<TTarget> = {
+  bivarianceHack(ctx: Context, shape: TTarget): void
+}['bivarianceHack']
+
 export interface ShapeConfig extends NodeConfig {
   fill?: string;
   fillPatternImage?: HTMLImageElement;
@@ -748,11 +752,11 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
   fillPatternX: GetSet<number, this>;
   fillPatternY: GetSet<number, this>;
   fillPriority: GetSet<string, this>;
-  hitFunc: GetSet<(ctx: Context, shape: this) => void, this>;
+  hitFunc: GetSet<ShapeConfigHandler<this>, this>;
   lineCap: GetSet<string, this>;
   lineJoin: GetSet<string, this>;
   perfectDrawEnabled: GetSet<boolean, this>;
-  sceneFunc: GetSet<(ctx: Context, shape: this) => void, this>;
+  sceneFunc: GetSet<ShapeConfigHandler<this>, this>;
   shadowColor: GetSet<string, this>;
   shadowEnabled: GetSet<boolean, this>;
   shadowForStrokeEnabled: GetSet<boolean, this>;
