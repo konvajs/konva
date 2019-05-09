@@ -19,6 +19,7 @@ suite('Context', function() {
     'arc',
     'arcTo',
     'rect',
+    'ellipse'
     'fill',
     'stroke',
     'clip',
