@@ -40,6 +40,7 @@ nbproject
 *.sublime-project
 *.sublime-workspace
 *.md.html
+.vscode
 
 # Dreamweaver added files
 _notes

@@ -6,7 +6,8 @@
     "noEmitOnError": true,
     "lib": ["es2015", "dom"]
     // "noImplicitAny": true
-    // "strict": true
+    // "strict": true,
+    // "strictFunctionTypes": true
   },
   "include": ["./src/*.ts"]
   // "include": ["./types/*.ts"]

@@ -13,9 +13,10 @@ import { _registerNode } from './Global';
 
 import { GetSet, Vector2d } from './types';
 
+// hack from here https://stackoverflow.com/questions/52667959/what-is-the-purpose-of-bivariancehack-in-typescript-types/52668133#52668133
 export type ShapeConfigHandler<TTarget> = {
-  bivarianceHack(ctx: Context, shape: TTarget): void
-}['bivarianceHack']
+  bivarianceHack(ctx: Context, shape: TTarget): void;
+}['bivarianceHack'];
 
 export interface ShapeConfig extends NodeConfig {
   fill?: string;
