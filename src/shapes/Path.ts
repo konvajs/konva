@@ -40,7 +40,7 @@ export class Path extends Shape<PathConfig> {
       this.pathLength += this.dataArray[i].pathLength;
     }
     this.on('dataChange.konva', function() {
-      this.dataArray = Path.parsePathData(this.getData());
+      this.dataArray = Path.parsePathData(this.data());
       this.pathLength = 0;
       for (var i = 0; i < this.dataArray.length; ++i) {
         this.pathLength += this.dataArray[i].pathLength;

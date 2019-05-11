@@ -1,15 +1,18 @@
-import { Util, Collection, Transform, RectConf } from './Util';
+import { Util, Collection, Transform, RectConf, Point } from './Util';
 import { Factory } from './Factory';
-import { SceneCanvas, HitCanvas } from './Canvas';
+import { SceneCanvas, HitCanvas, Canvas } from './Canvas';
 import { Konva, _NODES_REGISTRY } from './Global';
 import { Container } from './Container';
-import { GetSet, Vector2d } from './types';
+import { GetSet, Vector2d, IRect } from './types';
 import { DD } from './DragAndDrop';
 import {
   getNumberValidator,
   getStringValidator,
   getBooleanValidator
 } from './Validators';
+import { Context } from './Context';
+import { Shape } from './Shape';
+import { Stage } from './Stage';
 
 export const ids: any = {};
 export const names: any = {};
@@ -33,7 +36,7 @@ export const _removeId = function(id: string, node: any) {
   delete ids[id];
 };
 
-export const _addName = function(node: any, name) {
+export const _addName = function(node: any, name: string) {
   if (name) {
     if (!names[name]) {
       names[name] = [];
@@ -42,7 +45,7 @@ export const _addName = function(node: any, name) {
   }
 };
 
-export const _removeName = function(name, _id) {
+export const _removeName = function(name: string, _id: number) {
   if (!name) {
     return;
   }
@@ -154,9 +157,17 @@ var ABSOLUTE_OPACITY = 'absoluteOpacity',
   ].join(SPACE),
   SCALE_CHANGE_STR = ['scaleXChange.konva', 'scaleYChange.konva'].join(SPACE);
 
-const emptyChildren = new Collection<Node>();
+const emptyChildren: Collection<Node> = new Collection();
 
 let idCounter = 1;
+
+// create all the events here
+interface NodeEventMap {
+  [index: string]: any;
+  click: MouseEvent;
+  touchstart: TouchEvent;
+}
+
 /**
  * Node constructor. Nodes are entities that can be transformed, layered,
  * and have bound events. The stage, layers, groups, and shapes all extend Node.
@@ -167,40 +178,42 @@ let idCounter = 1;
  */
 export abstract class Node<Config extends NodeConfig = NodeConfig> {
   _id = idCounter++;
-  eventListeners = {};
+  eventListeners: {
+    [index: string]: Array<{ name: string; handler: Function }>;
+  } = {};
   attrs: any = {};
   index = 0;
-  parent: Container<Node> | null = null;
+  parent: Container<Node> | undefined = undefined;
   _cache: Map<string, any> = new Map<string, any>();
-  _lastPos = null;
-  _attrsAffectingSize: string[];
+  _lastPos: Point = null;
+  _attrsAffectingSize!: string[];
 
   _filterUpToDate = false;
   _isUnderCache = false;
   children = emptyChildren;
-  nodeType: string;
-  className: string;
+  nodeType!: string;
+  className!: string;
 
   constructor(config?: Config) {
     this.setAttrs(config);
 
     // event bindings for cache handling
-    this.on(TRANSFORM_CHANGE_STR, function() {
+    this.on(TRANSFORM_CHANGE_STR, () => {
       this._clearCache(TRANSFORM);
       this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
     });
 
-    this.on(SCALE_CHANGE_STR, function() {
+    this.on(SCALE_CHANGE_STR, () => {
       this._clearSelfAndDescendantCache(ABSOLUTE_SCALE);
     });
 
-    this.on('visibleChange.konva', function() {
+    this.on('visibleChange.konva', () => {
       this._clearSelfAndDescendantCache(VISIBLE);
     });
-    this.on('listeningChange.konva', function() {
+    this.on('listeningChange.konva', () => {
       this._clearSelfAndDescendantCache(LISTENING);
     });
-    this.on('opacityChange.konva', function() {
+    this.on('opacityChange.konva', () => {
       this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
     });
   }
@@ -214,14 +227,14 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   }
 
   /** @lends Konva.Node.prototype */
-  _clearCache(attr) {
+  _clearCache(attr?: string) {
     if (attr) {
       this._cache.delete(attr);
     } else {
       this._cache.clear();
     }
   }
-  _getCache(attr, privateGetter) {
+  _getCache(attr: string, privateGetter: Function) {
     var cache = this._cache.get(attr);
 
     // if not cached, we need to set it using the private getter method.
@@ -239,7 +252,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * when the logic for a cached result depends on ancestor propagation, use this
    * method to clear self and children cache
    */
-  _clearSelfAndDescendantCache(attr?) {
+  _clearSelfAndDescendantCache(attr?: string) {
     this._clearCache(attr);
 
     // skip clearing if node is cached with canvas
@@ -307,7 +320,15 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *   drawBorder: true
    * });
    */
-  cache(config) {
+  cache(config?: {
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+    drawBorder?: boolean;
+    offset?: number;
+    pixelRatio?: number;
+  }) {
     var conf = config || {};
     var rect = {} as RectConf;
 
@@ -410,8 +431,18 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return this;
   }
 
-  abstract drawScene(canvas?, top?, caching?, skipBuffer?): void;
-  abstract drawHit(canvas?, top?, caching?, skipBuffer?): void;
+  abstract drawScene(
+    canvas?: Canvas,
+    top?: Node,
+    caching?: boolean,
+    skipBuffer?: boolean
+  ): void;
+  abstract drawHit(
+    canvas?: Canvas,
+    top?: Node,
+    caching?: boolean,
+    skipBuffer?: boolean
+  ): void;
   /**
    * Return client rectangle {x, y, width, height} of node. This rectangle also include all styling (strokes, shadows, etc).
    * The rectangle position is relative to parent container.
@@ -459,7 +490,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     // redefine in Container and Shape
     throw new Error('abstract "getClientRect" method call');
   }
-  _transformedRect(rect, top) {
+  _transformedRect(rect: IRect, top: Node) {
     var points = [
       { x: rect.x, y: rect.y },
       { x: rect.x + rect.width, y: rect.y },
@@ -486,7 +517,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       height: maxY - minY
     };
   }
-  _drawCachedSceneCanvas(context) {
+  _drawCachedSceneCanvas(context: Context) {
     context.save();
     context._applyOpacity(this);
     context._applyGlobalCompositeOperation(this);
@@ -506,7 +537,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     );
     context.restore();
   }
-  _drawCachedHitCanvas(context) {
+  _drawCachedHitCanvas(context: Context) {
     var canvasCache = this._getCanvasCache(),
       hitCanvas = canvasCache.hit;
     context.save();
@@ -635,7 +666,20 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *   var group = evt.currentTarget;
    * });
    */
-  on(evtStr, handler) {
+  on<K extends keyof NodeEventMap>(
+    type: K,
+    listener: (
+      this: this,
+      ev: {
+        target: Shape | Stage;
+        evt: NodeEventMap[K];
+        currentTarget: Node;
+        cancelBubble: boolean;
+        child?: Node;
+      }
+    ) => any
+  ): void;
+  on(evtStr: string, handler: (evt: any) => void) {
     if (arguments.length === 3) {
       return this._delegate.apply(this, arguments);
     }
@@ -692,7 +736,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // remove listener by name
    * node.off('click.foo');
    */
-  off(evtStr, callback?) {
+  off(evtStr: string, callback?: Function) {
     var events = (evtStr || '').split(SPACE),
       len = events.length,
       n,
@@ -727,7 +771,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return this;
   }
   // some event aliases for third party integration like HammerJS
-  dispatchEvent(evt) {
+  dispatchEvent(evt: any) {
     var e = {
       target: this,
       type: evt.type,
@@ -736,19 +780,19 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this.fire(evt.type, e);
     return this;
   }
-  addEventListener(type, handler) {
+  addEventListener(type: string, handler: (e: Event) => void) {
     // we have to pass native event to handler
     this.on(type, function(evt) {
       handler.call(this, evt.evt);
     });
     return this;
   }
-  removeEventListener(type) {
+  removeEventListener(type: string) {
     this.off(type);
     return this;
   }
   // like node.on
-  _delegate(event, selector, handler) {
+  _delegate(event: string, selector: string, handler: (e: Event) => void) {
     var stopNode = this;
     this.on(event, function(evt) {
       var targets = evt.target.findAncestors(selector, true, stopNode);
@@ -821,10 +865,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @example
    * var x = node.getAttr('x');
    */
-  getAttr(attr) {
+  getAttr(attr: string) {
     var method = 'get' + Util._capitalize(attr);
-    if (Util._isFunction(this[method])) {
-      return this[method]();
+    if (Util._isFunction((this as any)[method])) {
+      return (this as any)[method]();
     }
     // otherwise get directly
     return this.attrs[attr];
@@ -871,7 +915,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *   fill: 'red'
    * });
    */
-  setAttrs(config) {
+  setAttrs(config: any) {
     var key, method;
 
     if (!config) {
@@ -2220,9 +2264,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this._dragCleanup();
 
     this.on('mousedown.konva touchstart.konva', function(evt) {
-      var shouldCheckButton = evt.evt.button !== undefined;
+      var shouldCheckButton = evt.evt['button'] !== undefined;
       var canDrag =
-        !shouldCheckButton || Konva.dragButtons.indexOf(evt.evt.button) >= 0;
+        !shouldCheckButton || Konva.dragButtons.indexOf(evt.evt['button']) >= 0;
       if (!canDrag) {
         return;
       }

@@ -312,7 +312,7 @@ export class Context {
   createRadialGradient(a0, a1, a2, a3, a4, a5) {
     return this._context.createRadialGradient(a0, a1, a2, a3, a4, a5);
   }
-  drawImage(a0, a1, a2, a3, a4, a5, a6, a7, a8) {
+  drawImage(a0, a1, a2, a3?, a4?, a5?, a6?, a7?, a8?) {
     var a = arguments,
       _context = this._context;
 

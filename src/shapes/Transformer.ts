@@ -348,24 +348,22 @@ export class Transformer extends Group {
     });
 
     // add hover styling
-    anchor.on('mouseenter', function() {
-      var tr = this.getParent();
+    anchor.on('mouseenter', () => {
+      var rad = Konva.getAngle(this.rotation());
 
-      var rad = Konva.getAngle(tr.rotation());
-
-      var scale = tr.getNode().getAbsoluteScale();
+      var scale = this.getNode().getAbsoluteScale();
       // If scale.y < 0 xor scale.x < 0 we need to flip (not rotate).
       var isMirrored = scale.y * scale.x < 0;
       var cursor = getCursor(name, rad, isMirrored);
       anchor.getStage().content.style.cursor = cursor;
-      tr._cursorChange = true;
+      this._cursorChange = true;
     });
-    anchor.on('mouseout', function() {
-      if (!anchor.getStage() || !this.getParent()) {
+    anchor.on('mouseout', () => {
+      if (!anchor.getStage() || !anchor.getParent()) {
         return;
       }
       anchor.getStage().content.style.cursor = '';
-      this.getParent()._cursorChange = false;
+      this._cursorChange = false;
     });
     this.add(anchor);
   }

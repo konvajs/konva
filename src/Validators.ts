@@ -1,7 +1,7 @@
 import { Konva } from './Global';
 import { Util } from './Util';
 
-function _formatValue(val) {
+function _formatValue(val: any) {
   if (Util._isString(val)) {
     return '"' + val + '"';
   }
@@ -14,7 +14,7 @@ function _formatValue(val) {
   return Object.prototype.toString.call(val);
 }
 
-export function RGBComponent(val) {
+export function RGBComponent(val: number) {
   if (val > 255) {
     return 255;
   } else if (val < 0) {
@@ -22,7 +22,7 @@ export function RGBComponent(val) {
   }
   return Math.round(val);
 }
-export function alphaComponent(val) {
+export function alphaComponent(val: number) {
   if (val > 1) {
     return 1;
   } else if (val < 0.0001) {
@@ -35,7 +35,7 @@ export function alphaComponent(val) {
 
 export function getNumberValidator() {
   if (Konva.isUnminified) {
-    return function(val, attr) {
+    return function(val: any, attr: string) {
       if (!Util._isNumber(val)) {
         Util.warn(
           _formatValue(val) +
@@ -50,7 +50,7 @@ export function getNumberValidator() {
 }
 export function getNumberOrAutoValidator() {
   if (Konva.isUnminified) {
-    return function(val, attr) {
+    return function(val: any, attr: string) {
       var isNumber = Util._isNumber(val);
       var isAuto = val === 'auto';
 
@@ -68,7 +68,7 @@ export function getNumberOrAutoValidator() {
 }
 export function getStringValidator() {
   if (Konva.isUnminified) {
-    return function(val, attr) {
+    return function(val: any, attr: string) {
       if (!Util._isString(val)) {
         Util.warn(
           _formatValue(val) +
@@ -83,7 +83,7 @@ export function getStringValidator() {
 }
 export function getFunctionValidator() {
   if (Konva.isUnminified) {
-    return function(val, attr) {
+    return function(val: any, attr: string) {
       if (!Util._isFunction(val)) {
         Util.warn(
           _formatValue(val) +
@@ -98,7 +98,7 @@ export function getFunctionValidator() {
 }
 export function getNumberArrayValidator() {
   if (Konva.isUnminified) {
-    return function(val, attr) {
+    return function(val: any, attr: string) {
       if (!Util._isArray(val)) {
         Util.warn(
           _formatValue(val) +
@@ -107,7 +107,7 @@ export function getNumberArrayValidator() {
             '" attribute. The value should be a array of numbers.'
         );
       } else {
-        val.forEach(function(item) {
+        val.forEach(function(item: any) {
           if (!Util._isNumber(item)) {
             Util.warn(
               '"' +
@@ -125,7 +125,7 @@ export function getNumberArrayValidator() {
 }
 export function getBooleanValidator() {
   if (Konva.isUnminified) {
-    return function(val, attr) {
+    return function(val: any, attr: string) {
       var isBool = val === true || val === false;
       if (!isBool) {
         Util.warn(
@@ -139,9 +139,9 @@ export function getBooleanValidator() {
     };
   }
 }
-export function getComponentValidator(components) {
+export function getComponentValidator(components: any) {
   if (Konva.isUnminified) {
-    return function(val, attr) {
+    return function(val: any, attr: string) {
       if (!Util.isObject(val)) {
         Util.warn(
           _formatValue(val) +

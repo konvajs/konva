@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v3.2.6
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Thu May 09 2019
+   * Date: Sat May 11 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2483,11 +2483,12 @@
    */
   var Node = /** @class */ (function () {
       function Node(config) {
+          var _this = this;
           this._id = idCounter++;
           this.eventListeners = {};
           this.attrs = {};
           this.index = 0;
-          this.parent = null;
+          this.parent = undefined;
           this._cache = new Map();
           this._lastPos = null;
           this._filterUpToDate = false;
@@ -2496,20 +2497,20 @@
           this.setAttrs(config);
           // event bindings for cache handling
           this.on(TRANSFORM_CHANGE_STR, function () {
-              this._clearCache(TRANSFORM);
-              this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
+              _this._clearCache(TRANSFORM);
+              _this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
           });
           this.on(SCALE_CHANGE_STR, function () {
-              this._clearSelfAndDescendantCache(ABSOLUTE_SCALE);
+              _this._clearSelfAndDescendantCache(ABSOLUTE_SCALE);
           });
           this.on('visibleChange.konva', function () {
-              this._clearSelfAndDescendantCache(VISIBLE);
+              _this._clearSelfAndDescendantCache(VISIBLE);
           });
           this.on('listeningChange.konva', function () {
-              this._clearSelfAndDescendantCache(LISTENING);
+              _this._clearSelfAndDescendantCache(LISTENING);
           });
           this.on('opacityChange.konva', function () {
-              this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
+              _this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
           });
       }
       Node.prototype.hasChildren = function () {
@@ -2804,67 +2805,6 @@
           }
           return sceneCanvas;
       };
-      /**
-       * bind events to the node. KonvaJS supports mouseover, mousemove,
-       *  mouseout, mouseenter, mouseleave, mousedown, mouseup, wheel, contextmenu, click, dblclick, touchstart, touchmove,
-       *  touchend, tap, dbltap, dragstart, dragmove, and dragend events.
-       *  Pass in a string of events delimited by a space to bind multiple events at once
-       *  such as 'mousedown mouseup mousemove'. Include a namespace to bind an
-       *  event by name such as 'click.foobar'.
-       * @method
-       * @name Konva.Node#on
-       * @param {String} evtStr e.g. 'click', 'mousedown touchstart', 'mousedown.foo touchstart.foo'
-       * @param {Function} handler The handler function is passed an event object
-       * @returns {Konva.Node}
-       * @example
-       * // add click listener
-       * node.on('click', function() {
-       *   console.log('you clicked me!');
-       * });
-       *
-       * // get the target node
-       * node.on('click', function(evt) {
-       *   console.log(evt.target);
-       * });
-       *
-       * // stop event propagation
-       * node.on('click', function(evt) {
-       *   evt.cancelBubble = true;
-       * });
-       *
-       * // bind multiple listeners
-       * node.on('click touchstart', function() {
-       *   console.log('you clicked/touched me!');
-       * });
-       *
-       * // namespace listener
-       * node.on('click.foo', function() {
-       *   console.log('you clicked/touched me!');
-       * });
-       *
-       * // get the event type
-       * node.on('click tap', function(evt) {
-       *   var eventType = evt.type;
-       * });
-       *
-       * // get native event object
-       * node.on('click tap', function(evt) {
-       *   var nativeEvent = evt.evt;
-       * });
-       *
-       * // for change events, get the old and new val
-       * node.on('xChange', function(evt) {
-       *   var oldVal = evt.oldVal;
-       *   var newVal = evt.newVal;
-       * });
-       *
-       * // get event targets
-       * // with event delegations
-       * layer.on('click', 'Group', function(evt) {
-       *   var shape = evt.target;
-       *   var group = evt.currentTarget;
-       * });
-       */
       Node.prototype.on = function (evtStr, handler) {
           if (arguments.length === 3) {
               return this._delegate.apply(this, arguments);
@@ -4289,8 +4229,8 @@
       Node.prototype._listenDrag = function () {
           this._dragCleanup();
           this.on('mousedown.konva touchstart.konva', function (evt) {
-              var shouldCheckButton = evt.evt.button !== undefined;
-              var canDrag = !shouldCheckButton || Konva.dragButtons.indexOf(evt.evt.button) >= 0;
+              var shouldCheckButton = evt.evt['button'] !== undefined;
+              var canDrag = !shouldCheckButton || Konva.dragButtons.indexOf(evt.evt['button']) >= 0;
               if (!canDrag) {
                   return;
               }
@@ -10798,7 +10738,7 @@
               _this.pathLength += _this.dataArray[i].pathLength;
           }
           _this.on('dataChange.konva', function () {
-              this.dataArray = Path.parsePathData(this.getData());
+              this.dataArray = Path.parsePathData(this.data());
               this.pathLength = 0;
               for (var i = 0; i < this.dataArray.length; ++i) {
                   this.pathLength += this.dataArray[i].pathLength;
@@ -14060,6 +14000,7 @@
           this._createAnchor('rotater');
       };
       Transformer.prototype._createAnchor = function (name) {
+          var _this = this;
           var anchor = new Rect({
               stroke: 'rgb(0, 161, 255)',
               fill: 'white',
@@ -14083,21 +14024,20 @@
           });
           // add hover styling
           anchor.on('mouseenter', function () {
-              var tr = this.getParent();
-              var rad = Konva.getAngle(tr.rotation());
-              var scale = tr.getNode().getAbsoluteScale();
+              var rad = Konva.getAngle(_this.rotation());
+              var scale = _this.getNode().getAbsoluteScale();
               // If scale.y < 0 xor scale.x < 0 we need to flip (not rotate).
               var isMirrored = scale.y * scale.x < 0;
               var cursor = getCursor(name, rad, isMirrored);
               anchor.getStage().content.style.cursor = cursor;
-              tr._cursorChange = true;
+              _this._cursorChange = true;
           });
           anchor.on('mouseout', function () {
-              if (!anchor.getStage() || !this.getParent()) {
+              if (!anchor.getStage() || !anchor.getParent()) {
                   return;
               }
               anchor.getStage().content.style.cursor = '';
-              this.getParent()._cursorChange = false;
+              _this._cursorChange = false;
           });
           this.add(anchor);
       };
