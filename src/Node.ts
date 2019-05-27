@@ -1620,16 +1620,19 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#getAbsoluteTransform
    * @returns {Konva.Transform}
    */
-  getAbsoluteTransform(top?: Node): Transform {
+  getAbsoluteTransform(top?: Node) {
     // if using an argument, we can't cache the result.
     if (top) {
       return this._getAbsoluteTransform(top);
     } else {
       // if no argument, we can cache the result
-      return this._getCache(ABSOLUTE_TRANSFORM, this._getAbsoluteTransform) as Transform;
+      return this._getCache(
+        ABSOLUTE_TRANSFORM,
+        this._getAbsoluteTransform
+      ) as Transform;
     }
   }
-  _getAbsoluteTransform(top?: Node): Transform {
+  _getAbsoluteTransform(top?: Node) {
     var at = new Transform();
 
     // start with stage and traverse downwards to self
@@ -1692,7 +1695,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#getTransform
    * @returns {Konva.Transform}
    */
-  getTransform(): Transform {
+  getTransform() {
     return this._getCache(TRANSFORM, this._getTransform) as Transform;
   }
   _getTransform(): Transform {
