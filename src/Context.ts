@@ -327,8 +327,8 @@ export class Context {
   isPointInPath(x, y) {
     return this._context.isPointInPath(x, y);
   }
-  fill() {
-    this._context.fill();
+  fill(rule) {
+    this._context.fill(rule);
   }
   fillRect(x, y, width, height) {
     this._context.fillRect(x, y, width, height);
