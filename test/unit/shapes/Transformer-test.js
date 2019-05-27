@@ -932,6 +932,58 @@ suite('Transformer', function() {
     assert.equal(rect.scaleY(), 1);
   });
 
+  test.only('keep ratio should allow negative scaling', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 150,
+      y: 10,
+      draggable: true,
+      width: 50,
+      height: 50,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+    layer.draw();
+
+    var anchor = tr.findOne('.top-right');
+    var pos = anchor.getAbsolutePosition();
+
+    stage.simulateMouseDown({
+      x: pos.x,
+      y: pos.y
+    });
+    var box = stage.content.getBoundingClientRect();
+    // debugger;
+    tr._handleMouseMove({
+      target: anchor,
+      clientX: box.left + pos.x - 100,
+      clientY: box.top + pos.y + 100
+    });
+
+    // here is duplicate, because transformer is listening window events
+    tr._handleMouseUp({
+      clientX: box.left + pos.x - 100,
+      clientY: box.top + pos.y + 100
+    });
+    stage.simulateMouseUp({
+      x: pos.x - 100,
+      y: pos.y + 100
+    });
+
+    assert.equal(rect.scaleX(), -1);
+    assert.equal(rect.scaleY(), -1);
+
+    throw '';
+  });
+
   test('can add padding with rotation', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

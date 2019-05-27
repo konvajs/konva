@@ -404,8 +404,8 @@ export class Transformer extends Group {
     var width = attrs.width;
     var height = attrs.height;
     var hypotenuse = Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2));
-    this.sin = height / hypotenuse;
-    this.cos = width / hypotenuse;
+    this.sin = Math.abs(height / hypotenuse);
+    this.cos = Math.abs(width / hypotenuse);
 
     window.addEventListener('mousemove', this._handleMouseMove);
     window.addEventListener('touchmove', this._handleMouseMove);
@@ -449,8 +449,13 @@ export class Transformer extends Group {
             Math.pow(this.findOne('.bottom-right').y() - resizerNode.y(), 2)
         );
 
-        x = newHypotenuse * this.cos;
-        y = newHypotenuse * this.sin;
+        var reverse =
+          this.findOne('.top-left').x() > this.findOne('.bottom-right').x()
+            ? -1
+            : 1;
+
+        x = newHypotenuse * this.cos * reverse;
+        y = newHypotenuse * this.sin * reverse;
 
         this.findOne('.top-left').x(this.findOne('.bottom-right').x() - x);
         this.findOne('.top-left').y(this.findOne('.bottom-right').y() - y);
@@ -464,8 +469,13 @@ export class Transformer extends Group {
             Math.pow(this.findOne('.bottom-left').y() - resizerNode.y(), 2)
         );
 
-        x = newHypotenuse * this.cos;
-        y = newHypotenuse * this.sin;
+        var reverse =
+          this.findOne('.top-right').x() < this.findOne('.top-left').x()
+            ? -1
+            : 1;
+
+        x = newHypotenuse * this.cos * reverse;
+        y = newHypotenuse * this.sin * reverse;
 
         this.findOne('.top-right').x(x);
         this.findOne('.top-right').y(this.findOne('.bottom-left').y() - y);
@@ -485,8 +495,13 @@ export class Transformer extends Group {
             Math.pow(this.findOne('.top-right').y() - resizerNode.y(), 2)
         );
 
-        x = newHypotenuse * this.cos;
-        y = newHypotenuse * this.sin;
+        var reverse =
+          this.findOne('.top-right').x() < this.findOne('.bottom-left').x()
+            ? -1
+            : 1;
+
+        x = newHypotenuse * this.cos * reverse;
+        y = newHypotenuse * this.sin * reverse;
 
         this.findOne('.bottom-left').x(this.findOne('.top-right').x() - x);
         this.findOne('.bottom-left').y(y);
@@ -505,8 +520,13 @@ export class Transformer extends Group {
             Math.pow(this.findOne('.bottom-right').y(), 2)
         );
 
-        x = newHypotenuse * this.cos;
-        y = newHypotenuse * this.sin;
+        var reverse =
+          this.findOne('.top-left').x() > this.findOne('.bottom-right').x()
+            ? -1
+            : 1;
+
+        x = newHypotenuse * this.cos * reverse;
+        y = newHypotenuse * this.sin * reverse;
 
         this.findOne('.bottom-right').x(x);
         this.findOne('.bottom-right').y(y);
