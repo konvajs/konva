@@ -36,7 +36,7 @@ export interface ImageConfig extends ShapeConfig {
  */
 export class Image extends Shape<ImageConfig> {
   _useBufferCanvas() {
-    return (
+    return !!(
       (this.hasShadow() || this.getAbsoluteOpacity() !== 1) &&
       this.hasStroke() &&
       this.getStage()

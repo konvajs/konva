@@ -329,4 +329,44 @@ Konva.Stage.prototype.simulateTouchEnd = function(pos) {
   Konva.DD._endDragAfter(evt);
 };
 
+Konva.Stage.prototype.simulatePointerDown = function(pos) {
+  var top = this.content.getBoundingClientRect().top;
+
+  this._mousedown({
+    clientX: pos.x,
+    clientY: pos.y + top,
+    button: pos.button || 0,
+    pointerId: pos.pointerId || 1
+  });
+};
+
+Konva.Stage.prototype.simulatePointerMove = function(pos) {
+  var top = this.content.getBoundingClientRect().top;
+
+  var evt = {
+    clientX: pos.x,
+    clientY: pos.y + top,
+    button: pos.button || 0,
+    pointerId: pos.pointerId || 1
+  };
+
+  this._mousemove(evt);
+  Konva.DD._drag(evt);
+};
+
+Konva.Stage.prototype.simulatePointerUp = function(pos) {
+  var top = this.content.getBoundingClientRect().top;
+
+  var evt = {
+    clientX: pos.x,
+    clientY: pos.y + top,
+    button: pos.button || 0,
+    pointerId: pos.pointerId || 1
+  };
+
+  Konva.DD._endDragBefore(evt);
+  this._mouseup(evt);
+  Konva.DD._endDragAfter(evt);
+};
+
 init();
