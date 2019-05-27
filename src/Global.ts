@@ -95,6 +95,7 @@ export const Konva = {
     return Konva.angleDeg ? angle * PI_OVER_180 : angle;
   },
   enableTrace: false,
+  _pointerEventsEnabled: false,
 
   // TODO: move that to stage?
   listenClickTap: false,

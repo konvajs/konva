@@ -83,6 +83,7 @@
           return Konva.angleDeg ? angle * PI_OVER_180 : angle;
       },
       enableTrace: false,
+      _pointerEventsEnabled: false,
       // TODO: move that to stage?
       listenClickTap: false,
       inDblClickWindow: false,
@@ -5423,8 +5424,40 @@
    */
   Collection.mapMethods(Container);
 
+  var Captures = new Map();
+  function getCapturedShape(pointerId) {
+      return Captures.get(pointerId);
+  }
+  function createEvent(evt) {
+      return {
+          evt: evt,
+          pointerId: evt.pointerId
+      };
+  }
+  function hasPointerCapture(pointerId, shape) {
+      return Captures.get(pointerId) === shape;
+  }
+  function setPointerCapture(pointerId, shape) {
+      releaseCapture(pointerId);
+      var content = shape.getStage().content;
+      content.setPointerCapture(pointerId);
+      Captures.set(pointerId, shape);
+      shape._fire('gotpointercapture', createEvent(new PointerEvent('gotpointercapture')));
+  }
+  function releaseCapture(pointerId, target) {
+      var shape = Captures.get(pointerId);
+      if (!shape)
+          return;
+      var content = shape.getStage().content;
+      content.releasePointerCapture(pointerId);
+      Captures.delete(pointerId);
+      shape._fire('lostpointercapture', createEvent(new PointerEvent('lostpointercapture')));
+  }
+
   // CONSTANTS
-  var STAGE$1 = 'Stage', STRING = 'string', PX = 'px', MOUSEOUT = 'mouseout', MOUSELEAVE$1 = 'mouseleave', MOUSEOVER = 'mouseover', MOUSEENTER$1 = 'mouseenter', MOUSEMOVE = 'mousemove', MOUSEDOWN = 'mousedown', MOUSEUP = 'mouseup', CONTEXTMENU = 'contextmenu', CLICK = 'click', DBL_CLICK = 'dblclick', TOUCHSTART = 'touchstart', TOUCHEND = 'touchend', TAP = 'tap', DBL_TAP = 'dbltap', TOUCHMOVE = 'touchmove', WHEEL = 'wheel', CONTENT_MOUSEOUT = 'contentMouseout', CONTENT_MOUSEOVER = 'contentMouseover', CONTENT_MOUSEMOVE = 'contentMousemove', CONTENT_MOUSEDOWN = 'contentMousedown', CONTENT_MOUSEUP = 'contentMouseup', CONTENT_CONTEXTMENU = 'contentContextmenu', CONTENT_CLICK = 'contentClick', CONTENT_DBL_CLICK = 'contentDblclick', CONTENT_TOUCHSTART = 'contentTouchstart', CONTENT_TOUCHEND = 'contentTouchend', CONTENT_DBL_TAP = 'contentDbltap', CONTENT_TAP = 'contentTap', CONTENT_TOUCHMOVE = 'contentTouchmove', CONTENT_WHEEL = 'contentWheel', RELATIVE = 'relative', KONVA_CONTENT = 'konvajs-content', UNDERSCORE = '_', CONTAINER = 'container', MAX_LAYERS_NUMBER = 5, EMPTY_STRING$1 = '', EVENTS = [
+  var STAGE$1 = 'Stage', STRING = 'string', PX = 'px', MOUSEOUT = 'mouseout', MOUSELEAVE$1 = 'mouseleave', MOUSEOVER = 'mouseover', MOUSEENTER$1 = 'mouseenter', MOUSEMOVE = 'mousemove', MOUSEDOWN = 'mousedown', MOUSEUP = 'mouseup', 
+  // TODO: add them into "on" method docs and into site docs
+  POINTERMOVE = 'pointermove', POINTERDOWN = 'pointerdown', POINTERUP = 'pointerup', POINTERCANCEL = 'pointercancel', LOSTPOINTERCAPTURE = 'lostpointercapture', CONTEXTMENU = 'contextmenu', CLICK = 'click', DBL_CLICK = 'dblclick', TOUCHSTART = 'touchstart', TOUCHEND = 'touchend', TAP = 'tap', DBL_TAP = 'dbltap', TOUCHMOVE = 'touchmove', WHEEL = 'wheel', CONTENT_MOUSEOUT = 'contentMouseout', CONTENT_MOUSEOVER = 'contentMouseover', CONTENT_MOUSEMOVE = 'contentMousemove', CONTENT_MOUSEDOWN = 'contentMousedown', CONTENT_MOUSEUP = 'contentMouseup', CONTENT_CONTEXTMENU = 'contentContextmenu', CONTENT_CLICK = 'contentClick', CONTENT_DBL_CLICK = 'contentDblclick', CONTENT_TOUCHSTART = 'contentTouchstart', CONTENT_TOUCHEND = 'contentTouchend', CONTENT_DBL_TAP = 'contentDbltap', CONTENT_TAP = 'contentTap', CONTENT_TOUCHMOVE = 'contentTouchmove', CONTENT_WHEEL = 'contentWheel', RELATIVE = 'relative', KONVA_CONTENT = 'konvajs-content', UNDERSCORE = '_', CONTAINER = 'container', MAX_LAYERS_NUMBER = 5, EMPTY_STRING$1 = '', EVENTS = [
       MOUSEENTER$1,
       MOUSEDOWN,
       MOUSEMOVE,
@@ -5435,7 +5468,12 @@
       TOUCHEND,
       MOUSEOVER,
       WHEEL,
-      CONTEXTMENU
+      CONTEXTMENU,
+      POINTERDOWN,
+      POINTERMOVE,
+      POINTERUP,
+      POINTERCANCEL,
+      LOSTPOINTERCAPTURE
   ], 
   // cached variables
   eventsLength = EVENTS.length;
@@ -6012,6 +6050,55 @@
               });
           }
           this._fire(CONTENT_WHEEL, { evt: evt });
+      };
+      Stage.prototype._pointerdown = function (evt) {
+          if (!Konva._pointerEventsEnabled) {
+              return;
+          }
+          this.setPointersPositions(evt);
+          var shape = getCapturedShape(evt.pointerId) ||
+              this.getIntersection(this.getPointerPosition());
+          if (shape) {
+              shape._fireAndBubble(POINTERDOWN, createEvent(evt));
+          }
+      };
+      Stage.prototype._pointermove = function (evt) {
+          if (!Konva._pointerEventsEnabled) {
+              return;
+          }
+          this.setPointersPositions(evt);
+          var shape = getCapturedShape(evt.pointerId) ||
+              this.getIntersection(this.getPointerPosition());
+          if (shape) {
+              shape._fireAndBubble(POINTERMOVE, createEvent(evt));
+          }
+      };
+      Stage.prototype._pointerup = function (evt) {
+          if (!Konva._pointerEventsEnabled) {
+              return;
+          }
+          this.setPointersPositions(evt);
+          var shape = getCapturedShape(evt.pointerId) ||
+              this.getIntersection(this.getPointerPosition());
+          if (shape) {
+              shape._fireAndBubble(POINTERUP, createEvent(evt));
+          }
+          releaseCapture(evt.pointerId);
+      };
+      Stage.prototype._pointercancel = function (evt) {
+          if (!Konva._pointerEventsEnabled) {
+              return;
+          }
+          this.setPointersPositions(evt);
+          var shape = getCapturedShape(evt.pointerId) ||
+              this.getIntersection(this.getPointerPosition());
+          if (shape) {
+              shape._fireAndBubble(POINTERUP, createEvent(evt));
+          }
+          releaseCapture(evt.pointerId);
+      };
+      Stage.prototype._lostpointercapture = function (evt) {
+          releaseCapture(evt.pointerId);
       };
       /**
        * manually register pointers positions (mouse/touch) in the stage.
@@ -6733,7 +6820,7 @@
       // it give better result when a shape has
       // stroke with fill and with some opacity
       Shape.prototype._useBufferCanvas = function (caching) {
-          return ((!caching || this.hasShadow()) &&
+          return !!((!caching || this.hasShadow()) &&
               this.perfectDrawEnabled() &&
               this.getAbsoluteOpacity() !== 1 &&
               this.hasFill() &&
@@ -6992,6 +7079,15 @@
               Util.error('Unable to draw hit graph from cached scene canvas. ' + e.message);
           }
           return this;
+      };
+      Shape.prototype.hasPointerCapture = function (pointerId) {
+          return hasPointerCapture(pointerId, this);
+      };
+      Shape.prototype.setPointerCapture = function (pointerId) {
+          setPointerCapture(pointerId, this);
+      };
+      Shape.prototype.releaseCapture = function (pointerId) {
+          releaseCapture(pointerId, this);
       };
       return Shape;
   }(Node));
@@ -10159,7 +10255,7 @@
           return _super !== null && _super.apply(this, arguments) || this;
       }
       Image.prototype._useBufferCanvas = function () {
-          return ((this.hasShadow() || this.getAbsoluteOpacity() !== 1) &&
+          return !!((this.hasShadow() || this.getAbsoluteOpacity() !== 1) &&
               this.hasStroke() &&
               this.getStage());
       };

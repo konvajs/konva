@@ -10,6 +10,7 @@ import {
 
 import { Context } from './Context';
 import { _registerNode } from './Global';
+import * as PointerEvents from './PointerEvents';
 
 import { GetSet, Vector2d } from './types';
 
@@ -395,8 +396,8 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
   // why do we need buffer canvas?
   // it give better result when a shape has
   // stroke with fill and with some opacity
-  _useBufferCanvas(caching) {
-    return (
+  _useBufferCanvas(caching): boolean {
+    return !!(
       (!caching || this.hasShadow()) &&
       this.perfectDrawEnabled() &&
       this.getAbsoluteOpacity() !== 1 &&
@@ -709,6 +710,18 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
     }
 
     return this;
+  }
+
+  hasPointerCapture(pointerId: number): boolean {
+    return PointerEvents.hasPointerCapture(pointerId, this);
+  }
+
+  setPointerCapture(pointerId: number) {
+    PointerEvents.setPointerCapture(pointerId, this);
+  }
+
+  releaseCapture(pointerId: number) {
+    PointerEvents.releaseCapture(pointerId, this);
   }
 
   draggable: GetSet<boolean, this>;
