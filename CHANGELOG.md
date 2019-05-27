@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* Typescript fixes
+
 ## [3.2.6][2019-05-09]
 
 * Typescript fixes again

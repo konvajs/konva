@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v3.2.6
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Sat May 11 2019
+   * Date: Mon May 27 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -6964,7 +6964,8 @@
        * shape.drawHitFromCache();
        */
       Shape.prototype.drawHitFromCache = function (alphaThreshold) {
-          var threshold = alphaThreshold || 0, cachedCanvas = this._getCanvasCache(), sceneCanvas = this._getCachedSceneCanvas(), hitCanvas = cachedCanvas.hit, hitContext = hitCanvas.getContext(), hitWidth = hitCanvas.getWidth(), hitHeight = hitCanvas.getHeight(), hitImageData, hitData, len, rgbColorKey, i, alpha;
+          if (alphaThreshold === void 0) { alphaThreshold = 0; }
+          var cachedCanvas = this._getCanvasCache(), sceneCanvas = this._getCachedSceneCanvas(), hitCanvas = cachedCanvas.hit, hitContext = hitCanvas.getContext(), hitWidth = hitCanvas.getWidth(), hitHeight = hitCanvas.getHeight(), hitImageData, hitData, len, rgbColorKey, i, alpha;
           hitContext.clear();
           hitContext.drawImage(sceneCanvas._canvas, 0, 0, hitWidth, hitHeight);
           try {
@@ -6975,7 +6976,7 @@
               // replace non transparent pixels with color key
               for (i = 0; i < len; i += 4) {
                   alpha = hitData[i + 3];
-                  if (alpha > threshold) {
+                  if (alpha > alphaThreshold) {
                       hitData[i] = rgbColorKey.r;
                       hitData[i + 1] = rgbColorKey.g;
                       hitData[i + 2] = rgbColorKey.b;

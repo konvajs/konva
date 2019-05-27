@@ -1,13 +1,11 @@
 import { Collection } from '../Util';
 import { Factory } from '../Factory';
-import { Line } from './Line';
+import { Line, LineConfig } from './Line';
 import { GetSet } from '../types';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
-import { ShapeConfig } from '../Shape';
-
-export interface ArrowConfig extends ShapeConfig {
+export interface ArrowConfig extends LineConfig {
   points: number[];
   tension?: number;
   closed?: boolean;

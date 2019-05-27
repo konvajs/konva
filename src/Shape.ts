@@ -666,9 +666,8 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
    * shape.cache();
    * shape.drawHitFromCache();
    */
-  drawHitFromCache(alphaThreshold) {
-    var threshold = alphaThreshold || 0,
-      cachedCanvas = this._getCanvasCache(),
+  drawHitFromCache(alphaThreshold = 0) {
+    var cachedCanvas = this._getCanvasCache(),
       sceneCanvas = this._getCachedSceneCanvas(),
       hitCanvas = cachedCanvas.hit,
       hitContext = hitCanvas.getContext(),
@@ -693,7 +692,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
       // replace non transparent pixels with color key
       for (i = 0; i < len; i += 4) {
         alpha = hitData[i + 3];
-        if (alpha > threshold) {
+        if (alpha > alphaThreshold) {
           hitData[i] = rgbColorKey.r;
           hitData[i + 1] = rgbColorKey.g;
           hitData[i + 2] = rgbColorKey.b;
