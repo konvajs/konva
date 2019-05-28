@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## [3.2.7][2019-05-27]
+
 * Typescript fixes
 * Experimental pointer events support. Do `Konva._pointerEventsEnabled = true;` to enable
 * Fix some `Konva.Transformer` bugs.
