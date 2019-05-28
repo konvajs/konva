@@ -932,7 +932,7 @@ suite('Transformer', function() {
     assert.equal(rect.scaleY(), 1);
   });
 
-  test.only('keep ratio should allow negative scaling', function() {
+  test('keep ratio should allow negative scaling', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -980,8 +980,6 @@ suite('Transformer', function() {
 
     assert.equal(rect.scaleX(), -1);
     assert.equal(rect.scaleY(), -1);
-
-    throw '';
   });
 
   test('can add padding with rotation', function() {
