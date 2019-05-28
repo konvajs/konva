@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "strict": true
+  },
+  "files": ["../types/index-types.d.ts"]
+}

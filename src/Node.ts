@@ -157,7 +157,8 @@ var ABSOLUTE_OPACITY = 'absoluteOpacity',
   ].join(SPACE),
   SCALE_CHANGE_STR = ['scaleXChange.konva', 'scaleYChange.konva'].join(SPACE);
 
-const emptyChildren: Collection<Node> = new Collection();
+// TODO: can we remove children from node?
+const emptyChildren: Collection<any> = new Collection();
 
 let idCounter = 1;
 
@@ -183,7 +184,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   } = {};
   attrs: any = {};
   index = 0;
-  parent: Container<Node> | undefined = undefined;
+  parent: Container<Node> | null = null;
   _cache: Map<string, any> = new Map<string, any>();
   _lastPos: Point = null;
   _attrsAffectingSize!: string[];

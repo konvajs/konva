@@ -62,7 +62,8 @@ var CONTEXT_PROPERTIES = [
   'textAlign',
   'textBaseline',
   'globalAlpha',
-  'globalCompositeOperation'
+  'globalCompositeOperation',
+  'imageSmoothingEnabled'
 ];
 
 // TODO: document all context methods

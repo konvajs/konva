@@ -31,6 +31,7 @@ export class FastLayer extends BaseLayer {
   }
   _setCanvasSize(width, height) {
     this.canvas.setSize(width, height);
+    this._checkSmooth();
   }
   hitGraphEnabled() {
     return false;

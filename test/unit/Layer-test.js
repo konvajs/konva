@@ -459,4 +459,32 @@ suite('Layer', function() {
     assert.equal(layer.width(), stage.width());
     assert.equal(layer.height(), stage.height());
   });
+
+  test('get/set imageSmoothingEnabled', function(done) {
+    var imageObj = new Image();
+    imageObj.onload = function() {
+      var stage = addStage();
+
+      var layer = new Konva.Layer({
+        imageSmoothingEnabled: false
+      });
+      var darth = new Konva.Image({
+        image: imageObj,
+        scaleX: 5,
+        scaleY: 5
+      });
+
+      layer.add(darth);
+      stage.add(layer);
+
+      assert.equal(layer.getContext().imageSmoothingEnabled, false);
+
+      layer.imageSmoothingEnabled(true);
+
+      assert.equal(layer.getContext().imageSmoothingEnabled, true);
+
+      done();
+    };
+    imageObj.src = 'assets/darth-vader.jpg';
+  });
 });

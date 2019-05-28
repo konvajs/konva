@@ -53,6 +53,7 @@ export class Layer extends BaseLayer {
   _setCanvasSize(width, height) {
     this.canvas.setSize(width, height);
     this.hitCanvas.setSize(width, height);
+    this._checkSmooth();
   }
   _validateAdd(child) {
     var type = child.getType();

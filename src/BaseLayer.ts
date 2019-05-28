@@ -35,6 +35,9 @@ export abstract class BaseLayer extends Container<Group | Shape> {
     super(config);
     this.on('visibleChange', this._checkVisibility);
     this._checkVisibility();
+
+    this.on('imageSmoothingEnabledChange', this._checkSmooth);
+    this._checkSmooth();
   }
   // for nodejs?
   createPNGStream() {
@@ -206,6 +209,10 @@ export abstract class BaseLayer extends Container<Group | Shape> {
       this.canvas._canvas.style.display = 'none';
     }
   }
+
+  _checkSmooth() {
+    this.getContext()._context.imageSmoothingEnabled = this.imageSmoothingEnabled();
+  }
   /**
    * get/set width of layer.getter return width of stage. setter doing nothing.
    * if you want change width use `stage.width(value);`
@@ -275,9 +282,29 @@ export abstract class BaseLayer extends Container<Group | Shape> {
   }
 
   clearBeforeDraw: GetSet<boolean, this>;
+  imageSmoothingEnabled: GetSet<boolean, this>;
 }
 
 BaseLayer.prototype.nodeType = 'BaseLayer';
+
+/**
+ * get/set imageSmoothingEnabled flag
+ * For more info see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/imageSmoothingEnabled
+ * @name Konva.BaseLayer#imageSmoothingEnabled
+ * @method
+ * @param {Boolean} imageSmoothingEnabled
+ * @returns {Boolean}
+ * @example
+ * // get imageSmoothingEnabled flag
+ * var imageSmoothingEnabled = layer.imageSmoothingEnabled();
+ *
+ * // disable clear before draw
+ * layer.imageSmoothingEnabled(false);
+ *
+ * // enable clear before draw
+ * layer.imageSmoothingEnabled(true);
+ */
+Factory.addGetterSetter(BaseLayer, 'imageSmoothingEnabled', true);
 
 /**
  * get/set clearBeforeDraw flag which determines if the layer is cleared or not
