@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
-## [3.2.7][2019-05-28]
+## [3.3.0][2019-05-28]
 
 * Enable strict mode for ts types
 * Add new property `imageSmoothingEnabled` to the layer
