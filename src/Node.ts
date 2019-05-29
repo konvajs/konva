@@ -1858,7 +1858,16 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
    * @returns {String}
    */
-  toDataURL(config) {
+  toDataURL(config?: {
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+    pixelRatio?: number;
+    mimeType?: string;
+    quality?: number;
+    callback?: (str: string) => void
+  }) {
     config = config || {};
     var mimeType = config.mimeType || null,
       quality = config.quality || null;
@@ -1896,7 +1905,16 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *   }
    * });
    */
-  toImage(config) {
+  toImage(config?: {
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+    pixelRatio?: number;
+    mimeType?: string;
+    quality?: number;
+    callback?: (img: HTMLImageElement) => void
+  }) {
     if (!config || !config.callback) {
       throw 'callback required for toImage method config argument';
     }

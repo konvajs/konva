@@ -12,6 +12,7 @@ import { Shape } from './Shape';
 export interface LayerConfig extends ContainerConfig {
   clearBeforeDraw?: boolean;
   hitGraphEnabled?: boolean;
+  imageSmoothingEnabled?: boolean;
 }
 
 /**
