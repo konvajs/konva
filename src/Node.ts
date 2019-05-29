@@ -169,6 +169,19 @@ interface NodeEventMap {
   touchstart: TouchEvent;
 }
 
+export interface KonvaEventObject<EventType extends keyof NodeEventMap> {
+  target: Shape | Stage;
+  evt: NodeEventMap[EventType];
+  currentTarget: Node;
+  cancelBubble: boolean;
+  child?: Node;
+}
+
+export type KonvaEventListener<This, EventType extends keyof NodeEventMap> = (
+  this: This,
+  ev: KonvaEventObject<EventType>
+) => void;
+
 /**
  * Node constructor. Nodes are entities that can be transformed, layered,
  * and have bound events. The stage, layers, groups, and shapes all extend Node.
@@ -668,23 +681,13 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * });
    */
   on<K extends keyof NodeEventMap>(
-    type: K,
-    listener: (
-      this: this,
-      ev: {
-        target: Shape | Stage;
-        evt: NodeEventMap[K];
-        currentTarget: Node;
-        cancelBubble: boolean;
-        child?: Node;
-      }
-    ) => any
-  ): void;
-  on(evtStr: string, handler: (evt: any) => void) {
+    evtStr: K,
+    handler: KonvaEventListener<this, K>
+  ) {
     if (arguments.length === 3) {
       return this._delegate.apply(this, arguments);
     }
-    var events = evtStr.split(SPACE),
+    var events = (evtStr as string).split(SPACE),
       len = events.length,
       n,
       event,

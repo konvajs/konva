@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v3.3.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue May 28 2019
+   * Date: Wed May 29 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2812,6 +2812,67 @@
           }
           return sceneCanvas;
       };
+      /**
+       * bind events to the node. KonvaJS supports mouseover, mousemove,
+       *  mouseout, mouseenter, mouseleave, mousedown, mouseup, wheel, contextmenu, click, dblclick, touchstart, touchmove,
+       *  touchend, tap, dbltap, dragstart, dragmove, and dragend events.
+       *  Pass in a string of events delimited by a space to bind multiple events at once
+       *  such as 'mousedown mouseup mousemove'. Include a namespace to bind an
+       *  event by name such as 'click.foobar'.
+       * @method
+       * @name Konva.Node#on
+       * @param {String} evtStr e.g. 'click', 'mousedown touchstart', 'mousedown.foo touchstart.foo'
+       * @param {Function} handler The handler function is passed an event object
+       * @returns {Konva.Node}
+       * @example
+       * // add click listener
+       * node.on('click', function() {
+       *   console.log('you clicked me!');
+       * });
+       *
+       * // get the target node
+       * node.on('click', function(evt) {
+       *   console.log(evt.target);
+       * });
+       *
+       * // stop event propagation
+       * node.on('click', function(evt) {
+       *   evt.cancelBubble = true;
+       * });
+       *
+       * // bind multiple listeners
+       * node.on('click touchstart', function() {
+       *   console.log('you clicked/touched me!');
+       * });
+       *
+       * // namespace listener
+       * node.on('click.foo', function() {
+       *   console.log('you clicked/touched me!');
+       * });
+       *
+       * // get the event type
+       * node.on('click tap', function(evt) {
+       *   var eventType = evt.type;
+       * });
+       *
+       * // get native event object
+       * node.on('click tap', function(evt) {
+       *   var nativeEvent = evt.evt;
+       * });
+       *
+       * // for change events, get the old and new val
+       * node.on('xChange', function(evt) {
+       *   var oldVal = evt.oldVal;
+       *   var newVal = evt.newVal;
+       * });
+       *
+       * // get event targets
+       * // with event delegations
+       * layer.on('click', 'Group', function(evt) {
+       *   var shape = evt.target;
+       *   var group = evt.currentTarget;
+       * });
+       */
       Node.prototype.on = function (evtStr, handler) {
           if (arguments.length === 3) {
               return this._delegate.apply(this, arguments);

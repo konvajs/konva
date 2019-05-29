@@ -18,15 +18,6 @@ export interface IRect {
   height: number;
 }
 
-export interface KonvaEventObject<E> {
-  target: Shape | Stage;
-  evt: E;
-  currentTarget: Node;
-  cancelBubble: boolean;
-}
-
-export type HandlerFunc<E = Event> = (e: KonvaEventObject<E>) => void;
-
 export enum KonvaNodeEvent {
   mouseover = 'mouseover',
   mouseout = 'mouseout',
@@ -48,7 +39,3 @@ export enum KonvaNodeEvent {
   dragmove = 'dragmove',
   dragend = 'dragend'
 }
-
-type KonvaEvent = KonvaNodeEvent;
-
-type KonvaEventString = KonvaEvent | string;

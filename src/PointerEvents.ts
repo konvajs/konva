@@ -1,11 +1,11 @@
-import { KonvaEventObject } from './types';
+import { KonvaEventObject } from './Node';
 
 import { Shape } from './Shape';
 import { Stage } from './Stage';
 
 const Captures = new Map<number, Shape | Stage>();
 
-export interface KonvaPointerEvent extends KonvaEventObject<PointerEvent> {
+export interface KonvaPointerEvent extends KonvaEventObject<'touchstart'> {
   pointerId: number;
 }
 

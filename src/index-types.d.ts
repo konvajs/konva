@@ -42,6 +42,15 @@ declare namespace Konva {
   export type Node = import('./Node').Node;
   export type NodeConfig = import('./Node').NodeConfig;
 
+  export type KonvaEventObject<EventType> = import('./Node').KonvaEventObject<
+    EventType
+  >;
+
+  export type KonvaEventListener<
+    This,
+    EventType
+  > = import('./Node').KonvaEventListener<This, EventType>;
+
   export const Container: typeof import('./Container').Container;
   export type Container = import('./Container').Container<Node>;
   export type ContainerConfig = import('./Container').ContainerConfig;
@@ -132,8 +141,6 @@ declare namespace Konva {
   export const Wedge: typeof import('./shapes/Wedge').Wedge;
   export type Wedge = import('./shapes/Wedge').Wedge;
   export type WedgeConfig = import('./shapes/Wedge').WedgeConfig;
-
-  export type KonvaEventObject<E> = import('./types').KonvaEventObject<E>;
 
   export const Filters: {
     Blur: typeof Blur;
