@@ -308,6 +308,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @param {Boolean} [config.drawBorder] when set to true, a red border will be drawn around the cached
    *  region for debugging purposes
    * @param {Number} [config.pixelRatio] change quality (or pixel ratio) of cached image. pixelRatio = 2 will produce 2x sized cache.
+   * @param {Boolean} [config.imageSmoothingEnabled] control imageSmoothingEnabled property of created canvas for cache
    * @returns {Konva.Node}
    * @example
    * // cache a shape with the x,y position of the bounding box at the center and
@@ -342,6 +343,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     drawBorder?: boolean;
     offset?: number;
     pixelRatio?: number;
+    imageSmoothingEnabled?: boolean;
   }) {
     var conf = config || {};
     var rect = {} as RectConf;
@@ -402,6 +404,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     this._cache.delete('canvas');
     this._filterUpToDate = false;
+
+    if (conf.imageSmoothingEnabled === false) {
+      cachedSceneCanvas.getContext()._context.imageSmoothingEnabled = false;
+      cachedFilterCanvas.getContext()._context.imageSmoothingEnabled = false;
+      cachedHitCanvas.getContext()._context.imageSmoothingEnabled = false;
+    }
 
     sceneContext.save();
     hitContext.save();
@@ -1866,7 +1874,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     pixelRatio?: number;
     mimeType?: string;
     quality?: number;
-    callback?: (str: string) => void
+    callback?: (str: string) => void;
   }) {
     config = config || {};
     var mimeType = config.mimeType || null,
@@ -1913,14 +1921,14 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     pixelRatio?: number;
     mimeType?: string;
     quality?: number;
-    callback?: (img: HTMLImageElement) => void
+    callback?: (img: HTMLImageElement) => void;
   }) {
     if (!config || !config.callback) {
       throw 'callback required for toImage method config argument';
     }
     var callback = config.callback;
     delete config.callback;
-    Util._urlToImage(this.toDataURL(config), function(img) {
+    Util._urlToImage(this.toDataURL(config as any), function(img) {
       callback(img);
     });
   }

@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* Add new property `imageSmoothingEnabled` to the node caching
+
 ## [3.3.0][2019-05-28]
 
 * Enable strict mode for ts types

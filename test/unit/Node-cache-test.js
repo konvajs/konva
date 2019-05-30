@@ -1154,4 +1154,35 @@ suite('Caching', function() {
     var d = layer.getContext().getImageData(100, 100, 1, 1).data;
     assert.equal(d[0], 255, 'see red');
   });
+
+  test('check image smooth', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer({
+      imageSmoothingEnabled: false
+    });
+    stage.add(layer);
+
+    var bigCircle = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 10,
+      fill: 'red',
+      draggable: true,
+      scaleX: 10,
+      scaleY: 10
+    });
+    layer.add(bigCircle);
+
+    bigCircle.cache({
+      imageSmoothingEnabled: false
+    });
+
+    layer.draw();
+    assert.equal(
+      bigCircle._cache.get('canvas').scene.getContext()._context
+        .imageSmoothingEnabled,
+      false
+    );
+  });
 });
