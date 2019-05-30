@@ -376,6 +376,19 @@ export class Stage extends Container<BaseLayer> {
   getLayer() {
     return null;
   }
+
+  hasPointerCapture(pointerId: number): boolean {
+    return PointerEvents.hasPointerCapture(pointerId, this);
+  }
+
+  setPointerCapture(pointerId: number) {
+    PointerEvents.setPointerCapture(pointerId, this);
+  }
+
+  releaseCapture(pointerId: number) {
+    PointerEvents.releaseCapture(pointerId, this);
+  }
+
   /**
    * returns a {@link Konva.Collection} of layers
    * @method

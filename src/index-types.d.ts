@@ -46,6 +46,8 @@ declare namespace Konva {
     EventType
   >;
 
+  export type KonvaPointerEvent = import('./PointerEvents').KonvaPointerEvent;
+
   export type KonvaEventListener<
     This,
     EventType
