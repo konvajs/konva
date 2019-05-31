@@ -14,7 +14,7 @@ var now = (function() {
 })();
 
 /**
- * Animation constructor.  A stage is used to contain multiple layers and handle
+ * Animation constructor.
  * @constructor
  * @memberof Konva
  * @param {Function} func function executed on each animation frame.  The function is passed a frame object, which contains
@@ -31,7 +31,7 @@ var now = (function() {
  *
  * var anim = new Konva.Animation(function(frame) {
  *   var dist = velocity * (frame.timeDiff / 1000);
- *   node.move(dist, 0);
+ *   node.move({x: dist, y: 0});
  * }, layer);
  *
  * anim.start();
