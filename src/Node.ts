@@ -163,21 +163,19 @@ const emptyChildren: Collection<any> = new Collection();
 let idCounter = 1;
 
 // create all the events here
-interface NodeEventMap {
+type NodeEventMap = GlobalEventHandlersEventMap & {
   [index: string]: any;
-  click: MouseEvent;
-  touchstart: TouchEvent;
-}
+};
 
-export interface KonvaEventObject<EventType extends keyof NodeEventMap> {
+export interface KonvaEventObject<EventType> {
   target: Shape | Stage;
-  evt: NodeEventMap[EventType];
+  evt: EventType;
   currentTarget: Node;
   cancelBubble: boolean;
   child?: Node;
 }
 
-export type KonvaEventListener<This, EventType extends keyof NodeEventMap> = (
+export type KonvaEventListener<This, EventType> = (
   this: This,
   ev: KonvaEventObject<EventType>
 ) => void;

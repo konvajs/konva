@@ -5,11 +5,9 @@ import { Stage } from './Stage';
 
 const Captures = new Map<number, Shape | Stage>();
 
-export interface KonvaPointerEvent extends KonvaEventObject<'touchstart'> {
+export interface KonvaPointerEvent extends KonvaEventObject<PointerEvent> {
   pointerId: number;
 }
-
-let implicitRelease = null;
 
 export function getCapturedShape(pointerId: number) {
   return Captures.get(pointerId);
@@ -29,9 +27,8 @@ export function hasPointerCapture(pointerId: number, shape: Shape | Stage) {
 export function setPointerCapture(pointerId: number, shape: Shape | Stage) {
   releaseCapture(pointerId);
 
-  const { content } = shape.getStage();
-
-  content.setPointerCapture(pointerId);
+  const stage = shape.getStage();
+  if (!stage) return;
 
   Captures.set(pointerId, shape);
 
@@ -46,9 +43,11 @@ export function releaseCapture(pointerId: number, target?: Shape | Stage) {
 
   if (!shape) return;
 
-  const { content } = shape.getStage();
+  const stage = shape.getStage();
 
-  content.releasePointerCapture(pointerId);
+  if (stage && stage.content) {
+    stage.content.releasePointerCapture(pointerId);
+  }
 
   Captures.delete(pointerId);
 
