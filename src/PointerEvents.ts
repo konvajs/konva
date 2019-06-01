@@ -5,7 +5,7 @@ import { Stage } from './Stage';
 
 const Captures = new Map<number, Shape | Stage>();
 
-export interface KonvaPointerEvent extends KonvaEventObject<MouseEvent> {
+export interface KonvaPointerEvent extends KonvaEventObject<PointerEvent> {
   pointerId: number;
 }
 
