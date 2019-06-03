@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## [3.3.2][2019-06-03]
+
+* TS types fixes
+
 ## [3.3.1][2019-05-28]
 
 * Add new property `imageSmoothingEnabled` to the node caching

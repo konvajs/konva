@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v3.3.1
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Thu May 30 2019
+   * Date: Mon Jun 03 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2088,7 +2088,7 @@
       };
   })();
   /**
-   * Animation constructor.  A stage is used to contain multiple layers and handle
+   * Animation constructor.
    * @constructor
    * @memberof Konva
    * @param {Function} func function executed on each animation frame.  The function is passed a frame object, which contains
@@ -2105,7 +2105,7 @@
    *
    * var anim = new Konva.Animation(function(frame) {
    *   var dist = velocity * (frame.timeDiff / 1000);
-   *   node.move(dist, 0);
+   *   node.move({x: dist, y: 0});
    * }, layer);
    *
    * anim.start();
@@ -5512,8 +5512,9 @@
   }
   function setPointerCapture(pointerId, shape) {
       releaseCapture(pointerId);
-      var content = shape.getStage().content;
-      content.setPointerCapture(pointerId);
+      var stage = shape.getStage();
+      if (!stage)
+          return;
       Captures.set(pointerId, shape);
       shape._fire('gotpointercapture', createEvent(new PointerEvent('gotpointercapture')));
   }
@@ -5521,8 +5522,10 @@
       var shape = Captures.get(pointerId);
       if (!shape)
           return;
-      var content = shape.getStage().content;
-      content.releasePointerCapture(pointerId);
+      var stage = shape.getStage();
+      if (stage && stage.content) {
+          stage.content.releasePointerCapture(pointerId);
+      }
       Captures.delete(pointerId);
       shape._fire('lostpointercapture', createEvent(new PointerEvent('lostpointercapture')));
   }
@@ -5798,6 +5801,15 @@
       };
       Stage.prototype.getLayer = function () {
           return null;
+      };
+      Stage.prototype.hasPointerCapture = function (pointerId) {
+          return hasPointerCapture(pointerId, this);
+      };
+      Stage.prototype.setPointerCapture = function (pointerId) {
+          setPointerCapture(pointerId, this);
+      };
+      Stage.prototype.releaseCapture = function (pointerId) {
+          releaseCapture(pointerId, this);
       };
       /**
        * returns a {@link Konva.Collection} of layers
