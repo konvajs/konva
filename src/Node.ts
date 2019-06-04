@@ -688,7 +688,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    */
   on<K extends keyof NodeEventMap>(
     evtStr: K,
-    handler: KonvaEventListener<this, K>
+    handler: KonvaEventListener<this, NodeEventMap[K]>
   ) {
     if (arguments.length === 3) {
       return this._delegate.apply(this, arguments);
