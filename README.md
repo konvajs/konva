@@ -133,7 +133,7 @@ Then in you javascript file you will need to use
 const Konva = require('konva-node');
 ```
 
-See file `resources/nodejs-demo.js` for example.
+See file `konva-node/demo.js` file in this repo as a sample.
 
 # Backers
 

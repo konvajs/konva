@@ -2,9 +2,7 @@ var fs = require('fs');
 
 // relative path here
 // but you will need just require('konva-node');
-var Konva = require('../konva-node');
-
-// console.log(Konva.Util.c);
+var Konva = require('./');
 
 // Create stage. Container parameter is not required in NodeJS.
 var stage = new Konva.Stage({
