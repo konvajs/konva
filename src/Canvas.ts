@@ -13,7 +13,7 @@ function getDevicePixelRatio() {
   var canvas = Util.createCanvasElement();
   var context = canvas.getContext('2d') as any;
   _pixelRatio = (function() {
-    var devicePixelRatio = glob.window.devicePixelRatio || 1,
+    var devicePixelRatio = Konva._global.devicePixelRatio || 1,
       backingStoreRatio =
         context.webkitBackingStorePixelRatio ||
         context.mozBackingStorePixelRatio ||

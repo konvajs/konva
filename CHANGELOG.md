@@ -5,6 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## [3.3.3][2019-06-07]
+
+* Some fixes for better support `konva-node`
+* TS types fixes
+
 ## [3.3.2][2019-06-03]
 
 * TS types fixes

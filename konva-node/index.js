@@ -15,7 +15,6 @@ Konva.document = {
 };
 
 // make some global injections
-global.window = Konva.window;
 global.requestAnimationFrame = cb => {
   setImmediate(cb);
 };

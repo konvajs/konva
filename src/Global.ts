@@ -87,6 +87,7 @@ export const glob: any =
     : {};
 
 export const Konva = {
+  _global: glob,
   version: '@@version',
   isBrowser: detectBrowser(),
   isUnminified: /param/.test(function(param) {}.toString()),
