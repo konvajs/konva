@@ -206,14 +206,14 @@ suite('Stage', function() {
   test('dangling stage ', function() {
     var stage = addStage();
     var container = stage.container();
-    var parent = stage.content.parentElement
+    var parent = stage.content.parentElement;
 
     parent.removeChild(stage.content);
 
     stage.setContainer(container);
 
     assert.equal(stage.container(), container);
-  })
+  });
 
   // ======================================================
   test('stage getIntersection()', function() {
