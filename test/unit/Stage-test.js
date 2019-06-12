@@ -203,6 +203,18 @@ suite('Stage', function() {
     assert.equal(clone.content, container.children[0]);
   });
 
+  test('dangling stage ', function() {
+    var stage = addStage();
+    var container = stage.container();
+    var parent = stage.content.parentElement;
+
+    parent.removeChild(stage.content);
+
+    stage.setContainer(container);
+
+    assert.equal(stage.container(), container);
+  });
+
   // ======================================================
   test('stage getIntersection()', function() {
     var stage = addStage();
