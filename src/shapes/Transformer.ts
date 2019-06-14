@@ -28,6 +28,7 @@ export interface TransformerConfig extends ContainerConfig {
   anchorStroke?: string;
   anchorStrokeWidth?: number;
   anchorSize?: number;
+  anchorBoundingBoxSize?: number;
   keepRatio?: boolean;
   centeredScaling?: boolean;
   enabledAnchors?: Array<string>;
@@ -41,6 +42,7 @@ var ATTR_CHANGE_LIST = [
   'rotateEnabledChange',
   'enabledAnchorsChange',
   'anchorSizeChange',
+  'anchorBoundingBoxSizeChange',
   'borderEnabledChange',
   'borderStrokeChange',
   'borderStrokeWidthChange',
@@ -157,6 +159,7 @@ var MAX_SAFE_INTEGER = 100000000;
  * @param {String} [config.anchorCornerRadius] Anchor corner radius
  * @param {Number} [config.anchorStrokeWidth] Anchor stroke size
  * @param {Number} [config.anchorSize] Default is 10
+ * @param {Number} [config.anchorBoundingBoxSize] Default is 0
  * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
  * @param {Boolean} [config.centeredScaling] Should we resize relative to node's center? Default is false
  * @param {Array} [config.enabledAnchors] Array of names of enabled handles
@@ -329,43 +332,52 @@ export class Transformer extends Group {
       stroke: 'rgb(0, 161, 255)',
       fill: 'white',
       strokeWidth: 1,
-      name: name + ' _anchor',
+      name: name + '_anchorView _anchorView',
       dragDistance: 0,
       draggable: true
     });
+    var anchorBB = new Rect({
+      stroke: 'rgb(0, 161, 255)',
+      fill: 'white',
+      strokeWidth: 1,
+      name: name + ' _anchor',
+      dragDistance: 0,
+      draggable: false
+    });
     var self = this;
-    anchor.on('mousedown touchstart', function(e) {
+    anchorBB.on('mousedown touchstart', function(e) {
       self._handleMouseDown(e);
     });
-    anchor.on('dragstart', function(e) {
+    anchorBB.on('dragstart', function(e) {
       e.cancelBubble = true;
     });
-    anchor.on('dragmove', function(e) {
+    anchorBB.on('dragmove', function(e) {
       e.cancelBubble = true;
     });
-    anchor.on('dragend', function(e) {
+    anchorBB.on('dragend', function(e) {
       e.cancelBubble = true;
     });
 
     // add hover styling
-    anchor.on('mouseenter', () => {
+    anchorBB.on('mouseenter', () => {
       var rad = Konva.getAngle(this.rotation());
 
       var scale = this.getNode().getAbsoluteScale();
       // If scale.y < 0 xor scale.x < 0 we need to flip (not rotate).
       var isMirrored = scale.y * scale.x < 0;
       var cursor = getCursor(name, rad, isMirrored);
-      anchor.getStage().content.style.cursor = cursor;
+      anchorBB.getStage().content.style.cursor = cursor;
       this._cursorChange = true;
     });
-    anchor.on('mouseout', () => {
+    anchorBB.on('mouseout', () => {
       if (!anchor.getStage() || !anchor.getParent()) {
         return;
       }
-      anchor.getStage().content.style.cursor = '';
+      anchorBB.getStage().content.style.cursor = '';
       this._cursorChange = false;
     });
     this.add(anchor);
+    this.add(anchorBB);
   }
   _createBack() {
     var back = new Shape({
@@ -532,7 +544,7 @@ export class Transformer extends Group {
         this.findOne('.bottom-right').y(y);
       }
     } else if (this.movingResizer === 'rotater') {
-      var padding = this.padding();
+      var padding = this.anchorBoundingBoxSize();
       var attrs = this._getNodeRect();
       x = resizerNode.x() - attrs.width / 2;
       y = -resizerNode.y() + attrs.height / 2;
@@ -683,7 +695,7 @@ export class Transformer extends Group {
       skipStroke: this.ignoreStroke()
     });
 
-    var padding = this.padding();
+    var padding = this.anchorBoundingBoxSize();
     var scaleX = (newAttrs.width - padding * 2) / pure.width;
     var scaleY = (newAttrs.height - padding * 2) / pure.height;
 
@@ -730,9 +742,10 @@ export class Transformer extends Group {
     var enabledAnchors = this.enabledAnchors();
     var resizeEnabled = this.resizeEnabled();
     var padding = this.padding();
+    var bbPadding = this.anchorBoundingBoxSize();
 
     var anchorSize = this.anchorSize();
-    this.find('._anchor').each(node =>
+    this.find('._anchorView').each(node =>
       node.setAttrs({
         width: anchorSize,
         height: anchorSize,
@@ -744,8 +757,25 @@ export class Transformer extends Group {
         cornerRadius: this.anchorCornerRadius()
       })
     );
+    this.find('._anchor').each(node =>
+      node.setAttrs({
+        width: anchorSize + 2 * bbPadding,
+        height: anchorSize + 2 * bbPadding,
+        offsetX: anchorSize / 2 + bbPadding,
+        offsetY: anchorSize / 2 + bbPadding,
+        stroke: 0,
+        fill: 'rgba(0,0,0,0)'
+      })
+    );
+
 
     this.findOne('.top-left').setAttrs({
+      x: -bbPadding,
+      y: -bbPadding,
+      scale: invertedScale,
+      visible: resizeEnabled && enabledAnchors.indexOf('top-left') >= 0
+    });
+    this.findOne('.top-left_anchorView').setAttrs({
       x: -padding,
       y: -padding,
       scale: invertedScale,
@@ -753,29 +783,59 @@ export class Transformer extends Group {
     });
     this.findOne('.top-center').setAttrs({
       x: width / 2,
+      y: -bbPadding,
+      scale: invertedScale,
+      visible: resizeEnabled && enabledAnchors.indexOf('top-center') >= 0
+    });
+    this.findOne('.top-center_anchorView').setAttrs({
+      x: width / 2,
       y: -padding,
       scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('top-center') >= 0
     });
     this.findOne('.top-right').setAttrs({
+      x: width + bbPadding,
+      y: -bbPadding,
+      scale: invertedScale,
+      visible: resizeEnabled && enabledAnchors.indexOf('top-right') >= 0
+    });
+    this.findOne('.top-right_anchorView').setAttrs({
       x: width + padding,
       y: -padding,
       scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('top-right') >= 0
     });
     this.findOne('.middle-left').setAttrs({
+      x: -bbPadding,
+      y: height / 2,
+      scale: invertedScale,
+      visible: resizeEnabled && enabledAnchors.indexOf('middle-left') >= 0
+    });
+    this.findOne('.middle-left_anchorView').setAttrs({
       x: -padding,
       y: height / 2,
       scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('middle-left') >= 0
     });
     this.findOne('.middle-right').setAttrs({
+      x: width + bbPadding,
+      y: height / 2,
+      scale: invertedScale,
+      visible: resizeEnabled && enabledAnchors.indexOf('middle-right') >= 0
+    });
+    this.findOne('.middle-right_anchorView').setAttrs({
       x: width + padding,
       y: height / 2,
       scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('middle-right') >= 0
     });
     this.findOne('.bottom-left').setAttrs({
+      x: -bbPadding,
+      y: height + bbPadding,
+      scale: invertedScale,
+      visible: resizeEnabled && enabledAnchors.indexOf('bottom-left') >= 0
+    });
+    this.findOne('.bottom-left_anchorView').setAttrs({
       x: -padding,
       y: height + padding,
       scale: invertedScale,
@@ -783,20 +843,37 @@ export class Transformer extends Group {
     });
     this.findOne('.bottom-center').setAttrs({
       x: width / 2,
+      y: height + bbPadding,
+      scale: invertedScale,
+      visible: resizeEnabled && enabledAnchors.indexOf('bottom-center') >= 0
+    });
+    this.findOne('.bottom-center_anchorView').setAttrs({
+      x: width / 2,
       y: height + padding,
       scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('bottom-center') >= 0
     });
     this.findOne('.bottom-right').setAttrs({
+      x: width + bbPadding,
+      y: height + bbPadding,
+      scale: invertedScale,
+      visible: resizeEnabled && enabledAnchors.indexOf('bottom-right') >= 0
+    });
+    this.findOne('.bottom-right_anchorView').setAttrs({
       x: width + padding,
       y: height + padding,
       scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('bottom-right') >= 0
     });
-
     var scaledRotateAnchorOffset =
       -this.rotateAnchorOffset() * Math.abs(invertedScale.y);
     this.findOne('.rotater').setAttrs({
+      x: width / 2,
+      y: scaledRotateAnchorOffset * Util._sign(height),
+      scale: invertedScale,
+      visible: this.rotateEnabled()
+    });
+    this.findOne('.rotater_anchorView').setAttrs({
       x: width / 2,
       y: scaledRotateAnchorOffset * Util._sign(height),
       scale: invertedScale,
@@ -855,6 +932,7 @@ export class Transformer extends Group {
   enabledAnchors: GetSet<string[], this>;
   rotationSnaps: GetSet<number[], this>;
   anchorSize: GetSet<number, this>;
+  anchorBoundingBoxSize: GetSet<number, this>;
   resizeEnabled: GetSet<boolean, this>;
   rotateEnabled: GetSet<boolean, this>;
   rotateAnchorOffset: GetSet<number, this>;
@@ -943,6 +1021,20 @@ Factory.addGetterSetter(Transformer, 'resizeEnabled', true);
  * transformer.anchorSize(20)
  */
 Factory.addGetterSetter(Transformer, 'anchorSize', 10, getNumberValidator());
+/**
+ * get/set anchor boundingbox size. Default is 0
+ * @name Konva.Transformer#validateAnchors
+ * @method
+ * @param {Number} 0
+ * @returns {Number}
+ * @example
+ * // get
+ * var anchorBoundingBoxSize = transformer.anchorBoundingBoxSize();
+ *
+ * // set
+ * transformer.anchorBoundingBoxSize(20)
+ */
+Factory.addGetterSetter(Transformer, 'anchorBoundingBoxSize', 0, getNumberValidator());
 
 /**
  * get/set ability to rotate.
