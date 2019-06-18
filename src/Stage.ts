@@ -190,7 +190,9 @@ export class Stage extends Container<BaseLayer> {
     }
     this._setAttr(CONTAINER, container);
     if (this.content) {
-      this.content.parentElement.removeChild(this.content);
+      if (this.content.parentElement) {
+        this.content.parentElement.removeChild(this.content);
+      }
       container.appendChild(this.content);
     }
     return this;
