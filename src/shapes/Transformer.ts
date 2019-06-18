@@ -364,7 +364,12 @@ export class Transformer extends Group {
         var tr = this.getParent();
         var padding = tr.padding();
         ctx.beginPath();
-        ctx.rect(-padding, -padding, this.width() + padding * 2, this.height() + padding * 2);
+        var scale = this.scale();
+        var invertedScale = {
+          x: 1 / scale.x,
+          y: 1 / scale.y
+        };
+        ctx.rect(-padding * invertedScale.x, -padding * invertedScale.y, this.width() + padding * invertedScale.x * 2, this.height() + padding * invertedScale.y * 2);
         ctx.moveTo(this.width() / 2, -padding);
         if (tr.rotateEnabled()) {
           ctx.lineTo(this.width() / 2, -tr.rotateAnchorOffset() * Util._sign(this.height()));
@@ -618,7 +623,7 @@ export class Transformer extends Group {
       skipStroke: this.ignoreStroke()
     });
 
-    var padding = this.anchorBoundingBoxSize();
+    var padding = (this.anchorBoundingBoxSize() * 3) / 4 + this.padding();
     var scaleX = (newAttrs.width - padding * 2) / pure.width;
     var scaleY = (newAttrs.height - padding * 2) / pure.height;
 
@@ -692,8 +697,8 @@ export class Transformer extends Group {
     );
 
     this.findOne('.top-left').setAttrs({
-      x: -bbPadding,
-      y: -bbPadding,
+      x: -((bbPadding * 3) / 4) - padding,
+      y: -((bbPadding * 3) / 4) - padding,
       scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('top-left') >= 0
     });
@@ -705,7 +710,7 @@ export class Transformer extends Group {
     });
     this.findOne('.top-center').setAttrs({
       x: width / 2,
-      y: -bbPadding,
+      y: -((bbPadding * 3) / 4) - padding,
       scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('top-center') >= 0
     });
@@ -716,8 +721,8 @@ export class Transformer extends Group {
       visible: resizeEnabled && enabledAnchors.indexOf('top-center') >= 0
     });
     this.findOne('.top-right').setAttrs({
-      x: width + bbPadding,
-      y: -bbPadding,
+      x: width + (bbPadding * 3) / 4 + padding,
+      y: -((bbPadding * 3) / 4) - padding,
       scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('top-right') >= 0
     });
@@ -728,7 +733,7 @@ export class Transformer extends Group {
       visible: resizeEnabled && enabledAnchors.indexOf('top-right') >= 0
     });
     this.findOne('.middle-left').setAttrs({
-      x: -bbPadding,
+      x: -((bbPadding * 3) / 4) - padding,
       y: height / 2,
       scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('middle-left') >= 0
@@ -740,7 +745,7 @@ export class Transformer extends Group {
       visible: resizeEnabled && enabledAnchors.indexOf('middle-left') >= 0
     });
     this.findOne('.middle-right').setAttrs({
-      x: width + bbPadding,
+      x: width + (bbPadding * 3) / 4 + padding,
       y: height / 2,
       scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('middle-right') >= 0
@@ -752,8 +757,8 @@ export class Transformer extends Group {
       visible: resizeEnabled && enabledAnchors.indexOf('middle-right') >= 0
     });
     this.findOne('.bottom-left').setAttrs({
-      x: -bbPadding,
-      y: height + bbPadding,
+      x: -((bbPadding * 3) / 4) - padding,
+      y: height + (bbPadding * 3) / 4 + padding,
       scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('bottom-left') >= 0
     });
@@ -765,7 +770,7 @@ export class Transformer extends Group {
     });
     this.findOne('.bottom-center').setAttrs({
       x: width / 2,
-      y: height + bbPadding,
+      y: height + (bbPadding * 3) / 4 + padding,
       scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('bottom-center') >= 0
     });
@@ -776,8 +781,8 @@ export class Transformer extends Group {
       visible: resizeEnabled && enabledAnchors.indexOf('bottom-center') >= 0
     });
     this.findOne('.bottom-right').setAttrs({
-      x: width + bbPadding,
-      y: height + bbPadding,
+      x: width + (bbPadding * 3) / 4 + padding,
+      y: height + (bbPadding * 3) / 4 + padding,
       scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('bottom-right') >= 0
     });
