@@ -1,5 +1,5 @@
 import { Factory } from '../Factory';
-import { Node } from '../Node';
+import { Node, Filter } from '../Node';
 import { getNumberValidator } from '../Validators';
 
 function pixelAt(idata, x, y) {
@@ -179,7 +179,7 @@ function smoothEdgeMask(mask, sw, sh) {
  * node.filters([Konva.Filters.Mask]);
  * node.threshold(200);
  */
-export const Mask = function(imageData) {
+export const Mask: Filter = function(imageData) {
   // Detect pixels close to the background color
   var threshold = this.threshold(),
     mask = backgroundMask(imageData, threshold);

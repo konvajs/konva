@@ -1,5 +1,5 @@
 import { Factory } from '../Factory';
-import { Node } from '../Node';
+import { Node, Filter } from '../Node';
 import { Util } from '../Util';
 import { getNumberValidator } from '../Validators';
 
@@ -177,7 +177,7 @@ var FromPolar = function(src, dst, opt) {
  * node.kaleidoscopePower(3);
  * node.kaleidoscopeAngle(45);
  */
-export const Kaleidoscope = function(imageData) {
+export const Kaleidoscope: Filter = function(imageData) {
   var xSize = imageData.width,
     ySize = imageData.height;
 

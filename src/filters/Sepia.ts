@@ -1,3 +1,5 @@
+import { Filter } from '../Node';
+
 // based on https://stackoverflow.com/questions/1061093/how-is-a-sepia-tone-created
 
 /**
@@ -9,7 +11,7 @@
  * node.cache();
  * node.filters([Konva.Filters.Sepia]);
  */
-export const Sepia = function(imageData) {
+export const Sepia: Filter = function(imageData) {
   var data = imageData.data,
     nPixels = data.length,
     i,

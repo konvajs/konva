@@ -1,5 +1,5 @@
 import { Factory } from '../Factory';
-import { Node } from '../Node';
+import { Node, Filter } from '../Node';
 import { getNumberValidator } from '../Validators';
 
 /**
@@ -14,7 +14,7 @@ import { getNumberValidator } from '../Validators';
  * node.filters([Konva.Filters.Noise]);
  * node.noise(0.8);
  */
-export const Noise = function(imageData) {
+export const Noise: Filter = function(imageData) {
   var amount = this.noise() * 255,
     data = imageData.data,
     nPixels = data.length,

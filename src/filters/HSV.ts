@@ -1,5 +1,5 @@
 import { Factory } from '../Factory';
-import { Node } from '../Node';
+import { Node, Filter } from '../Node';
 import { getNumberValidator } from '../Validators';
 
 /**
@@ -14,7 +14,7 @@ import { getNumberValidator } from '../Validators';
  * image.value(200);
  */
 
-export const HSV = function(imageData) {
+export const HSV: Filter = function(imageData) {
   var data = imageData.data,
     nPixels = data.length,
     v = Math.pow(2, this.value()),

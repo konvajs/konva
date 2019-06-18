@@ -1,5 +1,5 @@
 import { Factory } from '../Factory';
-import { Node } from '../Node';
+import { Node, Filter } from '../Node';
 import { getNumberValidator } from '../Validators';
 
 function remap(fromValue, fromMin, fromMax, toMin, toMax) {
@@ -37,7 +37,7 @@ function remap(fromValue, fromMin, fromMax, toMin, toMax) {
  * node.filters([Konva.Filters.Enhance]);
  * node.enhance(0.4);
  */
-export const Enhance = function(imageData) {
+export const Enhance: Filter = function(imageData) {
   var data = imageData.data,
     nSubPixels = data.length,
     rMin = data[0],

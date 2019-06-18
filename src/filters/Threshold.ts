@@ -1,5 +1,5 @@
 import { Factory } from '../Factory';
-import { Node } from '../Node';
+import { Node, Filter } from '../Node';
 import { getNumberValidator } from '../Validators';
 /**
  * Threshold Filter. Pushes any value above the mid point to
@@ -16,7 +16,7 @@ import { getNumberValidator } from '../Validators';
  * node.threshold(0.1);
  */
 
-export const Threshold = function(imageData) {
+export const Threshold: Filter = function(imageData) {
   var level = this.threshold() * 255,
     data = imageData.data,
     len = data.length,

@@ -2340,7 +2340,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   brightness: GetSet<number, this>;
   contrast: GetSet<number, this>;
   blurRadius: GetSet<number, this>;
+  luminance: GetSet<number, this>;
   green: GetSet<number, this>;
+  alpha: GetSet<number, this>;
   hue: GetSet<number, this>;
   kaleidoscopeAngle: GetSet<number, this>;
   kaleidoscopePower: GetSet<number, this>;

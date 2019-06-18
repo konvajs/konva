@@ -1,5 +1,5 @@
 import { Factory } from '../Factory';
-import { Node } from '../Node';
+import { Node, Filter } from '../Node';
 import { getNumberValidator } from '../Validators';
 /**
  * Posterize Filter. Adjusts the channels so that there are no more
@@ -16,7 +16,7 @@ import { getNumberValidator } from '../Validators';
  * node.levels(0.8); // between 0 and 1
  */
 
-export const Posterize = function(imageData) {
+export const Posterize: Filter = function(imageData) {
   // level must be between 1 and 255
   var levels = Math.round(this.levels() * 254) + 1,
     data = imageData.data,

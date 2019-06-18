@@ -1,5 +1,5 @@
 import { Factory } from '../Factory';
-import { Node } from '../Node';
+import { Node, Filter } from '../Node';
 import { RGBComponent } from '../Validators';
 
 /**
@@ -17,7 +17,7 @@ import { RGBComponent } from '../Validators';
  * node.alpha(0.3);
  */
 
-export const RGBA = function(imageData) {
+export const RGBA: Filter = function(imageData) {
   var data = imageData.data,
     nPixels = data.length,
     red = this.red(),

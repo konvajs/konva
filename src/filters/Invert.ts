@@ -1,3 +1,4 @@
+import { Filter } from '../Node';
 /**
  * Invert Filter
  * @function
@@ -7,7 +8,7 @@
  * node.cache();
  * node.filters([Konva.Filters.Invert]);
  */
-export const Invert = function(imageData) {
+export const Invert: Filter = function(imageData) {
   var data = imageData.data,
     len = data.length,
     i;

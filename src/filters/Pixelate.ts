@@ -1,7 +1,7 @@
 /*eslint-disable max-depth */
 import { Factory } from '../Factory';
 import { Util } from '../Util';
-import { Node } from '../Node';
+import { Node, Filter } from '../Node';
 import { getNumberValidator } from '../Validators';
 
 /**
@@ -18,7 +18,7 @@ import { getNumberValidator } from '../Validators';
  * node.pixelSize(10);
  */
 
-export const Pixelate = function(imageData) {
+export const Pixelate: Filter = function(imageData) {
   var pixelSize = Math.ceil(this.pixelSize()),
     width = imageData.width,
     height = imageData.height,
@@ -38,8 +38,8 @@ export const Pixelate = function(imageData) {
     yBinEnd,
     xBin,
     yBin,
-    pixelsInBin;
-  imageData = imageData.data;
+    pixelsInBin,
+    data = imageData.data;
 
   if (pixelSize <= 0) {
     Util.error('pixelSize value can not be <= 0');
@@ -71,10 +71,10 @@ export const Pixelate = function(imageData) {
             continue;
           }
           i = (width * y + x) * 4;
-          red += imageData[i + 0];
-          green += imageData[i + 1];
-          blue += imageData[i + 2];
-          alpha += imageData[i + 3];
+          red += data[i + 0];
+          green += data[i + 1];
+          blue += data[i + 2];
+          alpha += data[i + 3];
           pixelsInBin += 1;
         }
       }
@@ -95,10 +95,10 @@ export const Pixelate = function(imageData) {
             continue;
           }
           i = (width * y + x) * 4;
-          imageData[i + 0] = red;
-          imageData[i + 1] = green;
-          imageData[i + 2] = blue;
-          imageData[i + 3] = alpha;
+          data[i + 0] = red;
+          data[i + 1] = green;
+          data[i + 2] = blue;
+          data[i + 3] = alpha;
         }
       }
     }

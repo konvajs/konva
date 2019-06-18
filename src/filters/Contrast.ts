@@ -1,5 +1,5 @@
 import { Factory } from '../Factory';
-import { Node } from '../Node';
+import { Node, Filter } from '../Node';
 import { getNumberValidator } from '../Validators';
 /**
  * Contrast Filter.
@@ -12,8 +12,8 @@ import { getNumberValidator } from '../Validators';
  * node.contrast(10);
  */
 
-export const Contrast = function(imageData) {
-  var adjust = Math.pow((parseInt(this.contrast()) + 100) / 100, 2);
+export const Contrast: Filter = function(imageData) {
+  var adjust = Math.pow((this.contrast() + 100) / 100, 2);
 
   var data = imageData.data,
     nPixels = data.length,

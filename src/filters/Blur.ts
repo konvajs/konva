@@ -1,5 +1,5 @@
 import { Factory } from '../Factory';
-import { Node } from '../Node';
+import { Node, Filter } from '../Node';
 import { getNumberValidator } from '../Validators';
 /*
  the Gauss filter
@@ -827,7 +827,7 @@ function filterGaussBlurRGBA(imageData, radius) {
  * node.filters([Konva.Filters.Blur]);
  * node.blurRadius(10);
  */
-export const Blur = function Blur(this: Node, imageData: CanvasImageData) {
+export const Blur: Filter = function Blur(imageData) {
   var radius = Math.round(this.blurRadius());
 
   if (radius > 0) {
