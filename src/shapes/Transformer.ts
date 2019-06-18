@@ -27,6 +27,7 @@ export interface TransformerConfig extends ContainerConfig {
   anchorFill?: string;
   anchorStroke?: string;
   anchorStrokeWidth?: number;
+  anchorBoundingBoxStrokeWidth?: number;
   anchorSize?: number;
   anchorBoundingBoxSize?: number;
   keepRatio?: boolean;
@@ -49,6 +50,7 @@ var ATTR_CHANGE_LIST = [
   'borderDashChange',
   'anchorStrokeChange',
   'anchorStrokeWidthChange',
+  'anchorBoundingBoxStrokeWidthChange',
   'anchorFillChange',
   'anchorCornerRadiusChange',
   'ignoreStrokeChange'
@@ -139,6 +141,7 @@ var MAX_SAFE_INTEGER = 100000000;
  * @param {Number} [config.anchorStrokeWidth] Anchor stroke size
  * @param {Number} [config.anchorSize] Default is 10
  * @param {Number} [config.anchorBoundingBoxSize] Default is 0
+ * @param {Number} [config.anchorBoundingBoxStrokeWidth] Default is 0
  * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
  * @param {Boolean} [config.centeredScaling] Should we resize relative to node's center? Default is false
  * @param {Array} [config.enabledAnchors] Array of names of enabled handles
@@ -691,7 +694,7 @@ export class Transformer extends Group {
         height: anchorSize + 2 * bbPadding,
         offsetX: anchorSize / 2 + bbPadding,
         offsetY: anchorSize / 2 + bbPadding,
-        strokeWidth: 0,
+        strokeWidth: this.anchorBoundingBoxStrokeWidth(),
         fill: 'rgba(0,0,0,0)'
       })
     );
@@ -859,6 +862,7 @@ export class Transformer extends Group {
   rotationSnaps: GetSet<number[], this>;
   anchorSize: GetSet<number, this>;
   anchorBoundingBoxSize: GetSet<number, this>;
+  anchorBoundingBoxStrokeWidth: GetSet<number, this>;
   resizeEnabled: GetSet<boolean, this>;
   rotateEnabled: GetSet<boolean, this>;
   rotateAnchorOffset: GetSet<number, this>;
@@ -951,6 +955,21 @@ Factory.addGetterSetter(Transformer, 'anchorSize', 10, getNumberValidator());
  * transformer.anchorBoundingBoxSize(20)
  */
 Factory.addGetterSetter(Transformer, 'anchorBoundingBoxSize', 0, getNumberValidator());
+/**
+ * get/set anchor boundingbox strok width. Default is 0.
+ * Can be used for testing the best values for anchorBoundingBoxSize or debugging.
+ * @name Konva.Transformer#validateAnchors
+ * @method
+ * @param {Number} 0
+ * @returns {Number}
+ * @example
+ * // get
+ * var anchorBoundingBoxStrokeWidth = transformer.anchorBoundingBoxStrokeWidth();
+ *
+ * // set
+ * transformer.anchorBoundingBoxStrokeWidth(1)
+ */
+Factory.addGetterSetter(Transformer, 'anchorBoundingBoxStrokeWidth', 0, getNumberValidator());
 
 /**
  * get/set ability to rotate.
