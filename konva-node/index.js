@@ -29,4 +29,11 @@ Konva.Util.createCanvasElement = () => {
 // _checkVisibility use dom element, in node we can skip it
 Konva.Stage.prototype._checkVisibility = () => {};
 
+// mock for search a container
+global.document = {
+    getElementById: function() {
+        return new canvas.Canvas();
+    }
+};
+
 module.exports = Konva;
