@@ -26,6 +26,13 @@ Konva.Util.createCanvasElement = () => {
   return node;
 };
 
+// create canvas in Node env
+Konva.Util.createImageElement = () => {
+  const node = new canvas.Image();
+  node.style = {};
+  return node;
+};
+
 // _checkVisibility use dom element, in node we can skip it
 Konva.Stage.prototype._checkVisibility = () => {};
 

@@ -1326,7 +1326,7 @@ Factory.addGetterSetter(Shape, 'fillPatternRepeat', 'repeat');
  * shape.fillPatternRepeat('repeat-x');
  *
  * // do not repeat the pattern
- * shape.fillPatternRepeat('no repeat');
+ * shape.fillPatternRepeat('no-repeat');
  */
 
 Factory.addGetterSetter(Shape, 'fillEnabled', true);

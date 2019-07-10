@@ -1636,7 +1636,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       return this._getAbsoluteTransform(top);
     } else {
       // if no argument, we can cache the result
-      return this._getCache(
+    return this._getCache(
         ABSOLUTE_TRANSFORM,
         this._getAbsoluteTransform
       ) as Transform;
@@ -2409,7 +2409,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @param {Element} [container] optional container dom element used only if you're
    *  creating a stage node
    */
-  static create(data, container) {
+  static create(data, container?) {
     if (Util._isString(data)) {
       data = JSON.parse(data);
     }

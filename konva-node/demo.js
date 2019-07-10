@@ -62,6 +62,10 @@ setTimeout(function() {
               err && console.log(err);
               console.log('See out.png');
             });
+            // now try to create image from url
+            Konva.Image.fromURL(data, () => {
+              // shoul'd throw
+            });
           }
         });
       };
