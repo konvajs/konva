@@ -69,6 +69,7 @@ export interface ShapeConfig extends NodeConfig {
   shadowEnabled?: boolean;
   shadowForStrokeEnabled?: boolean;
   dash?: number[];
+  dashOffset?: number;
   dashEnabled?: boolean;
   perfectDrawEnabled?: boolean;
 }
@@ -729,6 +730,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
 
   dash: GetSet<number[], this>;
   dashEnabled: GetSet<boolean, this>;
+  dashOffset: GetSet<number, this>;
   fill: GetSet<string, this>;
   fillEnabled: GetSet<boolean, this>;
   fillLinearGradientColorStops: GetSet<Array<number | string>, this>;

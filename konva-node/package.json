@@ -1,6 +1,6 @@
 {
   "name": "konva-node",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "description": "Konva framework for NodeJS env",
   "main": "index.js",
   "files": [
