@@ -1,12 +1,11 @@
 import { Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
-import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
 export interface RectConfig extends ShapeConfig {
-  cornerRadius?: number;
+  cornerRadius?: number | number[];
 }
 
 /**
@@ -39,51 +38,58 @@ export class Rect extends Shape<RectConfig> {
       // simple rect - don't bother doing all that complicated maths stuff.
       context.rect(0, 0, width, height);
     } else {
-      // arcTo would be nicer, but browser support is patchy (Opera)
-      cornerRadius = Math.min(cornerRadius, width / 2, height / 2);
-      context.moveTo(cornerRadius, 0);
-      context.lineTo(width - cornerRadius, 0);
+      let topLeft = 0;
+      let topRight = 0;
+      let bottomLeft = 0;
+      let bottomRight = 0;
+      if (typeof cornerRadius === 'number') {
+        topLeft = topRight = bottomLeft = bottomRight = Math.min(
+          cornerRadius,
+          width / 2,
+          height / 2
+        );
+      } else {
+        topLeft = Math.min(cornerRadius[0], width / 2, height / 2);
+        topRight = Math.min(cornerRadius[1], width / 2, height / 2);
+        bottomRight = Math.min(cornerRadius[2], width / 2, height / 2);
+        bottomLeft = Math.min(cornerRadius[3], width / 2, height / 2);
+      }
+      context.moveTo(topLeft, 0);
+      context.lineTo(width - topRight, 0);
       context.arc(
-        width - cornerRadius,
-        cornerRadius,
-        cornerRadius,
+        width - topRight,
+        topRight,
+        topRight,
         (Math.PI * 3) / 2,
         0,
         false
       );
-      context.lineTo(width, height - cornerRadius);
+      context.lineTo(width, height - bottomRight);
       context.arc(
-        width - cornerRadius,
-        height - cornerRadius,
-        cornerRadius,
+        width - bottomRight,
+        height - bottomRight,
+        bottomRight,
         0,
         Math.PI / 2,
         false
       );
-      context.lineTo(cornerRadius, height);
+      context.lineTo(bottomLeft, height);
       context.arc(
-        cornerRadius,
-        height - cornerRadius,
-        cornerRadius,
+        bottomLeft,
+        height - bottomLeft,
+        bottomLeft,
         Math.PI / 2,
         Math.PI,
         false
       );
-      context.lineTo(0, cornerRadius);
-      context.arc(
-        cornerRadius,
-        cornerRadius,
-        cornerRadius,
-        Math.PI,
-        (Math.PI * 3) / 2,
-        false
-      );
+      context.lineTo(0, topLeft);
+      context.arc(topLeft, topLeft, topLeft, Math.PI, (Math.PI * 3) / 2, false);
     }
     context.closePath();
     context.fillStrokeShape(this);
   }
 
-  cornerRadius: GetSet<number, this>;
+  cornerRadius: GetSet<number | number[], this>;
 }
 
 Rect.prototype.className = 'Rect';
@@ -101,7 +107,11 @@ _registerNode(Rect);
  *
  * // set corner radius
  * rect.cornerRadius(10);
+ *
+ * // set different corner radius values
+ * // top-left, top-right, bottom-right, bottom-left
+ * rect.cornerRadius([0, 10, 20, 30]);
  */
-Factory.addGetterSetter(Rect, 'cornerRadius', 0, getNumberValidator());
+Factory.addGetterSetter(Rect, 'cornerRadius', 0);
 
 Collection.mapMethods(Rect);

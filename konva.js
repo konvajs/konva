@@ -11721,17 +11721,28 @@
               context.rect(0, 0, width, height);
           }
           else {
-              // arcTo would be nicer, but browser support is patchy (Opera)
-              cornerRadius = Math.min(cornerRadius, width / 2, height / 2);
-              context.moveTo(cornerRadius, 0);
-              context.lineTo(width - cornerRadius, 0);
-              context.arc(width - cornerRadius, cornerRadius, cornerRadius, (Math.PI * 3) / 2, 0, false);
-              context.lineTo(width, height - cornerRadius);
-              context.arc(width - cornerRadius, height - cornerRadius, cornerRadius, 0, Math.PI / 2, false);
-              context.lineTo(cornerRadius, height);
-              context.arc(cornerRadius, height - cornerRadius, cornerRadius, Math.PI / 2, Math.PI, false);
-              context.lineTo(0, cornerRadius);
-              context.arc(cornerRadius, cornerRadius, cornerRadius, Math.PI, (Math.PI * 3) / 2, false);
+              var topLeft = 0;
+              var topRight = 0;
+              var bottomLeft = 0;
+              var bottomRight = 0;
+              if (typeof cornerRadius === 'number') {
+                  topLeft = topRight = bottomLeft = bottomRight = Math.min(cornerRadius, width / 2, height / 2);
+              }
+              else {
+                  topLeft = Math.min(cornerRadius[0], width / 2, height / 2);
+                  topRight = Math.min(cornerRadius[1], width / 2, height / 2);
+                  bottomRight = Math.min(cornerRadius[2], width / 2, height / 2);
+                  bottomLeft = Math.min(cornerRadius[3], width / 2, height / 2);
+              }
+              context.moveTo(topLeft, 0);
+              context.lineTo(width - topRight, 0);
+              context.arc(width - topRight, topRight, topRight, (Math.PI * 3) / 2, 0, false);
+              context.lineTo(width, height - bottomRight);
+              context.arc(width - bottomRight, height - bottomRight, bottomRight, 0, Math.PI / 2, false);
+              context.lineTo(bottomLeft, height);
+              context.arc(bottomLeft, height - bottomLeft, bottomLeft, Math.PI / 2, Math.PI, false);
+              context.lineTo(0, topLeft);
+              context.arc(topLeft, topLeft, topLeft, Math.PI, (Math.PI * 3) / 2, false);
           }
           context.closePath();
           context.fillStrokeShape(this);
@@ -11752,8 +11763,12 @@
    *
    * // set corner radius
    * rect.cornerRadius(10);
+   *
+   * // set different corner radius values
+   * // top-left, top-right, bottom-right, bottom-left
+   * rect.cornerRadius([0, 10, 20, 30]);
    */
-  Factory.addGetterSetter(Rect, 'cornerRadius', 0, getNumberValidator());
+  Factory.addGetterSetter(Rect, 'cornerRadius', 0);
   Collection.mapMethods(Rect);
 
   /**

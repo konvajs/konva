@@ -5,7 +5,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+--
+
+## [3.3.3][2019-06-07]
+
 * TS types fixes
+* Added support for different values for `cornerRadius` of `Konva.Rect`
 
 ## [3.3.3][2019-06-07]
 
