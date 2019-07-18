@@ -5,7 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
---
+## [3.4.1][2019-07-18]
+
+* Fix wrong double tap trigger
 
 ## [3.4.0][2019-07-12]
 

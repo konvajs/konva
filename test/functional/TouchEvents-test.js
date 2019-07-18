@@ -105,8 +105,8 @@ suite('TouchEvents', function() {
     var dbltap = false;
 
     /*
-         * mobile
-         */
+     * mobile
+     */
     circle.on('touchstart', function() {
       touchstart = true;
       //log('touchstart');
@@ -282,5 +282,73 @@ suite('TouchEvents', function() {
     assert.equal(stageContentTouchstart, 1);
     assert.equal(stageContentTouchend, 1);
     assert.equal(circleTouchend, 1);
+  });
+
+  test('tap on one shape, then fast tap on another shape should no trigger double tap', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var circle1 = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle'
+    });
+
+    layer.add(circle1);
+
+    var circle2 = new Konva.Circle({
+      x: 200,
+      y: 100,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle'
+    });
+
+    layer.add(circle2);
+
+    layer.draw();
+
+    var circle1Tap = 0;
+    var circle2Tap = 0;
+    var circle2DoubleTap = 0;
+
+    circle1.on('tap', function() {
+      circle1Tap++;
+    });
+    circle2.on('tap', function() {
+      circle2Tap++;
+    });
+    circle2.on('dbltap', function() {
+      circle2DoubleTap++;
+    });
+
+    stage.simulateTouchStart({ x: 100, y: 100 });
+    stage.simulateTouchEnd({ x: 100, y: 100 });
+
+    assert.equal(circle1Tap, 1, 'should trigger tap on first circle');
+    assert.equal(circle2Tap, 0, 'should NOT trigger tap on second circle');
+    assert.equal(
+      circle2DoubleTap,
+      0,
+      'should NOT trigger dbltap on second circle'
+    );
+
+    stage.simulateTouchStart({ x: 200, y: 100 });
+    stage.simulateTouchEnd({ x: 200, y: 100 });
+
+    assert.equal(circle1Tap, 1, 'should trigger tap on first circle');
+    assert.equal(circle2Tap, 1, 'should trigger tap on second circle');
+    assert.equal(
+      circle2DoubleTap,
+      0,
+      'should NOT trigger dbltap on second circle'
+    );
   });
 });

@@ -565,7 +565,7 @@ export class Stage extends Container<BaseLayer> {
       ) {
         shape._fireAndBubble(CLICK, { evt: evt });
 
-        if (fireDblClick && clickEndShape && clickEndShape._id === shape._id) {
+        if (fireDblClick && clickEndShape && clickEndShape === shape) {
           shape._fireAndBubble(DBL_CLICK, { evt: evt });
         }
       }
@@ -642,6 +642,7 @@ export class Stage extends Container<BaseLayer> {
   _touchend(evt) {
     this.setPointersPositions(evt);
     var shape = this.getIntersection(this.getPointerPosition()),
+      clickEndShape = this.clickEndShape,
       fireDblClick = false;
 
     if (Konva.inDblClickWindow) {
@@ -658,6 +659,7 @@ export class Stage extends Container<BaseLayer> {
     }, Konva.dblClickWindow);
 
     if (shape && shape.isListening()) {
+      this.clickEndShape = shape;
       shape._fireAndBubble(TOUCHEND, { evt: evt });
 
       // detect if tap or double tap occurred
@@ -668,7 +670,7 @@ export class Stage extends Container<BaseLayer> {
       ) {
         shape._fireAndBubble(TAP, { evt: evt });
 
-        if (fireDblClick) {
+        if (fireDblClick && clickEndShape && clickEndShape === shape) {
           shape._fireAndBubble(DBL_TAP, { evt: evt });
         }
       }

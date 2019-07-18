@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v3.4.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Fri Jul 12 2019
+   * Date: Thu Jul 18 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -5975,7 +5975,7 @@
                   clickStartShape &&
                   clickStartShape._id === shape._id) {
                   shape._fireAndBubble(CLICK, { evt: evt });
-                  if (fireDblClick && clickEndShape && clickEndShape._id === shape._id) {
+                  if (fireDblClick && clickEndShape && clickEndShape === shape) {
                       shape._fireAndBubble(DBL_CLICK, { evt: evt });
                   }
               }
@@ -6047,7 +6047,7 @@
       };
       Stage.prototype._touchend = function (evt) {
           this.setPointersPositions(evt);
-          var shape = this.getIntersection(this.getPointerPosition()), fireDblClick = false;
+          var shape = this.getIntersection(this.getPointerPosition()), clickEndShape = this.clickEndShape, fireDblClick = false;
           if (Konva.inDblClickWindow) {
               fireDblClick = true;
               clearTimeout(this.dblTimeout);
@@ -6061,13 +6061,14 @@
               Konva.inDblClickWindow = false;
           }, Konva.dblClickWindow);
           if (shape && shape.isListening()) {
+              this.clickEndShape = shape;
               shape._fireAndBubble(TOUCHEND, { evt: evt });
               // detect if tap or double tap occurred
               if (Konva.listenClickTap &&
                   this.tapStartShape &&
                   shape._id === this.tapStartShape._id) {
                   shape._fireAndBubble(TAP, { evt: evt });
-                  if (fireDblClick) {
+                  if (fireDblClick && clickEndShape && clickEndShape === shape) {
                       shape._fireAndBubble(DBL_TAP, { evt: evt });
                   }
               }

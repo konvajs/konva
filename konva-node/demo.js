@@ -64,6 +64,7 @@ setTimeout(function() {
             });
             // now try to create image from url
             Konva.Image.fromURL(data, () => {
+              console.log('image loaded');
               // shoul'd throw
             });
           }
