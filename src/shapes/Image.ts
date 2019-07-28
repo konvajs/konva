@@ -138,8 +138,8 @@ _registerNode(Image);
  * get/set image source. It can be image, canvas or video element
  * @name Konva.Image#image
  * @method
- * @param {Number} y
- * @returns {Number}
+ * @param {Object} image source
+ * @returns {Object}
  * @example
  * // get value
  * var image = shape.image();
