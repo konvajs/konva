@@ -697,7 +697,8 @@ export const Util = {
       Util._hex3ColorToRGBA(str) ||
       Util._hex6ColorToRGBA(str) ||
       Util._rgbColorToRGBA(str) ||
-      Util._rgbaColorToRGBA(str)
+      Util._rgbaColorToRGBA(str) ||
+      Util._hslColorToRGBA(str)
     );
   },
   // Parse named css color. Like "green"
@@ -757,6 +758,71 @@ export const Util = {
         r: parseInt(str[1] + str[1], 16),
         g: parseInt(str[2] + str[2], 16),
         b: parseInt(str[3] + str[3], 16),
+        a: 1
+      };
+    }
+  },
+  // Code adapted from https://github.com/Qix-/color-convert/blob/master/conversions.js#L244
+  _hslColorToRGBA(str: string) {
+    // Check hsl() format
+    if (/hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.test(str)) {
+      // Extract h, s, l
+      const [_, ...hsl]= /hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.exec(str);
+
+      const h = Number(hsl[0]) / 360;
+      const s = Number(hsl[1]) / 100;
+      const l = Number(hsl[2]) / 100;
+      
+      let t2;
+      let t3;
+      let val;
+
+      if (s === 0) {
+        val = l * 255;
+        return {
+          r: Math.round(val),
+          g: Math.round(val),
+          b: Math.round(val),
+          a: 1
+        };
+      }
+
+      if (l < 0.5) {
+        t2 = l * (1 + s);
+      } else {
+        t2 = l + s - l * s;
+      }
+
+      const t1 = 2 * l - t2;
+
+      const rgb = [0, 0, 0];
+      for (let i = 0; i < 3; i++) {
+        t3 = h + 1 / 3 * -(i - 1);
+        if (t3 < 0) {
+          t3++;
+        }
+
+        if (t3 > 1) {
+          t3--;
+        }
+
+        if (6 * t3 < 1) {
+          val = t1 + (t2 - t1) * 6 * t3;
+        } else if (2 * t3 < 1) {
+          val = t2;
+        } else if (3 * t3 < 2) {
+          val = t1 + (t2 - t1) * (2 / 3 - t3) * 6;
+        } else {
+          val = t1;
+        }
+
+        rgb[i] = val * 255;
+      }
+
+      return {
+        r: Math.round(rgb[0]),
+        g: Math.round(rgb[1]),
+        b: Math.round(rgb[2]),
         a: 1
       };
     }
