@@ -1,4 +1,4 @@
-import { Util, Collection } from './Util';
+import { Util, Collection, Point } from './Util';
 import { Container } from './Container';
 import { Factory } from './Factory';
 import { BaseLayer } from './BaseLayer';
@@ -77,7 +77,7 @@ export class Layer extends BaseLayer {
    * // or if you interested in shape parent:
    * var group = layer.getIntersection({x: 50, y: 50}, 'Group');
    */
-  getIntersection(pos, selector) {
+  getIntersection(pos: Point, selector?: string) {
     var obj, i, intersectionOffset, shape;
 
     if (!this.hitGraphEnabled() || !this.isVisible()) {

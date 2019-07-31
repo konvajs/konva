@@ -1,4 +1,4 @@
-import { Util, Collection } from './Util';
+import { Util, Collection, Point } from './Util';
 import { Container, ContainerConfig } from './Container';
 import { Node } from './Node';
 import { Factory } from './Factory';
@@ -252,7 +252,7 @@ export abstract class BaseLayer extends Container<Group | Shape> {
       'Can not change height of layer. Use "stage.height(value)" function instead.'
     );
   }
-  getIntersection(pos, selector?) {
+  getIntersection(pos: Point, selector?: string) {
     return null;
   }
 

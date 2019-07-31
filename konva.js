@@ -2095,7 +2095,7 @@
    * @param {Function} func function executed on each animation frame.  The function is passed a frame object, which contains
    *  timeDiff, lastTime, time, and frameRate properties.  The timeDiff property is the number of milliseconds that have passed
    *  since the last animation frame.  The lastTime property is time in milliseconds that elapsed from the moment the animation started
-   *  to the last animation frame.  The time property is the time in milliseconds that ellapsed from the moment the animation started
+   *  to the last animation frame.  The time property is the time in milliseconds that elapsed from the moment the animation started
    *  to the current animation frame.  The frameRate property is the current frame rate in frames / second. Return false from function,
    *  if you don't need to redraw layer/layers on some frames.
    * @param {Konva.Layer|Array} [layers] layer(s) to be redrawn on each animation frame. Can be a layer, an array of layers, or null.
@@ -9818,8 +9818,8 @@
    * get/set image source. It can be image, canvas or video element
    * @name Konva.Image#image
    * @method
-   * @param {Number} y
-   * @returns {Number}
+   * @param {Object} image source
+   * @returns {Object}
    * @example
    * // get value
    * var image = shape.image();
