@@ -535,6 +535,174 @@ suite('DragAndDrop', function() {
     assert.equal(circle.y(), 100);
   });
 
+  test('drag with multi-touch (second finger on empty space)', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var circle = new Konva.Circle({
+      x: 70,
+      y: 70,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle',
+      draggable: true
+    });
+
+    layer.add(circle);
+    stage.add(layer);
+
+    circle.on('dragstart', function() {
+      assert.equal(circle.x(), 70);
+      assert.equal(circle.y(), 70);
+    });
+
+    stage.simulateTouchStart([
+      {
+        x: 70,
+        y: 70,
+        id: 0
+      },
+      {
+        x: 270,
+        y: 270,
+        id: 1
+      }
+    ]);
+
+    stage.simulateTouchMove([
+      {
+        x: 100,
+        y: 100,
+        id: 0
+      },
+      {
+        x: 270,
+        y: 270,
+        id: 1
+      }
+    ]);
+
+    stage.simulateTouchEnd([
+      {
+        x: 100,
+        y: 100,
+        id: 0
+      },
+      {
+        x: 270,
+        y: 270,
+        id: 1
+      }
+    ]);
+    assert.equal(circle.x(), 100);
+    assert.equal(circle.y(), 100);
+  });
+
+  test.only('drag with multi-touch (two shapes)', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var circle1 = new Konva.Circle({
+      x: 70,
+      y: 70,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle',
+      draggable: true
+    });
+    layer.add(circle1);
+
+    var circle2 = new Konva.Circle({
+      x: 270,
+      y: 70,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle',
+      draggable: true
+    });
+    layer.add(circle2);
+    layer.draw();
+
+    var dragstart1 = 0;
+    var dragmove1 = 0;
+    circle1.on('dragstart', function() {
+      dragstart1 += 1;
+    });
+    circle1.on('dragmove', function() {
+      dragmove1 += 1;
+    });
+
+    var dragstart2 = 0;
+    var dragmove2 = 0;
+    circle2.on('dragstart', function() {
+      dragstart2 += 1;
+    });
+
+    circle2.on('dragmove', function() {
+      dragmove2 += 1;
+    });
+
+    stage.simulateTouchStart([
+      {
+        x: 70,
+        y: 70,
+        id: 0
+      },
+      {
+        x: 270,
+        y: 70,
+        id: 1
+      }
+    ]);
+
+    // move one finger
+    stage.simulateTouchMove([
+      {
+        x: 100,
+        y: 100,
+        id: 0
+      },
+      {
+        x: 270,
+        y: 270,
+        id: 1
+      }
+    ]);
+
+    assert.equal(dragstart1, 1);
+    assert.equal(circle1.isDragging(), true);
+    assert.equal(dragmove1, 1);
+    assert.equal(circle1.x(), 100);
+    assert.equal(circle1.y(), 100);
+
+    // move second finger
+    stage.simulateTouchEnd([
+      {
+        x: 100,
+        y: 100,
+        id: 0
+      },
+      {
+        x: 290,
+        y: 270,
+        id: 1
+      }
+    ]);
+
+    assert.equal(dragstart2, 1);
+    assert.equal(circle2.isDragging(), true);
+    assert.equal(dragmove2, 1);
+    assert.equal(circle2.x(), 290);
+    assert.equal(circle2.y(), 270);
+  });
+
   test('can stop drag on dragstart without changing position later', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

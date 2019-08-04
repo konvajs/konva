@@ -3,6 +3,7 @@ import { Factory } from './Factory';
 import { Node, NodeConfig } from './Node';
 import { DD } from './DragAndDrop';
 import { getNumberValidator } from './Validators';
+import { Konva } from './Global';
 
 import { GetSet, IRect } from './types';
 import { Shape } from './Shape';
@@ -444,7 +445,9 @@ export abstract class Container<ChildType extends Node> extends Node<
   shouldDrawHit(canvas?) {
     var layer = this.getLayer();
     var layerUnderDrag =
-      DD.isDragging && DD.anim.getLayers().indexOf(layer) !== -1;
+      DD.isDragging &&
+      !Konva.hitOnDragEnabled &&
+      DD.anim.getLayers().indexOf(layer) !== -1;
     return (
       (canvas && canvas.isCache) ||
       (layer && layer.hitGraphEnabled() && this.isVisible() && !layerUnderDrag)

@@ -58,7 +58,13 @@ suite('TouchEvents', function() {
     });
 
     stage._touchend({
-      touches: []
+      touches: [],
+      changedTouches: [
+        {
+          clientX: 100,
+          clientY: 100 + top
+        }
+      ]
     });
 
     assert.equal(circleTouchstart, 1, 1);
@@ -162,6 +168,12 @@ suite('TouchEvents', function() {
     // touchend circle
     stage._touchend({
       touches: [],
+      changedTouches: [
+        {
+          clientX: 289,
+          clientY: 100 + top
+        }
+      ],
       preventDefault: function() {}
     });
     // end drag is tied to document mouseup and touchend event
@@ -194,6 +206,12 @@ suite('TouchEvents', function() {
     // touchend circle to triger dbltap
     stage._touchend({
       touches: [],
+      changedTouches: [
+        {
+          clientX: 289,
+          clientY: 100 + top
+        }
+      ],
       preventDefault: function() {}
     });
     // end drag is tied to document mouseup and touchend event
@@ -350,5 +368,228 @@ suite('TouchEvents', function() {
       0,
       'should NOT trigger dbltap on second circle'
     );
+  });
+
+  test('multitouch - register all touches', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var circle1 = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle1',
+      draggable: true
+    });
+    layer.add(circle1);
+
+    var circle2 = new Konva.Circle({
+      x: 100,
+      y: 200,
+      radius: 80,
+      fill: 'red',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle2',
+      draggable: true
+    });
+
+    layer.add(circle2);
+    layer.draw();
+
+    var touchStart = 0;
+    var touchMove = 0;
+    var touchEnd = 0;
+    var touchEnd2 = 0;
+
+    circle1.on('touchstart', function() {
+      touchStart++;
+    });
+    circle1.on('touchmove', function() {
+      touchMove++;
+    });
+    circle1.on('touchend', function() {
+      touchEnd++;
+    });
+
+    circle2.on('touchend', function() {
+      touchEnd2++;
+    });
+
+    var stageTouchStart = 0;
+    var stageTouchMove = 0;
+    var stageTouchEnd = 0;
+    stage.on('touchstart', function() {
+      stageTouchStart++;
+    });
+    stage.on('touchmove', function() {
+      stageTouchMove++;
+    });
+    stage.on('touchend', function() {
+      stageTouchEnd++;
+    });
+
+    // start with one touch
+    stage.simulateTouchStart(
+      [{ x: 100, y: 100, id: 0 }],
+      [{ x: 100, y: 100, id: 0 }]
+    );
+
+    assert.equal(stageTouchStart, 1, 'trigger first touch start on stage');
+    assert.equal(touchStart, 1, 'trigger first touch start on circle');
+
+    // make second touch
+    stage.simulateTouchStart(
+      [{ x: 100, y: 100, id: 0 }, { x: 210, y: 100, id: 1 }],
+      [{ x: 210, y: 100, id: 1 }]
+    );
+
+    assert.equal(
+      stageTouchStart,
+      2,
+      'should trigger the second touch on stage'
+    );
+    assert.equal(
+      touchStart,
+      1,
+      'should not trigger the second touch start (it is outside)'
+    );
+
+    // now try to make two touches at the same time
+    // TODO: should we trigger touch end first?
+    stage.simulateTouchStart(
+      [{ x: 100, y: 100, id: 0 }, { x: 210, y: 100, id: 1 }],
+      [{ x: 100, y: 100, id: 0 }, { x: 210, y: 100, id: 1 }]
+    );
+
+    assert.equal(stageTouchStart, 3, 'should trigger one more touch');
+    assert.equal(
+      touchStart,
+      2,
+      'should trigger the second touch start on the circle'
+    );
+
+    // check variables
+    assert.deepEqual(stage.getPointerPosition(), { x: 100, y: 100, id: 0 });
+    assert.deepEqual(stage.getPointersPositions(), [
+      { x: 100, y: 100, id: 0 },
+      { x: 210, y: 100, id: 1 }
+    ]);
+
+    // move one finger
+    stage.simulateTouchMove(
+      [{ x: 100, y: 100, id: 0 }, { x: 220, y: 100, id: 1 }],
+      [{ x: 220, y: 100, id: 1 }]
+    );
+    assert.equal(touchMove, 0, 'should not trigger touch move on circle');
+    assert.equal(stageTouchMove, 1, 'should trigger touch move on stage');
+
+    // move two fingers
+    stage.simulateTouchMove(
+      [{ x: 100, y: 100, id: 0 }, { x: 220, y: 100, id: 1 }],
+      [{ x: 100, y: 100, id: 0 }, { x: 220, y: 100, id: 1 }]
+    );
+    assert.equal(touchMove, 1, 'should trigger touch move on circle');
+    assert.equal(
+      stageTouchMove,
+      2,
+      'should trigger two more touchmoves on stage'
+    );
+
+    stage.simulateTouchEnd(
+      [],
+      [{ x: 100, y: 100, id: 0 }, { x: 220, y: 100, id: 1 }]
+    );
+    assert.equal(touchEnd, 1);
+    assert.equal(stageTouchEnd, 1);
+
+    // try two touch ends on both shapes
+    stage.simulateTouchEnd(
+      [],
+      [{ x: 100, y: 100, id: 0 }, { x: 100, y: 170, id: 1 }]
+    );
+
+    assert.equal(touchEnd, 2);
+    assert.equal(touchEnd2, 1);
+    // TODO: it should be 2, not 3
+    assert.equal(stageTouchEnd, 3);
+  });
+
+  test('can capture touch events', function() {
+    Konva.captureTouchEventsEnabled = true;
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var circle1 = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle1'
+    });
+    layer.add(circle1);
+
+    layer.draw();
+
+    var touchStart = 0;
+    var touchMove = 0;
+    var touchEnd = 0;
+
+    circle1.on('touchstart', function(e) {
+      touchStart++;
+    });
+    circle1.on('touchmove', function() {
+      touchMove++;
+    });
+    circle1.on('touchend', function() {
+      touchEnd++;
+    });
+
+    stage.simulateTouchStart(
+      [{ x: 100, y: 100, id: 0 }],
+      [{ x: 100, y: 100, id: 0 }]
+    );
+
+    // go out of circle
+    stage.simulateTouchMove(
+      [{ x: 180, y: 100, id: 0 }],
+      [{ x: 180, y: 100, id: 0 }]
+    );
+    assert.equal(touchMove, 1, 'first touchmove');
+
+    // add another finger
+    stage.simulateTouchStart(
+      [{ x: 180, y: 100, id: 0 }, { x: 100, y: 100, id: 1 }],
+      [{ x: 100, y: 100, id: 1 }]
+    );
+
+    // move all out
+    stage.simulateTouchMove(
+      [{ x: 185, y: 100, id: 0 }, { x: 190, y: 100, id: 1 }],
+      [{ x: 185, y: 100, id: 0 }, { x: 190, y: 100, id: 1 }]
+    );
+    // should trigger just one more touchmove
+    assert.equal(touchMove, 2, 'second touchmove');
+
+    // remove fingers
+    stage.simulateTouchEnd(
+      [],
+      [{ x: 185, y: 100, id: 0 }, { x: 190, y: 100, id: 1 }]
+    );
+
+    assert.equal(touchEnd, 1, 'first touchend');
+
+    // should release captures on touchend
+    assert.equal(circle1.hasPointerCapture(0), false);
+    assert.equal(circle1.hasPointerCapture(1), false);
+
+    Konva.captureTouchEventsEnabled = false;
   });
 });

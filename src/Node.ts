@@ -205,6 +205,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   children = emptyChildren;
   nodeType!: string;
   className!: string;
+  _dragEventId: number | null = null;
 
   constructor(config?: Config) {
     this.setAttrs(config);
@@ -1575,7 +1576,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#getStage
    * @returns {Konva.Stage}
    */
-  getStage(): any {
+  getStage(): Stage | null {
     return this._getCache(STAGE, this._getStage);
   }
 
@@ -1636,7 +1637,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       return this._getAbsoluteTransform(top);
     } else {
       // if no argument, we can cache the result
-    return this._getCache(
+      return this._getCache(
         ABSOLUTE_TRANSFORM,
         this._getAbsoluteTransform
       ) as Transform;
@@ -1805,8 +1806,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       y = config.y !== undefined ? config.y : box.y,
       pixelRatio = config.pixelRatio || 1,
       canvas = new SceneCanvas({
-        width: config.width || box.width || (stage ? stage.getWidth() : 0),
-        height: config.height || box.height || (stage ? stage.getHeight() : 0),
+        width: config.width || box.width || (stage ? stage.width() : 0),
+        height: config.height || box.height || (stage ? stage.height() : 0),
         pixelRatio: pixelRatio
       }),
       context = canvas.getContext();
@@ -2241,8 +2242,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   }
 
   _setDragPosition(evt?) {
-    var pos = this.getStage().getPointerPosition(),
-      dbf = this.dragBoundFunc();
+    // const pointers = this.getStage().getPointersPositions();
+    // const pos = pointers.find(p => p.id === this._dragEventId);
+    const pos = this.getStage().getPointerPosition();
+
+    var dbf = this.dragBoundFunc();
     if (!pos) {
       return;
     }

@@ -1,5 +1,6 @@
 import { Animation } from './Animation';
 import { Konva } from './Global';
+import { Node } from './Node';
 
 // TODO: make better module,
 // make sure other modules import it without global
@@ -21,6 +22,8 @@ export const DD = {
     y: 0
   },
   node: null,
+  _nodes: [],
+  _offsets: [],
 
   // methods
   _drag(evt) {

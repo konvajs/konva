@@ -283,45 +283,98 @@ Konva.Stage.prototype.simulateMouseUp = function(pos) {
   Konva.DD._endDragAfter(evt);
 };
 
-Konva.Stage.prototype.simulateTouchStart = function(pos) {
+Konva.Stage.prototype.simulateTouchStart = function(pos, changed) {
   var top = this.content.getBoundingClientRect().top;
 
-  this._touchstart({
-    touches: [
+  var touches;
+  var changedTouches;
+  if (Array.isArray(pos)) {
+    touches = pos.map(touch => ({
+      identifier: touch.id,
+      clientX: touch.x,
+      clientY: touch.y + top
+    }));
+    changedTouches = (changed || pos).map(touch => ({
+      identifier: touch.id,
+      clientX: touch.x,
+      clientY: touch.y + top
+    }));
+  } else {
+    touches = [
       {
         clientX: pos.x,
         clientY: pos.y + top
       }
-    ]
-  });
+    ];
+  }
+  var evt = {
+    touches: touches,
+    changedTouches: changedTouches
+  };
+
+  this._touchstart(evt);
 };
 
-Konva.Stage.prototype.simulateTouchMove = function(pos) {
+Konva.Stage.prototype.simulateTouchMove = function(pos, changed) {
   var top = this.content.getBoundingClientRect().top;
 
-  var evt = {
-    touches: [
+  var touches;
+  var changedTouches;
+  if (Array.isArray(pos)) {
+    touches = pos.map(touch => ({
+      identifier: touch.id,
+      clientX: touch.x,
+      clientY: touch.y + top
+    }));
+    changedTouches = (changed || pos).map(touch => ({
+      identifier: touch.id,
+      clientX: touch.x,
+      clientY: touch.y + top
+    }));
+  } else {
+    touches = [
       {
         clientX: pos.x,
         clientY: pos.y + top
       }
-    ]
+    ];
+  }
+  var evt = {
+    touches: touches,
+    changedTouches: changedTouches
   };
 
   this._touchmove(evt);
   Konva.DD._drag(evt);
 };
 
-Konva.Stage.prototype.simulateTouchEnd = function(pos) {
+Konva.Stage.prototype.simulateTouchEnd = function(pos, changed) {
   var top = this.content.getBoundingClientRect().top;
 
-  var evt = {
-    touches: [
+  var touches;
+  var changedTouches;
+  if (Array.isArray(pos)) {
+    touches = pos.map(touch => ({
+      identifier: touch.id,
+      clientX: touch.x,
+      clientY: touch.y + top
+    }));
+    changedTouches = (changed || pos).map(touch => ({
+      identifier: touch.id,
+      clientX: touch.x,
+      clientY: touch.y + top
+    }));
+  } else {
+    touches = [
       {
         clientX: pos.x,
         clientY: pos.y + top
       }
-    ]
+    ];
+  }
+  var evt = {
+    touches: touches,
+    changedTouches: changedTouches
   };
 
   Konva.DD._endDragBefore(evt);

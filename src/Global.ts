@@ -97,6 +97,30 @@ export const Konva = {
   },
   enableTrace: false,
   _pointerEventsEnabled: false,
+  /**
+   * Should we enable hit detection while dragging? For performance reasons, by default it is false.
+   * But on some rare cases you want to see hit graph and check intersections. Just set it to true.
+   * @property hitOnDragEnabled
+   * @default false
+   * @name hitOnDragEnabled
+   * @memberof Konva
+   * @example
+   * Konva.hitOnDragEnabled = true;
+   */
+  hitOnDragEnabled: false,
+  /**
+   * Should we capture touch events and bind them to the touchstart target? That is how it works on DOM elements.
+   * The case: we touchstart on div1, then touchmove out of that element into another element div2.
+   * DOM will continue trigger touchmove events on div1 (not div2). Because events are "captured" into initial target.
+   * By default Konva do not do that and will trigger touchmove on another element, while pointer is moving.
+   * @property captureTouchEventsEnabled
+   * @default false
+   * @name captureTouchEventsEnabled
+   * @memberof Konva
+   * @example
+   * Konva.captureTouchEventsEnabled = true;
+   */
+  captureTouchEventsEnabled: false,
 
   // TODO: move that to stage?
   listenClickTap: false,

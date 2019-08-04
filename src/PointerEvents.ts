@@ -46,7 +46,7 @@ export function releaseCapture(pointerId: number, target?: Shape | Stage) {
   const stage = shape.getStage();
 
   if (stage && stage.content) {
-    stage.content.releasePointerCapture(pointerId);
+    // stage.content.releasePointerCapture(pointerId);
   }
 
   Captures.delete(pointerId);
