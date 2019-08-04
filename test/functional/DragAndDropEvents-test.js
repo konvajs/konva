@@ -58,8 +58,8 @@ suite('DragAndDropEvents', function() {
     assert(!Konva.isDragReady(), ' isDragReady()) should be false 2');
 
     /*
-        * simulate drag and drop
-        */
+     * simulate drag and drop
+     */
     stage.simulateMouseDown({
       x: 380,
       y: 98
@@ -328,8 +328,8 @@ suite('DragAndDropEvents', function() {
     var top = stage.content.getBoundingClientRect().top;
 
     /*
-         * simulate drag and drop
-         */
+     * simulate drag and drop
+     */
     stage.simulateMouseDown({
       x: 380,
       y: 100
@@ -391,8 +391,8 @@ suite('DragAndDropEvents', function() {
     var top = stage.content.getBoundingClientRect().top;
 
     /*
-         * simulate drag and drop
-         */
+     * simulate drag and drop
+     */
     stage.simulateMouseDown({
       x: 399,
       y: 96
@@ -450,8 +450,8 @@ suite('DragAndDropEvents', function() {
     assert.equal(stage.getY(), 0);
 
     /*
-         * simulate drag and drop
-         */
+     * simulate drag and drop
+     */
     stage.simulateMouseDown({
       x: 0,
       y: 100

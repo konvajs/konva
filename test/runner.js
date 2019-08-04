@@ -243,6 +243,9 @@ afterEach(function() {
     Konva.stages.forEach(function(stage) {
       stage.destroy();
     });
+    if (Konva.DD._dragElements.size) {
+      throw 'Why not cleaned?';
+    }
   }
 });
 
@@ -300,10 +303,11 @@ Konva.Stage.prototype.simulateTouchStart = function(pos, changed) {
       clientY: touch.y + top
     }));
   } else {
-    touches = [
+    changedTouches = touches = [
       {
         clientX: pos.x,
-        clientY: pos.y + top
+        clientY: pos.y + top,
+        id: 0
       }
     ];
   }
@@ -332,10 +336,11 @@ Konva.Stage.prototype.simulateTouchMove = function(pos, changed) {
       clientY: touch.y + top
     }));
   } else {
-    touches = [
+    changedTouches = touches = [
       {
         clientX: pos.x,
-        clientY: pos.y + top
+        clientY: pos.y + top,
+        id: 0
       }
     ];
   }
@@ -365,10 +370,11 @@ Konva.Stage.prototype.simulateTouchEnd = function(pos, changed) {
       clientY: touch.y + top
     }));
   } else {
-    touches = [
+    changedTouches = touches = [
       {
         clientX: pos.x,
-        clientY: pos.y + top
+        clientY: pos.y + top,
+        id: 0
       }
     ];
   }

@@ -48,42 +48,18 @@ suite('TouchEvents', function() {
       stageContentDbltap++;
     });
 
-    stage._touchstart({
-      touches: [
-        {
-          clientX: 100,
-          clientY: 100 + top
-        }
-      ]
-    });
+    stage.simulateTouchStart([{ x: 100, y: 100, id: 0 }]);
 
-    stage._touchend({
-      touches: [],
-      changedTouches: [
-        {
-          clientX: 100,
-          clientY: 100 + top
-        }
-      ]
-    });
-
+    stage.simulateTouchEnd([], [{ x: 100, y: 100, id: 0 }]);
     assert.equal(circleTouchstart, 1, 1);
     assert.equal(circleTouchend, 1, 2);
     assert.equal(stageContentTouchstart, 1, 3);
     assert.equal(stageContentTouchend, 1, 4);
     assert.equal(stageContentDbltap, 0, 5);
 
-    stage._touchstart({
-      touches: [
-        {
-          clientX: 1,
-          clientY: 1 + top
-        }
-      ]
-    });
-    stage._touchend({
-      touches: []
-    });
+    stage.simulateTouchStart([{ x: 1, y: 1, id: 0 }]);
+
+    stage.simulateTouchEnd([], [{ x: 1, y: 1, id: 0 }]);
 
     assert.equal(stageContentTouchstart, 2, 6);
     assert.equal(stageContentTouchend, 2, 7);
@@ -149,15 +125,7 @@ suite('TouchEvents', function() {
     Konva.inDblClickWindow = false;
 
     // touchstart circle
-    stage._touchstart({
-      touches: [
-        {
-          clientX: 289,
-          clientY: 100 + top
-        }
-      ],
-      preventDefault: function() {}
-    });
+    stage.simulateTouchStart([{ x: 289, y: 100, id: 0 }]);
 
     assert(touchstart, '8) touchstart should be true');
     assert(!touchmove, '8) touchmove should be false');
@@ -166,16 +134,7 @@ suite('TouchEvents', function() {
     assert(!dbltap, '8) dbltap should be false');
 
     // touchend circle
-    stage._touchend({
-      touches: [],
-      changedTouches: [
-        {
-          clientX: 289,
-          clientY: 100 + top
-        }
-      ],
-      preventDefault: function() {}
-    });
+    stage.simulateTouchEnd([], [{ x: 289, y: 100, id: 0 }]);
     // end drag is tied to document mouseup and touchend event
     // which can't be simulated.  call _endDrag manually
     //Konva.DD._endDrag();
@@ -187,15 +146,7 @@ suite('TouchEvents', function() {
     assert(!dbltap, '9) dbltap should be false');
 
     // touchstart circle
-    stage._touchstart({
-      touches: [
-        {
-          clientX: 289,
-          clientY: 100 + top
-        }
-      ],
-      preventDefault: function() {}
-    });
+    stage.simulateTouchStart([{ x: 289, y: 100, id: 0 }]);
 
     assert(touchstart, '10) touchstart should be true');
     assert(!touchmove, '10) touchmove should be false');
@@ -204,16 +155,7 @@ suite('TouchEvents', function() {
     assert(!dbltap, '10) dbltap should be false');
 
     // touchend circle to triger dbltap
-    stage._touchend({
-      touches: [],
-      changedTouches: [
-        {
-          clientX: 289,
-          clientY: 100 + top
-        }
-      ],
-      preventDefault: function() {}
-    });
+    stage.simulateTouchEnd([], [{ x: 289, y: 100, id: 0 }]);
     // end drag is tied to document mouseup and touchend event
     // which can't be simulated.  call _endDrag manually
     //Konva.DD._endDrag();
@@ -226,15 +168,7 @@ suite('TouchEvents', function() {
 
     setTimeout(function() {
       // touchmove circle
-      stage._touchmove({
-        touches: [
-          {
-            clientX: 290,
-            clientY: 100 + top
-          }
-        ],
-        preventDefault: function() {}
-      });
+      stage.simulateTouchMove([], [{ x: 289, y: 100, id: 0 }]);
 
       assert(touchstart, '12) touchstart should be true');
       assert(touchmove, '12) touchmove should be true');
@@ -279,23 +213,8 @@ suite('TouchEvents', function() {
       stageContentTouchend++;
     });
 
-    stage._touchstart({
-      touches: [
-        {
-          clientX: 1,
-          clientY: 1 + top
-        }
-      ]
-    });
-
-    stage._touchend({
-      touches: [
-        {
-          clientX: 100,
-          clientY: 100 + top
-        }
-      ]
-    });
+    stage.simulateTouchStart([{ x: 1, y: 1, id: 0 }]);
+    stage.simulateTouchEnd([], [{ x: 100, y: 100, id: 0 }]);
 
     assert.equal(stageContentTouchstart, 1);
     assert.equal(stageContentTouchend, 1);
@@ -474,7 +393,7 @@ suite('TouchEvents', function() {
     );
 
     // check variables
-    assert.deepEqual(stage.getPointerPosition(), { x: 100, y: 100, id: 0 });
+    assert.deepEqual(stage.getPointerPosition(), { x: 100, y: 100 });
     assert.deepEqual(stage.getPointersPositions(), [
       { x: 100, y: 100, id: 0 },
       { x: 210, y: 100, id: 1 }

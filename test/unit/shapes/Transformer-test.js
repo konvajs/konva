@@ -841,6 +841,11 @@ suite('Transformer', function() {
     assert.equal(tr.isTransforming(), false);
 
     assert.equal(tr.getNode(), undefined);
+
+    stage.simulateMouseUp({
+      x: 100,
+      y: 60
+    });
   });
 
   test('can add padding', function() {

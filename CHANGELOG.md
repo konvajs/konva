@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* Better multitouch support
+* New drag&drop implementation
+
 ## [3.4.1][2019-07-18]
 
 * Fix wrong double tap trigger

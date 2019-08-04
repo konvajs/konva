@@ -928,7 +928,7 @@ suite('Stage', function() {
     assert.equal(dblicks, 1, 'first dbclick registered');
   });
 
-  test('test can listen taps on empty areas', function() {
+  test('can listen taps on empty areas', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -969,29 +969,12 @@ suite('Stage', function() {
       assert.equal(e.currentTarget, stage);
     });
 
-    var top = stage.content.getBoundingClientRect().top;
     // simulate dragging
-    stage._touchstart({
-      touches: [
-        {
-          clientX: 100,
-          clientY: 100 + top
-        }
-      ]
-    });
+    stage.simulateTouchStart([{ x: 100, y: 100, id: 1 }]);
 
-    stage._touchmove({
-      touches: [
-        {
-          clientX: 100,
-          clientY: 100 + top
-        }
-      ]
-    });
+    stage.simulateTouchMove([{ x: 100, y: 100, id: 1 }]);
 
-    stage._touchend({
-      touches: []
-    });
+    stage.simulateTouchEnd([], [{ x: 100, y: 100, id: 1 }]);
 
     assert.equal(touchstarts, 1, 'first touchstart registered');
     assert.equal(touchends, 1, 'first touchends registered');
@@ -999,18 +982,9 @@ suite('Stage', function() {
     assert.equal(touchmoves, 1, 'first touchmove registered');
     assert.equal(dbltaps, 0, 'no  dbltap registered');
 
-    stage._touchstart({
-      touches: [
-        {
-          clientX: 100,
-          clientY: 100 + top
-        }
-      ]
-    });
+    stage.simulateTouchStart([{ x: 100, y: 100, id: 1 }]);
 
-    stage._touchend({
-      touches: []
-    });
+    stage.simulateTouchEnd([], [{ x: 100, y: 100, id: 1 }]);
 
     assert.equal(touchstarts, 2, 'first touchstart registered');
     assert.equal(touchends, 2, 'first touchends registered');

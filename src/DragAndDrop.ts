@@ -1,6 +1,8 @@
 import { Animation } from './Animation';
 import { Konva } from './Global';
 import { Node } from './Node';
+import { Vector2d } from './types';
+import { Util } from './Util';
 
 // TODO: make better module,
 // make sure other modules import it without global
@@ -15,41 +17,70 @@ export const DD = {
     this.dirty = false;
     return b;
   }),
-  isDragging: false,
+  get isDragging() {
+    var flag = false;
+    DD._dragElements.forEach(elem => {
+      if (elem.isDragging) {
+        flag = true;
+      }
+    });
+    return flag;
+  },
   justDragged: false,
   offset: {
     x: 0,
     y: 0
   },
-  node: null,
-  _nodes: [],
-  _offsets: [],
+  get node() {
+    // return first dragging node
+    var node: Node | undefined;
+    DD._dragElements.forEach(elem => {
+      node = elem.node;
+    });
+    return node;
+  },
+  _dragElements: new Map<
+    number,
+    {
+      node: Node;
+      startPointerPos: Vector2d;
+      offset: Vector2d;
+      isDragging: boolean;
+      pointerId?: number;
+      dragStopped: boolean;
+    }
+  >(),
 
   // methods
   _drag(evt) {
-    var node = DD.node;
-    if (node) {
-      if (!DD.isDragging) {
-        var pos = node.getStage().getPointerPosition();
-        // it is possible that pos is undefined
-        // reattach it
-        if (!pos) {
-          node.getStage().setPointersPositions(evt);
-          pos = node.getStage().getPointerPosition();
-        }
+    DD._dragElements.forEach((elem, key) => {
+      const { node } = elem;
+      // we need to find pointer relative to that node
+      const stage = node.getStage();
+      stage.setPointersPositions(evt);
+
+      // it is possible that user call startDrag without any event
+      // it that case we need to detect first movable pointer and attach it into the node
+      if (elem.pointerId === undefined) {
+        elem.pointerId = Util._getFirstPointerId(evt);
+      }
+      const pos = stage._changedPointerPositions.find(
+        pos => pos.id === elem.pointerId
+      );
+      if (!pos) {
+        console.error('Can not find pointer');
+        return;
+      }
+      if (!elem.isDragging) {
         var dragDistance = node.dragDistance();
         var distance = Math.max(
-          Math.abs(pos.x - DD.startPointerPos.x),
-          Math.abs(pos.y - DD.startPointerPos.y)
+          Math.abs(pos.x - elem.startPointerPos.x),
+          Math.abs(pos.y - elem.startPointerPos.y)
         );
         if (distance < dragDistance) {
           return;
         }
-      }
-
-      node.getStage().setPointersPositions(evt);
-      if (!DD.isDragging) {
-        DD.isDragging = true;
+        elem.isDragging = true;
         node.fire(
           'dragstart',
           {
@@ -64,7 +95,7 @@ export const DD = {
           return;
         }
       }
-      node._setDragPosition(evt);
+      node._setDragPosition(evt, elem);
 
       // execute ondragmove if defined
       node.fire(
@@ -76,50 +107,93 @@ export const DD = {
         },
         true
       );
-    }
+    });
   },
   _endDragBefore(evt) {
-    var node = DD.node;
+    DD._dragElements.forEach((elem, key) => {
+      const { node } = elem;
+      // we need to find pointer relative to that node
+      const stage = node.getStage();
+      stage.setPointersPositions(evt);
 
-    if (node) {
-      DD.anim.stop();
+      const pos = stage._changedPointerPositions.find(
+        pos => pos.id === elem.pointerId
+      );
 
-      // only fire dragend event if the drag and drop
-      // operation actually started.
-      if (DD.isDragging) {
-        DD.isDragging = false;
-        DD.justDragged = true;
-        Konva.listenClickTap = false;
-
-        if (evt) {
-          evt.dragEndNode = node;
-        }
+      // that pointer is not related
+      if (!pos) {
+        return;
       }
 
-      DD.node = null;
+      if (elem.isDragging) {
+        DD.justDragged = true;
+        Konva.listenClickTap = false;
+      }
+
+      elem.dragStopped = true;
+      elem.isDragging = false;
 
       const drawNode =
-        node.getLayer() || (node instanceof Konva['Stage'] && node);
+        elem.node.getLayer() ||
+        (elem.node instanceof Konva['Stage'] && elem.node);
       if (drawNode) {
         drawNode.draw();
       }
-    }
+    });
+    // var node = DD.node;
+
+    // if (node) {
+    //   DD.anim.stop();
+
+    //   // only fire dragend event if the drag and drop
+    //   // operation actually started.
+    //   if (DD.isDragging) {
+    //     DD.isDragging = false;
+    //     DD.justDragged = true;
+    //     Konva.listenClickTap = false;
+
+    //     if (evt) {
+    //       evt.dragEndNode = node;
+    //     }
+    //   }
+
+    //   DD.node = null;
+
+    //   const drawNode =
+    //     node.getLayer() || (node instanceof Konva['Stage'] && node);
+    //   if (drawNode) {
+    //     drawNode.draw();
+    //   }
+    // }
   },
   _endDragAfter(evt) {
-    evt = evt || {};
-    var dragEndNode = evt.dragEndNode;
-
-    if (evt && dragEndNode) {
-      dragEndNode.fire(
-        'dragend',
-        {
-          type: 'dragend',
-          target: dragEndNode,
-          evt: evt
-        },
-        true
-      );
-    }
+    DD._dragElements.forEach((elem, key) => {
+      if (elem.dragStopped) {
+        elem.node.fire(
+          'dragend',
+          {
+            type: 'dragend',
+            target: elem.node,
+            evt: evt
+          },
+          true
+        );
+        DD._dragElements.delete(key);
+      }
+    });
+    // evt = evt || {};
+    // var dragEndNode = evt.dragEndNode;
+    // if (evt && dragEndNode) {
+    //   dragEndNode.fire(
+    //     'dragend',
+    //     {
+    //       type: 'dragend',
+    //       target: dragEndNode,
+    //       evt: evt
+    //     },
+    //     true
+    //   );
+    // }
   }
 };
 

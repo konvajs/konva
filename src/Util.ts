@@ -1003,5 +1003,13 @@ export const Util = {
       (<any>target)[key] = source[key];
     }
     return target as T & U;
+  },
+  _getFirstPointerId(evt) {
+    if (!evt.touches) {
+      // fake id for mouse
+      return 999;
+    } else {
+      return evt.changedTouches[0].identifier;
+    }
   }
 };

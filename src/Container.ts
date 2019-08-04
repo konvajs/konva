@@ -443,14 +443,20 @@ export abstract class Container<ChildType extends Node> extends Node<
     }
   }
   shouldDrawHit(canvas?) {
-    var layer = this.getLayer();
-    var layerUnderDrag =
-      DD.isDragging &&
-      !Konva.hitOnDragEnabled &&
-      DD.anim.getLayers().indexOf(layer) !== -1;
+    // TODO: set correct type
+    var layer = this.getLayer() as any;
+
+    var layerUnderDrag = false;
+    DD._dragElements.forEach(elem => {
+      if (elem.isDragging && elem.node.getLayer() === layer) {
+        layerUnderDrag = true;
+      }
+    });
+
+    var dragSkip = !Konva.hitOnDragEnabled && layerUnderDrag;
     return (
       (canvas && canvas.isCache) ||
-      (layer && layer.hitGraphEnabled() && this.isVisible() && !layerUnderDrag)
+      (layer && layer.hitGraphEnabled() && this.isVisible() && !dragSkip)
     );
   }
   getClientRect(attrs): IRect {

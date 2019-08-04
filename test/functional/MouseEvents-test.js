@@ -162,7 +162,6 @@ suite('MouseEvents', function() {
       y: 112
     });
 
-    Konva.DD._endDragBefore();
     stage.simulateMouseUp({
       x: 291,
       y: 112
@@ -202,7 +201,6 @@ suite('MouseEvents', function() {
       x: 291,
       y: 112
     });
-    Konva.DD._endDragBefore();
     stage.simulateMouseUp({
       x: 291,
       y: 112
@@ -215,7 +213,6 @@ suite('MouseEvents', function() {
       x: 291,
       y: 112
     });
-    Konva.DD._endDragBefore();
     stage.simulateMouseUp({
       x: 291,
       y: 112
@@ -232,7 +229,6 @@ suite('MouseEvents', function() {
       x: 291,
       y: 112
     });
-    Konva.DD._endDragBefore();
     stage.simulateMouseUp({
       x: 291,
       y: 112
@@ -297,12 +293,10 @@ suite('MouseEvents', function() {
       y: 113
     });
 
-    Konva.DD._endDragBefore();
     stage.simulateMouseUp({
       x: 284,
       y: 113
     });
-    Konva.DD._endDragAfter({ dragEndNode: redCircle });
 
     assert.equal(redClicks, 1, 'red circle should have 1 click');
     assert.equal(greenClicks, 0, 'green circle should have 0 clicks');
@@ -313,12 +307,10 @@ suite('MouseEvents', function() {
       y: 108
     });
 
-    Konva.DD._endDragBefore();
     stage.simulateMouseUp({
       x: 397,
       y: 108
     });
-    Konva.DD._endDragAfter({ dragEndNode: redCircle });
 
     assert.equal(redClicks, 1, 'red circle should have 1 click');
     assert.equal(greenClicks, 1, 'green circle should have 1 click');
@@ -329,12 +321,10 @@ suite('MouseEvents', function() {
       y: 113
     });
 
-    Konva.DD._endDragBefore();
     stage.simulateMouseUp({
       x: 397,
       y: 108
     });
-    Konva.DD._endDragAfter({ dragEndNode: redCircle });
 
     assert.equal(redClicks, 1, 'red circle should still have 1 click');
     assert.equal(greenClicks, 1, 'green circle should still have 1 click');
@@ -364,8 +354,6 @@ suite('MouseEvents', function() {
     layer.add(text);
     stage.add(layer);
 
-    var top = stage.content.getBoundingClientRect().top;
-
     showHit(layer);
 
     stage.simulateMouseDown({
@@ -373,12 +361,10 @@ suite('MouseEvents', function() {
       y: 120
     });
 
-    Konva.DD._endDragBefore();
     stage.simulateMouseUp({
       x: 300,
       y: 120
     });
-    Konva.DD._endDragAfter({ dragEndNode: text });
 
     assert.equal(
       click,
@@ -1596,7 +1582,6 @@ suite('MouseEvents', function() {
       x: 374,
       y: 114
     });
-    Konva.DD._endDragBefore();
     stage.simulateMouseUp({
       x: 374,
       y: 114

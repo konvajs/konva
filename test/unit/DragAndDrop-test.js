@@ -98,6 +98,8 @@ suite('DragAndDrop', function() {
       y: 112
     });
 
+    assert(!circle.isDragging(), 'drag stopped');
+
     stage.simulateMouseDown({
       x: 291,
       y: 112,
@@ -132,7 +134,7 @@ suite('DragAndDrop', function() {
       button: 2
     });
 
-    assert(circle.isDragging() === true, 'no dragging with right click');
+    assert(circle.isDragging() === true, 'now dragging with right click');
 
     stage.simulateMouseUp({
       x: 291,
@@ -600,7 +602,7 @@ suite('DragAndDrop', function() {
     assert.equal(circle.y(), 100);
   });
 
-  test.only('drag with multi-touch (two shapes)', function() {
+  test('drag with multi-touch (two shapes)', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -671,7 +673,7 @@ suite('DragAndDrop', function() {
       },
       {
         x: 270,
-        y: 270,
+        y: 70,
         id: 1
       }
     ]);
@@ -683,7 +685,7 @@ suite('DragAndDrop', function() {
     assert.equal(circle1.y(), 100);
 
     // move second finger
-    stage.simulateTouchEnd([
+    stage.simulateTouchMove([
       {
         x: 100,
         y: 100,
@@ -691,7 +693,7 @@ suite('DragAndDrop', function() {
       },
       {
         x: 290,
-        y: 270,
+        y: 70,
         id: 1
       }
     ]);
@@ -700,8 +702,44 @@ suite('DragAndDrop', function() {
     assert.equal(circle2.isDragging(), true);
     assert.equal(dragmove2, 1);
     assert.equal(circle2.x(), 290);
-    assert.equal(circle2.y(), 270);
+    assert.equal(circle2.y(), 70);
+
+    // remove first finger
+    stage.simulateTouchEnd(
+      [
+        {
+          x: 290,
+          y: 70,
+          id: 1
+        }
+      ],
+      [
+        {
+          x: 100,
+          y: 100,
+          id: 0
+        }
+      ]
+    );
+    assert.equal(circle1.isDragging(), false);
+    assert.equal(circle2.isDragging(), true);
+    assert.equal(Konva.DD.isDragging, true);
+    // remove first finger
+    stage.simulateTouchEnd(
+      [],
+      [
+        {
+          x: 290,
+          y: 70,
+          id: 1
+        }
+      ]
+    );
+    assert.equal(circle2.isDragging(), false);
+    assert.equal(Konva.DD.isDragging, false);
   });
+  // TODO: try move the same node with the second finger
+  // TODO: try to move two shapes on different stages
 
   test('can stop drag on dragstart without changing position later', function() {
     var stage = addStage();
