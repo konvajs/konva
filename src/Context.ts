@@ -66,13 +66,12 @@ var CONTEXT_PROPERTIES = [
   'imageSmoothingEnabled'
 ];
 
-// TODO: document all context methods
-
 const traceArrMax = 100;
 /**
  * Konva wrapper around native 2d canvas context. It has almost the same API of 2d context with some additional functions.
- * With core Konva shapes you don't need to use this object. But you have to use it if you want to create
- * a custom shape or a custom hit regions.
+ * With core Konva shapes you don't need to use this object. But you will use it if you want to create
+ * a [custom shape](/docs/react/Custom_Shape.html) or a [custom hit regions](/docs/events/Custom_Hit_Region.html).
+ * For full information about each 2d context API use [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D)
  * @constructor
  * @memberof Konva
  * @example
@@ -275,28 +274,67 @@ export class Context {
     this._context[attr] = val;
   }
 
-  // context pass through methods
+  /**
+   * arc function.
+   * @method
+   * @name Konva.Context#arc
+   */
   arc(a0, a1, a2, a3, a4, a5) {
     this._context.arc(a0, a1, a2, a3, a4, a5);
   }
+  /**
+   * arcTo function.
+   * @method
+   * @name Konva.Context#arcTo
+   */
   arcTo(a0, a1, a2, a3, a4, a5) {
     this._context.arc(a0, a1, a2, a3, a4, a5);
   }
+  /**
+   * beginPath function.
+   * @method
+   * @name Konva.Context#beginPath
+   */
   beginPath() {
     this._context.beginPath();
   }
+  /**
+   * bezierCurveTo function.
+   * @method
+   * @name Konva.Context#bezierCurveTo
+   */
   bezierCurveTo(a0, a1, a2, a3, a4, a5) {
     this._context.bezierCurveTo(a0, a1, a2, a3, a4, a5);
   }
+  /**
+   * clearRect function.
+   * @method
+   * @name Konva.Context#clearRect
+   */
   clearRect(a0, a1, a2, a3) {
     this._context.clearRect(a0, a1, a2, a3);
   }
+  /**
+   * clip function.
+   * @method
+   * @name Konva.Context#clip
+   */
   clip() {
     this._context.clip();
   }
+  /**
+   * closePath function.
+   * @method
+   * @name Konva.Context#closePath
+   */
   closePath() {
     this._context.closePath();
   }
+  /**
+   * createImageData function.
+   * @method
+   * @name Konva.Context#createImageData
+   */
   createImageData(a0, a1) {
     var a = arguments;
     if (a.length === 2) {
@@ -305,15 +343,35 @@ export class Context {
       return this._context.createImageData(a0);
     }
   }
+  /**
+   * createLinearGradient function.
+   * @method
+   * @name Konva.Context#createLinearGradient
+   */
   createLinearGradient(a0, a1, a2, a3) {
     return this._context.createLinearGradient(a0, a1, a2, a3);
   }
+  /**
+   * createPattern function.
+   * @method
+   * @name Konva.Context#createPattern
+   */
   createPattern(a0, a1) {
     return this._context.createPattern(a0, a1);
   }
+  /**
+   * createRadialGradient function.
+   * @method
+   * @name Konva.Context#createRadialGradient
+   */
   createRadialGradient(a0, a1, a2, a3, a4, a5) {
     return this._context.createRadialGradient(a0, a1, a2, a3, a4, a5);
   }
+  /**
+   * drawImage function.
+   * @method
+   * @name Konva.Context#drawImage
+   */
   drawImage(a0, a1, a2, a3?, a4?, a5?, a6?, a7?, a8?) {
     var a = arguments,
       _context = this._context;
@@ -326,57 +384,147 @@ export class Context {
       _context.drawImage(a0, a1, a2, a3, a4, a5, a6, a7, a8);
     }
   }
+  /**
+   * ellipse function.
+   * @method
+   * @name Konva.Context#ellipse
+   */
   ellipse(a0, a1, a2, a3, a4, a5, a6, a7) {
     this._context.ellipse(a0, a1, a2, a3, a4, a5, a6, a7);
   }
+  /**
+   * isPointInPath function.
+   * @method
+   * @name Konva.Context#isPointInPath
+   */
   isPointInPath(x, y) {
     return this._context.isPointInPath(x, y);
   }
+  /**
+   * fill function.
+   * @method
+   * @name Konva.Context#fill
+   */
   fill() {
     this._context.fill();
   }
+  /**
+   * fillRect function.
+   * @method
+   * @name Konva.Context#fillRect
+   */
   fillRect(x, y, width, height) {
     this._context.fillRect(x, y, width, height);
   }
+  /**
+   * strokeRect function.
+   * @method
+   * @name Konva.Context#strokeRect
+   */
   strokeRect(x, y, width, height) {
     this._context.strokeRect(x, y, width, height);
   }
+  /**
+   * fillText function.
+   * @method
+   * @name Konva.Context#fillText
+   */
   fillText(a0, a1, a2) {
     this._context.fillText(a0, a1, a2);
   }
+  /**
+   * measureText function.
+   * @method
+   * @name Konva.Context#measureText
+   */
   measureText(text) {
     return this._context.measureText(text);
   }
+  /**
+   * getImageData function.
+   * @method
+   * @name Konva.Context#getImageData
+   */
   getImageData(a0, a1, a2, a3) {
     return this._context.getImageData(a0, a1, a2, a3);
   }
+  /**
+   * lineTo function.
+   * @method
+   * @name Konva.Context#lineTo
+   */
   lineTo(a0, a1) {
     this._context.lineTo(a0, a1);
   }
+  /**
+   * moveTo function.
+   * @method
+   * @name Konva.Context#moveTo
+   */
   moveTo(a0, a1) {
     this._context.moveTo(a0, a1);
   }
+  /**
+   * rect function.
+   * @method
+   * @name Konva.Context#rect
+   */
   rect(a0, a1, a2, a3) {
     this._context.rect(a0, a1, a2, a3);
   }
+  /**
+   * putImageData function.
+   * @method
+   * @name Konva.Context#putImageData
+   */
   putImageData(a0, a1, a2) {
     this._context.putImageData(a0, a1, a2);
   }
+  /**
+   * quadraticCurveTo function.
+   * @method
+   * @name Konva.Context#quadraticCurveTo
+   */
   quadraticCurveTo(a0, a1, a2, a3) {
     this._context.quadraticCurveTo(a0, a1, a2, a3);
   }
+  /**
+   * restore function.
+   * @method
+   * @name Konva.Context#restore
+   */
   restore() {
     this._context.restore();
   }
+  /**
+   * rotate function.
+   * @method
+   * @name Konva.Context#rotate
+   */
   rotate(a0) {
     this._context.rotate(a0);
   }
+  /**
+   * save function.
+   * @method
+   * @name Konva.Context#save
+   */
   save() {
     this._context.save();
   }
+  /**
+   * scale function.
+   * @method
+   * @name Konva.Context#scale
+   */
   scale(a0, a1) {
     this._context.scale(a0, a1);
   }
+  /**
+   * setLineDash function.
+   * @method
+   * @name Konva.Context#setLineDash
+   */
   setLineDash(a0) {
     // works for Chrome and IE11
     if (this._context.setLineDash) {
@@ -391,21 +539,51 @@ export class Context {
 
     // no support for IE9 and IE10
   }
+  /**
+   * getLineDash function.
+   * @method
+   * @name Konva.Context#getLineDash
+   */
   getLineDash() {
     return this._context.getLineDash();
   }
+  /**
+   * setTransform function.
+   * @method
+   * @name Konva.Context#setTransform
+   */
   setTransform(a0, a1, a2, a3, a4, a5) {
     this._context.setTransform(a0, a1, a2, a3, a4, a5);
   }
+  /**
+   * stroke function.
+   * @method
+   * @name Konva.Context#stroke
+   */
   stroke() {
     this._context.stroke();
   }
+  /**
+   * strokeText function.
+   * @method
+   * @name Konva.Context#strokeText
+   */
   strokeText(a0, a1, a2, a3) {
     this._context.strokeText(a0, a1, a2, a3);
   }
+  /**
+   * transform function.
+   * @method
+   * @name Konva.Context#transform
+   */
   transform(a0, a1, a2, a3, a4, a5) {
     this._context.transform(a0, a1, a2, a3, a4, a5);
   }
+  /**
+   * translate function.
+   * @method
+   * @name Konva.Context#translate
+   */
   translate(a0, a1) {
     this._context.translate(a0, a1);
   }

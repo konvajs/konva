@@ -624,6 +624,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
       cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
     if (!this.colorKey) {
+      console.log(this);
       Util.warn(
         'Looks like your canvas has a destroyed shape in it. Do not reuse shape after you destroyed it. See the shape in logs above. If you want to reuse shape you should call remove() instead of destroy()'
       );

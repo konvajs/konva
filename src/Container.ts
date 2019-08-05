@@ -135,12 +135,6 @@ export abstract class Container<ChildType extends Node> extends Node<
     this._fire('add', {
       child: child
     });
-
-    // if node under drag we need to update drag animation
-    if (child.isDragging()) {
-      DD.anim.setLayers(child.getLayer());
-    }
-
     // chainable
     return this;
   }
@@ -443,9 +437,10 @@ export abstract class Container<ChildType extends Node> extends Node<
     }
   }
   shouldDrawHit(canvas?) {
-    // TODO: set correct type
-    var layer = this.getLayer() as any;
-
+    if (canvas && canvas.isCache) {
+      return true;
+    }
+    var layer = this.getLayer();
     var layerUnderDrag = false;
     DD._dragElements.forEach(elem => {
       if (elem.isDragging && elem.node.getLayer() === layer) {
@@ -454,10 +449,7 @@ export abstract class Container<ChildType extends Node> extends Node<
     });
 
     var dragSkip = !Konva.hitOnDragEnabled && layerUnderDrag;
-    return (
-      (canvas && canvas.isCache) ||
-      (layer && layer.hitGraphEnabled() && this.isVisible() && !dragSkip)
-    );
+    return layer && layer.hitGraphEnabled() && this.isVisible() && !dragSkip;
   }
   getClientRect(attrs): IRect {
     attrs = attrs || {};

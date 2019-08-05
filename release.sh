@@ -79,15 +79,9 @@ cp ./konva.js ../konva-site/
 # echo "replace CDN links"
 
 
-# find source themes -exec perl -i -pe "s|${old_cdn}|${new_cdn}|g" {} + >/dev/null
-# find source themes -exec perl -i -pe "s|${old_cdn_min}|${new_cdn_min}|g" {} + >/dev/null
+find source themes react-demos vue-demos main-demo -name "*.json|*.html" -exec perl -i -pe "s|${old_version}|${new_version}|g" {} + >/dev/null
 
 # echo "regenerate site"
 # ./deploy.sh >/dev/null
 
 echo "DONE!"
-
-echo "-------"
-echo "Now you need:"
-echo "1. Update CDN link to ${new_cdn} at http://codepen.io/lavrton/pen/myBPGo"
-echo "2. Update cdn links on konva website from ${old_version} to ${new_version}"

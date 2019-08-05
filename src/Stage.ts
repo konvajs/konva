@@ -701,7 +701,7 @@ export class Stage extends Container<BaseLayer> {
   }
   _touchmove(evt) {
     this.setPointersPositions(evt);
-    if (!DD.isDragging) {
+    if (!DD.isDragging || Konva.hitOnDragEnabled) {
       var triggeredOnShape = false;
       var processedShapesIds = {};
       this._changedPointerPositions.forEach(pos => {

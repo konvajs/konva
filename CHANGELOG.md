@@ -5,8 +5,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
-* Better multitouch support
-* New drag&drop implementation
+## [4.0.0][2019-08-05]
+
+Basically the release doesn't have any breaking changes. You may only have issues if you are using something from `Konva.DD` object (which is private and never documented). Otherwise you should be fine. `Konva` has major upgrade about touch events system and drag&drop flow. The API is exactly the same. But the internal refactoring is huge so I decided to make a major version. Please upgrade carefully. Report about any issues you have.
+
+* Better multi-touch support. Now we can trigger several `touch` events on one or many nodes.
+* New drag&drop implementation. You can drag several shapes at once with several pointers.
+* HSL colors support
 
 ## [3.4.1][2019-07-18]
 

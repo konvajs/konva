@@ -175,6 +175,9 @@ export abstract class BaseLayer extends Container<Group | Shape> {
   getLayer() {
     return this;
   }
+  hitGraphEnabled() {
+    return true;
+  }
   remove() {
     var _canvas = this.getCanvas()._canvas;
 

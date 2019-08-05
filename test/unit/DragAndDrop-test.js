@@ -277,12 +277,6 @@ suite('DragAndDrop', function() {
     rect.moveTo(startDragLayer);
     startDragLayer.draw();
 
-    assert.equal(
-      Konva.DD.anim.getLayers()[0],
-      endDragLayer,
-      'drag layer should be switched'
-    );
-
     var shape = startDragLayer.getIntersection({
       x: 2,
       y: 2
@@ -738,7 +732,117 @@ suite('DragAndDrop', function() {
     assert.equal(circle2.isDragging(), false);
     assert.equal(Konva.DD.isDragging, false);
   });
-  // TODO: try move the same node with the second finger
+
+  test('drag with multi-touch (same shape)', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var circle1 = new Konva.Circle({
+      x: 70,
+      y: 70,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle',
+      draggable: true
+    });
+    layer.add(circle1);
+    layer.draw();
+
+    var dragstart1 = 0;
+    var dragmove1 = 0;
+    circle1.on('dragstart', function() {
+      dragstart1 += 1;
+    });
+    circle1.on('dragmove', function() {
+      dragmove1 += 1;
+    });
+
+    stage.simulateTouchStart([
+      {
+        x: 70,
+        y: 70,
+        id: 0
+      }
+    ]);
+    // move one finger
+    stage.simulateTouchMove([
+      {
+        x: 75,
+        y: 75,
+        id: 0
+      }
+    ]);
+
+    stage.simulateTouchStart(
+      [
+        {
+          x: 75,
+          y: 75,
+          id: 0
+        },
+        {
+          x: 80,
+          y: 80,
+          id: 1
+        }
+      ],
+      [
+        {
+          x: 80,
+          y: 80,
+          id: 1
+        }
+      ]
+    );
+
+    stage.simulateTouchMove(
+      [
+        {
+          x: 75,
+          y: 75,
+          id: 0
+        },
+        {
+          x: 85,
+          y: 85,
+          id: 1
+        }
+      ],
+      [
+        {
+          x: 85,
+          y: 85,
+          id: 1
+        }
+      ]
+    );
+
+    assert.equal(dragstart1, 1);
+    assert.equal(circle1.isDragging(), true);
+    assert.equal(dragmove1, 1);
+    assert.equal(circle1.x(), 75);
+    assert.equal(circle1.y(), 75);
+
+    // remove first finger
+    stage.simulateTouchEnd(
+      [],
+      [
+        {
+          x: 75,
+          y: 75,
+          id: 0
+        },
+        {
+          x: 85,
+          y: 85,
+          id: 1
+        }
+      ]
+    );
+  });
   // TODO: try to move two shapes on different stages
 
   test('can stop drag on dragstart without changing position later', function() {

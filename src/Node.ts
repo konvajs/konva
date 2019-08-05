@@ -1036,7 +1036,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @returns {Boolean}
    */
   shouldDrawHit() {
-    var layer = this.getLayer() as any;
+    var layer = this.getLayer();
 
     return (
       (!layer && this.isListening() && this.isVisible()) ||
@@ -2242,10 +2242,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         pointerId,
         dragStopped: false
       });
-      DD.startPointerPos = pos;
-      DD.offset.x = pos.x - ap.x;
-      DD.offset.y = pos.y - ap.y;
-      // this._setDragPosition();
     }
   }
 
