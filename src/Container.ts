@@ -533,7 +533,12 @@ export abstract class Container<ChildType extends Node> extends Node<
   clipY: GetSet<number, this>;
   clipWidth: GetSet<number, this>;
   clipHeight: GetSet<number, this>;
-  clipFunc: GetSet<(ctx: CanvasRenderingContext2D, shape: this) => void, this>;
+  // there was "this" instead of "Container<ChildType>",
+  // but it breaks react-konva types: https://github.com/konvajs/react-konva/issues/390
+  clipFunc: GetSet<
+    (ctx: CanvasRenderingContext2D, shape: Container<ChildType>) => void,
+    this
+  >;
 }
 
 // add getters setters
