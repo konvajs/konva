@@ -825,9 +825,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * node.remove();
    */
   remove() {
-    // we can have drag element but that is not dragged yet
-    // so just clear it
-    DD._dragElements.delete(this._id);
     this._remove();
     return this;
   }
