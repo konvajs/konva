@@ -5,6 +5,7 @@ import { getNumberValidator, getNumberArrayValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
+import { Context } from '../Context';
 
 export interface LineConfig extends ShapeConfig {
   points: number[];
@@ -50,7 +51,7 @@ export class Line<Config extends LineConfig = LineConfig> extends Shape<
     );
   }
 
-  _sceneFunc(context) {
+  _sceneFunc(context: Context) {
     var points = this.points(),
       length = points.length,
       tension = this.tension(),

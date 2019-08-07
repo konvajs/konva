@@ -74,14 +74,14 @@ npm publish >/dev/null
 
 echo "copy konva.js into konva-site"
 cp ./konva.js ../konva-site/
-# cd ../konva-site
+cd ../konva-site
 
-# echo "replace CDN links"
+echo "replace CDN links"
 
 
 find source themes react-demos vue-demos main-demo -name "*.json|*.html" -exec perl -i -pe "s|${old_version}|${new_version}|g" {} + >/dev/null
 
-# echo "regenerate site"
-# ./deploy.sh >/dev/null
+echo "regenerate site"
+./deploy.sh >/dev/null
 
 echo "DONE!"

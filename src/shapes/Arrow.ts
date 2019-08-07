@@ -53,8 +53,8 @@ export class Arrow extends Line<ArrowConfig> {
 
     var dx, dy;
     if (fromTension) {
-      dx = points[n - 2] - tp[n - 2];
-      dy = points[n - 1] - tp[n - 1];
+      dx = points[n - 2] - (tp[tp.length - 2] + tp[tp.length - 4]) / 2;
+      dy = points[n - 1] - (tp[tp.length - 1] + tp[tp.length - 3]) / 2;
     } else {
       dx = points[n - 2] - points[n - 4];
       dy = points[n - 1] - points[n - 3];
@@ -78,8 +78,8 @@ export class Arrow extends Line<ArrowConfig> {
       ctx.save();
       ctx.translate(points[0], points[1]);
       if (fromTension) {
-        dx = tp[0] - points[0];
-        dy = tp[1] - points[1];
+        dx = (tp[0] + tp[2]) / 2 - points[0];
+        dy = (tp[1] + tp[3]) / 2 - points[1];
       } else {
         dx = points[2] - points[0];
         dy = points[3] - points[1];
