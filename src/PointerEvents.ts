@@ -1,9 +1,14 @@
 import { KonvaEventObject } from './Node';
+import { Konva } from './Global';
 
 import { Shape } from './Shape';
 import { Stage } from './Stage';
 
 const Captures = new Map<number, Shape | Stage>();
+
+// we may use this module for capturing touch events too
+// so make sure we don't do something super specific to pointer
+const SUPPORT_POINTER_EVENTS = Konva._global['PointerEvent'] !== undefined;
 
 export interface KonvaPointerEvent extends KonvaEventObject<PointerEvent> {
   pointerId: number;
@@ -32,10 +37,12 @@ export function setPointerCapture(pointerId: number, shape: Shape | Stage) {
 
   Captures.set(pointerId, shape);
 
-  shape._fire(
-    'gotpointercapture',
-    createEvent(new PointerEvent('gotpointercapture'))
-  );
+  if (SUPPORT_POINTER_EVENTS) {
+    shape._fire(
+      'gotpointercapture',
+      createEvent(new PointerEvent('gotpointercapture'))
+    );
+  }
 }
 
 export function releaseCapture(pointerId: number, target?: Shape | Stage) {
@@ -51,8 +58,10 @@ export function releaseCapture(pointerId: number, target?: Shape | Stage) {
 
   Captures.delete(pointerId);
 
-  shape._fire(
-    'lostpointercapture',
-    createEvent(new PointerEvent('lostpointercapture'))
-  );
+  if (SUPPORT_POINTER_EVENTS) {
+    shape._fire(
+      'lostpointercapture',
+      createEvent(new PointerEvent('lostpointercapture'))
+    );
+  }
 }

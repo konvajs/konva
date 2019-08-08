@@ -201,7 +201,7 @@ export const Konva = {
   // user agent
   UA: _parseUA((glob.navigator && glob.navigator.userAgent) || ''),
   document: glob.document,
-  // insert Konva into global namaspace (window)
+  // insert Konva into global namespace (window)
   // it is required for npm packages
   _injectGlobal(Konva) {
     glob.Konva = Konva;
