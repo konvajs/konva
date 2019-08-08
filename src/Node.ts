@@ -2225,20 +2225,22 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#startDrag
    */
   startDrag(evt?: any) {
+    // forceDrag means it is started by user
+    const forceDrag = !evt;
     var pointerId = evt ? evt.pointerId : undefined;
     var stage = this.getStage(),
       pos = stage._getPointerById(pointerId),
       ap = this.getAbsolutePosition();
 
-    if (pos) {
+    if (pos || forceDrag) {
       DD._dragElements.set(this._id, {
         node: this,
         startPointerPos: pos,
-        offset: {
+        offset: forceDrag ? {x: 0, y: 0 } : {
           x: pos.x - ap.x,
           y: pos.y - ap.y
         },
-        isDragging: false,
+        isDragging: forceDrag ? true : false,
         pointerId,
         dragStopped: false
       });

@@ -888,4 +888,59 @@ suite('DragAndDrop', function() {
     assert.equal(circle.x(), 70);
     assert.equal(circle.y(), 70);
   });
+
+  test('can force drag at any time (when pointer already registered)', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var circle = new Konva.Circle({
+      x: 70,
+      y: 70,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle',
+      draggable: true
+    });
+
+    layer.add(circle);
+    stage.add(layer);
+
+    stage.simulateMouseMove({ x: 70, y: 70 });
+    circle.startDrag();
+    assert.equal(circle.isDragging(), true);
+    stage.simulateMouseMove({ x: 80, y: 80 });
+    // stage.simulateMouseUp({ x: 80, y: 80 });
+    assert.equal(circle.x(), 80);
+    assert.equal(circle.y(), 80);
+  });
+
+  test('can force drag at any time (when pointer not registered)', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var circle = new Konva.Circle({
+      x: 70,
+      y: 70,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle',
+      draggable: true
+    });
+
+    layer.add(circle);
+    stage.add(layer);
+
+    circle.startDrag();
+    assert.equal(circle.isDragging(), true);
+    // let us think that offset will be equal 0 if not registered pointers
+    stage.simulateMouseMove({ x: 80, y: 80 });
+    stage.simulateMouseUp({ x: 80, y: 80 });
+
+    assert.equal(circle.x(), 80);
+    assert.equal(circle.y(), 80);
+  });
 });
