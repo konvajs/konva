@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+
+* Slightly changed `mousemove` event flow. It triggers for first `mouseover` event too
+* Better `Konva.hitOnDragEnabled` support for mouse inputs
+
 ## [4.0.2][2019-08-08]
 
 * Fixed `node.startDrag()` behavior. We can call it at any time.

@@ -433,11 +433,12 @@ export class Stage extends Container<BaseLayer> {
     this.setPointersPositions(evt);
     var targetShape = this.targetShape;
 
-    if (targetShape && !DD.isDragging) {
+    var eventsEnabled = !DD.isDragging || Konva.hitOnDragEnabled;
+    if (targetShape && eventsEnabled) {
       targetShape._fireAndBubble(MOUSEOUT, { evt: evt });
       targetShape._fireAndBubble(MOUSELEAVE, { evt: evt });
       this.targetShape = null;
-    } else if (!DD.isDragging) {
+    } else if (eventsEnabled) {
       this._fire(MOUSELEAVE, {
         evt: evt,
         target: this,
@@ -463,11 +464,12 @@ export class Stage extends Container<BaseLayer> {
     var pointerId = Util._getFirstPointerId(evt);
     var shape: Shape;
 
-    if (!DD.isDragging) {
+    var eventsEnabled = !DD.isDragging || Konva.hitOnDragEnabled;
+    if (eventsEnabled) {
       shape = this.getIntersection(this.getPointerPosition());
       if (shape && shape.isListening()) {
         var differentTarget = !this.targetShape || this.targetShape !== shape;
-        if (!DD.isDragging && differentTarget) {
+        if (eventsEnabled && differentTarget) {
           if (this.targetShape) {
             this.targetShape._fireAndBubble(
               MOUSEOUT,
@@ -490,6 +492,7 @@ export class Stage extends Container<BaseLayer> {
             { evt: evt, pointerId },
             this.targetShape
           );
+          shape._fireAndBubble(MOUSEMOVE, { evt: evt, pointerId });
           this.targetShape = shape;
         } else {
           shape._fireAndBubble(MOUSEMOVE, { evt: evt, pointerId });
@@ -499,7 +502,7 @@ export class Stage extends Container<BaseLayer> {
          * if no shape was detected, clear target shape and try
          * to run mouseout from previous target shape
          */
-        if (this.targetShape && !DD.isDragging) {
+        if (this.targetShape && eventsEnabled) {
           this.targetShape._fireAndBubble(MOUSEOUT, { evt: evt, pointerId });
           this.targetShape._fireAndBubble(MOUSELEAVE, { evt: evt, pointerId });
           this._fire(MOUSEOVER, {
@@ -701,7 +704,8 @@ export class Stage extends Container<BaseLayer> {
   }
   _touchmove(evt) {
     this.setPointersPositions(evt);
-    if (!DD.isDragging || Konva.hitOnDragEnabled) {
+    var eventsEnabled = !DD.isDragging || Konva.hitOnDragEnabled;
+    if (eventsEnabled) {
       var triggeredOnShape = false;
       var processedShapesIds = {};
       this._changedPointerPositions.forEach(pos => {
