@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
-## [4.0.2][2019-08-07]
+## [4.0.2][2019-08-08]
 
 * Fixed `node.startDrag()` behavior. We can call it at any time.
 
