@@ -2332,4 +2332,45 @@ suite('Transformer', function() {
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect), 'change data';
   });
+
+  test('make sure transformer events are not cloned', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    const rect1 = new Konva.Rect({
+      x: stage.width() / 5,
+      y: stage.height() / 5,
+      width: 50,
+      height: 50,
+      fill: 'green',
+      draggable: true
+    });
+
+    layer.add(rect1);
+
+    const tr1 = new Konva.Transformer({
+      node: rect1
+    });
+    layer.add(tr1);
+
+    const rect2 = rect1.clone({
+      fill: 'red',
+      x: stage.width() / 3,
+      y: stage.height() / 3
+    });
+    layer.add(rect2);
+
+    tr1.destroy();
+
+    let tr2 = new Konva.Transformer({
+      node: rect2
+    });
+    layer.add(tr2);
+
+    // should not throw error
+    rect2.width(100);
+
+    stage.draw();
+  });
 });

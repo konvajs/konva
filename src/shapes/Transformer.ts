@@ -35,6 +35,8 @@ export interface TransformerConfig extends ContainerConfig {
   boundBoxFunc?: (oldBox: Box, newBox: Box) => Box;
 }
 
+var EVENTS_NAME = 'tr-konva';
+
 var ATTR_CHANGE_LIST = [
   'resizeEnabledChange',
   'rotateAnchorOffsetChange',
@@ -50,23 +52,27 @@ var ATTR_CHANGE_LIST = [
   'anchorFillChange',
   'anchorCornerRadiusChange',
   'ignoreStrokeChange'
-].join(' ');
+]
+  .map(e => e + `.${EVENTS_NAME}`)
+  .join(' ');
 
 var NODE_RECT = 'nodeRect';
 
 var TRANSFORM_CHANGE_STR = [
-  'widthChange.tr',
-  'heightChange.tr',
-  'scaleXChange.tr',
-  'scaleYChange.tr',
-  'skewXChange.tr',
-  'skewYChange.tr',
-  'rotationChange.tr',
-  'offsetXChange.tr',
-  'offsetYChange.tr',
-  'transformsEnabledChange.tr',
-  'strokeWidthChange.tr'
-].join(' ');
+  'widthChange',
+  'heightChange',
+  'scaleXChange',
+  'scaleYChange',
+  'skewXChange',
+  'skewYChange',
+  'rotationChange',
+  'offsetXChange',
+  'offsetYChange',
+  'transformsEnabledChange',
+  'strokeWidthChange'
+]
+  .map(e => e + `.${EVENTS_NAME}`)
+  .join(' ');
 
 var ANGLES = {
   'top-left': -45,
@@ -217,7 +223,7 @@ export class Transformer extends Group {
     this._resetTransformCache();
 
     const additionalEvents = node._attrsAffectingSize
-      .map(prop => prop + 'Change.tr')
+      .map(prop => prop + 'Change.' + EVENTS_NAME)
       .join(' ');
 
     const onChange = () => {
@@ -228,7 +234,9 @@ export class Transformer extends Group {
     };
     node.on(additionalEvents, onChange);
     node.on(TRANSFORM_CHANGE_STR, onChange);
-    node.on('xChange.tr yChange.tr', () => this._resetTransformCache());
+    node.on(`xChange.${EVENTS_NAME} yChange.${EVENTS_NAME}`, () =>
+      this._resetTransformCache()
+    );
     // we may need it if we set node in initial props
     // so elements are not defined yet
     var elementsCreated = !!this.findOne('.top-left');
@@ -250,7 +258,7 @@ export class Transformer extends Group {
    */
   detach() {
     if (this.getNode()) {
-      this.getNode().off('.tr');
+      this.getNode().off('.' + EVENTS_NAME);
       this._node = undefined;
     }
     this._resetTransformCache();
