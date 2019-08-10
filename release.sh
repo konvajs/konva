@@ -56,7 +56,7 @@ echo "create new git tag"
 git tag $1 >/dev/null
 
 echo "generate documentation"
-npm start api >/dev/null
+npm run api >/dev/null
 
 
 

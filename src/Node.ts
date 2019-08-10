@@ -454,6 +454,16 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return this;
   }
 
+  /**
+   * determine if node is currently cached
+   * @method
+   * @name Konva.Node#isCached
+   * @returns {Boolean}
+   */
+  isCached() {
+    return this._cache.has('canvas');
+  }
+
   abstract drawScene(
     canvas?: Canvas,
     top?: Node,
@@ -2288,7 +2298,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    */
   stopDrag() {
     var evt = {};
-    DD._dragElements.get(this._id).dragStopped = true;
+    const elem = DD._dragElements.get(this._id);
+    if (elem) {
+      elem.dragStopped = true;
+    }
     DD._endDragBefore(evt);
     DD._endDragAfter(evt);
   }

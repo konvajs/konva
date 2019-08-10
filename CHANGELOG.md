@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* Add `node.isCached()` method
+
 ## [4.0.3][2019-08-08]
 
 * Slightly changed `mousemove` event flow. It triggers for first `mouseover` event too

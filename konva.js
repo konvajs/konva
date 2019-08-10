@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.0.3
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Thu Aug 08 2019
+   * Date: Sat Aug 10 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2760,6 +2760,15 @@
           return this;
       };
       /**
+       * determine if node is currently cached
+       * @method
+       * @name Konva.Node#isCached
+       * @returns {Boolean}
+       */
+      Node.prototype.isCached = function () {
+          return this._cache.has('canvas');
+      };
+      /**
        * Return client rectangle {x, y, width, height} of node. This rectangle also include all styling (strokes, shadows, etc).
        * The rectangle position is relative to parent container.
        * The purpose of the method is similar to getBoundingClientRect API of the DOM.
@@ -4362,7 +4371,10 @@
        */
       Node.prototype.stopDrag = function () {
           var evt = {};
-          DD._dragElements.get(this._id).dragStopped = true;
+          var elem = DD._dragElements.get(this._id);
+          if (elem) {
+              elem.dragStopped = true;
+          }
           DD._endDragBefore(evt);
           DD._endDragAfter(evt);
       };
