@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## [4.0.4][2019-08-12]
+
 * Add `node.isCached()` method
 * Fix nested dragging bug
 
