@@ -7,7 +7,7 @@ export const DD = {
   get isDragging() {
     var flag = false;
     DD._dragElements.forEach(elem => {
-      if (elem.isDragging) {
+      if (elem.dragStatus === 'dragging') {
         flag = true;
       }
     });
@@ -28,9 +28,13 @@ export const DD = {
       node: Node;
       startPointerPos: Vector2d;
       offset: Vector2d;
-      isDragging: boolean;
       pointerId?: number;
-      dragStopped: boolean;
+      // when we just put pointer down on a node
+      // it will create drag element
+      dragStatus: 'ready' | 'dragging' | 'stopped';
+      // dragStarted: boolean;
+      // isDragging: boolean;
+      // dragStopped: boolean;
     }
   >(),
 
@@ -55,7 +59,7 @@ export const DD = {
       if (!pos) {
         return;
       }
-      if (!elem.isDragging) {
+      if (elem.dragStatus !== 'dragging') {
         var dragDistance = node.dragDistance();
         var distance = Math.max(
           Math.abs(pos.x - elem.startPointerPos.x),
@@ -64,16 +68,7 @@ export const DD = {
         if (distance < dragDistance) {
           return;
         }
-        elem.isDragging = true;
-        node.fire(
-          'dragstart',
-          {
-            type: 'dragstart',
-            target: node,
-            evt: evt
-          },
-          true
-        );
+        node.startDrag(evt);
         // a user can stop dragging inside `dragstart`
         if (!node.isDragging()) {
           return;
@@ -112,13 +107,12 @@ export const DD = {
         return;
       }
 
-      if (elem.isDragging) {
+      if (elem.dragStatus === 'dragging') {
         DD.justDragged = true;
         Konva.listenClickTap = false;
       }
 
-      elem.dragStopped = true;
-      elem.isDragging = false;
+      elem.dragStatus = 'stopped';
 
       const drawNode =
         elem.node.getLayer() ||
@@ -130,7 +124,7 @@ export const DD = {
   },
   _endDragAfter(evt) {
     DD._dragElements.forEach((elem, key) => {
-      if (elem.dragStopped) {
+      if (elem.dragStatus === 'stopped') {
         elem.node.fire(
           'dragend',
           {

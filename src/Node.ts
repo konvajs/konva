@@ -2229,32 +2229,47 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   }
 
   // drag & drop
+  _createDragElement(evt) {
+    var pointerId = evt ? evt.pointerId : undefined;
+    var stage = this.getStage();
+    var ap = this.getAbsolutePosition();
+    var pos =
+      stage._getPointerById(pointerId) ||
+      stage._changedPointerPositions[0] ||
+      ap;
+    DD._dragElements.set(this._id, {
+      node: this,
+      startPointerPos: pos,
+      offset: {
+        x: pos.x - ap.x,
+        y: pos.y - ap.y
+      },
+      dragStatus: 'ready',
+      pointerId
+    });
+  }
+
   /**
-   * initiate drag and drop
+   * initiate drag and drop.
    * @method
    * @name Konva.Node#startDrag
    */
   startDrag(evt?: any) {
-    // forceDrag means it is started by user
-    const forceDrag = !evt;
-    var pointerId = evt ? evt.pointerId : undefined;
-    var stage = this.getStage(),
-      pos = stage._getPointerById(pointerId),
-      ap = this.getAbsolutePosition();
-
-    if (pos || forceDrag) {
-      DD._dragElements.set(this._id, {
-        node: this,
-        startPointerPos: pos,
-        offset: forceDrag ? {x: 0, y: 0 } : {
-          x: pos.x - ap.x,
-          y: pos.y - ap.y
-        },
-        isDragging: forceDrag ? true : false,
-        pointerId,
-        dragStopped: false
-      });
+    if (!DD._dragElements.has(this._id)) {
+      this._createDragElement(evt);
     }
+
+    const elem = DD._dragElements.get(this._id);
+    elem.dragStatus = 'dragging';
+    this.fire(
+      'dragstart',
+      {
+        type: 'dragstart',
+        target: this,
+        evt: evt && evt.evt
+      },
+      true
+    );
   }
 
   _setDragPosition(evt, elem) {
@@ -2300,7 +2315,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     var evt = {};
     const elem = DD._dragElements.get(this._id);
     if (elem) {
-      elem.dragStopped = true;
+      elem.dragStatus = 'stopped';
     }
     DD._endDragBefore(evt);
     DD._endDragAfter(evt);
@@ -2318,7 +2333,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    */
   isDragging() {
     const elem = DD._dragElements.get(this._id);
-    return elem ? elem.isDragging : false;
+    return elem ? elem.dragStatus === 'dragging' : false;
   }
 
   _listenDrag() {
@@ -2340,11 +2355,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         if (this.isAncestorOf(elem.node)) {
           hasDraggingChild = true;
         }
-      })
+      });
+      // nested drag can be started
+      // in that case we don't need to start new drag
       if (!hasDraggingChild) {
-        this.startDrag(evt);
+        this._createDragElement(evt);
       }
-      
     });
   }
 

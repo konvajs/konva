@@ -443,7 +443,7 @@ export abstract class Container<ChildType extends Node> extends Node<
     var layer = this.getLayer();
     var layerUnderDrag = false;
     DD._dragElements.forEach(elem => {
-      if (elem.isDragging && elem.node.getLayer() === layer) {
+      if (elem.dragStatus === 'dragging' && elem.node.getLayer() === layer) {
         layerUnderDrag = true;
       }
     });

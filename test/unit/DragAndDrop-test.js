@@ -659,22 +659,32 @@ suite('DragAndDrop', function() {
     ]);
 
     // move one finger
-    stage.simulateTouchMove([
-      {
-        x: 100,
-        y: 100,
-        id: 0
-      },
-      {
-        x: 270,
-        y: 70,
-        id: 1
-      }
-    ]);
+    stage.simulateTouchMove(
+      [
+        {
+          x: 100,
+          y: 100,
+          id: 0
+        },
+        {
+          x: 270,
+          y: 70,
+          id: 1
+        }
+      ],
+      [
+        {
+          x: 100,
+          y: 100,
+          id: 0
+        }
+      ]
+    );
 
     assert.equal(dragstart1, 1);
     assert.equal(circle1.isDragging(), true);
     assert.equal(dragmove1, 1);
+    assert.equal(dragmove2, 0);
     assert.equal(circle1.x(), 100);
     assert.equal(circle1.y(), 100);
 
@@ -942,6 +952,41 @@ suite('DragAndDrop', function() {
 
     assert.equal(circle.x(), 80);
     assert.equal(circle.y(), 80);
+  });
+
+  test('calling startDrag show still fire event when required', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var circle = new Konva.Circle({
+      x: 70,
+      y: 70,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle',
+      draggable: true
+    });
+
+    var dragstart = 0;
+    circle.on('dragstart', function() {
+      dragstart += 1;
+    });
+    layer.add(circle);
+    stage.add(layer);
+
+    // register pointer
+    stage.simulateMouseMove({ x: 70, y: 80 });
+    circle.startDrag();
+    assert.equal(dragstart, 1);
+    assert.equal(circle.isDragging(), true);
+    // moving by one pixel should move circle too
+    stage.simulateMouseMove({ x: 70, y: 81 });
+    stage.simulateMouseUp({ x: 70, y: 81 });
+
+    assert.equal(circle.x(), 70);
+    assert.equal(circle.y(), 71);
   });
 
   test('try nested dragging', function() {
