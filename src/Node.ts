@@ -1486,7 +1486,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return this.parent;
   }
   /**
-   * get all ancestros (parent then parent of the parent, etc) of the node
+   * get all ancestors (parent then parent of the parent, etc) of the node
    * @method
    * @name Konva.Node#findAncestors
    * @param {String} [selector] selector for search
@@ -2334,7 +2334,17 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       if (this.isDragging()) {
         return;
       }
-      this.startDrag(evt);
+
+      var hasDraggingChild = false;
+      DD._dragElements.forEach(elem => {
+        if (this.isAncestorOf(elem.node)) {
+          hasDraggingChild = true;
+        }
+      })
+      if (!hasDraggingChild) {
+        this.startDrag(evt);
+      }
+      
     });
   }
 

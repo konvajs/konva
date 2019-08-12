@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.0.3
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Sat Aug 10 2019
+   * Date: Mon Aug 12 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -3654,7 +3654,7 @@
           return this.parent;
       };
       /**
-       * get all ancestros (parent then parent of the parent, etc) of the node
+       * get all ancestors (parent then parent of the parent, etc) of the node
        * @method
        * @name Konva.Node#findAncestors
        * @param {String} [selector] selector for search
@@ -4394,6 +4394,7 @@
       Node.prototype._listenDrag = function () {
           this._dragCleanup();
           this.on('mousedown.konva touchstart.konva', function (evt) {
+              var _this = this;
               var shouldCheckButton = evt.evt['button'] !== undefined;
               var canDrag = !shouldCheckButton || Konva.dragButtons.indexOf(evt.evt['button']) >= 0;
               if (!canDrag) {
@@ -4402,7 +4403,15 @@
               if (this.isDragging()) {
                   return;
               }
-              this.startDrag(evt);
+              var hasDraggingChild = false;
+              DD._dragElements.forEach(function (elem) {
+                  if (_this.isAncestorOf(elem.node)) {
+                      hasDraggingChild = true;
+                  }
+              });
+              if (!hasDraggingChild) {
+                  this.startDrag(evt);
+              }
           });
       };
       Node.prototype._dragChange = function () {

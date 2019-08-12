@@ -943,4 +943,38 @@ suite('DragAndDrop', function() {
     assert.equal(circle.x(), 80);
     assert.equal(circle.y(), 80);
   });
+
+  test('try nested dragging', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer({
+      draggable: true
+    });
+
+    var circle = new Konva.Circle({
+      x: 70,
+      y: 70,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle',
+      draggable: true
+    });
+
+    layer.add(circle);
+    stage.add(layer);
+
+    layer.add(circle.clone({ x: 30, fill: 'red', draggable: false }));
+
+    stage.simulateMouseDown({ x: 70, y: 70 });
+    stage.simulateMouseMove({ x: 80, y: 80 });
+
+    assert.equal(circle.x(), 80);
+    assert.equal(circle.y(), 80);
+    assert.equal(layer.x(), 0);
+    assert.equal(layer.y(), 0);
+    // layer is not dragging, because drag is registered on circle
+    assert.equal(layer.isDragging(), false);
+    stage.simulateMouseUp({ x: 80, y: 80 });
+  });
 });
