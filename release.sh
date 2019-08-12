@@ -56,7 +56,7 @@ echo "create new git tag"
 git tag $1 >/dev/null
 
 echo "generate documentation"
-npm run api >/dev/null
+npx gulp api >/dev/null
 
 
 
@@ -79,7 +79,8 @@ cd ../konva-site
 echo "replace CDN links"
 
 
-find source themes/hexo3/layout react-demos vue-demos main-demo -iname "*.json" -o -iname "*.html" -exec perl -i -pe "s|${old_version}|${new_version}|g" {} + >/dev/null
+find source themes/hexo3/layout react-demos vue-demos main-demo -name "*.json" -exec perl -i -pe "s|${old_version}|${new_version}|g" {} + >/dev/null
+find source themes/hexo3/layout react-demos vue-demos main-demo -name "*.html" -exec perl -i -pe "s|${old_version}|${new_version}|g" {} + >/dev/null
 
 echo "regenerate site"
 ./deploy.sh >/dev/null
