@@ -764,6 +764,9 @@ export class Stage extends Container<BaseLayer> {
 
     var triggeredOnShape = false;
     var processedShapesIds = {};
+    var tapTriggered = false;
+    var dblTapTriggered = false;
+
     this._changedPointerPositions.forEach(pos => {
       var shape =
         (PointerEvents.getCapturedShape(pos.id) as Shape) ||
@@ -787,14 +790,12 @@ export class Stage extends Container<BaseLayer> {
       triggeredOnShape = true;
 
       // detect if tap or double tap occurred
-      if (
-        Konva.listenClickTap &&
-        this.tapStartShape &&
-        shape._id === this.tapStartShape._id
-      ) {
+      if (Konva.listenClickTap && shape === this.tapStartShape) {
+        tapTriggered = true;
         shape._fireAndBubble(TAP, { evt: evt, pointerId: pos.id });
 
         if (fireDblClick && clickEndShape && clickEndShape === shape) {
+          dblTapTriggered = true;
           shape._fireAndBubble(DBL_TAP, { evt: evt, pointerId: pos.id });
         }
       }
@@ -814,7 +815,7 @@ export class Stage extends Container<BaseLayer> {
       });
     }
 
-    if (Konva.listenClickTap) {
+    if (Konva.listenClickTap && !tapTriggered) {
       this._fire(TAP, {
         evt: evt,
         target: this,
@@ -822,7 +823,7 @@ export class Stage extends Container<BaseLayer> {
         pointerId: this._changedPointerPositions[0].id
       });
     }
-    if (fireDblClick) {
+    if (fireDblClick && !dblTapTriggered) {
       this._fire(DBL_TAP, {
         evt: evt,
         target: this,

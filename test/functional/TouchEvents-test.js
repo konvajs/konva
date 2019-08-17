@@ -511,4 +511,54 @@ suite('TouchEvents', function() {
 
     Konva.captureTouchEventsEnabled = false;
   });
+
+  test('tap and double tap should trigger just once on stage', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var circle1 = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle1'
+    });
+    layer.add(circle1);
+    layer.draw();
+
+    var tap = 0;
+    var dbltap = 0;
+
+    stage.on('tap', e => {
+      assert.equal(e.target, circle1);
+      tap += 1;
+    });
+
+    stage.on('dbltap', e => {
+      assert.equal(e.target, circle1);
+      dbltap += 1;
+    });
+
+    stage.simulateTouchStart(
+      [{ x: 100, y: 100, id: 0 }],
+      [{ x: 100, y: 100, id: 0 }]
+    );
+
+    stage.simulateTouchEnd([], [{ x: 100, y: 100, id: 0 }]);
+
+    assert.equal(tap, 1, 'tap triggered');
+    assert.equal(dbltap, 0, 'no dbltap triggered');
+
+    stage.simulateTouchStart(
+      [{ x: 100, y: 100, id: 0 }],
+      [{ x: 100, y: 100, id: 0 }]
+    );
+
+    stage.simulateTouchEnd([], [{ x: 100, y: 100, id: 0 }]);
+    assert.equal(tap, 2, 'tap triggered');
+    assert.equal(dbltap, 1, 'no dbltap triggered');
+  });
 });

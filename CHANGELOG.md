@@ -5,26 +5,31 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
-## [4.0.4][2019-08-12]
+## 4.0.5  - 2019-08-17
+
+* Fix `dragstart` flow when `node.startDrag()` is called.
+* Fix `tap` and `dbltap` double trigger on stage
+
+## 4.0.4  - 2019-08-12
 
 * Add `node.isCached()` method
 * Fix nested dragging bug
 
-## [4.0.3][2019-08-08]
+## 4.0.3  - 2019-08-08
 
 * Slightly changed `mousemove` event flow. It triggers for first `mouseover` event too
 * Better `Konva.hitOnDragEnabled` support for mouse inputs
 
-## [4.0.2][2019-08-08]
+## 4.0.2  - 2019-08-08
 
 * Fixed `node.startDrag()` behavior. We can call it at any time.
 
-## [4.0.1][2019-08-07]
+## 4.0.1  - 2019-08-07
 
 * Better `Konva.Arrow` + tension drawing
 * Typescript fixes
 
-## [4.0.0][2019-08-05]
+## 4.0.0  - 2019-08-05
 
 Basically the release doesn't have any breaking changes. You may only have issues if you are using something from `Konva.DD` object (which is private and never documented). Otherwise you should be fine. `Konva` has major upgrade about touch events system and drag&drop flow. The API is exactly the same. But the internal refactoring is huge so I decided to make a major version. Please upgrade carefully. Report about any issues you have.
 
@@ -32,90 +37,90 @@ Basically the release doesn't have any breaking changes. You may only have issue
 * New drag&drop implementation. You can drag several shapes at once with several pointers.
 * HSL colors support
 
-## [3.4.1][2019-07-18]
+## 3.4.1  - 2019-07-18
 
 * Fix wrong double tap trigger
 
-## [3.4.0][2019-07-12]
+## 3.4.0  - 2019-07-12
 
 * TS types fixes
 * Added support for different values for `cornerRadius` of `Konva.Rect`
 
-## [3.3.3][2019-06-07]
+## 3.3.3  - 2019-06-07
 
 * Some fixes for better support `konva-node`
 * TS types fixes
 
-## [3.3.2][2019-06-03]
+## 3.3.2  - 2019-06-03
 
 * TS types fixes
 
-## [3.3.1][2019-05-28]
+## 3.3.1  - 2019-05-28
 
 * Add new property `imageSmoothingEnabled` to the node caching
 * Even more ts fixes. Typescript need a lot of attention, you know...
 
-## [3.3.0][2019-05-28]
+## 3.3.0  - 2019-05-28
 
 * Enable strict mode for ts types
 * Add new property `imageSmoothingEnabled` to the layer
 
-## [3.2.7][2019-05-27]
+## 3.2.7  - 2019-05-27
 
 * Typescript fixes
 * Experimental pointer events support. Do `Konva._pointerEventsEnabled = true;` to enable
 * Fix some `Konva.Transformer` bugs.
 
-## [3.2.6][2019-05-09]
+## 3.2.6  - 2019-05-09
 
 * Typescript fixes again
 
-## [3.2.5][2019-04-17]
+## 3.2.5  - 2019-04-17
 
 * Show a warning when `Konva.Transformer` and attaching node have different parents.
 * Typescript fixes
 
-## [3.2.4][2019-04-05]
+## 3.2.4  - 2019-04-05
 
 * Fix some stage events. `mouseenter` and `mouseleave` should work correctly on empty spaces
 * Fix some typescript types
 * Better detection of production mode (no extra warnings)
 
-## [3.2.3][2019-03-21]
+## 3.2.3  - 2019-03-21
 
 * Fix `hasName` method for empty name cases
 
-## [3.2.2][2019-03-19]
+## 3.2.2  - 2019-03-19
 
 * Remove `dependencies` from npm package
 
-## [3.2.1][2019-03-18]
+## 3.2.1  - 2019-03-18
 
 * Better `find` and `findOne` lookup. Now we should not care about duplicate ids.
 * Better typescript definitions
 
-## [3.2.0][2019-03-10]
+## 3.2.0  - 2019-03-10
 
 * new property `shape.hitStrokeWidth(10)`
 * Better typescript definitions
 * Remove `Object.assign` usage (for IE11 support)
 
-## [3.1.7][2019-03-06]
+## 3.1.7  - 2019-03-06
 
 * Better modules and TS types
 
-## [3.1.6][2019-02-27]
+## 3.1.6  - 2019-02-27
 
 * Fix commonjs exports
 * Fix global injections
 
-## [3.1.0][2019-02-27]
+## 3.1.0  - 2019-02-27
 
 * Make `Konva` modular: `import Konva from 'konva/lib/Core';`;
 * Fix incorrect `Transformer` behavior
 * Fix drag&drop for touch devices
 
-## [3.0.0][2019-02-25]
+## 3.0.0  - 2019-02-25
 
 ## Breaking
 
@@ -172,7 +177,7 @@ That changes are private and internal specific. They should not break most of `K
 * Fixed gradient drawing for `Konva.Text`
 * Fixed rendering with `strokeWidth = 0`
 
-## [2.6.0][2018-12-14]
+## 2.6.0  - 2018-12-14
 
 ### Changed
 
@@ -187,13 +192,13 @@ That changes are private and internal specific. They should not break most of `K
 
 * `getKerning` TextPath API is deprecated. Use `kerningFunc` instead.
 
-## [2.5.1][2018-11-08]
+## 2.5.1  - 2018-11-08
 
 ### Changed
 
 * Use custom functions for `trimRight` and `trimLeft` (for better browsers support)
 
-## [2.5.0][2018-10-24]
+## 2.5.0  - 2018-10-24
 
 ### Added
 
@@ -207,13 +212,13 @@ That changes are private and internal specific. They should not break most of `K
 
 * `dragstart` event behavior is a bit changed. It will fire BEFORE actual position of a node is changed.
 
-## [2.4.2][2018-10-12]
+## 2.4.2  - 2018-10-12
 
 ### Fixed
 
 * Fixed a wrong cache when a shape inside group has `listening = false`
 
-## [2.4.1][2018-10-08]
+## 2.4.1  - 2018-10-08
 
 ### Changed
 
@@ -227,7 +232,7 @@ That changes are private and internal specific. They should not break most of `K
 * Fix click stage event on dragend
 * Fix some Transformer cursor behavior
 
-## [2.4.0][2018-09-19]
+## 2.4.0  - 2018-09-19
 
 ### Added
 
@@ -240,14 +245,14 @@ That changes are private and internal specific. They should not break most of `K
 * Add `user-select: none` to the stage container to fix some "selected contend around" issues
 
 
-## [2.3.0][2018-08-30]
+## 2.3.0  - 2018-08-30
 
 ### Added
 
 * new methods `path.getLength()` and `path.getPointAtLength(val)`
 * `verticalAlign` for `Konva.Text`
 
-## [2.2.2][2018-08-21]
+## 2.2.2  - 2018-08-21
 
 ### Changed
 
@@ -255,7 +260,7 @@ That changes are private and internal specific. They should not break most of `K
 * Typescript fixes
 * Automatic validations for many attributes
 
-## [2.2.1][2018-08-10]
+## 2.2.1  - 2018-08-10
 
 ### Added
 
@@ -265,7 +270,7 @@ That changes are private and internal specific. They should not break most of `K
 
 * Some properties of `Konva.Transformer` are renamed. `lineEnabled` -> `borderEnabled`. `rotateHandlerOffset` -> `rotateAnchorOffset`, `enabledHandlers` -> `enabledAnchors`.
 
-## [2.1.8][2018-08-01]
+## 2.1.8  - 2018-08-01
 
 ### Fixed
 
@@ -274,33 +279,33 @@ That changes are private and internal specific. They should not break most of `K
 * `stage.toDataURL()` fixes when it has hidden layers
 * `shape.toDataURL()` automatically adjust position and size of resulted image
 
-## [2.1.7][2018-07-03]
+## 2.1.7  - 2018-07-03
 
 ### Fixed
 
 * `toObject` fixes
 
-## [2.1.7][2018-07-03]
+## 2.1.7  - 2018-07-03
 
 ### Fixed
 
 * Some drag&drop fixes
 
-## [2.1.6][2018-06-16]
+## 2.1.6  - 2018-06-16
 
 ### Fixed
 
 * Removed wrong dep
 * Typescript fixes
 
-## [2.1.5][2018-06-15]
+## 2.1.5  - 2018-06-15
 
 ### Fixed
 
 * Typescript fixes
 * add shape as second argument for `sceneFunc` and `hitFunc`
 
-## [2.1.4][2018-06-15]
+## 2.1.4  - 2018-06-15
 
 ### Fixed
 
@@ -308,14 +313,14 @@ That changes are private and internal specific. They should not break most of `K
 * Added methods `data()`,`setData()`  and `getData()` methods to `Konva.TextPath`
 * Correct cache reset for `Konva.Transformer`
 
-## [2.1.3][2018-05-17]
+## 2.1.3  - 2018-05-17
 
 ### Fixed
 
 * `Konva.Transformer` automatically track shape changes
 * `Konva.Transformer` works with shapes with offset too
 
-## [2.1.2][2018-05-16]
+## 2.1.2  - 2018-05-16
 
 ### Fixed
 
@@ -326,7 +331,7 @@ That changes are private and internal specific. They should not break most of `K
 * fixed `Konva.Arrow` with tension != 0
 * Some fixes for `Konva.Transformer`
 
-## [2.0.3][2018-04-21]
+## 2.0.3  - 2018-04-21
 
 ### Added
 
@@ -346,19 +351,19 @@ That changes are private and internal specific. They should not break most of `K
 * better behavior of `dblclick` event when you click fast on different shapes
 * `stage.toDataURL` will use `pixelRatio = 1` by default.
 
-## [2.0.2][2018-03-15]
+## 2.0.2  - 2018-03-15
 
 ### Fixed
 
 * Even more bugs fixes for `Konva.Transformer`
 
-## [2.0.1][2018-03-15]
+## 2.0.1  - 2018-03-15
 
 ### Fixed
 
 * Several bugs fixes for `Konva.Transformer`
 
-## [2.0.0][2018-03-15]
+## 2.0.0  - 2018-03-15
 
 ### Added
 
@@ -384,19 +389,19 @@ That changes are private and internal specific. They should not break most of `K
 
 * Some deprecated methods are removed. If previous version was working without deprecation warnings for you, this one will work fine too.
 
-## [1.7.6][2017-11-01]
+## 1.7.6  - 2017-11-01
 
 ### Fixed
 
 * Some typescript fixes
 
-## [1.7.4][2017-10-30]
+## 1.7.4  - 2017-10-30
 
 ### Fixed
 
 * `isBrowser` detection for electron
 
-## [1.7.3][2017-10-19]
+## 1.7.3  - 2017-10-19
 
 ### Changed
 
@@ -406,19 +411,19 @@ That changes are private and internal specific. They should not break most of `K
 
 * Some fixes special for nodejs
 
-## [1.7.2][2017-10-11]
+## 1.7.2  - 2017-10-11
 
 ### Fixed
 
 * Fixed `Konva.document is undefined`
 
-## [1.7.1][2017-10-11]
+## 1.7.1  - 2017-10-11
 
 ### Changed
 
 * Konva for browser env and Konva for nodejs env are separate packages now. You can use `konva-node` for NodeJS env.
 
-## [1.7.0][2017-10-08]
+## 1.7.0  - 2017-10-08
 
 ### Fixed
 
@@ -430,14 +435,14 @@ That changes are private and internal specific. They should not break most of `K
 * Fix rare error throw on drag
 * Caching with height = 0 or width = 0 with throw async error. Caching will be ignored.
 
-## [1.6.8][2017-08-19]
+## 1.6.8  - 2017-08-19
 
 ### Changed
 
 * The `node.getClientRect()` calculation is changed a bit. It is more powerfull and correct. Also it takes parent transform into account. See docs.
 * Upgrade nodejs deps
 
-## [1.6.7][2017-07-28]
+## 1.6.7  - 2017-07-28
 
 ### Fixed
 
@@ -445,19 +450,19 @@ That changes are private and internal specific. They should not break most of `K
 * Fix `node.getClientRect()` calculation in a case of Group + invisible child
 * Fix dblclick issue https://github.com/konvajs/konva/issues/252
 
-## [1.6.3][2017-05-24]
+## 1.6.3  - 2017-05-24
 
 ### Fixed
 
 * Fixed bug with pointer detection. css 3d transformed stage will not work now.
 
-## [1.6.2][2017-05-08]
+## 1.6.2  - 2017-05-08
 
 ### Fixed
 
 * Fixed bug with automatic shadow for negative scale values
 
-## [1.6.1][2017-04-25]
+## 1.6.1  - 2017-04-25
 
 ### Fixed
 
@@ -467,7 +472,7 @@ That changes are private and internal specific. They should not break most of `K
 
 * moved `globalCompositeOperation` property to `Konva.Node`
 
-## [1.6.0][2017-04-21]
+## 1.6.0  - 2017-04-21
 
 ### Added
 
@@ -481,19 +486,19 @@ That changes are private and internal specific. They should not break most of `K
 
 * Konva a bit changed a way to detect pointer position. Now it should be OK to apply css transform on Konva container. https://github.com/konvajs/konva/pull/215
 
-## [1.5.0][2017-03-20]
+## 1.5.0  - 2017-03-20
 
 ### Added
 
 * support for `lineDashOffset` property for `Konva.Shape`.
 
-## [1.4.0][2017-02-07]
+## 1.4.0  - 2017-02-07
 
 ## Added
 
 * `textDecoration` of `Konva.Text` now supports `line-through`
 
-## [1.3.0][2017-01-10]
+## 1.3.0  - 2017-01-10
 
 ## Added
 
@@ -517,63 +522,63 @@ That changes are private and internal specific. They should not break most of `K
 * More consistent shadows on HDPI screens
 * Fixed memory leak for nodes with several names
 
-## [1.2.2][2016-09-15]
+## 1.2.2  - 2016-09-15
 
 ### Fixed
 
 * refresh stage hit and its `dragend`
 * `getClientRect` calculations
 
-## [1.2.0][2016-09-15]
+## 1.2.0  - 2016-09-15
 
 ## Added
 
 * new properties for `Konva.TextPath`: `letterSpacing` and `textBaseline`.
 
-## [1.1.4][2016-09-13]
+## 1.1.4  - 2016-09-13
 
 ### Fixed
 
 * Prevent throwing an error when text property of `Konva.Text` = undefined or null
 
-## [1.1.3][2016-09-12]
+## 1.1.3  - 2016-09-12
 
 ### Changed
 
 * Better hit function for `TextPath`.
 * Validation of `Shape` filters.
 
-## [1.1.2][2016-09-10]
+## 1.1.2  - 2016-09-10
 
 ### Fixed
 
 * Fixed "Dragging Group on mobile view throws "missing preventDefault" error" #169
 
-## [1.1.1][2016-08-30]
+## 1.1.1  - 2016-08-30
 
 ### Fixed
 
 * Fixed #166 bug of drag&drop
 
-## [1.1.0][2016-08-21]
+## 1.1.0  - 2016-08-21
 
 ## Added
 
 * new property of `Konva.Shape` - `preventDefault`.
 
-## [1.0.3][2016-08-14]
+## 1.0.3  - 2016-08-14
 
 ### Fixed
 
 * Fixed some typescript definitions
 
-## [1.0.2][2016-07-08]
+## 1.0.2  - 2016-07-08
 
 ## Changed
 
 * `Konva.Text` will interpret undefined `width` and `height` as `AUTO`
 
-## [1.0.1][2016-07-05]
+## 1.0.1  - 2016-07-05
 
 ### Changed
 
@@ -583,26 +588,26 @@ That changes are private and internal specific. They should not break most of `K
 
 * Bug fix for case when `touchend` event throws error
 
-## [1.0.0][2016-07-05]
+## 1.0.0  - 2016-07-05
 
 ### Fixed
 
 * Bug fix for case when `touchend` event throws error
 
-## [0.15.0][2016-06-18]
+## 0.15.0  - 2016-06-18
 
 ## Added
 
 * Custom clip function
 
-## [0.14.0][2016-06-17]
+## 0.14.0  - 2016-06-17
 
 ### Fixed
 
 * fixes in typescript definitions
 * fixes for bug with `mouseenter` event on deep nesting case
 
-## [0.13.9][2016-05-14]
+## 0.13.9  - 2016-05-14
 
 ### Changed
 
@@ -613,7 +618,7 @@ That changes are private and internal specific. They should not break most of `K
 * Warning when node for `Tween` is not in layer yet.
 * `removeChildren()` remove only first level children. So it will not remove grandchildren.
 
-## [0.12.4][2016-04-19]
+## 0.12.4  - 2016-04-19
 
 ### Changed
 
@@ -623,14 +628,14 @@ That changes are private and internal specific. They should not break most of `K
 
 * fix incorrect shadow offset on rotation
 
-## [0.12.3][2016-04-07]
+## 0.12.3  - 2016-04-07
 
 ### Fixed
 
 * `batchDraw` function works less time now
 * lighter npm package
 
-## [0.12.2][2016-03-31]
+## 0.12.2  - 2016-03-31
 
 ### Fixed
 
@@ -645,7 +650,7 @@ That changes are private and internal specific. They should not break most of `K
 * more universal stage container selector
 * `mousewheel` event changed to `wheel`
 
-## [0.11.1][2016-01-16]
+## 0.11.1  - 2016-01-16
 
 ### Fixed
 
@@ -667,7 +672,7 @@ That changes are private and internal specific. They should not break most of `K
 * `getAbsolutePosition` support optional relative parent argument (useful to find absolute position inside of some of parent nodes)
 * `change` event will be not fired if changed value is the same as old value
 
-## [0.10.0][2015-10-27]
+## 0.10.0  - 2015-10-27
 
 ### Added
 
@@ -686,7 +691,7 @@ That changes are private and internal specific. They should not break most of `K
 * `Konva.Node.create` now works with objects.
 * `Konva.Tween` now supports tweening points to state with different length
 
-## [0.9.5][2015-05-28]
+## 0.9.5  - 2015-05-28
 
 ### Fixed
 
@@ -721,7 +726,7 @@ That changes are private and internal specific. They should not break most of `K
 * `drawHitFunc` is deprecated. Use `hitFunc` instead.
 * `rotateDeg` is deprecated. Use `rotate` instead.
 
-## [0.9.0][2015-02-27]
+## 0.9.0  - 2015-02-27
 
 ### Fixed
 
@@ -744,7 +749,7 @@ That changes are private and internal specific. They should not break most of `K
 * new `getClientRect` method.
 * new `to` method for every node for shorter tweening
 
-## [0.8.0][2015-02-04]
+## 0.8.0  - 2015-02-04
 
 * Bug Fixes
   * browser crashing on pointer events fixed

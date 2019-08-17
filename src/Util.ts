@@ -35,7 +35,7 @@ export class Collection<Child extends Node> {
   // @ts-ignore
   each: (f: (child: Child, index: number) => void) => void;
   // @ts-ignore
-  toArray: () => Array<any>;
+  toArray: () => Array<Child>;
   // @ts-ignore
   push: (item: Child) => void;
   // @ts-ignore
@@ -767,12 +767,12 @@ export const Util = {
     // Check hsl() format
     if (/hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.test(str)) {
       // Extract h, s, l
-      const [_, ...hsl]= /hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.exec(str);
+      const [_, ...hsl] = /hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.exec(str);
 
       const h = Number(hsl[0]) / 360;
       const s = Number(hsl[1]) / 100;
       const l = Number(hsl[2]) / 100;
-      
+
       let t2;
       let t3;
       let val;
@@ -797,7 +797,7 @@ export const Util = {
 
       const rgb = [0, 0, 0];
       for (let i = 0; i < 3; i++) {
-        t3 = h + 1 / 3 * -(i - 1);
+        t3 = h + (1 / 3) * -(i - 1);
         if (t3 < 0) {
           t3++;
         }
