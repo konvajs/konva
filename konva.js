@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.0.5
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Sat Aug 17 2019
+   * Date: Thu Aug 22 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -5819,12 +5819,13 @@
        * get pointer position which can be a touch position or mouse position
        * @method
        * @name Konva.Stage#getPointerPosition
-       * @returns {Object}
+       * @returns {Vector2d|null}
        */
       Stage.prototype.getPointerPosition = function () {
           var pos = this._pointerPositions[0];
           if (!pos) {
               Util.warn(NO_POINTERS_MESSAGE);
+              return null;
           }
           return {
               x: pos.x,
@@ -5878,6 +5879,9 @@
        * var group = stage.getIntersection({x: 50, y: 50}, 'Group');
        */
       Stage.prototype.getIntersection = function (pos, selector) {
+          if (!pos) {
+              return null;
+          }
           var layers = this.children, len = layers.length, end = len - 1, n, shape;
           for (n = end; n >= 0; n--) {
               shape = layers[n].getIntersection(pos, selector);
@@ -5939,7 +5943,7 @@
           setPointerCapture(pointerId, this);
       };
       Stage.prototype.releaseCapture = function (pointerId) {
-          releaseCapture(pointerId, this);
+          releaseCapture(pointerId);
       };
       /**
        * returns a {@link Konva.Collection} of layers
@@ -7426,7 +7430,7 @@
           setPointerCapture(pointerId, this);
       };
       Shape.prototype.releaseCapture = function (pointerId) {
-          releaseCapture(pointerId, this);
+          releaseCapture(pointerId);
       };
       return Shape;
   }(Node));
