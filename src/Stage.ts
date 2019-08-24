@@ -244,12 +244,13 @@ export class Stage extends Container<BaseLayer> {
    * get pointer position which can be a touch position or mouse position
    * @method
    * @name Konva.Stage#getPointerPosition
-   * @returns {Object}
+   * @returns {Vector2d|null}
    */
-  getPointerPosition() {
+  getPointerPosition(): Vector2d | null {
     const pos = this._pointerPositions[0];
     if (!pos) {
       Util.warn(NO_POINTERS_MESSAGE);
+      return null;
     }
     return {
       x: pos.x,
@@ -316,7 +317,10 @@ export class Stage extends Container<BaseLayer> {
    * // or if you interested in shape parent:
    * var group = stage.getIntersection({x: 50, y: 50}, 'Group');
    */
-  getIntersection(pos: Vector2d, selector?: string): Shape | null {
+  getIntersection(pos: Vector2d | null, selector?: string): Shape | null {
+    if (!pos) {
+      return null;
+    }
     var layers = this.children,
       len = layers.length,
       end = len - 1,
