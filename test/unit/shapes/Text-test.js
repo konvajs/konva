@@ -1006,4 +1006,48 @@ suite('Text', function() {
     };
     imageObj.src = 'assets/darth-vader.jpg';
   });
+
+  test('image gradient for text with scale', function(done) {
+    Konva.pixelRatio = 1;
+    var imageObj = new Image();
+    imageObj.onload = function() {
+      var stage = addStage();
+      var layer = new Konva.Layer();
+
+      var text = new Konva.Text({
+        text: 'Hello, this is some good text',
+        fontSize: 30,
+        fillPatternImage: imageObj,
+        fillPatternScaleX: 0.5,
+        fillPatternScaleY: 0.5
+      });
+      layer.add(text);
+      stage.add(layer);
+
+      var canvas = createCanvas();
+      var ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = 'green';
+      ctx.font = 'normal normal 30px Arial';
+      ctx.textBaseline = 'middle';
+
+      var grd = ctx.createPattern(imageObj, 'repeat');
+      grd.setTransform({
+        a: 0.5, // Horizontal scaling. A value of 1 results in no scaling.
+        b: 0, // Vertical skewing.
+        c: 0, // Horizontal skewing.
+        d: 0.5, // Vertical scaling. A value of 1 results in no scaling.
+        e: 0, // Horizontal translation (moving).
+        f: 0 // Vertical translation (moving).
+      });
+      ctx.fillStyle = grd;
+
+      ctx.fillText(text.text(), 0, 15);
+
+      compareLayerAndCanvas(layer, canvas, 200);
+      delete Konva.pixelRatio;
+      done();
+    };
+    imageObj.src = 'assets/darth-vader.jpg';
+  });
 });

@@ -81,7 +81,7 @@ var linearGradient = 'linearGradient';
 var radialGradient = 'radialGradient';
 
 var dummyContext;
-function getDummyContext() {
+function getDummyContext(): CanvasRenderingContext2D {
   if (dummyContext) {
     return dummyContext;
   }
@@ -193,7 +193,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
     );
 
     this.on(
-      'fillPriorityChange.konva fillPatternImageChange.konva fillPatternRepeatChange.konva',
+      'fillPriorityChange.konva fillPatternImageChange.konva fillPatternRepeatChange.konva fillPatternScaleXChange.konva fillPatternScaleYChange.konva',
       _clearFillPatternCache
     );
 
@@ -261,10 +261,20 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
   __getFillPattern() {
     if (this.fillPatternImage()) {
       var ctx = getDummyContext();
-      return ctx.createPattern(
+      const pattern = ctx.createPattern(
         this.fillPatternImage(),
         this.fillPatternRepeat() || 'repeat'
       );
+      pattern.setTransform({
+        a: this.fillPatternScaleX(), // Horizontal scaling. A value of 1 results in no scaling.
+        b: 0, // Vertical skewing.
+        c: 0, // Horizontal skewing.
+        d: this.fillPatternScaleY(), // Vertical scaling. A value of 1 results in no scaling.
+        e: 0, // Horizontal translation (moving).
+        f: 0 // Vertical translation (moving).
+      });
+      // pattern.setTransform
+      return pattern;
     }
   }
   _getLinearGradient() {
@@ -281,7 +291,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
 
       // build color stops
       for (var n = 0; n < colorStops.length; n += 2) {
-        grd.addColorStop(colorStops[n], colorStops[n + 1]);
+        grd.addColorStop(colorStops[n] as number, colorStops[n + 1] as string);
       }
       return grd;
     }
@@ -308,7 +318,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
 
       // build color stops
       for (var n = 0; n < colorStops.length; n += 2) {
-        grd.addColorStop(colorStops[n], colorStops[n + 1]);
+        grd.addColorStop(colorStops[n] as number, colorStops[n + 1] as string);
       }
       return grd;
     }

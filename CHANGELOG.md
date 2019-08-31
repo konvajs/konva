@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## 4.0.6  - 2019-08-31
+
+* Fix fillPatternScale for text
+
 ## 4.0.5  - 2019-08-17
 
 * Fix `dragstart` flow when `node.startDrag()` is called.

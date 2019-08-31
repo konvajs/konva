@@ -664,8 +664,6 @@ export class SceneContext extends Context {
   _fillPattern(shape) {
     var fillPatternX = shape.getFillPatternX(),
       fillPatternY = shape.getFillPatternY(),
-      fillPatternScaleX = shape.getFillPatternScaleX(),
-      fillPatternScaleY = shape.getFillPatternScaleY(),
       fillPatternRotation = Konva.getAngle(shape.getFillPatternRotation()),
       fillPatternOffsetX = shape.getFillPatternOffsetX(),
       fillPatternOffsetY = shape.getFillPatternOffsetY();
@@ -678,9 +676,6 @@ export class SceneContext extends Context {
       this.rotate(fillPatternRotation);
     }
 
-    if (fillPatternScaleX || fillPatternScaleY) {
-      this.scale(fillPatternScaleX, fillPatternScaleY);
-    }
     if (fillPatternOffsetX || fillPatternOffsetY) {
       this.translate(-1 * fillPatternOffsetX, -1 * fillPatternOffsetY);
     }
