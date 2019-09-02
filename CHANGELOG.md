@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* Fixed double tap trigger after dragging
+
 ## 4.0.6  - 2019-08-31
 
 * Fix fillPatternScale for text
