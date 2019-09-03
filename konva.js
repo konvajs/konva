@@ -5,7 +5,7 @@
 }(this, function () { 'use strict';
 
   /*
-   * Konva JavaScript Framework v4.0.6
+   * Konva JavaScript Framework v4.0.7
    * http://konvajs.org/
    * Licensed under the MIT
    * Date: Tue Sep 03 2019
@@ -76,7 +76,7 @@
               : {};
   var Konva = {
       _global: glob,
-      version: '4.0.6',
+      version: '4.0.7',
       isBrowser: detectBrowser(),
       isUnminified: /param/.test(function (param) { }.toString()),
       dblClickWindow: 400,
