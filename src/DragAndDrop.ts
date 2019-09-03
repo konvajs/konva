@@ -68,7 +68,7 @@ export const DD = {
         if (distance < dragDistance) {
           return;
         }
-        node.startDrag(evt);
+        node.startDrag({ evt });
         // a user can stop dragging inside `dragstart`
         if (!node.isDragging()) {
           return;

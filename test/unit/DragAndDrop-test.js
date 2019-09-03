@@ -989,6 +989,40 @@ suite('DragAndDrop', function() {
     assert.equal(circle.y(), 71);
   });
 
+  test('make sure we have event object', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var circle = new Konva.Circle({
+      x: 70,
+      y: 70,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle',
+      draggable: true
+    });
+
+    circle.on('dragstart', function(e) {
+      assert.equal(e.evt === undefined, false);
+    });
+    circle.on('dragmove', function(e) {
+      assert.equal(e.evt === undefined, false);
+    });
+    circle.on('dragend', function(e) {
+      assert.equal(e.evt === undefined, false);
+    });
+    layer.add(circle);
+    stage.add(layer);
+
+    // register pointer
+    stage.simulateMouseDown({ x: 70, y: 80 });
+    // moving by one pixel should move circle too
+    stage.simulateMouseMove({ x: 80, y: 80 });
+    stage.simulateMouseUp({ x: 70, y: 80 });
+  });
+
   test('try nested dragging', function() {
     var stage = addStage();
     var layer = new Konva.Layer({

@@ -757,7 +757,7 @@ export class Stage extends Container<BaseLayer> {
       fireDblClick = true;
       clearTimeout(this.dblTimeout);
       // Konva.inDblClickWindow = false;
-    } else if (!DD.justDragged)  {
+    } else if (!DD.justDragged) {
       Konva.inDblClickWindow = true;
       clearTimeout(this.dblTimeout);
     }

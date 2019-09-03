@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## 4.0.7  - 2019-09-03
+
+* Fixed evt object on `dragstart`
 * Fixed double tap trigger after dragging
 
 ## 4.0.6  - 2019-08-31
