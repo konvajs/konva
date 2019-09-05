@@ -5,6 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## 4.0.8  - 2019-09-05
+
+* Fix `dragend` event on click
+* Revert fillPatternScale for text fix.
+
 ## 4.0.7  - 2019-09-03
 
 * Fixed evt object on `dragstart`
