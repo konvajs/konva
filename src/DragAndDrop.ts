@@ -110,9 +110,8 @@ export const DD = {
       if (elem.dragStatus === 'dragging') {
         DD.justDragged = true;
         Konva.listenClickTap = false;
+        elem.dragStatus = 'stopped';
       }
-
-      elem.dragStatus = 'stopped';
 
       const drawNode =
         elem.node.getLayer() ||
@@ -134,6 +133,8 @@ export const DD = {
           },
           true
         );
+      }
+      if (elem.dragStatus !== 'dragging') {
         DD._dragElements.delete(key);
       }
     });

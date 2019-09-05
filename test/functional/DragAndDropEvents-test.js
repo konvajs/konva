@@ -474,4 +474,52 @@ suite('DragAndDropEvents', function() {
       done();
     }, 20);
   });
+
+  test('drag events should not trigger on a click', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer({
+      draggable: true
+    });
+
+    var circle = new Konva.Circle({
+      x: 70,
+      y: 70,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle',
+      draggable: true
+    });
+
+    layer.add(circle);
+    stage.add(layer);
+
+    var dragstart = 0;
+    circle.on('dragstart', function() {
+      dragstart += 1;
+    });
+
+    var dragmove = 0;
+    circle.on('dragmove', function() {
+      dragmove += 1;
+    });
+
+    var dragend = 0;
+    circle.on('dragend', function() {
+      dragend += 1;
+    });
+
+    var click = 0;
+    circle.on('click', function() {
+      click += 1;
+    });
+    stage.simulateMouseDown({ x: 70, y: 70 });
+    stage.simulateMouseUp({ x: 70, y: 70 });
+
+    assert.equal(click, 1, 'click triggered');
+    assert.equal(dragstart, 0, 'dragstart not triggered');
+    assert.equal(dragmove, 0, 'dragmove not triggered');
+    assert.equal(dragend, 0, 'dragend not triggered');
+  });
 });

@@ -1007,7 +1007,7 @@ suite('Text', function() {
     imageObj.src = 'assets/darth-vader.jpg';
   });
 
-  test('image gradient for text with scale', function(done) {
+  test.skip('image gradient for text with scale', function(done) {
     Konva.pixelRatio = 1;
     var imageObj = new Image();
     imageObj.onload = function() {

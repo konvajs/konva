@@ -265,15 +265,15 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
         this.fillPatternImage(),
         this.fillPatternRepeat() || 'repeat'
       );
-      pattern.setTransform({
-        a: this.fillPatternScaleX(), // Horizontal scaling. A value of 1 results in no scaling.
-        b: 0, // Vertical skewing.
-        c: 0, // Horizontal skewing.
-        d: this.fillPatternScaleY(), // Vertical scaling. A value of 1 results in no scaling.
-        e: 0, // Horizontal translation (moving).
-        f: 0 // Vertical translation (moving).
-      });
-      // pattern.setTransform
+      // TODO: how to enable it? It doesn't work in FF...
+      // pattern.setTransform({
+      //   a: this.fillPatternScaleX(), // Horizontal scaling. A value of 1 results in no scaling.
+      //   b: 0, // Vertical skewing.
+      //   c: 0, // Horizontal skewing.
+      //   d: this.fillPatternScaleY(), // Vertical scaling. A value of 1 results in no scaling.
+      //   e: 0, // Horizontal translation (moving).
+      //   f: 0 // Vertical translation (moving).
+      // });
       return pattern;
     }
   }

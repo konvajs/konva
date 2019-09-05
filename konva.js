@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.0.7
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Sep 03 2019
+   * Date: Thu Sep 05 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2035,12 +2035,15 @@
           shape._fillFunc(this);
       };
       SceneContext.prototype._fillPattern = function (shape) {
-          var fillPatternX = shape.getFillPatternX(), fillPatternY = shape.getFillPatternY(), fillPatternRotation = Konva.getAngle(shape.getFillPatternRotation()), fillPatternOffsetX = shape.getFillPatternOffsetX(), fillPatternOffsetY = shape.getFillPatternOffsetY();
+          var fillPatternX = shape.getFillPatternX(), fillPatternY = shape.getFillPatternY(), fillPatternRotation = Konva.getAngle(shape.getFillPatternRotation()), fillPatternOffsetX = shape.getFillPatternOffsetX(), fillPatternOffsetY = shape.getFillPatternOffsetY(), fillPatternScaleX = shape.getFillPatternScaleX(), fillPatternScaleY = shape.getFillPatternScaleY();
           if (fillPatternX || fillPatternY) {
               this.translate(fillPatternX || 0, fillPatternY || 0);
           }
           if (fillPatternRotation) {
               this.rotate(fillPatternRotation);
+          }
+          if (fillPatternScaleX || fillPatternScaleY) {
+              this.scale(fillPatternScaleX, fillPatternScaleY);
           }
           if (fillPatternOffsetX || fillPatternOffsetY) {
               this.translate(-1 * fillPatternOffsetX, -1 * fillPatternOffsetY);
@@ -2421,8 +2424,8 @@
               if (elem.dragStatus === 'dragging') {
                   DD.justDragged = true;
                   Konva.listenClickTap = false;
+                  elem.dragStatus = 'stopped';
               }
-              elem.dragStatus = 'stopped';
               var drawNode = elem.node.getLayer() ||
                   (elem.node instanceof Konva['Stage'] && elem.node);
               if (drawNode) {
@@ -2438,6 +2441,8 @@
                       target: elem.node,
                       evt: evt
                   }, true);
+              }
+              if (elem.dragStatus !== 'dragging') {
                   DD._dragElements.delete(key);
               }
           });
@@ -7052,15 +7057,15 @@
           if (this.fillPatternImage()) {
               var ctx = getDummyContext();
               var pattern = ctx.createPattern(this.fillPatternImage(), this.fillPatternRepeat() || 'repeat');
-              pattern.setTransform({
-                  a: this.fillPatternScaleX(),
-                  b: 0,
-                  c: 0,
-                  d: this.fillPatternScaleY(),
-                  e: 0,
-                  f: 0 // Vertical translation (moving).
-              });
-              // pattern.setTransform
+              // TODO: how to enable it? It doesn't work in FF...
+              // pattern.setTransform({
+              //   a: this.fillPatternScaleX(), // Horizontal scaling. A value of 1 results in no scaling.
+              //   b: 0, // Vertical skewing.
+              //   c: 0, // Horizontal skewing.
+              //   d: this.fillPatternScaleY(), // Vertical scaling. A value of 1 results in no scaling.
+              //   e: 0, // Horizontal translation (moving).
+              //   f: 0 // Vertical translation (moving).
+              // });
               return pattern;
           }
       };
