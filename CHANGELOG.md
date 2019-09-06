@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## 4.0.9 - 2019-09-06
+
 * Fix `Konva.Transformer` behavior on mirrored nodes
 * Fix `stage.getPointerPosition()` logic.
 
