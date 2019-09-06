@@ -624,7 +624,7 @@ suite('TouchEvents', function() {
     assert.equal(dbltap, 0, 'no dbltap triggered');
   });
 
-  test.only('tap should give pointer position', function() {
+  test('tap should give pointer position', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);

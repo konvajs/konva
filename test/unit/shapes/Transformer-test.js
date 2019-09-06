@@ -1814,6 +1814,64 @@ suite('Transformer', function() {
     });
   });
 
+  test('transform scaled (in one direction) node', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      draggable: true,
+      fill: 'yellow',
+      x: 150,
+      y: 50,
+      width: 100,
+      height: 100,
+      scaleY: -1
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+
+    layer.draw();
+
+    stage.simulateMouseDown({
+      x: 150,
+      y: 150
+    });
+
+    var target = stage.getIntersection({
+      x: 150,
+      y: 150
+    });
+    var top = Math.round(stage.content.getBoundingClientRect().top);
+    tr._handleMouseMove({
+      target: target,
+      clientX: 100,
+      clientY: 100 + top
+    });
+
+    // here is duplicate, because transformer is listening window events
+    tr._handleMouseUp({
+      clientX: 100,
+      clientY: 100 + top
+    });
+    stage.simulateMouseUp({
+      x: 100,
+      y: 100
+    });
+    layer.draw();
+
+    assert.equal(rect.width() * rect.scaleX() + 50 < 0.1, true, ' width check');
+    assert.equal(
+      rect.height() * rect.scaleY() - 50 < 0.1,
+      true,
+      ' height check'
+    );
+  });
+
   test('transformer should ignore shadow', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
