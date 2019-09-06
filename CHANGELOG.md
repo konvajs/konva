@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* Fix `stage.getPointerPosition()` logic.
+
 ## 4.0.8  - 2019-09-05
 
 * Fix `dragend` event on click

@@ -247,7 +247,7 @@ export class Stage extends Container<BaseLayer> {
    * @returns {Vector2d|null}
    */
   getPointerPosition(): Vector2d | null {
-    const pos = this._pointerPositions[0];
+    const pos = this._pointerPositions[0] || this._changedPointerPositions[0];
     if (!pos) {
       Util.warn(NO_POINTERS_MESSAGE);
       return null;

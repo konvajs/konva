@@ -623,4 +623,47 @@ suite('TouchEvents', function() {
     assert.equal(tap, 1, 'tap triggered');
     assert.equal(dbltap, 0, 'no dbltap triggered');
   });
+
+  test.only('tap should give pointer position', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var circle1 = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle1',
+      draggable: true
+    });
+    layer.add(circle1);
+    layer.draw();
+
+    var tap = 0;
+    var click = 0;
+
+    stage.on('tap', e => {
+      assert.equal(e.target, circle1);
+      assert.equal(stage.getPointerPosition().x, 100);
+      assert.equal(stage.getPointerPosition().y, 100);
+      tap += 1;
+    });
+
+    stage.on('click', e => {
+      click += 1;
+    });
+
+    stage.simulateTouchStart(
+      [{ x: 100, y: 100, id: 0 }],
+      [{ x: 100, y: 100, id: 0 }]
+    );
+
+    stage.simulateTouchEnd([], [{ x: 100, y: 100, id: 0 }]);
+
+    assert.equal(tap, 1, 'tap triggered');
+    assert.equal(click, 0, 'no click triggered');
+  });
 });
