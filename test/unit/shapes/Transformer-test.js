@@ -1826,7 +1826,7 @@ suite('Transformer', function() {
       y: 50,
       width: 100,
       height: 100,
-      scaleY: -1
+      scaleX: -1
     });
     layer.add(rect);
 
@@ -1864,12 +1864,8 @@ suite('Transformer', function() {
     });
     layer.draw();
 
-    assert.equal(rect.width() * rect.scaleX() + 50 < 0.1, true, ' width check');
-    assert.equal(
-      rect.height() * rect.scaleY() - 50 < 0.1,
-      true,
-      ' height check'
-    );
+    assert.equal(rect.width() * rect.scaleX() + 50 < 1, true, ' width check');
+    assert.equal(rect.height() * rect.scaleY() - 50 < 1, true, ' height check');
   });
 
   test('transformer should ignore shadow', function() {
