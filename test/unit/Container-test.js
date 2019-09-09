@@ -889,7 +889,7 @@ suite('Container', function() {
   });
 
   // ======================================================
-  test('node type selector', function() {
+  test.only('node type selector', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     var fooLayer = new Konva.Layer();
@@ -927,6 +927,8 @@ suite('Container', function() {
     assert.equal(layer.find('Group').length, 1, 'layer should have 1 group');
     assert.equal(layer.find('Shape').length, 2, 'layer should have 2 shapes');
     assert.equal(layer.find('Layer').length, 0, 'layer should have 0 layers');
+
+    assert.equal(layer.find('Group, Rect').length, 3, 'layer should have 3 [group or rects]');
 
     assert.equal(
       fooLayer.find('Group').length,

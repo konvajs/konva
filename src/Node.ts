@@ -1569,7 +1569,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         if (this.hasName(sel.slice(1))) {
           return true;
         }
-      } else if (this.className === selector || this.nodeType === selector) {
+      } else if (this.className === sel || this.nodeType === sel) {
         return true;
       }
     }
