@@ -889,7 +889,7 @@ suite('Container', function() {
   });
 
   // ======================================================
-  test.only('node type selector', function() {
+  test('node type selector', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     var fooLayer = new Konva.Layer();
