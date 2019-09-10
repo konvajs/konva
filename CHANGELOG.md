@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## 4.0.10 - 2019-09-10
+
 * Fix drag position handling
 * Fix multiple selector for find() method
 
