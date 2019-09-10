@@ -1056,4 +1056,41 @@ suite('DragAndDrop', function() {
     assert.equal(layer.isDragging(), false);
     stage.simulateMouseUp({ x: 80, y: 80 });
   });
+
+  test('deletage drag', function() {
+    var stage = addStage();
+    stage.draggable(true);
+    var layer = new Konva.Layer();
+
+    var circle = new Konva.Circle({
+      x: 70,
+      y: 70,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle'
+    });
+
+    layer.add(circle);
+    stage.add(layer);
+
+    stage.on('dragstart', function(e) {
+      if (e.target === stage) {
+        stage.stopDrag();
+        circle.startDrag();
+      }
+    });
+
+    stage.simulateMouseDown({ x: 5, y: 5 });
+    stage.simulateMouseMove({ x: 10, y: 10 });
+
+    assert.equal(circle.isDragging(), true);
+    assert.equal(stage.isDragging(), false);
+
+    stage.simulateMouseUp({ x: 10, y: 10 });
+
+    assert.equal(circle.x(), 70);
+    assert.equal(circle.y(), 70);
+  });
 });

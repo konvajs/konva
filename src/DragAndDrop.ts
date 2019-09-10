@@ -91,12 +91,14 @@ export const DD = {
 
   // dragBefore and dragAfter allows us to set correct order of events
   // setup all in dragbefore, and stop dragging only after pointerup triggered.
-  _endDragBefore(evt) {
+  _endDragBefore(evt?) {
     DD._dragElements.forEach((elem, key) => {
       const { node } = elem;
       // we need to find pointer relative to that node
       const stage = node.getStage();
-      stage.setPointersPositions(evt);
+      if (evt) {
+        stage.setPointersPositions(evt);
+      }
 
       const pos = stage._changedPointerPositions.find(
         pos => pos.id === elem.pointerId

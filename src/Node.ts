@@ -2311,8 +2311,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @method
    * @name Konva.Node#stopDrag
    */
-  stopDrag() {
-    var evt = {};
+  stopDrag(evt?) {
     const elem = DD._dragElements.get(this._id);
     if (elem) {
       elem.dragStatus = 'stopped';
