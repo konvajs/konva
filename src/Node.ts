@@ -1489,7 +1489,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * get all ancestors (parent then parent of the parent, etc) of the node
    * @method
    * @name Konva.Node#findAncestors
-   * @param {String} [selector] selector for search
+   * @param {String} selector selector for search
    * @param {Boolean} [includeSelf] show we think that node is ancestro itself?
    * @param {Konva.Node} [stopNode] optional node where we need to stop searching (one of ancestors)
    * @returns {Array} [ancestors]
@@ -1497,7 +1497,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // get one of the parent group
    * var parentGroups = node.findAncestors('Group');
    */
-  findAncestors(selector?, includeSelf?, stopNode?) {
+  findAncestors(selector, includeSelf?, stopNode?) {
     var res: Array<Node> = [];
 
     if (includeSelf && this._isMatch(selector)) {
@@ -1522,7 +1522,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * get ancestor (parent or parent of the parent, etc) of the node that match passed selector
    * @method
    * @name Konva.Node#findAncestor
-   * @param {String} [selector] selector for search
+   * @param {String} selector selector for search
    * @param {Boolean} [includeSelf] show we think that node is ancestro itself?
    * @param {Konva.Node} [stopNode] optional node where we need to stop searching (one of ancestors)
    * @returns {Konva.Node} ancestor
@@ -1530,7 +1530,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // get one of the parent group
    * var group = node.findAncestors('.mygroup');
    */
-  findAncestor(selector?, includeSelf?, stopNode?) {
+  findAncestor(selector, includeSelf?, stopNode?) {
     return this.findAncestors(selector, includeSelf, stopNode)[0];
   }
   // is current node match passed selector?
