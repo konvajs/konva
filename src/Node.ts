@@ -1681,7 +1681,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *  account its ancestor scales
    * @method
    * @name Konva.Node#getAbsoluteScale
-   * @returns {Konva.Transform}
+   * @returns {Object}
+   * @example
+   * // get absolute scale x
+   * var scaleX = node.getAbsoluteScale().x;
    */
   getAbsoluteScale(top?) {
     // if using an argument, we can't cache the result.
