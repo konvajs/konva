@@ -14848,7 +14848,6 @@
               if (keepProportion) {
                   newHypotenuse = Math.sqrt(Math.pow(this.findOne('.top-right').x() - anchorNode.x() - padding * 2, 2) +
                       Math.pow(anchorNode.y() - this.findOne('.top-right').y() - padding * 2, 2));
-                  console.error(newHypotenuse);
                   var reverseX = this.findOne('.top-right').x() < this.findOne('.bottom-left').x()
                       ? -1
                       : 1;

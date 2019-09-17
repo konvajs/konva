@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
-## 4.0.11 - 2019-09-17
+## 4.0.12 - 2019-09-17
 
 * Fix some bugs when `Konva.Transformer` has `padding > 0`
 

@@ -540,8 +540,6 @@ export class Transformer extends Group {
             )
         );
 
-        console.error(newHypotenuse);
-
         var reverseX =
           this.findOne('.top-right').x() < this.findOne('.bottom-left').x()
             ? -1
