@@ -884,7 +884,7 @@ suite('Transformer', function() {
     assert.equal(rect.height(), 100);
   });
 
-  test.skip('test padding + keep ratio', function() {
+  test.only('test padding + keep ratio', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -892,22 +892,33 @@ suite('Transformer', function() {
     const rect = new Konva.Rect({
       x: 50,
       y: 50,
-      width: 200,
-      height: 10,
-      fill: 'red'
+      width: 180,
+      height: 50,
+      fill: 'red',
+      draggable: true
     });
     layer.add(rect);
 
     var tr = new Konva.Transformer({
       node: rect,
-      padding: 50,
+      padding: 40,
       keepRatio: true
     });
     layer.add(tr);
     layer.draw();
 
+    var width = rect.width() * rect.scaleX();
+    var height = rect.height() * rect.scaleY();
+
+    rect.on('transformstart transform', () => {
+      var width = rect.width() * rect.scaleX();
+      var height = rect.height() * rect.scaleY();
+    });
+
+    throw '';
+
     stage.simulateMouseDown({
-      x: 200,
+      x: 250,
       y: 150
     });
     var top = stage.content.getBoundingClientRect().top;
