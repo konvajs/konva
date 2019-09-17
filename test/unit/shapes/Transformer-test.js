@@ -884,7 +884,7 @@ suite('Transformer', function() {
     assert.equal(rect.height(), 100);
   });
 
-  test.only('test padding + keep ratio', function() {
+  test.skip('test padding + keep ratio', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -906,16 +906,6 @@ suite('Transformer', function() {
     });
     layer.add(tr);
     layer.draw();
-
-    var width = rect.width() * rect.scaleX();
-    var height = rect.height() * rect.scaleY();
-
-    rect.on('transformstart transform', () => {
-      var width = rect.width() * rect.scaleX();
-      var height = rect.height() * rect.scaleY();
-    });
-
-    throw '';
 
     stage.simulateMouseDown({
       x: 250,

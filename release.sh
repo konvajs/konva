@@ -36,7 +36,8 @@ git pull >/dev/null
 
 echo "Lint, build and test"
 npm run lint >/dev/null
-npm run build >/dev/null
+npm run full-build >/dev/null
+
 
 echo "commit change log updates"
 git commit -am "update CHANGELOG with new version" --allow-empty >/dev/null
