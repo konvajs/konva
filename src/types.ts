@@ -18,6 +18,15 @@ export interface IRect {
   height: number;
 }
 
+export interface IFrame {
+	time: number;
+	timeDiff: number;
+	lastTime: any;
+	frameRate: number;
+}
+
+export type AnimationFn = (frame?: IFrame) => boolean|void;
+
 export enum KonvaNodeEvent {
   mouseover = 'mouseover',
   mouseout = 'mouseout',
