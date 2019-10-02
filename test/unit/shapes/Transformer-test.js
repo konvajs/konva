@@ -1684,7 +1684,20 @@ suite('Transformer', function() {
       },
       expectedWidth: 50,
       expectedHeight: 50
-    }
+    },
+    // {
+    //   name: 'top-left-reverse',
+    //   startPos: {
+    //     x: 0,
+    //     y: 0
+    //   },
+    //   endPos: {
+    //     x: 100,
+    //     y: 100
+    //   },
+    //   expectedWidth: 100,
+    //   expectedHeight: 100
+    // }
   ];
 
   test('if alt is pressed should transform around center', function() {

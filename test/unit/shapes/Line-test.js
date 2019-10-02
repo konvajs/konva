@@ -312,6 +312,61 @@ suite('Line', function() {
     assert.equal(rect.height, 52, 'check height');
   });
 
+  test('getClientRect with tension', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var line = new Konva.Line({
+      x: 0,
+      y: 0,
+      points: [75, 75, 100, 200, 300, 140],
+      tension: 0.5,
+      stroke: '#0f0'
+    });
+    layer.add(line);
+
+    var client = line.getClientRect();
+    var rect = new Konva.Rect(Object.assign({ stroke: 'red' }, client));
+    layer.add(rect);
+
+    stage.add(layer);
+
+    assert.equal(client.x, 56, 'check x');
+    assert.equal(client.y, 74, 'check y');
+    assert.equal(client.width, 245, 'check width');
+    assert.equal(client.height, 227, 'check height');
+  });
+
+  test.skip('getClientRect with low number of points', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var line = new Konva.Line({
+      x: 0,
+      y: 0,
+      points: [],
+      tension: 0.5,
+      stroke: '#0f0'
+    });
+    layer.add(line);
+    layer.draw();
+
+    var client = line.getClientRect();
+
+    assert.equal(client.x, -1, 'check x');
+    assert.equal(client.y, -1, 'check y');
+    assert.equal(client.width, 2, 'check width');
+    assert.equal(client.height, 2, 'check height');
+
+    line.points([10, 10]);
+
+    assert.equal(client.x, 10, 'check x');
+    assert.equal(client.y, 10, 'check y');
+    assert.equal(client.width, 0, 'check width');
+    assert.equal(client.height, 0, 'check height');
+  });
+
   test('line caching', function() {
     // Konva.pixelRatio = 1;
     var stage = addStage();

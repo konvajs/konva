@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.0.12
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Sep 17 2019
+   * Date: Wed Oct 02 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -10119,9 +10119,23 @@
       };
       // overload size detection
       Line.prototype.getSelfRect = function () {
-          var points;
+          var points = this.points();
+          if (points.length < 4) {
+              return {
+                  x: points[0] || 0,
+                  y: points[1] || 0,
+                  width: 0,
+                  height: 0
+              };
+          }
           if (this.tension() !== 0) {
-              points = this._getTensionPoints();
+              points = [
+                  points[0],
+                  points[1]
+              ].concat(this._getTensionPoints(), [
+                  points[points.length - 2],
+                  points[points.length - 2]
+              ]);
           }
           else {
               points = this.points();
