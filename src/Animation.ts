@@ -1,5 +1,6 @@
 import { glob } from './Global';
 import { Layer } from './Layer';
+import { IFrame, AnimationFn } from './types';
 
 var now = (function() {
   if (glob.performance && glob.performance.now) {
@@ -17,7 +18,7 @@ var now = (function() {
  * Animation constructor.
  * @constructor
  * @memberof Konva
- * @param {Function} func function executed on each animation frame.  The function is passed a frame object, which contains
+ * @param {AnimationFn} func function executed on each animation frame.  The function is passed a frame object, which contains
  *  timeDiff, lastTime, time, and frameRate properties.  The timeDiff property is the number of milliseconds that have passed
  *  since the last animation frame.  The lastTime property is time in milliseconds that elapsed from the moment the animation started
  *  to the last animation frame.  The time property is the time in milliseconds that elapsed from the moment the animation started
@@ -37,19 +38,19 @@ var now = (function() {
  * anim.start();
  */
 export class Animation {
-  func: () => boolean;
+  func: AnimationFn;
   id = Animation.animIdCounter++;
 
   layers: Layer[];
 
-  frame = {
+  frame : IFrame = {
     time: 0,
     timeDiff: 0,
     lastTime: now(),
     frameRate: 0
   };
 
-  constructor(func, layers?) {
+  constructor(func: AnimationFn, layers?) {
     this.func = func;
     this.setLayers(layers);
   }
