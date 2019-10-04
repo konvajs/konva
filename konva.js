@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.0.13
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Wed Oct 02 2019
+   * Date: Fri Oct 04 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -1423,6 +1423,14 @@
       extendStatics(d, b);
       function __() { this.constructor = d; }
       d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  }
+
+  function __spreadArrays() {
+      for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+      for (var r = Array(s), k = 0, i = 0; i < il; i++)
+          for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+              r[k] = a[j];
+      return r;
   }
 
   var COMMA = ',', OPEN_PAREN = '(', CLOSE_PAREN = ')', OPEN_PAREN_BRACKET = '([', CLOSE_BRACKET_PAREN = '])', SEMICOLON = ';', DOUBLE_PAREN = '()', 
@@ -5949,7 +5957,7 @@
           setPointerCapture(pointerId, this);
       };
       Stage.prototype.releaseCapture = function (pointerId) {
-          releaseCapture(pointerId, this);
+          releaseCapture(pointerId);
       };
       /**
        * returns a {@link Konva.Collection} of layers
@@ -7446,7 +7454,7 @@
           setPointerCapture(pointerId, this);
       };
       Shape.prototype.releaseCapture = function (pointerId) {
-          releaseCapture(pointerId, this);
+          releaseCapture(pointerId);
       };
       return Shape;
   }(Node));
@@ -10129,10 +10137,10 @@
               };
           }
           if (this.tension() !== 0) {
-              points = [
+              points = __spreadArrays([
                   points[0],
                   points[1]
-              ].concat(this._getTensionPoints(), [
+              ], this._getTensionPoints(), [
                   points[points.length - 2],
                   points[points.length - 2]
               ]);
