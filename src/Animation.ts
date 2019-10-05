@@ -2,7 +2,7 @@ import { glob } from './Global';
 import { Layer } from './Layer';
 import { IFrame, AnimationFn } from './types';
 
-var now = (function() {
+var now = (function(): () => number {
   if (glob.performance && glob.performance.now) {
     return function() {
       return glob.performance.now();

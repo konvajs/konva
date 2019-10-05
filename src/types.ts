@@ -21,7 +21,7 @@ export interface IRect {
 export interface IFrame {
 	time: number;
 	timeDiff: number;
-	lastTime: any;
+	lastTime: number;
 	frameRate: number;
 }
 
