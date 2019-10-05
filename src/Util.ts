@@ -1,6 +1,6 @@
 import { glob, Konva } from './Global';
 import { Node } from './Node';
-import { IRect } from './types';
+import { IRect, RGB, RGBA } from './types';
 
 export type Point = {
   x: number;
@@ -500,7 +500,7 @@ export const Util = {
   /*
    * cherry-picked utilities from underscore.js
    */
-  _isElement(obj: any) {
+  _isElement(obj: any): obj is Element {
     return !!(obj && obj.nodeType == 1);
   },
   _isFunction(obj: any) {
@@ -512,21 +512,21 @@ export const Util = {
   _isArray(obj: any) {
     return Object.prototype.toString.call(obj) === OBJECT_ARRAY;
   },
-  _isNumber(obj: any) {
+  _isNumber(obj: any): obj is number {
     return (
       Object.prototype.toString.call(obj) === OBJECT_NUMBER &&
       !isNaN(obj) &&
       isFinite(obj)
     );
   },
-  _isString(obj: any) {
+  _isString(obj: any): obj is string {
     return Object.prototype.toString.call(obj) === OBJECT_STRING;
   },
-  _isBoolean(obj: any) {
+  _isBoolean(obj: any): obj is boolean {
     return Object.prototype.toString.call(obj) === OBJECT_BOOLEAN;
   },
   // arrays are objects too
-  isObject(val: any) {
+  isObject(val: any): val is Object {
     return val instanceof Object;
   },
   isValidSelector(selector: any) {
@@ -616,7 +616,7 @@ export const Util = {
   _rgbToHex(r: number, g: number, b: number) {
     return ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   },
-  _hexToRgb(hex: string) {
+  _hexToRgb(hex: string): RGB {
     hex = hex.replace(HASH, EMPTY_STRING);
     var bigint = parseInt(hex, 16);
     return {
@@ -658,7 +658,7 @@ export const Util = {
    * var rgb = Konva.Util.getRGB('#0000ff');
    * var rgb = Konva.Util.getRGB('rgb(0,0,255)');
    */
-  getRGB(color: string) {
+  getRGB(color: string): RGB {
     var rgb;
     // color string
     if (color in COLORS) {
@@ -690,7 +690,7 @@ export const Util = {
   },
   // convert any color string to RGBA object
   // from https://github.com/component/color-parser
-  colorToRGBA(str: string) {
+  colorToRGBA(str: string): RGBA {
     str = str || 'black';
     return (
       Util._namedColorToRBA(str) ||
@@ -715,7 +715,7 @@ export const Util = {
     };
   },
   // Parse rgb(n, n, n)
-  _rgbColorToRGBA(str: string) {
+  _rgbColorToRGBA(str: string): RGBA {
     if (str.indexOf('rgb(') === 0) {
       str = str.match(/rgb\(([^)]+)\)/)[1];
       var parts = str.split(/ *, */).map(Number);
@@ -728,7 +728,7 @@ export const Util = {
     }
   },
   // Parse rgba(n, n, n, n)
-  _rgbaColorToRGBA(str: string) {
+  _rgbaColorToRGBA(str: string): RGBA {
     if (str.indexOf('rgba(') === 0) {
       str = str.match(/rgba\(([^)]+)\)/)[1];
       var parts = str.split(/ *, */).map(Number);
@@ -741,7 +741,7 @@ export const Util = {
     }
   },
   // Parse #nnnnnn
-  _hex6ColorToRGBA(str: string) {
+  _hex6ColorToRGBA(str: string): RGBA {
     if (str[0] === '#' && str.length === 7) {
       return {
         r: parseInt(str.slice(1, 3), 16),
@@ -752,7 +752,7 @@ export const Util = {
     }
   },
   // Parse #nnn
-  _hex3ColorToRGBA(str: string) {
+  _hex3ColorToRGBA(str: string): RGBA {
     if (str[0] === '#' && str.length === 4) {
       return {
         r: parseInt(str[1] + str[1], 16),
@@ -763,7 +763,7 @@ export const Util = {
     }
   },
   // Code adapted from https://github.com/Qix-/color-convert/blob/master/conversions.js#L244
-  _hslColorToRGBA(str: string) {
+  _hslColorToRGBA(str: string): RGBA {
     // Check hsl() format
     if (/hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.test(str)) {
       // Extract h, s, l
