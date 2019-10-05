@@ -1,6 +1,6 @@
 import { Util } from './Util';
 import { SceneContext, HitContext, Context } from './Context';
-import { glob, Konva } from './Global';
+import { Konva } from './Global';
 import { Factory } from './Factory';
 import { getNumberValidator } from './Validators';
 
