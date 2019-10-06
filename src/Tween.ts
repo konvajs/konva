@@ -2,6 +2,7 @@ import { Util } from './Util';
 import { Animation } from './Animation';
 import { Node } from './Node';
 import { Konva } from './Global';
+import { Line } from './shapes/Line';
 
 var blacklist = {
     node: 1,
@@ -249,7 +250,7 @@ export class Tween {
     this.onReset = config.onReset;
   }
   _addAttr(key, end) {
-    var node = this.node as any,
+    var node = this.node,
       nodeId = node._id,
       start,
       diff,
@@ -280,11 +281,11 @@ export class Tween {
         if (end.length > start.length) {
           // so in this case we will increase number of starting points
           trueStart = start;
-          start = Util._prepareArrayForTween(start, end, node.closed());
+          start = Util._prepareArrayForTween(start, end, (node as Line).closed());
         } else {
           // in this case we will increase number of eding points
           trueEnd = end;
-          end = Util._prepareArrayForTween(end, start, node.closed());
+          end = Util._prepareArrayForTween(end, start, (node as Line).closed());
         }
       }
 
