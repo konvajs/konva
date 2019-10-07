@@ -240,7 +240,7 @@ suite('Label', function() {
 
     stage.add(layer);
 
-    cloneAndCompareLayer(layer, 100);
+    cloneAndCompareLayer(layer, 250);
   });
 
   test('tag should list text size changes', function() {

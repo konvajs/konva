@@ -289,29 +289,6 @@ suite('Line', function() {
     });
   });
 
-  // should we calculate client rect for line differently?
-  test.skip('getClientRect rotated', function() {
-    var stage = addStage();
-    var layer = new Konva.Layer();
-
-    var line = new Konva.Line({
-      x: 20,
-      y: 20,
-      rotation: 45,
-      points: [0, 0, 50, 50],
-      closed: true,
-      stroke: '#0f0'
-    });
-    layer.add(line);
-    stage.add(layer);
-
-    var rect = line.getClientRect();
-    assert.equal(rect.x, 19, 'check x');
-    assert.equal(rect.y, 19, 'check y');
-    // assert.equal(rect.width, 2, 'check width');
-    assert.equal(rect.height, 52, 'check height');
-  });
-
   test('getClientRect with tension', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -337,7 +314,7 @@ suite('Line', function() {
     assert.equal(client.height, 227, 'check height');
   });
 
-  test.skip('getClientRect with low number of points', function() {
+  test('getClientRect with low number of points', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -360,11 +337,12 @@ suite('Line', function() {
     assert.equal(client.height, 2, 'check height');
 
     line.points([10, 10]);
+    client = line.getClientRect();
 
-    assert.equal(client.x, 10, 'check x');
-    assert.equal(client.y, 10, 'check y');
-    assert.equal(client.width, 0, 'check width');
-    assert.equal(client.height, 0, 'check height');
+    assert.equal(client.x, 9, 'check x');
+    assert.equal(client.y, 9, 'check y');
+    assert.equal(client.width, 2, 'check width');
+    assert.equal(client.height, 2, 'check height');
   });
 
   test('line caching', function() {

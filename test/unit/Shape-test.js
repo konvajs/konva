@@ -707,7 +707,7 @@ suite('Shape', function() {
 
   // ======================================================
   // hard to emulate the same drawing
-  test.skip('fill and stroke with shadow and opacity', function() {
+  test('fill and stroke with shadow and opacity', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -769,17 +769,16 @@ suite('Shape', function() {
     context.fill();
     context.restore();
 
-    // don't test in PhantomJS as it use old chrome engine
-    // it it has opacity + shadow bug
-    if (!window.mochaPhantomJS) {
-      compareLayerAndCanvas(layer, canvas, 260);
-    }
+    // // don't test in PhantomJS as it use old chrome engine
+    // // it it has opacity + shadow bug
+    // if (!window.mochaPhantomJS) {
+    //   compareLayerAndCanvas(layer, canvas, 260);
+    // }
 
     var trace = layer.getContext().getTrace();
-    //console.log(trace);
     assert.equal(
       trace,
-      'clearRect(0,0,578,200);save();save();shadowColor=rgba(128,128,128,1);shadowBlur=1;shadowOffsetX=20;shadowOffsetY=20;globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();restore();'
+      'clearRect(0,0,578,200);save();save();shadowColor=rgba(128,128,128,1);shadowBlur=5;shadowOffsetX=20;shadowOffsetY=20;globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();restore();'
     );
   });
 

@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.0.13
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Fri Oct 04 2019
+   * Date: Mon Oct 07 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -8835,7 +8835,7 @@
    * Animation constructor.
    * @constructor
    * @memberof Konva
-   * @param {Function} func function executed on each animation frame.  The function is passed a frame object, which contains
+   * @param {AnimationFn} func function executed on each animation frame.  The function is passed a frame object, which contains
    *  timeDiff, lastTime, time, and frameRate properties.  The timeDiff property is the number of milliseconds that have passed
    *  since the last animation frame.  The lastTime property is time in milliseconds that elapsed from the moment the animation started
    *  to the last animation frame.  The time property is the time in milliseconds that elapsed from the moment the animation started

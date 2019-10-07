@@ -400,7 +400,7 @@ suite('Sprite', function() {
     imageObj.src = 'assets/scorpion-sprite.png';
   });
 
-  // need fix, but who is using sprites??
+  // need fix.
   test.skip('can change frame rate on fly', function(done) {
     var imageObj = new Image();
     imageObj.onload = function() {

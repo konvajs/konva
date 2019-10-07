@@ -117,27 +117,6 @@ suite('Node', function() {
     assert.equal(circle.getAbsoluteOpacity(), 0.25);
     assert.equal(layer.getAbsoluteOpacity(), 0.5);
   });
-
-  // we don't need this test any more
-  test.skip('warn on duplicate id', function() {
-    var oldWarn = Konva.Util.warn;
-    var called = false;
-    Konva.Util.warn = function() {
-      called = true;
-    };
-    var circle1 = new Konva.Circle({
-      id: 'circle'
-    });
-    var circle2 = new Konva.Circle({
-      id: 'circle'
-    });
-
-    assert.equal(called, true);
-    Konva.Util.warn = oldWarn;
-    circle1.destroy();
-    circle2.destroy();
-  });
-
   // ======================================================
   test('transform cache', function() {
     var stage = addStage();

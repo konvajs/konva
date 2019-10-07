@@ -174,7 +174,8 @@ suite('Image', function() {
   });
 
   // ======================================================
-  test.skip('image with svg source', function(done) {
+  // TODO: what can we test here?
+  test('image with svg source', function(done) {
     var imageObj = new Image();
 
     var stage = addStage();

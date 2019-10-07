@@ -153,7 +153,7 @@ suite('Caching', function() {
 
   // skip, because opacity rendering of cached shape is different
   // nothing we can do here
-  test.skip('cache rectangle with fill, shadow and opacity', function() {
+  test('cache rectangle with fill, shadow and opacity', function() {
     var stage = addStage();
 
     var layer = new Konva.Layer();
