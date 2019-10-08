@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.0.13
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Mon Oct 07 2019
+   * Date: Tue Oct 08 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2622,7 +2622,8 @@
       Node.prototype._clearSelfAndDescendantCache = function (attr) {
           this._clearCache(attr);
           // skip clearing if node is cached with canvas
-          if (this._getCanvasCache()) {
+          // for performance reasons !!!
+          if (this.isCached()) {
               return;
           }
           if (this.children) {
@@ -3365,6 +3366,20 @@
           };
       };
       Node.prototype.getAbsolutePosition = function (top) {
+          var haveCachedParent = false;
+          var parent = this.parent;
+          while (parent) {
+              if (parent.isCached()) {
+                  haveCachedParent = true;
+                  break;
+              }
+              parent = parent.parent;
+          }
+          if (haveCachedParent && !top) {
+              // make fake top element
+              // "true" is not a node, but it will just allow skip all caching
+              top = true;
+          }
           var absoluteMatrix = this.getAbsoluteTransform(top).getMatrix(), absoluteTransform = new Transform(), offset = this.offset();
           // clone the matrix array
           absoluteTransform.m = absoluteMatrix.slice();

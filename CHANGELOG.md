@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* Fix absolute position calculations for cached parent
+
 ## 4.0.13 - 2019-10-02
 
 * Fix `line.getClientRect()` calculations for line with a tension or low number of points

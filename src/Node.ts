@@ -271,7 +271,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this._clearCache(attr);
 
     // skip clearing if node is cached with canvas
-    if (this._getCanvasCache()) {
+    // for performance reasons !!!
+    if (this.isCached()) {
       return;
     }
     if (this.children) {
@@ -1151,6 +1152,20 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     };
   }
   getAbsolutePosition(top?) {
+    let haveCachedParent = false;
+    let parent = this.parent;
+    while (parent) {
+      if (parent.isCached()) {
+        haveCachedParent = true;
+        break;
+      }
+      parent = parent.parent;
+    }
+    if (haveCachedParent && !top) {
+      // make fake top element
+      // "true" is not a node, but it will just allow skip all caching
+      top = true;
+    }
     var absoluteMatrix = this.getAbsoluteTransform(top).getMatrix(),
       absoluteTransform = new Transform(),
       offset = this.offset();

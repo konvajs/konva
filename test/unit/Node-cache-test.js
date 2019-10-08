@@ -1185,4 +1185,34 @@ suite('Caching', function() {
       false
     );
   });
+
+  test('getAbsolutePosition for cached container', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer({});
+    stage.add(layer);
+
+    var circle = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 10,
+      fill: 'red',
+      draggable: true,
+      scaleX: 10,
+      scaleY: 10
+    });
+    layer.add(circle);
+    // initial calculations
+    circle.getAbsolutePosition();
+    //
+
+    layer.cache();
+    layer.draw();
+    layer.position({
+      x: 10,
+      y: 10
+    });
+    assert.equal(circle.getAbsolutePosition().x, 110);
+    assert.equal(circle.getAbsolutePosition().y, 110);
+  });
 });
