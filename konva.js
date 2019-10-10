@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.0.13
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Oct 08 2019
+   * Date: Thu Oct 10 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2858,7 +2858,6 @@
       Node.prototype._drawCachedHitCanvas = function (context) {
           var canvasCache = this._getCanvasCache(), hitCanvas = canvasCache.hit;
           context.save();
-          context._applyGlobalCompositeOperation(this);
           context.translate(canvasCache.x, canvasCache.y);
           context.drawImage(hitCanvas._canvas, 0, 0);
           context.restore();
@@ -5432,7 +5431,9 @@
                   .getMatrix();
               context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
           }
-          var hasComposition = this.globalCompositeOperation() !== 'source-over' && !skipComposition;
+          var hasComposition = this.globalCompositeOperation() !== 'source-over' &&
+              !skipComposition &&
+              drawMethod === 'drawScene';
           if (hasComposition && layer) {
               context.save();
               context._applyGlobalCompositeOperation(this);

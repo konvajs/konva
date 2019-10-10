@@ -575,7 +575,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     var canvasCache = this._getCanvasCache(),
       hitCanvas = canvasCache.hit;
     context.save();
-    context._applyGlobalCompositeOperation(this);
     context.translate(canvasCache.x, canvasCache.y);
     context.drawImage(hitCanvas._canvas, 0, 0);
     context.restore();

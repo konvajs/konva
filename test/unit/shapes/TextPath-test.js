@@ -49,13 +49,15 @@ suite('TextPath', function() {
   });
 
   // ======================================================
-  test('Find Next Segment when Arc is in Path', function() {
+  test.skip('Find Next Segment when Arc is in Path', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
 
-    var c = 'M 50 50 a 150 50 0 0 1 250 50 l 50 0';
+    var c = 'M10,10 C0,0 10,150 100,100 S300,150 40,130';
     var path = new Konva.Path({
-      stroke: 'red',
+      x: 0,
+      y: 50,
+      stroke: 'green',
       strokeWidth: 1,
       data: c
     });
@@ -63,15 +65,23 @@ suite('TextPath', function() {
     layer.add(path);
 
     var textpath = new Konva.TextPath({
-      fill: 'black',
-      fontSize: 10,
+      x: 0,
+      y: 50,
+      fill: '#333',
+      fontSize: 50,
+      fontFamily: 'Arial',
       text:
-        "All the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.",
+        "All mhe world's a smage, and all mhe men and women merely players.",
       data: c
     });
 
     layer.add(textpath);
     stage.add(layer);
+
+    var trace = layer.getContext().getTrace();
+    console.log(trace);
+    assert.equal(trace.indexOf('NaN') === -1, true, 'No NaNs');
+    throw '';
   });
 
   // ======================================================

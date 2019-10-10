@@ -419,7 +419,9 @@ export abstract class Container<ChildType extends Node> extends Node<
     }
 
     var hasComposition =
-      this.globalCompositeOperation() !== 'source-over' && !skipComposition;
+      this.globalCompositeOperation() !== 'source-over' &&
+      !skipComposition &&
+      drawMethod === 'drawScene';
     if (hasComposition && layer) {
       context.save();
       context._applyGlobalCompositeOperation(this);

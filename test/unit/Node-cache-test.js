@@ -1030,6 +1030,17 @@ suite('Caching', function() {
     const layer = new Konva.Layer();
     stage.add(layer);
 
+    function getColor(pos) {
+      var ratio = layer.canvas.pixelRatio;
+      var p = layer.canvas.context.getImageData(
+        Math.round(pos.x * ratio),
+        Math.round(pos.y * ratio),
+        1,
+        1
+      ).data;
+      return Konva.Util._rgbToHex(p[0], p[1], p[2]);
+    }
+
     const bg = new Konva.Rect({
       x: 0,
       y: 0,
@@ -1077,14 +1088,15 @@ suite('Caching', function() {
 
     layer.draw();
     // no caches - mask group clipped all drawing
-    assert.equal(stage.getIntersection({ x: 5, y: 20 }), null);
-    assert.equal(stage.getIntersection({ x: 55, y: 20 }), rect);
+    assert.equal(getColor({ x: 5, y: 20 }), '000000');
+    assert.equal(getColor({ x: 55, y: 20 }), '0000ff');
 
     // cache inner mask group - same result
     maskgroup.cache();
     layer.draw();
-    assert.equal(stage.getIntersection({ x: 5, y: 20 }), null);
-    assert.equal(stage.getIntersection({ x: 55, y: 20 }), rect);
+
+    assert.equal(getColor({ x: 5, y: 20 }), '000000');
+    assert.equal(getColor({ x: 55, y: 20 }), '0000ff');
 
     // cache group
     // background will be visible now, because globalCompositeOperation
@@ -1092,8 +1104,8 @@ suite('Caching', function() {
     group.cache();
     layer.draw();
 
-    assert.equal(stage.getIntersection({ x: 5, y: 20 }), bg);
-    assert.equal(stage.getIntersection({ x: 55, y: 20 }), rect);
+    assert.equal(getColor({ x: 5, y: 20 }), 'd3d3d3');
+    assert.equal(getColor({ x: 55, y: 20 }), '0000ff');
   });
 
   it('recache should update internal caching', function() {
@@ -1214,5 +1226,38 @@ suite('Caching', function() {
     });
     assert.equal(circle.getAbsolutePosition().x, 110);
     assert.equal(circle.getAbsolutePosition().y, 110);
+  });
+
+  test('hit from cache + global composite', function(done) {
+    // blend mode should NOT effect hit detection.
+    var stage = addStage();
+
+    var layer = new Konva.Layer({});
+    stage.add(layer);
+
+    Konva.Image.fromURL('./assets/lion.png', lion => {
+      lion.name('lion');
+      lion.cache();
+      lion.drawHitFromCache();
+      layer.add(lion);
+
+      Konva.Image.fromURL('./assets/lion.png', lion2 => {
+        lion2.position({
+          x: 50,
+          y: 50
+        });
+        lion2.name('lion2');
+        lion2.globalCompositeOperation('overlay');
+        lion2.cache();
+        lion2.drawHitFromCache();
+        layer.add(lion2);
+        layer.draw();
+        layer.toggleHitCanvas();
+
+        var shape = layer.getIntersection({ x: 106, y: 78 });
+        assert.equal(shape, lion2);
+        done();
+      });
+    });
   });
 });
