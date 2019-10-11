@@ -315,7 +315,7 @@ suite('TextPath', function() {
     assert.equal(layer.getContext().getTrace(true), trace);
   });
 
-  test.only('Text path with align right', function() {
+  test('Text path with align right', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
 
