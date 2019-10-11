@@ -21,7 +21,7 @@ export interface IRect {
 export interface IFrame {
 	time: number;
 	timeDiff: number;
-	lastTime: any;
+	lastTime: number;
 	frameRate: number;
 }
 
@@ -47,4 +47,14 @@ export enum KonvaNodeEvent {
   dragstart = 'dragstart',
   dragmove = 'dragmove',
   dragend = 'dragend'
+}
+
+export interface RGB {
+  r: number;
+  g: number;
+  b: number;
+}
+
+export interface RGBA extends RGB {
+  a: number;
 }

@@ -35,7 +35,7 @@ export function alphaComponent(val: number) {
 
 export function getNumberValidator() {
   if (Konva.isUnminified) {
-    return function(val: any, attr: string) {
+    return function<T>(val: T, attr: string): T|void {
       if (!Util._isNumber(val)) {
         Util.warn(
           _formatValue(val) +
@@ -50,7 +50,7 @@ export function getNumberValidator() {
 }
 export function getNumberOrAutoValidator() {
   if (Konva.isUnminified) {
-    return function(val: any, attr: string) {
+    return function<T extends string>(val: T, attr: string): T|void {
       var isNumber = Util._isNumber(val);
       var isAuto = val === 'auto';
 
