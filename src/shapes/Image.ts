@@ -7,7 +7,7 @@ import { _registerNode } from '../Global';
 import { GetSet, IRect } from '../types';
 
 export interface ImageConfig extends ShapeConfig {
-  image: ImageBitmapSource;
+  image: CanvasImageSource | undefined;
   crop?: IRect;
 }
 
@@ -124,7 +124,7 @@ export class Image extends Shape<ImageConfig> {
     img.src = url;
   }
 
-  image: GetSet<CanvasImageSource, this>;
+  image: GetSet<CanvasImageSource | undefined, this>;
   crop: GetSet<IRect, this>;
   cropX: GetSet<number, this>;
   cropY: GetSet<number, this>;

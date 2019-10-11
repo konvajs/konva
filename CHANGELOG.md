@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## 4.0.14 - 2019-10-11
+
+* TS fixes
 * Fix globalCompositeOperation + cached hit detections.
 * Fix absolute position calculations for cached parent
 
