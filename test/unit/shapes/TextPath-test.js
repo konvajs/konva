@@ -315,6 +315,37 @@ suite('TextPath', function() {
     assert.equal(layer.getContext().getTrace(true), trace);
   });
 
+  test.only('Text path with align right', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var c = 'M10,10 300, 10';
+
+    var path = new Konva.Path({
+      stroke: 'red',
+      data: c
+    });
+
+    layer.add(path);
+
+    var textpath = new Konva.TextPath({
+      fill: 'black',
+      fontSize: 10,
+      fontFamily: 'Arial',
+      text: "All the world's a stage.",
+      align: 'right',
+      data: c
+    });
+
+    layer.add(textpath);
+    stage.add(layer);
+
+    var trace =
+      "restore();save();translate(228.335,10);rotate(0);fillStyle=black;fillText(w,0,0);restore();save();translate(235.557,10);rotate(0);fillStyle=black;fillText(o,0,0);restore();save();translate(241.118,10);rotate(0);fillStyle=black;fillText(r,0,0);restore();save();translate(244.448,10);rotate(0);fillStyle=black;fillText(l,0,0);restore();save();translate(246.67,10);rotate(0);fillStyle=black;fillText(d,0,0);restore();save();translate(252.231,10);rotate(0);fillStyle=black;fillText(',0,0);restore();save();translate(254.141,10);rotate(0);fillStyle=black;fillText(s,0,0);restore();save();translate(259.141,10);rotate(0);fillStyle=black;fillText( ,0,0);restore();save();translate(261.919,10);rotate(0);fillStyle=black;fillText(a,0,0);restore();save();translate(267.48,10);rotate(0);fillStyle=black;fillText( ,0,0);restore();save();translate(270.259,10);rotate(0);fillStyle=black;fillText(s,0,0);restore();save();translate(275.259,10);rotate(0);fillStyle=black;fillText(t,0,0);restore();save();translate(278.037,10);rotate(0);fillStyle=black;fillText(a,0,0);restore();save();translate(283.599,10);rotate(0);fillStyle=black;fillText(g,0,0);restore();save();translate(289.16,10);rotate(0);fillStyle=black;fillText(e,0,0);restore();save();translate(294.722,10);rotate(0);fillStyle=black;fillText(.,0,0);restore();restore();restore();";
+
+    assert.equal(layer.getContext().getTrace(), trace);
+  });
+
   test('Text path with justify align', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

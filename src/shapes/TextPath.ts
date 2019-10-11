@@ -441,11 +441,13 @@ export class TextPath extends Shape<TextPathConfig> {
       }
     };
 
-    // fake search for offset, this is very bad approach
-    // find other way to add offset from start (for align)
+    // fake search for offset, this is the best approach
     var testChar = 'C';
     var glyphWidth = that._getTextSize(testChar).width + letterSpacing;
-    for (var k = 0; k < offset / glyphWidth; k++) {
+    var lettersInOffset = offset / glyphWidth - 1;
+    // the idea is simple
+    // try to draw testChar until we fill offset
+    for (var k = 0; k < lettersInOffset; k++) {
       findSegmentToFitCharacter(testChar);
       if (p0 === undefined || p1 === undefined) {
         break;
