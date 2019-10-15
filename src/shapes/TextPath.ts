@@ -500,6 +500,14 @@ export class TextPath extends Shape<TextPathConfig> {
     }
   }
   getSelfRect() {
+    if (!this.glyphInfo.length) {
+      return {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0
+      };
+    }
     var points = [];
 
     this.glyphInfo.forEach(function(info) {
@@ -508,10 +516,10 @@ export class TextPath extends Shape<TextPathConfig> {
       points.push(info.p1.x);
       points.push(info.p1.y);
     });
-    var minX = points[0];
-    var maxX = points[0];
-    var minY = points[0];
-    var maxY = points[0];
+    var minX = points[0] || 0;
+    var maxX = points[0] || 0;
+    var minY = points[1] || 0;
+    var maxY = points[1] || 0;
     var x, y;
     for (var i = 0; i < points.length / 2; i++) {
       x = points[i * 2];

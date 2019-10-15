@@ -631,4 +631,32 @@ suite('TextPath', function() {
     );
     layer.draw();
   });
+
+  test('client rect calculations', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var textpath = new Konva.TextPath({
+      x: 100,
+      y: 150,
+      fill: '#333',
+      fontSize: 16,
+      fontFamily: 'Arial',
+      align: 'right',
+      text: 'test_path',
+      data: 'M 0,10 L 300 10'
+    });
+    layer.add(textpath);
+    layer.draw();
+
+    var rect = textpath.getClientRect();
+
+    assert.equal(rect.height, 16, 'check height');
+
+    textpath.text('');
+    rect = textpath.getClientRect();
+    assert.equal(rect.height, 0, 'check height');
+  });
 });

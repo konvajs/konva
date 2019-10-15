@@ -5,8 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## 4.0.15 - 2019-10-15
+
 * TS fixes
-* Better calculations for `TextPath` with align = right.
+* Better calculations for `TextPath` with align = right
+* Better `textPath.getClientRect()`
 
 ## 4.0.14 - 2019-10-11
 
