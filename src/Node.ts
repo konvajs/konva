@@ -2294,7 +2294,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     // const pos = pointers.find(p => p.id === this._dragEventId);
     const pos = this.getStage()._getPointerById(elem.pointerId);
 
-    var dbf = this.dragBoundFunc();
     if (!pos) {
       return;
     }
@@ -2303,8 +2302,16 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       y: pos.y - elem.offset.y
     };
 
+    var dbf = this.dragBoundFunc();
     if (dbf !== undefined) {
-      newNodePos = dbf.call(this, newNodePos, evt);
+      const bounded = dbf.call(this, newNodePos, evt);
+      if (!bounded) {
+        Util.warn(
+          'dragBoundFunc did not return any value. That is unexpected behavior. You must return new absolute position from dragBoundFunc.'
+        );
+      } else {
+        newNodePos = bounded;
+      }
     }
 
     if (

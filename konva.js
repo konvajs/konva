@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.0.15
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Oct 15 2019
+   * Date: Fri Oct 18 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -4374,7 +4374,6 @@
           // const pointers = this.getStage().getPointersPositions();
           // const pos = pointers.find(p => p.id === this._dragEventId);
           var pos = this.getStage()._getPointerById(elem.pointerId);
-          var dbf = this.dragBoundFunc();
           if (!pos) {
               return;
           }
@@ -4382,8 +4381,15 @@
               x: pos.x - elem.offset.x,
               y: pos.y - elem.offset.y
           };
+          var dbf = this.dragBoundFunc();
           if (dbf !== undefined) {
-              newNodePos = dbf.call(this, newNodePos, evt);
+              var bounded = dbf.call(this, newNodePos, evt);
+              if (!bounded) {
+                  Util.warn('dragBoundFunc did not return any value. That is unexpected behavior. You must return new absolute position from dragBoundFunc.');
+              }
+              else {
+                  newNodePos = bounded;
+              }
           }
           if (!this._lastPos ||
               this._lastPos.x !== newNodePos.x ||

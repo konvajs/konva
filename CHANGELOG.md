@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* Warn on undefined return value of `dragBoundFunc`.
+
 ## 4.0.15 - 2019-10-15
 
 * TS fixes

@@ -1057,6 +1057,39 @@ suite('DragAndDrop', function() {
     stage.simulateMouseUp({ x: 80, y: 80 });
   });
 
+  test('warn on bad dragBoundFunc', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer({
+      draggable: true
+    });
+
+    var circle = new Konva.Circle({
+      x: 70,
+      y: 70,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle',
+      draggable: true,
+      dragBoundFunc: () => {}
+    });
+
+    layer.add(circle);
+    stage.add(layer);
+
+    var counter = 0;
+    var oldWarn = Konva.Util.warn;
+    Konva.Util.warn = function() {
+      counter += 1;
+    };
+    stage.simulateMouseDown({ x: 70, y: 70 });
+    stage.simulateMouseMove({ x: 80, y: 80 });
+    stage.simulateMouseUp({ x: 80, y: 80 });  
+    assert.equal(counter > 0, true);
+    Konva.Util.warn = oldWarn;
+  });
+
   test('deletage drag', function() {
     var stage = addStage();
     stage.draggable(true);
