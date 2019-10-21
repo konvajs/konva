@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## 4.0.16 - 2019-10-21
+
 * Warn on undefined return value of `dragBoundFunc`.
 * Better calculations for `container.getClientRect()`
 
