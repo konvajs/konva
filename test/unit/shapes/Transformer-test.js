@@ -1684,7 +1684,7 @@ suite('Transformer', function() {
       },
       expectedWidth: 50,
       expectedHeight: 50
-    },
+    }
     // {
     //   name: 'top-left-reverse',
     //   startPos: {
@@ -1968,6 +1968,38 @@ suite('Transformer', function() {
 
     assert.equal(rect.width(), 100);
     assert.equal(rect.height(), 100);
+  });
+
+  test('check calculations when the size = 0', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      // can we fit from empty width?
+      width: 0,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+    layer.draw();
+
+    tr._fitNodeInto({
+      x: 50,
+      y: 50,
+      width: 100,
+      height: 100
+    });
+    layer.draw();
+    assert.equal(rect.scaleX(), 1, '');
   });
 
   test('attrs change - arc', function() {

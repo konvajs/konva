@@ -735,8 +735,10 @@ export class Transformer extends Group {
     });
 
     var padding = this.padding();
-    var scaleX = (newAttrs.width - padding * 2) / pure.width;
-    var scaleY = (newAttrs.height - padding * 2) / pure.height;
+    var scaleX = pure.width ? (newAttrs.width - padding * 2) / pure.width : 1;
+    var scaleY = pure.height
+      ? (newAttrs.height - padding * 2) / pure.height
+      : 1;
 
     var rotation = Konva.getAngle(node.rotation());
     var dx = pure.x * scaleX - padding - node.offsetX() * scaleX;

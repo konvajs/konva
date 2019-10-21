@@ -928,7 +928,11 @@ suite('Container', function() {
     assert.equal(layer.find('Shape').length, 2, 'layer should have 2 shapes');
     assert.equal(layer.find('Layer').length, 0, 'layer should have 0 layers');
 
-    assert.equal(layer.find('Group, Rect').length, 3, 'layer should have 3 [group or rects]');
+    assert.equal(
+      layer.find('Group, Rect').length,
+      3,
+      'layer should have 3 [group or rects]'
+    );
 
     assert.equal(
       fooLayer.find('Group').length,
@@ -2330,6 +2334,49 @@ suite('Container', function() {
       y: 10,
       width: 50,
       height: 50
+    });
+  });
+
+  test('getClientRect - test group with visible child inside invisible parent', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer({
+      visible: false
+    });
+    stage.add(layer);
+    var group = new Konva.Group({
+      x: 10,
+      y: 10
+    });
+    layer.add(group);
+
+    var subGroup = new Konva.Group({
+      visible: false
+    });
+    group.add(subGroup);
+    subGroup.add(
+      new Konva.Rect({
+        x: 0,
+        y: 0,
+        width: 50,
+        height: 50,
+        visible: true
+      })
+    );
+    subGroup.add(
+      new Konva.Rect({
+        x: 400,
+        y: 400,
+        width: 50,
+        height: 50,
+        visible: true
+      })
+    );
+    layer.draw();
+    assert.deepEqual(group.getClientRect(), {
+      x: 10,
+      y: 10,
+      width: 0,
+      height: 0
     });
   });
 

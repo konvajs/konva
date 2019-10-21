@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.0.15
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Fri Oct 18 2019
+   * Date: Mon Oct 21 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -3263,6 +3263,9 @@
               else {
                   return true;
               }
+          }
+          else if (relativeTo && relativeTo !== parent) {
+              return visible && parent._isVisible(relativeTo);
           }
           else {
               return visible;
@@ -15048,8 +15051,10 @@
               skipStroke: this.ignoreStroke()
           });
           var padding = this.padding();
-          var scaleX = (newAttrs.width - padding * 2) / pure.width;
-          var scaleY = (newAttrs.height - padding * 2) / pure.height;
+          var scaleX = pure.width ? (newAttrs.width - padding * 2) / pure.width : 1;
+          var scaleY = pure.height
+              ? (newAttrs.height - padding * 2) / pure.height
+              : 1;
           var rotation = Konva.getAngle(node.rotation());
           var dx = pure.x * scaleX - padding - node.offsetX() * scaleX;
           var dy = pure.y * scaleY - padding - node.offsetY() * scaleY;

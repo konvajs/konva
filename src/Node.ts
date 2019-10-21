@@ -1034,6 +1034,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       } else {
         return true;
       }
+    } else if (relativeTo && relativeTo !== parent) {
+      return visible && parent._isVisible(relativeTo);
     } else {
       return visible;
     }
