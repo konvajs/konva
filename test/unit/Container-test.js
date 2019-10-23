@@ -2207,7 +2207,21 @@ suite('Container', function() {
       'layer has exactly three children'
     );
   });
-
+  test('getClientRect - adding a zero bounds shape should result in zero bounds', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    var grp = new Konva.Group();
+    var zeroRect = new Konva.Rect({x: 0, y: 0, width: 0, height: 0});
+    grp.add(zeroRect);
+    var bounds = grp.getClientRect();
+    assert.deepEqual(bounds, {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0
+    });
+  });
   test('getClientRect - test empty case', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
