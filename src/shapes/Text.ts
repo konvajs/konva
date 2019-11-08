@@ -94,6 +94,11 @@ function checkDefaultFill(config) {
   return config;
 }
 
+// polyfill for IE11
+const trimRight = String.prototype.trimRight || function polyfill() {
+  return this.replace(/[\s\xa0]+$/, '');
+}
+
 /**
  * Text constructor
  * @constructor
@@ -461,7 +466,7 @@ export class Text extends Shape<TextConfig> {
               }
             }
             // if (align === 'right') {
-            match = match.trimRight();
+            match = trimRight.call(match);
             // }
             this._addTextLine(match);
             textWidth = Math.max(textWidth, matchWidth);

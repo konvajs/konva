@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* Allow hitStrokeWidth usage, even if a shape has not stroke visible
+* Better IE11 support
+
 ## 4.0.16 - 2019-10-21
 
 * Warn on undefined return value of `dragBoundFunc`.
