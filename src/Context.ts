@@ -826,7 +826,7 @@ export class HitContext extends Context {
     this.restore();
   }
   _stroke(shape) {
-    if (shape.hasStroke() && shape.hitStrokeWidth()) {
+    if (shape.hasHitStroke()) {
       // ignore strokeScaleEnabled for Text
       var strokeScaleEnabled = shape.getStrokeScaleEnabled();
       if (!strokeScaleEnabled) {

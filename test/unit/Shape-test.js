@@ -1122,6 +1122,31 @@ suite('Shape', function() {
     // );
   });
 
+
+  test('enable hitStrokeWidth even if we have no stroke on scene', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+
+    var rect = new Konva.Rect({
+      x: 10,
+      y: 10,
+      width: 100,
+      height: 100
+    });
+    // default value
+    layer.add(rect);
+    stage.add(layer);
+
+    // try to hit test near edge
+    assert.equal(stage.getIntersection({ x: 5, y: 5 }), null);
+
+    rect.hitStrokeWidth(20);
+    layer.draw();
+    // no we should hit the rect
+    assert.equal(stage.getIntersection({ x: 5, y: 5 }), rect);
+  });
+
   test('cache shadow color rgba', function() {
     var circle = new Konva.Circle({
       fill: 'green',

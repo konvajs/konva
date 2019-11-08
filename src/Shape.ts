@@ -370,6 +370,16 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
       // this.getStrokeRadialGradientColorStops()
     );
   }
+  hasHitStroke() {
+    const width = this.hitStrokeWidth();
+
+    // we should enable hit stroke we stroke is enabled
+    // and we have some value from width
+    return (
+      this.strokeEnabled() &&
+      (width || this.strokeWidth() && width === 'auto')
+    );
+  }
   /**
    * determines if point is in the shape, regardless if other shapes are on top of it.  Note: because
    *  this method clears a temporary canvas and then redraws the shape, it performs very poorly if executed many times
