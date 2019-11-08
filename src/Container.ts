@@ -507,8 +507,7 @@ export abstract class Container<ChildType extends Node> extends Node<
         break;
       }
     }
-
-    if (hasVisible) {
+    if (hasVisible && minX !== undefined) {
       selfRect = {
         x: minX,
         y: minY,
