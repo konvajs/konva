@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+
+## 4.0.17 - 2019-11-08
+
 * Allow hitStrokeWidth usage, even if a shape has not stroke visible
 * Better IE11 support
 
