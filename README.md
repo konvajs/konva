@@ -77,7 +77,7 @@ Konva supports UMD loading. So you can use all possible variants to load the fra
 <script src="https://unpkg.com/konva@^4.0.3/konva.js"></script>
 ```
 
-You can use CDN: [https://unpkg.com/konva@^4.0.3/konva.js](https://unpkg.com/konva@^4.0.3/konva.js)
+You can also use a CDN: [https://unpkg.com/konva@^4.0.3/konva.js](https://unpkg.com/konva@^4.0.3/konva.js)
 
 ### 2 Load via AMD (requirejs):
 
@@ -87,28 +87,32 @@ define(['./konva'], function(Konva) {
 });
 ```
 
-### 3 CommonJS style with npm:
+### 3 Load with npm:
 
 ```bash
 npm install konva --save
 ```
 
 ```javascript
-// old way
+// The old way (e.g. a CommonJS-style import)
 var Konva = require('konva');
 
-// modern way
+// The modern way (e.g. an ES6-style import)
 import Konva from 'konva';
 
-// typescript
-import * as Konva from 'konva';
+// TypeScript
+import Konva from 'konva'; // Allows e.g. "Konva.Stage"
+// Or:
+import * as Konva from 'konva'; // Allows e.g. "Konva.default.Stage"
+// Note that for both TypeScript options, you must supply the TypeScript compiler with the
+// "dom" library flag and the "es2015" library flag (or greater)
 ```
 
 ### 4 Minimal bundle
 
 ```javascript
 import Konva from 'konva/lib/Core';
-// now you have Konva object with Stage, Layer, FastLayer, Group, Shape and some additional utils function.
+// Now you have a Konva object with Stage, Layer, FastLayer, Group, Shape and some additional utils function.
 // Also core currently already have support for drag&drop and animations.
 // BUT there are no shapes (rect, circle, etc), no filters.
 
