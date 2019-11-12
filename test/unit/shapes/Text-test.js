@@ -14,6 +14,22 @@ suite('Text', function() {
   });
 
   // ======================================================
+  test('check text with FALSY values', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    stage.add(layer);
+    var text = new Konva.Text();
+
+    layer.add(text);
+    layer.draw();
+
+
+    text.text(0);
+    assert.equal(text.text(), '0');
+  });
+
+  // ======================================================
   test('text with undefined text property should not throw an error', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

@@ -1716,7 +1716,7 @@ suite('Transformer', function() {
     });
     layer.add(tr);
 
-    tests.forEach(test => {
+    tests.forEach(function(test) {
       rect.setAttrs({
         x: 0,
         y: 0,
@@ -1781,7 +1781,7 @@ suite('Transformer', function() {
     });
     layer.add(tr);
 
-    tests.forEach(test => {
+    tests.forEach(function(test) {
       rect.setAttrs({
         x: 0,
         y: 0,
@@ -2027,12 +2027,12 @@ suite('Transformer', function() {
     shape.outerRadius(100);
 
     layer.draw();
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect);
 
     shape.innerRadius(200);
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect);
 
@@ -2065,13 +2065,13 @@ suite('Transformer', function() {
     layer.draw();
 
     shape.points([10, 10, 100, 10]);
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     layer.draw();
     assert.deepEqual(shape.getClientRect(), rect);
 
     shape.strokeWidth(10);
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     layer.draw();
     assert.deepEqual(shape.getClientRect(), rect);
@@ -2099,7 +2099,7 @@ suite('Transformer', function() {
 
     shape.radius(100);
     layer.draw();
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect);
   });
@@ -2130,12 +2130,12 @@ suite('Transformer', function() {
     shape.radiusX(120);
 
     layer.draw();
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect);
 
     shape.radiusY(100);
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect);
 
@@ -2166,12 +2166,12 @@ suite('Transformer', function() {
     shape.width(120);
 
     layer.draw();
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect);
 
     shape.height(110);
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect);
 
@@ -2200,7 +2200,7 @@ suite('Transformer', function() {
     shape.data('M200,100h100v50z');
     layer.draw();
 
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect);
   });
@@ -2229,7 +2229,7 @@ suite('Transformer', function() {
     shape.radius(100);
     layer.draw();
 
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect);
   });
@@ -2258,12 +2258,12 @@ suite('Transformer', function() {
     shape.outerRadius(100);
 
     layer.draw();
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect);
 
     shape.innerRadius(200);
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect);
 
@@ -2295,12 +2295,12 @@ suite('Transformer', function() {
     shape.outerRadius(100);
 
     layer.draw();
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect);
 
     shape.innerRadius(200);
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect);
 
@@ -2330,7 +2330,7 @@ suite('Transformer', function() {
 
     shape.radius(100);
     layer.draw();
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect);
   });
@@ -2357,37 +2357,37 @@ suite('Transformer', function() {
 
     shape.text('Simple');
     layer.draw();
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect, 'change text');
 
     shape.fontSize(30);
     layer.draw();
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect, 'change font size');
 
     shape.padding(10);
     layer.draw();
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect, 'change padding');
 
     shape.lineHeight(2);
     layer.draw();
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect, 'change line height');
 
     shape.width(30);
     layer.draw();
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect), 'change width';
 
     shape.height(30);
     layer.draw();
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect, 'change height');
   });
@@ -2416,19 +2416,19 @@ suite('Transformer', function() {
 
     shape.text('Simple');
     layer.draw();
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect, 'change text');
 
     shape.fontSize(30);
     layer.draw();
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect, 'change font size');
 
     shape.data('M10,10 C0,0 10,150 100,100 S300,150 400,50');
     layer.draw();
-    var rect = Object.assign({}, tr._getNodeRect());
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
     assert.deepEqual(shape.getClientRect(), rect), 'change data';
   });

@@ -384,7 +384,7 @@ suite('Sprite', function() {
       stage.add(layer);
 
       var counter = 0;
-      sprite.on('frameIndexChange.konva', event => {
+      sprite.on('frameIndexChange.konva', function(event) {
         counter += 1;
       });
 

@@ -546,7 +546,7 @@ suite('TextPath', function() {
     layer.draw();
 
     var called = false;
-    kernedText.kerningFunc(() => {
+    kernedText.kerningFunc(function() {
       called = true;
       return 1;
     });

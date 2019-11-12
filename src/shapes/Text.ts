@@ -466,7 +466,7 @@ export class Text extends Shape<TextConfig> {
               }
             }
             // if (align === 'right') {
-            match = trimRight.call(match);
+            match = match.trimRight();
             // }
             this._addTextLine(match);
             textWidth = Math.max(textWidth, matchWidth);

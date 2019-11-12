@@ -545,7 +545,7 @@ suite('Stage', function() {
   test('Should not throw on clip for stage', function() {
     // no asserts, because we check throw
     var stage = addStage({
-      clipFunc: () => {}
+      clipFunc: function(){}
     });
     var layer = new Konva.Layer();
 

@@ -2071,7 +2071,7 @@ suite('MouseEvents', function() {
     layer.draw();
 
     var mousemove = 0;
-    rect.on('mousemove', () => {
+    rect.on('mousemove', function() {
       mousemove += 1;
     });
 

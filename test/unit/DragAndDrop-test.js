@@ -1072,7 +1072,7 @@ suite('DragAndDrop', function() {
       strokeWidth: 4,
       name: 'myCircle',
       draggable: true,
-      dragBoundFunc: () => {}
+      dragBoundFunc: function() {}
     });
 
     layer.add(circle);

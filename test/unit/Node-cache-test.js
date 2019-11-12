@@ -1235,13 +1235,13 @@ suite('Caching', function() {
     var layer = new Konva.Layer({});
     stage.add(layer);
 
-    Konva.Image.fromURL('./assets/lion.png', lion => {
+    Konva.Image.fromURL('./assets/lion.png', function(lion) {
       lion.name('lion');
       lion.cache();
       lion.drawHitFromCache();
       layer.add(lion);
 
-      Konva.Image.fromURL('./assets/lion.png', lion2 => {
+      Konva.Image.fromURL('./assets/lion.png', function(lion2) {
         lion2.position({
           x: 50,
           y: 50

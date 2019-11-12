@@ -61,6 +61,12 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
 </script>
 ```
 
+# Browsers support
+
+Konva works in all modern mobile and desktop browsers. A browser need to be capable to run javascript code from ES2015 spec. For older browsers you may need polyfills for missing functions.
+
+At the current moment `Konva` doesn't work in IE11 directly. To make it work you just need to provide some polyfills such as `Array.prototype.find`, `String.prototype.trimLeft` and `String.prototype.trimRight`.
+
 # Loading and installing Konva
 
 Konva supports UMD loading. So you can use all possible variants to load the framework into your project:
@@ -117,6 +123,8 @@ var shape = new Konva.Rect();
 // for filters you can use this:
 import { Blur } from 'konva/lib/filters/Blur';
 ```
+
+
 
 ### 5 NodeJS
 

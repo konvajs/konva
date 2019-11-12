@@ -532,12 +532,12 @@ suite('TouchEvents', function() {
     var tap = 0;
     var dbltap = 0;
 
-    stage.on('tap', e => {
+    stage.on('tap', function(e) {
       assert.equal(e.target, circle1);
       tap += 1;
     });
 
-    stage.on('dbltap', e => {
+    stage.on('dbltap', function(e) {
       assert.equal(e.target, circle1);
       dbltap += 1;
     });
@@ -584,16 +584,16 @@ suite('TouchEvents', function() {
     var dbltap = 0;
     var dragmove = 0;
 
-    stage.on('tap', e => {
+    stage.on('tap', function(e) {
       assert.equal(e.target, circle1);
       tap += 1;
     });
 
-    stage.on('dbltap', e => {
+    stage.on('dbltap', function(e) {
       dbltap += 1;
     });
 
-    stage.on('dragmove', e => {
+    stage.on('dragmove', function(e) {
       dragmove += 1;
     });
 
@@ -645,14 +645,14 @@ suite('TouchEvents', function() {
     var tap = 0;
     var click = 0;
 
-    stage.on('tap', e => {
+    stage.on('tap', function(e) {
       assert.equal(e.target, circle1);
       assert.equal(stage.getPointerPosition().x, 100);
       assert.equal(stage.getPointerPosition().y, 100);
       tap += 1;
     });
 
-    stage.on('click', e => {
+    stage.on('click', function(e) {
       click += 1;
     });
 

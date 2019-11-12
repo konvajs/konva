@@ -303,7 +303,7 @@ suite('Line', function() {
     layer.add(line);
 
     var client = line.getClientRect();
-    var rect = new Konva.Rect(Object.assign({ stroke: 'red' }, client));
+    var rect = new Konva.Rect(Konva.Util._assign({ stroke: 'red' }, client));
     layer.add(rect);
 
     stage.add(layer);
