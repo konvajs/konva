@@ -475,7 +475,7 @@ suite('DragAndDropEvents', function() {
     }, 20);
   });
 
-  test('drag events should not trigger on a click', function() {
+  test('click should not start drag&drop', function() {
     var stage = addStage();
     var layer = new Konva.Layer({
       draggable: true
@@ -521,5 +521,106 @@ suite('DragAndDropEvents', function() {
     assert.equal(dragstart, 0, 'dragstart not triggered');
     assert.equal(dragmove, 0, 'dragmove not triggered');
     assert.equal(dragend, 0, 'dragend not triggered');
+  });
+
+
+  test('drag&drop should not fire click', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer({
+      draggable: true
+    });
+
+    var circle = new Konva.Circle({
+      x: 70,
+      y: 70,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle',
+      draggable: true
+    });
+
+    layer.add(circle);
+    stage.add(layer);
+
+    var dragstart = 0;
+    circle.on('dragstart', function() {
+      dragstart += 1;
+    });
+
+    var dragmove = 0;
+    circle.on('dragmove', function() {
+      dragmove += 1;
+    });
+
+    var dragend = 0;
+    circle.on('dragend', function() {
+      dragend += 1;
+    });
+
+    var click = 0;
+    circle.on('click', function() {
+      click += 1;
+    });
+    stage.simulateMouseDown({ x: 70, y: 70 });
+    stage.simulateMouseMove({ x: 80, y: 80 });
+    stage.simulateMouseUp({ x: 80, y: 80 });
+
+    assert.equal(click, 0, 'click triggered');
+    assert.equal(dragstart, 1, 'dragstart not triggered');
+    assert.equal(dragmove, 1, 'dragmove not triggered');
+    assert.equal(dragend, 1, 'dragend not triggered');
+  });
+
+
+  test('drag events should not trigger on a click even if we stop drag on dragstart', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer({
+      draggable: true
+    });
+
+    var circle = new Konva.Circle({
+      x: 70,
+      y: 70,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle',
+      draggable: true
+    });
+
+    layer.add(circle);
+    stage.add(layer);
+
+    var dragstart = 0;
+    circle.on('dragstart', function() {
+      circle.stopDrag();
+      dragstart += 1;
+    });
+
+    var dragmove = 0;
+    circle.on('dragmove', function() {
+      dragmove += 1;
+    });
+
+    var dragend = 0;
+    circle.on('dragend', function() {
+      dragend += 1;
+    });
+
+    var click = 0;
+    circle.on('click', function() {
+      click += 1;
+    });
+    stage.simulateMouseDown({ x: 70, y: 70 });
+    stage.simulateMouseMove({ x: 75, y: 75 });
+    stage.simulateMouseUp({ x: 75, y: 75 });
+
+    assert.equal(click, 0, 'click triggered');
+    assert.equal(dragstart, 1, 'dragstart triggered');
+    assert.equal(dragmove, 0, 'dragmove not triggered');
+    assert.equal(dragend, 1, 'dragend triggered');
   });
 });

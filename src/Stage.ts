@@ -546,6 +546,7 @@ export class Stage extends Container<BaseLayer> {
     var pointerId = Util._getFirstPointerId(evt);
     var shape = this.getIntersection(this.getPointerPosition());
 
+    DD.justDragged = false;
     Konva.listenClickTap = true;
 
     if (shape && shape.isListening()) {
@@ -590,8 +591,6 @@ export class Stage extends Container<BaseLayer> {
       // don't set inDblClickWindow after dragging
       Konva.inDblClickWindow = true;
       clearTimeout(this.dblTimeout);
-    } else if (DD) {
-      DD.justDragged = false;
     }
 
     this.dblTimeout = setTimeout(function() {
@@ -677,6 +676,7 @@ export class Stage extends Container<BaseLayer> {
     this._changedPointerPositions.forEach(pos => {
       var shape = this.getIntersection(pos);
       Konva.listenClickTap = true;
+      DD.justDragged = false;
       const hasShape = shape && shape.isListening();
 
       if (!hasShape) {
