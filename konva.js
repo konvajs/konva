@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.0.17
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Nov 12 2019
+   * Date: Thu Nov 14 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -11524,7 +11524,17 @@
       Path.prototype.getSelfRect = function () {
           var points = [];
           this.dataArray.forEach(function (data) {
-              points = points.concat(data.points);
+              if (data.command === 'A') {
+                  points = points.concat([
+                      data.points[0] - data.points[2],
+                      data.points[1] - data.points[3],
+                      data.points[0] + data.points[2],
+                      data.points[1] + data.points[3]
+                  ]);
+              }
+              else {
+                  points = points.concat(data.points);
+              }
           });
           var minX = points[0];
           var maxX = points[0];

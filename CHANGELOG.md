@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* Fix `path.getClientRect()` calculations for `Konva.Path`
+* Fix wrong fire of `click` and `tap` events on stopped drag events.
 
 ## 4.0.17 - 2019-11-08
 
