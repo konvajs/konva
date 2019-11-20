@@ -10832,6 +10832,7 @@
                   ]);
               }
               else {
+                  // TODO: how can we calculate bezier curves better?
                   points = points.concat(data.points);
               }
           });

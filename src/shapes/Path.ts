@@ -111,6 +111,7 @@ export class Path extends Shape<PathConfig> {
           data.points[1] + data.points[3]
         ])
       } else {
+        // TODO: how can we calculate bezier curves better?
         points = points.concat(data.points);
       }
     });

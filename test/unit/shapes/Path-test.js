@@ -1182,6 +1182,36 @@ suite('Path', function() {
     assert.deepEqual(rect, {x: 8, y: 65, width: 95, height: 56});
   });
 
+  test.skip('getClientRect of another complex path', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var path = new Konva.Path({
+      x: 50,
+      y: 50,
+      data:
+        'M0,29 C71,-71,142,128,213,29 L213,207 C142,307,71,108,0,207 L0,29 Z',
+      fill: 'black',
+      stroke: 'red',
+      scaleY: 0.3
+    });
+    layer.add(path);
+    var rect = path.getClientRect();
+
+    var back = new Konva.Rect({
+      x: rect.x,
+      y: rect.y,
+      width: rect.width,
+      height: rect.height,
+      stroke: 'red'
+    });
+    layer.add(back);
+    layer.draw();
+
+    assert.deepEqual(rect, {x: 8, y: 65, width: 95, height: 56});
+  });
+
   test('getClientRect for arc', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
