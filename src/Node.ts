@@ -1675,22 +1675,44 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
   }
   _getAbsoluteTransform(top?: Node) {
-    var at = new Transform();
+    
+    var at;
+    // we we need position relative to an ancestor, we will iterate for all
+    if (top) {
+      at = new Transform();
+      // start with stage and traverse downwards to self
+      this._eachAncestorReverse(function(node: Node) {
+        var transformsEnabled = node.transformsEnabled();
 
-    // start with stage and traverse downwards to self
-    this._eachAncestorReverse(function(node) {
-      var transformsEnabled = node.getTransformsEnabled();
-
+        if (transformsEnabled === 'all') {
+          at.multiply(node.getTransform());
+        } else if (transformsEnabled === 'position') {
+          at.translate(
+            node.x() - node.offsetX(),
+            node.y() - node.offsetY()
+          );
+        }
+      }, top);
+      return at;
+    } else {
+      // try to use a cached value
+      if (this.parent) {
+        // transform will be cached
+        at = this.parent.getAbsoluteTransform().copy();
+      } else {
+        at = new Transform();
+      }
+      var transformsEnabled = this.transformsEnabled();
       if (transformsEnabled === 'all') {
-        at.multiply(node.getTransform());
+        at.multiply(this.getTransform());
       } else if (transformsEnabled === 'position') {
         at.translate(
-          node.getX() - node.getOffsetX(),
-          node.getY() - node.getOffsetY()
+          this.x() - this.offsetX(),
+          this.y() - this.offsetY()
         );
       }
-    }, top);
-    return at;
+      return at;
+    }
   }
   /**
    * get absolute scale of the node which takes into

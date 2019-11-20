@@ -28,7 +28,7 @@
       var maxY = height - 10;
       var minY = 0;
 
-      var startBunnyCount = 10;
+      var startBunnyCount = 1000;
       var isAdding = false;
       var count = 0;
       var container;
@@ -98,8 +98,9 @@
           bunnys.push(bunny);
           layer.add(bunny);
 
-          layer.draw();
+          
         }
+        layer.draw();
       }
 
       function onTouchStart(event) {
