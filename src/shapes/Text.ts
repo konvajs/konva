@@ -294,7 +294,7 @@ export class Text extends Shape<TextConfig> {
     context.fillStrokeShape(this);
   }
   setText(text) {
-    var str = Util._isString(text) ? text : (text || '').toString();
+    var str = Util._isString(text) ? text : (text === null || text === undefined) ? '' : text + '';
     this._setAttr(TEXT, str);
     return this;
   }

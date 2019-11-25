@@ -15,7 +15,7 @@ suite('Text', function() {
 
   // ======================================================
   // TODO: what is the best UX here?
-  test.skip('check text with FALSY values', function() {
+  test('check text with FALSY values', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -28,6 +28,15 @@ suite('Text', function() {
 
     text.text(0);
     assert.equal(text.text(), '0');
+
+    text.text(true);
+    assert.equal(text.text(), 'true');
+
+    text.text(false);
+    assert.equal(text.text(), 'false');
+
+    text.setText(undefined);
+    assert.equal(text.text(), '');
   });
 
   // ======================================================
