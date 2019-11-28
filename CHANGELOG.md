@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* Fix caching on float dimensions
+
+## 4.0.18 - 2019-11-20
+
 * Fix `path.getClientRect()` calculations for `Konva.Path`
 * Fix wrong fire of `click` and `tap` events on stopped drag events.
 

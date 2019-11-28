@@ -751,6 +751,29 @@ suite('Caching', function() {
     cloneAndCompareLayer(layer, 210);
   });
 
+  test('test rect with float dimensions', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group({
+      x: 10,
+      y: 10,
+      draggable: true
+    });
+    layer.add(group);
+
+    var circle = new Konva.Circle({
+      radius: 52.2,
+      fill: 'red',
+    });
+    group.add(circle);
+    group.cache();
+    stage.draw();
+
+    cloneAndCompareLayer(layer, 210);
+  });
+
   test('cache group with rectangle with fill and opacity', function() {
     var stage = addStage();
 

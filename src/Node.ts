@@ -363,8 +363,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         relativeTo: this.getParent()
       });
     }
-    var width = conf.width || rect.width,
-      height = conf.height || rect.height,
+    var width = Math.ceil(conf.width || rect.width),
+      height = Math.ceil(conf.height || rect.height),
       pixelRatio = conf.pixelRatio,
       x = conf.x === undefined ? rect.x : conf.x,
       y = conf.y === undefined ? rect.y : conf.y,
