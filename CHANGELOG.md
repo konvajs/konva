@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* Make events work on some CSS transforms
 * Fix caching on float dimensions
 
 ## 4.0.18 - 2019-11-20

@@ -6485,29 +6485,22 @@
               Collection.prototype.each.call(evt.touches, function (touch) {
                   _this._pointerPositions.push({
                       id: touch.identifier,
-                      x: touch.clientX - contentPosition.left,
-                      y: touch.clientY - contentPosition.top
+                      x: (touch.clientX - contentPosition.left) / contentPosition.scaleX,
+                      y: (touch.clientY - contentPosition.top) / contentPosition.scaleY
                   });
               });
               Collection.prototype.each.call(evt.changedTouches || evt.touches, function (touch) {
                   _this._changedPointerPositions.push({
                       id: touch.identifier,
-                      x: touch.clientX - contentPosition.left,
-                      y: touch.clientY - contentPosition.top
+                      x: (touch.clientX - contentPosition.left) / contentPosition.scaleX,
+                      y: (touch.clientY - contentPosition.top) / contentPosition.scaleY
                   });
               });
-              // currently, only handle one finger
-              if (evt.touches.length > 0) {
-                  var touch = evt.touches[0];
-                  // get the information for finger #1
-                  x = touch.clientX - contentPosition.left;
-                  y = touch.clientY - contentPosition.top;
-              }
           }
           else {
               // mouse events
-              x = evt.clientX - contentPosition.left;
-              y = evt.clientY - contentPosition.top;
+              x = (evt.clientX - contentPosition.left) / contentPosition.scaleX;
+              y = (evt.clientY - contentPosition.top) / contentPosition.scaleY;
               this.pointerPos = {
                   x: x,
                   y: y
@@ -6525,10 +6518,12 @@
       Stage.prototype._getContentPosition = function () {
           var rect = this.content.getBoundingClientRect
               ? this.content.getBoundingClientRect()
-              : { top: 0, left: 0 };
+              : { top: 0, left: 0, width: 1000, height: 1000 };
           return {
               top: rect.top,
-              left: rect.left
+              left: rect.left,
+              scaleX: rect.width / this.content.clientWidth,
+              scaleY: rect.height / this.content.clientHeight,
           };
       };
       Stage.prototype._buildDOM = function () {

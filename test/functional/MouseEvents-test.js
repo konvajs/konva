@@ -2096,4 +2096,55 @@ suite('MouseEvents', function() {
     assert.equal(mousemove, 2, 'mousemove should be 2');
     Konva.hitOnDragEnabled = false;
   });
+
+  test('test scaled with CSS stage', function() {
+    var stage = addStage();
+
+    stage.container().style.transform = 'scale(0.5)';
+    stage.container().style.transformOrigin = 'left top';
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      width: 50,
+      height: 50,
+      fill: 'red',
+      draggable: true
+    });
+    layer.add(rect);
+
+    layer.draw();
+
+    var clicks = 0;
+    rect.on('click', function() {
+      clicks += 1;
+    });
+
+    stage.simulateMouseDown({
+      x: 40,
+      y: 40
+    });
+
+    
+    stage.simulateMouseUp({
+      x: 40,
+      y: 40
+    });
+
+    // should not register this click this click, because the stage is scaled
+    assert.equal(clicks, 0, 'clicks not triggered');
+    assert.deepEqual(stage.getPointerPosition(), { x: 80, y: 80 });
+
+
+    // try touch too
+    stage.simulateTouchStart({
+      x: 30,
+      y: 30
+    });
+    stage.simulateTouchEnd({
+      x: 30,
+      y: 30
+    });
+    assert.deepEqual(stage.getPointerPosition(), { x: 60, y: 60 });
+  });
 });
