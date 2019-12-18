@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.0.18
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Thu Nov 28 2019
+   * Date: Wed Dec 18 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -6041,6 +6041,7 @@
           if (targetShape && eventsEnabled) {
               targetShape._fireAndBubble(MOUSEOUT, { evt: evt });
               targetShape._fireAndBubble(MOUSELEAVE$1, { evt: evt });
+              this._fire(MOUSELEAVE$1, { evt: evt, target: this, currentTarget: this });
               this.targetShape = null;
           }
           else if (eventsEnabled) {

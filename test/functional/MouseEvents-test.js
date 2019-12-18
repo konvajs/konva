@@ -1983,6 +1983,72 @@ suite('MouseEvents', function() {
     assert.equal(mouseleave, 1, 'mouseleave should be 1');
   });
 
+  test('test mouseleave from the shape', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var circle = new Konva.Circle({
+      fill: 'red',
+      radius: 100,
+      x: 200,
+      y: 0
+    })
+    layer.add(circle);
+    layer.draw();
+
+    var mouseleave = 0;
+    stage.on('mouseleave', function() {
+      mouseleave += 1;
+    });
+
+    var mouseout = 0;
+    stage.on('mouseout', function() {
+      mouseout += 1;
+    });
+
+    var circleMouseleave = 0;
+    circle.on('mouseleave', function() {
+      circleMouseleave += 1;
+    });
+
+    var circleMouseout = 0;
+    circle.on('mouseout', function() {
+      circleMouseout += 1;
+    });
+
+    var layerMouseleave = 0;
+    layer.on('mouseleave', function() {
+      layerMouseleave += 1;
+    });
+
+    var layerMouseout = 0;
+    layer.on('mouseout', function() {
+      layerMouseout += 1;
+    });
+    
+
+    // move into a circle
+    stage.simulateMouseMove({ x: 200, y : 5});
+
+    var top = stage.content.getBoundingClientRect().top;
+    var evt = {
+      clientX: 200,
+      clientY: -5 + top,
+      button: 0
+    };
+
+    stage._mouseout(evt);
+
+    assert.equal(circleMouseleave, 1, 'circleMouseleave should be 1');
+    assert.equal(circleMouseout, 1, 'circleMouseout should be 1');
+    assert.equal(layerMouseleave, 1, 'layerMouseleave should be 1');
+    assert.equal(layerMouseout, 1, 'layerMouseout should be 1');
+    assert.equal(mouseleave, 1, 'mouseleave should be 1');
+    assert.equal(mouseout, 1, 'mouseout should be 1');
+    
+  });
+
   test('should not trigger mouseenter on stage when we go to the shape from empty space', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

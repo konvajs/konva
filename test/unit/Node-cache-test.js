@@ -769,9 +769,9 @@ suite('Caching', function() {
     });
     group.add(circle);
     group.cache();
-    stage.draw();
 
-    cloneAndCompareLayer(layer, 210);
+    const canvas = group._cache.get('canvas').scene;
+    assert.equal(canvas.width, 105 * canvas.pixelRatio)
   });
 
   test('cache group with rectangle with fill and opacity', function() {

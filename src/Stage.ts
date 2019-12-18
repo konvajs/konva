@@ -443,6 +443,7 @@ export class Stage extends Container<BaseLayer> {
     if (targetShape && eventsEnabled) {
       targetShape._fireAndBubble(MOUSEOUT, { evt: evt });
       targetShape._fireAndBubble(MOUSELEAVE, { evt: evt });
+      this._fire(MOUSELEAVE, { evt: evt, target: this, currentTarget: this });
       this.targetShape = null;
     } else if (eventsEnabled) {
       this._fire(MOUSELEAVE, {
