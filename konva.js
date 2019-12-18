@@ -5197,22 +5197,27 @@
        * // remember to redraw layer if you changed something
        * layer.draw();
        */
-      Container.prototype.add = function (child) {
+      Container.prototype.add = function () {
+          var children = [];
+          for (var _i = 0; _i < arguments.length; _i++) {
+              children[_i] = arguments[_i];
+          }
           if (arguments.length > 1) {
               for (var i = 0; i < arguments.length; i++) {
                   this.add(arguments[i]);
               }
               return this;
           }
+          var child = arguments[0];
           if (child.getParent()) {
               child.moveTo(this);
               return this;
           }
-          var children = this.children;
+          var _children = this.children;
           this._validateAdd(child);
-          child.index = children.length;
+          child.index = _children.length;
           child.parent = this;
-          children.push(child);
+          _children.push(child);
           this._fire('add', {
               child: child
           });
