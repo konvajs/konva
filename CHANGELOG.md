@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## 4.1.0 - 2019-12-23
+
 * Make events work on some CSS transforms
 * Fix caching on float dimensions
 * Fix `mouseleave` event on stage.
