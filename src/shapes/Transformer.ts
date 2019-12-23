@@ -85,6 +85,8 @@ var ANGLES = {
   'bottom-right': 135
 };
 
+const TOUCH_DEVICE = 'ontouchstart' in Konva._global;
+
 function getCursor(anchorName, rad, isMirrored) {
   if (anchorName === 'rotater') {
     return 'crosshair';
@@ -339,7 +341,8 @@ export class Transformer extends Group {
       strokeWidth: 1,
       name: name + ' _anchor',
       dragDistance: 0,
-      draggable: true
+      draggable: true,
+      hitStrokeWidth: TOUCH_DEVICE ? 10 : 'auto'
     });
     var self = this;
     anchor.on('mousedown touchstart', function(e) {

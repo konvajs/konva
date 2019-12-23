@@ -52,7 +52,7 @@ export interface ShapeConfig extends NodeConfig {
   fillPriority?: string;
   stroke?: string;
   strokeWidth?: number;
-  hitStrokeWidth?: number;
+  hitStrokeWidth?: number | string;
   strokeScaleEnabled?: boolean;
   strokeHitEnabled?: boolean;
   strokeEnabled?: boolean;

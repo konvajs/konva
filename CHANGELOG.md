@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Make events work on some CSS transforms
 * Fix caching on float dimensions
 * Fix `mouseleave` event on stage.
+* Increase default anchor size for `Konva.Transformer` on touch devices
 
 ## 4.0.18 - 2019-11-20
 

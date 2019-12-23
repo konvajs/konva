@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.0.18
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Wed Dec 18 2019
+   * Date: Mon Dec 23 2019
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -14567,6 +14567,7 @@
       'bottom-center': 180,
       'bottom-right': 135
   };
+  var TOUCH_DEVICE = 'ontouchstart' in Konva._global;
   function getCursor(anchorName, rad, isMirrored) {
       if (anchorName === 'rotater') {
           return 'crosshair';
@@ -14808,7 +14809,8 @@
               strokeWidth: 1,
               name: name + ' _anchor',
               dragDistance: 0,
-              draggable: true
+              draggable: true,
+              hitStrokeWidth: TOUCH_DEVICE ? 10 : 'auto'
           });
           var self = this;
           anchor.on('mousedown touchstart', function (e) {
