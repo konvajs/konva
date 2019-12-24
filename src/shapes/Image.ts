@@ -92,11 +92,11 @@ export class Image extends Shape<ImageConfig> {
   }
   getWidth() {
     var image = this.image();
-    return this.attrs.width || (image ? image.width : 0);
+    return this.attrs.width ?? (image ? image.width : 0);
   }
   getHeight() {
     var image = this.image();
-    return this.attrs.height || (image ? image.height : 0);
+    return this.attrs.height ?? (image ? image.height : 0);
   }
 
   /**

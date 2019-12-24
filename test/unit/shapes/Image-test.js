@@ -368,4 +368,23 @@ suite('Image', function() {
       done();
     });
   });
+
+  test.only('check zero values', function(done) {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    var src = 'assets/darth-vader.jpg';
+    Konva.Image.fromURL(src, function(image) {
+      layer.add(image);
+      layer.draw();
+
+      image.width(0);
+      image.height(0);
+      layer.draw();
+
+      assert.equal(image.width(), 0);
+      assert.equal(image.height(), 0);
+      done();
+    });
+  });
 });

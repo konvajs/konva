@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* Add ability to use `width = 0` and `height = 0` for `Konva.Image`.
+
 ## 4.1.0 - 2019-12-23
 
 * Make events work on some CSS transforms
