@@ -1828,6 +1828,78 @@ suite('Transformer', function() {
     });
   });
 
+  test.skip('centered scaling on flip', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      draggable: true,
+      fill: 'yellow',
+      
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect,
+      centeredScaling: true,
+      keepRatio: false
+    });
+    layer.add(tr);
+
+    rect.setAttrs({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100,
+      scaleX: 1,
+      scaleY: 1
+    });
+    tr.update();
+
+    layer.draw();
+
+    // stage.simulateMouseDown({x: 0, y: 0});
+
+    var target = stage.getIntersection({ x: 0, y: 0});
+    var top = stage.content.getBoundingClientRect().top;
+    throw 11;
+    debugger;
+    tr._handleMouseMove({
+      target: target,
+      clientX: 100,
+      clientY: 0 + top
+    });
+    console.log(rect.width() * rect.scaleX());
+    tr._handleMouseMove({
+      target: target,
+      clientX: 100,
+      clientY: 0 + top
+    });
+    console.log(rect.width() * rect.scaleX());
+    // here is duplicate, because transformer is listening window events
+    tr._handleMouseUp({
+      clientX: 100,
+      clientY: 0 + top
+    });
+    stage.simulateMouseUp({
+      x: 100,
+      y: 0
+    });
+    layer.draw();
+
+    assert.equal(
+      rect.width() * rect.scaleX(),
+      -100
+    );
+    assert.equal(
+      rect.height() * rect.scaleY(),
+      -100,
+    );
+
+    throw 1;
+  });
+
   test('transform scaled (in one direction) node', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
