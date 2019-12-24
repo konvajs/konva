@@ -369,7 +369,7 @@ suite('Image', function() {
     });
   });
 
-  test.only('check zero values', function(done) {
+  test('check zero values', function(done) {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
