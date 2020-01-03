@@ -109,4 +109,42 @@ suite('Arrow', function() {
       'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(79,63);quadraticCurveTo(71.86,73.607,87,80);bezierCurveTo(116.86,92.607,94.263,67.131,124,82);bezierCurveTo(148.263,94.131,118.223,94.778,141,107);quadraticCurveTo(159.223,116.778,165,104);lineWidth=2;strokeStyle=red;stroke();save();beginPath();translate(165,104);rotate(5.796);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();save();translate(79,63);rotate(4.681);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();setLineDash();fillStyle=red;fill();lineWidth=2;strokeStyle=red;stroke();restore();'
     );
   });
+
+  test('test cache', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var arrow = new Konva.Arrow({
+      points: [50, 50, 150, 50],
+      stroke: 'blue',
+      fill: 'blue',
+      strokeWidth: 1,
+      draggable: true,
+      tension: 0,
+    });
+    layer.add(arrow);
+    
+    stage.add(layer);
+    
+
+    cloneAndCompareLayer(layer, 200);
+
+    // visual debug
+    // var back = new Konva.Rect({
+    //   stroke: 'black'
+    // });
+    // layer.add(back);
+    // stage.on('mousemove',() => {
+    //   const pos = stage.getPointerPosition();
+
+    //   const points = [arrow.points()[0], arrow.points()[1], pos.x, pos.y];
+    //   arrow.points(points);
+    //   arrow.cache();
+
+    //   console.log(arrow.points());
+    //   back.setAttrs(arrow.getClientRect());
+    //   layer.batchDraw();
+    // })
+
+  });
 });

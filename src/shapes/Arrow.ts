@@ -112,6 +112,17 @@ export class Arrow extends Line<ArrowConfig> {
     }
   }
 
+  getSelfRect() {
+    const lineRect = super.getSelfRect();
+    const offset = this.pointerWidth() / 2;
+    return {
+      x: lineRect.x - offset,
+      y: lineRect.y - offset,
+      width: lineRect.width + offset * 2,
+      height: lineRect.height + offset * 2,
+    }
+  }
+
   pointerLength: GetSet<number, this>;
   pointerWidth: GetSet<number, this>;
   pointerAtBeginning: GetSet<boolean, this>;

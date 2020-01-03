@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Not released:
 
 * Add ability to use `width = 0` and `height = 0` for `Konva.Image`.
+* Fix `cache()` method of `Konva.Arrow()`
 
 ## 4.1.0 - 2019-12-23
 
