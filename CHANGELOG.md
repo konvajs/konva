@@ -5,8 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## 4.1.1 - 2020-01-07
+
 * Add ability to use `width = 0` and `height = 0` for `Konva.Image`.
 * Fix `cache()` method of `Konva.Arrow()`
+* Add `Transform` to `Konva` default exports. So `Konva.Transform` is available now.
 
 ## 4.1.0 - 2019-12-23
 

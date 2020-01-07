@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.1.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Fri Jan 03 2020
+   * Date: Tue Jan 07 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -9794,6 +9794,7 @@
   var Konva$1 = Util._assign(Konva, {
       Collection: Collection,
       Util: Util,
+      Transform: Transform,
       Node: Node,
       ids: ids,
       names: names,

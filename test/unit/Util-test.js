@@ -48,4 +48,8 @@ suite('Util', function() {
       a: 1
     });
   });
+
+  test('make sure Transform is exported', () => {
+    assert.equal(!!Konva.Transform, true);
+  })
 });
