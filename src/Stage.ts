@@ -1005,8 +1005,10 @@ export class Stage extends Container<BaseLayer> {
     return {
       top: rect.top,
       left: rect.left,
-      scaleX: rect.width / this.content.clientWidth,
-      scaleY: rect.height / this.content.clientHeight,
+      // sometimes clientWidth can be equals to 0
+      // i saw it in react-konva test, looks like it is because of hidden testing element
+      scaleX: rect.width / this.content.clientWidth || 1,
+      scaleY: rect.height / this.content.clientHeight || 1,
     };
   }
   _buildDOM() {

@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.1.1
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Jan 07 2020
+   * Date: Wed Jan 08 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -6528,8 +6528,10 @@
           return {
               top: rect.top,
               left: rect.left,
-              scaleX: rect.width / this.content.clientWidth,
-              scaleY: rect.height / this.content.clientHeight,
+              // sometimes clientWidth can be equals to 0
+              // i saw it in react-konva test, looks like it is because of hidden testing element
+              scaleX: rect.width / this.content.clientWidth || 1,
+              scaleY: rect.height / this.content.clientHeight || 1,
           };
       };
       Stage.prototype._buildDOM = function () {

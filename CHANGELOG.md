@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## 4.1.2 - 2020-01-08
+
+* Fix possible `NaN` in content calculations
+
 ## 4.1.1 - 2020-01-07
 
 * Add ability to use `width = 0` and `height = 0` for `Konva.Image`.
