@@ -42,6 +42,9 @@ import { Sepia } from './filters/Sepia';
 import { Solarize } from './filters/Solarize';
 import { Threshold } from './filters/Threshold';
 
+// intersects
+import { RectToRect } from './intersects/RectToRect'
+
 export const Konva = Core.Util._assign(Core, {
   Arc,
   Arrow,
@@ -85,5 +88,12 @@ export const Konva = Core.Util._assign(Core, {
     Sepia,
     Solarize,
     Threshold
+  },
+  /**
+   * @namespace Intersects
+   * @memberof Konva
+   */
+  Intersects: {
+    RectToRect
   }
 });
