@@ -89,6 +89,30 @@ export class Rect extends Shape<RectConfig> {
     context.fillStrokeShape(this);
   }
 
+  getRight() {
+    return this.x() + this.width()
+  }
+
+  getBottom() {
+    return this.y() + this.height()
+  }
+
+  getLeftLine() {
+    return [this.x(), this.y(), this.x(), this.getBottom()]
+  }
+
+  getRightLine() {
+    return [this.getRight(), this.y(), this.getRight(), this.getBottom()]
+  }
+
+  getTopLine() {
+    return [this.x(), this.y(), this.getRight(), this.y()]
+  }
+
+  getBottomLine() {
+    return [this.x(), this.getBottom(), this.getRight(), this.getBottom()]
+  }
+
   cornerRadius: GetSet<number | number[], this>;
 }
 

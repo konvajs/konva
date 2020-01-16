@@ -43,7 +43,7 @@ import { Solarize } from './filters/Solarize';
 import { Threshold } from './filters/Threshold';
 
 // intersects
-import { RectToRect } from './intersects/RectToRect'
+import { GetRectToRect } from './intersects/GetRectToRect'
 
 export const Konva = Core.Util._assign(Core, {
   Arc,
@@ -94,6 +94,6 @@ export const Konva = Core.Util._assign(Core, {
    * @memberof Konva
    */
   Intersects: {
-    RectToRect
+    GetRectToRect
   }
 });
