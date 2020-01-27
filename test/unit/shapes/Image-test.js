@@ -117,7 +117,7 @@ suite('Image', function() {
     imageObj.onload = function() {
       var stage = addStage();
       var layer = new Konva.Layer();
-      darth = new Konva.Image({
+      var darth = new Konva.Image({
         x: 200,
         y: 75,
         image: imageObj,
