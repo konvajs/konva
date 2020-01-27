@@ -199,8 +199,8 @@ export class Line<Config extends LineConfig = LineConfig> extends Shape<
         points[0],
         points[1],
         ...this._getTensionPoints(),
-        points[points.length - 1],
-        points[points.length - 2]
+        points[points.length - 2],
+        points[points.length - 1]
       ];
     } else {
       points = this.points();

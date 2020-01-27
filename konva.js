@@ -9847,7 +9847,7 @@
                   points[1]
               ], this._getTensionPoints(), [
                   points[points.length - 2],
-                  points[points.length - 2]
+                  points[points.length - 1]
               ]);
           }
           else {

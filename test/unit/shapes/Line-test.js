@@ -291,6 +291,7 @@ suite('Line', function() {
 
   test('getClientRect with tension', function() {
     var stage = addStage();
+    stage.draggable(true);
     var layer = new Konva.Layer();
 
     var line = new Konva.Line({
@@ -298,7 +299,7 @@ suite('Line', function() {
       y: 0,
       points: [75, 75, 100, 200, 300, 140],
       tension: 0.5,
-      stroke: '#0f0'
+      stroke: '#0f0',
     });
     layer.add(line);
 
@@ -311,7 +312,7 @@ suite('Line', function() {
     assert.equal(client.x, 56, 'check x');
     assert.equal(client.y, 74, 'check y');
     assert.equal(client.width, 245, 'check width');
-    assert.equal(client.height, 227, 'check height');
+    assert.equal(client.height, 147, 'check height');
   });
 
   test('getClientRect with low number of points', function() {
