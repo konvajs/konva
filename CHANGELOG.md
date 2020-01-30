@@ -5,8 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## 4.1.3 - 2020-01-30
+
 * Fix line with tension calculations
 * Add `node.getAbsoluteRotation()` method
+* Fix cursor on anchors for rotated parent
 
 ## 4.1.2 - 2020-01-08
 
