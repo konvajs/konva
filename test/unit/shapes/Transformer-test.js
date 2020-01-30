@@ -1412,6 +1412,38 @@ suite('Transformer', function() {
     assert.equal(stage.content.style.cursor, 'nwse-resize');
   });
 
+  test('check correct cursor on rotated parent', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer({
+      x: 100,
+      y: -50,
+      rotation: 90
+    });
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 0,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+    layer.draw();
+
+    stage.simulateMouseMove({
+      x: 50,
+      y: 1
+    });
+    assert.equal(stage.content.style.cursor, 'ns-resize');
+  });
+
   test('stopTransform method', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

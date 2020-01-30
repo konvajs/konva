@@ -13,7 +13,6 @@ import {
 import { Stage } from './Stage';
 import { Context } from './Context';
 import { Shape } from './Shape';
-import { Layer } from './Layer';
 import { BaseLayer } from './BaseLayer';
 
 export const ids: any = {};
@@ -1755,6 +1754,26 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       x: scaleX,
       y: scaleY
     };
+  }
+  /**
+   * get absolute rotation of the node which takes into
+   *  account its ancestor rotations
+   * @method
+   * @name Konva.Node#getAbsoluteRotation
+   * @returns {Number}
+   * @example
+   * // get absolute scale x
+   * var rotation = node.getAbsoluteRotation();
+   */
+  getAbsoluteRotation() {
+    var parent: Node = this;
+    var rotation = 0;
+
+    while (parent) {
+      rotation += parent.rotation();
+      parent = parent.getParent();
+    }
+    return rotation;
   }
   /**
    * get transform of the node

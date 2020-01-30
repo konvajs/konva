@@ -360,7 +360,7 @@ export class Transformer extends Group {
 
     // add hover styling
     anchor.on('mouseenter', () => {
-      var rad = Konva.getAngle(this.rotation());
+      var rad = Konva.getAngle(this.getAbsoluteRotation());
 
       var scale = this.getNode().getAbsoluteScale();
       // If scale.y < 0 xor scale.x < 0 we need to flip (not rotate).

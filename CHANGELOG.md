@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Not released:
 
 * Fix line with tension calculations
+* Add `node.getAbsoluteRotation()` method
 
 ## 4.1.2 - 2020-01-08
 

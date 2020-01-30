@@ -299,7 +299,7 @@ suite('Line', function() {
       y: 0,
       points: [75, 75, 100, 200, 300, 140],
       tension: 0.5,
-      stroke: '#0f0',
+      stroke: '#0f0'
     });
     layer.add(line);
 
