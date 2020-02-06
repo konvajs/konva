@@ -2577,4 +2577,63 @@ suite('Transformer', function() {
 
     stage.draw();
   });
+
+  test('try to move anchor on scaled with css stage', function() {
+    var stage = addStage();
+    stage.container().style.transform = 'scale(0.5)';
+    stage.container().style.transformOrigin = 'top left';
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 0,
+      y: 0,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect,
+      keepRatio: false
+    });
+    layer.add(tr);
+    layer.draw();
+
+    stage.simulateMouseMove({
+      x: 50,
+      y: 50
+    });
+    stage.simulateMouseDown({
+      x: 50,
+      y: 50
+    });
+
+    var target = stage.getIntersection({
+      x: 50,
+      y: 50
+    });
+    var top = stage.content.getBoundingClientRect().top;
+    tr._handleMouseMove({
+      target: target,
+      clientX: 100,
+      clientY: 50 + top
+    });
+
+    // here is duplicate, because transformer is listening window events
+    tr._handleMouseUp({
+      clientX: 100,
+      clientY: 50 + top
+    });
+    stage.simulateMouseUp({
+      x: 100,
+      y: 50
+    });
+
+
+    assert.equal(rect.width() * rect.scaleX(), 200);
+  });
 });

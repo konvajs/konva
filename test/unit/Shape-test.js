@@ -1049,7 +1049,8 @@ suite('Shape', function() {
       width: 100,
       height: 50,
       stroke: 'red',
-      strokeWidth: 20
+      strokeWidth: 20,
+      draggable: true
     });
     // default value
     assert.equal(rect.strokeHitEnabled(), true);
@@ -1121,7 +1122,6 @@ suite('Shape', function() {
     //   'clearRect();save();transform();beginPath();rect();closePath();save();fillStyle;fill();restore();restore();'
     // );
   });
-
 
   test('enable hitStrokeWidth even if we have no stroke on scene', function() {
     var stage = addStage();
@@ -1917,5 +1917,52 @@ suite('Shape', function() {
 
     assert.equal(callCount, 1);
     Konva.Util.warn = oldWarn;
+  });
+
+  test('hasFill getter', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var shape = new Konva.Shape({
+      stroke: 'black',
+      strokeWidth: 4,
+      sceneFunc: function(context) {
+        context.beginPath();
+        context.moveTo(20, 50);
+        context.quadraticCurveTo(550, 0, 500, 500);
+        context.fillStrokeShape(shape);
+      },
+      fill: 'red',
+      fillEnabled: false
+    });
+
+    layer.add(shape);
+    assert.equal(shape.hasFill(), false);
+  });
+
+  test('test hit of non filled shape', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var line = new Konva.Shape({
+      sceneFunc: function(context) {
+        context.beginPath();
+        context.moveTo(20, 50);
+        context.quadraticCurveTo(550, 0, 500, 500);
+
+        context.fillStrokeShape(line);
+      }
+    });
+
+    layer.add(line);
+    layer.draw();
+
+    // we still should register shape here
+    // like for a non filled rectangle (with just stroke),
+    // we need fill it for full events
+    var shape = layer.getIntersection({ x: 50, y: 70 });
+    assert.equal(shape, line);
   });
 });

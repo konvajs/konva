@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.1.3
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Thu Jan 30 2020
+   * Date: Thu Feb 06 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -1528,7 +1528,7 @@
        * @param {Konva.Shape} shape
        */
       Context.prototype.fillShape = function (shape) {
-          if (shape.getFillEnabled()) {
+          if (shape.fillEnabled()) {
               this._fill(shape);
           }
       };
@@ -1542,7 +1542,7 @@
        * @param {Konva.Shape} shape
        */
       Context.prototype.strokeShape = function (shape) {
-          if (shape.getStrokeEnabled()) {
+          if (shape.hasStroke()) {
               this._stroke(shape);
           }
       };
@@ -1556,12 +1556,8 @@
        * @param {Konva.Shape} shape
        */
       Context.prototype.fillStrokeShape = function (shape) {
-          if (shape.getFillEnabled()) {
-              this._fill(shape);
-          }
-          if (shape.getStrokeEnabled()) {
-              this._stroke(shape);
-          }
+          this.fillShape(shape);
+          this.strokeShape(shape);
       };
       Context.prototype.getTrace = function (relaxed) {
           var traceArr = this.traceArr, len = traceArr.length, str = '', n, trace, method, args;
@@ -2173,6 +2169,11 @@
           this.setAttr('fillStyle', shape.colorKey);
           shape._fillFuncHit(this);
           this.restore();
+      };
+      HitContext.prototype.strokeShape = function (shape) {
+          if (shape.hasHitStroke()) {
+              this._stroke(shape);
+          }
       };
       HitContext.prototype._stroke = function (shape) {
           if (shape.hasHitStroke()) {
@@ -6722,8 +6723,8 @@
           var stage = this.getStage();
           if (stage) {
               stage.content.removeChild(this.getCanvas()._canvas);
-              if (index < stage.getChildren().length - 1) {
-                  stage.content.insertBefore(this.getCanvas()._canvas, stage.getChildren()[index + 1].getCanvas()._canvas);
+              if (index < stage.children.length - 1) {
+                  stage.content.insertBefore(this.getCanvas()._canvas, stage.children[index + 1].getCanvas()._canvas);
               }
               else {
                   stage.content.appendChild(this.getCanvas()._canvas);
@@ -6750,8 +6751,8 @@
               return false;
           }
           stage.content.removeChild(this.getCanvas()._canvas);
-          if (this.index < stage.getChildren().length - 1) {
-              stage.content.insertBefore(this.getCanvas()._canvas, stage.getChildren()[this.index + 1].getCanvas()._canvas);
+          if (this.index < stage.children.length - 1) {
+              stage.content.insertBefore(this.getCanvas()._canvas, stage.children[this.index + 1].getCanvas()._canvas);
           }
           else {
               stage.content.appendChild(this.getCanvas()._canvas);
@@ -6763,7 +6764,7 @@
           if (Node.prototype.moveDown.call(this)) {
               var stage = this.getStage();
               if (stage) {
-                  var children = stage.getChildren();
+                  var children = stage.children;
                   stage.content.removeChild(this.getCanvas()._canvas);
                   stage.content.insertBefore(this.getCanvas()._canvas, children[this.index + 1].getCanvas()._canvas);
               }
@@ -6776,7 +6777,7 @@
           if (Node.prototype.moveToBottom.call(this)) {
               var stage = this.getStage();
               if (stage) {
-                  var children = stage.getChildren();
+                  var children = stage.children;
                   stage.content.removeChild(this.getCanvas()._canvas);
                   stage.content.insertBefore(this.getCanvas()._canvas, children[1].getCanvas()._canvas);
               }
@@ -7210,7 +7211,7 @@
        * @returns {Boolean}
        */
       Shape.prototype.hasFill = function () {
-          return !!(this.fill() ||
+          return this.fillEnabled() && !!(this.fill() ||
               this.fillPatternImage() ||
               this.fillLinearGradientColorStops() ||
               this.fillRadialGradientColorStops());
@@ -14918,23 +14919,10 @@
           var x, y, newHypotenuse;
           var anchorNode = this.findOne('.' + this._movingAnchorName);
           var stage = anchorNode.getStage();
-          var box = stage.getContent().getBoundingClientRect();
-          var zeroPoint = {
-              x: box.left,
-              y: box.top
-          };
-          var pointerPos = {
-              left: e.clientX !== undefined ? e.clientX : e.touches[0].clientX,
-              top: e.clientX !== undefined ? e.clientY : e.touches[0].clientY
-          };
-          var newAbsPos = {
-              x: pointerPos.left - zeroPoint.x,
-              y: pointerPos.top - zeroPoint.y
-          };
-          anchorNode.setAbsolutePosition(newAbsPos);
+          stage.setPointersPositions(e);
+          anchorNode.setAbsolutePosition(stage.getPointerPosition());
           var keepProportion = this.keepRatio() || e.shiftKey;
           var padding = this.padding();
-          // console.log(keepProportion);
           if (this._movingAnchorName === 'top-left') {
               if (keepProportion) {
                   newHypotenuse = Math.sqrt(Math.pow(this.findOne('.bottom-right').x() - anchorNode.x() - padding * 2, 2) +

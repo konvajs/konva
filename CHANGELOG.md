@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* Fix `Konva.Transformer` behavior on scaled with CSS stage
+
 ## 4.1.3 - 2020-01-30
 
 * Fix line with tension calculations

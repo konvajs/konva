@@ -99,10 +99,10 @@ export abstract class BaseLayer extends Container<Group | Shape> {
     if (stage) {
       stage.content.removeChild(this.getCanvas()._canvas);
 
-      if (index < stage.getChildren().length - 1) {
+      if (index < stage.children.length - 1) {
         stage.content.insertBefore(
           this.getCanvas()._canvas,
-          stage.getChildren()[index + 1].getCanvas()._canvas
+          stage.children[index + 1].getCanvas()._canvas
         );
       } else {
         stage.content.appendChild(this.getCanvas()._canvas);
@@ -130,10 +130,10 @@ export abstract class BaseLayer extends Container<Group | Shape> {
     }
     stage.content.removeChild(this.getCanvas()._canvas);
 
-    if (this.index < stage.getChildren().length - 1) {
+    if (this.index < stage.children.length - 1) {
       stage.content.insertBefore(
         this.getCanvas()._canvas,
-        stage.getChildren()[this.index + 1].getCanvas()._canvas
+        stage.children[this.index + 1].getCanvas()._canvas
       );
     } else {
       stage.content.appendChild(this.getCanvas()._canvas);
@@ -145,7 +145,7 @@ export abstract class BaseLayer extends Container<Group | Shape> {
     if (Node.prototype.moveDown.call(this)) {
       var stage = this.getStage();
       if (stage) {
-        var children = stage.getChildren();
+        var children = stage.children;
         stage.content.removeChild(this.getCanvas()._canvas);
         stage.content.insertBefore(
           this.getCanvas()._canvas,
@@ -161,7 +161,7 @@ export abstract class BaseLayer extends Container<Group | Shape> {
     if (Node.prototype.moveToBottom.call(this)) {
       var stage = this.getStage();
       if (stage) {
-        var children = stage.getChildren();
+        var children = stage.children;
         stage.content.removeChild(this.getCanvas()._canvas);
         stage.content.insertBefore(
           this.getCanvas()._canvas,

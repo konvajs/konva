@@ -1378,15 +1378,4 @@ suite('Stage', function() {
     Konva.Util.warn = oldWarn;
     assert.equal(called, true);
   });
-
-  // test.only('Warn when styles or stage are applied', function() {
-  //   var stage = addStage();
-  //   // var layer = new Konva.Layer();
-  //   // stage.add(layer);
-  //   var container = stage.content;
-  //   console.log(
-  //     getComputedStyle(container).width,
-  //     getComputedStyle(container).height
-  //   );
-  // });
 });

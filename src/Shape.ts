@@ -349,7 +349,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
    * @returns {Boolean}
    */
   hasFill() {
-    return !!(
+    return this.fillEnabled() && !!(
       this.fill() ||
       this.fillPatternImage() ||
       this.fillLinearGradientColorStops() ||

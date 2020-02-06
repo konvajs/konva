@@ -434,27 +434,13 @@ export class Transformer extends Group {
     var anchorNode = this.findOne('.' + this._movingAnchorName);
     var stage = anchorNode.getStage();
 
-    var box = stage.getContent().getBoundingClientRect();
-    var zeroPoint = {
-      x: box.left,
-      y: box.top
-    };
-    var pointerPos = {
-      left: e.clientX !== undefined ? e.clientX : e.touches[0].clientX,
-      top: e.clientX !== undefined ? e.clientY : e.touches[0].clientY
-    };
-    var newAbsPos = {
-      x: pointerPos.left - zeroPoint.x,
-      y: pointerPos.top - zeroPoint.y
-    };
+    stage.setPointersPositions(e);
 
-    anchorNode.setAbsolutePosition(newAbsPos);
+    anchorNode.setAbsolutePosition(stage.getPointerPosition());
 
     var keepProportion = this.keepRatio() || e.shiftKey;
 
     var padding = this.padding();
-
-    // console.log(keepProportion);
 
     if (this._movingAnchorName === 'top-left') {
       if (keepProportion) {
