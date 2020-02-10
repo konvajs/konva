@@ -843,14 +843,19 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this._remove();
     return this;
   }
+  _clearCaches() {
+    this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
+    this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
+    this._clearSelfAndDescendantCache(ABSOLUTE_SCALE);
+    this._clearSelfAndDescendantCache(STAGE);
+    this._clearSelfAndDescendantCache(VISIBLE);
+    this._clearSelfAndDescendantCache(LISTENING);
+  }
   _remove() {
     // every cached attr that is calculated via node tree
     // traversal must be cleared when removing a node
-    this._clearSelfAndDescendantCache(STAGE);
-    this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
-    this._clearSelfAndDescendantCache(VISIBLE);
-    this._clearSelfAndDescendantCache(LISTENING);
-    this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
+    this._clearCaches();
+
     var parent = this.getParent();
 
     if (parent && parent.children) {

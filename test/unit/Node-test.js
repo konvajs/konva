@@ -3783,4 +3783,47 @@ suite('Node', function() {
     assert.equal(callCount, 2);
     Konva.Util.warn = oldWarn;
   });
+
+  test('check transform caching', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      width: 150,
+      height: 50,
+      stroke: 'black',
+      strokeWidth: 4
+    });
+
+    var text00 = new Konva.Text({
+      text: 'Sample text',
+      x: 50,
+      y: 50,
+      fontSize: 20
+    });
+
+    layer.add(rect);
+    layer.add(text00);
+
+    stage.add(layer);
+
+    stage.x(+40);
+    stage.y(+40);
+
+    stage.draw();
+
+    layer.removeChildren();
+    text00.getClientRect({}); // Commenting this line or putting it after line 41 puts text in rectangle
+
+    layer.add(text00);
+    layer.add(rect);
+
+    stage.draw();
+
+    assert.equal(text00.getClientRect().x, 90);
+    assert.equal(text00.getClientRect().y, 90);
+  });
 });

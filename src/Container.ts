@@ -123,13 +123,14 @@ export abstract class Container<ChildType extends Node> extends Node<
       }
       return this;
     }
-    var child = arguments[0];
+    var child = children[0];
     if (child.getParent()) {
       child.moveTo(this);
       return this;
     }
     var _children = this.children;
     this._validateAdd(child);
+    child._clearCaches();
     child.index = _children.length;
     child.parent = this;
     _children.push(child);

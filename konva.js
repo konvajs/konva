@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.1.3
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Thu Feb 06 2020
+   * Date: Mon Feb 10 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -3082,14 +3082,18 @@
           this._remove();
           return this;
       };
+      Node.prototype._clearCaches = function () {
+          this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
+          this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
+          this._clearSelfAndDescendantCache(ABSOLUTE_SCALE);
+          this._clearSelfAndDescendantCache(STAGE);
+          this._clearSelfAndDescendantCache(VISIBLE);
+          this._clearSelfAndDescendantCache(LISTENING);
+      };
       Node.prototype._remove = function () {
           // every cached attr that is calculated via node tree
           // traversal must be cleared when removing a node
-          this._clearSelfAndDescendantCache(STAGE);
-          this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
-          this._clearSelfAndDescendantCache(VISIBLE);
-          this._clearSelfAndDescendantCache(LISTENING);
-          this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
+          this._clearCaches();
           var parent = this.getParent();
           if (parent && parent.children) {
               parent.children.splice(this.index, 1);
@@ -5228,13 +5232,14 @@
               }
               return this;
           }
-          var child = arguments[0];
+          var child = children[0];
           if (child.getParent()) {
               child.moveTo(this);
               return this;
           }
           var _children = this.children;
           this._validateAdd(child);
+          child._clearCaches();
           child.index = _children.length;
           child.parent = this;
           _children.push(child);
