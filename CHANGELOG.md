@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## 4.1.4 - 2020-02-10
+
 * Fix wrong internal caching of absolute attributes
 * Fix `Konva.Transformer` behavior on scaled with CSS stage
 
