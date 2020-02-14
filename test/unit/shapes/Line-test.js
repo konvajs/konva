@@ -401,4 +401,54 @@ suite('Line', function() {
       'calculated points should change'
     );
   });
+
+  test('getSelfRect with horizontal line should return strokeWidth for height', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var blob = new Konva.Line({
+      x: 50,
+      y: 50,
+      points: [10, 10, 20, 10],
+      stroke: 'blue',
+      strokeWidth: 5,
+      draggable: true,
+      fill: '#aaf',
+      closed: true
+    });
+
+    layer.add(blob);
+    stage.add(layer);
+
+    assert.deepEqual(blob.getSelfRect(), {
+      x: 10,
+      y: 10,
+      width: 10,
+      height: 5
+    });
+  });
+
+  test('getSelfRect with vertical line should return strokeWidth for width', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var blob = new Konva.Line({
+      x: 50,
+      y: 50,
+      points: [10, 10, 10, 20],
+      stroke: 'blue',
+      strokeWidth: 5,
+      draggable: true,
+      fill: '#aaf',
+      closed: true
+    });
+
+    layer.add(blob);
+    stage.add(layer);
+
+    assert.deepEqual(blob.getSelfRect(), {
+      x: 10,
+      y: 10,
+      width: 5,
+      height: 10
+    });
+  });
 });

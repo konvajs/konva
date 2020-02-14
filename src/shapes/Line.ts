@@ -221,8 +221,8 @@ export class Line<Config extends LineConfig = LineConfig> extends Shape<
     return {
       x: Math.round(minX),
       y: Math.round(minY),
-      width: Math.round(maxX - minX),
-      height: Math.round(maxY - minY)
+      width: Math.max(this.strokeWidth(), Math.round(maxX - minX)),
+      height: Math.max(this.strokeWidth(), Math.round(maxY - minY))
     };
   }
 

@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.1.4
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Mon Feb 10 2020
+   * Date: Fri Feb 14 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -10248,8 +10248,8 @@
           return {
               x: Math.round(minX),
               y: Math.round(minY),
-              width: Math.round(maxX - minX),
-              height: Math.round(maxY - minY)
+              width: Math.max(this.strokeWidth(), Math.round(maxX - minX)),
+              height: Math.max(this.strokeWidth(), Math.round(maxY - minY))
           };
       };
       return Line;
