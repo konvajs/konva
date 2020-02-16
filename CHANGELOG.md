@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## 4.1.5 - 2020-02-16
+
+* Fixes for `path.getClientRect()` function calculations
+
 ## 4.1.4 - 2020-02-10
 
 * Fix wrong internal caching of absolute attributes

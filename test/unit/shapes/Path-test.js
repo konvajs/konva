@@ -1179,10 +1179,10 @@ suite('Path', function() {
     layer.add(back);
     layer.draw();
 
-    assert.deepEqual(rect, {x: 8, y: 65, width: 95, height: 56});
+    assert.deepEqual(rect, { x: 9, y: 66, width: 95, height: 55 });
   });
 
-  test.skip('getClientRect of another complex path', function() {
+  test('getClientRect of another complex path', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -1209,7 +1209,41 @@ suite('Path', function() {
     layer.add(back);
     layer.draw();
 
-    assert.deepEqual(rect, {x: 8, y: 65, width: 95, height: 56});
+    assert.deepEqual(rect, {
+      x: 49,
+      y: 49.7,
+      width: 215,
+      height: 71.39999999999999
+    });
+  });
+
+  test('getClientRect of one more path', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var path = new Konva.Path({
+      x: 50,
+      y: 50,
+      data:
+        'M25.21,2.36C22.11,6.1,19,10.17,22.1,15.52a2.14,2.14,0,0,1,.22.69c.18,1.09-.52,1.31-1.31,1.11C19.88,17,19.29,16,18.55,15.21a12.71,12.71,0,0,0-7.82-4.28c-3.24-.42-7.9,1.26-9,3.68-2.24,5-2.64,10.23.66,14.94a26,26,0,0,0,11.57,9c6.17,2.56,12.6,4.45,18.67,7.28,1.33.62,1.67-.14,2.11-1.12,3.84-8.44,5.64-17.32,6-28.25.53-3.82-1.37-8.64-4.3-13.12C33.91-.58,28.2-1.24,25.21,2.36Z',
+      fill: 'black',
+      stroke: 'red'
+    });
+    layer.add(path);
+    var rect = path.getClientRect();
+
+    var back = new Konva.Rect({
+      x: rect.x,
+      y: rect.y,
+      width: rect.width,
+      height: rect.height,
+      stroke: 'red'
+    });
+    layer.add(back);
+    layer.draw();
+
+    assert.deepEqual(rect, { x: 49, y: 49, width: 43, height: 48 });
   });
 
   test('getClientRect for arc', function() {
@@ -1227,15 +1261,12 @@ suite('Path', function() {
     layer.add(path);
     var rect = path.getClientRect();
 
-    var scale =  stage.height() / rect.height / 2;
-
+    var scale = stage.height() / rect.height / 2;
 
     path.x(-rect.x * scale);
     path.y(-rect.y * scale);
     path.scaleX(scale);
     path.scaleY(scale);
-
-    
 
     rect = path.getClientRect();
 
@@ -1249,6 +1280,11 @@ suite('Path', function() {
     layer.add(back);
     layer.draw();
 
-    assert.deepEqual(rect, {x: 0, y: 0, width: 132.53012048192795, height: 100});
+    assert.deepEqual(rect, {
+      x: 0,
+      y: 0,
+      width: 132.53012048192795,
+      height: 100
+    });
   });
 });

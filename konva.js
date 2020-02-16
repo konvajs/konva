@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.1.4
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Mon Feb 10 2020
+   * Date: Sun Feb 16 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -11587,12 +11587,38 @@
           var points = [];
           this.dataArray.forEach(function (data) {
               if (data.command === 'A') {
-                  points = points.concat([
-                      data.points[0] - data.points[2],
-                      data.points[1] - data.points[3],
-                      data.points[0] + data.points[2],
-                      data.points[1] + data.points[3]
-                  ]);
+                  // Approximates by breaking curve into line segments
+                  var start = data.points[4];
+                  // 4 = theta
+                  var dTheta = data.points[5];
+                  // 5 = dTheta
+                  var end = data.points[4] + dTheta;
+                  var inc = Math.PI / 180.0;
+                  // 1 degree resolution
+                  if (Math.abs(start - end) < inc) {
+                      inc = Math.abs(start - end);
+                  }
+                  if (dTheta < 0) {
+                      // clockwise
+                      for (var t = start - inc; t > end; t -= inc) {
+                          var point = Path.getPointOnEllipticalArc(data.points[0], data.points[1], data.points[2], data.points[3], t, 0);
+                          points.push(point.x, point.y);
+                      }
+                  }
+                  else {
+                      // counter-clockwise
+                      for (var t = start + inc; t < end; t += inc) {
+                          var point = Path.getPointOnEllipticalArc(data.points[0], data.points[1], data.points[2], data.points[3], t, 0);
+                          points.push(point.x, point.y);
+                      }
+                  }
+              }
+              else if (data.command === 'C') {
+                  // Approximates by breaking curve into 100 line segments
+                  for (var t = 0.0; t <= 1; t += 0.01) {
+                      var point = Path.getPointOnCubicBezier(t, data.start.x, data.start.y, data.points[0], data.points[1], data.points[2], data.points[3], data.points[4], data.points[5]);
+                      points.push(point.x, point.y);
+                  }
               }
               else {
                   // TODO: how can we calculate bezier curves better?
