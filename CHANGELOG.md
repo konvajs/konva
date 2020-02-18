@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* Now `Konva` will keep `id` in a cloned node
+
 ## 4.1.5 - 2020-02-16
 
 * Fixes for `path.getClientRect()` function calculations
