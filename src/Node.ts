@@ -1679,7 +1679,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
   }
   _getAbsoluteTransform(top?: Node) {
-    
     var at;
     // we we need position relative to an ancestor, we will iterate for all
     if (top) {
@@ -1691,10 +1690,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         if (transformsEnabled === 'all') {
           at.multiply(node.getTransform());
         } else if (transformsEnabled === 'position') {
-          at.translate(
-            node.x() - node.offsetX(),
-            node.y() - node.offsetY()
-          );
+          at.translate(node.x() - node.offsetX(), node.y() - node.offsetY());
         }
       }, top);
       return at;
@@ -1710,10 +1706,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       if (transformsEnabled === 'all') {
         at.multiply(this.getTransform());
       } else if (transformsEnabled === 'position') {
-        at.translate(
-          this.x() - this.offsetX(),
-          this.y() - this.offsetY()
-        );
+        at.translate(this.x() - this.offsetX(), this.y() - this.offsetY());
       }
       return at;
     }
@@ -1844,11 +1837,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       len,
       n,
       listener;
-    // filter black attrs
-    for (var i in CLONE_BLACK_LIST) {
-      var blockAttr = CLONE_BLACK_LIST[i];
-      delete attrs[blockAttr];
-    }
     // apply attr overrides
     for (key in obj) {
       attrs[key] = obj[key];
@@ -2244,10 +2232,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       // simulate event bubbling
       var stopBubble =
         (eventType === MOUSEENTER || eventType === MOUSELEAVE) &&
-        (compareShape &&
+        compareShape &&
           compareShape.isAncestorOf &&
           compareShape.isAncestorOf(this) &&
-          !compareShape.isAncestorOf(this.parent));
+          !compareShape.isAncestorOf(this.parent);
       if (
         ((evt && !evt.cancelBubble) || !evt) &&
         this.parent &&

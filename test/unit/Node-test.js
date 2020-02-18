@@ -560,7 +560,7 @@ suite('Node', function() {
     assert.equal(rect.getShadowColor(), 'black');
     assert.equal(clone.getShadowColor(), 'black');
 
-    assert.equal(clone.id() == '', true, 'do not clone id');
+    assert.equal(clone.id() === 'myRect', true, 'clone id');
 
     clone.setShadowColor('green');
 

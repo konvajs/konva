@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.1.5
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Sun Feb 16 2020
+   * Date: Mon Feb 17 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2515,7 +2515,7 @@
       }
   };
   // CONSTANTS
-  var ABSOLUTE_OPACITY = 'absoluteOpacity', ABSOLUTE_TRANSFORM = 'absoluteTransform', ABSOLUTE_SCALE = 'absoluteScale', CANVAS = 'canvas', CHANGE = 'Change', CHILDREN = 'children', KONVA = 'konva', LISTENING = 'listening', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', NAME = 'name', SET$1 = 'set', SHAPE = 'Shape', SPACE = ' ', STAGE = 'stage', TRANSFORM = 'transform', UPPER_STAGE = 'Stage', VISIBLE = 'visible', CLONE_BLACK_LIST = ['id'], TRANSFORM_CHANGE_STR = [
+  var ABSOLUTE_OPACITY = 'absoluteOpacity', ABSOLUTE_TRANSFORM = 'absoluteTransform', ABSOLUTE_SCALE = 'absoluteScale', CANVAS = 'canvas', CHANGE = 'Change', CHILDREN = 'children', KONVA = 'konva', LISTENING = 'listening', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', NAME = 'name', SET$1 = 'set', SHAPE = 'Shape', SPACE = ' ', STAGE = 'stage', TRANSFORM = 'transform', UPPER_STAGE = 'Stage', VISIBLE = 'visible', TRANSFORM_CHANGE_STR = [
       'xChange.konva',
       'yChange.konva',
       'scaleXChange.konva',
@@ -3990,11 +3990,6 @@
       Node.prototype.clone = function (obj) {
           // instantiate new node
           var attrs = Util.cloneObject(this.attrs), key, allListeners, len, n, listener;
-          // filter black attrs
-          for (var i in CLONE_BLACK_LIST) {
-              var blockAttr = CLONE_BLACK_LIST[i];
-              delete attrs[blockAttr];
-          }
           // apply attr overrides
           for (key in obj) {
               attrs[key] = obj[key];
@@ -4345,10 +4340,10 @@
               this._fire(eventType, evt);
               // simulate event bubbling
               var stopBubble = (eventType === MOUSEENTER || eventType === MOUSELEAVE) &&
-                  (compareShape &&
-                      compareShape.isAncestorOf &&
-                      compareShape.isAncestorOf(this) &&
-                      !compareShape.isAncestorOf(this.parent));
+                  compareShape &&
+                  compareShape.isAncestorOf &&
+                  compareShape.isAncestorOf(this) &&
+                  !compareShape.isAncestorOf(this.parent);
               if (((evt && !evt.cancelBubble) || !evt) &&
                   this.parent &&
                   this.parent.isListening() &&
