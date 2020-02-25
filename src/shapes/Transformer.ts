@@ -426,8 +426,8 @@ export class Transformer extends Group {
 
     this._transforming = true;
 
-    this._fire('transformstart', { evt: e });
-    this.getNode()._fire('transformstart', { evt: e });
+    this._fire('transformstart', { evt: e, target: this.getNode() });
+    this.getNode()._fire('transformstart', { evt: e, target: this.getNode() });
   }
   _handleMouseMove(e) {
     var x, y, newHypotenuse;
@@ -740,8 +740,8 @@ export class Transformer extends Group {
       y: newAttrs.y - (dy * Math.cos(rotation) + dx * Math.sin(rotation))
     });
 
-    this._fire('transform', { evt: evt });
-    this.getNode()._fire('transform', { evt: evt });
+    this._fire('transform', { evt: evt, target: this.getNode() });
+    this.getNode()._fire('transform', { evt: evt, target: this.getNode() });
     this.update();
     this.getLayer().batchDraw();
   }

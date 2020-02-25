@@ -1499,6 +1499,81 @@ suite('Transformer', function() {
     });
   });
 
+  test.only('transform events check', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+    layer.draw();
+
+    var callCount = 0;
+    rect.on('transformstart', function(e) {
+      callCount += 1;
+      assert.equal(e.target, rect);
+    });
+
+    rect.on('transform', function(e) {
+      callCount += 1;
+      assert.equal(e.target, rect);
+    });
+
+    rect.on('transformend', function(e) {
+      callCount += 1;
+      assert.equal(e.target, rect);
+    });
+
+    tr.on('transformstart', function(e) {
+      callCount += 1;
+      assert.equal(e.target, rect);
+    });
+
+    tr.on('transform', function(e) {
+      callCount += 1;
+      assert.equal(e.target, rect);
+    });
+
+    tr.on('transformend', function(e) {
+      callCount += 1;
+      assert.equal(e.target, rect);
+    });
+
+    stage.simulateMouseDown({
+      x: 50,
+      y: 50
+    });
+
+    var top = stage.content.getBoundingClientRect().top;
+    tr._handleMouseMove({
+      target: tr.findOne('.top-left'),
+      clientX: 60,
+      clientY: 60 + top
+    });
+
+    tr._handleMouseUp({
+      clientX: 60,
+      clientY: 60 + top
+    });
+    stage.simulateMouseUp({
+      x: 60,
+      y: 60
+    });
+    assert.equal(callCount, 6);
+  });
+
   test('on force update should clear transform', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -1867,8 +1942,7 @@ suite('Transformer', function() {
 
     var rect = new Konva.Rect({
       draggable: true,
-      fill: 'yellow',
-      
+      fill: 'yellow'
     });
     layer.add(rect);
 
@@ -1893,7 +1967,7 @@ suite('Transformer', function() {
 
     // stage.simulateMouseDown({x: 0, y: 0});
 
-    var target = stage.getIntersection({ x: 0, y: 0});
+    var target = stage.getIntersection({ x: 0, y: 0 });
     var top = stage.content.getBoundingClientRect().top;
     throw 11;
     debugger;
@@ -1920,14 +1994,8 @@ suite('Transformer', function() {
     });
     layer.draw();
 
-    assert.equal(
-      rect.width() * rect.scaleX(),
-      -100
-    );
-    assert.equal(
-      rect.height() * rect.scaleY(),
-      -100,
-    );
+    assert.equal(rect.width() * rect.scaleX(), -100);
+    assert.equal(rect.height() * rect.scaleY(), -100);
 
     throw 1;
   });
@@ -2632,7 +2700,6 @@ suite('Transformer', function() {
       x: 100,
       y: 50
     });
-
 
     assert.equal(rect.width() * rect.scaleX(), 200);
   });

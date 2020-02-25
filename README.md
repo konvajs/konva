@@ -79,15 +79,7 @@ Konva supports UMD loading. So you can use all possible variants to load the fra
 
 You can also use a CDN: [https://unpkg.com/konva@^4.0.3/konva.js](https://unpkg.com/konva@^4.0.3/konva.js)
 
-### 2 Load via AMD (requirejs):
-
-```javascript
-define(['./konva'], function(Konva) {
-  // your code
-});
-```
-
-### 3 Load with npm:
+### 2 Install with npm:
 
 ```bash
 npm install konva --save
@@ -97,18 +89,33 @@ npm install konva --save
 // The old way (e.g. a CommonJS-style import)
 var Konva = require('konva');
 
-// The modern way (e.g. an ES6-style import)
+// The modern way (e.g. an ES6-style import for webpack, parcel)
 import Konva from 'konva';
-
-// TypeScript
-import Konva from 'konva'; // Allows e.g. "Konva.Stage"
-// Or:
-import * as Konva from 'konva'; // Allows e.g. "Konva.default.Stage"
-// Note that for both TypeScript options, you must supply the TypeScript compiler with the
-// "dom" library flag and the "es2015" library flag (or greater)
 ```
 
-### 4 Minimal bundle
+#### Typescript usage
+
+Add DOM definitions into your `tsconfig.json` and set `esModuleInterop` to `true`:
+
+```
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "lib": [
+        "es6",
+        "dom"
+    ]
+  }
+}
+```
+
+Then use it:
+
+```javascript
+import Konva from 'konva';
+```
+
+### 3 Minimal bundle
 
 ```javascript
 import Konva from 'konva/lib/Core';
@@ -128,9 +135,7 @@ var shape = new Konva.Rect();
 import { Blur } from 'konva/lib/filters/Blur';
 ```
 
-
-
-### 5 NodeJS
+### 4 NodeJS env
 
 We are using [node-canvas](https://github.com/Automattic/node-canvas) to create canvas element.
 Please check installation instructions for it. Then just run
