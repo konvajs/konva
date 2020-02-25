@@ -1499,7 +1499,7 @@ suite('Transformer', function() {
     });
   });
 
-  test.only('transform events check', function() {
+  test('transform events check', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);

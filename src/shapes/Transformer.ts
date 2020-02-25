@@ -699,10 +699,11 @@ export class Transformer extends Group {
       window.removeEventListener('touchmove', this._handleMouseMove);
       window.removeEventListener('mouseup', this._handleMouseUp, true);
       window.removeEventListener('touchend', this._handleMouseUp, true);
-      this._fire('transformend', { evt: e });
       var node = this.getNode();
+      this._fire('transformend', { evt: e, target: node });
+      
       if (node) {
-        node.fire('transformend', { evt: e });
+        node.fire('transformend', { evt: e, target: node  });
       }
     }
   }
