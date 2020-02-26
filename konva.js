@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.1.5
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Mon Feb 24 2020
+   * Date: Tue Feb 25 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2307,7 +2307,9 @@
                   return this._canvas.toDataURL();
               }
               catch (err) {
-                  Util.error('Unable to get data URL. ' + err.message);
+                  Util.error('Unable to get data URL. ' +
+                      err.message +
+                      '. For more info read https://konvajs.org/docs/posts/Tainted_Canvas.html.');
                   return '';
               }
           }
@@ -2881,7 +2883,7 @@
                           if (typeof filter !== 'function') {
                               Util.error('Filter should be type of function, but got ' +
                                   typeof filter +
-                                  ' insted. Please check correct filters');
+                                  ' instead. Please check correct filters');
                               continue;
                           }
                           filter.call(this, imageData);
@@ -2889,7 +2891,9 @@
                       }
                   }
                   catch (e) {
-                      Util.error('Unable to apply filter. ' + e.message);
+                      Util.error('Unable to apply filter. ' +
+                          e.message +
+                          '. This post my help you https://konvajs.org/docs/posts/Tainted_Canvas.html.');
                   }
                   this._filterUpToDate = true;
               }
