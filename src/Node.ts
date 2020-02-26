@@ -630,7 +630,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
           Util.error(
             'Unable to apply filter. ' +
               e.message +
-              '. This post my help you https://konvajs.org/docs/posts/Tainted_Canvas.html.'
+              ' This post my help you https://konvajs.org/docs/posts/Tainted_Canvas.html.'
           );
         }
 

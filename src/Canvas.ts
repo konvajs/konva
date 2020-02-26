@@ -138,7 +138,7 @@ export class Canvas {
         Util.error(
           'Unable to get data URL. ' +
             err.message +
-            '. For more info read https://konvajs.org/docs/posts/Tainted_Canvas.html.'
+            ' For more info read https://konvajs.org/docs/posts/Tainted_Canvas.html.'
         );
         return '';
       }
