@@ -619,7 +619,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
               Util.error(
                 'Filter should be type of function, but got ' +
                   typeof filter +
-                  ' insted. Please check correct filters'
+                  ' instead. Please check correct filters'
               );
               continue;
             }
@@ -627,7 +627,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
             filterContext.putImageData(imageData, 0, 0);
           }
         } catch (e) {
-          Util.error('Unable to apply filter. ' + e.message);
+          Util.error(
+            'Unable to apply filter. ' +
+              e.message +
+              '. This post my help you https://konvajs.org/docs/posts/Tainted_Canvas.html.'
+          );
         }
 
         this._filterUpToDate = true;
@@ -2233,9 +2237,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       var stopBubble =
         (eventType === MOUSEENTER || eventType === MOUSELEAVE) &&
         compareShape &&
-          compareShape.isAncestorOf &&
-          compareShape.isAncestorOf(this) &&
-          !compareShape.isAncestorOf(this.parent);
+        compareShape.isAncestorOf &&
+        compareShape.isAncestorOf(this) &&
+        !compareShape.isAncestorOf(this.parent);
       if (
         ((evt && !evt.cancelBubble) || !evt) &&
         this.parent &&

@@ -135,7 +135,11 @@ export class Canvas {
       try {
         return this._canvas.toDataURL();
       } catch (err) {
-        Util.error('Unable to get data URL. ' + err.message);
+        Util.error(
+          'Unable to get data URL. ' +
+            err.message +
+            '. For more info read https://konvajs.org/docs/posts/Tainted_Canvas.html.'
+        );
         return '';
       }
     }

@@ -5,8 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## 4.1.6 - 2020-02-25
+
 * Events fixes for `Konva.Transformer`
 * Now `Konva` will keep `id` in a cloned node
+* Better error messages on tainted canvas issues
 
 ## 4.1.5 - 2020-02-16
 
