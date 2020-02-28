@@ -149,7 +149,7 @@ export const Konva = {
    */
   dragDistance: 3,
   /**
-   * Use degree values for angle properties. You may set this property to false if you want to use radiant values.
+   * Use degree values for angle properties. You may set this property to false if you want to use radian values.
    * @property angleDeg
    * @default true
    * @memberof Konva
