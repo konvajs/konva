@@ -19,6 +19,7 @@ export interface TransformerConfig extends ContainerConfig {
   resizeEnabled?: boolean;
   rotateEnabled?: boolean;
   rotationSnaps?: Array<number>;
+  rotationSnapTolerance?: number;
   rotateAnchorOffset?: number;
   borderEnabled?: boolean;
   borderStroke?: string;
@@ -154,6 +155,7 @@ var MAX_SAFE_INTEGER = 100000000;
  * @param {Boolean} [config.resizeEnabled] Default is true
  * @param {Boolean} [config.rotateEnabled] Default is true
  * @param {Array} [config.rotationSnaps] Array of angles for rotation snaps. Default is []
+ * @param {Number} [config.rotationSnapTolerance] Snapping tolerance. If closer than this it will snap. Default is 5
  * @param {Number} [config.rotateAnchorOffset] Default is 50
  * @param {Number} [config.padding] Default is 0
  * @param {Boolean} [config.borderEnabled] Should we draw border? Default is true
@@ -596,7 +598,7 @@ export class Transformer extends Group {
       var newAlpha = Util._degToRad(newRotation);
 
       var snaps = this.rotationSnaps();
-      var offset = 0.1;
+      var offset = Konva.getAngle(this.rotationSnapTolerance());
       for (var i = 0; i < snaps.length; i++) {
         var angle = Konva.getAngle(snaps[i]);
 
@@ -901,6 +903,7 @@ export class Transformer extends Group {
   resizeEnabled: GetSet<boolean, this>;
   rotateEnabled: GetSet<boolean, this>;
   rotateAnchorOffset: GetSet<number, this>;
+  rotationSnapTolerance: GetSet<number, this>;
   padding: GetSet<number, this>;
   borderEnabled: GetSet<boolean, this>;
   borderStroke: GetSet<string, this>;
@@ -1034,6 +1037,26 @@ Factory.addGetterSetter(
   Transformer,
   'rotateAnchorOffset',
   50,
+  getNumberValidator()
+);
+
+/**
+ * get/set distance for rotation tolerance
+ * @name Konva.Transformer#rotationSnapTolerance
+ * @method
+ * @param {Number} tolerance
+ * @returns {Number}
+ * @example
+ * // get
+ * var rotationSnapTolerance = transformer.rotationSnapTolerance();
+ *
+ * // set
+ * transformer.rotationSnapTolerance(100);
+ */
+Factory.addGetterSetter(
+  Transformer,
+  'rotationSnapTolerance',
+  5,
   getNumberValidator()
 );
 

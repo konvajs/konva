@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* Add `rotationSnapTolerance` property to `Konva.Transformer`.
+
 ## 4.1.6 - 2020-02-25
 
 * Events fixes for `Konva.Transformer`
