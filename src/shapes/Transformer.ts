@@ -253,6 +253,17 @@ export class Transformer extends Group {
     return this._node;
   }
   /**
+   * return the name of current active anchor
+   * @method
+   * @name Konva.Transformer#detach
+   * @returns {String | Null}
+   * @example
+   * transformer.detach();
+   */
+  getActiveAnchor() {
+    return this._movingAnchorName;
+  }
+  /**
    * detach transformer from an attached node
    * @method
    * @name Konva.Transformer#detach
@@ -703,10 +714,11 @@ export class Transformer extends Group {
       window.removeEventListener('touchend', this._handleMouseUp, true);
       var node = this.getNode();
       this._fire('transformend', { evt: e, target: node });
-      
+
       if (node) {
-        node.fire('transformend', { evt: e, target: node  });
+        node.fire('transformend', { evt: e, target: node });
       }
+      this._movingAnchorName = null;
     }
   }
   _fitNodeInto(newAttrs, evt) {

@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.1.6
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Feb 25 2020
+   * Date: Tue Mar 03 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -134,7 +134,7 @@
        */
       dragDistance: 3,
       /**
-       * Use degree values for angle properties. You may set this property to false if you want to use radiant values.
+       * Use degree values for angle properties. You may set this property to false if you want to use radian values.
        * @property angleDeg
        * @default true
        * @memberof Konva
@@ -2309,7 +2309,7 @@
               catch (err) {
                   Util.error('Unable to get data URL. ' +
                       err.message +
-                      '. For more info read https://konvajs.org/docs/posts/Tainted_Canvas.html.');
+                      ' For more info read https://konvajs.org/docs/posts/Tainted_Canvas.html.');
                   return '';
               }
           }
@@ -2893,7 +2893,7 @@
                   catch (e) {
                       Util.error('Unable to apply filter. ' +
                           e.message +
-                          '. This post my help you https://konvajs.org/docs/posts/Tainted_Canvas.html.');
+                          ' This post my help you https://konvajs.org/docs/posts/Tainted_Canvas.html.');
                   }
                   this._filterUpToDate = true;
               }
@@ -14702,6 +14702,7 @@
    * @param {Boolean} [config.resizeEnabled] Default is true
    * @param {Boolean} [config.rotateEnabled] Default is true
    * @param {Array} [config.rotationSnaps] Array of angles for rotation snaps. Default is []
+   * @param {Number} [config.rotationSnapTolerance] Snapping tolerance. If closer than this it will snap. Default is 5
    * @param {Number} [config.rotateAnchorOffset] Default is 50
    * @param {Number} [config.padding] Default is 0
    * @param {Boolean} [config.borderEnabled] Should we draw border? Default is true
@@ -14789,6 +14790,17 @@
       };
       Transformer.prototype.getNode = function () {
           return this._node;
+      };
+      /**
+       * return the name of current active anchor
+       * @method
+       * @name Konva.Transformer#detach
+       * @returns {String | Null}
+       * @example
+       * transformer.detach();
+       */
+      Transformer.prototype.getActiveAnchor = function () {
+          return this._movingAnchorName;
       };
       /**
        * detach transformer from an attached node
@@ -15048,7 +15060,7 @@
               var alpha = Konva.getAngle(this.getNode().rotation());
               var newAlpha = Util._degToRad(newRotation);
               var snaps = this.rotationSnaps();
-              var offset = 0.1;
+              var offset = Konva.getAngle(this.rotationSnapTolerance());
               for (var i = 0; i < snaps.length; i++) {
                   var angle = Konva.getAngle(snaps[i]);
                   var dif = Math.abs(angle - Util._degToRad(newRotation)) % (Math.PI * 2);
@@ -15128,6 +15140,7 @@
               if (node) {
                   node.fire('transformend', { evt: e, target: node });
               }
+              this._movingAnchorName = null;
           }
       };
       Transformer.prototype._fitNodeInto = function (newAttrs, evt) {
@@ -15412,6 +15425,20 @@
    * transformer.rotateAnchorOffset(100);
    */
   Factory.addGetterSetter(Transformer, 'rotateAnchorOffset', 50, getNumberValidator());
+  /**
+   * get/set distance for rotation tolerance
+   * @name Konva.Transformer#rotationSnapTolerance
+   * @method
+   * @param {Number} tolerance
+   * @returns {Number}
+   * @example
+   * // get
+   * var rotationSnapTolerance = transformer.rotationSnapTolerance();
+   *
+   * // set
+   * transformer.rotationSnapTolerance(100);
+   */
+  Factory.addGetterSetter(Transformer, 'rotationSnapTolerance', 5, getNumberValidator());
   /**
    * get/set visibility of border
    * @name Konva.Transformer#borderEnabled

@@ -889,7 +889,7 @@ suite('Transformer', function() {
     var layer = new Konva.Layer();
     stage.add(layer);
 
-    const rect = new Konva.Rect({
+    var rect = new Konva.Rect({
       x: 50,
       y: 50,
       width: 180,
@@ -1524,16 +1524,19 @@ suite('Transformer', function() {
     rect.on('transformstart', function(e) {
       callCount += 1;
       assert.equal(e.target, rect);
+      assert.equal(tr.getActiveAnchor(), 'top-left');
     });
 
     rect.on('transform', function(e) {
       callCount += 1;
       assert.equal(e.target, rect);
+      assert.equal(tr.getActiveAnchor(), 'top-left');
     });
 
     rect.on('transformend', function(e) {
       callCount += 1;
       assert.equal(e.target, rect);
+      assert.equal(tr.getActiveAnchor(), 'top-left');
     });
 
     tr.on('transformstart', function(e) {
@@ -1572,6 +1575,7 @@ suite('Transformer', function() {
       y: 60
     });
     assert.equal(callCount, 6);
+    assert.equal(tr.getActiveAnchor(), null);
   });
 
   test('on force update should clear transform', function() {
