@@ -53,6 +53,7 @@ export class Path extends Shape<PathConfig> {
 
     // context position
     context.beginPath();
+    var isClosed = false;
     for (var n = 0; n < ca.length; n++) {
       var c = ca[n].command;
       var p = ca[n].points;
@@ -93,12 +94,17 @@ export class Path extends Shape<PathConfig> {
 
           break;
         case 'z':
+          isClosed = true;
           context.closePath();
           break;
       }
     }
 
-    context.fillStrokeShape(this);
+    if (!isClosed && !this.hasFill()) {
+      context.strokeShape(this);
+    } else {
+      context.fillStrokeShape(this);
+    }
   }
   getSelfRect() {
     var points = [];

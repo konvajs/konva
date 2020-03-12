@@ -1118,6 +1118,51 @@ suite('Path', function() {
   });
 
   // ======================================================
+  // do we need to fill hit, when it is not closed?
+  test('Stroke when no closed', function() {
+    // https://github.com/konvajs/konva/issues/867
+
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var path = new Konva.Path({
+      data: 'M 0 0 L 100 100 L 100 0',
+      stroke: 'black'
+    });
+
+    // override color key so that we can test the context trace
+    path.colorKey = 'black';
+
+    path.on('mouseover', function() {
+      this.setStroke('#f00');
+      layer.draw();
+    });
+
+    path.on('mouseout', function() {
+      this.setStroke('#000');
+      layer.draw();
+    });
+
+    layer.add(path);
+    stage.add(layer);
+
+    showHit(layer);
+
+    var trace = layer.getContext().getTrace();
+
+    var hitTrace = layer.hitCanvas.getContext().getTrace();
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(0,0);lineTo(100,100);lineTo(100,0);lineWidth=2;strokeStyle=black;stroke();restore();'
+    );
+    assert.equal(
+      hitTrace,
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(0,0);lineTo(100,100);lineTo(100,0);lineWidth=2;strokeStyle=black;stroke();restore();'
+    );
+  });
+
+  // ======================================================
   test('draw path with no space in numbers', function() {
     // https://github.com/konvajs/konva/issues/329
 

@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.1.6
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Mar 03 2020
+   * Date: Thu Mar 12 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -11546,6 +11546,7 @@
           var ca = this.dataArray;
           // context position
           context.beginPath();
+          var isClosed = false;
           for (var n = 0; n < ca.length; n++) {
               var c = ca[n].command;
               var p = ca[n].points;
@@ -11576,11 +11577,17 @@
                       context.translate(-cx, -cy);
                       break;
                   case 'z':
+                      isClosed = true;
                       context.closePath();
                       break;
               }
           }
-          context.fillStrokeShape(this);
+          if (!isClosed && !this.hasFill()) {
+              context.strokeShape(this);
+          }
+          else {
+              context.fillStrokeShape(this);
+          }
       };
       Path.prototype.getSelfRect = function () {
           var points = [];
