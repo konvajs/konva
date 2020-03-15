@@ -164,6 +164,9 @@ export class Stage extends Container<BaseLayer> {
   }
 
   _checkVisibility() {
+    if (!this.content) {
+      return;
+    }
     const style = this.visible() ? '' : 'none';
     this.content.style.display = style;
   }
@@ -339,28 +342,22 @@ export class Stage extends Container<BaseLayer> {
     return null;
   }
   _resizeDOM() {
+    var width = this.width();
+    var height = this.height();
     if (this.content) {
-      var width = this.width(),
-        height = this.height(),
-        layers = this.getChildren(),
-        len = layers.length,
-        n,
-        layer;
-
       // set content dimensions
       this.content.style.width = width + PX;
       this.content.style.height = height + PX;
-
-      this.bufferCanvas.setSize(width, height);
-      this.bufferHitCanvas.setSize(width, height);
-
-      // set layer dimensions
-      for (n = 0; n < len; n++) {
-        layer = layers[n];
-        layer.setSize({ width, height });
-        layer.draw();
-      }
     }
+
+    this.bufferCanvas.setSize(width, height);
+    this.bufferHitCanvas.setSize(width, height);
+
+    // set layer dimensions
+    this.children.each(layer => {
+      layer.setSize({ width, height });
+      layer.draw();
+    });
   }
   add(layer) {
     if (arguments.length > 1) {
@@ -997,26 +994,36 @@ export class Stage extends Container<BaseLayer> {
     this.setPointersPositions(evt);
   }
   _getContentPosition() {
-    var rect = this.content.getBoundingClientRect
-      ? this.content.getBoundingClientRect()
-      : { top: 0, left: 0, width: 1000, height: 1000 };
+    if (!this.content || !this.content.getBoundingClientRect) {
+      return {
+        top: 0,
+        left: 0,
+        scaleX: 1,
+        scaleY: 1
+      };
+    }
 
-    
+    var rect = this.content.getBoundingClientRect();
+
     return {
       top: rect.top,
       left: rect.left,
       // sometimes clientWidth can be equals to 0
       // i saw it in react-konva test, looks like it is because of hidden testing element
       scaleX: rect.width / this.content.clientWidth || 1,
-      scaleY: rect.height / this.content.clientHeight || 1,
+      scaleY: rect.height / this.content.clientHeight || 1
     };
   }
   _buildDOM() {
-    // the buffer canvas pixel ratio must be 1 because it is used as an
-    // intermediate canvas before copying the result onto a scene canvas.
-    // not setting it to 1 will result in an over compensation
-    this.bufferCanvas = new SceneCanvas();
-    this.bufferHitCanvas = new HitCanvas({ pixelRatio: 1 });
+    this.bufferCanvas = new SceneCanvas({
+      width: this.width(),
+      height: this.height()
+    });
+    this.bufferHitCanvas = new HitCanvas({
+      pixelRatio: 1,
+      width: this.width(),
+      height: this.height()
+    });
 
     if (!Konva.isBrowser) {
       return;

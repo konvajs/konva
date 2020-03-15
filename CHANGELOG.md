@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Add `rotationSnapTolerance` property to `Konva.Transformer`.
 * Add `getActiveAnchor()` method to `Konva.Transformer`
 * Fix hit for non-closed `Konva.Path`
+* Some fixes for experimental Offscreen canvas support inside a worker
 
 ## 4.1.6 - 2020-02-25
 

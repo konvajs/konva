@@ -115,8 +115,8 @@ export class Canvas {
     return this.height;
   }
   setSize(width, height) {
-    this.setWidth(width);
-    this.setHeight(height);
+    this.setWidth(width || 0);
+    this.setHeight(height || 0);
   }
   /**
    * to data url

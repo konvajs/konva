@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Konva Canvas Scrolling Demo</title>
+    <title>Konva Offscreen Canvas Demo</title>
     <style>
       body {
         margin: 0;
@@ -13,15 +13,46 @@
   </head>
 
   <body>
-    <canvas id="canvas"></div>
+    <canvas id="canvas"></canvas>
     <script>
-      var htmlCanvas = document.getElementById("canvas");
+      var htmlCanvas = document.getElementById('canvas');
+      htmlCanvas.width = window.innerWidth;
+      htmlCanvas.height = window.innerHeight;
       var offscreen = htmlCanvas.transferControlToOffscreen();
 
       var w = new Worker('./worker.js');
-      w.onmessage = function(event) {
-        document.getElementById('result').innerHTML = event.data;
-      };
+      w.postMessage({ canvas: offscreen }, [offscreen]);
+
+      var EVENTS = [
+        'mouseenter',
+        'mousedown',
+        'mousemove',
+        'mouseup',
+        'mouseout',
+        'touchstart',
+        'touchmove',
+        'touchend',
+        'mouseover',
+        'wheel',
+        'contextmenu',
+        'pointerdown',
+        'pointermove',
+        'pointerup',
+        'pointercancel',
+        'lostpointercapture'
+      ];
+
+      EVENTS.forEach(eventName => {
+        htmlCanvas.addEventListener(eventName, e => {
+          w.postMessage({
+            eventName,
+            event: {
+              clientX: e.clientX,
+              clientY: e.clientY
+            }
+          });
+        });
+      });
     </script>
   </body>
 </html>
