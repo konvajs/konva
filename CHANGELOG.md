@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## 4.2.0 - 2020-03-14
+
 * Add `rotationSnapTolerance` property to `Konva.Transformer`.
 * Add `getActiveAnchor()` method to `Konva.Transformer`
 * Fix hit for non-closed `Konva.Path`
