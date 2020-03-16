@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.2.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Sat Mar 14 2020
+   * Date: Mon Mar 16 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -10338,7 +10338,7 @@
    * Arrow constructor
    * @constructor
    * @memberof Konva
-   * @augments Konva.Shape
+   * @augments Konva.Line
    * @param {Object} config
    * @param {Array} config.points Flat array of points coordinates. You should define them as [x1, y1, x2, y2, x3, y3].
    * @param {Number} [config.tension] Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
@@ -10504,7 +10504,7 @@
               x: lineRect.x - offset,
               y: lineRect.y - offset,
               width: lineRect.width + offset * 2,
-              height: lineRect.height + offset * 2,
+              height: lineRect.height + offset * 2
           };
       };
       return Arrow;

@@ -18,7 +18,7 @@ export interface ArrowConfig extends LineConfig {
  * Arrow constructor
  * @constructor
  * @memberof Konva
- * @augments Konva.Shape
+ * @augments Konva.Line
  * @param {Object} config
  * @param {Array} config.points Flat array of points coordinates. You should define them as [x1, y1, x2, y2, x3, y3].
  * @param {Number} [config.tension] Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
@@ -119,8 +119,8 @@ export class Arrow extends Line<ArrowConfig> {
       x: lineRect.x - offset,
       y: lineRect.y - offset,
       width: lineRect.width + offset * 2,
-      height: lineRect.height + offset * 2,
-    }
+      height: lineRect.height + offset * 2
+    };
   }
 
   pointerLength: GetSet<number, this>;

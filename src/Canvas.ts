@@ -161,10 +161,10 @@ export class Canvas {
  * @returns {Number}
  * @example
  * // get
- * var pixelRatio = canvas.pixelRatio();
+ * var pixelRatio = layer.getCanvas.pixelRatio();
  *
  * // set
- * canvas.pixelRatio(100);
+ * layer.getCanvas().pixelRatio(3);
  */
 Factory.addGetterSetter(Canvas, 'pixelRatio', undefined, getNumberValidator());
 
