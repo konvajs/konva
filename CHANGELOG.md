@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* Fix some issues with `mouseenter` and `mouseleave` events.
+
 ## 4.2.0 - 2020-03-14
 
 * Add `rotationSnapTolerance` property to `Konva.Transformer`.

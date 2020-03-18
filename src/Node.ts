@@ -2251,7 +2251,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
             this.parent,
             eventType,
             evt,
-            compareShape.parent
+            compareShape
           );
         } else {
           this._fireAndBubble.call(this.parent, eventType, evt);

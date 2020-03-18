@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.2.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Mon Mar 16 2020
+   * Date: Wed Mar 18 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -114,12 +114,13 @@
       inDblClickWindow: false,
       /**
        * Global pixel ratio configuration. KonvaJS automatically detect pixel ratio of current device.
-       * But you may override such property, if you want to use your value.
+       * But you may override such property, if you want to use your value. Set this value before any components initializations.
        * @property pixelRatio
        * @default undefined
        * @name pixelRatio
        * @memberof Konva
        * @example
+       * // before any Konva code:
        * Konva.pixelRatio = 1;
        */
       pixelRatio: undefined,
@@ -2331,10 +2332,10 @@
    * @returns {Number}
    * @example
    * // get
-   * var pixelRatio = canvas.pixelRatio();
+   * var pixelRatio = layer.getCanvas.pixelRatio();
    *
    * // set
-   * canvas.pixelRatio(100);
+   * layer.getCanvas().pixelRatio(3);
    */
   Factory.addGetterSetter(Canvas, 'pixelRatio', undefined, getNumberValidator());
   var SceneCanvas = /** @class */ (function (_super) {
@@ -4353,7 +4354,7 @@
                   this.parent.isListening() &&
                   !stopBubble) {
                   if (compareShape && compareShape.parent) {
-                      this._fireAndBubble.call(this.parent, eventType, evt, compareShape.parent);
+                      this._fireAndBubble.call(this.parent, eventType, evt, compareShape);
                   }
                   else {
                       this._fireAndBubble.call(this.parent, eventType, evt);

@@ -1289,6 +1289,98 @@ suite('MouseEvents', function() {
   });
 
   // ======================================================
+  test('test mouseleave and mouseenter on deep nesting', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    // top group
+    var group = new Konva.Group({
+      x: 0,
+      y: 0,
+      width: stage.width(),
+      height: stage.height(),
+      name: 'top-group'
+    });
+    layer.add(group);
+
+    // circle inside top group
+    var circle = new Konva.Circle({
+      x: 50,
+      y: 50,
+      radius: 50,
+      fill: 'green'
+    });
+    group.add(circle);
+
+    // two level nesting
+    var group2 = new Konva.Group({
+      x: 0,
+      y: 0,
+      name: 'group-2'
+    });
+    group.add(group2);
+
+    var group3 = new Konva.Group({
+      x: 0,
+      y: 0,
+      name: 'group-3'
+    });
+    group2.add(group3);
+
+    // circle inside deep group
+    var circle2 = new Konva.Circle({
+      x: 50,
+      y: 50,
+      radius: 20,
+      fill: 'white'
+    });
+    group3.add(circle2);
+
+    layer.draw();
+
+    var mouseenter = 0;
+    var mouseleave = 0;
+    group.on('mouseenter', function() {
+      mouseenter += 1;
+    });
+    group.on('mouseleave', function() {
+      mouseleave += 1;
+    });
+    // move to big circle
+    stage.simulateMouseMove({
+      x: 20,
+      y: 20
+    });
+    assert.equal(mouseenter, 1, 'first enter big circle');
+    assert.equal(mouseleave, 0, 'no leave on first move');
+
+    // move to small inner circle
+    stage.simulateMouseMove({
+      x: 50,
+      y: 50
+    });
+    assert.equal(mouseenter, 1, 'enter small circle');
+    assert.equal(mouseleave, 0, 'no leave on second move');
+
+    // move to big circle
+    stage.simulateMouseMove({
+      x: 20,
+      y: 20
+    });
+    assert.equal(mouseenter, 1, 'second enter big circle');
+    assert.equal(mouseleave, 0, 'no leave on third move');
+
+    // move out of group
+    stage.simulateMouseMove({
+      x: 0,
+      y: 0
+    });
+    assert.equal(mouseenter, 1, 'mouseenter = 1 at the end');
+    assert.equal(mouseleave, 1, 'first mouseleave');
+  });
+
+  // ======================================================
   test('test dblclick to a wrong target', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -1993,7 +2085,7 @@ suite('MouseEvents', function() {
       radius: 100,
       x: 200,
       y: 0
-    })
+    });
     layer.add(circle);
     layer.draw();
 
@@ -2026,10 +2118,9 @@ suite('MouseEvents', function() {
     layer.on('mouseout', function() {
       layerMouseout += 1;
     });
-    
 
     // move into a circle
-    stage.simulateMouseMove({ x: 200, y : 5});
+    stage.simulateMouseMove({ x: 200, y: 5 });
 
     var top = stage.content.getBoundingClientRect().top;
     var evt = {
@@ -2046,7 +2137,6 @@ suite('MouseEvents', function() {
     assert.equal(layerMouseout, 1, 'layerMouseout should be 1');
     assert.equal(mouseleave, 1, 'mouseleave should be 1');
     assert.equal(mouseout, 1, 'mouseout should be 1');
-    
   });
 
   test('should not trigger mouseenter on stage when we go to the shape from empty space', function() {
@@ -2191,7 +2281,6 @@ suite('MouseEvents', function() {
       y: 40
     });
 
-    
     stage.simulateMouseUp({
       x: 40,
       y: 40
@@ -2200,7 +2289,6 @@ suite('MouseEvents', function() {
     // should not register this click this click, because the stage is scaled
     assert.equal(clicks, 0, 'clicks not triggered');
     assert.deepEqual(stage.getPointerPosition(), { x: 80, y: 80 });
-
 
     // try touch too
     stage.simulateTouchStart({
