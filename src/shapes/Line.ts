@@ -219,10 +219,10 @@ export class Line<Config extends LineConfig = LineConfig> extends Shape<
       maxY = Math.max(maxY, y);
     }
     return {
-      x: Math.round(minX),
-      y: Math.round(minY),
-      width: Math.round(maxX - minX),
-      height: Math.round(maxY - minY)
+      x: minX,
+      y: minY,
+      width: maxX - minX,
+      height: maxY - minY
     };
   }
 

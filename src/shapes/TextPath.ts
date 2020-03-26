@@ -531,10 +531,10 @@ export class TextPath extends Shape<TextPathConfig> {
     }
     var fontSize = this.fontSize();
     return {
-      x: Math.round(minX) - fontSize / 2,
-      y: Math.round(minY) - fontSize / 2,
-      width: Math.round(maxX - minX) + fontSize,
-      height: Math.round(maxY - minY) + fontSize
+      x: minX - fontSize / 2,
+      y: minY - fontSize / 2,
+      width: maxX - minX + fontSize,
+      height: maxY - minY + fontSize
     };
   }
 

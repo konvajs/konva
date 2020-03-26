@@ -260,7 +260,7 @@ suite('TextPath', function() {
     layer.add(textpath);
     stage.add(layer);
 
-    cloneAndCompareLayer(layer, 50);
+    cloneAndCompareLayer(layer, 200);
     showHit(layer);
   });
 
@@ -286,7 +286,7 @@ suite('TextPath', function() {
 
     layer.add(textpath);
     stage.add(layer);
-    cloneAndCompareLayer(layer, 50);
+    cloneAndCompareLayer(layer, 200);
     showHit(layer);
   });
 

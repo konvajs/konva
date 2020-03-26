@@ -309,10 +309,10 @@ suite('Line', function() {
 
     stage.add(layer);
 
-    assert.equal(client.x, 56, 'check x');
-    assert.equal(client.y, 74, 'check y');
-    assert.equal(client.width, 245, 'check width');
-    assert.equal(client.height, 147, 'check height');
+    assert.equal(Math.round(client.x), 56, 'check x');
+    assert.equal(Math.round(client.y), 74, 'check y');
+    assert.equal(Math.round(client.width), 245, 'check width');
+    assert.equal(Math.round(client.height), 147, 'check height');
   });
 
   test('getClientRect with low number of points', function() {
@@ -400,5 +400,31 @@ suite('Line', function() {
       false,
       'calculated points should change'
     );
+  });
+
+  test('getClientRect with scaling', function() {
+    var stage = addStage();
+    var scale = 42;
+    stage.scaleX(scale);
+    stage.scaleY(scale);
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var points = [1, 1, 7, 2, 8, 7, 2, 6];
+    var line = new Konva.Line({
+      points: points.map(function(v) {
+        return (v * 20) / scale;
+      }),
+      closed: true,
+      fill: 'green'
+    });
+    layer.add(line);
+
+    var client = line.getClientRect();
+
+    assert.equal(client.x, 20, 'check x');
+    assert.equal(client.y, 20, 'check y');
+    assert.equal(client.width, 140, 'check width');
+    assert.equal(client.height, 120, 'check height');
   });
 });

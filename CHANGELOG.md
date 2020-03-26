@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Not released:
 
 * Fix some issues with `mouseenter` and `mouseleave` events.
+* Deprecate `hitStrokeEnabled` property
+* Fix rounding issues for `getClientRect()` for some shapes
 
 ## 4.2.0 - 2020-03-14
 

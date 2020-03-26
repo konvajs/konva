@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.2.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Wed Mar 18 2020
+   * Date: Thu Mar 26 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -7146,11 +7146,11 @@
       };
       Shape.prototype._hasShadow = function () {
           return (this.shadowEnabled() &&
-              (this.shadowOpacity() !== 0 &&
-                  !!(this.shadowColor() ||
-                      this.shadowBlur() ||
-                      this.shadowOffsetX() ||
-                      this.shadowOffsetY())));
+              this.shadowOpacity() !== 0 &&
+              !!(this.shadowColor() ||
+                  this.shadowBlur() ||
+                  this.shadowOffsetX() ||
+                  this.shadowOffsetY()));
       };
       Shape.prototype._getFillPattern = function () {
           return this._getCache(patternImage, this.__getFillPattern);
@@ -7229,10 +7229,11 @@
        * @returns {Boolean}
        */
       Shape.prototype.hasFill = function () {
-          return this.fillEnabled() && !!(this.fill() ||
-              this.fillPatternImage() ||
-              this.fillLinearGradientColorStops() ||
-              this.fillRadialGradientColorStops());
+          return (this.fillEnabled() &&
+              !!(this.fill() ||
+                  this.fillPatternImage() ||
+                  this.fillLinearGradientColorStops() ||
+                  this.fillRadialGradientColorStops()));
       };
       /**
        * returns whether or not the shape will be stroked
@@ -7252,7 +7253,7 @@
           // we should enable hit stroke we stroke is enabled
           // and we have some value from width
           return (this.strokeEnabled() &&
-              (width || this.strokeWidth() && width === 'auto'));
+              (width || (this.strokeWidth() && width === 'auto')));
       };
       /**
        * determines if point is in the shape, regardless if other shapes are on top of it.  Note: because
@@ -7291,6 +7292,7 @@
               this.getStage());
       };
       Shape.prototype.setStrokeHitEnabled = function (val) {
+          Util.warn('strokeHitEnabled property is deprecated. Please use hitStrokeWidth instead.');
           if (val) {
               this.hitStrokeWidth('auto');
           }
@@ -7321,8 +7323,8 @@
       Shape.prototype.getSelfRect = function () {
           var size = this.size();
           return {
-              x: this._centroid ? Math.round(-size.width / 2) : 0,
-              y: this._centroid ? Math.round(-size.height / 2) : 0,
+              x: this._centroid ? -size.width / 2 : 0,
+              y: this._centroid ? -size.height / 2 : 0,
               width: size.width,
               height: size.height
           };
@@ -7619,7 +7621,7 @@
   // TODO: probably we should deprecate it
   Factory.addGetterSetter(Shape, 'strokeHitEnabled', true, getBooleanValidator());
   /**
-   * get/set strokeHitEnabled property. Useful for performance optimization.
+   * **deprecated, use hitStrokeWidth instead!** get/set strokeHitEnabled property. Useful for performance optimization.
    * You may set `shape.strokeHitEnabled(false)`. In this case stroke will be no draw on hit canvas, so hit area
    * of shape will be decreased (by lineWidth / 2). Remember that non closed line with `strokeHitEnabled = false`
    * will be not drawn on hit canvas, that is mean line will no trigger pointer events (like mouseover)
@@ -10259,10 +10261,10 @@
               maxY = Math.max(maxY, y);
           }
           return {
-              x: Math.round(minX),
-              y: Math.round(minY),
-              width: Math.round(maxX - minX),
-              height: Math.round(maxY - minY)
+              x: minX,
+              y: minY,
+              width: maxX - minX,
+              height: maxY - minY
           };
       };
       return Line;
@@ -13528,7 +13530,11 @@
           context.fillStrokeShape(this);
       };
       Text.prototype.setText = function (text) {
-          var str = Util._isString(text) ? text : (text === null || text === undefined) ? '' : text + '';
+          var str = Util._isString(text)
+              ? text
+              : text === null || text === undefined
+                  ? ''
+                  : text + '';
           this._setAttr(TEXT, str);
           return this;
       };
@@ -14428,10 +14434,10 @@
           }
           var fontSize = this.fontSize();
           return {
-              x: Math.round(minX) - fontSize / 2,
-              y: Math.round(minY) - fontSize / 2,
-              width: Math.round(maxX - minX) + fontSize,
-              height: Math.round(maxY - minY) + fontSize
+              x: minX - fontSize / 2,
+              y: minY - fontSize / 2,
+              width: maxX - minX + fontSize,
+              height: maxY - minY + fontSize
           };
       };
       return TextPath;
