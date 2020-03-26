@@ -402,6 +402,32 @@ suite('Line', function() {
     );
   });
 
+  test('hit test for scaled line', function() {
+    var stage = addStage();
+    var scale = 42;
+    stage.scaleX(scale);
+    stage.scaleY(scale);
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var points = [1, 1, 7, 2, 8, 7, 2, 6];
+    var line = new Konva.Line({
+      points: points.map(function(v) {
+        return (v * 20) / scale;
+      }),
+      closed: true,
+      fill: 'green',
+      draggable: true
+    });
+    layer.add(line);
+    layer.draw();
+
+    assert.equal(line.hasHitStroke(), false);
+    assert.equal(layer.getIntersection({ x: 1, y: 1 }), null);
+
+    layer.toggleHitCanvas();
+  });
+
   test('getClientRect with scaling', function() {
     var stage = addStage();
     var scale = 42;
@@ -416,9 +442,11 @@ suite('Line', function() {
         return (v * 20) / scale;
       }),
       closed: true,
-      fill: 'green'
+      fill: 'green',
+      draggable: true
     });
     layer.add(line);
+    layer.draw();
 
     var client = line.getClientRect();
 

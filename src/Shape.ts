@@ -376,12 +376,14 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
   hasHitStroke() {
     const width = this.hitStrokeWidth();
 
-    // we should enable hit stroke we stroke is enabled
+    // on auto just check by stroke
+    if (width === 'auto') {
+      return this.hasStroke();
+    }
+
+    // we should enable hit stroke if stroke is enabled
     // and we have some value from width
-    return (
-      this.strokeEnabled() &&
-      (width || (this.strokeWidth() && width === 'auto'))
-    );
+    return this.strokeEnabled() && !!width;
   }
   /**
    * determines if point is in the shape, regardless if other shapes are on top of it.  Note: because

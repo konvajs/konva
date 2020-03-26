@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## 4.2.2 - 2020-03-26
+
+* Fix hit stroke issues
+
 ## 4.2.1 - 2020-03-26
 
 * Fix some issues with `mouseenter` and `mouseleave` events.
