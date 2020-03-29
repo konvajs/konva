@@ -118,33 +118,17 @@ suite('Arrow', function() {
       points: [50, 50, 150, 50],
       stroke: 'blue',
       fill: 'blue',
-      strokeWidth: 1,
+      // large stroke width will not work :(
+      strokeWidth: 5,
       draggable: true,
-      tension: 0,
+      tension: 0
     });
     layer.add(arrow);
-    
+
     stage.add(layer);
-    
+    arrow.cache();
+    layer.draw();
 
     cloneAndCompareLayer(layer, 200);
-
-    // visual debug
-    // var back = new Konva.Rect({
-    //   stroke: 'black'
-    // });
-    // layer.add(back);
-    // stage.on('mousemove',() => {
-    //   const pos = stage.getPointerPosition();
-
-    //   const points = [arrow.points()[0], arrow.points()[1], pos.x, pos.y];
-    //   arrow.points(points);
-    //   arrow.cache();
-
-    //   console.log(arrow.points());
-    //   back.setAttrs(arrow.getClientRect());
-    //   layer.batchDraw();
-    // })
-
   });
 });
