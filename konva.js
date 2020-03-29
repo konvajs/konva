@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.2.2
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Thu Mar 26 2020
+   * Date: Sun Mar 29 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -5371,17 +5371,6 @@
           }
           return obj;
       };
-      Container.prototype._getDescendants = function (arr) {
-          var retArr = [];
-          var len = arr.length;
-          for (var n = 0; n < len; n++) {
-              var node = arr[n];
-              if (this.isAncestorOf(node)) {
-                  retArr.push(node);
-              }
-          }
-          return retArr;
-      };
       /**
        * determine if node is an ancestor
        * of descendant
@@ -5524,10 +5513,10 @@
           var dragSkip = !Konva.hitOnDragEnabled && layerUnderDrag;
           return layer && layer.hitGraphEnabled() && this.isVisible() && !dragSkip;
       };
-      Container.prototype.getClientRect = function (attrs) {
-          attrs = attrs || {};
-          var skipTransform = attrs.skipTransform;
-          var relativeTo = attrs.relativeTo;
+      Container.prototype.getClientRect = function (config) {
+          config = config || {};
+          var skipTransform = config.skipTransform;
+          var relativeTo = config.relativeTo;
           var minX, minY, maxX, maxY;
           var selfRect = {
               x: Infinity,
@@ -5543,8 +5532,8 @@
               }
               var rect = child.getClientRect({
                   relativeTo: that,
-                  skipShadow: attrs.skipShadow,
-                  skipStroke: attrs.skipStroke
+                  skipShadow: config.skipShadow,
+                  skipStroke: config.skipStroke
               });
               // skip invisible children (like empty groups)
               if (rect.width === 0 && rect.height === 0) {

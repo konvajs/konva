@@ -187,7 +187,7 @@ export abstract class Container<ChildType extends Node> extends Node<
    *  return node.getType() === 'Node' && node.getAbsoluteOpacity() < 1;
    * });
    */
-  find<ChildNode extends Node = Node>(selector): Collection<ChildNode> {
+  find<ChildNode extends Node = Node>(selector): Collection<Node> {
     // protecting _generalFind to prevent user from accidentally adding
     // second argument and getting unexpected `findOne` result
     return this._generalFind<ChildNode>(selector, false);
@@ -217,12 +217,15 @@ export abstract class Container<ChildType extends Node> extends Node<
    *  return node.getType() === 'Shape'
    * })
    */
-  findOne<ChildNode extends Node = Node>(selector): ChildNode {
+  findOne<ChildNode extends Node = Node>(selector: string | Function): Node {
     var result = this._generalFind<ChildNode>(selector, true);
     return result.length > 0 ? result[0] : undefined;
   }
-  _generalFind<ChildNode extends Node = Node>(selector, findOne) {
-    var retArr: Array<ChildNode> = [];
+  _generalFind<ChildNode extends Node = Node>(
+    selector: string | Function,
+    findOne: boolean
+  ) {
+    var retArr: Array<Node> = [];
 
     this._descendants(node => {
       const valid = node._isMatch(selector);
@@ -237,7 +240,7 @@ export abstract class Container<ChildType extends Node> extends Node<
 
     return Collection.toCollection(retArr);
   }
-  private _descendants(fn) {
+  private _descendants(fn: (n: Node) => boolean) {
     let shouldStop = false;
     for (var i = 0; i < this.children.length; i++) {
       const child = this.children[i];
@@ -270,18 +273,6 @@ export abstract class Container<ChildType extends Node> extends Node<
 
     return obj;
   }
-  _getDescendants(arr) {
-    var retArr = [];
-    var len = arr.length;
-    for (var n = 0; n < len; n++) {
-      var node = arr[n];
-      if (this.isAncestorOf(node)) {
-        retArr.push(node);
-      }
-    }
-
-    return retArr;
-  }
   /**
    * determine if node is an ancestor
    * of descendant
@@ -289,7 +280,7 @@ export abstract class Container<ChildType extends Node> extends Node<
    * @name Konva.Container#isAncestorOf
    * @param {Konva.Node} node
    */
-  isAncestorOf(node) {
+  isAncestorOf(node: Node) {
     var parent = node.getParent();
     while (parent) {
       if (parent._id === this._id) {
@@ -300,7 +291,7 @@ export abstract class Container<ChildType extends Node> extends Node<
 
     return false;
   }
-  clone(obj?) {
+  clone(obj?: any) {
     // call super method
     var node = Node.prototype.clone.call(this, obj);
 
@@ -455,10 +446,15 @@ export abstract class Container<ChildType extends Node> extends Node<
     var dragSkip = !Konva.hitOnDragEnabled && layerUnderDrag;
     return layer && layer.hitGraphEnabled() && this.isVisible() && !dragSkip;
   }
-  getClientRect(attrs): IRect {
-    attrs = attrs || {};
-    var skipTransform = attrs.skipTransform;
-    var relativeTo = attrs.relativeTo;
+  getClientRect(config?: {
+    skipTransform?: boolean;
+    skipShadow?: boolean;
+    skipStroke?: boolean;
+    relativeTo?: Container<Node>;
+  }): IRect {
+    config = config || {};
+    var skipTransform = config.skipTransform;
+    var relativeTo = config.relativeTo;
 
     var minX, minY, maxX, maxY;
     var selfRect = {
@@ -476,8 +472,8 @@ export abstract class Container<ChildType extends Node> extends Node<
 
       var rect = child.getClientRect({
         relativeTo: that,
-        skipShadow: attrs.skipShadow,
-        skipStroke: attrs.skipStroke
+        skipShadow: config.skipShadow,
+        skipStroke: config.skipStroke
       });
 
       // skip invisible children (like empty groups)

@@ -1,6 +1,4 @@
 suite('Collection', function() {
-  var util;
-
   test('test collection method mapping', function() {
     // Node method
     assert.notEqual(Konva.Collection.prototype.on, undefined);
