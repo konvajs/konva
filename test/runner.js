@@ -241,7 +241,7 @@ afterEach(function() {
 
   if (!isFailed && !isManual) {
     Konva.stages.forEach(function(stage) {
-      stage.destroy();
+      // stage.destroy();
     });
     if (Konva.DD._dragElements.size) {
       throw 'Why not cleaned?';
@@ -297,14 +297,14 @@ Konva.Stage.prototype.simulateTouchStart = function(pos, changed) {
         identifier: touch.id,
         clientX: touch.x,
         clientY: touch.y + top
-      }
+      };
     });
     changedTouches = (changed || pos).map(function(touch) {
       return {
         identifier: touch.id,
         clientX: touch.x,
         clientY: touch.y + top
-      }
+      };
     });
   } else {
     changedTouches = touches = [
@@ -334,14 +334,14 @@ Konva.Stage.prototype.simulateTouchMove = function(pos, changed) {
         identifier: touch.id,
         clientX: touch.x,
         clientY: touch.y + top
-      }
+      };
     });
     changedTouches = (changed || pos).map(function(touch) {
       return {
         identifier: touch.id,
         clientX: touch.x,
         clientY: touch.y + top
-      }
+      };
     });
   } else {
     changedTouches = touches = [
@@ -372,14 +372,14 @@ Konva.Stage.prototype.simulateTouchEnd = function(pos, changed) {
         identifier: touch.id,
         clientX: touch.x,
         clientY: touch.y + top
-      }
+      };
     });
     changedTouches = (changed || pos).map(function(touch) {
       return {
         identifier: touch.id,
         clientX: touch.x,
         clientY: touch.y + top
-      }
+      };
     });
   } else {
     changedTouches = touches = [
@@ -442,7 +442,6 @@ Konva.Stage.prototype.simulatePointerUp = function(pos) {
 
 init();
 
-
 // polyfills
 if (!Array.prototype.find) {
   Object.defineProperty(Array.prototype, 'find', {
@@ -490,11 +489,14 @@ if (!Array.prototype.find) {
   });
 }
 
+String.prototype.trimRight =
+  String.prototype.trimRight ||
+  function polyfill() {
+    return this.replace(/[\s\xa0]+$/, '');
+  };
 
-String.prototype.trimRight = String.prototype.trimRight || function polyfill() {
-  return this.replace(/[\s\xa0]+$/, '');
-}
-
-String.prototype.trimLeft = String.prototype.trimLeft || function polyfill() {
-  return this.replace(/^\s+/, '');
-}
+String.prototype.trimLeft =
+  String.prototype.trimLeft ||
+  function polyfill() {
+    return this.replace(/^\s+/, '');
+  };

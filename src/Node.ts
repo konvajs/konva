@@ -1683,7 +1683,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
   }
   _getAbsoluteTransform(top?: Node) {
-    var at;
+    var at: Transform;
     // we we need position relative to an ancestor, we will iterate for all
     if (top) {
       at = new Transform();
@@ -1744,17 +1744,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       parent = parent.getParent();
     }
 
-    var scaleX = 1,
-      scaleY = 1;
+    const transform = this.getAbsoluteTransform(top);
+    const attrs = transform.decompose();
 
-    // start with stage and traverse downwards to self
-    this._eachAncestorReverse(function(node) {
-      scaleX *= node.scaleX();
-      scaleY *= node.scaleY();
-    }, top);
     return {
-      x: scaleX,
-      y: scaleY
+      x: attrs.scaleX,
+      y: attrs.scaleY
     };
   }
   /**
@@ -1768,14 +1763,15 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * var rotation = node.getAbsoluteRotation();
    */
   getAbsoluteRotation() {
-    var parent: Node = this;
-    var rotation = 0;
+    // var parent: Node = this;
+    // var rotation = 0;
 
-    while (parent) {
-      rotation += parent.rotation();
-      parent = parent.getParent();
-    }
-    return rotation;
+    // while (parent) {
+    //   rotation += parent.rotation();
+    //   parent = parent.getParent();
+    // }
+    // return rotation;
+    return this.getAbsoluteTransform().decompose().rotation;
   }
   /**
    * get transform of the node
