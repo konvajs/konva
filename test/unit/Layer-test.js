@@ -416,6 +416,11 @@ suite('Layer', function() {
 
       assert.equal(layer.getContext().imageSmoothingEnabled, true);
 
+      layer.imageSmoothingEnabled(false);
+      // change size
+      stage.width(stage.width() + 1);
+      assert.equal(layer.getContext().imageSmoothingEnabled, false);
+
       done();
     };
     imageObj.src = 'assets/darth-vader.jpg';

@@ -29,10 +29,6 @@ export class FastLayer extends BaseLayer {
       Util.throw('You may only add shapes to a fast layer.');
     }
   }
-  _setCanvasSize(width, height) {
-    this.canvas.setSize(width, height);
-    this._checkSmooth();
-  }
   hitGraphEnabled() {
     return false;
   }

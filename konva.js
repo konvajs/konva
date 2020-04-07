@@ -6062,7 +6062,7 @@
                   length +
                   ' layers. Recommended maximum number of layers is 3-5. Adding more layers into the stage may drop the performance. Rethink your tree structure, you can use Konva.Group.');
           }
-          layer._setCanvasSize(this.width(), this.height());
+          layer.setSize({ width: this.width(), height: this.height() });
           // draw layer and append canvas to container
           layer.draw();
           if (Konva.isBrowser) {
@@ -6723,8 +6723,8 @@
           _this._waitingForDraw = false;
           _this.on('visibleChange', _this._checkVisibility);
           _this._checkVisibility();
-          _this.on('imageSmoothingEnabledChange', _this._checkSmooth);
-          _this._checkSmooth();
+          _this.on('imageSmoothingEnabledChange', _this._setSmoothEnabled);
+          _this._setSmoothEnabled();
           return _this;
       }
       // for nodejs?
@@ -6867,6 +6867,7 @@
       BaseLayer.prototype.setSize = function (_a) {
           var width = _a.width, height = _a.height;
           this.canvas.setSize(width, height);
+          this._setSmoothEnabled();
           return this;
       };
       BaseLayer.prototype._toKonvaCanvas = function (config) {
@@ -6886,7 +6887,7 @@
               this.canvas._canvas.style.display = 'none';
           }
       };
-      BaseLayer.prototype._checkSmooth = function () {
+      BaseLayer.prototype._setSmoothEnabled = function () {
           this.getContext()._context.imageSmoothingEnabled = this.imageSmoothingEnabled();
       };
       /**
@@ -8658,10 +8659,11 @@
           });
           return _this;
       }
-      Layer.prototype._setCanvasSize = function (width, height) {
-          this.canvas.setSize(width, height);
+      Layer.prototype.setSize = function (_a) {
+          var width = _a.width, height = _a.height;
+          _super.prototype.setSize.call(this, { width: width, height: height });
           this.hitCanvas.setSize(width, height);
-          this._checkSmooth();
+          return this;
       };
       Layer.prototype._validateAdd = function (child) {
           var type = child.getType();
@@ -8820,12 +8822,6 @@
               parent.content.appendChild(this.hitCanvas._canvas);
           }
       };
-      Layer.prototype.setSize = function (_a) {
-          var width = _a.width, height = _a.height;
-          _super.prototype.setSize.call(this, { width: width, height: height });
-          this.hitCanvas.setSize(width, height);
-          return this;
-      };
       return Layer;
   }(BaseLayer));
   Layer.prototype.nodeType = 'Layer';
@@ -8886,10 +8882,6 @@
           if (type !== 'Shape') {
               Util.throw('You may only add shapes to a fast layer.');
           }
-      };
-      FastLayer.prototype._setCanvasSize = function (width, height) {
-          this.canvas.setSize(width, height);
-          this._checkSmooth();
       };
       FastLayer.prototype.hitGraphEnabled = function () {
           return false;

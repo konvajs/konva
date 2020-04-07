@@ -37,8 +37,8 @@ export abstract class BaseLayer extends Container<Group | Shape> {
     this.on('visibleChange', this._checkVisibility);
     this._checkVisibility();
 
-    this.on('imageSmoothingEnabledChange', this._checkSmooth);
-    this._checkSmooth();
+    this.on('imageSmoothingEnabledChange', this._setSmoothEnabled);
+    this._setSmoothEnabled();
   }
   // for nodejs?
   createPNGStream() {
@@ -193,6 +193,7 @@ export abstract class BaseLayer extends Container<Group | Shape> {
   }
   setSize({ width, height }) {
     this.canvas.setSize(width, height);
+    this._setSmoothEnabled();
     return this;
   }
   _toKonvaCanvas(config) {
@@ -214,7 +215,7 @@ export abstract class BaseLayer extends Container<Group | Shape> {
     }
   }
 
-  _checkSmooth() {
+  _setSmoothEnabled() {
     this.getContext()._context.imageSmoothingEnabled = this.imageSmoothingEnabled();
   }
   /**

@@ -50,10 +50,10 @@ export class Layer extends BaseLayer {
     pixelRatio: 1
   });
 
-  _setCanvasSize(width, height) {
-    this.canvas.setSize(width, height);
+  setSize({ width, height }) {
+    super.setSize({ width, height });
     this.hitCanvas.setSize(width, height);
-    this._checkSmooth();
+    return this;
   }
   _validateAdd(child) {
     var type = child.getType();
@@ -226,11 +226,6 @@ export class Layer extends BaseLayer {
     } else {
       parent.content.appendChild(this.hitCanvas._canvas);
     }
-  }
-  setSize({ width, height }) {
-    super.setSize({ width, height });
-    this.hitCanvas.setSize(width, height);
-    return this;
   }
 
   hitGraphEnabled: GetSet<boolean, this>;

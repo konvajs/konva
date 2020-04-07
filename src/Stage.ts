@@ -376,7 +376,7 @@ export class Stage extends Container<BaseLayer> {
           ' layers. Recommended maximum number of layers is 3-5. Adding more layers into the stage may drop the performance. Rethink your tree structure, you can use Konva.Group.'
       );
     }
-    layer._setCanvasSize(this.width(), this.height());
+    layer.setSize({ width: this.width(), height: this.height() });
 
     // draw layer and append canvas to container
     layer.draw();
