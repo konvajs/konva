@@ -1,4 +1,4 @@
-import { Util, Collection, Transform, Point } from '../Util';
+import { Util, Collection, Transform } from '../Util';
 import { Factory } from '../Factory';
 import { Node } from '../Node';
 import { Shape } from '../Shape';
@@ -9,7 +9,7 @@ import { Konva } from '../Global';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
-import { GetSet, IRect } from '../types';
+import { GetSet, IRect, Vector2d } from '../types';
 
 interface Box extends IRect {
   rotation: number;
@@ -145,15 +145,7 @@ var ANCHORS_NAMES = [
 
 var MAX_SAFE_INTEGER = 100000000;
 
-type SHAPE = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  rotation: number;
-};
-
-function getCenter(shape: SHAPE) {
+function getCenter(shape: Box) {
   return {
     x:
       shape.x +
@@ -166,7 +158,7 @@ function getCenter(shape: SHAPE) {
   };
 }
 
-function rotateAroundPoint(shape: SHAPE, angleRad: number, point: Point) {
+function rotateAroundPoint(shape: Box, angleRad: number, point: Vector2d) {
   const x =
     point.x +
     (shape.x - point.x) * Math.cos(angleRad) -
@@ -183,12 +175,12 @@ function rotateAroundPoint(shape: SHAPE, angleRad: number, point: Point) {
   };
 }
 
-function rotateAroundCenter(shape: SHAPE, deltaRad: number) {
+function rotateAroundCenter(shape: Box, deltaRad: number) {
   const center = getCenter(shape);
   return rotateAroundPoint(shape, deltaRad, center);
 }
 
-function getShapeRect(shape: SHAPE) {
+function getShapeRect(shape: Box) {
   const angleRad = shape.rotation;
   const x1 = shape.x;
   const y1 = shape.y;
@@ -217,7 +209,7 @@ function getShapeRect(shape: SHAPE) {
   };
 }
 
-function getShapesRect(shapes: Array<SHAPE>) {
+function getShapesRect(shapes: Array<Box>) {
   // if (shapes.length === 1) {
   //   const shape = shapes[0];
 
@@ -251,9 +243,9 @@ function getShapesRect(shapes: Array<SHAPE>) {
 }
 
 function transformShape(
-  shape: SHAPE,
-  oldSelection: SHAPE,
-  newSelection: SHAPE,
+  shape: Box,
+  oldSelection: Box,
+  newSelection: Box,
   keepOffset = 1
 ) {
   const offset = rotateAroundPoint(shape, -oldSelection.rotation, {
@@ -284,9 +276,9 @@ function transformShape(
 }
 
 function transformAndRotateShape(
-  shape: SHAPE,
-  oldSelection: SHAPE,
-  newSelection: SHAPE
+  shape: Box,
+  oldSelection: Box,
+  newSelection: Box
 ) {
   const updated = transformShape(shape, oldSelection, newSelection);
   return rotateAroundPoint(
@@ -337,7 +329,7 @@ export class Transformer extends Group {
   _nodes: Array<Node>;
   _movingAnchorName: string;
   _transforming = false;
-  _anchorDragOffset: Point;
+  _anchorDragOffset: Vector2d;
   sin: number;
   cos: number;
   _cursorChange: boolean;

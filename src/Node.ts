@@ -1,4 +1,4 @@
-import { Util, Collection, Transform, RectConf, Point } from './Util';
+import { Util, Collection, Transform } from './Util';
 import { Factory } from './Factory';
 import { SceneCanvas, HitCanvas, Canvas } from './Canvas';
 import { Konva, _NODES_REGISTRY } from './Global';
@@ -143,7 +143,6 @@ var ABSOLUTE_OPACITY = 'absoluteOpacity',
   TRANSFORM = 'transform',
   UPPER_STAGE = 'Stage',
   VISIBLE = 'visible',
-  CLONE_BLACK_LIST = ['id'],
   TRANSFORM_CHANGE_STR = [
     'xChange.konva',
     'yChange.konva',
@@ -198,7 +197,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   index = 0;
   parent: Container<Node> | null = null;
   _cache: Map<string, any> = new Map<string, any>();
-  _lastPos: Point = null;
+  _lastPos: Vector2d = null;
   _attrsAffectingSize!: string[];
 
   _filterUpToDate = false;
@@ -347,7 +346,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     imageSmoothingEnabled?: boolean;
   }) {
     var conf = config || {};
-    var rect = {} as RectConf;
+    var rect = {} as IRect;
 
     // don't call getClientRect if we have all attributes
     // it means call it only if have one undefined

@@ -1,18 +1,7 @@
 import { glob, Konva } from './Global';
 import { Node } from './Node';
-import { IRect, RGB, RGBA } from './types';
+import { IRect, RGB, RGBA, Vector2d } from './types';
 
-export type Point = {
-  x: number;
-  y: number;
-};
-
-export interface RectConf {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
 
 /**
  * Collection constructor. Collection extends Array.
@@ -163,7 +152,7 @@ export class Transform {
    * @param {Object} point 2D point(x, y)
    * @returns {Object} 2D point(x, y)
    */
-  point(point: Point) {
+  point(point: Vector2d) {
     var m = this.m;
     return {
       x: m[0] * point.x + m[2] * point.y + m[4],
@@ -1025,7 +1014,7 @@ export const Util = {
   },
   // line as array of points.
   // line might be closed
-  _getProjectionToLine(pt: Point, line, isClosed) {
+  _getProjectionToLine(pt: Vector2d, line, isClosed) {
     var pc = Util.cloneObject(pt);
     var dist = Number.MAX_VALUE;
     line.forEach(function(p1, i) {

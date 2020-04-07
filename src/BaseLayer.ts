@@ -1,11 +1,11 @@
-import { Util, Collection, Point } from './Util';
+import { Util, Collection } from './Util';
 import { Container, ContainerConfig } from './Container';
 import { Node } from './Node';
 import { Factory } from './Factory';
 import { SceneCanvas, HitCanvas } from './Canvas';
 import { Stage } from './Stage';
 
-import { GetSet } from './types';
+import { GetSet, Vector2d } from './types';
 import { Group } from './Group';
 import { Shape } from './Shape';
 
@@ -255,7 +255,7 @@ export abstract class BaseLayer extends Container<Group | Shape> {
       'Can not change height of layer. Use "stage.height(value)" function instead.'
     );
   }
-  getIntersection(pos: Point, selector?: string) {
+  getIntersection(pos: Vector2d, selector?: string) {
     return null;
   }
 

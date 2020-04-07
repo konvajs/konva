@@ -1,4 +1,4 @@
-suite.only('Transformer', function() {
+suite('Transformer', function() {
   function isClose(a, b) {
     return Math.abs(a - b) < 0.000001;
   }
@@ -1071,7 +1071,10 @@ suite.only('Transformer', function() {
       image.setAttrs({
         draggable: true,
         scaleX: 0.5,
-        scaleY: 0.5
+        scaleY: 0.5,
+        shadowColor: 'black',
+        // shadowBlur: 10,
+        shadowOffset: { x: 10, y: 10 }
       });
       layer.add(image);
       var tr = new Konva.Transformer({
@@ -1080,6 +1083,7 @@ suite.only('Transformer', function() {
       });
       layer.add(tr);
       layer.draw();
+      throw 1;
       done();
     });
   });
@@ -1132,9 +1136,9 @@ suite.only('Transformer', function() {
     assert.equal(rect.x(), 115);
     assert.equal(rect.y(), 10);
     assert.equal(rect.width(), 100);
-    assert.equal(rect.scaleX(), 0.05);
+    assert.equal(rect.scaleX(), -0.05);
     assert.equal(rect.height(), 100);
-    assert.equal(rect.scaleY(), -1);
+    assert.equal(rect.scaleY(), 1);
 
     // switch again
     tr.simulateMouseMove({
@@ -1420,9 +1424,9 @@ suite.only('Transformer', function() {
     assert.equal(rect.x(), 110);
     assert.equal(rect.y(), 115);
     assert.equal(rect.width(), 100);
-    assert.equal(rect.scaleX(), 0.05);
+    assert.equal(rect.scaleX(), -0.05);
     assert.equal(rect.height(), 100);
-    assert.equal(rect.scaleY(), -1);
+    assert.equal(rect.scaleY(), 1);
 
     // switch again
     tr.simulateMouseMove({
@@ -2503,7 +2507,7 @@ suite.only('Transformer', function() {
     });
   });
 
-  test.only('centered scaling on flip + keep ratio', function() {
+  test.skip('centered scaling on flip + keep ratio', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);

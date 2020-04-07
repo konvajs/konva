@@ -1,4 +1,4 @@
-import { Util, Collection, Point } from './Util';
+import { Util, Collection } from './Util';
 import { Container } from './Container';
 import { Factory } from './Factory';
 import { BaseLayer } from './BaseLayer';
@@ -7,7 +7,7 @@ import { shapes } from './Shape';
 import { getBooleanValidator } from './Validators';
 import { _registerNode } from './Global';
 
-import { GetSet } from './types';
+import { GetSet, Vector2d } from './types';
 
 // constants
 var HASH = '#',
@@ -77,7 +77,7 @@ export class Layer extends BaseLayer {
    * // or if you interested in shape parent:
    * var group = layer.getIntersection({x: 50, y: 50}, 'Group');
    */
-  getIntersection(pos: Point, selector?: string) {
+  getIntersection(pos: Vector2d, selector?: string) {
     var obj, i, intersectionOffset, shape;
 
     if (!this.hitGraphEnabled() || !this.isVisible()) {

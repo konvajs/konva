@@ -921,7 +921,7 @@ suite('DragAndDrop', function() {
     circle.startDrag();
     assert.equal(circle.isDragging(), true);
     stage.simulateMouseMove({ x: 80, y: 80 });
-    // stage.simulateMouseUp({ x: 80, y: 80 });
+    stage.simulateMouseUp({ x: 80, y: 80 });
     assert.equal(circle.x(), 80);
     assert.equal(circle.y(), 80);
   });
@@ -1085,7 +1085,7 @@ suite('DragAndDrop', function() {
     };
     stage.simulateMouseDown({ x: 70, y: 70 });
     stage.simulateMouseMove({ x: 80, y: 80 });
-    stage.simulateMouseUp({ x: 80, y: 80 });  
+    stage.simulateMouseUp({ x: 80, y: 80 });
     assert.equal(counter > 0, true);
     Konva.Util.warn = oldWarn;
   });

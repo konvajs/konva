@@ -1,6 +1,3 @@
-import { Shape } from './Shape';
-import { Stage } from './Stage';
-
 export interface GetSet<Type, This> {
   (): Type;
   (v: Type): This;
@@ -19,13 +16,13 @@ export interface IRect {
 }
 
 export interface IFrame {
-	time: number;
-	timeDiff: number;
-	lastTime: number;
-	frameRate: number;
+  time: number;
+  timeDiff: number;
+  lastTime: number;
+  frameRate: number;
 }
 
-export type AnimationFn = (frame?: IFrame) => boolean|void;
+export type AnimationFn = (frame?: IFrame) => boolean | void;
 
 export enum KonvaNodeEvent {
   mouseover = 'mouseover',

@@ -119,7 +119,7 @@ suite('Arrow', function() {
       stroke: 'blue',
       fill: 'blue',
       // large stroke width will not work :(
-      strokeWidth: 5,
+      strokeWidth: 1,
       draggable: true,
       tension: 0
     });
