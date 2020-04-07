@@ -145,7 +145,15 @@ var ANCHORS_NAMES = [
 
 var MAX_SAFE_INTEGER = 100000000;
 
-function getCenter(shape) {
+type SHAPE = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  rotation: number;
+};
+
+function getCenter(shape: SHAPE) {
   return {
     x:
       shape.x +
@@ -158,7 +166,7 @@ function getCenter(shape) {
   };
 }
 
-function rotateAroundPoint(shape, angleRad, point) {
+function rotateAroundPoint(shape: SHAPE, angleRad: number, point: Point) {
   const x =
     point.x +
     (shape.x - point.x) * Math.cos(angleRad) -
@@ -175,12 +183,12 @@ function rotateAroundPoint(shape, angleRad, point) {
   };
 }
 
-function rotateAroundCenter(shape, deltaRad) {
+function rotateAroundCenter(shape: SHAPE, deltaRad: number) {
   const center = getCenter(shape);
   return rotateAroundPoint(shape, deltaRad, center);
 }
 
-function getShapeRect(shape) {
+function getShapeRect(shape: SHAPE) {
   const angleRad = shape.rotation;
   const x1 = shape.x;
   const y1 = shape.y;
@@ -209,7 +217,7 @@ function getShapeRect(shape) {
   };
 }
 
-function getShapesRect(shapes) {
+function getShapesRect(shapes: Array<SHAPE>) {
   // if (shapes.length === 1) {
   //   const shape = shapes[0];
 
@@ -242,25 +250,16 @@ function getShapesRect(shapes) {
   };
 }
 
-function isOverlap(rect1, rect2) {
-  const offset = 0;
-  if (rect1.x - offset > rect2.x + rect2.width) {
-    return false;
-  }
-  if (rect1.x + rect1.width + offset < rect2.x) {
-    return false;
-  }
-  if (rect1.y - offset > rect2.y + rect2.height) {
-    return false;
-  }
-  if (rect1.y + rect1.height + offset < rect2.y) {
-    return false;
-  }
-  return true;
-}
-
-function transformShape(shape, oldSelection, newSelection, keepOffset = 1) {
-  const offset = rotateAroundPoint(shape, -oldSelection.rotation, oldSelection);
+function transformShape(
+  shape: SHAPE,
+  oldSelection: SHAPE,
+  newSelection: SHAPE,
+  keepOffset = 1
+) {
+  const offset = rotateAroundPoint(shape, -oldSelection.rotation, {
+    x: oldSelection.x,
+    y: oldSelection.y
+  });
   const offsetX = offset.x - oldSelection.x;
   const offsetY = offset.y - oldSelection.y;
 
@@ -279,14 +278,19 @@ function transformShape(shape, oldSelection, newSelection, keepOffset = 1) {
       offsetX * scaleX * Math.sin(angle) +
       offsetY * scaleY * Math.cos(angle),
     width: shape.width * scaleX,
-    height: shape.height * scaleY
+    height: shape.height * scaleY,
+    rotation: shape.rotation
   };
 }
 
-function transformAndRotateShape(shape, oldSelection, newSelection) {
+function transformAndRotateShape(
+  shape: SHAPE,
+  oldSelection: SHAPE,
+  newSelection: SHAPE
+) {
   const updated = transformShape(shape, oldSelection, newSelection);
   return rotateAroundPoint(
-    { ...updated, rotation: shape.rotation },
+    updated,
     newSelection.rotation - oldSelection.rotation,
     newSelection
   );
@@ -580,22 +584,22 @@ export class Transformer extends Group {
       strokeWidth: 1,
       name: name + ' _anchor',
       dragDistance: 0,
-      draggable: true,
+      draggable: false,
       hitStrokeWidth: TOUCH_DEVICE ? 10 : 'auto'
     });
     var self = this;
     anchor.on('mousedown touchstart', function(e) {
       self._handleMouseDown(e);
     });
-    anchor.on('dragstart', function(e) {
-      e.cancelBubble = true;
-    });
-    anchor.on('dragmove', function(e) {
-      e.cancelBubble = true;
-    });
-    anchor.on('dragend', function(e) {
-      e.cancelBubble = true;
-    });
+    // anchor.on('dragstart', function(e) {
+    //   e.cancelBubble = true;
+    // });
+    // anchor.on('dragmove', function(e) {
+    //   e.cancelBubble = true;
+    // });
+    // anchor.on('dragend', function(e) {
+    //   e.cancelBubble = true;
+    // });
 
     // add hover styling
     anchor.on('mouseenter', () => {
@@ -697,13 +701,47 @@ export class Transformer extends Group {
       x: pp.x - this._anchorDragOffset.x,
       y: pp.y - this._anchorDragOffset.y
     };
+    const oldAbs = anchorNode.getAbsolutePosition();
     anchorNode.setAbsolutePosition(newNodePos);
+    const newAbs = anchorNode.getAbsolutePosition();
+
+    if (oldAbs.x === newAbs.x && oldAbs.y === newAbs.y) {
+      return;
+    }
+
+    var centeredScaling = this.centeredScaling() || e.altKey;
+    // if (centeredScaling && this._movingAnchorName.indexOf('left') >= 0) {
+    //   var topLeft = this.findOne('.top-left');
+    //   var bottomRight = this.findOne('.bottom-right');
+    //   var topOffsetX = topLeft.x() + padding;
+    //   var topOffsetY = topLeft.y() + padding;
+
+    //   var bottomOffsetX = this.getWidth() - bottomRight.x() + padding;
+    //   var bottomOffsetY = this.getHeight() - bottomRight.y() + padding;
+
+    //   bottomRight.move({
+    //     x: -anchorNode.x(),
+    //     y: -anchorNode.y()
+    //   });
+
+    //   topLeft.move({
+    //     x: bottomOffsetX,
+    //     y: bottomOffsetY
+    //   });
+    // }
 
     var keepProportion = this.keepRatio() || e.shiftKey;
 
     var padding = 0;
 
     if (this._movingAnchorName === 'top-left') {
+      // if (centeredScaling) {
+      //   this.findOne('.bottom-right').move({
+      //     x: -anchorNode.x(),
+      //     y: -anchorNode.y()
+      //   });
+      // }
+
       if (keepProportion) {
         newHypotenuse = Math.sqrt(
           Math.pow(
@@ -737,8 +775,32 @@ export class Transformer extends Group {
         );
       }
     } else if (this._movingAnchorName === 'top-center') {
+      // if (centeredScaling) {
+      //   this.findOne('.bottom-right').move({
+      //     x: 0,
+      //     y: -anchorNode.y()
+      //   });
+      // }
       this.findOne('.top-left').y(anchorNode.y());
     } else if (this._movingAnchorName === 'top-right') {
+      if (centeredScaling) {
+        // this.findOne('.bottom-left').move({
+        //   x: -(anchorNode.x() - this.width()),
+        //   y: -anchorNode.y()
+        // });
+        // this.findOne('.top-left').move({
+        //   x: -(anchorNode.x() - this.width()),
+        //   y: anchorNode.y()
+        // });
+        // this.findOne('.bottom-right').move({
+        //   x: -(anchorNode.x() - this.width()),
+        //   y: anchorNode.y()
+        // });
+      }
+
+      // var center = getCenter({
+      //   x
+      // })
       if (keepProportion) {
         newHypotenuse = Math.sqrt(
           Math.pow(
@@ -770,14 +832,31 @@ export class Transformer extends Group {
         );
       }
       var pos = anchorNode.position();
-
       this.findOne('.top-left').y(pos.y);
       this.findOne('.bottom-right').x(pos.x);
     } else if (this._movingAnchorName === 'middle-left') {
+      // if (centeredScaling) {
+      //   this.findOne('.bottom-right').move({
+      //     x: -anchorNode.x(),
+      //     y: 0
+      //   });
+      // }
       this.findOne('.top-left').x(anchorNode.x());
     } else if (this._movingAnchorName === 'middle-right') {
+      // if (centeredScaling) {
+      //   this.findOne('.top-left').move({
+      //     x: -(anchorNode.x() - this.width()),
+      //     y: 0
+      //   });
+      // }
       this.findOne('.bottom-right').x(anchorNode.x());
     } else if (this._movingAnchorName === 'bottom-left') {
+      // if (centeredScaling) {
+      //   this.findOne('.bottom-right').move({
+      //     x: -anchorNode.x(),
+      //     y: -(anchorNode.y() - this.height())
+      //   });
+      // }
       if (keepProportion) {
         newHypotenuse = Math.sqrt(
           Math.pow(
@@ -814,8 +893,21 @@ export class Transformer extends Group {
       this.findOne('.top-left').x(pos.x);
       this.findOne('.bottom-right').y(pos.y);
     } else if (this._movingAnchorName === 'bottom-center') {
+      // if (centeredScaling) {
+      //   this.findOne('.top-left').move({
+      //     x: 0,
+      //     y: -(anchorNode.y() - this.height())
+      //   });
+      // }
       this.findOne('.bottom-right').y(anchorNode.y());
     } else if (this._movingAnchorName === 'bottom-right') {
+      // if (centeredScaling) {
+      //   this.findOne('.top-left').move({
+      //     x: -(anchorNode.x() - this.width()),
+      //     y: -(anchorNode.y() - this.height())
+      //   });
+      // }
+
       if (keepProportion) {
         newHypotenuse = Math.sqrt(
           Math.pow(this.findOne('.bottom-right').x() - padding, 2) +
@@ -910,9 +1002,7 @@ export class Transformer extends Group {
       });
     }
 
-    var absPos = this.findOne('.top-left').getAbsolutePosition(
-      this.getParent()
-    );
+    var absPos = this.findOne('.top-left').getAbsolutePosition();
 
     x = absPos.x;
     y = absPos.y;
@@ -924,8 +1014,8 @@ export class Transformer extends Group {
 
     this._fitNodesInto(
       {
-        x: x + this.offsetX(),
-        y: y + this.offsetY(),
+        x: x,
+        y: y,
         width: width,
         height: height,
         rotation: Konva.getAngle(this.rotation())
@@ -956,43 +1046,88 @@ export class Transformer extends Group {
     }
   }
   _fitNodesInto(newAttrs, evt) {
-    // console.log(newAttrs, oldAttrs);
-    // waring! in this attrs padding is included
     var oldAttrs = this._getNodeRect();
     var boundBoxFunc = this.boundBoxFunc();
     if (boundBoxFunc) {
       newAttrs = boundBoxFunc.call(this, oldAttrs, newAttrs);
     }
-    console.log(newAttrs.width, newAttrs.height);
-    if (newAttrs.width < 1 && newAttrs.width > - this.padding() * 2) {
+
+    const minSize = 1;
+
+    if (Util._inRange(newAttrs.width, -this.padding() * 2 - minSize, minSize)) {
       this.update();
       return;
     }
-    if (Math.abs(newAttrs.height) < 1) {
+    if (
+      Util._inRange(newAttrs.height, -this.padding() * 2 - minSize, minSize)
+    ) {
       this.update();
       return;
     }
+    // if (newAttrs.width < 0) {
+    //   debugger;
+    // }
     const an = this._movingAnchorName;
+    const allowNegativeScale = true;
+    var t = new Transform();
+    t.rotate(Konva.getAngle(this.rotation()));
     if (an && newAttrs.width < 0 && an.indexOf('left') >= 0) {
+      const offset = t.point({
+        x: -this.padding() * 2,
+        y: 0
+      });
+      newAttrs.x += offset.x;
+      newAttrs.y += offset.y;
+      newAttrs.width += this.padding() * 2;
       this._movingAnchorName = an.replace('left', 'right');
-      this._anchorDragOffset.x += this.padding() * 2;
-      this.update();
-      return;
+      this._anchorDragOffset.x -= offset.x;
+      this._anchorDragOffset.y -= offset.y;
+      if (!allowNegativeScale) {
+        this.update();
+        return;
+      }
     } else if (an && newAttrs.width < 0 && an.indexOf('right') >= 0) {
+      const offset = t.point({
+        x: this.padding() * 2,
+        y: 0
+      });
       this._movingAnchorName = an.replace('right', 'left');
-      this._anchorDragOffset.x -= this.padding() * 2;
-      this.update();
-      return;
-    } else if (an && newAttrs.height < 0 && an.indexOf('top') >= 0) {
+      this._anchorDragOffset.x -= offset.x;
+      this._anchorDragOffset.y -= offset.y;
+      newAttrs.width += this.padding() * 2;
+      if (!allowNegativeScale) {
+        this.update();
+        return;
+      }
+    }
+    if (an && newAttrs.height < 0 && an.indexOf('top') >= 0) {
+      const offset = t.point({
+        x: 0,
+        y: -this.padding() * 2
+      });
+      newAttrs.x += offset.x;
+      newAttrs.y += offset.y;
       this._movingAnchorName = an.replace('top', 'bottom');
-      this._anchorDragOffset.y += this.padding() * 2;
-      this.update();
-      return;
+      this._anchorDragOffset.x -= offset.x;
+      this._anchorDragOffset.y -= offset.y;
+      newAttrs.height += this.padding() * 2;
+      if (!allowNegativeScale) {
+        this.update();
+        return;
+      }
     } else if (an && newAttrs.height < 0 && an.indexOf('bottom') >= 0) {
+      const offset = t.point({
+        x: 0,
+        y: this.padding() * 2
+      });
       this._movingAnchorName = an.replace('bottom', 'top');
-      this._anchorDragOffset.y -= this.padding() * 2;
-      this.update();
-      return;
+      this._anchorDragOffset.x -= offset.x;
+      this._anchorDragOffset.y -= offset.y;
+      newAttrs.height += this.padding() * 2;
+      if (!allowNegativeScale) {
+        this.update();
+        return;
+      }
     }
     this._nodes.forEach(node => {
       var oldRect = this.__getNodeShape(node, 0);

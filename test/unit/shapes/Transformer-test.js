@@ -1,4 +1,26 @@
 suite.only('Transformer', function() {
+  function isClose(a, b) {
+    return Math.abs(a - b) < 0.000001;
+  }
+
+  Konva.Transformer.prototype.simulateMouseDown = function(pos) {
+    this.getStage().simulateMouseDown(pos);
+  };
+
+  Konva.Transformer.prototype.simulateMouseMove = function(pos) {
+    var top = this.getStage().content.getBoundingClientRect().top;
+    this._handleMouseMove({
+      clientX: pos.x,
+      clientY: pos.y + top
+    });
+    this.getStage().simulateMouseMove(pos);
+  };
+
+  Konva.Transformer.prototype.simulateMouseUp = function(pos) {
+    this._handleMouseUp(pos);
+    this.getStage().simulateMouseUp(pos || { x: 1, y: 1 });
+  };
+
   // ======================================================
   test('init transformer on simple rectangle', function() {
     var stage = addStage();
@@ -196,7 +218,7 @@ suite.only('Transformer', function() {
     assert.equal(tr.rotation(), rect.rotation());
   });
 
-  test.skip('try to fit simple rectangle into negative scale', function() {
+  test('try to fit simple rectangle into negative scale', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -226,8 +248,6 @@ suite.only('Transformer', function() {
     };
 
     tr._fitNodesInto(box);
-
-    assert.deepEqual(box, tr.__getNodeRect());
 
     assert.equal(rect.x(), 100);
     assert.equal(rect.y(), 0);
@@ -939,14 +959,14 @@ suite.only('Transformer', function() {
     });
   });
 
-  test.only('can add padding', function() {
+  test('can add padding', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
 
     var rect = new Konva.Rect({
-      x: 100,
-      y: 60,
+      x: 30,
+      y: 30,
       draggable: true,
       width: 100,
       height: 100,
@@ -956,77 +976,36 @@ suite.only('Transformer', function() {
 
     var tr = new Konva.Transformer({
       node: rect,
-      padding: 50
-    });
-    layer.add(tr);
-
-    tr._fitNodesInto({
-      x: 20,
-      y: 20,
-      width: 100,
-      height: 100,
-      rotation: 0
-    });
-
-    layer.draw();
-
-    assert.equal(rect.x(), 20);
-    assert.equal(rect.y(), 20);
-    assert.equal(rect.width(), 120);
-    assert.equal(rect.height(), 120);
-  });
-
-  test.skip('test padding + keep ratio', function() {
-    var stage = addStage();
-    var layer = new Konva.Layer();
-    stage.add(layer);
-
-    var rect = new Konva.Rect({
-      x: 50,
-      y: 50,
-      width: 180,
-      height: 50,
-      fill: 'red',
-      draggable: true
-    });
-    layer.add(rect);
-
-    var tr = new Konva.Transformer({
-      node: rect,
-      padding: 40,
-      keepRatio: true
+      padding: 20
     });
     layer.add(tr);
     layer.draw();
 
     stage.simulateMouseDown({
-      x: 250,
-      y: 150
-    });
-    var top = stage.content.getBoundingClientRect().top;
-    tr._handleMouseMove({
-      target: tr.findOne('.bottom-right'),
-      clientX: 200,
-      clientY: 150 + top
+      x: 10,
+      y: 80
     });
 
-    // here is duplicate, because transformer is listening window events
+    var top = stage.content.getBoundingClientRect().top;
+    tr._handleMouseMove({
+      clientX: 60,
+      clientY: 80 + top
+    });
+
     tr._handleMouseUp({
       clientX: 200,
-      clientY: 150 + top
+      clientY: 150
     });
     stage.simulateMouseUp({
       x: 200,
       y: 150
     });
 
-    layer.draw();
-
-    assert.equal(rect.x(), 50);
-    assert.equal(rect.y(), 50);
+    assert.equal(rect.x(), 80);
+    assert.equal(rect.y(), 30);
     assert.equal(rect.width(), 100);
-    assert.equal(rect.height(), 50);
-    assert.equal(rect.scaleX(), 1);
+    assert.equal(rect.scaleX(), 0.5);
+    assert.equal(rect.height(), 100);
     assert.equal(rect.scaleY(), 1);
   });
 
@@ -1051,6 +1030,11 @@ suite.only('Transformer', function() {
     layer.add(tr);
     layer.draw();
 
+    // rect.on('transform', () => {
+    //   console.log(tr.getActiveAnchor(), tr._anchorDragOffset);
+    // });
+    // throw 1;
+
     var anchor = tr.findOne('.top-right');
     var pos = anchor.getAbsolutePosition();
 
@@ -1059,9 +1043,7 @@ suite.only('Transformer', function() {
       y: pos.y
     });
     var box = stage.content.getBoundingClientRect();
-    // debugger;
     tr._handleMouseMove({
-      target: anchor,
       clientX: box.left + pos.x - 100,
       clientY: box.top + pos.y + 100
     });
@@ -1080,14 +1062,36 @@ suite.only('Transformer', function() {
     assert.equal(rect.scaleY(), -1);
   });
 
-  test('can add padding with rotation', function() {
+  test.skip('visual test', function(done) {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    var src = 'assets/darth-vader.jpg';
+    Konva.Image.fromURL(src, function(image) {
+      image.setAttrs({
+        draggable: true,
+        scaleX: 0.5,
+        scaleY: 0.5
+      });
+      layer.add(image);
+      var tr = new Konva.Transformer({
+        node: image,
+        keepRatio: false
+      });
+      layer.add(tr);
+      layer.draw();
+      done();
+    });
+  });
+
+  test('switch scaling with padding - x', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
 
     var rect = new Konva.Rect({
-      x: 100,
-      y: 60,
+      x: 10,
+      y: 10,
       draggable: true,
       width: 100,
       height: 100,
@@ -1101,21 +1105,411 @@ suite.only('Transformer', function() {
     });
     layer.add(tr);
 
-    tr._fitNodesInto({
-      x: 120,
-      y: 0,
-      width: 120,
-      height: 120,
-      rotation: Konva.getAngle(90)
+    layer.draw();
+
+    tr.simulateMouseDown({
+      x: 0,
+      y: 60
     });
 
+    tr.simulateMouseMove({
+      x: 125,
+      y: 60
+    });
+
+    assert.equal(rect.x(), 115);
+    assert.equal(rect.y(), 10);
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.scaleX(), -0.05);
+    assert.equal(rect.height(), 100);
+    assert.equal(rect.rotation(), 0);
+
+    tr.simulateMouseMove({
+      x: 125,
+      y: 60
+    });
+
+    assert.equal(rect.x(), 115);
+    assert.equal(rect.y(), 10);
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.scaleX(), 0.05);
+    assert.equal(rect.height(), 100);
+    assert.equal(rect.scaleY(), -1);
+
+    // switch again
+    tr.simulateMouseMove({
+      x: 90,
+      y: 60
+    });
+
+    assert.equal(rect.x(), 100);
+    assert.equal(rect.y(), 10);
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.scaleY(), -1);
+    assert.equal(rect.scaleX() + 0.1 < 0.0001, true);
+    assert.equal(rect.height(), 100);
+
+    tr.simulateMouseUp();
+  });
+
+  test('switch scaling with padding - y', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 10,
+      y: 10,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect,
+      padding: 10
+    });
+    layer.add(tr);
+
     layer.draw();
+
+    tr.simulateMouseDown({
+      x: 60,
+      y: 0
+    });
+
+    tr.simulateMouseMove({
+      x: 60,
+      y: 125
+    });
+
+    assert.equal(rect.x(), 10);
+    assert.equal(rect.y(), 115);
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.scaleY(), -0.05);
+    assert.equal(rect.height(), 100);
+    assert.equal(rect.rotation(), 0);
+
+    tr.simulateMouseMove({
+      x: 60,
+      y: 125
+    });
+
+    assert.equal(rect.x(), 10);
+    assert.equal(rect.y(), 115);
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.scaleY(), -0.05);
+    assert.equal(rect.height(), 100);
+    assert.equal(rect.rotation(), 0);
+
+    // switch again
+    tr.simulateMouseMove({
+      x: 60,
+      y: 90
+    });
+
+    assert.equal(rect.x(), 10);
+    assert.equal(rect.y(), 100);
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.scaleX(), 1);
+    assert.equal(rect.scaleY(), 0.1);
+    assert.equal(rect.height(), 100);
+    assert.equal(rect.rotation(), 0);
+
+    tr.simulateMouseUp();
+  });
+
+  test('switch horizontal scaling with (top-left anchor)', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 0,
+      y: 0,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+
+    layer.draw();
+
+    tr.simulateMouseDown({
+      x: 0,
+      y: 0
+    });
+
+    tr.simulateMouseMove({
+      x: 150,
+      y: 50
+    });
+    layer.draw();
+
+    assert.equal(rect.x(), 150);
+    assert.equal(rect.y(), 50);
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.scaleX(), -0.5);
+    assert.equal(rect.height(), 100);
+    assert.equal(rect.rotation(), 0);
+
+    tr.simulateMouseMove({
+      x: 98,
+      y: 2.859375
+    });
+    tr.simulateMouseMove({
+      x: 98,
+      y: 2.859375
+    });
+    tr.simulateMouseMove({
+      x: 98,
+      y: 2.859375
+    });
+    tr.simulateMouseMove({
+      x: 100,
+      y: 2.859375
+    });
+    layer.draw();
+    tr.simulateMouseMove({
+      x: 101,
+      y: 2.859375
+    });
+    layer.draw();
+    tr.simulateMouseMove({
+      x: 101,
+      y: 2.859375
+    });
+    layer.draw();
+    tr.simulateMouseMove({
+      x: 101,
+      y: 2.859375
+    });
+    layer.draw();
+    tr.simulateMouseMove({
+      x: 102,
+      y: 2.859375
+    });
+    layer.draw();
+    // switch again
+    tr.simulateMouseMove({
+      x: 0,
+      y: 0
+    });
+
+    assert.equal(isClose(rect.x(), 0), true);
+    assert.equal(Math.round(rect.y()), 0);
+    assert.equal(rect.width(), 100);
+    assert.equal(Math.round(rect.scaleY()), -1);
+    assert.equal(Math.round(rect.scaleX()), -1);
+    assert.equal(rect.height(), 100);
+
+    tr.simulateMouseUp();
+  });
+
+  // TODO: doesn't work!!!
+  test.skip('switch vertical scaling with (top-left anchor)', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 0,
+      y: 0,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+
+    layer.draw();
+
+    tr.simulateMouseDown({
+      x: 0,
+      y: 0
+    });
+
+    tr.simulateMouseMove({
+      x: 0,
+      y: 200
+    });
+    layer.draw();
+
+    assert.equal(rect.x(), 0);
+    assert.equal(rect.y(), 200);
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.scaleX(), 1);
+    assert.equal(rect.height(), 100);
+    assert.equal(rect.rotation(), 0);
+
+    tr.simulateMouseMove({
+      x: 0,
+      y: 0
+    });
+    layer.draw();
+    tr.simulateMouseUp();
+
+    assert.equal(rect.x(), 0);
+    assert.equal(rect.y(), 100);
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.scaleX(), 1);
+    assert.equal(rect.height(), 100);
+    assert.equal(rect.rotation(), 0);
+    assert.equal(rect.scaleY(), -1);
+  });
+
+  test('switch scaling with padding for rotated - x', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 110,
+      y: 10,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+      rotation: 90
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect,
+      padding: 10
+    });
+    layer.add(tr);
+
+    layer.draw();
+
+    tr.simulateMouseDown({
+      x: 60,
+      y: 0
+    });
+
+    tr.simulateMouseMove({
+      x: 60,
+      y: 125
+    });
+
+    assert.equal(rect.x(), 110);
+    assert.equal(rect.y(), 115);
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.scaleX(), -0.05);
+    assert.equal(rect.height(), 100);
+    assert.equal(rect.rotation(), 90);
+
+    tr.simulateMouseMove({
+      x: 60,
+      y: 125
+    });
+
+    assert.equal(rect.x(), 110);
+    assert.equal(rect.y(), 115);
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.scaleX(), 0.05);
+    assert.equal(rect.height(), 100);
+    assert.equal(rect.scaleY(), -1);
+
+    // switch again
+    tr.simulateMouseMove({
+      x: 60,
+      y: 90
+    });
+
+    assert.equal(rect.x(), 110);
+    assert.equal(rect.y() - 120 < 0.001, true);
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.scaleX() + 0.1 < 0.0001, true);
+    assert.equal(rect.scaleY(), -1);
+
+    assert.equal(rect.height(), 100);
+
+    tr.simulateMouseUp();
+  });
+
+  test('switch scaling with padding for rotated - y', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 110,
+      y: 10,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+      rotation: 90
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect,
+      padding: 10
+    });
+    layer.add(tr);
+
+    layer.draw();
+
+    tr.simulateMouseDown({
+      x: 0,
+      y: 60
+    });
+
+    tr.simulateMouseMove({
+      x: 125,
+      y: 60
+    });
 
     assert.equal(rect.x(), 110);
     assert.equal(rect.y(), 10);
     assert.equal(rect.width(), 100);
+    assert.equal(rect.scaleX(), 1);
+    assert.equal(rect.scaleY(), -0.05);
     assert.equal(rect.height(), 100);
     assert.equal(rect.rotation(), 90);
+
+    tr.simulateMouseMove({
+      x: 125,
+      y: 60
+    });
+
+    assert.equal(rect.x(), 110);
+    assert.equal(rect.y(), 10);
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.scaleX(), 1);
+    assert.equal(rect.scaleY(), -0.05);
+    assert.equal(rect.height(), 100);
+    assert.equal(rect.rotation(), 90);
+
+    // switch again
+    tr.simulateMouseMove({
+      x: 90,
+      y: 60
+    });
+
+    assert.equal(rect.x(), 110);
+    assert.equal(rect.y() - 120 < 0.001, true);
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.scaleX(), 1);
+    assert.equal(rect.scaleY(), 0.1);
+    assert.equal(rect.height(), 100);
+
+    tr.simulateMouseUp();
   });
 
   test('transformer should automatically track attr changes of a node', function() {
@@ -1368,7 +1762,6 @@ suite.only('Transformer', function() {
     });
     var top = stage.content.getBoundingClientRect().top;
     tr._handleMouseMove({
-      target: rotater,
       clientX: pos.x + 100,
       clientY: pos.y - 100 + top
     });
@@ -1453,7 +1846,6 @@ suite.only('Transformer', function() {
     });
     var top = stage.content.getBoundingClientRect().top;
     tr._handleMouseMove({
-      target: target,
       clientX: 120,
       clientY: 100 + top
     });
@@ -1581,7 +1973,6 @@ suite.only('Transformer', function() {
 
     var top = stage.content.getBoundingClientRect().top;
     tr._handleMouseMove({
-      target: tr.findOne('.top-left'),
       clientX: 60,
       clientY: 60 + top
     });
@@ -1670,7 +2061,6 @@ suite.only('Transformer', function() {
 
     var top = stage.content.getBoundingClientRect().top;
     tr._handleMouseMove({
-      target: tr.findOne('.top-left'),
       clientX: 60,
       clientY: 60 + top
     });
@@ -1984,6 +2374,71 @@ suite.only('Transformer', function() {
     });
   });
 
+  test('centered scaling - no keep ratio', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      draggable: true,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect,
+      centeredScaling: true,
+      keepRatio: false
+    });
+    layer.add(tr);
+
+    tests.forEach(function(test) {
+      rect.setAttrs({
+        x: 0,
+        y: 0,
+        width: 100,
+        height: 100,
+        scaleX: 1,
+        scaleY: 1
+      });
+      tr.update();
+
+      layer.draw();
+
+      stage.simulateMouseDown(test.startPos);
+
+      var target = stage.getIntersection(test.startPos);
+      var top = stage.content.getBoundingClientRect().top;
+      tr._handleMouseMove({
+        target: target,
+        clientX: test.endPos.x,
+        clientY: test.endPos.y + top
+      });
+
+      // here is duplicate, because transformer is listening window events
+      tr._handleMouseUp({
+        clientX: test.endPos.x,
+        clientY: test.endPos.y + top
+      });
+      stage.simulateMouseUp({
+        x: test.endPos.x,
+        y: test.endPos.y
+      });
+      layer.draw();
+
+      assert.equal(
+        rect.width() * rect.scaleX(),
+        test.expectedWidth,
+        test.name + ' width check'
+      );
+      assert.equal(
+        rect.height() * rect.scaleY(),
+        test.expectedHeight,
+        test.name + ' height check'
+      );
+    });
+  });
+
   test('centered scaling', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -2048,7 +2503,7 @@ suite.only('Transformer', function() {
     });
   });
 
-  test.skip('centered scaling on flip', function() {
+  test.only('centered scaling on flip + keep ratio', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -2062,14 +2517,14 @@ suite.only('Transformer', function() {
     var tr = new Konva.Transformer({
       node: rect,
       centeredScaling: true,
-      keepRatio: false
+      keepRatio: true
     });
     layer.add(tr);
 
     rect.setAttrs({
       x: 0,
       y: 0,
-      width: 100,
+      width: 200,
       height: 100,
       scaleX: 1,
       scaleY: 1
@@ -2078,39 +2533,36 @@ suite.only('Transformer', function() {
 
     layer.draw();
 
-    // stage.simulateMouseDown({x: 0, y: 0});
+    tr.simulateMouseDown({
+      x: 0,
+      y: 0
+    });
+    tr.simulateMouseMove({
+      x: 200,
+      y: 0
+    });
+    assert.equal(isClose(rect.x(), 200), true);
+    assert.equal(isClose(rect.y(), 0), true);
+    assert.equal(rect.width(), 200);
+    assert.equal(Math.round(rect.scaleY()), 1);
+    assert.equal(Math.round(rect.scaleX()), -1);
+    assert.equal(rect.height(), 100);
 
-    var target = stage.getIntersection({ x: 0, y: 0 });
-    var top = stage.content.getBoundingClientRect().top;
-    throw 11;
-    debugger;
-    tr._handleMouseMove({
-      target: target,
-      clientX: 100,
-      clientY: 0 + top
+    tr.simulateMouseMove({
+      x: 200,
+      y: 0
     });
-    console.log(rect.width() * rect.scaleX());
-    tr._handleMouseMove({
-      target: target,
-      clientX: 100,
-      clientY: 0 + top
-    });
-    console.log(rect.width() * rect.scaleX());
-    // here is duplicate, because transformer is listening window events
-    tr._handleMouseUp({
-      clientX: 100,
-      clientY: 0 + top
-    });
-    stage.simulateMouseUp({
-      x: 100,
+    tr.simulateMouseUp({
+      x: 0,
       y: 0
     });
     layer.draw();
-
-    assert.equal(rect.width() * rect.scaleX(), -100);
-    assert.equal(rect.height() * rect.scaleY(), -100);
-
-    throw 1;
+    assert.equal(isClose(rect.x(), 200), true);
+    assert.equal(isClose(rect.y(), 0), true);
+    assert.equal(rect.width(), 200);
+    assert.equal(Math.round(rect.scaleY()), -1);
+    assert.equal(Math.round(rect.scaleX()), 1);
+    assert.equal(rect.height(), 100);
   });
 
   test('transform scaled (in one direction) node', function() {
@@ -2149,7 +2601,6 @@ suite.only('Transformer', function() {
     });
     var top = Math.round(stage.content.getBoundingClientRect().top);
     tr._handleMouseMove({
-      target: target,
       clientX: 100,
       clientY: 100 + top
     });
@@ -2800,7 +3251,6 @@ suite.only('Transformer', function() {
     });
     var top = stage.content.getBoundingClientRect().top;
     tr._handleMouseMove({
-      target: target,
       clientX: 100,
       clientY: 50 + top
     });

@@ -218,7 +218,7 @@ export abstract class BaseLayer extends Container<Group | Shape> {
     this.getContext()._context.imageSmoothingEnabled = this.imageSmoothingEnabled();
   }
   /**
-   * get/set width of layer.getter return width of stage. setter doing nothing.
+   * get/set width of layer. getter return width of stage. setter doing nothing.
    * if you want change width use `stage.width(value);`
    * @name Konva.BaseLayer#width
    * @method
@@ -302,10 +302,8 @@ BaseLayer.prototype.nodeType = 'BaseLayer';
  * // get imageSmoothingEnabled flag
  * var imageSmoothingEnabled = layer.imageSmoothingEnabled();
  *
- * // disable clear before draw
  * layer.imageSmoothingEnabled(false);
  *
- * // enable clear before draw
  * layer.imageSmoothingEnabled(true);
  */
 Factory.addGetterSetter(BaseLayer, 'imageSmoothingEnabled', true);
