@@ -389,8 +389,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       }),
       cachedFilterCanvas = new SceneCanvas({
         pixelRatio: pixelRatio,
-        width: width,
-        height: height
+        width: 0,
+        height: 0
       }),
       cachedHitCanvas = new HitCanvas({
         pixelRatio: 1,
@@ -408,7 +408,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (conf.imageSmoothingEnabled === false) {
       cachedSceneCanvas.getContext()._context.imageSmoothingEnabled = false;
       cachedFilterCanvas.getContext()._context.imageSmoothingEnabled = false;
-      cachedHitCanvas.getContext()._context.imageSmoothingEnabled = false;
     }
 
     sceneContext.save();
@@ -591,7 +590,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (filters) {
       if (!this._filterUpToDate) {
         var ratio = sceneCanvas.pixelRatio;
-
+        filterCanvas.setSize(
+          sceneCanvas.width / sceneCanvas.pixelRatio,
+          sceneCanvas.height / sceneCanvas.pixelRatio
+        );
         try {
           len = filters.length;
           filterContext.clear();

@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.2.2
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Apr 07 2020
+   * Date: Wed Apr 08 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2780,8 +2780,8 @@
               height: height
           }), cachedFilterCanvas = new SceneCanvas({
               pixelRatio: pixelRatio,
-              width: width,
-              height: height
+              width: 0,
+              height: 0
           }), cachedHitCanvas = new HitCanvas({
               pixelRatio: 1,
               width: width,
@@ -2793,7 +2793,6 @@
           if (conf.imageSmoothingEnabled === false) {
               cachedSceneCanvas.getContext()._context.imageSmoothingEnabled = false;
               cachedFilterCanvas.getContext()._context.imageSmoothingEnabled = false;
-              cachedHitCanvas.getContext()._context.imageSmoothingEnabled = false;
           }
           sceneContext.save();
           hitContext.save();
@@ -2930,6 +2929,7 @@
           if (filters) {
               if (!this._filterUpToDate) {
                   var ratio = sceneCanvas.pixelRatio;
+                  filterCanvas.setSize(sceneCanvas.width / sceneCanvas.pixelRatio, sceneCanvas.height / sceneCanvas.pixelRatio);
                   try {
                       len = filters.length;
                       filterContext.clear();

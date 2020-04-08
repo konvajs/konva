@@ -765,13 +765,13 @@ suite('Caching', function() {
 
     var circle = new Konva.Circle({
       radius: 52.2,
-      fill: 'red',
+      fill: 'red'
     });
     group.add(circle);
     group.cache();
 
     const canvas = group._cache.get('canvas').scene;
-    assert.equal(canvas.width, 105 * canvas.pixelRatio)
+    assert.equal(canvas.width, 105 * canvas.pixelRatio);
   });
 
   test('cache group with rectangle with fill and opacity', function() {
@@ -1249,6 +1249,37 @@ suite('Caching', function() {
     });
     assert.equal(circle.getAbsolutePosition().x, 110);
     assert.equal(circle.getAbsolutePosition().y, 110);
+  });
+
+  test('cached node should not have filter canvas until we have a filter', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer({});
+    stage.add(layer);
+
+    var circle = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 10,
+      fill: 'red',
+      draggable: true,
+      scaleX: 10,
+      scaleY: 10
+    });
+    layer.add(circle);
+    circle.cache();
+
+    console.log(circle._cache.get('canvas'));
+    assert.equal(circle._cache.get('canvas').filter.width, 0);
+    circle.filters([Konva.Filters.Blur]);
+    layer.draw();
+    assert.equal(
+      circle._cache.get('canvas').filter.width,
+      20 * circle._cache.get('canvas').filter.pixelRatio
+    );
+    circle.filters([]);
+    // TODO: should we clear cache canvas?
+    // assert.equal(circle._cache.get('canvas').filter.width, 0);
   });
 
   test('hit from cache + global composite', function(done) {

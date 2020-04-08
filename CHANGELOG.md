@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* new `Konva.Transformer`
+* Fix `imageSmoothEnabled` when stage is resized
+* Memory usage optimizations when a node is cached
+
 ## 4.2.2 - 2020-03-26
 
 * Fix hit stroke issues
