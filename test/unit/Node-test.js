@@ -1904,7 +1904,7 @@ suite('Node', function() {
       clicks.push('layer');
     });
     // fire event with bubbling
-    circle.fire('click', null, true);
+    circle.fire('click', undefined, true);
 
     //console.log(clicks);
 
@@ -2074,7 +2074,7 @@ suite('Node', function() {
       clicks.push('layer');
     });
 
-    circle.fire('click', null, true);
+    circle.fire('click', undefined, true);
 
     assert.equal(clicks[0], 'circle');
     assert.equal(clicks[1], 'layer');
@@ -2138,7 +2138,7 @@ suite('Node', function() {
       assert.equal(e.currentTarget, circle);
       fired = true;
     });
-    circle.fire('click', null, true);
+    circle.fire('click', undefined, true);
     assert.equal(fired, true);
   });
 
@@ -2169,7 +2169,7 @@ suite('Node', function() {
       assert.equal(e.currentTarget, group);
       fired = true;
     });
-    circle.fire('click', null, true);
+    circle.fire('click', undefined, true);
     assert.equal(fired, true);
   });
   // ======================================================

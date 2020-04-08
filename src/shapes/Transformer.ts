@@ -70,7 +70,9 @@ var TRANSFORM_CHANGE_STR = [
   'offsetXChange',
   'offsetYChange',
   'transformsEnabledChange',
-  'strokeWidthChange'
+  'strokeWidthChange',
+  // listen to cache changes
+  'clearCache'
 ]
   .map(e => e + `.${EVENTS_NAME}`)
   .join(' ');

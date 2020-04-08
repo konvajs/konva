@@ -267,6 +267,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    */
   _clearSelfAndDescendantCache(attr?: string) {
     this._clearCache(attr);
+    // trigger clear cache, so transformer can use it
+    this.fire('clearCache');
 
     // skip clearing if node is cached with canvas
     // for performance reasons !!!
@@ -1652,8 +1654,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // fire click event that bubbles
    * node.fire('click', null, true);
    */
-  fire(eventType, evt, bubble?) {
-    evt = evt || {};
+  fire(eventType, evt: any = {}, bubble?) {
     evt.target = evt.target || this;
     // bubble
     if (bubble) {

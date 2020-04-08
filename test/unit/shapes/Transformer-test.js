@@ -1083,6 +1083,7 @@ suite('Transformer', function() {
       });
       layer.add(tr);
       layer.draw();
+
       throw 1;
       done();
     });
@@ -1901,6 +1902,33 @@ suite('Transformer', function() {
       y: 1
     });
     assert.equal(stage.content.style.cursor, 'nwse-resize');
+  });
+
+  test('changing parent transform should recalculate transformer attrs', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 0,
+      y: 0,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+    layer.draw();
+
+    layer.scaleX(2);
+    layer.draw();
+
+    assert.equal(tr.width(), 200);
   });
 
   test.skip('check fit and correct cursor on rotated parent', function() {
@@ -3312,12 +3340,19 @@ suite('Transformer', function() {
       rotation: Konva.getAngle(90)
     });
 
-    assert.equal(tr.x(), rect1.x());
-    assert.equal(tr.y(), rect1.y());
-    assert.equal(tr.width(), rect1.width() + rect2.width());
-    assert.equal(tr.height(), rect1.height() + rect2.width());
-    assert.equal(tr.rotation(), 90);
     layer.draw();
+
+    assert.equal(rect1.x(), 100);
+    assert.equal(rect1.y(), 0);
+    assert.equal(rect1.width() + rect2.width(), 100);
+    assert.equal(rect1.height() + rect2.width(), 100);
+    assert.equal(rect1.rotation(), 90);
+
+    assert.equal(rect2.x(), 50);
+    assert.equal(rect2.y(), 50);
+    assert.equal(rect2.width() + rect2.width(), 100);
+    assert.equal(rect2.height() + rect2.width(), 100);
+    assert.equal(tr.rotation(), 90);
 
     tr._fitNodesInto({
       x: 100,

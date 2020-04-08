@@ -2684,6 +2684,8 @@
        */
       Node.prototype._clearSelfAndDescendantCache = function (attr) {
           this._clearCache(attr);
+          // trigger clear cache, so transformer can use it
+          this.fire('clearCache');
           // skip clearing if node is cached with canvas
           // for performance reasons !!!
           if (this.isCached()) {
@@ -3881,7 +3883,7 @@
        * node.fire('click', null, true);
        */
       Node.prototype.fire = function (eventType, evt, bubble) {
-          evt = evt || {};
+          if (evt === void 0) { evt = {}; }
           evt.target = evt.target || this;
           // bubble
           if (bubble) {
@@ -14681,7 +14683,9 @@
       'offsetXChange',
       'offsetYChange',
       'transformsEnabledChange',
-      'strokeWidthChange'
+      'strokeWidthChange',
+      // listen to cache changes
+      'clearCache'
   ]
       .map(function (e) { return e + ("." + EVENTS_NAME); })
       .join(' ');
