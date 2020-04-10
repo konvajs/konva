@@ -70,9 +70,7 @@ var TRANSFORM_CHANGE_STR = [
   'offsetXChange',
   'offsetYChange',
   'transformsEnabledChange',
-  'strokeWidthChange',
-  // listen to cache changes
-  'clearCache'
+  'strokeWidthChange'
 ]
   .map(e => e + `.${EVENTS_NAME}`)
   .join(' ');
@@ -401,9 +399,6 @@ export class Transformer extends Group {
   }
 
   drawScene(can?, top?, caching?) {
-    if (!this._cache.get(NODES_RECT)) {
-      this.update();
-    }
     return super.drawScene(can, top, caching);
   }
   // _attachTo(node) => {
@@ -432,9 +427,10 @@ export class Transformer extends Group {
       };
       node.on(additionalEvents, onChange);
       node.on(TRANSFORM_CHANGE_STR, onChange);
-      node.on(`xChange.${EVENTS_NAME} yChange.${EVENTS_NAME}`, () => {
+      node.on(`clearCache.${EVENTS_NAME}`, () => {
         this._resetTransformCache();
       });
+      node.on(`xChange.${EVENTS_NAME} yChange.${EVENTS_NAME}`, onChange);
     });
     this._resetTransformCache();
     // we may need it if we set node in initial props
@@ -869,7 +865,7 @@ export class Transformer extends Group {
             : 1;
 
         var reverseY =
-          this.findOne('.bottom-right').y() < this.findOne('.top-left').y()
+          this.findOne('.bottom-left').y() < this.findOne('.top-right').y()
             ? -1
             : 1;
 
@@ -1198,15 +1194,6 @@ export class Transformer extends Group {
   update() {
     var attrs = this._getNodeRect();
     this.rotation(Util._getRotation(attrs.rotation));
-    var node = this.getNode();
-    var scale = { x: 1, y: 1 };
-    // if (node && node.getParent()) {
-    //   scale = node.getParent().getAbsoluteScale();
-    // }
-    var invertedScale = {
-      x: 1 / scale.x,
-      y: 1 / scale.y
-    };
     var width = attrs.width;
     var height = attrs.height;
 
@@ -1233,14 +1220,12 @@ export class Transformer extends Group {
       y: 0,
       offsetX: anchorSize / 2 + padding,
       offsetY: anchorSize / 2 + padding,
-      scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('top-left') >= 0
     });
     this.findOne('.top-center').setAttrs({
       x: width / 2,
       y: 0,
       offsetY: anchorSize / 2 + padding,
-      scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('top-center') >= 0
     });
     this.findOne('.top-right').setAttrs({
@@ -1248,21 +1233,18 @@ export class Transformer extends Group {
       y: 0,
       offsetX: anchorSize / 2 - padding,
       offsetY: anchorSize / 2 + padding,
-      scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('top-right') >= 0
     });
     this.findOne('.middle-left').setAttrs({
       x: 0,
       y: height / 2,
       offsetX: anchorSize / 2 + padding,
-      scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('middle-left') >= 0
     });
     this.findOne('.middle-right').setAttrs({
       x: width,
       y: height / 2,
       offsetX: anchorSize / 2 - padding,
-      scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('middle-right') >= 0
     });
     this.findOne('.bottom-left').setAttrs({
@@ -1270,14 +1252,12 @@ export class Transformer extends Group {
       y: height,
       offsetX: anchorSize / 2 + padding,
       offsetY: anchorSize / 2 - padding,
-      scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('bottom-left') >= 0
     });
     this.findOne('.bottom-center').setAttrs({
       x: width / 2,
       y: height,
       offsetY: anchorSize / 2 - padding,
-      scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('bottom-center') >= 0
     });
     this.findOne('.bottom-right').setAttrs({
@@ -1285,23 +1265,18 @@ export class Transformer extends Group {
       y: height,
       offsetX: anchorSize / 2 - padding,
       offsetY: anchorSize / 2 - padding,
-      scale: invertedScale,
       visible: resizeEnabled && enabledAnchors.indexOf('bottom-right') >= 0
     });
 
-    var scaledRotateAnchorOffset =
-      -this.rotateAnchorOffset() * Math.abs(invertedScale.y);
     this.findOne('.rotater').setAttrs({
       x: width / 2,
-      y: scaledRotateAnchorOffset * Util._sign(height) - padding,
-      scale: invertedScale,
+      y: -this.rotateAnchorOffset() * Util._sign(height) - padding,
       visible: this.rotateEnabled()
     });
 
     this.findOne('.back').setAttrs({
-      width: width * scale.x,
-      height: height * scale.y,
-      scale: invertedScale,
+      width: width,
+      height: height,
       visible: this.borderEnabled(),
       stroke: this.borderStroke(),
       strokeWidth: this.borderStrokeWidth(),

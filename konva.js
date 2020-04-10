@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.2.2
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Wed Apr 08 2020
+   * Date: Fri Apr 10 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2682,10 +2682,12 @@
        * when the logic for a cached result depends on ancestor propagation, use this
        * method to clear self and children cache
        */
-      Node.prototype._clearSelfAndDescendantCache = function (attr) {
+      Node.prototype._clearSelfAndDescendantCache = function (attr, forceEvent) {
           this._clearCache(attr);
           // trigger clear cache, so transformer can use it
-          this.fire('clearCache');
+          if (forceEvent) {
+              this.fire('clearCache');
+          }
           // skip clearing if node is cached with canvas
           // for performance reasons !!!
           if (this.isCached()) {
@@ -2693,7 +2695,7 @@
           }
           if (this.children) {
               this.children.each(function (node) {
-                  node._clearSelfAndDescendantCache(attr);
+                  node._clearSelfAndDescendantCache(attr, true);
               });
           }
       };
@@ -3474,8 +3476,8 @@
               x: this.attrs.x + it.getTranslation().x,
               y: this.attrs.y + it.getTranslation().y
           };
-          this.setPosition({ x: pos.x, y: pos.y });
           this._setTransform(origTrans);
+          this.setPosition({ x: pos.x, y: pos.y });
           return this;
       };
       Node.prototype._setTransform = function (trans) {
@@ -14683,9 +14685,7 @@
       'offsetXChange',
       'offsetYChange',
       'transformsEnabledChange',
-      'strokeWidthChange',
-      // listen to cache changes
-      'clearCache'
+      'strokeWidthChange'
   ]
       .map(function (e) { return e + ("." + EVENTS_NAME); })
       .join(' ');
@@ -14966,9 +14966,6 @@
           return this._nodes && this._nodes[0];
       };
       Transformer.prototype.drawScene = function (can, top, caching) {
-          if (!this._cache.get(NODES_RECT)) {
-              this.update();
-          }
           return _super.prototype.drawScene.call(this, can, top, caching);
       };
       // _attachTo(node) => {
@@ -14998,9 +14995,10 @@
               };
               node.on(additionalEvents, onChange);
               node.on(TRANSFORM_CHANGE_STR$1, onChange);
-              node.on("xChange." + EVENTS_NAME + " yChange." + EVENTS_NAME, function () {
+              node.on("clearCache." + EVENTS_NAME, function () {
                   _this._resetTransformCache();
               });
+              node.on("xChange." + EVENTS_NAME + " yChange." + EVENTS_NAME, onChange);
           });
           this._resetTransformCache();
           // we may need it if we set node in initial props
@@ -15340,7 +15338,7 @@
                   var reverseX = this.findOne('.top-right').x() < this.findOne('.bottom-left').x()
                       ? -1
                       : 1;
-                  var reverseY = this.findOne('.bottom-right').y() < this.findOne('.top-left').y()
+                  var reverseY = this.findOne('.bottom-left').y() < this.findOne('.top-right').y()
                       ? -1
                       : 1;
                   x = newHypotenuse * this.cos * reverseX;
@@ -15600,15 +15598,6 @@
           var _this = this;
           var attrs = this._getNodeRect();
           this.rotation(Util._getRotation(attrs.rotation));
-          var node = this.getNode();
-          var scale = { x: 1, y: 1 };
-          // if (node && node.getParent()) {
-          //   scale = node.getParent().getAbsoluteScale();
-          // }
-          var invertedScale = {
-              x: 1 / scale.x,
-              y: 1 / scale.y
-          };
           var width = attrs.width;
           var height = attrs.height;
           var enabledAnchors = this.enabledAnchors();
@@ -15632,14 +15621,12 @@
               y: 0,
               offsetX: anchorSize / 2 + padding,
               offsetY: anchorSize / 2 + padding,
-              scale: invertedScale,
               visible: resizeEnabled && enabledAnchors.indexOf('top-left') >= 0
           });
           this.findOne('.top-center').setAttrs({
               x: width / 2,
               y: 0,
               offsetY: anchorSize / 2 + padding,
-              scale: invertedScale,
               visible: resizeEnabled && enabledAnchors.indexOf('top-center') >= 0
           });
           this.findOne('.top-right').setAttrs({
@@ -15647,21 +15634,18 @@
               y: 0,
               offsetX: anchorSize / 2 - padding,
               offsetY: anchorSize / 2 + padding,
-              scale: invertedScale,
               visible: resizeEnabled && enabledAnchors.indexOf('top-right') >= 0
           });
           this.findOne('.middle-left').setAttrs({
               x: 0,
               y: height / 2,
               offsetX: anchorSize / 2 + padding,
-              scale: invertedScale,
               visible: resizeEnabled && enabledAnchors.indexOf('middle-left') >= 0
           });
           this.findOne('.middle-right').setAttrs({
               x: width,
               y: height / 2,
               offsetX: anchorSize / 2 - padding,
-              scale: invertedScale,
               visible: resizeEnabled && enabledAnchors.indexOf('middle-right') >= 0
           });
           this.findOne('.bottom-left').setAttrs({
@@ -15669,14 +15653,12 @@
               y: height,
               offsetX: anchorSize / 2 + padding,
               offsetY: anchorSize / 2 - padding,
-              scale: invertedScale,
               visible: resizeEnabled && enabledAnchors.indexOf('bottom-left') >= 0
           });
           this.findOne('.bottom-center').setAttrs({
               x: width / 2,
               y: height,
               offsetY: anchorSize / 2 - padding,
-              scale: invertedScale,
               visible: resizeEnabled && enabledAnchors.indexOf('bottom-center') >= 0
           });
           this.findOne('.bottom-right').setAttrs({
@@ -15684,20 +15666,16 @@
               y: height,
               offsetX: anchorSize / 2 - padding,
               offsetY: anchorSize / 2 - padding,
-              scale: invertedScale,
               visible: resizeEnabled && enabledAnchors.indexOf('bottom-right') >= 0
           });
-          var scaledRotateAnchorOffset = -this.rotateAnchorOffset() * Math.abs(invertedScale.y);
           this.findOne('.rotater').setAttrs({
               x: width / 2,
-              y: scaledRotateAnchorOffset * Util._sign(height) - padding,
-              scale: invertedScale,
+              y: -this.rotateAnchorOffset() * Util._sign(height) - padding,
               visible: this.rotateEnabled()
           });
           this.findOne('.back').setAttrs({
-              width: width * scale.x,
-              height: height * scale.y,
-              scale: invertedScale,
+              width: width,
+              height: height,
               visible: this.borderEnabled(),
               stroke: this.borderStroke(),
               strokeWidth: this.borderStrokeWidth(),

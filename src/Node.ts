@@ -265,10 +265,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * when the logic for a cached result depends on ancestor propagation, use this
    * method to clear self and children cache
    */
-  _clearSelfAndDescendantCache(attr?: string) {
+  _clearSelfAndDescendantCache(attr?: string, forceEvent?: boolean) {
     this._clearCache(attr);
     // trigger clear cache, so transformer can use it
-    this.fire('clearCache');
+    if (forceEvent) {
+      this.fire('clearCache');
+    }
 
     // skip clearing if node is cached with canvas
     // for performance reasons !!!
@@ -277,7 +279,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
     if (this.children) {
       this.children.each(function(node) {
-        node._clearSelfAndDescendantCache(attr);
+        node._clearSelfAndDescendantCache(attr, true);
       });
     }
   }
@@ -1208,8 +1210,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       y: this.attrs.y + it.getTranslation().y
     };
 
-    this.setPosition({ x: pos.x, y: pos.y });
     this._setTransform(origTrans);
+    this.setPosition({ x: pos.x, y: pos.y });
 
     return this;
   }

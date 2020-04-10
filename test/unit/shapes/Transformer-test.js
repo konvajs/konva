@@ -1319,8 +1319,7 @@ suite('Transformer', function() {
     tr.simulateMouseUp();
   });
 
-  // TODO: doesn't work!!!
-  test.skip('switch vertical scaling with (top-left anchor)', function() {
+  test('switch vertical scaling with (top-left anchor)', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -1368,12 +1367,12 @@ suite('Transformer', function() {
     tr.simulateMouseUp();
 
     assert.equal(rect.x(), 0);
-    assert.equal(rect.y(), 100);
+    assert.equal(rect.y(), 0);
     assert.equal(rect.width(), 100);
     assert.equal(rect.scaleX(), 1);
     assert.equal(rect.height(), 100);
     assert.equal(rect.rotation(), 0);
-    assert.equal(rect.scaleY(), -1);
+    assert.equal(rect.scaleY(), 1);
   });
 
   test('switch scaling with padding for rotated - x', function() {
@@ -1705,38 +1704,7 @@ suite('Transformer', function() {
     });
   });
 
-  test.skip('on negative scaleY should move rotater', function() {
-    var stage = addStage();
-    var layer = new Konva.Layer();
-    stage.add(layer);
-
-    var rect = new Konva.Rect({
-      x: 50,
-      y: 160,
-      draggable: true,
-      width: 100,
-      height: 100,
-      fill: 'yellow',
-      scaleY: -1
-    });
-    layer.add(rect);
-
-    var tr = new Konva.Transformer({
-      node: rect
-    });
-    layer.add(tr);
-    layer.draw();
-
-    var rotater = tr.findOne('.rotater');
-    var pos = rotater.getAbsolutePosition();
-
-    assert.equal(pos.x, 100);
-
-    assert.equal(pos.y, 210);
-  });
-
-  // TODO: why it doesn't work?
-  test.skip('try rotated scaled rect', function() {
+  test('try rotate scaled rect', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -1761,27 +1729,20 @@ suite('Transformer', function() {
     var rotater = tr.findOne('.rotater');
     var pos = rotater.getAbsolutePosition();
 
-    stage.simulateMouseDown({
+    tr.simulateMouseDown({
       x: pos.x,
       y: pos.y
     });
-    var top = stage.content.getBoundingClientRect().top;
-    tr._handleMouseMove({
-      clientX: pos.x + 100,
-      clientY: pos.y - 100 + top
+    tr.simulateMouseMove({
+      x: pos.x + 100,
+      y: pos.y + 100
+    });
+    tr.simulateMouseUp({
+      x: pos.x + 100,
+      y: pos.y + 100
     });
 
-    // here is duplicate, because transformer is listening window events
-    tr._handleMouseUp({
-      clientX: pos.x + 100,
-      clientY: pos.y - 100 + top
-    });
-    stage.simulateMouseUp({
-      x: 100,
-      y: 100
-    });
-
-    assert.equal(rect.rotation(), -90);
+    assert.equal(rect.rotation(), 90);
   });
 
   test('check correct cursor on scaled shape', function() {
@@ -1926,12 +1887,13 @@ suite('Transformer', function() {
     layer.draw();
 
     layer.scaleX(2);
-    layer.draw();
 
     assert.equal(tr.width(), 200);
+
+    layer.draw();
   });
 
-  test.skip('check fit and correct cursor on rotated parent', function() {
+  test('check fit and correct cursor on rotated parent', function() {
     var stage = addStage();
     var layer = new Konva.Layer({
       x: 100,
@@ -1975,6 +1937,51 @@ suite('Transformer', function() {
       y: 1
     });
     assert.equal(stage.content.style.cursor, 'ew-resize');
+  });
+
+  test('check drag with transformer', function() {
+    var stage = addStage();
+    stage.draggable(true);
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 0,
+      y: 0,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+    layer.draw();
+
+    stage.simulateMouseDown({
+      x: 50,
+      y: 50
+    });
+
+    stage.simulateMouseMove({
+      x: 55,
+      y: 50
+    });
+    stage.simulateMouseMove({
+      x: 60,
+      y: 50
+    });
+
+    stage.simulateMouseUp({
+      x: 60,
+      y: 50
+    });
+
+    assert.equal(rect.x(), 10);
+    assert.equal(rect.y(), 0);
   });
 
   test('stopTransform method', function() {
@@ -2535,6 +2542,7 @@ suite('Transformer', function() {
     });
   });
 
+  // TODO: fix it!!!
   test.skip('centered scaling on flip + keep ratio', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
