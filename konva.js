@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v4.2.2
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Fri Apr 10 2020
+   * Date: Mon Apr 13 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -14866,6 +14866,18 @@
       var updated = transformShape(shape, oldSelection, newSelection);
       return rotateAroundPoint(updated, newSelection.rotation - oldSelection.rotation, newSelection);
   }
+  function getSnap(snaps, newRotationRad, tol) {
+      var snapped = newRotationRad;
+      for (var i = 0; i < snaps.length; i++) {
+          var angle = Konva.getAngle(snaps[i]);
+          var absDiff = Math.abs(angle - newRotationRad) % (Math.PI * 2);
+          var dif = Math.min(absDiff, Math.PI * 2 - absDiff);
+          if (dif < tol) {
+              snapped = angle;
+          }
+      }
+      return snapped;
+  }
   /**
    * Transformer constructor.  Transformer is a special type of group that allow you transform Konva
    * primitives and shapes. Transforming tool is not changing `width` and `height` properties of nodes
@@ -15057,7 +15069,8 @@
           var absPos = node.getAbsolutePosition();
           var dx = rect.x * absScale.x - node.offsetX() * absScale.x;
           var dy = rect.y * absScale.y - node.offsetY() * absScale.y;
-          var rotation = Konva.getAngle(node.getAbsoluteRotation());
+          var rotation = (Konva.getAngle(node.getAbsoluteRotation()) + Math.PI * 2) %
+              (Math.PI * 2);
           var box = {
               x: absPos.x + dx * Math.cos(rotation) + dy * Math.sin(-rotation),
               y: absPos.y + dy * Math.cos(rotation) + dx * Math.sin(rotation),
@@ -15235,7 +15248,27 @@
           if (oldAbs.x === newAbs.x && oldAbs.y === newAbs.y) {
               return;
           }
-          var centeredScaling = this.centeredScaling() || e.altKey;
+          // rotater is working very differently, so do it first
+          if (this._movingAnchorName === 'rotater') {
+              var attrs = this._getNodeRect();
+              x = anchorNode.x() - attrs.width / 2;
+              y = -anchorNode.y() + attrs.height / 2;
+              // hor angle is changed?
+              var delta = Math.atan2(-y, x) + Math.PI / 2;
+              if (attrs.height < 0) {
+                  delta -= Math.PI;
+              }
+              var oldRotation = Konva.getAngle(this.rotation());
+              var newRotation = oldRotation + delta;
+              var tol = Konva.getAngle(this.rotationSnapTolerance());
+              var snappedRot = getSnap(this.rotationSnaps(), newRotation, tol);
+              var diff = snappedRot - attrs.rotation;
+              var shape = rotateAroundCenter(attrs, diff);
+              this._fitNodesInto(shape, e);
+              return;
+          }
+          var padding = 0;
+          // var centeredScaling = this.centeredScaling() || e.altKey;
           // if (centeredScaling && this._movingAnchorName.indexOf('left') >= 0) {
           //   var topLeft = this.findOne('.top-left');
           //   var bottomRight = this.findOne('.bottom-right');
@@ -15244,8 +15277,8 @@
           //   var bottomOffsetX = this.getWidth() - bottomRight.x() + padding;
           //   var bottomOffsetY = this.getHeight() - bottomRight.y() + padding;
           //   bottomRight.move({
-          //     x: -anchorNode.x(),
-          //     y: -anchorNode.y()
+          //     x: -topOffsetX,
+          //     y: -topOffsetY
           //   });
           //   topLeft.move({
           //     x: bottomOffsetX,
@@ -15253,7 +15286,6 @@
           //   });
           // }
           var keepProportion = this.keepRatio() || e.shiftKey;
-          var padding = 0;
           if (this._movingAnchorName === 'top-left') {
               // if (centeredScaling) {
               //   this.findOne('.bottom-right').move({
@@ -15286,6 +15318,20 @@
               this.findOne('.top-left').y(anchorNode.y());
           }
           else if (this._movingAnchorName === 'top-right') {
+              // if (centeredScaling) {
+              //   // this.findOne('.bottom-left').move({
+              //   //   x: -(anchorNode.x() - this.width()),
+              //   //   y: -anchorNode.y()
+              //   // });
+              //   // this.findOne('.top-left').move({
+              //   //   x: -(anchorNode.x() - this.width()),
+              //   //   y: anchorNode.y()
+              //   // });
+              //   // this.findOne('.bottom-right').move({
+              //   //   x: -(anchorNode.x() - this.width()),
+              //   //   y: anchorNode.y()
+              //   // });
+              // }
               // var center = getCenter({
               //   x
               // })
@@ -15381,32 +15427,6 @@
                   this.findOne('.bottom-right').y(y + padding);
               }
           }
-          else if (this._movingAnchorName === 'rotater') {
-              var attrs = this._getNodeRect();
-              x = anchorNode.x() - attrs.width / 2;
-              y = -anchorNode.y() + attrs.height / 2;
-              var dAlpha = Math.atan2(-y, x) + Math.PI / 2;
-              if (attrs.height < 0) {
-                  dAlpha -= Math.PI;
-              }
-              var rot = Konva.getAngle(this.rotation());
-              var newRotation = Util._radToDeg(rot) + Util._radToDeg(dAlpha);
-              var alpha = Konva.getAngle(this.getNode().rotation());
-              var newAlpha = Util._degToRad(newRotation);
-              var snaps = this.rotationSnaps();
-              var offset = Konva.getAngle(this.rotationSnapTolerance());
-              for (var i = 0; i < snaps.length; i++) {
-                  var angle = Konva.getAngle(snaps[i]);
-                  var dif = Math.abs(angle - Util._degToRad(newRotation)) % (Math.PI * 2);
-                  if (dif < offset) {
-                      newRotation = Util._radToDeg(angle);
-                      newAlpha = angle;
-                  }
-              }
-              var delta = newAlpha - attrs.rotation;
-              var shape = rotateAroundCenter(attrs, delta);
-              this._fitNodesInto(shape, e);
-          }
           else {
               console.error(new Error('Wrong position argument of selection resizer: ' +
                   this._movingAnchorName));
@@ -15422,6 +15442,9 @@
               var topOffsetY = topLeft.y() + padding;
               var bottomOffsetX = this.getWidth() - bottomRight.x() + padding;
               var bottomOffsetY = this.getHeight() - bottomRight.y() + padding;
+              if (Math.abs(topOffsetY) > 10) {
+                  debugger;
+              }
               bottomRight.move({
                   x: -topOffsetX,
                   y: -topOffsetY

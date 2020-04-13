@@ -288,6 +288,21 @@ function transformAndRotateShape(
   );
 }
 
+function getSnap(snaps: Array<number>, newRotationRad: number, tol: number) {
+  let snapped = newRotationRad;
+  for (let i = 0; i < snaps.length; i++) {
+    const angle = Konva.getAngle(snaps[i]);
+
+    const absDiff = Math.abs(angle - newRotationRad) % (Math.PI * 2);
+    const dif = Math.min(absDiff, Math.PI * 2 - absDiff);
+
+    if (dif < tol) {
+      snapped = angle;
+    }
+  }
+  return snapped;
+}
+
 /**
  * Transformer constructor.  Transformer is a special type of group that allow you transform Konva
  * primitives and shapes. Transforming tool is not changing `width` and `height` properties of nodes
@@ -493,7 +508,9 @@ export class Transformer extends Group {
     var dx = rect.x * absScale.x - node.offsetX() * absScale.x;
     var dy = rect.y * absScale.y - node.offsetY() * absScale.y;
 
-    const rotation = Konva.getAngle(node.getAbsoluteRotation());
+    const rotation =
+      (Konva.getAngle(node.getAbsoluteRotation()) + Math.PI * 2) %
+      (Math.PI * 2);
 
     const box = {
       x: absPos.x + dx * Math.cos(rotation) + dy * Math.sin(-rotation),
@@ -699,7 +716,34 @@ export class Transformer extends Group {
       return;
     }
 
-    var centeredScaling = this.centeredScaling() || e.altKey;
+    // rotater is working very differently, so do it first
+    if (this._movingAnchorName === 'rotater') {
+      var attrs = this._getNodeRect();
+      x = anchorNode.x() - attrs.width / 2;
+      y = -anchorNode.y() + attrs.height / 2;
+
+      // hor angle is changed?
+      let delta = Math.atan2(-y, x) + Math.PI / 2;
+
+      if (attrs.height < 0) {
+        delta -= Math.PI;
+      }
+
+      var oldRotation = Konva.getAngle(this.rotation());
+      const newRotation = oldRotation + delta;
+
+      const tol = Konva.getAngle(this.rotationSnapTolerance());
+      const snappedRot = getSnap(this.rotationSnaps(), newRotation, tol);
+
+      const diff = snappedRot - attrs.rotation;
+
+      const shape = rotateAroundCenter(attrs, diff);
+      this._fitNodesInto(shape, e);
+      return;
+    }
+
+    var padding = 0;
+    // var centeredScaling = this.centeredScaling() || e.altKey;
     // if (centeredScaling && this._movingAnchorName.indexOf('left') >= 0) {
     //   var topLeft = this.findOne('.top-left');
     //   var bottomRight = this.findOne('.bottom-right');
@@ -710,8 +754,8 @@ export class Transformer extends Group {
     //   var bottomOffsetY = this.getHeight() - bottomRight.y() + padding;
 
     //   bottomRight.move({
-    //     x: -anchorNode.x(),
-    //     y: -anchorNode.y()
+    //     x: -topOffsetX,
+    //     y: -topOffsetY
     //   });
 
     //   topLeft.move({
@@ -721,8 +765,6 @@ export class Transformer extends Group {
     // }
 
     var keepProportion = this.keepRatio() || e.shiftKey;
-
-    var padding = 0;
 
     if (this._movingAnchorName === 'top-left') {
       // if (centeredScaling) {
@@ -773,20 +815,20 @@ export class Transformer extends Group {
       // }
       this.findOne('.top-left').y(anchorNode.y());
     } else if (this._movingAnchorName === 'top-right') {
-      if (centeredScaling) {
-        // this.findOne('.bottom-left').move({
-        //   x: -(anchorNode.x() - this.width()),
-        //   y: -anchorNode.y()
-        // });
-        // this.findOne('.top-left').move({
-        //   x: -(anchorNode.x() - this.width()),
-        //   y: anchorNode.y()
-        // });
-        // this.findOne('.bottom-right').move({
-        //   x: -(anchorNode.x() - this.width()),
-        //   y: anchorNode.y()
-        // });
-      }
+      // if (centeredScaling) {
+      //   // this.findOne('.bottom-left').move({
+      //   //   x: -(anchorNode.x() - this.width()),
+      //   //   y: -anchorNode.y()
+      //   // });
+      //   // this.findOne('.top-left').move({
+      //   //   x: -(anchorNode.x() - this.width()),
+      //   //   y: anchorNode.y()
+      //   // });
+      //   // this.findOne('.bottom-right').move({
+      //   //   x: -(anchorNode.x() - this.width()),
+      //   //   y: anchorNode.y()
+      //   // });
+      // }
 
       // var center = getCenter({
       //   x
@@ -920,44 +962,6 @@ export class Transformer extends Group {
         this.findOne('.bottom-right').x(x + padding);
         this.findOne('.bottom-right').y(y + padding);
       }
-    } else if (this._movingAnchorName === 'rotater') {
-      var attrs = this._getNodeRect();
-      x = anchorNode.x() - attrs.width / 2;
-      y = -anchorNode.y() + attrs.height / 2;
-
-      var dAlpha = Math.atan2(-y, x) + Math.PI / 2;
-
-      if (attrs.height < 0) {
-        dAlpha -= Math.PI;
-      }
-
-      var rot = Konva.getAngle(this.rotation());
-
-      var newRotation = Util._radToDeg(rot) + Util._radToDeg(dAlpha);
-
-      var alpha = Konva.getAngle(this.getNode().rotation());
-      var newAlpha = Util._degToRad(newRotation);
-
-      var snaps = this.rotationSnaps();
-      var offset = Konva.getAngle(this.rotationSnapTolerance());
-      for (var i = 0; i < snaps.length; i++) {
-        var angle = Konva.getAngle(snaps[i]);
-
-        var dif = Math.abs(angle - Util._degToRad(newRotation)) % (Math.PI * 2);
-
-        if (dif < offset) {
-          newRotation = Util._radToDeg(angle);
-          newAlpha = angle;
-        }
-      }
-      const delta = newAlpha - attrs.rotation;
-
-      var dx = padding;
-      var dy = padding;
-
-      const shape = rotateAroundCenter(attrs, delta);
-
-      this._fitNodesInto(shape, e);
     } else {
       console.error(
         new Error(
@@ -981,6 +985,9 @@ export class Transformer extends Group {
       var bottomOffsetX = this.getWidth() - bottomRight.x() + padding;
       var bottomOffsetY = this.getHeight() - bottomRight.y() + padding;
 
+      if (Math.abs(topOffsetY) > 10) {
+        debugger;
+      }
       bottomRight.move({
         x: -topOffsetX,
         y: -topOffsetY
