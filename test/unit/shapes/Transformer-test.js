@@ -21,6 +21,12 @@ suite('Transformer', function() {
     this.getStage().simulateMouseUp(pos || { x: 1, y: 1 });
   };
 
+  assert.almostEqual = function(val1, val2) {
+    if (!isClose(val1, val2)) {
+      throw new Error('Expected ' + val1 + ' to be almost equal to ' + val2);
+    }
+  };
+
   // ======================================================
   test('init transformer on simple rectangle', function() {
     var stage = addStage();
@@ -38,7 +44,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
 
@@ -96,56 +102,6 @@ suite('Transformer', function() {
     assert.equal(tr.rotation(), 0);
   });
 
-  test('try it on a parent of parent', function() {
-    var callCount = 0;
-    var oldWarn = Konva.Util.warn;
-    Konva.Util.warn = function() {
-      callCount += 1;
-    };
-
-    var stage = addStage();
-    var layer = new Konva.Layer();
-    stage.add(layer);
-
-    var group = new Konva.Group({
-      x: 50,
-      y: 50
-    });
-    layer.add(group);
-
-    var rect = new Konva.Rect({
-      x: 50,
-      y: 50,
-      draggable: true,
-      width: 100,
-      height: 100,
-      fill: 'yellow'
-    });
-    group.add(rect);
-
-    var tr = new Konva.Transformer({
-      node: rect
-    });
-    layer.add(tr);
-
-    rect.width(120);
-    layer.draw();
-
-    assert.equal(callCount, 1);
-    Konva.Util.warn = oldWarn;
-
-    // assert.equal(tr.x(), rect.x() + group.x());
-    // assert.equal(tr.y(), rect.y() + group.y());
-    // assert.equal(tr.width(), rect.width());
-    // assert.equal(tr.height(), rect.height());
-
-    // // manual check of correct position of node
-    // var handler = tr.findOne('.bottom-right');
-    // var pos = handler.getAbsolutePosition();
-    // assert.equal(pos.x, rect.x() + rect.width());
-    // assert.equal(pos.y, rect.y() + rect.height());
-  });
-
   test('try set/get node', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -170,15 +126,15 @@ suite('Transformer', function() {
     layer.add(circle);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
 
     layer.draw();
-    assert.equal(tr.node(), rect);
+    assert.equal(tr.nodes()[0], rect);
 
-    tr.attachTo(circle);
-    assert.equal(tr.node(), circle);
+    tr.nodes([circle]);
+    assert.equal(tr.nodes()[0], circle);
     layer.draw();
   });
 
@@ -199,7 +155,7 @@ suite('Transformer', function() {
 
     var tr = new Konva.Transformer();
     layer.add(tr);
-    tr.attachTo(rect);
+    tr.nodes([rect]);
 
     layer.draw();
 
@@ -235,7 +191,7 @@ suite('Transformer', function() {
 
     var tr = new Konva.Transformer();
     layer.add(tr);
-    tr.attachTo(rect);
+    tr.nodes([rect]);
 
     layer.draw();
 
@@ -282,7 +238,7 @@ suite('Transformer', function() {
       ignoreStroke: true
     });
     layer.add(tr);
-    tr.attachTo(rect);
+    tr.nodes([rect]);
 
     layer.draw();
 
@@ -314,7 +270,7 @@ suite('Transformer', function() {
 
     var tr = new Konva.Transformer();
     layer.add(tr);
-    tr.attachTo(rect);
+    tr.nodes([rect]);
 
     layer.draw();
     assert.equal(tr.getClassName(), 'Transformer');
@@ -352,7 +308,7 @@ suite('Transformer', function() {
 
     var tr = new Konva.Transformer();
     layer.add(tr);
-    tr.attachTo(rect);
+    tr.nodes([rect]);
 
     layer.draw();
     assert.equal(tr.getClassName(), 'Transformer');
@@ -386,7 +342,7 @@ suite('Transformer', function() {
 
     var tr = new Konva.Transformer();
     layer.add(tr);
-    tr.attachTo(rect);
+    tr.nodes([rect]);
 
     layer.draw();
 
@@ -426,7 +382,7 @@ suite('Transformer', function() {
 
     var tr = new Konva.Transformer();
     layer.add(tr);
-    tr.attachTo(rect);
+    tr.nodes([rect]);
 
     layer.draw();
     assert.equal(tr.getClassName(), 'Transformer');
@@ -457,7 +413,7 @@ suite('Transformer', function() {
 
     var tr = new Konva.Transformer();
     layer.add(tr);
-    tr.attachTo(rect);
+    tr.nodes([rect]);
 
     tr._fitNodesInto({
       x: 0,
@@ -497,7 +453,7 @@ suite('Transformer', function() {
 
     var tr = new Konva.Transformer();
     layer.add(tr);
-    tr.attachTo(circle);
+    tr.nodes([circle]);
 
     layer.draw();
     assert.equal(tr.getClassName(), 'Transformer');
@@ -525,7 +481,7 @@ suite('Transformer', function() {
 
     var tr = new Konva.Transformer();
     layer.add(tr);
-    tr.attachTo(circle);
+    tr.nodes([circle]);
 
     tr._fitNodesInto({
       x: 40,
@@ -563,7 +519,7 @@ suite('Transformer', function() {
 
     var tr = new Konva.Transformer();
     layer.add(tr);
-    tr.attachTo(circle);
+    tr.nodes([circle]);
 
     tr._fitNodesInto({
       x: 80,
@@ -603,7 +559,7 @@ suite('Transformer', function() {
 
     var tr = new Konva.Transformer();
     layer.add(tr);
-    tr.attachTo(circle);
+    tr.nodes([circle]);
 
     layer.draw();
     assert.equal(tr.getClassName(), 'Transformer');
@@ -633,7 +589,7 @@ suite('Transformer', function() {
 
     var tr = new Konva.Transformer();
     layer.add(tr);
-    tr.attachTo(circle);
+    tr.nodes([circle]);
 
     layer.draw();
 
@@ -679,7 +635,7 @@ suite('Transformer', function() {
 
     var tr = new Konva.Transformer();
     layer.add(tr);
-    tr.attachTo(group);
+    tr.nodes([group]);
 
     layer.draw();
 
@@ -723,7 +679,7 @@ suite('Transformer', function() {
 
     var tr = new Konva.Transformer();
     layer.add(tr);
-    tr.attachTo(group);
+    tr.nodes([group]);
 
     tr._fitNodesInto({
       x: 100,
@@ -781,7 +737,7 @@ suite('Transformer', function() {
 
     var tr = new Konva.Transformer();
     layer.add(tr);
-    tr.attachTo(group);
+    tr.nodes([group]);
 
     layer.draw();
 
@@ -825,7 +781,7 @@ suite('Transformer', function() {
 
     var tr = new Konva.Transformer();
     layer.add(tr);
-    tr.attachTo(group);
+    tr.nodes([group]);
 
     tr._fitNodesInto({
       x: 0,
@@ -866,7 +822,7 @@ suite('Transformer', function() {
 
     var tr = new Konva.Transformer();
     layer.add(tr);
-    tr.attachTo(rect);
+    tr.nodes([rect]);
 
     layer.draw();
 
@@ -909,7 +865,7 @@ suite('Transformer', function() {
 
     assert.equal(tr.getWidth(), 0);
 
-    tr.attachTo(rect);
+    tr.nodes([rect]);
     assert.equal(tr.getWidth(), 100);
   });
 
@@ -934,7 +890,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
 
@@ -975,7 +931,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect,
+      nodes: [rect,]
       padding: 20
     });
     layer.add(tr);
@@ -1025,7 +981,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
     layer.draw();
@@ -1078,8 +1034,9 @@ suite('Transformer', function() {
       });
       layer.add(image);
       var tr = new Konva.Transformer({
-        node: image,
-        keepRatio: false
+        nodes: [image],
+        keepRatio: true,
+        centeredScaling: true
       });
       layer.add(tr);
       layer.draw();
@@ -1104,7 +1061,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect,
+      nodes: [rect,]
       rotationSnaps: [0, 90, 180, 270],
       rotationSnapTolerance: 45
     });
@@ -1197,7 +1154,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect,
+      nodes: [rect,]
       padding: 10
     });
     layer.add(tr);
@@ -1226,12 +1183,12 @@ suite('Transformer', function() {
       y: 60
     });
 
-    assert.equal(rect.x(), 115);
-    assert.equal(rect.y(), 10);
-    assert.equal(rect.width(), 100);
-    assert.equal(rect.scaleX(), -0.05);
-    assert.equal(rect.height(), 100);
-    assert.equal(rect.scaleY(), 1);
+    assert.almostEqual(rect.x(), 115);
+    assert.almostEqual(rect.y(), 10);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.scaleX(), 0.05);
+    assert.almostEqual(rect.height(), 100);
+    assert.almostEqual(rect.scaleY(), -1);
 
     // switch again
     tr.simulateMouseMove({
@@ -1239,12 +1196,12 @@ suite('Transformer', function() {
       y: 60
     });
 
-    assert.equal(rect.x(), 100);
-    assert.equal(rect.y(), 10);
-    assert.equal(rect.width(), 100);
-    assert.equal(rect.scaleY(), -1);
-    assert.equal(rect.scaleX() + 0.1 < 0.0001, true);
-    assert.equal(rect.height(), 100);
+    assert.almostEqual(rect.x(), 100);
+    assert.almostEqual(rect.y(), 10);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.scaleY(), -1);
+    assert.almostEqual(rect.scaleX() + 0.1 < 0.0001, true);
+    assert.almostEqual(rect.height(), 100);
 
     tr.simulateMouseUp();
   });
@@ -1265,7 +1222,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect,
+      nodes: [rect,]
       padding: 10
     });
     layer.add(tr);
@@ -1334,7 +1291,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
 
@@ -1427,7 +1384,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
 
@@ -1484,7 +1441,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect,
+      nodes: [rect,]
       padding: 10
     });
     layer.add(tr);
@@ -1513,12 +1470,12 @@ suite('Transformer', function() {
       y: 125
     });
 
-    assert.equal(rect.x(), 110);
-    assert.equal(rect.y(), 115);
-    assert.equal(rect.width(), 100);
-    assert.equal(rect.scaleX(), -0.05);
-    assert.equal(rect.height(), 100);
-    assert.equal(rect.scaleY(), 1);
+    assert.almostEqual(rect.x(), 110);
+    assert.almostEqual(rect.y(), 115);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.scaleX(), 0.05);
+    assert.almostEqual(rect.height(), 100);
+    assert.almostEqual(rect.scaleY(), -1);
 
     // switch again
     tr.simulateMouseMove({
@@ -1526,13 +1483,13 @@ suite('Transformer', function() {
       y: 90
     });
 
-    assert.equal(rect.x(), 110);
-    assert.equal(rect.y() - 120 < 0.001, true);
-    assert.equal(rect.width(), 100);
-    assert.equal(rect.scaleX() + 0.1 < 0.0001, true);
-    assert.equal(rect.scaleY(), -1);
+    assert.almostEqual(rect.x(), 110);
+    assert.almostEqual(rect.y() - 120 < 0.001, true);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.scaleX() + 0.1 < 0.0001, true);
+    assert.almostEqual(rect.scaleY(), -1);
 
-    assert.equal(rect.height(), 100);
+    assert.almostEqual(rect.height(), 100);
 
     tr.simulateMouseUp();
   });
@@ -1554,7 +1511,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect,
+      nodes: [rect,]
       padding: 10
     });
     layer.add(tr);
@@ -1624,7 +1581,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
 
@@ -1677,7 +1634,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
 
@@ -1717,7 +1674,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
 
@@ -1764,7 +1721,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
 
@@ -1813,7 +1770,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
     layer.draw();
@@ -1854,7 +1811,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
     layer.draw();
@@ -1882,7 +1839,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
     layer.draw();
@@ -1945,7 +1902,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
     layer.draw();
@@ -1973,7 +1930,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
     layer.draw();
@@ -2005,7 +1962,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
     layer.draw();
@@ -2048,7 +2005,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
     layer.draw();
@@ -2092,7 +2049,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
     layer.draw();
@@ -2146,7 +2103,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
     layer.draw();
@@ -2221,7 +2178,7 @@ suite('Transformer', function() {
 
     var tr = new Konva.Transformer();
     layer.add(tr);
-    tr.attachTo(group);
+    tr.nodes([group]);
 
     layer.draw();
 
@@ -2276,7 +2233,7 @@ suite('Transformer', function() {
     // make draw to set all caches
     layer.draw();
     // then attach
-    tr.attachTo(rect);
+    tr.nodes([rect]);
 
     layer.draw();
 
@@ -2306,7 +2263,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
     layer.draw();
@@ -2453,7 +2410,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
 
@@ -2517,7 +2474,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect,
+      nodes: [rect,]
       centeredScaling: true,
       keepRatio: false
     });
@@ -2582,7 +2539,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect,
+      nodes: [rect,]
       centeredScaling: true
     });
     layer.add(tr);
@@ -2635,7 +2592,7 @@ suite('Transformer', function() {
   });
 
   // TODO: fix
-  test.skip('centered scaling on flip + keep ratio', function() {
+  test('centered scaling on flip + keep ratio', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -2647,59 +2604,74 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect,
+      nodes: [rect,]
       centeredScaling: true,
       keepRatio: true
     });
     layer.add(tr);
 
-    rect.setAttrs({
-      x: 0,
-      y: 0,
-      width: 100,
-      height: 100,
-      scaleX: 1,
-      scaleY: 1
-    });
-    tr.update();
+    // try to move mouse from edge corners into different directions
+    var tl = { x: 0, y: 0 };
+    var trr = { x: 200, y: 0 };
+    var bl = { x: 0, y: 100 };
+    var br = { x: 200, y: 100 };
 
-    layer.draw();
+    var tests = [
+      [tl, trr],
+      [tl, bl],
+      [tl, br],
+      [trr, tl],
+      [trr, bl],
+      [trr, br],
 
-    tr.simulateMouseDown({
-      x: 0,
-      y: 0
-    });
-    tr.simulateMouseMove({
-      x: 100,
-      y: 0
-    });
+      [bl, tl],
+      [bl, trr],
+      [bl, br],
 
-    var box = rect.getClientRect();
-    console.log(box);
-    // assert.equal(rect.x(), 110);
-    // assert.equal(isClose(rect.y(), 0), true);
-    // assert.equal(rect.width(), 200);
-    // assert.equal(Math.round(rect.scaleY()), 1);
-    // assert.equal(Math.round(rect.scaleX()), -1);
-    // assert.equal(rect.height(), 100);
+      [br, tl],
+      [br, trr],
+      [br, bl]
+    ];
+    tests.forEach(test => {
+      var start = test[0];
+      var end = test[1];
+      console.log(start, end);
+      rect.setAttrs({
+        x: 0,
+        y: 0,
+        width: 200,
+        height: 100,
+        scaleX: 1,
+        scaleY: 1,
+        rotation: 0
+      });
+      layer.draw();
 
-    tr.simulateMouseMove({
-      x: 100,
-      y: 0
+      // move from start to end
+      tr.simulateMouseDown(start);
+      tr.simulateMouseMove(end);
+      var box = rect.getClientRect();
+      assert.almostEqual(box.x, 0);
+      assert.almostEqual(box.y, 0);
+      assert.almostEqual(box.width, 200);
+      assert.almostEqual(box.height, 100);
+
+      // make extra move on end
+      tr.simulateMouseMove(end);
+      var box = rect.getClientRect();
+      assert.almostEqual(box.x, 0);
+      assert.almostEqual(box.y, 0);
+      assert.almostEqual(box.width, 200);
+      assert.almostEqual(box.height, 100);
+
+      // move back
+      tr.simulateMouseMove(start);
+      tr.simulateMouseUp();
+      assert.almostEqual(box.x, 0);
+      assert.almostEqual(box.y, 0);
+      assert.almostEqual(box.width, 200);
+      assert.almostEqual(box.height, 100);
     });
-    var box = rect.getClientRect();
-    console.log(box);
-    tr.simulateMouseUp({
-      x: 0,
-      y: 0
-    });
-    layer.draw();
-    // assert.equal(isClose(rect.x(), 200), true);
-    // assert.equal(isClose(rect.y(), 0), true);
-    // assert.equal(rect.width(), 200);
-    // assert.equal(Math.round(rect.scaleY()), -1);
-    // assert.equal(Math.round(rect.scaleX()), 1);
-    // assert.equal(rect.height(), 100);
   });
 
   test('transform scaled (in one direction) node', function() {
@@ -2721,7 +2693,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
 
@@ -2774,7 +2746,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
     layer.draw();
@@ -2821,7 +2793,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
     layer.draw();
@@ -2864,7 +2836,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect
+      nodes: [rect]
     });
     layer.add(tr);
     layer.draw();
@@ -2898,7 +2870,7 @@ suite('Transformer', function() {
     layer.add(shape);
 
     var tr = new Konva.Transformer({
-      node: shape
+      nodes: [shape]
     });
     layer.add(tr);
 
@@ -2932,7 +2904,7 @@ suite('Transformer', function() {
     layer.add(shape);
 
     var tr = new Konva.Transformer({
-      node: shape
+      node: [shape]
     });
     layer.add(tr);
 
@@ -2967,7 +2939,7 @@ suite('Transformer', function() {
     layer.add(shape);
 
     var tr = new Konva.Transformer({
-      node: shape
+      nodes: [shape]
     });
     layer.add(tr);
 
@@ -2997,7 +2969,7 @@ suite('Transformer', function() {
     layer.add(shape);
 
     var tr = new Konva.Transformer({
-      node: shape
+      nodes: [shape]
     });
     layer.add(tr);
 
@@ -3033,7 +3005,7 @@ suite('Transformer', function() {
     layer.add(shape);
 
     var tr = new Konva.Transformer({
-      node: shape
+      nodes: [shape]
     });
     layer.add(tr);
 
@@ -3067,7 +3039,7 @@ suite('Transformer', function() {
     layer.add(shape);
 
     var tr = new Konva.Transformer({
-      node: shape
+      nodes: [shape]
     });
     layer.add(tr);
 
@@ -3096,7 +3068,7 @@ suite('Transformer', function() {
     layer.add(shape);
 
     var tr = new Konva.Transformer({
-      node: shape
+      nodes: [shape]
     });
     layer.add(tr);
 
@@ -3125,7 +3097,7 @@ suite('Transformer', function() {
     layer.add(shape);
 
     var tr = new Konva.Transformer({
-      node: shape
+      nodes: [shape]
     });
     layer.add(tr);
 
@@ -3162,7 +3134,7 @@ suite('Transformer', function() {
     layer.add(shape);
 
     var tr = new Konva.Transformer({
-      node: shape
+      nodes: [shape]
     });
     layer.add(tr);
 
@@ -3198,7 +3170,7 @@ suite('Transformer', function() {
     layer.add(shape);
 
     var tr = new Konva.Transformer({
-      node: shape
+      nodes: [shape]
     });
     layer.add(tr);
 
@@ -3225,7 +3197,7 @@ suite('Transformer', function() {
     layer.add(shape);
 
     var tr = new Konva.Transformer({
-      node: shape
+      nodes: [shape]
     });
     layer.add(tr);
 
@@ -3284,7 +3256,7 @@ suite('Transformer', function() {
     layer.add(shape);
 
     var tr = new Konva.Transformer({
-      node: shape
+      nodes: [shape]
     });
     layer.add(tr);
 
@@ -3324,7 +3296,7 @@ suite('Transformer', function() {
     layer.add(rect1);
 
     var tr1 = new Konva.Transformer({
-      node: rect1
+      nodes: [rect1]
     });
     layer.add(tr1);
 
@@ -3338,7 +3310,7 @@ suite('Transformer', function() {
     tr1.destroy();
 
     var tr2 = new Konva.Transformer({
-      node: rect2
+      nodes: [rect2]
     });
     layer.add(tr2);
 
@@ -3367,7 +3339,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect,
+      nodes: [rect,]
       keepRatio: false
     });
     layer.add(tr);
@@ -3472,6 +3444,199 @@ suite('Transformer', function() {
     assert.equal(tr.width(), rect1.width() + rect2.width());
     assert.equal(tr.height(), rect1.height() + rect2.width());
     assert.equal(tr.rotation(), 180);
+  });
+
+  test('drag several nodes', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect1 = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 50,
+      height: 50,
+      fill: 'yellow'
+    });
+    layer.add(rect1);
+
+    var rect2 = new Konva.Rect({
+      x: 100,
+      y: 100,
+      draggable: true,
+      width: 50,
+      height: 50,
+      fill: 'red'
+    });
+
+    layer.add(rect2);
+
+    var dragstart = 0;
+    var dragmove = 0;
+    var dragend = 0;
+
+    rect2.on('dragstart', () => {
+      dragstart += 1;
+    });
+    rect2.on('dragmove', () => {
+      dragmove += 1;
+    });
+    rect2.on('dragend', () => {
+      dragend += 1;
+    });
+
+    var tr = new Konva.Transformer({
+      nodes: [rect1, rect2]
+    });
+    layer.add(tr);
+    layer.draw();
+
+    stage.simulateMouseDown({
+      x: 75,
+      y: 75
+    });
+    stage.simulateMouseMove({
+      x: 80,
+      y: 80
+    });
+
+    stage.simulateMouseUp({
+      x: 80,
+      y: 80
+    });
+
+    // proxy drag to other nodes
+    assert.equal(rect2.x(), 105);
+    assert.equal(rect2.y(), 105);
+    assert.equal(dragstart, 1);
+    assert.equal(dragmove, 1);
+    assert.equal(dragend, 1);
+  });
+
+  test('transformer should not hide shapes', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect1 = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 50,
+      height: 50,
+      fill: 'yellow'
+    });
+    layer.add(rect1);
+
+    var click = 0;
+
+    rect1.on('click', () => {
+      click += 1;
+    });
+
+    var tr = new Konva.Transformer({
+      nodes: [rect1]
+    });
+    layer.add(tr);
+    layer.draw();
+
+    stage.simulateMouseDown({
+      x: 75,
+      y: 75
+    });
+    stage.simulateMouseMove({
+      x: 75,
+      y: 75
+    });
+
+    stage.simulateMouseUp({
+      x: 75,
+      y: 75
+    });
+
+    // proxy drag to other nodes
+    assert.equal(click, 1);
+  });
+
+  test('drag several nodes by transformer back', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect1 = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 50,
+      height: 50,
+      fill: 'yellow'
+    });
+    layer.add(rect1);
+
+    var rect2 = new Konva.Rect({
+      x: 100,
+      y: 100,
+      draggable: true,
+      width: 50,
+      height: 50,
+      fill: 'red'
+    });
+
+    layer.add(rect2);
+
+    var dragstart = 0;
+    var dragmove = 0;
+    var dragend = 0;
+
+    rect1.on('dragstart', () => {
+      dragstart += 1;
+    });
+    rect1.on('dragmove', () => {
+      dragmove += 1;
+    });
+    rect1.on('dragend', () => {
+      dragend += 1;
+    });
+    rect2.on('dragstart', () => {
+      dragstart += 1;
+    });
+    rect2.on('dragmove', () => {
+      dragmove += 1;
+    });
+    rect2.on('dragend', () => {
+      dragend += 1;
+    });
+
+    var tr = new Konva.Transformer({
+      nodes: [rect1, rect2],
+      shouldOverdrawWholeArea: true
+    });
+    layer.add(tr);
+    layer.draw();
+
+    stage.simulateMouseDown({
+      x: 110,
+      y: 90
+    });
+    stage.simulateMouseMove({
+      x: 120,
+      y: 90
+    });
+
+    stage.simulateMouseUp({
+      x: 120,
+      y: 90
+    });
+
+    // proxy drag to other nodes
+    assert.equal(rect1.x(), 60);
+    assert.equal(rect1.y(), 50);
+    assert.equal(rect2.x(), 110);
+    assert.equal(rect2.y(), 100);
+    assert.equal(dragstart, 2);
+    assert.equal(dragmove, 2);
+    assert.equal(dragend, 2);
   });
 
   test('reattach to several nodes', function() {

@@ -88,17 +88,12 @@ var ANGLES = {
 
 const TOUCH_DEVICE = 'ontouchstart' in Konva._global;
 
-function getCursor(anchorName, rad, isMirrored) {
+function getCursor(anchorName, rad) {
   if (anchorName === 'rotater') {
     return 'crosshair';
   }
 
   rad += Util._degToRad(ANGLES[anchorName] || 0);
-  // If we are mirrored, we need to mirror the angle (this is not the same as
-  // rotate).
-  if (isMirrored) {
-    rad *= -1;
-  }
   var angle = ((Util._radToDeg(rad) % 360) + 360) % 360;
 
   if (Util._inRange(angle, 315 + 22.5, 360) || Util._inRange(angle, 0, 22.5)) {
@@ -210,17 +205,6 @@ function getShapeRect(shape: Box) {
 }
 
 function getShapesRect(shapes: Array<Box>) {
-  // if (shapes.length === 1) {
-  //   const shape = shapes[0];
-
-  //   return {
-  //     x: shape.x,
-  //     y: shape.y,
-  //     width: shape.width,
-  //     height: shape.height,
-  //     rotation: shape.rotation
-  //   };
-  // }
   let x1 = 9999999999;
   let y1 = 9999999999;
   let x2 = -999999999;
@@ -379,46 +363,15 @@ export class Transformer extends Group {
     return this;
   }
   setNode(node) {
+    Util.warn(
+      'tr.setNode(shape), tr.node(shape) and tr.attachTo(shape) methods are deprecated. Please use tr.nodes(nodesArray) instead.'
+    );
     return this.setNodes([node]);
-    // if (this._node) {
-    //   this.detach();
-    // }
-    // this._node = node;
-    // this._resetTransformCache();
-
-    // const additionalEvents = node._attrsAffectingSize
-    //   .map(prop => prop + 'Change.' + EVENTS_NAME)
-    //   .join(' ');
-
-    // const onChange = () => {
-    //   this._resetTransformCache();
-    //   if (!this._transforming) {
-    //     this.update();
-    //   }
-    // };
-    // node.on(additionalEvents, onChange);
-    // node.on(TRANSFORM_CHANGE_STR, onChange);
-    // node.on(`xChange.${EVENTS_NAME} yChange.${EVENTS_NAME}`, () =>
-    //   this._resetTransformCache()
-    // );
-    // // we may need it if we set node in initial props
-    // // so elements are not defined yet
-    // var elementsCreated = !!this.findOne('.top-left');
-    // if (elementsCreated) {
-    //   this.update();
-    // }
-    // return this;
   }
   getNode() {
     return this._nodes && this._nodes[0];
   }
 
-  drawScene(can?, top?, caching?) {
-    return super.drawScene(can, top, caching);
-  }
-  // _attachTo(node) => {
-
-  // }
   setNodes(nodes: Array<Node> = []) {
     if (this._nodes && this._nodes.length) {
       this.detach();
@@ -446,6 +399,7 @@ export class Transformer extends Group {
         this._resetTransformCache();
       });
       node.on(`xChange.${EVENTS_NAME} yChange.${EVENTS_NAME}`, onChange);
+      this._proxyDrag(node);
     });
     this._resetTransformCache();
     // we may need it if we set node in initial props
@@ -455,6 +409,36 @@ export class Transformer extends Group {
       this.update();
     }
     return this;
+  }
+
+  _proxyDrag(node: Node) {
+    let lastPos;
+    node.on(`dragstart.${EVENTS_NAME}`, () => {
+      lastPos = node.getAbsolutePosition();
+    });
+    node.on(`dragmove.${EVENTS_NAME}`, () => {
+      if (!lastPos) {
+        return;
+      }
+      const abs = node.getAbsolutePosition();
+      const dx = abs.x - lastPos.x;
+      const dy = abs.y - lastPos.y;
+      this.nodes().forEach(otherNode => {
+        if (otherNode === node) {
+          return;
+        }
+        if (otherNode.isDragging()) {
+          return;
+        }
+        const otherAbs = otherNode.getAbsolutePosition();
+        otherNode.setAbsolutePosition({
+          x: otherAbs.x + dx,
+          y: otherAbs.y + dy
+        });
+        otherNode.startDrag();
+      });
+      lastPos = null;
+    });
   }
 
   getNodes() {
@@ -537,12 +521,6 @@ export class Transformer extends Group {
       };
     }
 
-    if (node.parent && this.parent && node.parent !== this.parent) {
-      Util.warn(
-        'Transformer and attached node have different parents. Konva does not support such case right now. Please move Transformer to the parent of attaching node.'
-      );
-    }
-
     const shapes = this.nodes().map(node => {
       return this.__getNodeShape(node);
     });
@@ -552,14 +530,6 @@ export class Transformer extends Group {
       x: 0,
       y: 0
     });
-
-    // return {
-    //   x: node.x() + dx * Math.cos(rotation) + dy * Math.sin(-rotation),
-    //   y: node.y() + dy * Math.cos(rotation) + dx * Math.sin(rotation),
-    //   width: rect.width * node.scaleX(),
-    //   height: rect.height * node.scaleY(),
-    //   rotation: node.rotation()
-    // };
   }
   getX() {
     return this._getNodeRect().x;
@@ -598,24 +568,11 @@ export class Transformer extends Group {
     anchor.on('mousedown touchstart', function(e) {
       self._handleMouseDown(e);
     });
-    // anchor.on('dragstart', function(e) {
-    //   e.cancelBubble = true;
-    // });
-    // anchor.on('dragmove', function(e) {
-    //   e.cancelBubble = true;
-    // });
-    // anchor.on('dragend', function(e) {
-    //   e.cancelBubble = true;
-    // });
 
     // add hover styling
     anchor.on('mouseenter', () => {
       var rad = Konva.getAngle(this.rotation());
-
-      // var scale = this.getNode().getAbsoluteScale();
-      // If scale.y < 0 xor scale.x < 0 we need to flip (not rotate).
-      // var isMirrored = false;
-      var cursor = getCursor(name, rad, false);
+      var cursor = getCursor(name, rad);
       anchor.getStage().content.style.cursor = cursor;
       this._cursorChange = true;
     });
@@ -633,6 +590,7 @@ export class Transformer extends Group {
       name: 'back',
       width: 0,
       height: 0,
+      draggable: true,
       sceneFunc(ctx) {
         var tr = this.getParent();
         var padding = tr.padding();
@@ -653,21 +611,23 @@ export class Transformer extends Group {
 
         ctx.fillStrokeShape(this);
       },
-      listening: false
-      // hitFunc(ctx) {
-      //   var tr = this.getParent();
-      //   var padding = tr.padding();
-      //   ctx.beginPath();
-      //   ctx.rect(
-      //     -padding,
-      //     -padding,
-      //     this.width() + padding * 2,
-      //     this.height() + padding * 2
-      //   );
-      //   ctx.fillStrokeShape(this);
-      // }
+      hitFunc: (ctx, shape) => {
+        if (!this.shouldOverdrawWholeArea()) {
+          return;
+        }
+        var padding = this.padding();
+        ctx.beginPath();
+        ctx.rect(
+          -padding,
+          -padding,
+          shape.width() + padding * 2,
+          shape.height() + padding * 2
+        );
+        ctx.fillStrokeShape(shape);
+      }
     });
     this.add(back);
+    this._proxyDrag(back);
   }
   _handleMouseDown(e) {
     this._movingAnchorName = e.target.name().split(' ')[0];
@@ -742,182 +702,97 @@ export class Transformer extends Group {
       return;
     }
 
-    var padding = 0;
-    // var centeredScaling = this.centeredScaling() || e.altKey;
-    // if (centeredScaling && this._movingAnchorName.indexOf('left') >= 0) {
-    //   var topLeft = this.findOne('.top-left');
-    //   var bottomRight = this.findOne('.bottom-right');
-    //   var topOffsetX = topLeft.x() + padding;
-    //   var topOffsetY = topLeft.y() + padding;
-
-    //   var bottomOffsetX = this.getWidth() - bottomRight.x() + padding;
-    //   var bottomOffsetY = this.getHeight() - bottomRight.y() + padding;
-
-    //   bottomRight.move({
-    //     x: -topOffsetX,
-    //     y: -topOffsetY
-    //   });
-
-    //   topLeft.move({
-    //     x: bottomOffsetX,
-    //     y: bottomOffsetY
-    //   });
-    // }
-
     var keepProportion = this.keepRatio() || e.shiftKey;
+    var centeredScaling = this.centeredScaling() || e.altKey;
 
     if (this._movingAnchorName === 'top-left') {
-      // if (centeredScaling) {
-      //   this.findOne('.bottom-right').move({
-      //     x: -anchorNode.x(),
-      //     y: -anchorNode.y()
-      //   });
-      // }
-
       if (keepProportion) {
+        var comparePoint = centeredScaling
+          ? {
+              x: this.width() / 2,
+              y: this.height() / 2
+            }
+          : {
+              x: this.findOne('.bottom-right').x(),
+              y: this.findOne('.bottom-right').y()
+            };
         newHypotenuse = Math.sqrt(
-          Math.pow(
-            this.findOne('.bottom-right').x() - anchorNode.x() - padding * 2,
-            2
-          ) +
-            Math.pow(
-              this.findOne('.bottom-right').y() - anchorNode.y() - padding * 2,
-              2
-            )
+          Math.pow(comparePoint.x - anchorNode.x(), 2) +
+            Math.pow(comparePoint.y - anchorNode.y(), 2)
         );
 
-        var reverseX =
-          this.findOne('.top-left').x() > this.findOne('.bottom-right').x()
-            ? -1
-            : 1;
+        var reverseX = this.findOne('.top-left').x() > comparePoint.x ? -1 : 1;
 
-        var reverseY =
-          this.findOne('.top-left').y() > this.findOne('.bottom-right').y()
-            ? -1
-            : 1;
+        var reverseY = this.findOne('.top-left').y() > comparePoint.y ? -1 : 1;
 
         x = newHypotenuse * this.cos * reverseX;
         y = newHypotenuse * this.sin * reverseY;
 
-        this.findOne('.top-left').x(
-          this.findOne('.bottom-right').x() - x - padding * 2
-        );
-        this.findOne('.top-left').y(
-          this.findOne('.bottom-right').y() - y - padding * 2
-        );
+        this.findOne('.top-left').x(comparePoint.x - x);
+        this.findOne('.top-left').y(comparePoint.y - y);
       }
     } else if (this._movingAnchorName === 'top-center') {
-      // if (centeredScaling) {
-      //   this.findOne('.bottom-right').move({
-      //     x: 0,
-      //     y: -anchorNode.y()
-      //   });
-      // }
       this.findOne('.top-left').y(anchorNode.y());
     } else if (this._movingAnchorName === 'top-right') {
-      // if (centeredScaling) {
-      //   // this.findOne('.bottom-left').move({
-      //   //   x: -(anchorNode.x() - this.width()),
-      //   //   y: -anchorNode.y()
-      //   // });
-      //   // this.findOne('.top-left').move({
-      //   //   x: -(anchorNode.x() - this.width()),
-      //   //   y: anchorNode.y()
-      //   // });
-      //   // this.findOne('.bottom-right').move({
-      //   //   x: -(anchorNode.x() - this.width()),
-      //   //   y: anchorNode.y()
-      //   // });
-      // }
-
-      // var center = getCenter({
-      //   x
-      // })
       if (keepProportion) {
+        var comparePoint = centeredScaling
+          ? {
+              x: this.width() / 2,
+              y: this.height() / 2
+            }
+          : {
+              x: this.findOne('.bottom-left').x(),
+              y: this.findOne('.bottom-left').y()
+            };
+
         newHypotenuse = Math.sqrt(
-          Math.pow(
-            anchorNode.x() - this.findOne('.bottom-left').x() - padding * 2,
-            2
-          ) +
-            Math.pow(
-              this.findOne('.bottom-left').y() - anchorNode.y() - padding * 2,
-              2
-            )
+          Math.pow(anchorNode.x() - comparePoint.x, 2) +
+            Math.pow(comparePoint.y - anchorNode.y(), 2)
         );
 
-        var reverseX =
-          this.findOne('.top-right').x() < this.findOne('.top-left').x()
-            ? -1
-            : 1;
+        var reverseX = this.findOne('.top-right').x() < comparePoint.x ? -1 : 1;
 
-        var reverseY =
-          this.findOne('.top-right').y() > this.findOne('.bottom-left').y()
-            ? -1
-            : 1;
+        var reverseY = this.findOne('.top-right').y() > comparePoint.y ? -1 : 1;
 
         x = newHypotenuse * this.cos * reverseX;
         y = newHypotenuse * this.sin * reverseY;
 
-        this.findOne('.top-right').x(x + padding);
-        this.findOne('.top-right').y(
-          this.findOne('.bottom-left').y() - y - padding * 2
-        );
+        this.findOne('.top-right').x(comparePoint.x + x);
+        this.findOne('.top-right').y(comparePoint.y - y);
       }
       var pos = anchorNode.position();
       this.findOne('.top-left').y(pos.y);
       this.findOne('.bottom-right').x(pos.x);
     } else if (this._movingAnchorName === 'middle-left') {
-      // if (centeredScaling) {
-      //   this.findOne('.bottom-right').move({
-      //     x: -anchorNode.x(),
-      //     y: 0
-      //   });
-      // }
       this.findOne('.top-left').x(anchorNode.x());
     } else if (this._movingAnchorName === 'middle-right') {
-      // if (centeredScaling) {
-      //   this.findOne('.top-left').move({
-      //     x: -(anchorNode.x() - this.width()),
-      //     y: 0
-      //   });
-      // }
       this.findOne('.bottom-right').x(anchorNode.x());
     } else if (this._movingAnchorName === 'bottom-left') {
-      // if (centeredScaling) {
-      //   this.findOne('.bottom-right').move({
-      //     x: -anchorNode.x(),
-      //     y: -(anchorNode.y() - this.height())
-      //   });
-      // }
       if (keepProportion) {
+        var comparePoint = centeredScaling
+          ? {
+              x: this.width() / 2,
+              y: this.height() / 2
+            }
+          : {
+              x: this.findOne('.top-right').x(),
+              y: this.findOne('.top-right').y()
+            };
+
         newHypotenuse = Math.sqrt(
-          Math.pow(
-            this.findOne('.top-right').x() - anchorNode.x() - padding * 2,
-            2
-          ) +
-            Math.pow(
-              anchorNode.y() - this.findOne('.top-right').y() - padding * 2,
-              2
-            )
+          Math.pow(comparePoint.x - anchorNode.x(), 2) +
+            Math.pow(anchorNode.y() - comparePoint.y, 2)
         );
 
-        var reverseX =
-          this.findOne('.top-right').x() < this.findOne('.bottom-left').x()
-            ? -1
-            : 1;
+        var reverseX = comparePoint.x < anchorNode.x() ? -1 : 1;
 
-        var reverseY =
-          this.findOne('.bottom-left').y() < this.findOne('.top-right').y()
-            ? -1
-            : 1;
+        var reverseY = anchorNode.y() < comparePoint.y ? -1 : 1;
 
         x = newHypotenuse * this.cos * reverseX;
         y = newHypotenuse * this.sin * reverseY;
 
-        this.findOne('.bottom-left').x(
-          this.findOne('.top-right').x() - x - padding * 2
-        );
-        this.findOne('.bottom-left').y(y + padding);
+        anchorNode.x(comparePoint.x - x);
+        anchorNode.y(comparePoint.y + y);
       }
 
       pos = anchorNode.position();
@@ -925,42 +800,35 @@ export class Transformer extends Group {
       this.findOne('.top-left').x(pos.x);
       this.findOne('.bottom-right').y(pos.y);
     } else if (this._movingAnchorName === 'bottom-center') {
-      // if (centeredScaling) {
-      //   this.findOne('.top-left').move({
-      //     x: 0,
-      //     y: -(anchorNode.y() - this.height())
-      //   });
-      // }
       this.findOne('.bottom-right').y(anchorNode.y());
     } else if (this._movingAnchorName === 'bottom-right') {
-      // if (centeredScaling) {
-      //   this.findOne('.top-left').move({
-      //     x: -(anchorNode.x() - this.width()),
-      //     y: -(anchorNode.y() - this.height())
-      //   });
-      // }
-
       if (keepProportion) {
+        var comparePoint = centeredScaling
+          ? {
+              x: this.width() / 2,
+              y: this.height() / 2
+            }
+          : {
+              x: this.findOne('.top-left').x(),
+              y: this.findOne('.top-left').y()
+            };
+
         newHypotenuse = Math.sqrt(
-          Math.pow(this.findOne('.bottom-right').x() - padding, 2) +
-            Math.pow(this.findOne('.bottom-right').y() - padding, 2)
+          Math.pow(anchorNode.x() - comparePoint.x, 2) +
+            Math.pow(anchorNode.y() - comparePoint.y, 2)
         );
 
         var reverseX =
-          this.findOne('.top-left').x() > this.findOne('.bottom-right').x()
-            ? -1
-            : 1;
+          this.findOne('.bottom-right').x() < comparePoint.x ? -1 : 1;
 
         var reverseY =
-          this.findOne('.top-left').y() > this.findOne('.bottom-right').y()
-            ? -1
-            : 1;
+          this.findOne('.bottom-right').y() < comparePoint.y ? -1 : 1;
 
         x = newHypotenuse * this.cos * reverseX;
         y = newHypotenuse * this.sin * reverseY;
 
-        this.findOne('.bottom-right').x(x + padding);
-        this.findOne('.bottom-right').y(y + padding);
+        this.findOne('.bottom-right').x(comparePoint.x + x);
+        this.findOne('.bottom-right').y(comparePoint.y + y);
       }
     } else {
       console.error(
@@ -971,23 +839,16 @@ export class Transformer extends Group {
       );
     }
 
-    if (this._movingAnchorName === 'rotater') {
-      return;
-    }
-
     var centeredScaling = this.centeredScaling() || e.altKey;
     if (centeredScaling) {
       var topLeft = this.findOne('.top-left');
       var bottomRight = this.findOne('.bottom-right');
-      var topOffsetX = topLeft.x() + padding;
-      var topOffsetY = topLeft.y() + padding;
+      var topOffsetX = topLeft.x();
+      var topOffsetY = topLeft.y();
 
-      var bottomOffsetX = this.getWidth() - bottomRight.x() + padding;
-      var bottomOffsetY = this.getHeight() - bottomRight.y() + padding;
+      var bottomOffsetX = this.getWidth() - bottomRight.x();
+      var bottomOffsetY = this.getHeight() - bottomRight.y();
 
-      if (Math.abs(topOffsetY) > 10) {
-        debugger;
-      }
       bottomRight.move({
         x: -topOffsetX,
         y: -topOffsetY
@@ -1061,14 +922,15 @@ export class Transformer extends Group {
       this.update();
       return;
     }
-    // if (newAttrs.width < 0) {
-    //   debugger;
-    // }
-    const an = this._movingAnchorName;
+
     const allowNegativeScale = true;
     var t = new Transform();
     t.rotate(Konva.getAngle(this.rotation()));
-    if (an && newAttrs.width < 0 && an.indexOf('left') >= 0) {
+    if (
+      this._movingAnchorName &&
+      newAttrs.width < 0 &&
+      this._movingAnchorName.indexOf('left') >= 0
+    ) {
       const offset = t.point({
         x: -this.padding() * 2,
         y: 0
@@ -1076,19 +938,23 @@ export class Transformer extends Group {
       newAttrs.x += offset.x;
       newAttrs.y += offset.y;
       newAttrs.width += this.padding() * 2;
-      this._movingAnchorName = an.replace('left', 'right');
+      this._movingAnchorName = this._movingAnchorName.replace('left', 'right');
       this._anchorDragOffset.x -= offset.x;
       this._anchorDragOffset.y -= offset.y;
       if (!allowNegativeScale) {
         this.update();
         return;
       }
-    } else if (an && newAttrs.width < 0 && an.indexOf('right') >= 0) {
+    } else if (
+      this._movingAnchorName &&
+      newAttrs.width < 0 &&
+      this._movingAnchorName.indexOf('right') >= 0
+    ) {
       const offset = t.point({
         x: this.padding() * 2,
         y: 0
       });
-      this._movingAnchorName = an.replace('right', 'left');
+      this._movingAnchorName = this._movingAnchorName.replace('right', 'left');
       this._anchorDragOffset.x -= offset.x;
       this._anchorDragOffset.y -= offset.y;
       newAttrs.width += this.padding() * 2;
@@ -1097,14 +963,18 @@ export class Transformer extends Group {
         return;
       }
     }
-    if (an && newAttrs.height < 0 && an.indexOf('top') >= 0) {
+    if (
+      this._movingAnchorName &&
+      newAttrs.height < 0 &&
+      this._movingAnchorName.indexOf('top') >= 0
+    ) {
       const offset = t.point({
         x: 0,
         y: -this.padding() * 2
       });
       newAttrs.x += offset.x;
       newAttrs.y += offset.y;
-      this._movingAnchorName = an.replace('top', 'bottom');
+      this._movingAnchorName = this._movingAnchorName.replace('top', 'bottom');
       this._anchorDragOffset.x -= offset.x;
       this._anchorDragOffset.y -= offset.y;
       newAttrs.height += this.padding() * 2;
@@ -1112,12 +982,16 @@ export class Transformer extends Group {
         this.update();
         return;
       }
-    } else if (an && newAttrs.height < 0 && an.indexOf('bottom') >= 0) {
+    } else if (
+      this._movingAnchorName &&
+      newAttrs.height < 0 &&
+      this._movingAnchorName.indexOf('bottom') >= 0
+    ) {
       const offset = t.point({
         x: 0,
         y: this.padding() * 2
       });
-      this._movingAnchorName = an.replace('bottom', 'top');
+      this._movingAnchorName = this._movingAnchorName.replace('bottom', 'top');
       this._anchorDragOffset.x -= offset.x;
       this._anchorDragOffset.y -= offset.y;
       newAttrs.height += this.padding() * 2;
@@ -1146,8 +1020,6 @@ export class Transformer extends Group {
       skipStroke: this.ignoreStroke()
     });
 
-    var padding = 0;
-
     const parentTransform = node
       .getParent()
       .getAbsoluteTransform()
@@ -1163,20 +1035,13 @@ export class Transformer extends Group {
 
     pure.width *= absScale.x;
     pure.height *= absScale.y;
-    // pure.x -= absPos.x;
-    // pure.y -= absPos.y;
 
-    // newAttrs.x = (newAttrs.x - absPos.x) / absScale.x;
-    // newAttrs.y = (newAttrs.y - absPos.y) / absScale.y;
-
-    var scaleX = pure.width ? (newAttrs.width - padding * 2) / pure.width : 1;
-    var scaleY = pure.height
-      ? (newAttrs.height - padding * 2) / pure.height
-      : 1;
+    var scaleX = pure.width ? newAttrs.width / pure.width : 1;
+    var scaleY = pure.height ? newAttrs.height / pure.height : 1;
 
     var rotation = Konva.getAngle(node.rotation());
-    var dx = pure.x * scaleX - padding - node.offsetX() * scaleX;
-    var dy = pure.y * scaleY - padding - node.offsetY() * scaleY;
+    var dx = pure.x * scaleX - node.offsetX() * scaleX;
+    var dy = pure.y * scaleY - node.offsetY() * scaleY;
 
     node.setAttrs({
       scaleX: scaleX,
@@ -1287,7 +1152,9 @@ export class Transformer extends Group {
       visible: this.borderEnabled(),
       stroke: this.borderStroke(),
       strokeWidth: this.borderStrokeWidth(),
-      dash: this.borderDash()
+      dash: this.borderDash(),
+      x: 0,
+      y: 0
     });
   }
   /**
@@ -1350,6 +1217,7 @@ export class Transformer extends Group {
   centeredScaling: GetSet<boolean, this>;
   ignoreStroke: GetSet<boolean, this>;
   boundBoxFunc: GetSet<(oldBox: IRect, newBox: IRect) => IRect, this>;
+  shouldOverdrawWholeArea: GetSet<boolean, this>;
 }
 
 function validateAnchors(val) {
@@ -1738,6 +1606,8 @@ Factory.addGetterSetter(Transformer, 'nodes');
  * });
  */
 Factory.addGetterSetter(Transformer, 'boundBoxFunc');
+
+Factory.addGetterSetter(Transformer, 'shouldOverdrawWholeArea', false);
 
 Factory.backCompat(Transformer, {
   lineEnabled: 'borderEnabled',
