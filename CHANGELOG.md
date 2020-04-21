@@ -5,13 +5,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
-* **New `Konva.Transformer` implemenation!**
-  * Support of transforming multiple shapes at once: `tr.nodes([shape1, shape2])`.
+## 5.0.0 - 2020-03-26
+
+* **New `Konva.Transformer` implementation!**. Old API should work. But I mark this release is `major` (breaking) just for smooth updates. Changes:
+  * Support of transforming multiple nodes at once: `tr.nodes([shape1, shape2])`.
   * `tr.node()`, `tr.setNode()`, `tr.attachTo()` methods are deprecated. Use `tr.nodes(array)` instead
   * Fixes for center scaling
-  * Fixes for better `padding` property support
-  * Transformer can be placed anywhere in the tree of a stage tree.
-* Fix `imageSmoothEnabled` when stage is resized
+  * Fixes for better `padding` support
+  * `Transformer` can be placed anywhere in the tree of a stage tree (NOT just inside a parent of attached node).
+* Fix `imageSmoothEnabled` resets when stage is resized
 * Memory usage optimizations when a node is cached
 
 ## 4.2.2 - 2020-03-26
