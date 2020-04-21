@@ -931,7 +931,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      nodes: [rect,]
+      nodes: [rect],
       padding: 20
     });
     layer.add(tr);
@@ -1061,7 +1061,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      nodes: [rect,]
+      nodes: [rect],
       rotationSnaps: [0, 90, 180, 270],
       rotationSnapTolerance: 45
     });
@@ -1154,7 +1154,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      nodes: [rect,]
+      nodes: [rect],
       padding: 10
     });
     layer.add(tr);
@@ -1222,7 +1222,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      nodes: [rect,]
+      nodes: [rect],
       padding: 10
     });
     layer.add(tr);
@@ -1441,7 +1441,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      nodes: [rect,]
+      nodes: [rect],
       padding: 10
     });
     layer.add(tr);
@@ -1511,7 +1511,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      nodes: [rect,]
+      nodes: [rect],
       padding: 10
     });
     layer.add(tr);
@@ -2474,7 +2474,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      nodes: [rect,]
+      nodes: [rect],
       centeredScaling: true,
       keepRatio: false
     });
@@ -2539,7 +2539,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      nodes: [rect,]
+      nodes: [rect],
       centeredScaling: true
     });
     layer.add(tr);
@@ -2604,7 +2604,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      nodes: [rect,]
+      nodes: [rect],
       centeredScaling: true,
       keepRatio: true
     });
@@ -2904,7 +2904,7 @@ suite('Transformer', function() {
     layer.add(shape);
 
     var tr = new Konva.Transformer({
-      node: [shape]
+      nodes: [shape]
     });
     layer.add(tr);
 
@@ -3339,7 +3339,7 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      nodes: [rect,]
+      nodes: [rect],
       keepRatio: false
     });
     layer.add(tr);
@@ -3818,5 +3818,65 @@ suite('Transformer', function() {
     assert.equal(tr.width(), rect1.width() + rect2.width());
     assert.equal(tr.height(), rect1.height() + rect2.height());
     assert.equal(tr.rotation(), 0);
+  });
+
+  test('boundBoxFox should work in local coordinates', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect1 = new Konva.Rect({
+      x: 0,
+      y: 0,
+      draggable: true,
+      width: 50,
+      height: 50,
+      fill: 'yellow'
+    });
+    layer.add(rect1);
+
+    var rect2 = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 50,
+      height: 50,
+      fill: 'red'
+    });
+
+    layer.add(rect2);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect1, rect2],
+      boundBoxFunc: function(oldBox, newBox, node) {
+        if (node === rect1) {
+          assert.deepEqual(oldBox, {
+            x: 0,
+            y: 0,
+            width: 50,
+            height: 50,
+            rotation: 0
+          });
+        } else {
+          assert.deepEqual(oldBox, {
+            x: 50,
+            y: 50,
+            width: 50,
+            height: 50,
+            rotation: 0
+          });
+        }
+        return newBox;
+      }
+    });
+    layer.add(tr);
+
+    tr._fitNodesInto({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100,
+      rotation: 0
+    });
   });
 });

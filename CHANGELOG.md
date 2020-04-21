@@ -5,7 +5,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
-* new `Konva.Transformer`
+* **New `Konva.Transformer` implemenation!**
+  * Support of transforming multiple shapes at once: `tr.nodes([shape1, shape2])`.
+  * `tr.node()`, `tr.setNode()`, `tr.attachTo()` methods are deprecated. Use `tr.nodes(array)` instead
+  * Fixes for center scaling
+  * Fixes for better `padding` property support
+  * Transformer can be placed anywhere in the tree of a stage tree.
 * Fix `imageSmoothEnabled` when stage is resized
 * Memory usage optimizations when a node is cached
 

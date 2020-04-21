@@ -479,15 +479,15 @@ export class Transformer extends Group {
     return this._getCache(NODES_RECT, this.__getNodeRect);
   }
 
-  __getNodeShape(node, rot = this.rotation()) {
+  __getNodeShape(node, rot = this.rotation(), relative?: Node) {
     var rect = node.getClientRect({
       skipTransform: true,
       skipShadow: true,
       skipStroke: this.ignoreStroke()
     });
 
-    var absScale = node.getAbsoluteScale();
-    var absPos = node.getAbsolutePosition();
+    var absScale = node.getAbsoluteScale(relative);
+    var absPos = node.getAbsolutePosition(relative);
 
     var dx = rect.x * absScale.x - node.offsetX() * absScale.x;
     var dy = rect.y * absScale.y - node.offsetY() * absScale.y;
@@ -905,10 +905,6 @@ export class Transformer extends Group {
   }
   _fitNodesInto(newAttrs, evt) {
     var oldAttrs = this._getNodeRect();
-    var boundBoxFunc = this.boundBoxFunc();
-    if (boundBoxFunc) {
-      newAttrs = boundBoxFunc.call(this, oldAttrs, newAttrs);
-    }
 
     const minSize = 1;
 
@@ -1011,6 +1007,22 @@ export class Transformer extends Group {
     this.getLayer().batchDraw();
   }
   _fitNodeInto(node: Node, newAttrs, evt) {
+    if (this.boundBoxFunc()) {
+      const oldAttrs = this.__getNodeShape(
+        node,
+        node.rotation(),
+        node.getParent()
+      );
+      const bounded = this.boundBoxFunc()(oldAttrs, newAttrs, node);
+      if (bounded) {
+        newAttrs = bounded;
+      } else {
+        Util.warn(
+          'boundBoxFunc returned falsy. You should return new bound rect from it!'
+        );
+      }
+    }
+
     const parentRot = Konva.getAngle(node.getParent().getAbsoluteRotation());
     node.rotation(Util._getRotation(newAttrs.rotation - parentRot));
 
@@ -1216,7 +1228,10 @@ export class Transformer extends Group {
   keepRatio: GetSet<boolean, this>;
   centeredScaling: GetSet<boolean, this>;
   ignoreStroke: GetSet<boolean, this>;
-  boundBoxFunc: GetSet<(oldBox: IRect, newBox: IRect) => IRect, this>;
+  boundBoxFunc: GetSet<
+    (oldBox: IRect, newBox: IRect, node: Node) => IRect,
+    this
+  >;
   shouldOverdrawWholeArea: GetSet<boolean, this>;
 }
 
@@ -1588,7 +1603,7 @@ Factory.addGetterSetter(Transformer, 'node');
 Factory.addGetterSetter(Transformer, 'nodes');
 
 /**
- * get/set bounding box function
+ * get/set bounding box function. boundBondFunc operates is local coordinates of nodes parent
  * @name Konva.Transformer#boundBoxFunc
  * @method
  * @param {Function} func
@@ -1598,7 +1613,9 @@ Factory.addGetterSetter(Transformer, 'nodes');
  * var boundBoxFunc = transformer.boundBoxFunc();
  *
  * // set
- * transformer.boundBoxFunc(function(oldBox, newBox) {
+ * transformer.boundBoxFunc(function(oldBox, newBox, node) {
+ *   // width and height of the boxes are corresponding to total width and height of a node
+ *   // so it includes scale of the node.
  *   if (newBox.width > 200) {
  *     return oldBox;
  *   }
