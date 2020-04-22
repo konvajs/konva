@@ -351,7 +351,7 @@ export class Transformer extends Group {
     }
   }
   /**
-   * alias to `tr.node(shape)`
+   * alias to `tr.nodes([shape])`/ This method is deprecated and will be removed soon.
    * @method
    * @name Konva.Transformer#attachTo
    * @returns {Konva.Transformer}
@@ -395,9 +395,7 @@ export class Transformer extends Group {
       };
       node.on(additionalEvents, onChange);
       node.on(TRANSFORM_CHANGE_STR, onChange);
-      node.on(`clearCache.${EVENTS_NAME}`, () => {
-        this._resetTransformCache();
-      });
+      node.on(`clearCache.${EVENTS_NAME}`, onChange);
       node.on(`xChange.${EVENTS_NAME} yChange.${EVENTS_NAME}`, onChange);
       this._proxyDrag(node);
     });
@@ -1573,7 +1571,8 @@ Factory.addGetterSetter(Transformer, 'ignoreStroke', false);
 Factory.addGetterSetter(Transformer, 'padding', 0, getNumberValidator());
 
 /**
- * get/set attached node of the Transformer. Transformer will adapt to its size and listen to its events
+ * get/set attached node of the Transformer. Transformer will adapt to its size and listen to its events.
+ * **This method is deprecated and will be removed soon.** Please use `tr.nodes([shape1, shape2]);` instead
  * @method
  * @name Konva.Transformer#Konva.Transformer#node
  * @returns {Konva.Node}
@@ -1598,6 +1597,11 @@ Factory.addGetterSetter(Transformer, 'node');
  *
  * // set
  * transformer.nodes([rect, circle]);
+ * // push new item:
+ *
+ * const oldNodes = transformer.nodes();
+ * const newNodes = oldNodes.concat([newShape]);
+ * transformer.nodes(newNodes);
  */
 
 Factory.addGetterSetter(Transformer, 'nodes');

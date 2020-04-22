@@ -174,6 +174,70 @@ suite('Transformer', function() {
     assert.equal(tr.rotation(), rect.rotation());
   });
 
+  test('change transform of parent', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect]
+    });
+    layer.add(tr);
+
+    layer.draw();
+
+    assert.equal(tr.x(), 50);
+
+    stage.scaleX(2);
+    stage.scaleY(2);
+
+    // check attrs
+    assert.equal(tr.x(), 100);
+    assert.equal(tr.width(), 200);
+    // check visual
+    var pos = tr.findOne('.top-right').getAbsolutePosition();
+    assert.equal(pos.x, 300);
+
+    stage.draw();
+  });
+
+  // TODO: try to rotate rect manually
+  // it produce the weird result
+  // we need skew here!
+  test.skip('rotated inside scaled (in one direction) parent', function() {
+    var stage = addStage();
+    stage.scaleX(2);
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect]
+    });
+    layer.add(tr);
+
+    layer.draw();
+  });
+
   test('try to fit simple rectangle into negative scale', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -313,7 +377,6 @@ suite('Transformer', function() {
     layer.draw();
     assert.equal(tr.getClassName(), 'Transformer');
 
-    console.log(tr);
     layer.draw();
 
     assert.equal(tr.x(), rect.x());
@@ -985,11 +1048,6 @@ suite('Transformer', function() {
     });
     layer.add(tr);
     layer.draw();
-
-    // rect.on('transform', () => {
-    //   console.log(tr.getActiveAnchor(), tr._anchorDragOffset);
-    // });
-    // throw 1;
 
     var anchor = tr.findOne('.top-right');
     var pos = anchor.getAbsolutePosition();
@@ -2635,7 +2693,6 @@ suite('Transformer', function() {
     tests.forEach(test => {
       var start = test[0];
       var end = test[1];
-      console.log(start, end);
       rect.setAttrs({
         x: 0,
         y: 0,
@@ -3399,6 +3456,77 @@ suite('Transformer', function() {
       width: 50,
       height: 50,
       fill: 'red'
+    });
+
+    layer.add(rect2);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect1, rect2]
+    });
+    layer.add(tr);
+    layer.draw();
+
+    tr._fitNodesInto({
+      x: 100,
+      y: 0,
+      width: 100,
+      height: 100,
+      rotation: Konva.getAngle(90)
+    });
+
+    layer.draw();
+
+    assert.equal(rect1.x(), 100);
+    assert.equal(rect1.y(), 0);
+    assert.equal(rect1.width() + rect2.width(), 100);
+    assert.equal(rect1.height() + rect2.width(), 100);
+    assert.equal(rect1.rotation(), 90);
+
+    assert.equal(rect2.x(), 50);
+    assert.equal(rect2.y(), 50);
+    assert.equal(rect2.width() + rect2.width(), 100);
+    assert.equal(rect2.height() + rect2.width(), 100);
+    assert.equal(tr.rotation(), 90);
+
+    tr._fitNodesInto({
+      x: 100,
+      y: 100,
+      width: 100,
+      height: 100,
+      rotation: Konva.getAngle(180)
+    });
+
+    assert.equal(tr.x(), rect1.x());
+    assert.equal(tr.y(), rect1.y());
+    assert.equal(tr.width(), rect1.width() + rect2.width());
+    assert.equal(tr.height(), rect1.height() + rect2.width());
+    assert.equal(tr.rotation(), 180);
+  });
+
+  test.skip('transform several rotated nodes', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect1 = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 50,
+      height: 50,
+      fill: 'blue',
+      rotation: 45
+    });
+    layer.add(rect1);
+
+    var rect2 = new Konva.Rect({
+      x: 100,
+      y: 100,
+      draggable: true,
+      width: 50,
+      height: 50,
+      fill: 'red',
+      rotation: 120
     });
 
     layer.add(rect2);
