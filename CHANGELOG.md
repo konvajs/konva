@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* Deatach fixes for `Konva.Transformer`
 
 ## 5.0.1 - 2020-04-22
 

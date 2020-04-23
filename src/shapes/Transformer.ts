@@ -462,10 +462,11 @@ export class Transformer extends Group {
    * transformer.detach();
    */
   detach() {
-    if (this.getNode()) {
-      this.getNode().off('.' + EVENTS_NAME);
-      this._nodes = [];
-    }
+    // remove events
+    this._nodes.forEach(node => {
+      node.off('.' + EVENTS_NAME);
+    });
+    this._nodes = [];
     this._resetTransformCache();
   }
   _resetTransformCache() {

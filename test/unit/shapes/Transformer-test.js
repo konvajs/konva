@@ -238,7 +238,7 @@ suite('Transformer', function() {
     layer.draw();
   });
 
-  test('try to resize on draggable stage', function() {
+  test('try to resize in draggable stage', function() {
     var stage = addStage();
     stage.draggable(true);
     var layer = new Konva.Layer();
@@ -3711,6 +3711,60 @@ suite('Transformer', function() {
     assert.equal(dragstart, 1);
     assert.equal(dragmove, 1);
     assert.equal(dragend, 1);
+  });
+
+  test.only('reattach from several and drag one', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect1 = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 50,
+      height: 50,
+      fill: 'yellow'
+    });
+    layer.add(rect1);
+
+    var rect2 = new Konva.Rect({
+      x: 100,
+      y: 100,
+      draggable: true,
+      width: 50,
+      height: 50,
+      fill: 'red'
+    });
+
+    layer.add(rect2);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect1, rect2]
+    });
+    layer.add(tr);
+    layer.draw();
+
+    tr.nodes([rect1]);
+
+    // now drag just the first
+    stage.simulateMouseDown({
+      x: 125,
+      y: 125
+    });
+    stage.simulateMouseMove({
+      x: 130,
+      y: 130
+    });
+
+    stage.simulateMouseUp({
+      x: 130,
+      y: 130
+    });
+
+    // no changes on the second
+    assert.equal(rect1.x(), 50);
+    assert.equal(rect1.y(), 50);
   });
 
   test('transformer should not hide shapes', function() {
