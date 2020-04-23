@@ -5,9 +5,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
-* Fixes for `Konva.Transformer` when parent scale is changed
 
-## 5.0.0 - 2020-03-26
+## 5.0.1 - 2020-04-22
+
+* Fixes for `Konva.Transformer` when parent scale is changed
+* Fixes for `Konva.Transformer` when parent is draggable
+* Performance optimizations
+
+## 5.0.0 - 2020-04-21
 
 * **New `Konva.Transformer` implementation!**. Old API should work. But I mark this release is `major` (breaking) just for smooth updates. Changes:
   * Support of transforming multiple nodes at once: `tr.nodes([shape1, shape2])`.

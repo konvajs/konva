@@ -395,7 +395,7 @@ export class Transformer extends Group {
       };
       node.on(additionalEvents, onChange);
       node.on(TRANSFORM_CHANGE_STR, onChange);
-      node.on(`clearCache.${EVENTS_NAME}`, onChange);
+      node.on(`_clearTransformCache.${EVENTS_NAME}`, onChange);
       node.on(`xChange.${EVENTS_NAME} yChange.${EVENTS_NAME}`, onChange);
       this._proxyDrag(node);
     });
@@ -559,12 +559,21 @@ export class Transformer extends Group {
       strokeWidth: 1,
       name: name + ' _anchor',
       dragDistance: 0,
-      draggable: false,
+      // make it draggable,
+      // so activating the anchror will not start drag&drop of any parent
+      draggable: true,
       hitStrokeWidth: TOUCH_DEVICE ? 10 : 'auto'
     });
     var self = this;
     anchor.on('mousedown touchstart', function(e) {
       self._handleMouseDown(e);
+    });
+    anchor.on('dragstart', e => {
+      anchor.stopDrag();
+      e.cancelBubble = true;
+    });
+    anchor.on('dragend', e => {
+      e.cancelBubble = true;
     });
 
     // add hover styling

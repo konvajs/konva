@@ -199,6 +199,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   _cache: Map<string, any> = new Map<string, any>();
   _lastPos: Vector2d = null;
   _attrsAffectingSize!: string[];
+  _batchingTransformChange = false;
+  _needClearTransformCache = false;
 
   _filterUpToDate = false;
   _isUnderCache = false;
@@ -212,12 +214,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     // event bindings for cache handling
     this.on(TRANSFORM_CHANGE_STR, () => {
+      if (this._batchingTransformChange) {
+        this._needClearTransformCache = true;
+        return;
+      }
       this._clearCache(TRANSFORM);
       this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
-    });
-
-    this.on(SCALE_CHANGE_STR, () => {
-      this._clearSelfAndDescendantCache(ABSOLUTE_SCALE);
     });
 
     this.on('visibleChange.konva', () => {
@@ -268,8 +270,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   _clearSelfAndDescendantCache(attr?: string, forceEvent?: boolean) {
     this._clearCache(attr);
     // trigger clear cache, so transformer can use it
-    if (forceEvent) {
-      this.fire('clearCache');
+    if (forceEvent && attr === ABSOLUTE_TRANSFORM) {
+      this.fire('_clearTransformCache');
     }
 
     // skip clearing if node is cached with canvas
@@ -1154,9 +1156,27 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
     return depth;
   }
+
+  // sometimes we do several attributes changes
+  // like node.position(pos)
+  // for performance reasons, lets batch transform reset
+  // so it work faster
+  _batchTransformChanges(func) {
+    this._batchingTransformChange = true;
+    func();
+    this._batchingTransformChange = false;
+    if (this._needClearTransformCache) {
+      this._clearCache(TRANSFORM);
+      this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM, true);
+    }
+    this._needClearTransformCache = false;
+  }
+
   setPosition(pos) {
-    this.x(pos.x);
-    this.y(pos.y);
+    this._batchTransformChanges(() => {
+      this.x(pos.x);
+      this.y(pos.y);
+    });
     return this;
   }
   getPosition() {
@@ -1200,8 +1220,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     delete origTrans.x;
     delete origTrans.y;
 
-    // unravel transform
-    it = this.getAbsoluteTransform();
+    // important, use non cached value
+    this._clearCache(TRANSFORM);
+    it = this._getAbsoluteTransform();
 
     it.invert();
     it.translate(pos.x, pos.y);
@@ -1209,7 +1230,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       x: this.attrs.x + it.getTranslation().x,
       y: this.attrs.y + it.getTranslation().y
     };
-
     this._setTransform(origTrans);
     this.setPosition({ x: pos.x, y: pos.y });
 
@@ -1221,9 +1241,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     for (key in trans) {
       this.attrs[key] = trans[key];
     }
-
-    this._clearCache(TRANSFORM);
-    this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
+    // this._clearCache(TRANSFORM);
+    // this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
   }
   _clearTransform() {
     var trans = {
@@ -1247,9 +1266,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this.attrs.offsetY = 0;
     this.attrs.skewX = 0;
     this.attrs.skewY = 0;
-
-    this._clearCache(TRANSFORM);
-    this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
 
     // return original transform
     return trans;
@@ -1730,15 +1746,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * var scaleX = node.getAbsoluteScale().x;
    */
   getAbsoluteScale(top?) {
-    // if using an argument, we can't cache the result.
-    if (top) {
-      return this._getAbsoluteScale(top);
-    } else {
-      // if no argument, we can cache the result
-      return this._getCache(ABSOLUTE_SCALE, this._getAbsoluteScale);
-    }
-  }
-  _getAbsoluteScale(top) {
+    // do not cache this calculations,
+    // because it use cache transform
     // this is special logic for caching with some shapes with shadow
     var parent: Node = this;
     while (parent) {

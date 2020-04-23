@@ -238,6 +238,76 @@ suite('Transformer', function() {
     layer.draw();
   });
 
+  test('try to resize on draggable stage', function() {
+    var stage = addStage();
+    stage.draggable(true);
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect]
+    });
+    layer.add(tr);
+    layer.draw();
+
+    var dragstart = 0;
+    var dragmove = 0;
+    var dragend = 0;
+    stage.on('dragstart', function() {
+      dragstart += 1;
+    });
+    stage.on('dragmove', function() {
+      dragmove += 1;
+    });
+    stage.on('dragend', function() {
+      dragend += 1;
+    });
+
+    tr.simulateMouseDown({
+      x: 50,
+      y: 50
+    });
+    tr.simulateMouseMove({
+      x: 60,
+      y: 60
+    });
+    assert.equal(stage.isDragging(), false);
+    assert.equal(dragstart, 0);
+    tr.simulateMouseUp({ x: 60, y: 60 });
+    assert.equal(dragmove, 0);
+    assert.equal(dragend, 0);
+
+    stage.simulateMouseDown({
+      x: 40,
+      y: 40
+    });
+    stage.simulateMouseMove({
+      x: 45,
+      y: 45
+    });
+    stage.simulateMouseMove({
+      x: 50,
+      y: 50
+    });
+    assert.equal(stage.isDragging(), true);
+    assert.equal(stage.x(), 10);
+    assert.equal(stage.y(), 10);
+    stage.simulateMouseUp({
+      x: 45,
+      y: 45
+    });
+  });
+
   test('try to fit simple rectangle into negative scale', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -1748,16 +1818,16 @@ suite('Transformer', function() {
       y: 30
     });
 
+    stage.simulateMouseUp({
+      x: 30,
+      y: 30
+    });
+
     assert.equal(rect.x(), 10);
     assert.equal(rect.y(), 10);
 
     assert.equal(tr.x(), 10);
     assert.equal(tr.y(), 10);
-
-    stage.simulateMouseUp({
-      x: 30,
-      y: 30
-    });
   });
 
   test('check transformer with drag&drop and scaled shape', function() {
@@ -1995,9 +2065,9 @@ suite('Transformer', function() {
 
     layer.scaleX(2);
 
-    assert.equal(tr.width(), 200);
-
     layer.draw();
+
+    assert.equal(tr.width(), 200);
   });
 
   test('check fit and correct cursor on rotated parent', function() {
@@ -2649,7 +2719,6 @@ suite('Transformer', function() {
     });
   });
 
-  // TODO: fix
   test('centered scaling on flip + keep ratio', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -2703,6 +2772,8 @@ suite('Transformer', function() {
         rotation: 0
       });
       layer.draw();
+
+      console.log(start, end);
 
       // move from start to end
       tr.simulateMouseDown(start);
