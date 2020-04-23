@@ -463,9 +463,11 @@ export class Transformer extends Group {
    */
   detach() {
     // remove events
-    this._nodes.forEach(node => {
-      node.off('.' + EVENTS_NAME);
-    });
+    if (this._nodes) {
+      this._nodes.forEach(node => {
+        node.off('.' + EVENTS_NAME);
+      });
+    }
     this._nodes = [];
     this._resetTransformCache();
   }
@@ -1004,6 +1006,13 @@ export class Transformer extends Group {
         return;
       }
     }
+    // let's find delta transform
+    // var dx = newAttrs.x - oldAttrs.x,
+    //   dy = newAttrs.y - oldAttrs.y,
+    //   angle = newAttrs.rotation - oldAttrs.rotation,
+    //   scaleX = newAttrs.width / oldAttrs.width,
+    //   scaleY = newAttrs.height / oldAttrs.height;
+
     this._nodes.forEach(node => {
       var oldRect = this.__getNodeShape(node, 0);
       var newRect = transformAndRotateShape(oldRect, oldAttrs, newAttrs);

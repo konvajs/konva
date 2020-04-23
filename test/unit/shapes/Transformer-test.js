@@ -1162,9 +1162,7 @@ suite('Transformer', function() {
       });
       layer.add(image);
       var tr = new Konva.Transformer({
-        nodes: [image],
-        keepRatio: true,
-        centeredScaling: true
+        nodes: [image]
       });
       layer.add(tr);
       layer.draw();
@@ -3713,7 +3711,7 @@ suite('Transformer', function() {
     assert.equal(dragend, 1);
   });
 
-  test.only('reattach from several and drag one', function() {
+  test('reattach from several and drag one', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
