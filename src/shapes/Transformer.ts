@@ -1007,16 +1007,146 @@ export class Transformer extends Group {
       }
     }
     // let's find delta transform
-    // var dx = newAttrs.x - oldAttrs.x,
-    //   dy = newAttrs.y - oldAttrs.y,
-    //   angle = newAttrs.rotation - oldAttrs.rotation,
-    //   scaleX = newAttrs.width / oldAttrs.width,
-    //   scaleY = newAttrs.height / oldAttrs.height;
+    var dx = newAttrs.x - oldAttrs.x,
+      dy = newAttrs.y - oldAttrs.y,
+      angle = newAttrs.rotation - oldAttrs.rotation,
+      scaleX = newAttrs.width / oldAttrs.width,
+      scaleY = newAttrs.height / oldAttrs.height;
+
+    // dt1.invert();
+
+    // const dt2 = new Transform();
+    // dt2.translate(newAttrs.x, newAttrs.y);
+    // dt2.rotate(newAttrs.rotation);
+    // // console.log(dt.point(newAttrs));
+    // // dt.translate(newAttrs.x, newAttrs.y);
+    // // console.log(dt.decompose());
+    // // dt.rotate(newAttrs.rotation);
+    // dt2.scale(scaleX, scaleY);
+
+    // dt1.multiply(dt2);
+
+    // dt.translate(dx, dy);
+    // dt.rotate(angle);
+    // dt.scale(scaleX, scaleY);
+
+    // console.log(Math.abs(Konva.getAngle(dt.decompose().rotation) - angle));
+    // if (
+    //   Math.abs(Konva.getAngle(dt.decompose().rotation) - angle) > 0.000000000000001
+    // ) {
+    //   debugger;
+    // }
 
     this._nodes.forEach(node => {
-      var oldRect = this.__getNodeShape(node, 0);
-      var newRect = transformAndRotateShape(oldRect, oldAttrs, newAttrs);
-      this._fitNodeInto(node, newRect, evt);
+      // var oldRect = this.__getNodeShape(node, 0);
+      // var newRect = transformAndRotateShape(oldRect, oldAttrs, newAttrs);
+      // this._fitNodeInto(node, newRect, evt);
+
+      // var m = new Transform(),
+      //   x = node.x(),
+      //   y = node.y(),
+      //   rotation = Konva.getAngle(node.rotation()),
+      //   scaleX = node.scaleX(),
+      //   scaleY = node.scaleY(),
+      //   skewX = node.skewX(),
+      //   skewY = node.skewY(),
+      //   offsetX = node.offsetX(),
+      //   offsetY = node.offsetY();
+
+      // // if (x !== 0 || y !== 0) {
+      // //   m.translate(x, y);
+      // // }
+      // if (rotation !== 0) {
+      //   m.rotate(rotation);
+      // }
+      // if (skewX !== 0 || skewY !== 0) {
+      //   m.skew(skewX, skewY);
+      // }
+      // if (scaleX !== 1 || scaleY !== 1) {
+      //   m.scale(scaleX, scaleY);
+      // }
+      // if (offsetX !== 0 || offsetY !== 0) {
+      //   m.translate(-1 * offsetX, -1 * offsetY);
+      // }
+
+      // return m;
+
+      // t.translate(dx, dy);
+      // t.rotate(Konva.getAngle(node.rotation()) + angle);
+      // t.scale(node.scaleX() * scaleX, node.scaleY() * scaleY);
+      // const t = node.getTransform();
+
+      // const dt1 = new Transform();
+      // dt1.translate(dx, dy);
+      // dt1.rotate(angle);
+      // dt1.scale(scaleX, scaleY);
+
+      // // const oldScale = {
+      // //   x: dt.decompose().scaleX,
+      // //   y: dt.decompose().scaleY
+      // // };
+      // // dt.scale(1, 1);
+      // t.multiply(dt1);
+      // dt.scale(oldScale.x, oldScale.y);
+      // t.translate(
+      //   dt.getTranslation().x * t.decompose().scaleX,
+      //   dt.getTranslation().y * t.decompose().scaleY
+      // );
+      // dt.set
+      // dt.setAbsolutePosition(0, 0);
+      // t.multiply(dt);
+      // console.log(
+      //   node.rotation(),
+      //   dt.decompose().rotation,
+      //   t.decompose().rotation,
+      //   Util._getRotation(newAttrs.rotation)
+      // );
+      // m.multiply(dt);
+      // m.translate(x + dx, y + dy);
+      // node.setAttrs(t.decompose());
+      // if (offsetX !== 0 || offsetY !== 0) {
+      // t.translate(
+      //   node.offsetX() * (1 - node.scaleX() / scaleX),
+      //   node.offsetY() * (1 - node.scaleY() / scaleY)
+      // );
+      const parentRot = Konva.getAngle(node.getParent().getAbsoluteRotation());
+      const rotation = Util._getRotation(newAttrs.rotation - parentRot);
+
+      var pure = node.getClientRect({
+        skipShadow: true,
+        skipStroke: this.ignoreStroke()
+      });
+
+      const parentTransform = node
+        .getParent()
+        .getAbsoluteTransform()
+        .copy();
+      parentTransform.invert();
+      const invertedPoint = parentTransform.point({
+        x: newAttrs.x,
+        y: newAttrs.y
+      });
+      newAttrs.x = invertedPoint.x;
+      newAttrs.y = invertedPoint.y;
+      var absScale = node.getParent().getAbsoluteScale();
+
+      pure.width *= absScale.x;
+      pure.height *= absScale.y;
+
+      var scaleX = pure.width ? newAttrs.width / pure.width : 1;
+      var scaleY = pure.height ? newAttrs.height / pure.height : 1;
+
+      var dx = pure.x * scaleX - node.offsetX() * scaleX;
+      var dy = pure.y * scaleY - node.offsetY() * scaleY;
+
+      var x = newAttrs.x - (dx * Math.cos(rotation) + dy * Math.sin(-rotation));
+      var y = newAttrs.y - (dy * Math.cos(rotation) + dx * Math.sin(rotation));
+      var tr = new Transform();
+      tr.translate(x, y);
+      tr.rotate(rotation);
+      tr.scale(scaleX, scaleY);
+
+      node.setAttrs(tr.multiply(node.getTransform()).decompose());
     });
     this.rotation(Util._getRotation(newAttrs.rotation));
     this._resetTransformCache();

@@ -1,4 +1,4 @@
-suite('Transformer', function() {
+suite.only('Transformer', function() {
   function isClose(a, b) {
     return Math.abs(a - b) < 0.000001;
   }
@@ -138,7 +138,7 @@ suite('Transformer', function() {
     layer.draw();
   });
 
-  test('try to fit simple rectangle', function() {
+  test.only('try to fit simple rectangle', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -159,19 +159,132 @@ suite('Transformer', function() {
 
     layer.draw();
 
+    // tr._fitNodesInto({
+    //   x: 120,
+    //   y: 60,
+    //   width: 50,
+    //   height: 50,
+    //   rotation: Konva.getAngle(45)
+    // });
+
+    // assert.equal(tr.x(), rect.x());
+    // assert.equal(Math.round(tr.y()), rect.y());
+    // assert.equal(tr.width(), 50);
+    // assert.equal(tr.height(), 50);
+    // assert.equal(tr.rotation(), rect.rotation());
+  });
+
+  test('try to fit simple rotated rectangle', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 150,
+      fill: 'yellow',
+      rotation: 45
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer();
+    layer.add(tr);
+    tr.nodes([rect]);
+
+    layer.draw();
+
     tr._fitNodesInto({
-      x: 120,
-      y: 60,
-      width: 50,
-      height: 50,
+      x: 50,
+      y: 50,
+      width: 100,
+      height: 150,
       rotation: Konva.getAngle(45)
     });
 
-    assert.equal(tr.x(), rect.x());
-    assert.equal(Math.round(tr.y()), rect.y());
-    assert.equal(tr.width(), 50);
-    assert.equal(tr.height(), 50);
-    assert.equal(tr.rotation(), rect.rotation());
+    assert.almostEqual(rect.x(), 50);
+    assert.almostEqual(rect.y(), 50);
+    assert.almostEqual(tr.width(), 100);
+    assert.almostEqual(tr.height(), 150);
+    assert.almostEqual(tr.rotation(), rect.rotation());
+  });
+
+  test('try to fit simple rotated rectangle - 2', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 200,
+      fill: 'yellow',
+      rotation: 45
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer();
+    layer.add(tr);
+    tr.nodes([rect]);
+
+    layer.draw();
+
+    tr._fitNodesInto({
+      x: 40,
+      y: 40,
+      width: 100,
+      height: 100,
+      rotation: 0
+    });
+
+    assert.almostEqual(rect.x(), 40);
+    assert.almostEqual(rect.y(), 40);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.height(), 200);
+    assert.almostEqual(rect.scaleY(), 0.5);
+    assert.almostEqual(rect.rotation(), 0);
+  });
+
+  test('rotate around center', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 200,
+      fill: 'yellow',
+      rotation: 45
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer();
+    layer.add(tr);
+    tr.nodes([rect]);
+
+    layer.draw();
+
+    tr._fitNodesInto({
+      x: 40,
+      y: 40,
+      width: 100,
+      height: 100,
+      rotation: 0
+    });
+
+    assert.almostEqual(rect.x(), 40);
+    assert.almostEqual(rect.y(), 40);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.height(), 200);
+    assert.almostEqual(rect.scaleY(), 0.5);
+    assert.almostEqual(rect.rotation(), 0);
   });
 
   test('change transform of parent', function() {
@@ -456,7 +569,7 @@ suite('Transformer', function() {
     assert.equal(tr.rotation(), rect.rotation());
   });
 
-  test('try to fit a transformed rect', function() {
+  test.only('try to fit a transformed rect', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
