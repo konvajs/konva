@@ -2771,8 +2771,6 @@ suite('Transformer', function() {
       });
       layer.draw();
 
-      console.log(start, end);
-
       // move from start to end
       tr.simulateMouseDown(start);
       tr.simulateMouseMove(end);
@@ -4073,7 +4071,12 @@ suite('Transformer', function() {
 
   test('boundBoxFox should work in local coordinates', function() {
     var stage = addStage();
-    var layer = new Konva.Layer();
+    var layer = new Konva.Layer({
+      x: 10,
+      y: 10,
+      scaleX: 2,
+      scaleY: 2
+    });
     stage.add(layer);
 
     var rect1 = new Konva.Rect({
@@ -4108,8 +4111,22 @@ suite('Transformer', function() {
             height: 50,
             rotation: 0
           });
+          assert.deepEqual(newBox, {
+            x: 0,
+            y: 0,
+            width: 50,
+            height: 50,
+            rotation: 0
+          });
         } else {
           assert.deepEqual(oldBox, {
+            x: 50,
+            y: 50,
+            width: 50,
+            height: 50,
+            rotation: 0
+          });
+          assert.deepEqual(newBox, {
             x: 50,
             y: 50,
             width: 50,
@@ -4123,10 +4140,10 @@ suite('Transformer', function() {
     layer.add(tr);
 
     tr._fitNodesInto({
-      x: 0,
-      y: 0,
-      width: 100,
-      height: 100,
+      x: 10,
+      y: 10,
+      width: 200,
+      height: 200,
       rotation: 0
     });
   });

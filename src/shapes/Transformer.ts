@@ -1024,6 +1024,29 @@ export class Transformer extends Group {
     this.getLayer().batchDraw();
   }
   _fitNodeInto(node: Node, newAttrs, evt) {
+    var pure = node.getClientRect({
+      skipTransform: true,
+      skipShadow: true,
+      skipStroke: this.ignoreStroke()
+    });
+
+    const parentTransform = node
+      .getParent()
+      .getAbsoluteTransform()
+      .copy();
+    parentTransform.invert();
+    const invertedPoint = parentTransform.point({
+      x: newAttrs.x,
+      y: newAttrs.y
+    });
+
+    var absScale = node.getParent().getAbsoluteScale();
+
+    newAttrs.x = invertedPoint.x;
+    newAttrs.y = invertedPoint.y;
+    newAttrs.width /= absScale.x;
+    newAttrs.height /= absScale.y;
+
     if (this.boundBoxFunc()) {
       const oldAttrs = this.__getNodeShape(
         node,
@@ -1043,27 +1066,7 @@ export class Transformer extends Group {
     const parentRot = Konva.getAngle(node.getParent().getAbsoluteRotation());
     node.rotation(Util._getRotation(newAttrs.rotation - parentRot));
 
-    var pure = node.getClientRect({
-      skipTransform: true,
-      skipShadow: true,
-      skipStroke: this.ignoreStroke()
-    });
-
-    const parentTransform = node
-      .getParent()
-      .getAbsoluteTransform()
-      .copy();
-    parentTransform.invert();
-    const invertedPoint = parentTransform.point({
-      x: newAttrs.x,
-      y: newAttrs.y
-    });
-    newAttrs.x = invertedPoint.x;
-    newAttrs.y = invertedPoint.y;
     var absScale = node.getParent().getAbsoluteScale();
-
-    pure.width *= absScale.x;
-    pure.height *= absScale.y;
 
     var scaleX = pure.width ? newAttrs.width / pure.width : 1;
     var scaleY = pure.height ? newAttrs.height / pure.height : 1;
