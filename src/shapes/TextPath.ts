@@ -660,7 +660,7 @@ Factory.addGetterSetter(TextPath, 'align', 'left');
 Factory.addGetterSetter(TextPath, 'letterSpacing', 0, getNumberValidator());
 
 /**
- * get/set text baselineg.  The default is 'middle'. Can be 'top', 'bottom', 'middle', 'alphabetic', 'hanging'
+ * get/set text baseline.  The default is 'middle'. Can be 'top', 'bottom', 'middle', 'alphabetic', 'hanging'
  * @name Konva.TextPath#textBaseline
  * @method
  * @param {String} textBaseline

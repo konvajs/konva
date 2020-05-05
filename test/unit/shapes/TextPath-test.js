@@ -315,6 +315,32 @@ suite('TextPath', function() {
     assert.equal(layer.getContext().getTrace(true), trace);
   });
 
+  test.skip('Text path with center align - arc', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var textpath = new Konva.TextPath({
+      fill: '#333',
+      fontSize: 20,
+      text: 'Hello  World',
+      align: 'right',
+      data: 'M 50 200 a 100 100 0 0 1 200 0'
+    });
+    layer.add(textpath);
+
+    var path = new Konva.Path({
+      stroke: '#000',
+      data: 'M 50 200 a 100 100 0 0 1 200 0'
+    });
+    layer.add(path);
+    stage.add(layer);
+
+    var trace =
+      'restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();restore();restore();';
+
+    assert.equal(layer.getContext().getTrace(true), trace);
+  });
+
   test('Text path with align right', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

@@ -1492,6 +1492,37 @@ suite('Shape', function() {
     assert.equal(absRect.height, 100);
   });
 
+  test.only('getClientRect with skew', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var shape = new Konva.Rect({
+      x: 150,
+      y: 50,
+      width: 100,
+      height: 100,
+      scaleX: 0.63,
+      skewX: -1.6,
+      fill: 'green'
+    });
+    layer.add(shape);
+
+    var back = new Konva.Rect({
+      stroke: 'red'
+    });
+    back.setAttrs(shape.getClientRect());
+    layer.add(back);
+    layer.draw();
+
+    var absRect = shape.getClientRect();
+
+    assert.equal(absRect.x, 10);
+    assert.equal(absRect.y, 0);
+    assert.equal(absRect.width, 100);
+    assert.equal(absRect.height, 100);
+  });
+
   test('shadow should respect pixel ratio', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

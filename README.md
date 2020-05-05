@@ -155,6 +155,7 @@ See file `konva-node/demo.js` file in this repo as a sample.
 # Backers
 
 [myposter GmbH](https://www.myposter.de/)
+[queue.gg]()https://queue.gg/
 
 
 # Change log

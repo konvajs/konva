@@ -2,7 +2,6 @@ import { glob, Konva } from './Global';
 import { Node } from './Node';
 import { IRect, RGB, RGBA, Vector2d } from './types';
 
-
 /**
  * Collection constructor. Collection extends Array.
  * This class is used in conjunction with {@link Konva.Container#find}
@@ -344,7 +343,7 @@ export class Transform {
       result.rotation = b > 0 ? Math.acos(a / r) : -Math.acos(a / r);
       result.scaleX = r;
       result.scaleY = delta / r;
-      result.skewX = Math.atan((a * c + b * d) / (r * r));
+      result.skewX = (a * c + b * d) / (r * r);
       result.skewY = 0;
     } else if (c != 0 || d != 0) {
       var s = Math.sqrt(c * c + d * d);
@@ -353,7 +352,7 @@ export class Transform {
       result.scaleX = delta / s;
       result.scaleY = s;
       result.skewX = 0;
-      result.skewY = Math.atan((a * c + b * d) / (s * s));
+      result.skewY = (a * c + b * d) / (s * s);
     } else {
       // a = b = c = d = 0
     }
@@ -361,6 +360,25 @@ export class Transform {
     result.rotation = Util._getRotation(result.rotation);
 
     return result;
+  }
+  qrDecompose() {
+    var angle = Math.atan2(this.m[1], this.m[0]),
+      denom = Math.pow(this.m[0], 2) + Math.pow(this.m[1], 2),
+      scaleX = Math.sqrt(denom),
+      scaleY = (this.m[0] * this.m[3] - this.m[2] * this.m[1]) / scaleX,
+      skewX = Math.atan2(this.m[0] * this.m[2] + this.m[1] * this.m[3], denom);
+
+    const rotation = Util._getRotation(angle);
+
+    return {
+      rotation,
+      scaleX: scaleX,
+      scaleY: scaleY,
+      skewX: skewX / (Math.PI / 180),
+      skewY: 0,
+      x: this.m[4],
+      y: this.m[5]
+    };
   }
 }
 

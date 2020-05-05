@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## 5.0.3 - 2020-05-01
+
+* Fixes for `boundBoxFunc` of `Konva.Transformer`.
+
 ## 5.0.2 - 2020-04-23
 
 * Deatach fixes for `Konva.Transformer`
