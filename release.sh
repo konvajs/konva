@@ -56,9 +56,6 @@ git commit -am "update cdn link" --allow-empty >/dev/null
 echo "create new git tag"
 git tag $1 >/dev/null
 
-echo "generate documentation"
-npx gulp api >/dev/null
-
 
 
 echo "archive documentation"

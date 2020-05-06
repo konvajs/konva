@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "chai": "4.2.0",
+    "github-release-from-changelog": "^2.1.1",
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
     "gulp-connect": "^5.7.0",
@@ -40,8 +41,10 @@
     "gulp-typescript": "^5.0.1",
     "gulp-uglify": "^3.0.2",
     "gulp-util": "^3.0.8",
+    "install": "^0.13.0",
     "mocha": "6.2.2",
     "mocha-headless-chrome": "^2.0.3",
+    "npm": "^6.14.5",
     "prettier": "^1.19.1",
     "rollup": "^1.27.0",
     "rollup-plugin-commonjs": "^10.1.0",

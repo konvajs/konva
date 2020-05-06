@@ -343,7 +343,7 @@ export class Transform {
       result.rotation = b > 0 ? Math.acos(a / r) : -Math.acos(a / r);
       result.scaleX = r;
       result.scaleY = delta / r;
-      result.skewX = (a * c + b * d) / (r * r);
+      result.skewX = (a * c + b * d) / delta;
       result.skewY = 0;
     } else if (c != 0 || d != 0) {
       var s = Math.sqrt(c * c + d * d);
@@ -352,7 +352,7 @@ export class Transform {
       result.scaleX = delta / s;
       result.scaleY = s;
       result.skewX = 0;
-      result.skewY = (a * c + b * d) / (s * s);
+      result.skewY = (a * c + b * d) / delta;
     } else {
       // a = b = c = d = 0
     }

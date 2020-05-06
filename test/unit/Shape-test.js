@@ -1492,18 +1492,18 @@ suite('Shape', function() {
     assert.equal(absRect.height, 100);
   });
 
-  test.only('getClientRect with skew', function() {
+  test('getClientRect with skew', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
 
     var shape = new Konva.Rect({
-      x: 150,
-      y: 50,
-      width: 100,
+      x: 0,
+      y: 0,
+      width: 200,
       height: 100,
-      scaleX: 0.63,
-      skewX: -1.6,
+      skewX: 0.5,
+      scaleX: 2,
       fill: 'green'
     });
     layer.add(shape);
@@ -1517,10 +1517,40 @@ suite('Shape', function() {
 
     var absRect = shape.getClientRect();
 
-    assert.equal(absRect.x, 10);
+    assert.equal(absRect.x, 0);
     assert.equal(absRect.y, 0);
-    assert.equal(absRect.width, 100);
+    assert.equal(absRect.width, 450);
     assert.equal(absRect.height, 100);
+  });
+
+  test('decompose transform', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var shape = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: 200,
+      height: 100,
+      skewX: 0.5,
+      scaleX: 2,
+      scaleY: 2,
+      fill: 'green'
+    });
+    layer.add(shape);
+    layer.draw();
+
+    assert.equal(shape.getTransform().decompose().scaleX, 2);
+    assert.equal(shape.getTransform().decompose().scaleY, 2);
+    assert.equal(shape.getTransform().decompose().skewX, 0.5);
+
+    shape.skewX(2);
+    shape.scaleX(0.5);
+
+    assert.equal(shape.getTransform().decompose().skewX, 2);
+    assert.equal(shape.getTransform().decompose().scaleX, 0.5);
+    assert.equal(shape.getTransform().decompose().scaleY, 2);
   });
 
   test('shadow should respect pixel ratio', function() {
