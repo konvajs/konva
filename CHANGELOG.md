@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+* **BREAKING!** `transformer.boundBoxFunc` works in absolute coordinates of whole transformer.
+* Many `Konva.Transformer` fixes. Now it works correctly when you transform several rotated shapes.
+
 ## 5.0.3 - 2020-05-01
 
 * Fixes for `boundBoxFunc` of `Konva.Transformer`.
@@ -21,7 +24,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 5.0.0 - 2020-04-21
 
-* **New `Konva.Transformer` implementation!**. Old API should work. But I mark this release is `major` (breaking) just for smooth updates. Changes:
+* **New `Konva.Transformer` implementation!**. Old API should work. But I marked this release is `major` (breaking) just for smooth updates. Changes:
   * Support of transforming multiple nodes at once: `tr.nodes([shape1, shape2])`.
   * `tr.node()`, `tr.setNode()`, `tr.attachTo()` methods are deprecated. Use `tr.nodes(array)` instead
   * Fixes for center scaling

@@ -174,6 +174,119 @@ suite('Transformer', function() {
     assert.equal(tr.rotation(), rect.rotation());
   });
 
+  test('try to fit simple rotated rectangle', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 150,
+      fill: 'yellow',
+      rotation: 45
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer();
+    layer.add(tr);
+    tr.nodes([rect]);
+
+    layer.draw();
+
+    tr._fitNodesInto({
+      x: 50,
+      y: 50,
+      width: 100,
+      height: 150,
+      rotation: Konva.getAngle(45)
+    });
+
+    assert.almostEqual(rect.x(), 50);
+    assert.almostEqual(rect.y(), 50);
+    assert.almostEqual(tr.width(), 100);
+    assert.almostEqual(tr.height(), 150);
+    assert.almostEqual(tr.rotation(), rect.rotation());
+  });
+
+  test('try to fit simple rotated rectangle - 2', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 200,
+      fill: 'yellow',
+      rotation: 45
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer();
+    layer.add(tr);
+    tr.nodes([rect]);
+
+    layer.draw();
+
+    tr._fitNodesInto({
+      x: 40,
+      y: 40,
+      width: 100,
+      height: 100,
+      rotation: 0
+    });
+
+    assert.almostEqual(rect.x(), 40);
+    assert.almostEqual(rect.y(), 40);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.height(), 200);
+    assert.almostEqual(rect.scaleY(), 0.5);
+    assert.almostEqual(rect.rotation(), 0);
+  });
+
+  test('rotate around center', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 200,
+      fill: 'yellow',
+      rotation: 45
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer();
+    layer.add(tr);
+    tr.nodes([rect]);
+
+    layer.draw();
+
+    tr._fitNodesInto({
+      x: 40,
+      y: 40,
+      width: 100,
+      height: 100,
+      rotation: 0
+    });
+
+    assert.almostEqual(rect.x(), 40);
+    assert.almostEqual(rect.y(), 40);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.height(), 200);
+    assert.almostEqual(rect.scaleY(), 0.5);
+    assert.almostEqual(rect.rotation(), 0);
+  });
+
   test('change transform of parent', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -214,7 +327,7 @@ suite('Transformer', function() {
   // TODO: try to rotate rect manually
   // it produce the weird result
   // we need skew here!
-  test.skip('rotated inside scaled (in one direction) parent', function() {
+  test('rotated inside scaled (in one direction) parent', function() {
     var stage = addStage();
     stage.scaleX(2);
     var layer = new Konva.Layer();
@@ -236,6 +349,45 @@ suite('Transformer', function() {
     layer.add(tr);
 
     layer.draw();
+  });
+
+  test('try to fit rectangle with skew', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 60,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+      skewX: 0.5,
+      scaleX: 2
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer();
+    layer.add(tr);
+    tr.nodes([rect]);
+
+    layer.draw();
+
+    tr._fitNodesInto({
+      x: 120,
+      y: 60,
+      width: 50,
+      height: 50,
+      rotation: Konva.getAngle(45)
+    });
+
+    assert.equal(tr.x(), rect.x());
+    assert.equal(Math.round(tr.y()), rect.y());
+    assert.equal(tr.width(), 50);
+    assert.equal(tr.height(), 50);
+    assert.equal(tr.rotation(), rect.rotation());
+    assert.almostEqual(rect.skewX(), 0.2);
   });
 
   test('try to resize in draggable stage', function() {
@@ -339,13 +491,13 @@ suite('Transformer', function() {
 
     tr._fitNodesInto(box);
 
-    assert.equal(rect.x(), 100);
-    assert.equal(rect.y(), 0);
-    assert.equal(rect.width(), 100);
-    assert.equal(rect.scaleX(), -1);
-    assert.equal(rect.height(), 100);
-    assert.equal(rect.scaleY(), 1);
-    assert.equal(rect.rotation(), 0);
+    assert.almostEqual(rect.x(), 100);
+    assert.almostEqual(rect.y(), 0);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.scaleX(), 1);
+    assert.almostEqual(rect.height(), 100);
+    assert.almostEqual(rect.scaleY(), -1);
+    assert.almostEqual(rect.rotation(), -180);
 
     layer.draw();
   });
@@ -384,11 +536,11 @@ suite('Transformer', function() {
       rotation: 0
     });
 
-    assert.equal(rect.x(), 20);
-    assert.equal(rect.y(), 20);
-    assert.equal(rect.width(), 100);
-    assert.equal(rect.height(), 100);
-    assert.equal(rect.scaleX(), 2);
+    assert.almostEqual(rect.x(), 20);
+    assert.almostEqual(rect.y(), 20);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.height(), 100);
+    assert.almostEqual(rect.scaleX(), 2);
   });
 
   test('listen shape changes', function() {
@@ -487,11 +639,11 @@ suite('Transformer', function() {
       rotation: 0
     });
 
-    assert.equal(rect.x(), 100);
-    assert.equal(rect.y(), 70);
-    assert.equal(rect.width() * rect.scaleX(), 100);
-    assert.equal(rect.height() * rect.scaleY(), 100);
-    assert.equal(rect.rotation(), rect.rotation());
+    assert.almostEqual(rect.x(), 100);
+    assert.almostEqual(rect.y(), 70);
+    assert.almostEqual(rect.width() * rect.scaleX(), 100);
+    assert.almostEqual(rect.height() * rect.scaleY(), 100);
+    assert.almostEqual(rect.rotation(), rect.rotation());
   });
 
   test('add transformer for transformed rect with offset', function() {
@@ -557,17 +709,17 @@ suite('Transformer', function() {
     });
     layer.draw();
 
-    assert.equal(rect.x(), 100);
-    assert.equal(rect.y(), 50);
-    assert.equal(rect.width() * rect.scaleX(), 200);
-    assert.equal(rect.height() * rect.scaleY(), 100);
-    assert.equal(rect.rotation(), rect.rotation());
+    assert.almostEqual(rect.x(), 100);
+    assert.almostEqual(rect.y(), 50);
+    assert.almostEqual(rect.width() * rect.scaleX(), 200);
+    assert.almostEqual(rect.height() * rect.scaleY(), 100);
+    assert.almostEqual(rect.rotation(), rect.rotation());
 
-    assert.equal(tr.x(), 0);
-    assert.equal(tr.y(), 0);
-    assert.equal(tr.width(), 200);
-    assert.equal(tr.height(), 100);
-    assert.equal(rect.rotation(), rect.rotation());
+    assert.almostEqual(tr.x(), 0);
+    assert.almostEqual(tr.y(), 0);
+    assert.almostEqual(tr.width(), 200);
+    assert.almostEqual(tr.height(), 100);
+    assert.almostEqual(rect.rotation(), rect.rotation());
   });
 
   test('add transformer for circle', function() {
@@ -663,16 +815,16 @@ suite('Transformer', function() {
     });
     layer.draw();
 
-    assert.equal(circle.x(), 40);
-    assert.equal(circle.y(), 40);
-    assert.equal(circle.width() * circle.scaleX(), 80);
-    assert.equal(circle.height() * circle.scaleY(), 80);
-    assert.equal(circle.rotation(), 90);
+    assert.almostEqual(circle.x(), 40);
+    assert.almostEqual(circle.y(), 40);
+    assert.almostEqual(circle.width() * circle.scaleX(), 80);
+    assert.almostEqual(circle.height() * circle.scaleY(), 80);
+    assert.almostEqual(circle.rotation(), 90);
 
-    assert.equal(tr.x(), 80);
-    assert.equal(tr.y(), 0);
-    assert.equal(tr.width(), 80);
-    assert.equal(tr.height(), 80);
+    assert.almostEqual(tr.x(), 80);
+    assert.almostEqual(tr.y(), 0);
+    assert.almostEqual(tr.width(), 80);
+    assert.almostEqual(tr.height(), 80);
   });
 
   test('add transformer for transformed circle', function() {
@@ -825,16 +977,16 @@ suite('Transformer', function() {
 
     var rect = group.getClientRect();
 
-    assert.equal(group.x(), 50);
-    assert.equal(group.y(), 50);
-    assert.equal(rect.width, 100);
-    assert.equal(rect.height, 100);
-    assert.equal(group.rotation(), 90);
+    assert.almostEqual(group.x(), 50);
+    assert.almostEqual(group.y(), 50);
+    assert.almostEqual(rect.width, 100);
+    assert.almostEqual(rect.height, 100);
+    assert.almostEqual(group.rotation(), 90);
 
-    assert.equal(tr.x(), 100);
-    assert.equal(tr.y(), 0);
-    assert.equal(tr.width(), 100);
-    assert.equal(tr.height(), 100);
+    assert.almostEqual(tr.x(), 100);
+    assert.almostEqual(tr.y(), 0);
+    assert.almostEqual(tr.width(), 100);
+    assert.almostEqual(tr.height(), 100);
   });
 
   test('add transformer to another group', function() {
@@ -927,15 +1079,15 @@ suite('Transformer', function() {
 
     var rect = group.getClientRect();
 
-    assert.equal(group.x(), 100);
-    assert.equal(group.y(), 50);
-    assert.equal(rect.width, 200);
-    assert.equal(rect.height, 100);
+    assert.almostEqual(group.x(), 100);
+    assert.almostEqual(group.y(), 50);
+    assert.almostEqual(rect.width, 200);
+    assert.almostEqual(rect.height, 100);
 
-    assert.equal(tr.x(), 0);
-    assert.equal(tr.y(), 0);
-    assert.equal(tr.width(), 200);
-    assert.equal(tr.height(), 100);
+    assert.almostEqual(tr.x(), 0);
+    assert.almostEqual(tr.y(), 0);
+    assert.almostEqual(tr.width(), 200);
+    assert.almostEqual(tr.height(), 100);
   });
 
   test('toJSON should not save attached node and children', function() {
@@ -1090,12 +1242,12 @@ suite('Transformer', function() {
       y: 150
     });
 
-    assert.equal(rect.x(), 80);
-    assert.equal(rect.y(), 30);
-    assert.equal(rect.width(), 100);
-    assert.equal(rect.scaleX(), 0.5);
-    assert.equal(rect.height(), 100);
-    assert.equal(rect.scaleY(), 1);
+    assert.almostEqual(rect.x(), 80);
+    assert.almostEqual(rect.y(), 30);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.scaleX(), 0.5);
+    assert.almostEqual(rect.height(), 100);
+    assert.almostEqual(rect.scaleY(), 1);
   });
 
   test('keep ratio should allow negative scaling', function() {
@@ -1122,28 +1274,22 @@ suite('Transformer', function() {
     var anchor = tr.findOne('.top-right');
     var pos = anchor.getAbsolutePosition();
 
-    stage.simulateMouseDown({
+    tr.simulateMouseDown({
       x: pos.x,
       y: pos.y
     });
-    var box = stage.content.getBoundingClientRect();
-    tr._handleMouseMove({
-      clientX: box.left + pos.x - 100,
-      clientY: box.top + pos.y + 100
+    tr.simulateMouseMove({
+      x: pos.x - 100,
+      y: pos.y + 100
     });
-
-    // here is duplicate, because transformer is listening window events
-    tr._handleMouseUp({
-      clientX: box.left + pos.x - 100,
-      clientY: box.top + pos.y + 100
-    });
-    stage.simulateMouseUp({
+    tr.simulateMouseUp({
       x: pos.x - 100,
       y: pos.y + 100
     });
 
-    assert.equal(rect.scaleX(), -1);
-    assert.equal(rect.scaleY(), -1);
+    assert.almostEqual(rect.scaleX(), 1);
+    assert.almostEqual(rect.scaleY(), 1);
+    assert.almostEqual(rect.rotation(), -180);
   });
 
   test.skip('visual test', function(done) {
@@ -1236,24 +1382,24 @@ suite('Transformer', function() {
       x: 0,
       y: 199
     });
-    assert.equal(rect.rotation(), 270);
+    assert.almostEqual(rect.rotation(), -90);
 
     tr.simulateMouseMove({
       x: 0,
       y: 50
     });
-    assert.equal(rect.rotation(), 270);
+    assert.almostEqual(rect.rotation(), -90);
     tr.simulateMouseMove({
       x: 0,
       y: 45
     });
-    assert.equal(rect.rotation(), 270);
+    assert.almostEqual(rect.rotation(), -90);
 
     tr.simulateMouseMove({
       x: 0,
       y: 1
     });
-    assert.equal(rect.rotation(), 270);
+    assert.almostEqual(rect.rotation(), -90);
 
     tr.simulateMouseMove({
       x: 1,
@@ -1297,12 +1443,13 @@ suite('Transformer', function() {
       y: 60
     });
 
-    assert.equal(rect.x(), 115);
-    assert.equal(rect.y(), 10);
-    assert.equal(rect.width(), 100);
-    assert.equal(rect.scaleX(), -0.05);
-    assert.equal(rect.height(), 100);
-    assert.equal(rect.rotation(), 0);
+    assert.almostEqual(rect.x(), 115);
+    assert.almostEqual(rect.y(), 10);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.scaleX(), 0.05);
+    assert.almostEqual(rect.scaleY(), -1);
+    assert.almostEqual(rect.height(), 100);
+    assert.almostEqual(rect.rotation(), -180);
 
     tr.simulateMouseMove({
       x: 125,
@@ -1325,8 +1472,8 @@ suite('Transformer', function() {
     assert.almostEqual(rect.x(), 100);
     assert.almostEqual(rect.y(), 10);
     assert.almostEqual(rect.width(), 100);
-    assert.almostEqual(rect.scaleY(), -1);
-    assert.almostEqual(rect.scaleX() + 0.1 < 0.0001, true);
+    assert.almostEqual(rect.scaleY(), 1);
+    assert.almostEqual(rect.scaleX(), 0.1);
     assert.almostEqual(rect.height(), 100);
 
     tr.simulateMouseUp();
@@ -1365,24 +1512,24 @@ suite('Transformer', function() {
       y: 125
     });
 
-    assert.equal(rect.x(), 10);
-    assert.equal(rect.y(), 115);
-    assert.equal(rect.width(), 100);
-    assert.equal(rect.scaleY(), -0.05);
-    assert.equal(rect.height(), 100);
-    assert.equal(rect.rotation(), 0);
+    assert.almostEqual(rect.x(), 10);
+    assert.almostEqual(rect.y(), 115);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.scaleY(), -0.05);
+    assert.almostEqual(rect.height(), 100);
+    assert.almostEqual(rect.rotation(), 0);
 
     tr.simulateMouseMove({
       x: 60,
       y: 125
     });
 
-    assert.equal(rect.x(), 10);
-    assert.equal(rect.y(), 115);
-    assert.equal(rect.width(), 100);
-    assert.equal(rect.scaleY(), -0.05);
-    assert.equal(rect.height(), 100);
-    assert.equal(rect.rotation(), 0);
+    assert.almostEqual(rect.x(), 10);
+    assert.almostEqual(rect.y(), 115);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.scaleY(), -0.05);
+    assert.almostEqual(rect.height(), 100);
+    assert.almostEqual(rect.rotation(), 0);
 
     // switch again
     tr.simulateMouseMove({
@@ -1390,13 +1537,13 @@ suite('Transformer', function() {
       y: 90
     });
 
-    assert.equal(rect.x(), 10);
-    assert.equal(rect.y(), 100);
-    assert.equal(rect.width(), 100);
-    assert.equal(rect.scaleX(), 1);
-    assert.equal(rect.scaleY(), 0.1);
-    assert.equal(rect.height(), 100);
-    assert.equal(rect.rotation(), 0);
+    assert.almostEqual(rect.x(), 10);
+    assert.almostEqual(rect.y(), 100);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.scaleX(), 1);
+    assert.almostEqual(rect.scaleY(), 0.1);
+    assert.almostEqual(rect.height(), 100);
+    assert.almostEqual(rect.rotation(), 0);
 
     tr.simulateMouseUp();
   });
@@ -1434,12 +1581,13 @@ suite('Transformer', function() {
     });
     layer.draw();
 
-    assert.equal(rect.x(), 150);
-    assert.equal(rect.y(), 50);
-    assert.equal(rect.width(), 100);
-    assert.equal(rect.scaleX(), -0.5);
-    assert.equal(rect.height(), 100);
-    assert.equal(rect.rotation(), 0);
+    assert.almostEqual(rect.x(), 150);
+    assert.almostEqual(rect.y(), 50);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.scaleX(), 0.5);
+    assert.almostEqual(rect.scaleY(), -0.5);
+    assert.almostEqual(rect.height(), 100);
+    assert.almostEqual(rect.rotation(), -180);
 
     tr.simulateMouseMove({
       x: 98,
@@ -1484,12 +1632,12 @@ suite('Transformer', function() {
       y: 0
     });
 
-    assert.equal(isClose(rect.x(), 0), true);
-    assert.equal(Math.round(rect.y()), 0);
-    assert.equal(rect.width(), 100);
-    assert.equal(Math.round(rect.scaleY()), -1);
-    assert.equal(Math.round(rect.scaleX()), -1);
-    assert.equal(rect.height(), 100);
+    assert.almostEqual(rect.x(), 0);
+    assert.almostEqual(rect.y(), 0);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.scaleY(), 1);
+    assert.almostEqual(rect.scaleX(), 1);
+    assert.almostEqual(rect.height(), 100);
 
     tr.simulateMouseUp();
   });
@@ -1527,12 +1675,12 @@ suite('Transformer', function() {
     });
     layer.draw();
 
-    assert.equal(rect.x(), 0);
-    assert.equal(rect.y(), 200);
-    assert.equal(rect.width(), 100);
-    assert.equal(rect.scaleX(), 1);
-    assert.equal(rect.height(), 100);
-    assert.equal(rect.rotation(), 0);
+    assert.almostEqual(rect.x(), 0);
+    assert.almostEqual(rect.y(), 200);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.scaleX(), 1);
+    assert.almostEqual(rect.height(), 100);
+    assert.almostEqual(rect.rotation(), 0);
 
     tr.simulateMouseMove({
       x: 0,
@@ -1541,13 +1689,13 @@ suite('Transformer', function() {
     layer.draw();
     tr.simulateMouseUp();
 
-    assert.equal(rect.x(), 0);
-    assert.equal(rect.y(), 0);
-    assert.equal(rect.width(), 100);
-    assert.equal(rect.scaleX(), 1);
-    assert.equal(rect.height(), 100);
-    assert.equal(rect.rotation(), 0);
-    assert.equal(rect.scaleY(), 1);
+    assert.almostEqual(rect.x(), 0);
+    assert.almostEqual(rect.y(), 0);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.scaleX(), 1);
+    assert.almostEqual(rect.height(), 100);
+    assert.almostEqual(rect.rotation(), 0);
+    assert.almostEqual(rect.scaleY(), 1);
   });
 
   test('switch scaling with padding for rotated - x', function() {
@@ -1584,12 +1732,13 @@ suite('Transformer', function() {
       y: 125
     });
 
-    assert.equal(rect.x(), 110);
-    assert.equal(rect.y(), 115);
-    assert.equal(rect.width(), 100);
-    assert.equal(rect.scaleX(), -0.05);
-    assert.equal(rect.height(), 100);
-    assert.equal(rect.rotation(), 90);
+    assert.almostEqual(rect.x(), 110);
+    assert.almostEqual(rect.y(), 115);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.scaleX(), 0.05);
+    assert.almostEqual(rect.scaleY(), -1);
+    assert.almostEqual(rect.height(), 100);
+    assert.almostEqual(rect.rotation(), -90);
 
     tr.simulateMouseMove({
       x: 60,
@@ -1603,6 +1752,8 @@ suite('Transformer', function() {
     assert.almostEqual(rect.height(), 100);
     assert.almostEqual(rect.scaleY(), -1);
 
+    layer.draw();
+
     // switch again
     tr.simulateMouseMove({
       x: 60,
@@ -1610,10 +1761,10 @@ suite('Transformer', function() {
     });
 
     assert.almostEqual(rect.x(), 110);
-    assert.almostEqual(rect.y() - 120 < 0.001, true);
+    assert.almostEqual(rect.y(), 100);
     assert.almostEqual(rect.width(), 100);
-    assert.almostEqual(rect.scaleX() + 0.1 < 0.0001, true);
-    assert.almostEqual(rect.scaleY(), -1);
+    assert.almostEqual(rect.scaleX(), 0.1);
+    assert.almostEqual(rect.scaleY(), 1);
 
     assert.almostEqual(rect.height(), 100);
 
@@ -1654,26 +1805,26 @@ suite('Transformer', function() {
       y: 60
     });
 
-    assert.equal(rect.x(), 110);
-    assert.equal(rect.y(), 10);
-    assert.equal(rect.width(), 100);
-    assert.equal(rect.scaleX(), 1);
-    assert.equal(rect.scaleY(), -0.05);
-    assert.equal(rect.height(), 100);
-    assert.equal(rect.rotation(), 90);
+    assert.almostEqual(rect.x(), 110);
+    assert.almostEqual(rect.y(), 10);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.scaleX(), 1);
+    assert.almostEqual(rect.scaleY(), -0.05);
+    assert.almostEqual(rect.height(), 100);
+    assert.almostEqual(rect.rotation(), 90);
 
     tr.simulateMouseMove({
       x: 125,
       y: 60
     });
 
-    assert.equal(rect.x(), 110);
-    assert.equal(rect.y(), 10);
-    assert.equal(rect.width(), 100);
-    assert.equal(rect.scaleX(), 1);
-    assert.equal(rect.scaleY(), -0.05);
-    assert.equal(rect.height(), 100);
-    assert.equal(rect.rotation(), 90);
+    assert.almostEqual(rect.x(), 110);
+    assert.almostEqual(rect.y(), 10);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.scaleX(), 1);
+    assert.almostEqual(rect.scaleY(), -0.05);
+    assert.almostEqual(rect.height(), 100);
+    assert.almostEqual(rect.rotation(), 90);
 
     // switch again
     tr.simulateMouseMove({
@@ -1681,12 +1832,12 @@ suite('Transformer', function() {
       y: 60
     });
 
-    assert.equal(rect.x(), 110);
-    assert.equal(rect.y() - 120 < 0.001, true);
-    assert.equal(rect.width(), 100);
-    assert.equal(rect.scaleX(), 1);
-    assert.equal(rect.scaleY(), 0.1);
-    assert.equal(rect.height(), 100);
+    assert.almostEqual(rect.x(), 110);
+    assert.almostEqual(rect.y() - 120 < 0.001, true);
+    assert.almostEqual(rect.width(), 100);
+    assert.almostEqual(rect.scaleX(), 1);
+    assert.almostEqual(rect.scaleY(), 0.1);
+    assert.almostEqual(rect.height(), 100);
 
     tr.simulateMouseUp();
   });
@@ -2268,25 +2419,21 @@ suite('Transformer', function() {
       assert.equal(e.target, rect);
     });
 
-    stage.simulateMouseDown({
+    tr.simulateMouseDown({
       x: 50,
       y: 50
     });
 
-    var top = stage.content.getBoundingClientRect().top;
-    tr._handleMouseMove({
-      clientX: 60,
-      clientY: 60 + top
-    });
-
-    tr._handleMouseUp({
-      clientX: 60,
-      clientY: 60 + top
-    });
-    stage.simulateMouseUp({
+    tr.simulateMouseMove({
       x: 60,
       y: 60
     });
+
+    tr.simulateMouseUp({
+      x: 60,
+      y: 60
+    });
+
     assert.equal(callCount, 6);
     assert.equal(tr.getActiveAnchor(), null);
   });
@@ -2575,12 +2722,12 @@ suite('Transformer', function() {
       });
       layer.draw();
 
-      assert.equal(
+      assert.almostEqual(
         rect.width() * rect.scaleX(),
         test.expectedWidth,
         test.name + ' width check'
       );
-      assert.equal(
+      assert.almostEqual(
         rect.height() * rect.scaleY(),
         test.expectedHeight,
         test.name + ' height check'
@@ -2640,12 +2787,12 @@ suite('Transformer', function() {
       });
       layer.draw();
 
-      assert.equal(
+      assert.almostEqual(
         rect.width() * rect.scaleX(),
         test.expectedWidth,
         test.name + ' width check'
       );
-      assert.equal(
+      assert.almostEqual(
         rect.height() * rect.scaleY(),
         test.expectedHeight,
         test.name + ' height check'
@@ -2704,12 +2851,12 @@ suite('Transformer', function() {
       });
       layer.draw();
 
-      assert.equal(
+      assert.almostEqual(
         rect.width() * rect.scaleX(),
         test.expectedWidth,
         test.name + ' width check'
       );
-      assert.equal(
+      assert.almostEqual(
         rect.height() * rect.scaleY(),
         test.expectedHeight,
         test.name + ' height check'
@@ -2943,7 +3090,7 @@ suite('Transformer', function() {
     assert.equal(rect.height(), 100);
   });
 
-  test('check calculations when the size = 0', function() {
+  test.skip('check calculations when the size = 0', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -2973,7 +3120,7 @@ suite('Transformer', function() {
       rotation: 0
     });
     layer.draw();
-    assert.equal(rect.scaleX(), 1, '');
+    assert.equal(rect.scaleX(), 1);
   });
 
   test('attrs change - arc', function() {
@@ -3498,7 +3645,7 @@ suite('Transformer', function() {
       y: 50
     });
 
-    assert.equal(rect.width() * rect.scaleX(), 200);
+    assert.almostEqual(rect.width() * rect.scaleX(), 200);
   });
 
   test('rotate several nodes', function() {
@@ -3543,17 +3690,17 @@ suite('Transformer', function() {
 
     layer.draw();
 
-    assert.equal(rect1.x(), 100);
-    assert.equal(rect1.y(), 0);
-    assert.equal(rect1.width() + rect2.width(), 100);
-    assert.equal(rect1.height() + rect2.width(), 100);
-    assert.equal(rect1.rotation(), 90);
+    assert.almostEqual(rect1.x(), 100);
+    assert.almostEqual(rect1.y(), 0);
+    assert.almostEqual(rect1.width() + rect2.width(), 100);
+    assert.almostEqual(rect1.height() + rect2.width(), 100);
+    assert.almostEqual(rect1.rotation(), 90);
 
-    assert.equal(rect2.x(), 50);
-    assert.equal(rect2.y(), 50);
-    assert.equal(rect2.width() + rect2.width(), 100);
-    assert.equal(rect2.height() + rect2.width(), 100);
-    assert.equal(tr.rotation(), 90);
+    assert.almostEqual(rect2.x(), 50);
+    assert.almostEqual(rect2.y(), 50);
+    assert.almostEqual(rect2.width() + rect2.width(), 100);
+    assert.almostEqual(rect2.height() + rect2.width(), 100);
+    assert.almostEqual(tr.rotation(), 90);
 
     tr._fitNodesInto({
       x: 100,
@@ -3563,14 +3710,14 @@ suite('Transformer', function() {
       rotation: Konva.getAngle(180)
     });
 
-    assert.equal(tr.x(), rect1.x());
-    assert.equal(tr.y(), rect1.y());
-    assert.equal(tr.width(), rect1.width() + rect2.width());
-    assert.equal(tr.height(), rect1.height() + rect2.width());
-    assert.equal(tr.rotation(), 180);
+    assert.almostEqual(tr.x(), rect1.x());
+    assert.almostEqual(tr.y(), rect1.y());
+    assert.almostEqual(tr.width(), rect1.width() + rect2.width());
+    assert.almostEqual(tr.height(), rect1.height() + rect2.width());
+    assert.almostEqual(tr.rotation(), 180);
   });
 
-  test.skip('transform several rotated nodes', function() {
+  test('transform several rotated nodes', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -3614,17 +3761,17 @@ suite('Transformer', function() {
 
     layer.draw();
 
-    assert.equal(rect1.x(), 100);
-    assert.equal(rect1.y(), 0);
-    assert.equal(rect1.width() + rect2.width(), 100);
-    assert.equal(rect1.height() + rect2.width(), 100);
-    assert.equal(rect1.rotation(), 90);
+    assert.almostEqual(rect1.x(), 100);
+    assert.almostEqual(rect1.y(), 41.421356237309496);
+    assert.almostEqual(rect1.width() + rect2.width(), 100);
+    assert.almostEqual(rect1.height() + rect2.width(), 100);
+    assert.almostEqual(rect1.rotation(), 132.45339125826706);
 
-    assert.equal(rect2.x(), 50);
-    assert.equal(rect2.y(), 50);
-    assert.equal(rect2.width() + rect2.width(), 100);
-    assert.equal(rect2.height() + rect2.width(), 100);
-    assert.equal(tr.rotation(), 90);
+    assert.almostEqual(rect2.x(), 46.41016151377549);
+    assert.almostEqual(rect2.y(), 100);
+    assert.almostEqual(rect2.width() + rect2.width(), 100);
+    assert.almostEqual(rect2.height() + rect2.width(), 100);
+    assert.almostEqual(tr.rotation(), 90);
 
     tr._fitNodesInto({
       x: 100,
@@ -3634,11 +3781,8 @@ suite('Transformer', function() {
       rotation: Konva.getAngle(180)
     });
 
-    assert.equal(tr.x(), rect1.x());
-    assert.equal(tr.y(), rect1.y());
-    assert.equal(tr.width(), rect1.width() + rect2.width());
-    assert.equal(tr.height(), rect1.height() + rect2.width());
-    assert.equal(tr.rotation(), 180);
+    assert.almostEqual(tr.x(), 100);
+    assert.almostEqual(tr.y(), 100);
   });
 
   test('drag several nodes', function() {
@@ -3928,20 +4072,20 @@ suite('Transformer', function() {
       rotation: Konva.getAngle(90)
     });
 
-    assert.equal(tr.x(), rect1.x());
-    assert.equal(tr.y(), rect1.y());
-    assert.equal(tr.width(), rect1.width() + rect2.width());
-    assert.equal(tr.height(), rect1.height() + rect2.width());
-    assert.equal(tr.rotation(), 90);
+    assert.almostEqual(tr.x(), rect1.x());
+    assert.almostEqual(tr.y(), rect1.y());
+    assert.almostEqual(tr.width(), rect1.width() + rect2.width());
+    assert.almostEqual(tr.height(), rect1.height() + rect2.width());
+    assert.almostEqual(tr.rotation(), 90);
     layer.draw();
 
     tr.nodes([rect1, rect2]);
 
-    assert.equal(tr.x(), 0);
-    assert.equal(tr.y(), 0);
-    assert.equal(tr.width(), rect1.width() + rect2.width());
-    assert.equal(tr.height(), rect1.height() + rect2.width());
-    assert.equal(tr.rotation(), 0);
+    assert.almostEqual(tr.x(), 0);
+    assert.almostEqual(tr.y(), 0);
+    assert.almostEqual(tr.width(), rect1.width() + rect2.width());
+    assert.almostEqual(tr.height(), rect1.height() + rect2.width());
+    assert.almostEqual(tr.rotation(), 0);
   });
 
   test('rotate several nodes inside different parents', function() {
@@ -3999,19 +4143,25 @@ suite('Transformer', function() {
 
     tr._fitNodesInto(box);
 
-    assert.deepEqual(box, tr._getNodeRect());
+    var newBox = tr._getNodeRect();
 
-    assert.equal(rect1.x(), 0);
-    assert.equal(rect1.y(), 0);
-    assert.equal(rect1.width(), 50);
-    assert.equal(rect1.height(), 50);
-    assert.equal(rect1.rotation(), 0);
+    assert.almostEqual(box.x, newBox.x);
+    assert.almostEqual(box.y, newBox.y);
+    assert.almostEqual(box.width, newBox.width);
+    assert.almostEqual(box.height, newBox.height);
+    assert.almostEqual(box.rotation, newBox.rotation);
 
-    assert.equal(rect2.x(), 0);
-    assert.equal(rect2.y(), 50);
-    assert.equal(rect2.width(), 25);
-    assert.equal(rect2.height(), 50);
-    assert.equal(rect2.rotation(), 0);
+    assert.almostEqual(rect1.x(), 0);
+    assert.almostEqual(rect1.y(), 0);
+    assert.almostEqual(rect1.width(), 50);
+    assert.almostEqual(rect1.height(), 50);
+    assert.almostEqual(rect1.rotation(), 0);
+
+    assert.almostEqual(rect2.x(), 0);
+    assert.almostEqual(rect2.y(), 50);
+    assert.almostEqual(rect2.width(), 25);
+    assert.almostEqual(rect2.height(), 50);
+    assert.almostEqual(rect2.rotation(), 0);
   });
 
   test('can attach transformer into several nodes and fit into negative scale', function() {
@@ -4062,14 +4212,14 @@ suite('Transformer', function() {
     });
 
     layer.draw();
-    assert.equal(Math.round(tr.x()), 0);
-    assert.equal(Math.round(tr.y()), 0);
-    assert.equal(tr.width(), rect1.width() + rect2.width());
-    assert.equal(tr.height(), rect1.height() + rect2.height());
-    assert.equal(tr.rotation(), 0);
+    assert.almostEqual(Math.round(tr.x()), 0);
+    assert.almostEqual(Math.round(tr.y()), 0);
+    assert.almostEqual(tr.width(), rect1.width() + rect2.width());
+    assert.almostEqual(tr.height(), rect1.height() + rect2.height());
+    assert.almostEqual(tr.rotation(), 0);
   });
 
-  test('boundBoxFox should work in local coordinates', function() {
+  test('boundBoxFox should work in absolute coordinates', function() {
     var stage = addStage();
     var layer = new Konva.Layer({
       x: 10,
@@ -4100,40 +4250,25 @@ suite('Transformer', function() {
 
     layer.add(rect2);
 
+    var callCount = 0;
     var tr = new Konva.Transformer({
       nodes: [rect1, rect2],
-      boundBoxFunc: function(oldBox, newBox, node) {
-        if (node === rect1) {
-          assert.deepEqual(oldBox, {
-            x: 0,
-            y: 0,
-            width: 50,
-            height: 50,
-            rotation: 0
-          });
-          assert.deepEqual(newBox, {
-            x: 0,
-            y: 0,
-            width: 50,
-            height: 50,
-            rotation: 0
-          });
-        } else {
-          assert.deepEqual(oldBox, {
-            x: 50,
-            y: 50,
-            width: 50,
-            height: 50,
-            rotation: 0
-          });
-          assert.deepEqual(newBox, {
-            x: 50,
-            y: 50,
-            width: 50,
-            height: 50,
-            rotation: 0
-          });
-        }
+      boundBoxFunc: function(oldBox, newBox) {
+        callCount += 1;
+        assert.deepEqual(oldBox, {
+          x: 10,
+          y: 10,
+          width: 200,
+          height: 200,
+          rotation: 0
+        });
+        assert.deepEqual(newBox, {
+          x: 10,
+          y: 10,
+          width: 300,
+          height: 200,
+          rotation: 0
+        });
         return newBox;
       }
     });
@@ -4142,9 +4277,10 @@ suite('Transformer', function() {
     tr._fitNodesInto({
       x: 10,
       y: 10,
-      width: 200,
+      width: 300,
       height: 200,
       rotation: 0
     });
+    assert.equal(callCount, 1);
   });
 });

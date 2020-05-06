@@ -241,10 +241,10 @@ afterEach(function() {
 
   if (!isFailed && !isManual) {
     Konva.stages.forEach(function(stage) {
-      // stage.destroy();
+      stage.destroy();
     });
     if (Konva.DD._dragElements.size) {
-      throw 'Why not cleaned?';
+      throw 'Why drag elements are not cleaned?';
     }
   }
 });

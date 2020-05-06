@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v5.0.3
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Fri May 01 2020
+   * Date: Wed May 06 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -499,7 +499,7 @@
               result.rotation = b > 0 ? Math.acos(a / r) : -Math.acos(a / r);
               result.scaleX = r;
               result.scaleY = delta / r;
-              result.skewX = Math.atan((a * c + b * d) / (r * r));
+              result.skewX = (a * c + b * d) / delta;
               result.skewY = 0;
           }
           else if (c != 0 || d != 0) {
@@ -509,10 +509,23 @@
               result.scaleX = delta / s;
               result.scaleY = s;
               result.skewX = 0;
-              result.skewY = Math.atan((a * c + b * d) / (s * s));
+              result.skewY = (a * c + b * d) / delta;
           }
           result.rotation = Util._getRotation(result.rotation);
           return result;
+      };
+      Transform.prototype.qrDecompose = function () {
+          var angle = Math.atan2(this.m[1], this.m[0]), denom = Math.pow(this.m[0], 2) + Math.pow(this.m[1], 2), scaleX = Math.sqrt(denom), scaleY = (this.m[0] * this.m[3] - this.m[2] * this.m[1]) / scaleX, skewX = Math.atan2(this.m[0] * this.m[2] + this.m[1] * this.m[3], denom);
+          var rotation = Util._getRotation(angle);
+          return {
+              rotation: rotation,
+              scaleX: scaleX,
+              scaleY: scaleY,
+              skewX: skewX / (Math.PI / 180),
+              skewY: 0,
+              x: this.m[4],
+              y: this.m[5]
+          };
       };
       return Transform;
   }());
@@ -14607,7 +14620,7 @@
    */
   Factory.addGetterSetter(TextPath, 'letterSpacing', 0, getNumberValidator());
   /**
-   * get/set text baselineg.  The default is 'middle'. Can be 'top', 'bottom', 'middle', 'alphabetic', 'hanging'
+   * get/set text baseline.  The default is 'middle'. Can be 'top', 'bottom', 'middle', 'alphabetic', 'hanging'
    * @name Konva.TextPath#textBaseline
    * @method
    * @param {String} textBaseline
@@ -14805,78 +14818,6 @@
       var center = getCenter(shape);
       return rotateAroundPoint(shape, deltaRad, center);
   }
-  function getShapeRect(shape) {
-      var angleRad = shape.rotation;
-      var x1 = shape.x;
-      var y1 = shape.y;
-      var x2 = x1 + shape.width * Math.cos(angleRad);
-      var y2 = y1 + shape.width * Math.sin(angleRad);
-      var x3 = shape.x +
-          shape.width * Math.cos(angleRad) +
-          shape.height * Math.sin(-angleRad);
-      var y3 = shape.y +
-          shape.height * Math.cos(angleRad) +
-          shape.width * Math.sin(angleRad);
-      var x4 = shape.x + shape.height * Math.sin(-angleRad);
-      var y4 = shape.y + shape.height * Math.cos(angleRad);
-      var leftX = Math.min(x1, x2, x3, x4);
-      var rightX = Math.max(x1, x2, x3, x4);
-      var topY = Math.min(y1, y2, y3, y4);
-      var bottomY = Math.max(y1, y2, y3, y4);
-      return {
-          x: leftX,
-          y: topY,
-          width: rightX - leftX,
-          height: bottomY - topY
-      };
-  }
-  function getShapesRect(shapes) {
-      var x1 = 9999999999;
-      var y1 = 9999999999;
-      var x2 = -999999999;
-      var y2 = -999999999;
-      shapes.forEach(function (shape) {
-          var rect = getShapeRect(shape);
-          x1 = Math.min(x1, rect.x);
-          y1 = Math.min(y1, rect.y);
-          x2 = Math.max(x2, rect.x + rect.width);
-          y2 = Math.max(y2, rect.y + rect.height);
-      });
-      return {
-          x: x1,
-          y: y1,
-          width: x2 - x1,
-          height: y2 - y1,
-          rotation: 0
-      };
-  }
-  function transformShape(shape, oldSelection, newSelection, keepOffset) {
-      if (keepOffset === void 0) { keepOffset = 1; }
-      var offset = rotateAroundPoint(shape, -oldSelection.rotation, {
-          x: oldSelection.x,
-          y: oldSelection.y
-      });
-      var offsetX = offset.x - oldSelection.x;
-      var offsetY = offset.y - oldSelection.y;
-      var angle = oldSelection.rotation;
-      var scaleX = shape.width ? newSelection.width / oldSelection.width : 1;
-      var scaleY = shape.height ? newSelection.height / oldSelection.height : 1;
-      return {
-          x: keepOffset * newSelection.x +
-              offsetX * scaleX * Math.cos(angle) +
-              offsetY * scaleY * Math.sin(-angle),
-          y: keepOffset * newSelection.y +
-              offsetX * scaleX * Math.sin(angle) +
-              offsetY * scaleY * Math.cos(angle),
-          width: shape.width * scaleX,
-          height: shape.height * scaleY,
-          rotation: shape.rotation
-      };
-  }
-  function transformAndRotateShape(shape, oldSelection, newSelection) {
-      var updated = transformShape(shape, oldSelection, newSelection);
-      return rotateAroundPoint(updated, newSelection.rotation - oldSelection.rotation, newSelection);
-  }
   function getSnap(snaps, newRotationRad, tol) {
       var snapped = newRotationRad;
       for (var i = 0; i < snaps.length; i++) {
@@ -15071,6 +15012,7 @@
       Transformer.prototype._getNodeRect = function () {
           return this._getCache(NODES_RECT, this.__getNodeRect);
       };
+      // return absolute rotated bounding rectangle
       Transformer.prototype.__getNodeShape = function (node, rot, relative) {
           if (rot === void 0) { rot = this.rotation(); }
           var rect = node.getClientRect({
@@ -15109,14 +15051,56 @@
                   rotation: 0
               };
           }
-          var shapes = this.nodes().map(function (node) {
-              return _this.__getNodeShape(node);
+          var totalPoints = [];
+          this.nodes().map(function (node) {
+              var box = node.getClientRect({
+                  skipTransform: true,
+                  skipShadow: true,
+                  skipStroke: _this.ignoreStroke()
+              });
+              var points = [
+                  { x: box.x, y: box.y },
+                  { x: box.x + box.width, y: box.y },
+                  { x: box.x + box.width, y: box.y + box.height },
+                  { x: box.x, y: box.y + box.height }
+              ];
+              var trans = node.getAbsoluteTransform();
+              points.forEach(function (point) {
+                  var transformed = trans.point(point);
+                  totalPoints.push(transformed);
+              });
           });
-          var box = getShapesRect(shapes);
-          return rotateAroundPoint(box, Konva.getAngle(this.rotation()), {
-              x: 0,
-              y: 0
+          var tr = new Transform();
+          tr.rotate(-Konva.getAngle(this.rotation()));
+          var minX, minY, maxX, maxY;
+          totalPoints.forEach(function (point) {
+              var transformed = tr.point(point);
+              if (minX === undefined) {
+                  minX = maxX = transformed.x;
+                  minY = maxY = transformed.y;
+              }
+              minX = Math.min(minX, transformed.x);
+              minY = Math.min(minY, transformed.y);
+              maxX = Math.max(maxX, transformed.x);
+              maxY = Math.max(maxY, transformed.y);
           });
+          tr.invert();
+          var p = tr.point({ x: minX, y: minY });
+          return {
+              x: p.x,
+              y: p.y,
+              width: maxX - minX,
+              height: maxY - minY,
+              rotation: Konva.getAngle(this.rotation())
+          };
+          // const shapes = this.nodes().map(node => {
+          //   return this.__getNodeShape(node);
+          // });
+          // const box = getShapesRect(shapes);
+          // return rotateAroundPoint(box, Konva.getAngle(this.rotation()), {
+          //   x: 0,
+          //   y: 0
+          // });
       };
       Transformer.prototype.getX = function () {
           return this._getNodeRect().x;
@@ -15491,45 +15475,8 @@
               this._anchorDragOffset.y -= offset.y;
               newAttrs.height += this.padding() * 2;
           }
-          // let's find delta transform
-          // var dx = newAttrs.x - oldAttrs.x,
-          //   dy = newAttrs.y - oldAttrs.y,
-          //   angle = newAttrs.rotation - oldAttrs.rotation,
-          //   scaleX = newAttrs.width / oldAttrs.width,
-          //   scaleY = newAttrs.height / oldAttrs.height;
-          this._nodes.forEach(function (node) {
-              var oldRect = _this.__getNodeShape(node, 0);
-              var newRect = transformAndRotateShape(oldRect, oldAttrs, newAttrs);
-              _this._fitNodeInto(node, newRect, evt);
-          });
-          this.rotation(Util._getRotation(newAttrs.rotation));
-          this._resetTransformCache();
-          this.update();
-          this.getLayer().batchDraw();
-      };
-      Transformer.prototype._fitNodeInto = function (node, newAttrs, evt) {
-          var pure = node.getClientRect({
-              skipTransform: true,
-              skipShadow: true,
-              skipStroke: this.ignoreStroke()
-          });
-          var parentTransform = node
-              .getParent()
-              .getAbsoluteTransform()
-              .copy();
-          parentTransform.invert();
-          var invertedPoint = parentTransform.point({
-              x: newAttrs.x,
-              y: newAttrs.y
-          });
-          var absScale = node.getParent().getAbsoluteScale();
-          newAttrs.x = invertedPoint.x;
-          newAttrs.y = invertedPoint.y;
-          newAttrs.width /= absScale.x;
-          newAttrs.height /= absScale.y;
           if (this.boundBoxFunc()) {
-              var oldAttrs = this.__getNodeShape(node, node.rotation(), node.getParent());
-              var bounded = this.boundBoxFunc()(oldAttrs, newAttrs, node);
+              var bounded = this.boundBoxFunc()(oldAttrs, newAttrs);
               if (bounded) {
                   newAttrs = bounded;
               }
@@ -15537,22 +15484,51 @@
                   Util.warn('boundBoxFunc returned falsy. You should return new bound rect from it!');
               }
           }
-          var parentRot = Konva.getAngle(node.getParent().getAbsoluteRotation());
-          node.rotation(Util._getRotation(newAttrs.rotation - parentRot));
-          var absScale = node.getParent().getAbsoluteScale();
-          var scaleX = pure.width ? newAttrs.width / pure.width : 1;
-          var scaleY = pure.height ? newAttrs.height / pure.height : 1;
-          var rotation = Konva.getAngle(node.rotation());
-          var dx = pure.x * scaleX - node.offsetX() * scaleX;
-          var dy = pure.y * scaleY - node.offsetY() * scaleY;
-          node.setAttrs({
-              scaleX: scaleX,
-              scaleY: scaleY,
-              x: newAttrs.x - (dx * Math.cos(rotation) + dy * Math.sin(-rotation)),
-              y: newAttrs.y - (dy * Math.cos(rotation) + dx * Math.sin(rotation))
+          // base size value doesn't really matter
+          // we just need to think about bounding boxes as transforms
+          // but how?
+          // the idea is that we have a transformed rectangle with the size of "baseSize"
+          var baseSize = 10000000;
+          var oldTr = new Transform();
+          oldTr.translate(oldAttrs.x, oldAttrs.y);
+          oldTr.rotate(oldAttrs.rotation);
+          oldTr.scale(oldAttrs.width / baseSize, oldAttrs.height / baseSize);
+          var newTr = new Transform();
+          newTr.translate(newAttrs.x, newAttrs.y);
+          newTr.rotate(newAttrs.rotation);
+          newTr.scale(newAttrs.width / baseSize, newAttrs.height / baseSize);
+          // now lets think we had [old transform] and now we have [new transform]
+          // Now, the questions is: how can we transform "parent" to go from [old transform] into [new transform]
+          // in equation it will be:
+          // [delta transform] * [old transform] = [new transform]
+          // that means that
+          // [delta transform] = [new transform] * [old transform inverted]
+          var delta = newTr.multiply(oldTr.invert());
+          this._nodes.forEach(function (node) {
+              // for each node we have the same [delta transform]
+              // the equations is
+              // [delta transform] * [parent transform] * [old local transform] = [parent transform] * [new local transform]
+              // and we need to find [new local transform]
+              // [new local] = [parent inverted] * [delta] * [parent] * [old local]
+              var parentTransform = node.getParent().getAbsoluteTransform();
+              var localTransform = node.getTransform().copy();
+              // skip offset:
+              localTransform.translate(node.offsetX(), node.offsetY());
+              var newLocalTransform = new Transform();
+              newLocalTransform
+                  .multiply(parentTransform.copy().invert())
+                  .multiply(delta)
+                  .multiply(parentTransform)
+                  .multiply(localTransform);
+              var attrs = newLocalTransform.decompose();
+              node.setAttrs(attrs);
+              _this._fire('transform', { evt: evt, target: node });
+              node._fire('transform', { evt: evt, target: node });
           });
-          this._fire('transform', { evt: evt, target: node });
-          node._fire('transform', { evt: evt, target: node });
+          this.rotation(Util._getRotation(newAttrs.rotation));
+          this._resetTransformCache();
+          this.update();
+          this.getLayer().batchDraw();
       };
       /**
        * force update of Konva.Transformer.
@@ -16012,7 +15988,7 @@
    */
   Factory.addGetterSetter(Transformer, 'nodes');
   /**
-   * get/set bounding box function. boundBondFunc operates is local coordinates of nodes parent
+   * get/set bounding box function. **IMPORTANT!** boundBondFunc operates in absolute coordinates
    * @name Konva.Transformer#boundBoxFunc
    * @method
    * @param {Function} func
@@ -16022,8 +15998,8 @@
    * var boundBoxFunc = transformer.boundBoxFunc();
    *
    * // set
-   * transformer.boundBoxFunc(function(oldBox, newBox, node) {
-   *   // width and height of the boxes are corresponding to total width and height of a node
+   * transformer.boundBoxFunc(function(oldBox, newBox) {
+   *   // width and height of the boxes are corresponding to total absolute width and height of all nodes cobined
    *   // so it includes scale of the node.
    *   if (newBox.width > 200) {
    *     return oldBox;
