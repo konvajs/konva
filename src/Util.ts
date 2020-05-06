@@ -361,25 +361,6 @@ export class Transform {
 
     return result;
   }
-  qrDecompose() {
-    var angle = Math.atan2(this.m[1], this.m[0]),
-      denom = Math.pow(this.m[0], 2) + Math.pow(this.m[1], 2),
-      scaleX = Math.sqrt(denom),
-      scaleY = (this.m[0] * this.m[3] - this.m[2] * this.m[1]) / scaleX,
-      skewX = Math.atan2(this.m[0] * this.m[2] + this.m[1] * this.m[3], denom);
-
-    const rotation = Util._getRotation(angle);
-
-    return {
-      rotation,
-      scaleX: scaleX,
-      scaleY: scaleY,
-      skewX: skewX / (Math.PI / 180),
-      skewY: 0,
-      x: this.m[4],
-      y: this.m[5]
-    };
-  }
 }
 
 // CONSTANTS
