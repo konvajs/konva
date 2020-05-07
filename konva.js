@@ -11076,12 +11076,12 @@
       Image.prototype.getWidth = function () {
           var _a;
           var image = this.image();
-          return _a = this.attrs.width, (_a !== null && _a !== void 0 ? _a : (image ? image.width : 0));
+          return (_a = this.attrs.width) !== null && _a !== void 0 ? _a : (image ? image.width : 0);
       };
       Image.prototype.getHeight = function () {
           var _a;
           var image = this.image();
-          return _a = this.attrs.height, (_a !== null && _a !== void 0 ? _a : (image ? image.height : 0));
+          return (_a = this.attrs.height) !== null && _a !== void 0 ? _a : (image ? image.height : 0);
       };
       /**
        * load image from given url and create `Konva.Image` instance
@@ -15143,9 +15143,6 @@
               _this._cursorChange = true;
           });
           anchor.on('mouseout', function () {
-              if (!anchor.getStage() || !anchor.getParent()) {
-                  return;
-              }
               anchor.getStage().content.style.cursor = '';
               _this._cursorChange = false;
           });

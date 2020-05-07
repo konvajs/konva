@@ -1,7 +1,6 @@
 var gulp = require('gulp');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
-var concat = require('gulp-concat');
 var replace = require('gulp-replace');
 var jsdoc = require('gulp-jsdoc3');
 var connect = require('gulp-connect');

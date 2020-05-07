@@ -536,9 +536,6 @@ export class Transformer extends Group {
       this._cursorChange = true;
     });
     anchor.on('mouseout', () => {
-      if (!anchor.getStage() || !anchor.getParent()) {
-        return;
-      }
       anchor.getStage().content.style.cursor = '';
       this._cursorChange = false;
     });
