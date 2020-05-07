@@ -434,7 +434,7 @@ export class Stage extends Container<BaseLayer> {
   }
   _mouseout(evt) {
     this.setPointersPositions(evt);
-    var targetShape = this.targetShape;
+    var targetShape = this.targetShape?.getStage() ? this.targetShape : null;
 
     var eventsEnabled = !DD.isDragging || Konva.hitOnDragEnabled;
     if (targetShape && eventsEnabled) {
@@ -467,34 +467,30 @@ export class Stage extends Container<BaseLayer> {
     this.setPointersPositions(evt);
     var pointerId = Util._getFirstPointerId(evt);
     var shape: Shape;
-
+    var targetShape = this.targetShape?.getStage() ? this.targetShape : null;
     var eventsEnabled = !DD.isDragging || Konva.hitOnDragEnabled;
     if (eventsEnabled) {
       shape = this.getIntersection(this.getPointerPosition());
       if (shape && shape.isListening()) {
-        var differentTarget = !this.targetShape || this.targetShape !== shape;
+        var differentTarget = targetShape !== shape;
         if (eventsEnabled && differentTarget) {
-          if (this.targetShape) {
-            this.targetShape._fireAndBubble(
+          if (targetShape) {
+            targetShape._fireAndBubble(
               MOUSEOUT,
               { evt: evt, pointerId },
               shape
             );
-            this.targetShape._fireAndBubble(
+            targetShape._fireAndBubble(
               MOUSELEAVE,
               { evt: evt, pointerId },
               shape
             );
           }
-          shape._fireAndBubble(
-            MOUSEOVER,
-            { evt: evt, pointerId },
-            this.targetShape
-          );
+          shape._fireAndBubble(MOUSEOVER, { evt: evt, pointerId }, targetShape);
           shape._fireAndBubble(
             MOUSEENTER,
             { evt: evt, pointerId },
-            this.targetShape
+            targetShape
           );
           shape._fireAndBubble(MOUSEMOVE, { evt: evt, pointerId });
           this.targetShape = shape;
@@ -506,9 +502,9 @@ export class Stage extends Container<BaseLayer> {
          * if no shape was detected, clear target shape and try
          * to run mouseout from previous target shape
          */
-        if (this.targetShape && eventsEnabled) {
-          this.targetShape._fireAndBubble(MOUSEOUT, { evt: evt, pointerId });
-          this.targetShape._fireAndBubble(MOUSELEAVE, { evt: evt, pointerId });
+        if (targetShape && eventsEnabled) {
+          targetShape._fireAndBubble(MOUSEOUT, { evt: evt, pointerId });
+          targetShape._fireAndBubble(MOUSELEAVE, { evt: evt, pointerId });
           this._fire(MOUSEOVER, {
             evt: evt,
             target: this,

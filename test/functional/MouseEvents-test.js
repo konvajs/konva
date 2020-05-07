@@ -2172,7 +2172,54 @@ suite('MouseEvents', function() {
     assert.equal(mouseenter, 0, 'mouseenter should be 1');
   });
 
-  test('should not trigger mouseenter on stage when we go to the shape directly', function() {
+  test('should not trigger mouseleave after shape destroy', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      width: 50,
+      height: 50,
+      fill: 'red'
+    });
+    layer.add(rect);
+
+    layer.draw();
+
+    var mouseout = 0;
+    var mouseleave = 0;
+    stage.on('mouseout', function() {
+      mouseout += 1;
+    });
+
+    rect.on('mouseout', function() {
+      mouseout += 1;
+    });
+
+    stage.on('mouseleave', function() {
+      mouseleave += 1;
+    });
+
+    rect.on('mouseleave', function() {
+      mouseleave += 1;
+    });
+
+    stage.simulateMouseMove({
+      x: 10,
+      y: 10
+    });
+
+    rect.destroy();
+    layer.draw();
+    stage.simulateMouseMove({
+      x: 20,
+      y: 20
+    });
+    assert.equal(mouseout, 0);
+    assert.equal(mouseleave, 0);
+  });
+
+  test('should not trigger mouseenter on stage twice when we go to the shape directly', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);

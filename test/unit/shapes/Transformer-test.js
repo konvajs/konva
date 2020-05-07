@@ -3064,7 +3064,8 @@ suite('Transformer', function() {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      nodes: [rect]
+      nodes: [rect],
+      ignoreStroke: true
     });
     layer.add(tr);
     layer.draw();

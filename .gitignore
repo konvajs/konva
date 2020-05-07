@@ -15,6 +15,7 @@ src_old
 *.zip
 *_cache
 types
+out.png
 
 # Numerous always-ignore extensions
 *.diff
