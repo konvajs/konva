@@ -1568,7 +1568,7 @@ Factory.addGetterSetter(Transformer, 'node');
 Factory.addGetterSetter(Transformer, 'nodes');
 
 /**
- * get/set bounding box function. **IMPORTANT!** boundBondFunc operates in absolute coordinates
+ * get/set bounding box function. **IMPORTANT!** boundBondFunc operates in absolute coordinates.
  * @name Konva.Transformer#boundBoxFunc
  * @method
  * @param {Function} func
@@ -1579,7 +1579,7 @@ Factory.addGetterSetter(Transformer, 'nodes');
  *
  * // set
  * transformer.boundBoxFunc(function(oldBox, newBox) {
- *   // width and height of the boxes are corresponding to total absolute width and height of all nodes cobined
+ *   // width and height of the boxes are corresponding to total absolute width and height of all nodes combined
  *   // so it includes scale of the node.
  *   if (newBox.width > 200) {
  *     return oldBox;

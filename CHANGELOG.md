@@ -5,9 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
-## 6.0.0 - 2020-05-01
+## 6.0.0 - 2020-05-08
 
-* **BREAKING!** `boundBoxFunc` of `Konva.Transformer` works in absolute coordinates of whole transformer.
+* **BREAKING!** `boundBoxFunc` of `Konva.Transformer` works in absolute coordinates of whole transformer. Previously in was working in local coordinates of transforming node.
 * Many `Konva.Transformer` fixes. Now it works correctly when you transform several rotated shapes.
 * Fix for wrong `mouseleave` and `mouseout` fire on shape remove/destroy;
 
