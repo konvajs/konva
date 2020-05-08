@@ -1,6 +1,6 @@
-suite('Line', function() {
+suite('Line', function () {
   // ======================================================
-  test('add line', function() {
+  test('add line', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -10,7 +10,7 @@ suite('Line', function() {
       lineCap: 'round',
       lineJoin: 'round',
       draggable: true,
-      tension: 0
+      tension: 0,
     });
 
     layer.add(line);
@@ -32,7 +32,7 @@ suite('Line', function() {
   });
 
   // ======================================================
-  test('test default ponts array for two lines', function() {
+  test('test default ponts array for two lines', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -41,7 +41,7 @@ suite('Line', function() {
       strokeWidth: 20,
       lineCap: 'round',
       lineJoin: 'round',
-      draggable: true
+      draggable: true,
     });
 
     var redLine = new Konva.Line({
@@ -50,7 +50,7 @@ suite('Line', function() {
       strokeWidth: 20,
       lineCap: 'round',
       lineJoin: 'round',
-      draggable: true
+      draggable: true,
     });
 
     line.setPoints([0, 1, 2, 3]);
@@ -64,7 +64,7 @@ suite('Line', function() {
   });
 
   // ======================================================
-  test('add dashed line', function() {
+  test('add dashed line', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -97,8 +97,8 @@ suite('Line', function() {
       shadowBlur: 10,
       shadowOffset: {
         x: 20,
-        y: 20
-      }
+        y: 20,
+      },
       //opacity: 0.2
     });
 
@@ -113,7 +113,7 @@ suite('Line', function() {
   });
 
   // ======================================================
-  test('add line with shadow', function() {
+  test('add line with shadow', function () {
     Konva.pixelRatio = 1;
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -128,10 +128,10 @@ suite('Line', function() {
       shadowBlur: 20,
       shadowOffset: {
         x: 10,
-        y: 10
+        y: 10,
       },
       shadowOpacity: 0.5,
-      draggable: true
+      draggable: true,
     });
 
     layer.add(line);
@@ -169,7 +169,7 @@ suite('Line', function() {
     );
   });
 
-  test('line hit test with strokeScaleEnabled = false', function() {
+  test('line hit test with strokeScaleEnabled = false', function () {
     var stage = addStage();
     var scale = 0.1;
     var layer = new Konva.Layer();
@@ -177,8 +177,8 @@ suite('Line', function() {
     var group = new Konva.Group({
       scale: {
         x: scale,
-        y: scale
-      }
+        y: scale,
+      },
     });
 
     var line1 = new Konva.Line({
@@ -186,7 +186,7 @@ suite('Line', function() {
       stroke: 'red',
       strokeScaleEnabled: false,
       strokeWidth: 10,
-      y: 0
+      y: 0,
     });
     group.add(line1);
 
@@ -194,7 +194,7 @@ suite('Line', function() {
       points: [0, 0, 300, 0],
       stroke: 'green',
       strokeWidth: 40 / scale,
-      y: 60 / scale
+      y: 60 / scale,
     });
     group.add(line2);
 
@@ -204,18 +204,18 @@ suite('Line', function() {
 
     var shape = layer.getIntersection({
       x: 10,
-      y: 60
+      y: 60,
     });
     assert.equal(shape, line2, 'second line detected');
 
     shape = layer.getIntersection({
       x: 10,
-      y: 4
+      y: 4,
     });
     assert.equal(shape, line1, 'first line detected');
   });
 
-  test('line get size', function() {
+  test('line get size', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -223,7 +223,7 @@ suite('Line', function() {
       points: [73, 160, 340, 23, 500, 109, 500, 180],
       stroke: 'blue',
 
-      strokeWidth: 10
+      strokeWidth: 10,
     });
 
     layer.add(line);
@@ -231,11 +231,11 @@ suite('Line', function() {
 
     assert.deepEqual(line.size(), {
       width: 500 - 73,
-      height: 180 - 23
+      height: 180 - 23,
     });
   });
 
-  test('getSelfRect', function() {
+  test('getSelfRect', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var blob = new Konva.Line({
@@ -246,7 +246,7 @@ suite('Line', function() {
       strokeWidth: 10,
       draggable: true,
       fill: '#aaf',
-      closed: true
+      closed: true,
     });
 
     layer.add(blob);
@@ -256,11 +256,11 @@ suite('Line', function() {
       x: -25,
       y: -30,
       width: 275,
-      height: 140
+      height: 140,
     });
   });
 
-  test('getClientRect', function() {
+  test('getClientRect', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -269,12 +269,12 @@ suite('Line', function() {
       y: 0,
       points: [-100, 0, +100, 0, +100, 100, -100, 100],
       closed: true,
-      fill: '#0f0'
+      fill: '#0f0',
     });
 
     stage.position({
       x: 150,
-      y: 50
+      y: 50,
     });
 
     layer.add(poly);
@@ -285,11 +285,11 @@ suite('Line', function() {
       x: -100,
       y: 0,
       width: 200,
-      height: 100
+      height: 100,
     });
   });
 
-  test('getClientRect with tension', function() {
+  test('getClientRect with tension', function () {
     var stage = addStage();
     stage.draggable(true);
     var layer = new Konva.Layer();
@@ -299,7 +299,7 @@ suite('Line', function() {
       y: 0,
       points: [75, 75, 100, 200, 300, 140],
       tension: 0.5,
-      stroke: '#0f0'
+      stroke: '#0f0',
     });
     layer.add(line);
 
@@ -315,7 +315,7 @@ suite('Line', function() {
     assert.equal(Math.round(client.height), 147, 'check height');
   });
 
-  test('getClientRect with low number of points', function() {
+  test('getClientRect with low number of points', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -325,7 +325,7 @@ suite('Line', function() {
       y: 0,
       points: [],
       tension: 0.5,
-      stroke: '#0f0'
+      stroke: '#0f0',
     });
     layer.add(line);
     layer.draw();
@@ -346,7 +346,7 @@ suite('Line', function() {
     assert.equal(client.height, 2, 'check height');
   });
 
-  test('line caching', function() {
+  test('line caching', function () {
     // Konva.pixelRatio = 1;
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -357,13 +357,13 @@ suite('Line', function() {
       stroke: 'black',
       strokeWidth: 10,
       draggable: true,
-      closed: true
+      closed: true,
     });
 
     layer.add(blob);
     var layer2 = layer.clone();
     blob.cache({
-      offset: 30
+      offset: 30,
     });
     stage.add(layer);
     stage.add(layer2);
@@ -372,7 +372,7 @@ suite('Line', function() {
     // Konva.pixelRatio = undefined;
   });
 
-  test('updating points with old mutable array should trigger recalculations', function() {
+  test('updating points with old mutable array should trigger recalculations', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -385,7 +385,7 @@ suite('Line', function() {
       strokeWidth: 10,
       draggable: true,
       closed: true,
-      tension: 1
+      tension: 1,
     });
 
     var tensionPoints = blob.getTensionPoints();
@@ -402,7 +402,7 @@ suite('Line', function() {
     );
   });
 
-  test('hit test for scaled line', function() {
+  test('hit test for scaled line', function () {
     var stage = addStage();
     var scale = 42;
     stage.scaleX(scale);
@@ -412,12 +412,12 @@ suite('Line', function() {
 
     var points = [1, 1, 7, 2, 8, 7, 2, 6];
     var line = new Konva.Line({
-      points: points.map(function(v) {
+      points: points.map(function (v) {
         return (v * 20) / scale;
       }),
       closed: true,
       fill: 'green',
-      draggable: true
+      draggable: true,
     });
     layer.add(line);
     layer.draw();
@@ -428,7 +428,7 @@ suite('Line', function() {
     layer.toggleHitCanvas();
   });
 
-  test('getClientRect with scaling', function() {
+  test('getClientRect with scaling', function () {
     var stage = addStage();
     var scale = 42;
     stage.scaleX(scale);
@@ -438,12 +438,12 @@ suite('Line', function() {
 
     var points = [1, 1, 7, 2, 8, 7, 2, 6];
     var line = new Konva.Line({
-      points: points.map(function(v) {
+      points: points.map(function (v) {
         return (v * 20) / scale;
       }),
       closed: true,
       fill: 'green',
-      draggable: true
+      draggable: true,
     });
     layer.add(line);
     layer.draw();

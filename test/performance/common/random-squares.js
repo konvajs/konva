@@ -7,14 +7,14 @@ var height = 300;
 
 var VERSION = Konva.version === 'dev' ? 'new' : 'old';
 
-window.requestAnimFrame = (function() {
+window.requestAnimFrame = (function () {
   return (
     window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame ||
     window.msRequestAnimationFrame ||
-    function(callback) {
+    function (callback) {
       window.setTimeout(callback, 1000 / 30);
     }
   );
@@ -30,7 +30,7 @@ function fpsCounter() {
   $('html').append(stats.domElement);
 }
 
-$(function() {
+$(function () {
   fpsCounter();
 
   make_stage();
@@ -40,7 +40,7 @@ $(function() {
 
   circles = [];
   for (var n = 0; n < 2500; n++) {
-    (function() {
+    (function () {
       var color = colors[colorIndex++];
       if (colorIndex >= colors.length) {
         colorIndex = 0;
@@ -74,7 +74,7 @@ function animate(lastTime) {
 
   circlesLayer.draw();
   stats.end();
-  requestAnimFrame(function() {
+  requestAnimFrame(function () {
     animate(lastTime);
   });
 }
@@ -86,7 +86,7 @@ function make_shape(color) {
     fillLinearGradientColorStops: [0, 'black', 1, color],
     // fill: color,
     width: 10,
-    height: 10
+    height: 10,
   });
 }
 
@@ -94,11 +94,11 @@ function make_stage() {
   stage = new Konva.Stage({
     container: 'container',
     width: width,
-    height: height
+    height: height,
   });
 
   // circlesLayer = new Konva.FastLayer();
   circlesLayer = new Konva.Layer({
-    hitGraphEnabled: false
+    hitGraphEnabled: false,
   });
 }

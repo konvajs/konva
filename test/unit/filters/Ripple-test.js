@@ -1,16 +1,16 @@
-suite('Ripple', function() {
+suite('Ripple', function () {
   // ======================================================
-  test('basic ripple', function(done) {
+  test('basic ripple', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer();
       darth = new Konva.Image({
         x: 10,
         y: 10,
         image: imageObj,
-        draggable: true
+        draggable: true,
       });
 
       layer.add(darth);
@@ -42,17 +42,17 @@ suite('Ripple', function() {
   });
 
   // ======================================================
-  test('tween ripple offset', function(done) {
+  test('tween ripple offset', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer();
       darth = new Konva.Image({
         x: 10,
         y: 10,
         image: imageObj,
-        draggable: true
+        draggable: true,
       });
 
       layer.add(darth);
@@ -69,14 +69,14 @@ suite('Ripple', function() {
         duration: 2.0,
         rippleOffset: 32,
         //rippleSize: 64,
-        easing: Konva.Easings.EaseInOut
+        easing: Konva.Easings.EaseInOut,
       });
 
-      darth.on('mouseover', function() {
+      darth.on('mouseover', function () {
         tween.play();
       });
 
-      darth.on('mouseout', function() {
+      darth.on('mouseout', function () {
         tween.reverse();
       });
 
@@ -86,17 +86,17 @@ suite('Ripple', function() {
   });
 
   // ======================================================
-  test('tween ripple size', function(done) {
+  test('tween ripple size', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer();
       darth = new Konva.Image({
         x: 10,
         y: 10,
         image: imageObj,
-        draggable: true
+        draggable: true,
       });
 
       layer.add(darth);
@@ -112,14 +112,14 @@ suite('Ripple', function() {
         node: darth,
         duration: 2.0,
         rippleSize: 64,
-        easing: Konva.Easings.EaseInOut
+        easing: Konva.Easings.EaseInOut,
       });
 
-      darth.on('mouseover', function() {
+      darth.on('mouseover', function () {
         tween.play();
       });
 
-      darth.on('mouseout', function() {
+      darth.on('mouseout', function () {
         tween.reverse();
       });
 

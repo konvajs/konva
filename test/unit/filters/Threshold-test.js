@@ -1,16 +1,16 @@
-suite('Threshold', function() {
+suite('Threshold', function () {
   // ======================================================
-  test('image tween', function(done) {
+  test('image tween', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer();
       darth = new Konva.Image({
         x: 10,
         y: 10,
         image: imageObj,
-        draggable: true
+        draggable: true,
       });
 
       layer.add(darth);
@@ -25,14 +25,14 @@ suite('Threshold', function() {
         node: darth,
         duration: 5.0,
         threshold: 0,
-        easing: Konva.Easings.EaseInOut
+        easing: Konva.Easings.EaseInOut,
       });
 
-      darth.on('mouseover', function() {
+      darth.on('mouseover', function () {
         tween.play();
       });
 
-      darth.on('mouseout', function() {
+      darth.on('mouseout', function () {
         tween.reverse();
       });
 

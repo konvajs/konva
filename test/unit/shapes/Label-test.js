@@ -1,13 +1,13 @@
-suite('Label', function() {
+suite('Label', function () {
   // ======================================================
-  test('add label', function() {
+  test('add label', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
     var label = new Konva.Label({
       x: 100,
       y: 100,
-      draggable: true
+      draggable: true,
     });
 
     // add a tag to the label
@@ -22,7 +22,7 @@ suite('Label', function() {
         pointerDirection: 'up',
         pointerWidth: 20,
         pointerHeight: 20,
-        cornerRadius: 5
+        cornerRadius: 5,
       })
     );
 
@@ -35,7 +35,7 @@ suite('Label', function() {
         //fontStyle: 'normal',
         lineHeight: 1.2,
         //padding: 10,
-        fill: 'green'
+        fill: 'green',
       })
     );
 
@@ -61,7 +61,7 @@ suite('Label', function() {
   });
 
   // ======================================================
-  test('create label from json', function() {
+  test('create label from json', function () {
     var stage = addStage();
 
     var json =
@@ -74,19 +74,19 @@ suite('Label', function() {
     stage.add(layer);
   });
 
-  test('find label class', function() {
+  test('find label class', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
     var label = new Konva.Label({
       x: 100,
-      y: 100
+      y: 100,
     });
 
     // add a tag to the label
     label.add(
       new Konva.Tag({
-        fill: '#bbb'
+        fill: '#bbb',
       })
     );
 
@@ -94,7 +94,7 @@ suite('Label', function() {
     label.add(
       new Konva.Text({
         text: 'Test Label',
-        fill: 'green'
+        fill: 'green',
       })
     );
 
@@ -105,7 +105,7 @@ suite('Label', function() {
   });
 
   // caching doesn't give exactly the same result. WHY?
-  test.skip('cache label', function() {
+  test.skip('cache label', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -113,7 +113,7 @@ suite('Label', function() {
     var tooltip = new Konva.Label({
       x: 170,
       y: 75,
-      opacity: 0.75
+      opacity: 0.75,
     });
     tooltip.add(
       new Konva.Tag({
@@ -125,7 +125,7 @@ suite('Label', function() {
         shadowColor: 'black',
         shadowBlur: 10,
         shadowOffsetX: 10,
-        shadowOpacity: 0.5
+        shadowOpacity: 0.5,
       })
     );
     tooltip.add(
@@ -134,14 +134,14 @@ suite('Label', function() {
         fontFamily: 'Calibri',
         fontSize: 18,
         padding: 5,
-        fill: 'white'
+        fill: 'white',
       })
     );
 
     var tooltipUp = new Konva.Label({
       x: 170,
       y: 75,
-      opacity: 0.75
+      opacity: 0.75,
     });
     tooltipUp.add(
       new Konva.Tag({
@@ -153,7 +153,7 @@ suite('Label', function() {
         shadowColor: 'black',
         shadowBlur: 10,
         shadowOffsetX: 10,
-        shadowOpacity: 0.5
+        shadowOpacity: 0.5,
       })
     );
     tooltipUp.add(
@@ -162,14 +162,14 @@ suite('Label', function() {
         fontFamily: 'Calibri',
         fontSize: 18,
         padding: 5,
-        fill: 'white'
+        fill: 'white',
       })
     );
     // label with left pointer
     var labelLeft = new Konva.Label({
       x: 20,
       y: 130,
-      opacity: 0.75
+      opacity: 0.75,
     });
     labelLeft.add(
       new Konva.Tag({
@@ -177,7 +177,7 @@ suite('Label', function() {
         pointerDirection: 'left',
         pointerWidth: 30,
         pointerHeight: 28,
-        lineJoin: 'round'
+        lineJoin: 'round',
       })
     );
     labelLeft.add(
@@ -186,7 +186,7 @@ suite('Label', function() {
         fontFamily: 'Calibri',
         fontSize: 18,
         padding: 5,
-        fill: 'white'
+        fill: 'white',
       })
     );
     // label with left pointer
@@ -194,7 +194,7 @@ suite('Label', function() {
       x: 160,
       y: 170,
       offsetX: 20,
-      opacity: 0.75
+      opacity: 0.75,
     });
     labelRight.add(
       new Konva.Tag({
@@ -202,7 +202,7 @@ suite('Label', function() {
         pointerDirection: 'right',
         pointerWidth: 20,
         pointerHeight: 28,
-        lineJoin: 'round'
+        lineJoin: 'round',
       })
     );
     labelRight.add(
@@ -211,18 +211,18 @@ suite('Label', function() {
         fontFamily: 'Calibri',
         fontSize: 18,
         padding: 5,
-        fill: 'white'
+        fill: 'white',
       })
     );
     // simple label
     var simpleLabel = new Konva.Label({
       x: 180,
       y: 150,
-      opacity: 0.75
+      opacity: 0.75,
     });
     simpleLabel.add(
       new Konva.Tag({
-        fill: 'yellow'
+        fill: 'yellow',
       })
     );
     simpleLabel.add(
@@ -231,7 +231,7 @@ suite('Label', function() {
         fontFamily: 'Calibri',
         fontSize: 18,
         padding: 5,
-        fill: 'black'
+        fill: 'black',
       })
     );
     // add the labels to layer
@@ -243,7 +243,7 @@ suite('Label', function() {
     cloneAndCompareLayer(layer, 250);
   });
 
-  test('tag should list text size changes', function() {
+  test('tag should list text size changes', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -251,13 +251,13 @@ suite('Label', function() {
     var label = new Konva.Label();
 
     var tag = new Konva.Tag({
-      stroke: 'black'
+      stroke: 'black',
     });
 
     label.add(tag);
 
     var text = new Konva.Text({
-      text: 'hello hello hello hello hello hello hello hello'
+      text: 'hello hello hello hello hello hello hello hello',
     });
     label.add(text);
 

@@ -1,22 +1,22 @@
-suite('Enhance', function() {
+suite('Enhance', function () {
   // ======================================================
-  test('on image', function(done) {
+  test('on image', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer();
       var filt = new Konva.Image({
         x: 10,
         y: 10,
         image: imageObj,
-        draggable: true
+        draggable: true,
       });
       var orig = new Konva.Image({
         x: 200,
         y: 10,
         image: imageObj,
-        draggable: true
+        draggable: true,
       });
 
       layer.add(filt);
@@ -34,17 +34,17 @@ suite('Enhance', function() {
   });
 
   // ======================================================
-  test('tween enhance', function(done) {
+  test('tween enhance', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer();
       darth = new Konva.Image({
         x: 10,
         y: 10,
         image: imageObj,
-        draggable: true
+        draggable: true,
       });
 
       layer.add(darth);
@@ -59,14 +59,14 @@ suite('Enhance', function() {
         node: darth,
         duration: 2.0,
         enhance: 1.0,
-        easing: Konva.Easings.EaseInOut
+        easing: Konva.Easings.EaseInOut,
       });
 
-      darth.on('mouseover', function() {
+      darth.on('mouseover', function () {
         tween.play();
       });
 
-      darth.on('mouseout', function() {
+      darth.on('mouseout', function () {
         tween.reverse();
       });
 

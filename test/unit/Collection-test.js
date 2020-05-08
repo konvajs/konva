@@ -1,5 +1,5 @@
-suite('Collection', function() {
-  test('test collection method mapping', function() {
+suite('Collection', function () {
+  test('test collection method mapping', function () {
     // Node method
     assert.notEqual(Konva.Collection.prototype.on, undefined);
 
@@ -13,7 +13,7 @@ suite('Collection', function() {
     assert.notEqual(Konva.Collection.prototype.strokeWidth, undefined);
   });
 
-  test('add circle to stage', function() {
+  test('add circle to stage', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var circle1 = new Konva.Circle({
@@ -24,7 +24,7 @@ suite('Collection', function() {
       stroke: 'black',
       strokeWidth: 4,
       name: 'myCircle',
-      draggable: true
+      draggable: true,
     });
 
     var circle2 = new Konva.Circle({
@@ -35,16 +35,13 @@ suite('Collection', function() {
       stroke: 'black',
       strokeWidth: 4,
       name: 'myCircle',
-      draggable: true
+      draggable: true,
     });
 
     layer.add(circle1).add(circle2);
     stage.add(layer);
 
-    layer
-      .find('Circle')
-      .fill('blue')
-      .stroke('green');
+    layer.find('Circle').fill('blue').stroke('green');
     layer.draw();
 
     //console.log(layer.getContext().getTrace());

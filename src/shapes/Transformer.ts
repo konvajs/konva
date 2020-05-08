@@ -52,9 +52,9 @@ var ATTR_CHANGE_LIST = [
   'anchorStrokeWidthChange',
   'anchorFillChange',
   'anchorCornerRadiusChange',
-  'ignoreStrokeChange'
+  'ignoreStrokeChange',
 ]
-  .map(e => e + `.${EVENTS_NAME}`)
+  .map((e) => e + `.${EVENTS_NAME}`)
   .join(' ');
 
 var NODES_RECT = 'nodesRect';
@@ -70,9 +70,9 @@ var TRANSFORM_CHANGE_STR = [
   'offsetXChange',
   'offsetYChange',
   'transformsEnabledChange',
-  'strokeWidthChange'
+  'strokeWidthChange',
 ]
-  .map(e => e + `.${EVENTS_NAME}`)
+  .map((e) => e + `.${EVENTS_NAME}`)
   .join(' ');
 
 var ANGLES = {
@@ -83,7 +83,7 @@ var ANGLES = {
   'middle-left': 90,
   'bottom-left': -135,
   'bottom-center': 180,
-  'bottom-right': 135
+  'bottom-right': 135,
 };
 
 const TOUCH_DEVICE = 'ontouchstart' in Konva._global;
@@ -135,7 +135,7 @@ var ANCHORS_NAMES = [
   'middle-left',
   'bottom-left',
   'bottom-center',
-  'bottom-right'
+  'bottom-right',
 ];
 
 var MAX_SAFE_INTEGER = 100000000;
@@ -149,7 +149,7 @@ function getCenter(shape: Box) {
     y:
       shape.y +
       (shape.height / 2) * Math.cos(shape.rotation) +
-      (shape.width / 2) * Math.sin(shape.rotation)
+      (shape.width / 2) * Math.sin(shape.rotation),
   };
 }
 
@@ -166,7 +166,7 @@ function rotateAroundPoint(shape: Box, angleRad: number, point: Vector2d) {
     ...shape,
     rotation: shape.rotation + angleRad,
     x,
-    y
+    y,
   };
 }
 
@@ -285,9 +285,9 @@ export class Transformer extends Group {
     } else {
       this.rotation(0);
     }
-    this._nodes.forEach(node => {
+    this._nodes.forEach((node) => {
       const additionalEvents = node._attrsAffectingSize
-        .map(prop => prop + 'Change.' + EVENTS_NAME)
+        .map((prop) => prop + 'Change.' + EVENTS_NAME)
         .join(' ');
 
       const onChange = () => {
@@ -324,7 +324,7 @@ export class Transformer extends Group {
       const abs = node.getAbsolutePosition();
       const dx = abs.x - lastPos.x;
       const dy = abs.y - lastPos.y;
-      this.nodes().forEach(otherNode => {
+      this.nodes().forEach((otherNode) => {
         if (otherNode === node) {
           return;
         }
@@ -334,7 +334,7 @@ export class Transformer extends Group {
         const otherAbs = otherNode.getAbsolutePosition();
         otherNode.setAbsolutePosition({
           x: otherAbs.x + dx,
-          y: otherAbs.y + dy
+          y: otherAbs.y + dy,
         });
         otherNode.startDrag();
       });
@@ -367,7 +367,7 @@ export class Transformer extends Group {
   detach() {
     // remove events
     if (this._nodes) {
-      this._nodes.forEach(node => {
+      this._nodes.forEach((node) => {
         node.off('.' + EVENTS_NAME);
       });
     }
@@ -388,7 +388,7 @@ export class Transformer extends Group {
     var rect = node.getClientRect({
       skipTransform: true,
       skipShadow: true,
-      skipStroke: this.ignoreStroke()
+      skipStroke: this.ignoreStroke(),
     });
 
     var absScale = node.getAbsoluteScale(relative);
@@ -406,11 +406,11 @@ export class Transformer extends Group {
       y: absPos.y + dy * Math.cos(rotation) + dx * Math.sin(rotation),
       width: rect.width * absScale.x,
       height: rect.height * absScale.y,
-      rotation: rotation
+      rotation: rotation,
     };
     return rotateAroundPoint(box, -Konva.getAngle(rot), {
       x: 0,
-      y: 0
+      y: 0,
     });
   }
   // returns box + rotation of all shapes
@@ -422,25 +422,25 @@ export class Transformer extends Group {
         y: -MAX_SAFE_INTEGER,
         width: 0,
         height: 0,
-        rotation: 0
+        rotation: 0,
       };
     }
 
     const totalPoints = [];
-    this.nodes().map(node => {
+    this.nodes().map((node) => {
       const box = node.getClientRect({
         skipTransform: true,
         skipShadow: true,
-        skipStroke: this.ignoreStroke()
+        skipStroke: this.ignoreStroke(),
       });
       var points = [
         { x: box.x, y: box.y },
         { x: box.x + box.width, y: box.y },
         { x: box.x + box.width, y: box.y + box.height },
-        { x: box.x, y: box.y + box.height }
+        { x: box.x, y: box.y + box.height },
       ];
       var trans = node.getAbsoluteTransform();
-      points.forEach(function(point) {
+      points.forEach(function (point) {
         var transformed = trans.point(point);
         totalPoints.push(transformed);
       });
@@ -450,7 +450,7 @@ export class Transformer extends Group {
     tr.rotate(-Konva.getAngle(this.rotation()));
 
     var minX: number, minY: number, maxX: number, maxY: number;
-    totalPoints.forEach(function(point) {
+    totalPoints.forEach(function (point) {
       var transformed = tr.point(point);
       if (minX === undefined) {
         minX = maxX = transformed.x;
@@ -469,7 +469,7 @@ export class Transformer extends Group {
       y: p.y,
       width: maxX - minX,
       height: maxY - minY,
-      rotation: Konva.getAngle(this.rotation())
+      rotation: Konva.getAngle(this.rotation()),
     };
     // const shapes = this.nodes().map(node => {
     //   return this.__getNodeShape(node);
@@ -497,7 +497,7 @@ export class Transformer extends Group {
     this._createBack();
 
     ANCHORS_NAMES.forEach(
-      function(name) {
+      function (name) {
         this._createAnchor(name);
       }.bind(this)
     );
@@ -514,17 +514,17 @@ export class Transformer extends Group {
       // make it draggable,
       // so activating the anchror will not start drag&drop of any parent
       draggable: true,
-      hitStrokeWidth: TOUCH_DEVICE ? 10 : 'auto'
+      hitStrokeWidth: TOUCH_DEVICE ? 10 : 'auto',
     });
     var self = this;
-    anchor.on('mousedown touchstart', function(e) {
+    anchor.on('mousedown touchstart', function (e) {
       self._handleMouseDown(e);
     });
-    anchor.on('dragstart', e => {
+    anchor.on('dragstart', (e) => {
       anchor.stopDrag();
       e.cancelBubble = true;
     });
-    anchor.on('dragend', e => {
+    anchor.on('dragend', (e) => {
       e.cancelBubble = true;
     });
 
@@ -580,7 +580,7 @@ export class Transformer extends Group {
           shape.height() + padding * 2
         );
         ctx.fillStrokeShape(shape);
-      }
+      },
     });
     this.add(back);
     this._proxyDrag(back);
@@ -607,7 +607,7 @@ export class Transformer extends Group {
     var pos = e.target.getStage().getPointerPosition();
     this._anchorDragOffset = {
       x: pos.x - ap.x,
-      y: pos.y - ap.y
+      y: pos.y - ap.y,
     };
     this._fire('transformstart', { evt: e, target: this.getNode() });
     this.getNode()._fire('transformstart', { evt: e, target: this.getNode() });
@@ -622,7 +622,7 @@ export class Transformer extends Group {
     const pp = stage.getPointerPosition();
     var newNodePos = {
       x: pp.x - this._anchorDragOffset.x,
-      y: pp.y - this._anchorDragOffset.y
+      y: pp.y - this._anchorDragOffset.y,
     };
     const oldAbs = anchorNode.getAbsolutePosition();
     anchorNode.setAbsolutePosition(newNodePos);
@@ -666,11 +666,11 @@ export class Transformer extends Group {
         var comparePoint = centeredScaling
           ? {
               x: this.width() / 2,
-              y: this.height() / 2
+              y: this.height() / 2,
             }
           : {
               x: this.findOne('.bottom-right').x(),
-              y: this.findOne('.bottom-right').y()
+              y: this.findOne('.bottom-right').y(),
             };
         newHypotenuse = Math.sqrt(
           Math.pow(comparePoint.x - anchorNode.x(), 2) +
@@ -694,11 +694,11 @@ export class Transformer extends Group {
         var comparePoint = centeredScaling
           ? {
               x: this.width() / 2,
-              y: this.height() / 2
+              y: this.height() / 2,
             }
           : {
               x: this.findOne('.bottom-left').x(),
-              y: this.findOne('.bottom-left').y()
+              y: this.findOne('.bottom-left').y(),
             };
 
         newHypotenuse = Math.sqrt(
@@ -728,11 +728,11 @@ export class Transformer extends Group {
         var comparePoint = centeredScaling
           ? {
               x: this.width() / 2,
-              y: this.height() / 2
+              y: this.height() / 2,
             }
           : {
               x: this.findOne('.top-right').x(),
-              y: this.findOne('.top-right').y()
+              y: this.findOne('.top-right').y(),
             };
 
         newHypotenuse = Math.sqrt(
@@ -762,11 +762,11 @@ export class Transformer extends Group {
         var comparePoint = centeredScaling
           ? {
               x: this.width() / 2,
-              y: this.height() / 2
+              y: this.height() / 2,
             }
           : {
               x: this.findOne('.top-left').x(),
-              y: this.findOne('.top-left').y()
+              y: this.findOne('.top-left').y(),
             };
 
         newHypotenuse = Math.sqrt(
@@ -807,12 +807,12 @@ export class Transformer extends Group {
 
       bottomRight.move({
         x: -topOffsetX,
-        y: -topOffsetY
+        y: -topOffsetY,
       });
 
       topLeft.move({
         x: bottomOffsetX,
-        y: bottomOffsetY
+        y: bottomOffsetY,
       });
     }
 
@@ -832,7 +832,7 @@ export class Transformer extends Group {
         y: y,
         width: width,
         height: height,
-        rotation: Konva.getAngle(this.rotation())
+        rotation: Konva.getAngle(this.rotation()),
       },
       e
     );
@@ -885,7 +885,7 @@ export class Transformer extends Group {
     ) {
       const offset = t.point({
         x: -this.padding() * 2,
-        y: 0
+        y: 0,
       });
       newAttrs.x += offset.x;
       newAttrs.y += offset.y;
@@ -904,7 +904,7 @@ export class Transformer extends Group {
     ) {
       const offset = t.point({
         x: this.padding() * 2,
-        y: 0
+        y: 0,
       });
       this._movingAnchorName = this._movingAnchorName.replace('right', 'left');
       this._anchorDragOffset.x -= offset.x;
@@ -922,7 +922,7 @@ export class Transformer extends Group {
     ) {
       const offset = t.point({
         x: 0,
-        y: -this.padding() * 2
+        y: -this.padding() * 2,
       });
       newAttrs.x += offset.x;
       newAttrs.y += offset.y;
@@ -941,7 +941,7 @@ export class Transformer extends Group {
     ) {
       const offset = t.point({
         x: 0,
-        y: this.padding() * 2
+        y: this.padding() * 2,
       });
       this._movingAnchorName = this._movingAnchorName.replace('bottom', 'top');
       this._anchorDragOffset.x -= offset.x;
@@ -987,7 +987,7 @@ export class Transformer extends Group {
     // [delta transform] = [new transform] * [old transform inverted]
     const delta = newTr.multiply(oldTr.invert());
 
-    this._nodes.forEach(node => {
+    this._nodes.forEach((node) => {
       // for each node we have the same [delta transform]
       // the equations is
       // [delta transform] * [parent transform] * [old local transform] = [parent transform] * [new local transform]
@@ -1006,7 +1006,9 @@ export class Transformer extends Group {
         .multiply(localTransform);
 
       const attrs = newLocalTransform.decompose();
-      node.setAttrs(attrs);
+      node._batchTransformChanges(() => {
+        node.setAttrs(attrs);
+      });
       this._fire('transform', { evt: evt, target: node });
       node._fire('transform', { evt: evt, target: node });
     });
@@ -1025,6 +1027,14 @@ export class Transformer extends Group {
     this._resetTransformCache();
     this.update();
   }
+
+  _batchChangeChild(selector: string, attrs: any) {
+    const anchor = this.findOne(selector);
+    anchor._batchTransformChanges(() => {
+      anchor.setAttrs(attrs);
+    });
+  }
+
   update() {
     var attrs = this._getNodeRect();
     this.rotation(Util._getRotation(attrs.rotation));
@@ -1036,79 +1046,81 @@ export class Transformer extends Group {
     var padding = this.padding();
 
     var anchorSize = this.anchorSize();
-    this.find('._anchor').each(node =>
-      node.setAttrs({
-        width: anchorSize,
-        height: anchorSize,
-        offsetX: anchorSize / 2,
-        offsetY: anchorSize / 2,
-        stroke: this.anchorStroke(),
-        strokeWidth: this.anchorStrokeWidth(),
-        fill: this.anchorFill(),
-        cornerRadius: this.anchorCornerRadius()
-      })
-    );
+    this.find('._anchor').each((node) => {
+      node._batchTransformChanges(() => {
+        node.setAttrs({
+          width: anchorSize,
+          height: anchorSize,
+          offsetX: anchorSize / 2,
+          offsetY: anchorSize / 2,
+          stroke: this.anchorStroke(),
+          strokeWidth: this.anchorStrokeWidth(),
+          fill: this.anchorFill(),
+          cornerRadius: this.anchorCornerRadius(),
+        });
+      });
+    });
 
-    this.findOne('.top-left').setAttrs({
+    this._batchChangeChild('.top-left', {
       x: 0,
       y: 0,
       offsetX: anchorSize / 2 + padding,
       offsetY: anchorSize / 2 + padding,
-      visible: resizeEnabled && enabledAnchors.indexOf('top-left') >= 0
+      visible: resizeEnabled && enabledAnchors.indexOf('top-left') >= 0,
     });
-    this.findOne('.top-center').setAttrs({
+    this._batchChangeChild('.top-center', {
       x: width / 2,
       y: 0,
       offsetY: anchorSize / 2 + padding,
-      visible: resizeEnabled && enabledAnchors.indexOf('top-center') >= 0
+      visible: resizeEnabled && enabledAnchors.indexOf('top-center') >= 0,
     });
-    this.findOne('.top-right').setAttrs({
+    this._batchChangeChild('.top-right', {
       x: width,
       y: 0,
       offsetX: anchorSize / 2 - padding,
       offsetY: anchorSize / 2 + padding,
-      visible: resizeEnabled && enabledAnchors.indexOf('top-right') >= 0
+      visible: resizeEnabled && enabledAnchors.indexOf('top-right') >= 0,
     });
-    this.findOne('.middle-left').setAttrs({
+    this._batchChangeChild('.middle-left', {
       x: 0,
       y: height / 2,
       offsetX: anchorSize / 2 + padding,
-      visible: resizeEnabled && enabledAnchors.indexOf('middle-left') >= 0
+      visible: resizeEnabled && enabledAnchors.indexOf('middle-left') >= 0,
     });
-    this.findOne('.middle-right').setAttrs({
+    this._batchChangeChild('.middle-right', {
       x: width,
       y: height / 2,
       offsetX: anchorSize / 2 - padding,
-      visible: resizeEnabled && enabledAnchors.indexOf('middle-right') >= 0
+      visible: resizeEnabled && enabledAnchors.indexOf('middle-right') >= 0,
     });
-    this.findOne('.bottom-left').setAttrs({
+    this._batchChangeChild('.bottom-left', {
       x: 0,
       y: height,
       offsetX: anchorSize / 2 + padding,
       offsetY: anchorSize / 2 - padding,
-      visible: resizeEnabled && enabledAnchors.indexOf('bottom-left') >= 0
+      visible: resizeEnabled && enabledAnchors.indexOf('bottom-left') >= 0,
     });
-    this.findOne('.bottom-center').setAttrs({
+    this._batchChangeChild('.bottom-center', {
       x: width / 2,
       y: height,
       offsetY: anchorSize / 2 - padding,
-      visible: resizeEnabled && enabledAnchors.indexOf('bottom-center') >= 0
+      visible: resizeEnabled && enabledAnchors.indexOf('bottom-center') >= 0,
     });
-    this.findOne('.bottom-right').setAttrs({
+    this._batchChangeChild('.bottom-right', {
       x: width,
       y: height,
       offsetX: anchorSize / 2 - padding,
       offsetY: anchorSize / 2 - padding,
-      visible: resizeEnabled && enabledAnchors.indexOf('bottom-right') >= 0
+      visible: resizeEnabled && enabledAnchors.indexOf('bottom-right') >= 0,
     });
 
-    this.findOne('.rotater').setAttrs({
+    this._batchChangeChild('.rotater', {
       x: width / 2,
       y: -this.rotateAnchorOffset() * Util._sign(height) - padding,
-      visible: this.rotateEnabled()
+      visible: this.rotateEnabled(),
     });
 
-    this.findOne('.back').setAttrs({
+    this._batchChangeChild('.back', {
       width: width,
       height: height,
       visible: this.borderEnabled(),
@@ -1116,7 +1128,7 @@ export class Transformer extends Group {
       strokeWidth: this.borderStrokeWidth(),
       dash: this.borderDash(),
       x: 0,
-      y: 0
+      y: 0,
     });
   }
   /**
@@ -1187,7 +1199,7 @@ function validateAnchors(val) {
     Util.warn('enabledAnchors value should be an array');
   }
   if (val instanceof Array) {
-    val.forEach(function(name) {
+    val.forEach(function (name) {
       if (ANCHORS_NAMES.indexOf(name) === -1) {
         Util.warn(
           'Unknown anchor name: ' +
@@ -1582,7 +1594,7 @@ Factory.addGetterSetter(Transformer, 'shouldOverdrawWholeArea', false);
 Factory.backCompat(Transformer, {
   lineEnabled: 'borderEnabled',
   rotateHandlerOffset: 'rotateAnchorOffset',
-  enabledHandlers: 'enabledAnchors'
+  enabledHandlers: 'enabledAnchors',
 });
 
 Collection.mapMethods(Transformer);

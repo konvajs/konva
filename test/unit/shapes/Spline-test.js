@@ -1,6 +1,6 @@
-suite('Spline', function() {
+suite('Spline', function () {
   // ======================================================
-  test('add splines', function() {
+  test('add splines', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -11,7 +11,7 @@ suite('Spline', function() {
       lineCap: 'round',
       lineJoin: 'round',
       draggable: true,
-      tension: 1
+      tension: 1,
     });
 
     var line2 = new Konva.Line({
@@ -21,7 +21,7 @@ suite('Spline', function() {
       lineCap: 'round',
       lineJoin: 'round',
       draggable: true,
-      tension: 1
+      tension: 1,
     });
 
     var line3 = new Konva.Line({
@@ -31,7 +31,7 @@ suite('Spline', function() {
       lineCap: 'round',
       lineJoin: 'round',
       draggable: true,
-      tension: 1
+      tension: 1,
     });
 
     layer.add(line1);
@@ -51,7 +51,7 @@ suite('Spline', function() {
   });
 
   // ======================================================
-  test('update spline points', function() {
+  test('update spline points', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -62,7 +62,7 @@ suite('Spline', function() {
       lineCap: 'round',
       lineJoin: 'round',
       draggable: true,
-      tension: 1
+      tension: 1,
     });
 
     layer.add(spline);
@@ -78,7 +78,7 @@ suite('Spline', function() {
   });
 
   // ======================================================
-  test('add point to spline points', function() {
+  test('add point to spline points', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -89,7 +89,7 @@ suite('Spline', function() {
       lineCap: 'round',
       lineJoin: 'round',
       draggable: true,
-      tension: 1
+      tension: 1,
     });
 
     layer.add(spline);

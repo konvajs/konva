@@ -9,14 +9,14 @@ var assert = chai.assert,
   assertionCount = 0,
   assertions = document.createElement('em');
 
-window.requestAnimFrame = (function(callback) {
+window.requestAnimFrame = (function (callback) {
   return (
     window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame ||
     window.msRequestAnimationFrame ||
-    function(callback) {
+    function (callback) {
       window.setTimeout(callback, 1000 / 30);
     }
   );
@@ -24,25 +24,25 @@ window.requestAnimFrame = (function(callback) {
 
 function init() {
   // assert extenders so that we can count assertions
-  assert = function() {
+  assert = function () {
     origAssert.apply(this, arguments);
     assertions.innerHTML = ++assertionCount;
   };
-  assert.equal = function() {
+  assert.equal = function () {
     origAssertEqual.apply(this, arguments);
     assertions.innerHTML = ++assertionCount;
   };
-  assert.notEqual = function() {
+  assert.notEqual = function () {
     origNotEqual.apply(this, arguments);
     assertions.innerHTML = ++assertionCount;
   };
 
-  assert.deepEqual = function() {
+  assert.deepEqual = function () {
     origDeepEqual.apply(this, arguments);
     assertions.innerHTML = ++assertionCount;
   };
 
-  window.onload = function() {
+  window.onload = function () {
     var mochaStats = document.getElementById('mocha-stats');
 
     if (mochaStats) {
@@ -78,7 +78,7 @@ function addStats() {
   function animate(lastTime) {
     stats.begin();
 
-    requestAnimFrame(function() {
+    requestAnimFrame(function () {
       stats.end();
       animate(lastTime);
     });
@@ -93,7 +93,7 @@ function addStage(attrs) {
     {
       container: container,
       width: 578,
-      height: 200
+      height: 200,
     },
     attrs
   );
@@ -215,7 +215,7 @@ function showHit(layer) {
   konvaContainer.appendChild(canvas);
 }
 
-beforeEach(function() {
+beforeEach(function () {
   var title = document.createElement('h2'),
     test = this.currentTest;
 
@@ -231,16 +231,16 @@ beforeEach(function() {
 
 Konva.UA.mobile = false;
 
-afterEach(function() {
+afterEach(function () {
   var isFailed = this.currentTest.state == 'failed';
   var isManual = this.currentTest.parent.title === 'Manual';
 
-  Konva.stages.forEach(function(stage) {
+  Konva.stages.forEach(function (stage) {
     clearTimeout(stage.dblTimeout);
   });
 
   if (!isFailed && !isManual) {
-    Konva.stages.forEach(function(stage) {
+    Konva.stages.forEach(function (stage) {
       stage.destroy();
     });
     if (Konva.DD._dragElements.size) {
@@ -249,36 +249,36 @@ afterEach(function() {
   }
 });
 
-Konva.Stage.prototype.simulateMouseDown = function(pos) {
+Konva.Stage.prototype.simulateMouseDown = function (pos) {
   var top = this.content.getBoundingClientRect().top;
 
   this._mousedown({
     clientX: pos.x,
     clientY: pos.y + top,
-    button: pos.button || 0
+    button: pos.button || 0,
   });
 };
 
-Konva.Stage.prototype.simulateMouseMove = function(pos) {
+Konva.Stage.prototype.simulateMouseMove = function (pos) {
   var top = this.content.getBoundingClientRect().top;
 
   var evt = {
     clientX: pos.x,
     clientY: pos.y + top,
-    button: pos.button || 0
+    button: pos.button || 0,
   };
 
   this._mousemove(evt);
   Konva.DD._drag(evt);
 };
 
-Konva.Stage.prototype.simulateMouseUp = function(pos) {
+Konva.Stage.prototype.simulateMouseUp = function (pos) {
   var top = this.content.getBoundingClientRect().top;
 
   var evt = {
     clientX: pos.x,
     clientY: pos.y + top,
-    button: pos.button || 0
+    button: pos.button || 0,
   };
 
   Konva.DD._endDragBefore(evt);
@@ -286,24 +286,24 @@ Konva.Stage.prototype.simulateMouseUp = function(pos) {
   Konva.DD._endDragAfter(evt);
 };
 
-Konva.Stage.prototype.simulateTouchStart = function(pos, changed) {
+Konva.Stage.prototype.simulateTouchStart = function (pos, changed) {
   var top = this.content.getBoundingClientRect().top;
 
   var touches;
   var changedTouches;
   if (Array.isArray(pos)) {
-    touches = pos.map(function(touch) {
+    touches = pos.map(function (touch) {
       return {
         identifier: touch.id,
         clientX: touch.x,
-        clientY: touch.y + top
+        clientY: touch.y + top,
       };
     });
-    changedTouches = (changed || pos).map(function(touch) {
+    changedTouches = (changed || pos).map(function (touch) {
       return {
         identifier: touch.id,
         clientX: touch.x,
-        clientY: touch.y + top
+        clientY: touch.y + top,
       };
     });
   } else {
@@ -311,36 +311,36 @@ Konva.Stage.prototype.simulateTouchStart = function(pos, changed) {
       {
         clientX: pos.x,
         clientY: pos.y + top,
-        id: 0
-      }
+        id: 0,
+      },
     ];
   }
   var evt = {
     touches: touches,
-    changedTouches: changedTouches
+    changedTouches: changedTouches,
   };
 
   this._touchstart(evt);
 };
 
-Konva.Stage.prototype.simulateTouchMove = function(pos, changed) {
+Konva.Stage.prototype.simulateTouchMove = function (pos, changed) {
   var top = this.content.getBoundingClientRect().top;
 
   var touches;
   var changedTouches;
   if (Array.isArray(pos)) {
-    touches = pos.map(function(touch) {
+    touches = pos.map(function (touch) {
       return {
         identifier: touch.id,
         clientX: touch.x,
-        clientY: touch.y + top
+        clientY: touch.y + top,
       };
     });
-    changedTouches = (changed || pos).map(function(touch) {
+    changedTouches = (changed || pos).map(function (touch) {
       return {
         identifier: touch.id,
         clientX: touch.x,
-        clientY: touch.y + top
+        clientY: touch.y + top,
       };
     });
   } else {
@@ -348,37 +348,37 @@ Konva.Stage.prototype.simulateTouchMove = function(pos, changed) {
       {
         clientX: pos.x,
         clientY: pos.y + top,
-        id: 0
-      }
+        id: 0,
+      },
     ];
   }
   var evt = {
     touches: touches,
-    changedTouches: changedTouches
+    changedTouches: changedTouches,
   };
 
   this._touchmove(evt);
   Konva.DD._drag(evt);
 };
 
-Konva.Stage.prototype.simulateTouchEnd = function(pos, changed) {
+Konva.Stage.prototype.simulateTouchEnd = function (pos, changed) {
   var top = this.content.getBoundingClientRect().top;
 
   var touches;
   var changedTouches;
   if (Array.isArray(pos)) {
-    touches = pos.map(function(touch) {
+    touches = pos.map(function (touch) {
       return {
         identifier: touch.id,
         clientX: touch.x,
-        clientY: touch.y + top
+        clientY: touch.y + top,
       };
     });
-    changedTouches = (changed || pos).map(function(touch) {
+    changedTouches = (changed || pos).map(function (touch) {
       return {
         identifier: touch.id,
         clientX: touch.x,
-        clientY: touch.y + top
+        clientY: touch.y + top,
       };
     });
   } else {
@@ -386,13 +386,13 @@ Konva.Stage.prototype.simulateTouchEnd = function(pos, changed) {
       {
         clientX: pos.x,
         clientY: pos.y + top,
-        id: 0
-      }
+        id: 0,
+      },
     ];
   }
   var evt = {
     touches: touches,
-    changedTouches: changedTouches
+    changedTouches: changedTouches,
   };
 
   Konva.DD._endDragBefore(evt);
@@ -400,39 +400,39 @@ Konva.Stage.prototype.simulateTouchEnd = function(pos, changed) {
   Konva.DD._endDragAfter(evt);
 };
 
-Konva.Stage.prototype.simulatePointerDown = function(pos) {
+Konva.Stage.prototype.simulatePointerDown = function (pos) {
   var top = this.content.getBoundingClientRect().top;
 
   this._mousedown({
     clientX: pos.x,
     clientY: pos.y + top,
     button: pos.button || 0,
-    pointerId: pos.pointerId || 1
+    pointerId: pos.pointerId || 1,
   });
 };
 
-Konva.Stage.prototype.simulatePointerMove = function(pos) {
+Konva.Stage.prototype.simulatePointerMove = function (pos) {
   var top = this.content.getBoundingClientRect().top;
 
   var evt = {
     clientX: pos.x,
     clientY: pos.y + top,
     button: pos.button || 0,
-    pointerId: pos.pointerId || 1
+    pointerId: pos.pointerId || 1,
   };
 
   this._mousemove(evt);
   Konva.DD._drag(evt);
 };
 
-Konva.Stage.prototype.simulatePointerUp = function(pos) {
+Konva.Stage.prototype.simulatePointerUp = function (pos) {
   var top = this.content.getBoundingClientRect().top;
 
   var evt = {
     clientX: pos.x,
     clientY: pos.y + top,
     button: pos.button || 0,
-    pointerId: pos.pointerId || 1
+    pointerId: pos.pointerId || 1,
   };
 
   Konva.DD._endDragBefore(evt);
@@ -445,7 +445,7 @@ init();
 // polyfills
 if (!Array.prototype.find) {
   Object.defineProperty(Array.prototype, 'find', {
-    value: function(predicate) {
+    value: function (predicate) {
       // 1. Let O be ? ToObject(this value).
       if (this == null) {
         throw TypeError('"this" is null or not defined');
@@ -485,7 +485,7 @@ if (!Array.prototype.find) {
       return undefined;
     },
     configurable: true,
-    writable: true
+    writable: true,
   });
 }
 

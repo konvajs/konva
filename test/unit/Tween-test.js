@@ -1,6 +1,6 @@
-suite('Tween', function() {
+suite('Tween', function () {
   // ======================================================
-  test('tween node', function(done) {
+  test('tween node', function (done) {
     var stage = addStage();
 
     var layer = new Konva.Layer();
@@ -11,14 +11,14 @@ suite('Tween', function() {
       radius: 70,
       fill: 'green',
       stroke: 'blue',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
 
     layer.add(circle);
     stage.add(layer);
 
     var finishCount = 0;
-    var onFinish = function() {
+    var onFinish = function () {
       assert(++finishCount <= 1, 'finishCount should not exceed 1');
       done();
     };
@@ -41,7 +41,7 @@ suite('Tween', function() {
       duration: 0.2,
       x: 200,
       y: 100,
-      onFinish: onFinish
+      onFinish: onFinish,
     }).play();
 
     var tweens = 0;
@@ -61,7 +61,7 @@ suite('Tween', function() {
   });
 
   // ======================================================
-  test('destroy tween while tweening', function() {
+  test('destroy tween while tweening', function () {
     var stage = addStage();
 
     var layer = new Konva.Layer();
@@ -72,7 +72,7 @@ suite('Tween', function() {
       radius: 70,
       fill: 'green',
       stroke: 'blue',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
 
     layer.add(circle);
@@ -82,7 +82,7 @@ suite('Tween', function() {
       node: circle,
       duration: 0.2,
       x: 200,
-      y: 100
+      y: 100,
     }).play();
 
     // start/diff object = attrs.nodeId.tweenId.attr
@@ -99,7 +99,7 @@ suite('Tween', function() {
   });
 
   // ======================================================
-  test('zero duration', function(done) {
+  test('zero duration', function (done) {
     var stage = addStage();
 
     var layer = new Konva.Layer();
@@ -110,7 +110,7 @@ suite('Tween', function() {
       radius: 70,
       fill: 'green',
       stroke: 'blue',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
 
     layer.add(circle);
@@ -120,18 +120,18 @@ suite('Tween', function() {
       node: circle,
       duration: 0,
       x: 200,
-      y: 100
+      y: 100,
     });
     tween.play();
 
-    setTimeout(function() {
+    setTimeout(function () {
       assert.equal(circle.x(), 200);
       assert.equal(circle.y(), 100);
       done();
     }, 60);
   });
 
-  test('color tweening', function(done) {
+  test('color tweening', function (done) {
     var stage = addStage();
 
     var layer = new Konva.Layer();
@@ -142,7 +142,7 @@ suite('Tween', function() {
       radius: 70,
       fill: 'red',
       stroke: 'blue',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
 
     layer.add(circle);
@@ -157,10 +157,10 @@ suite('Tween', function() {
       node: circle,
       duration: duration,
       fill: endFill,
-      onFinish: function() {
+      onFinish: function () {
         assert.equal(endFill, circle.fill());
         done();
-      }
+      },
     });
 
     tween.seek(duration * 0.5);
@@ -170,7 +170,7 @@ suite('Tween', function() {
     tween.play();
   });
 
-  test('gradient tweening', function(done) {
+  test('gradient tweening', function (done) {
     var stage = addStage();
 
     var layer = new Konva.Layer();
@@ -181,7 +181,7 @@ suite('Tween', function() {
       radius: 70,
       fillLinearGradientStartPoint: { x: -50, y: -50 },
       fillLinearGradientEndPoint: { x: 50, y: 50 },
-      fillLinearGradientColorStops: [0, 'red', 0.5, 'blue']
+      fillLinearGradientColorStops: [0, 'red', 0.5, 'blue'],
     });
 
     layer.add(circle);
@@ -194,13 +194,13 @@ suite('Tween', function() {
       node: circle,
       duration: duration,
       fillLinearGradientColorStops: endFill,
-      onFinish: function() {
+      onFinish: function () {
         assert.deepEqual(
           [0.5, 'rgba(255,0,0,1)', 1, 'rgba(0,0,0,1)'],
           circle.fillLinearGradientColorStops()
         );
         done();
-      }
+      },
     });
 
     tween.seek(duration * 0.5);
@@ -213,7 +213,7 @@ suite('Tween', function() {
     tween.play();
   });
 
-  test('to method', function(done) {
+  test('to method', function (done) {
     var stage = addStage();
 
     var layer = new Konva.Layer();
@@ -222,7 +222,7 @@ suite('Tween', function() {
       radius: 70,
       fill: 'red',
       stroke: 'blue',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
 
     layer.add(circle);
@@ -232,42 +232,42 @@ suite('Tween', function() {
       x: stage.width() / 2,
       y: stage.getHeight() / 2,
       duration: 0.1,
-      onFinish: function() {
+      onFinish: function () {
         assert.equal(circle.x(), stage.width() / 2);
         assert.equal(Object.keys(Konva.Tween.attrs[circle._id]).length, 0);
         done();
-      }
+      },
     });
   });
 
-  test('to method simple usage', function(done) {
+  test('to method simple usage', function (done) {
     var stage = addStage();
 
     stage.to({
       x: 10,
-      duration: 0.001
+      duration: 0.001,
     });
-    setTimeout(function() {
+    setTimeout(function () {
       done();
     }, 50);
   });
 
-  suite('tween array with different length', function() {
-    test('prepare array closed', function() {
+  suite('tween array with different length', function () {
+    test('prepare array closed', function () {
       var start = [0, 0, 10, 0, 10, 10];
       var end = [0, 0, 10, 0, 10, 10, 0, 10];
       var newStart = Konva.Util._prepareArrayForTween(start, end, true);
       assert.deepEqual(newStart, [0, 0, 10, 0, 10, 10, 5, 5]);
     });
 
-    test('prepare array - opened', function() {
+    test('prepare array - opened', function () {
       var start = [0, 0, 10, 0, 10, 10, 0, 10];
       var end = [0, 0, 10, 0, 7, 9];
       end = Konva.Util._prepareArrayForTween(start, end, false);
       assert.deepEqual(end, [0, 0, 10, 0, 7, 9, 7, 9]);
     });
 
-    test('tween array with bigger size', function(done) {
+    test('tween array with bigger size', function (done) {
       var stage = addStage();
 
       var layer = new Konva.Layer();
@@ -276,14 +276,14 @@ suite('Tween', function() {
       var line = new Konva.Line({
         stroke: 'black',
         points: [100, 100, 200, 100, 200, 200],
-        closed: true
+        closed: true,
       });
       layer.add(line);
 
       line.to({
         points: [100, 100, 200, 100, 200, 200, 100, 200],
         duration: 0.1,
-        onFinish: function() {
+        onFinish: function () {
           assert.deepEqual(line.points(), [
             100,
             100,
@@ -292,14 +292,14 @@ suite('Tween', function() {
             200,
             200,
             100,
-            200
+            200,
           ]);
           done();
-        }
+        },
       });
     });
 
-    test('tween array to lower size', function(done) {
+    test('tween array to lower size', function (done) {
       var stage = addStage();
 
       var layer = new Konva.Layer();
@@ -308,21 +308,21 @@ suite('Tween', function() {
       var line = new Konva.Line({
         stroke: 'black',
         points: [100, 100, 200, 100, 200, 200, 100, 200],
-        closed: true
+        closed: true,
       });
       layer.add(line);
 
       line.to({
         points: [100, 100, 200, 100, 200, 200],
         duration: 0.1,
-        onFinish: function() {
+        onFinish: function () {
           assert.deepEqual(line.points(), [100, 100, 200, 100, 200, 200]);
           done();
-        }
+        },
       });
     });
 
-    test('tween array to lower size and go back', function(done) {
+    test('tween array to lower size and go back', function (done) {
       var stage = addStage();
 
       var layer = new Konva.Layer();
@@ -331,7 +331,7 @@ suite('Tween', function() {
       var line = new Konva.Line({
         stroke: 'black',
         points: [100, 100, 200, 100, 200, 200, 100, 200],
-        closed: true
+        closed: true,
       });
       layer.add(line);
 
@@ -339,10 +339,10 @@ suite('Tween', function() {
         node: line,
         points: [100, 100, 200, 100, 200, 200],
         duration: 0.01,
-        onFinish: function() {
+        onFinish: function () {
           tween.reverse();
         },
-        onReset: function() {
+        onReset: function () {
           assert.deepEqual(line.points(), [
             100,
             100,
@@ -351,15 +351,15 @@ suite('Tween', function() {
             200,
             200,
             100,
-            200
+            200,
           ]);
           done();
-        }
+        },
       });
       tween.play();
     });
 
-    test('tween array to bigger size and go back', function(done) {
+    test('tween array to bigger size and go back', function (done) {
       var stage = addStage();
 
       var layer = new Konva.Layer();
@@ -368,7 +368,7 @@ suite('Tween', function() {
       var line = new Konva.Line({
         stroke: 'black',
         points: [100, 100, 200, 100, 200, 200],
-        closed: true
+        closed: true,
       });
       layer.add(line);
 
@@ -376,13 +376,13 @@ suite('Tween', function() {
         node: line,
         points: [100, 100, 200, 100, 200, 200, 100, 200],
         duration: 0.01,
-        onFinish: function() {
+        onFinish: function () {
           tween.reverse();
         },
-        onReset: function() {
+        onReset: function () {
           assert.deepEqual(line.points(), [100, 100, 200, 100, 200, 200]);
           done();
-        }
+        },
       });
       tween.play();
     });

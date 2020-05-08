@@ -1,6 +1,6 @@
-suite('Rect', function() {
+suite('Rect', function () {
   // ======================================================
-  test('add rect to stage', function() {
+  test('add rect to stage', function () {
     var stage = addStage();
 
     var layer = new Konva.Layer();
@@ -11,7 +11,7 @@ suite('Rect', function() {
       width: 100,
       height: 50,
       fill: 'green',
-      stroke: 'blue'
+      stroke: 'blue',
     });
 
     layer.add(rect);
@@ -36,7 +36,7 @@ suite('Rect', function() {
   });
 
   // ======================================================
-  test('add rect with shadow, corner radius, and opacity', function() {
+  test('add rect with shadow, corner radius, and opacity', function () {
     var stage = addStage();
 
     var layer = new Konva.Layer();
@@ -53,7 +53,7 @@ suite('Rect', function() {
       shadowOffset: { x: 5, y: 5 },
       shadowOpacity: 0.5,
       opacity: 0.4,
-      cornerRadius: 5
+      cornerRadius: 5,
     });
 
     layer.add(rect);
@@ -69,7 +69,7 @@ suite('Rect', function() {
   });
 
   // ======================================================
-  test('draw rect', function() {
+  test('draw rect', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var rect = new Konva.Rect({
@@ -82,10 +82,10 @@ suite('Rect', function() {
       strokeWidth: 4,
       scale: {
         x: 2,
-        y: 2
+        y: 2,
       },
       cornerRadius: 15,
-      draggable: true
+      draggable: true,
     });
 
     layer.add(rect);
@@ -95,7 +95,7 @@ suite('Rect', function() {
   });
 
   // ======================================================
-  test('add fill stroke rect', function() {
+  test('add fill stroke rect', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var rect = new Konva.Rect({
@@ -105,7 +105,7 @@ suite('Rect', function() {
       height: 50,
       fill: 'blue',
       stroke: 'green',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
 
     layer.add(rect);
@@ -125,7 +125,7 @@ suite('Rect', function() {
   });
 
   // ======================================================
-  test('add stroke rect', function() {
+  test('add stroke rect', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var rect = new Konva.Rect({
@@ -134,7 +134,7 @@ suite('Rect', function() {
       width: 100,
       height: 50,
       stroke: 'green',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
 
     layer.add(rect);
@@ -152,7 +152,7 @@ suite('Rect', function() {
   });
 
   // ======================================================
-  test('use default stroke width (stroke width should be 2)', function() {
+  test('use default stroke width (stroke width should be 2)', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var rect = new Konva.Rect({
@@ -160,7 +160,7 @@ suite('Rect', function() {
       y: 100,
       width: 100,
       height: 50,
-      stroke: 'blue'
+      stroke: 'blue',
     });
 
     layer.add(rect);
@@ -177,7 +177,7 @@ suite('Rect', function() {
   });
 
   // ======================================================
-  test('limit corner radius', function() {
+  test('limit corner radius', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var rect = new Konva.Rect({
@@ -186,7 +186,7 @@ suite('Rect', function() {
       width: 100,
       height: 100,
       fill: 'black',
-      cornerRadius: 100
+      cornerRadius: 100,
     });
 
     layer.add(rect);
@@ -203,7 +203,7 @@ suite('Rect', function() {
   });
 
   // ======================================================
-  test('array for corner radius', function() {
+  test('array for corner radius', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var rect = new Konva.Rect({
@@ -212,7 +212,7 @@ suite('Rect', function() {
       width: 100,
       height: 100,
       fill: 'black',
-      cornerRadius: [0, 10, 20, 30]
+      cornerRadius: [0, 10, 20, 30],
     });
 
     layer.add(rect);

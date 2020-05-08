@@ -8,7 +8,7 @@ Konva.Util.createCanvasElement = () => {
 
 var stage = new Konva.Stage({
   width: 200,
-  height: 200
+  height: 200,
 });
 
 var layer = new Konva.Layer();
@@ -19,20 +19,20 @@ layer.add(topGroup);
 
 var counter = new Konva.Text({
   x: 5,
-  y: 35
+  y: 35,
 });
 topGroup.add(counter);
 
 var button = new Konva.Label({
   x: 5,
   y: 5,
-  opacity: 0.75
+  opacity: 0.75,
 });
 topGroup.add(button);
 
 button.add(
   new Konva.Tag({
-    fill: 'black'
+    fill: 'black',
   })
 );
 
@@ -42,7 +42,7 @@ button.add(
     fontFamily: 'Calibri',
     fontSize: 18,
     padding: 5,
-    fill: 'white'
+    fill: 'white',
   })
 );
 
@@ -51,17 +51,17 @@ var circle = new Konva.Circle({
   y: stage.height() / 2,
   radius: 20,
   fill: 'red',
-  draggable: true
+  draggable: true,
 });
 topGroup.add(circle);
 layer.draw();
 
-onmessage = function(evt) {
+onmessage = function (evt) {
   if (evt.data.canvas) {
     var canvas = evt.data.canvas;
     stage.setSize({
       width: canvas.width,
-      height: canvas.height
+      height: canvas.height,
     });
     const ctx = canvas.getContext('2d');
     setInterval(() => {
@@ -104,14 +104,14 @@ async function runBunnies() {
   var isAdding = false;
   var count = 0;
   var amount = 10;
-  const imgBlob = await fetch('./assets/bunny.png').then(r => r.blob());
+  const imgBlob = await fetch('./assets/bunny.png').then((r) => r.blob());
   const img = await createImageBitmap(imgBlob);
 
-  button.on('mousedown', function() {
+  button.on('mousedown', function () {
     isAdding = true;
   });
 
-  button.on('mouseup', function() {
+  button.on('mouseup', function () {
     isAdding = false;
   });
 
@@ -122,7 +122,7 @@ async function runBunnies() {
       hitGraphEnabled: false,
       x: 10,
       y: 10,
-      listening: false
+      listening: false,
     });
 
     bunny.speedX = Math.random() * 10;
@@ -149,7 +149,7 @@ async function runBunnies() {
           transformsEnabled: 'position',
           x: 0,
           y: 0,
-          listening: false
+          listening: false,
         });
         bunny.speedX = Math.random() * 10;
         bunny.speedY = Math.random() * 10 - 5;

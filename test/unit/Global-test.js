@@ -1,11 +1,11 @@
-suite('Global', function() {
+suite('Global', function () {
   // ======================================================
-  test('test Konva version number', function() {
+  test('test Konva version number', function () {
     assert.equal(!!Konva.version, true);
   });
 
   // ======================================================
-  test('getAngle()', function() {
+  test('getAngle()', function () {
     // test that default angleDeg is true
     assert.equal(Konva.angleDeg, true);
     assert.equal(Konva.getAngle(180), Math.PI);
@@ -18,7 +18,7 @@ suite('Global', function() {
   });
 
   // ======================================================
-  test('UA tests', function() {
+  test('UA tests', function () {
     var ua;
 
     // Chrome 34.0.1847.137 m

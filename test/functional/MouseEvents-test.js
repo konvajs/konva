@@ -1,6 +1,6 @@
-suite('MouseEvents', function() {
+suite('MouseEvents', function () {
   // ======================================================
-  test('stage content mouse events', function(done) {
+  test('stage content mouse events', function (done) {
     var stage = addStage();
     var layer = new Konva.Layer();
     var circle = new Konva.Circle({
@@ -10,7 +10,7 @@ suite('MouseEvents', function() {
       fill: 'green',
       stroke: 'black',
       strokeWidth: 4,
-      name: 'myCircle'
+      name: 'myCircle',
     });
 
     layer.add(circle);
@@ -20,52 +20,52 @@ suite('MouseEvents', function() {
 
     var top = stage.content.getBoundingClientRect().top;
 
-    circle.on('mousedown', function() {
+    circle.on('mousedown', function () {
       circleMousedown++;
     });
 
-    circle.on('mouseup', function() {
+    circle.on('mouseup', function () {
       circleMouseup++;
     });
 
-    stage.on('contentMousedown', function() {
+    stage.on('contentMousedown', function () {
       stageContentMousedown++;
     });
 
-    stage.on('contentMouseup', function() {
+    stage.on('contentMouseup', function () {
       stageContentMouseup++;
     });
 
-    stage.on('contentMousemove', function() {
+    stage.on('contentMousemove', function () {
       stageContentMousemove++;
     });
 
-    stage.on('contentMouseout', function() {
+    stage.on('contentMouseout', function () {
       stageContentMouseout++;
     });
 
-    stage.on('contentMouseover', function() {
+    stage.on('contentMouseover', function () {
       stageContentMouseover++;
     });
 
-    stage.on('contentClick', function() {
+    stage.on('contentClick', function () {
       //console.log('click');
       stageContentClick++;
     });
 
-    stage.on('contentDblclick', function() {
+    stage.on('contentDblclick', function () {
       //console.log('dbl click');
       stageContentDblClick++;
     });
 
     stage.simulateMouseDown({
       x: 100,
-      y: 100
+      y: 100,
     });
 
     stage.simulateMouseUp({
       x: 100,
-      y: 100
+      y: 100,
     });
 
     assert.equal(circleMousedown, 1);
@@ -76,11 +76,11 @@ suite('MouseEvents', function() {
 
     stage.simulateMouseDown({
       x: 1,
-      y: 1
+      y: 1,
     });
     stage.simulateMouseUp({
       x: 1,
-      y: 1
+      y: 1,
     });
 
     assert.equal(stageContentMousedown, 2);
@@ -89,35 +89,35 @@ suite('MouseEvents', function() {
     // trigger double click
     stage.simulateMouseDown({
       x: 1,
-      y: 1
+      y: 1,
     });
     stage.simulateMouseUp({
       x: 1,
-      y: 1
+      y: 1,
     });
 
     assert.equal(stageContentMousedown, 3);
     assert.equal(stageContentMouseup, 3);
     //assert.equal(stageContentDblClick, 1);
 
-    setTimeout(function() {
+    setTimeout(function () {
       stage.simulateMouseMove({
         x: 200,
-        y: 1
+        y: 1,
       });
 
       assert.equal(stageContentMousemove, 1);
 
       stage._mouseout({
         offsetX: 0,
-        offsetY: 0
+        offsetY: 0,
       });
 
       assert.equal(stageContentMouseout, 1);
 
       stage._mouseover({
         offsetX: 0,
-        offsetY: 0
+        offsetY: 0,
       });
 
       assert.equal(stageContentMouseover, 1);
@@ -127,7 +127,7 @@ suite('MouseEvents', function() {
   });
 
   // ======================================================
-  test('remove shape with onclick', function() {
+  test('remove shape with onclick', function () {
     var stage = addStage();
 
     var top = stage.content.getBoundingClientRect().top;
@@ -142,7 +142,7 @@ suite('MouseEvents', function() {
       stroke: 'black',
       strokeWidth: 4,
       name: 'myCircle',
-      draggable: true
+      draggable: true,
     });
 
     layer.add(circle);
@@ -153,24 +153,24 @@ suite('MouseEvents', function() {
       layer.draw();
     }
 
-    circle.on('click', function() {
+    circle.on('click', function () {
       setTimeout(remove, 0);
     });
 
     stage.simulateMouseDown({
       x: 291,
-      y: 112
+      y: 112,
     });
 
     stage.simulateMouseUp({
       x: 291,
-      y: 112
+      y: 112,
     });
     Konva.DD._endDragAfter({ dragEndNode: circle });
   });
 
   // ======================================================
-  test('test listening true/false with clicks', function() {
+  test('test listening true/false with clicks', function () {
     var stage = addStage();
 
     var top = stage.content.getBoundingClientRect().top;
@@ -184,12 +184,12 @@ suite('MouseEvents', function() {
       fill: 'green',
       stroke: 'black',
       strokeWidth: 4,
-      name: 'myCircle'
+      name: 'myCircle',
     });
 
     var clickCount = 0;
 
-    circle.on('click', function() {
+    circle.on('click', function () {
       clickCount++;
     });
 
@@ -199,11 +199,11 @@ suite('MouseEvents', function() {
     // -----------------------------------
     stage.simulateMouseDown({
       x: 291,
-      y: 112
+      y: 112,
     });
     stage.simulateMouseUp({
       x: 291,
-      y: 112
+      y: 112,
     });
     assert.equal(clickCount, 1, 'should be 1 click');
 
@@ -211,11 +211,11 @@ suite('MouseEvents', function() {
     circle.setListening(false);
     stage.simulateMouseDown({
       x: 291,
-      y: 112
+      y: 112,
     });
     stage.simulateMouseUp({
       x: 291,
-      y: 112
+      y: 112,
     });
     assert.equal(
       clickCount,
@@ -227,20 +227,20 @@ suite('MouseEvents', function() {
     circle.setListening(true);
     stage.simulateMouseDown({
       x: 291,
-      y: 112
+      y: 112,
     });
     stage.simulateMouseUp({
       x: 291,
-      y: 112
+      y: 112,
     });
     assert.equal(clickCount, 2, 'should be 2 clicks');
   });
 
   // ======================================================
-  test('click mapping', function() {
+  test('click mapping', function () {
     var stage = addStage();
     var layer = new Konva.Layer({
-      sceneFunc: function() {
+      sceneFunc: function () {
         var context = this.getContext();
         context.beginPath();
         context.moveTo(200, 50);
@@ -249,32 +249,32 @@ suite('MouseEvents', function() {
         context.closePath();
         context.fillStyle = 'blue';
         context.fill(context);
-      }
+      },
     });
 
     var redCircle = new Konva.Circle({
       x: stage.getWidth() / 2,
       y: stage.getHeight() / 2,
       radius: 70,
-      fill: 'red'
+      fill: 'red',
     });
 
     var greenCircle = new Konva.Circle({
       x: 400,
       y: stage.getHeight() / 2,
       radius: 70,
-      fill: 'green'
+      fill: 'green',
     });
 
     var redClicks = 0;
     var greenClicks = 0;
 
-    redCircle.on('click', function() {
+    redCircle.on('click', function () {
       //console.log('clicked redCircle');
       redClicks++;
     });
 
-    greenCircle.on('click', function() {
+    greenCircle.on('click', function () {
       //console.log('clicked greenCircle');
       greenClicks++;
     });
@@ -290,12 +290,12 @@ suite('MouseEvents', function() {
     // mousedown and mouseup on red circle
     stage.simulateMouseDown({
       x: 284,
-      y: 113
+      y: 113,
     });
 
     stage.simulateMouseUp({
       x: 284,
-      y: 113
+      y: 113,
     });
 
     assert.equal(redClicks, 1, 'red circle should have 1 click');
@@ -304,12 +304,12 @@ suite('MouseEvents', function() {
     // mousedown and mouseup on green circle
     stage.simulateMouseDown({
       x: 397,
-      y: 108
+      y: 108,
     });
 
     stage.simulateMouseUp({
       x: 397,
-      y: 108
+      y: 108,
     });
 
     assert.equal(redClicks, 1, 'red circle should have 1 click');
@@ -318,12 +318,12 @@ suite('MouseEvents', function() {
     // mousedown red circle and mouseup on green circle
     stage.simulateMouseDown({
       x: 284,
-      y: 113
+      y: 113,
     });
 
     stage.simulateMouseUp({
       x: 397,
-      y: 108
+      y: 108,
     });
 
     assert.equal(redClicks, 1, 'red circle should still have 1 click');
@@ -331,7 +331,7 @@ suite('MouseEvents', function() {
   });
 
   // ======================================================
-  test('text events', function() {
+  test('text events', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var text = new Konva.Text({
@@ -341,12 +341,12 @@ suite('MouseEvents', function() {
       fontSize: 30,
       fill: 'red',
       text: 'Testing 123',
-      draggable: true
+      draggable: true,
     });
 
     var click = false;
 
-    text.on('click', function() {
+    text.on('click', function () {
       //console.log('text click');
       click = true;
     });
@@ -358,12 +358,12 @@ suite('MouseEvents', function() {
 
     stage.simulateMouseDown({
       x: 300,
-      y: 120
+      y: 120,
     });
 
     stage.simulateMouseUp({
       x: 300,
-      y: 120
+      y: 120,
     });
 
     assert.equal(
@@ -374,10 +374,10 @@ suite('MouseEvents', function() {
   });
 
   // ======================================================
-  test('modify fill stroke and stroke width on hover with circle', function(done) {
+  test('modify fill stroke and stroke width on hover with circle', function (done) {
     var stage = addStage();
     var layer = new Konva.Layer({
-      throttle: 999
+      throttle: 999,
     });
     var circle = new Konva.Circle({
       x: 380,
@@ -385,10 +385,10 @@ suite('MouseEvents', function() {
       radius: 70,
       strokeWidth: 4,
       fill: 'red',
-      stroke: 'black'
+      stroke: 'black',
     });
 
-    circle.on('mouseover', function() {
+    circle.on('mouseover', function () {
       this.setFill('yellow');
       this.setStroke('purple');
       this.setStrokeWidth(20);
@@ -396,7 +396,7 @@ suite('MouseEvents', function() {
       layer.draw();
     });
 
-    circle.on('mouseout', function() {
+    circle.on('mouseout', function () {
       this.setFill('red');
       this.setStroke('black');
       this.setStrokeWidth(4);
@@ -412,10 +412,10 @@ suite('MouseEvents', function() {
     assert.equal(circle.getFill(), 'red', 'circle fill should be red');
     assert.equal(circle.getStroke(), 'black', 'circle stroke should be black');
 
-    setTimeout(function() {
+    setTimeout(function () {
       stage.simulateMouseMove({
         x: 377,
-        y: 101
+        y: 101,
       });
 
       assert.equal(circle.getFill(), 'yellow', 'circle fill should be yellow');
@@ -425,11 +425,11 @@ suite('MouseEvents', function() {
         'circle stroke should be purple'
       );
 
-      setTimeout(function() {
+      setTimeout(function () {
         // move mouse back out of circle
         stage.simulateMouseMove({
           x: 157,
-          y: 138
+          y: 138,
         });
 
         assert.equal(circle.getFill(), 'red', 'circle fill should be red');
@@ -444,7 +444,7 @@ suite('MouseEvents', function() {
   });
 
   // ======================================================
-  test('mousedown mouseup mouseover mouseout mousemove click dblclick', function(done) {
+  test('mousedown mouseup mouseover mouseout mousemove click dblclick', function (done) {
     var stage = addStage();
     var layer = new Konva.Layer();
     var circle = new Konva.Circle({
@@ -453,7 +453,7 @@ suite('MouseEvents', function() {
       radius: 70,
       fill: 'red',
       stroke: 'black',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
 
     // desktop events
@@ -465,37 +465,37 @@ suite('MouseEvents', function() {
     var mouseout = false;
     var mousemove = false;
 
-    circle.on('mousedown', function() {
+    circle.on('mousedown', function () {
       mousedown = true;
       //log('mousedown');
     });
 
-    circle.on('mouseup', function() {
+    circle.on('mouseup', function () {
       mouseup = true;
       //log('mouseup');
     });
 
-    circle.on('mouseover', function() {
+    circle.on('mouseover', function () {
       mouseover = true;
       //log('mouseover');
     });
 
-    circle.on('mouseout', function() {
+    circle.on('mouseout', function () {
       mouseout = true;
       //log('mouseout');
     });
 
-    circle.on('mousemove', function() {
+    circle.on('mousemove', function () {
       mousemove = true;
       //log('mousemove');
     });
 
-    circle.on('click', function() {
+    circle.on('click', function () {
       click = true;
       //log('click');
     });
 
-    circle.on('dblclick', function() {
+    circle.on('dblclick', function () {
       dblclick = true;
       //log('dblclick');
     });
@@ -505,11 +505,11 @@ suite('MouseEvents', function() {
 
     var top = stage.content.getBoundingClientRect().top;
 
-    setTimeout(function() {
+    setTimeout(function () {
       // move mouse to center of circle to trigger mouseover
       stage.simulateMouseMove({
         x: 290,
-        y: 100
+        y: 100,
       });
 
       assert(mouseover, '1) mouseover should be true');
@@ -520,11 +520,11 @@ suite('MouseEvents', function() {
       assert(!dblclick, '1) dblclick should be false');
       assert(!mouseout, '1) mouseout should be false');
 
-      setTimeout(function() {
+      setTimeout(function () {
         // move mouse again inside circle to trigger mousemove
         stage.simulateMouseMove({
           x: 290,
-          y: 100
+          y: 100,
         });
 
         assert(mouseover, '2) mouseover should be true');
@@ -538,7 +538,7 @@ suite('MouseEvents', function() {
         // mousedown inside circle
         stage.simulateMouseDown({
           x: 290,
-          y: 100
+          y: 100,
         });
 
         assert(mouseover, '3) mouseover should be true');
@@ -552,7 +552,7 @@ suite('MouseEvents', function() {
         // mouseup inside circle
         stage.simulateMouseUp({
           x: 290,
-          y: 100
+          y: 100,
         });
 
         assert(mouseover, '4) mouseover should be true');
@@ -566,7 +566,7 @@ suite('MouseEvents', function() {
         // mousedown inside circle
         stage.simulateMouseDown({
           x: 290,
-          y: 100
+          y: 100,
         });
 
         assert(mouseover, '5) mouseover should be true');
@@ -580,7 +580,7 @@ suite('MouseEvents', function() {
         // mouseup inside circle to trigger double click
         stage.simulateMouseUp({
           x: 290,
-          y: 100
+          y: 100,
         });
 
         assert(mouseover, '6) mouseover should be true');
@@ -591,11 +591,11 @@ suite('MouseEvents', function() {
         assert(dblclick, '6) dblclick should be true');
         assert(!mouseout, '6) mouseout should be false');
 
-        setTimeout(function() {
+        setTimeout(function () {
           // move mouse outside of circle to trigger mouseout
           stage.simulateMouseMove({
             x: 0,
-            y: 100
+            y: 100,
           });
 
           assert(mouseover, '7) mouseover should be true');
@@ -612,7 +612,7 @@ suite('MouseEvents', function() {
   });
 
   // ======================================================
-  test('test group mousedown events', function() {
+  test('test group mousedown events', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var group = new Konva.Group();
@@ -624,7 +624,7 @@ suite('MouseEvents', function() {
       strokeWidth: 4,
       fill: 'red',
       stroke: 'black',
-      name: 'red'
+      name: 'red',
     });
 
     var greenCircle = new Konva.Circle({
@@ -634,7 +634,7 @@ suite('MouseEvents', function() {
       strokeWidth: 4,
       fill: 'green',
       stroke: 'black',
-      name: 'green'
+      name: 'green',
     });
 
     group.add(redCircle);
@@ -648,17 +648,17 @@ suite('MouseEvents', function() {
     var groupMousedowns = 0;
     var greenCircleMousedowns = 0;
 
-    group.on('mousedown', function() {
+    group.on('mousedown', function () {
       groupMousedowns++;
     });
 
-    greenCircle.on('mousedown', function() {
+    greenCircle.on('mousedown', function () {
       greenCircleMousedowns++;
     });
 
     stage.simulateMouseDown({
       x: 285,
-      y: 100
+      y: 100,
     });
 
     assert.equal(groupMousedowns, 1, 'groupMousedowns should be 1');
@@ -666,7 +666,7 @@ suite('MouseEvents', function() {
 
     stage.simulateMouseDown({
       x: 332,
-      y: 139
+      y: 139,
     });
 
     assert.equal(groupMousedowns, 2, 'groupMousedowns should be 2');
@@ -674,7 +674,7 @@ suite('MouseEvents', function() {
 
     stage.simulateMouseDown({
       x: 285,
-      y: 92
+      y: 92,
     });
 
     assert.equal(groupMousedowns, 3, 'groupMousedowns should be 3');
@@ -682,7 +682,7 @@ suite('MouseEvents', function() {
 
     stage.simulateMouseDown({
       x: 221,
-      y: 146
+      y: 146,
     });
 
     //assert.equal(groupMousedowns, 4, 'groupMousedowns should be 4');
@@ -690,7 +690,7 @@ suite('MouseEvents', function() {
   });
 
   // ======================================================
-  test('test mousedown events with antialiasing', function() {
+  test('test mousedown events with antialiasing', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var group = new Konva.Group();
@@ -700,7 +700,7 @@ suite('MouseEvents', function() {
       y: 50,
       radius: 50,
       fill: 'green',
-      name: 'green'
+      name: 'green',
     });
 
     var groupMousedowns = 0;
@@ -710,9 +710,9 @@ suite('MouseEvents', function() {
     group.cache();
     group.scale({
       x: 5,
-      y: 5
+      y: 5,
     });
-    group.on('mousedown', function() {
+    group.on('mousedown', function () {
       groupMousedowns++;
     });
 
@@ -722,24 +722,24 @@ suite('MouseEvents', function() {
     var top = stage.content.getBoundingClientRect().top;
     stage.simulateMouseDown({
       x: 135,
-      y: 30
+      y: 30,
     });
 
     assert.equal(groupMousedowns, 1, 'groupMousedowns should be 1');
   });
-  test('test mousemove events with antialiasing', function() {
+  test('test mousemove events with antialiasing', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
     var group = new Konva.Group({
-      name: 'group'
+      name: 'group',
     });
     var rect1 = new Konva.Rect({
       x: 0,
       y: 0,
       width: 100,
       height: 100,
-      fill: 'red'
+      fill: 'red',
     });
 
     var rect2 = new Konva.Rect({
@@ -748,14 +748,14 @@ suite('MouseEvents', function() {
       width: 70,
       height: 70,
       rotation: 45,
-      fill: 'green'
+      fill: 'green',
     });
     group.add(rect1).add(rect2);
     layer.add(group);
     group.scaleX(5);
     group.scaleY(5);
     var mouseenterCount = 0;
-    group.on('mouseenter', function() {
+    group.on('mouseenter', function () {
       mouseenterCount++;
     });
 
@@ -766,18 +766,18 @@ suite('MouseEvents', function() {
     for (var i = 99; i < 129; i++) {
       stage.simulateMouseMove({
         x: i,
-        y: 135
+        y: 135,
       });
     }
     assert.equal(mouseenterCount, 1, 'mouseenterCount should be 1');
   });
 
   // ======================================================
-  test('group mouseenter events', function(done) {
+  test('group mouseenter events', function (done) {
     var stage = addStage();
     var layer = new Konva.Layer();
     var group = new Konva.Group({
-      name: 'group'
+      name: 'group',
     });
 
     var redMouseenters = 0;
@@ -794,7 +794,7 @@ suite('MouseEvents', function() {
       strokeWidth: 4,
       fill: 'red',
       stroke: 'black',
-      name: 'red'
+      name: 'red',
     });
 
     var greenCircle = new Konva.Circle({
@@ -804,35 +804,35 @@ suite('MouseEvents', function() {
       strokeWidth: 4,
       fill: 'green',
       stroke: 'black',
-      name: 'green'
+      name: 'green',
     });
 
-    group.on('mouseenter', function() {
+    group.on('mouseenter', function () {
       groupMouseenters++;
       //console.log('group over')
     });
 
-    group.on('mouseleave', function() {
+    group.on('mouseleave', function () {
       groupMouseleaves++;
       //console.log('group out')
     });
 
-    redCircle.on('mouseenter', function() {
+    redCircle.on('mouseenter', function () {
       redMouseenters++;
       //console.log('red over')
     });
 
-    redCircle.on('mouseleave', function() {
+    redCircle.on('mouseleave', function () {
       redMouseleaves++;
       //console.log('red out')
     });
 
-    greenCircle.on('mouseenter', function() {
+    greenCircle.on('mouseenter', function () {
       greenMouseenters++;
       //console.log('green over')
     });
 
-    greenCircle.on('mouseleave', function() {
+    greenCircle.on('mouseleave', function () {
       greenMouseleaves++;
       //console.log('green out')
     });
@@ -845,11 +845,11 @@ suite('MouseEvents', function() {
 
     var top = stage.content.getBoundingClientRect().top;
 
-    setTimeout(function() {
+    setTimeout(function () {
       // move mouse outside of circles
       stage.simulateMouseMove({
         x: 177,
-        y: 146
+        y: 146,
       });
 
       assert.equal(redMouseenters, 0, 'redMouseenters should be 0');
@@ -859,11 +859,11 @@ suite('MouseEvents', function() {
       assert.equal(groupMouseenters, 0, 'groupMouseenters should be 0');
       assert.equal(groupMouseleaves, 0, 'groupMouseleaves should be 0');
 
-      setTimeout(function() {
+      setTimeout(function () {
         // move mouse inside of red circle
         stage.simulateMouseMove({
           x: 236,
-          y: 145
+          y: 145,
         });
 
         //console.log('groupMouseenters=' + groupMouseenters);
@@ -875,11 +875,11 @@ suite('MouseEvents', function() {
         assert.equal(groupMouseenters, 1, 'groupMouseenters should be 1');
         assert.equal(groupMouseleaves, 0, 'groupMouseleaves should be 0');
 
-        setTimeout(function() {
+        setTimeout(function () {
           // move mouse inside of green circle
           stage.simulateMouseMove({
             x: 284,
-            y: 118
+            y: 118,
           });
 
           assert.equal(redMouseenters, 1, 'redMouseenters should be 1');
@@ -889,12 +889,12 @@ suite('MouseEvents', function() {
           assert.equal(groupMouseenters, 1, 'groupMouseenters should be 1');
           assert.equal(groupMouseleaves, 0, 'groupMouseleaves should be 0');
 
-          setTimeout(function() {
+          setTimeout(function () {
             // move mouse back to red circle
 
             stage.simulateMouseMove({
               x: 345,
-              y: 105
+              y: 105,
             });
 
             assert.equal(redMouseenters, 2, 'redMouseenters should be 2');
@@ -904,11 +904,11 @@ suite('MouseEvents', function() {
             assert.equal(groupMouseenters, 1, 'groupMouseenters should be 1');
             assert.equal(groupMouseleaves, 0, 'groupMouseleaves should be 0');
 
-            setTimeout(function() {
+            setTimeout(function () {
               // move mouse outside of circles
               stage.simulateMouseMove({
                 x: 177,
-                y: 146
+                y: 146,
               });
 
               assert.equal(redMouseenters, 2, 'redMouseenters should be 2');
@@ -931,10 +931,10 @@ suite('MouseEvents', function() {
   });
 
   // ======================================================
-  test('test mouseleave with multiple groups', function() {
+  test('test mouseleave with multiple groups', function () {
     var stage = addStage();
     var layer = new Konva.Layer({
-      id: 'layer'
+      id: 'layer',
     });
 
     var rect1 = new Konva.Rect({
@@ -943,7 +943,7 @@ suite('MouseEvents', function() {
       width: 100,
       height: 100,
       fill: 'red',
-      id: 'redRect'
+      id: 'redRect',
     });
 
     var rect2 = new Konva.Rect({
@@ -953,14 +953,14 @@ suite('MouseEvents', function() {
       height: 70,
       rotation: 45,
       fill: 'green',
-      id: 'greenRect'
+      id: 'greenRect',
     });
 
     var group = new Konva.Group({
-      id: 'group1'
+      id: 'group1',
     });
     var group2 = new Konva.Group({
-      id: 'group2'
+      id: 'group2',
     });
     group.add(rect1);
     group2.add(rect2);
@@ -979,29 +979,29 @@ suite('MouseEvents', function() {
     var group2Mouseover = 0;
     var group2Mouseout = 0;
 
-    group.on('mouseenter', function() {
+    group.on('mouseenter', function () {
       groupMouseenter += 1;
     });
-    group.on('mouseleave', function() {
+    group.on('mouseleave', function () {
       groupMouseleave += 1;
     });
-    group.on('mouseover', function() {
+    group.on('mouseover', function () {
       groupMouseover += 1;
     });
-    group.on('mouseout', function() {
+    group.on('mouseout', function () {
       groupMouseout += 1;
     });
 
-    group2.on('mouseenter', function() {
+    group2.on('mouseenter', function () {
       group2Mouseenter += 1;
     });
-    group2.on('mouseleave', function() {
+    group2.on('mouseleave', function () {
       group2Mouseleave += 1;
     });
-    group2.on('mouseover', function() {
+    group2.on('mouseover', function () {
       group2Mouseover += 1;
     });
-    group2.on('mouseout', function() {
+    group2.on('mouseout', function () {
       group2Mouseout += 1;
     });
 
@@ -1009,7 +1009,7 @@ suite('MouseEvents', function() {
 
     stage.simulateMouseMove({
       x: 10,
-      y: 10
+      y: 10,
     });
     assert.equal(groupMouseenter, 1, 'move1 : group mouseenter should trigger');
     assert.equal(
@@ -1045,7 +1045,7 @@ suite('MouseEvents', function() {
 
     stage.simulateMouseMove({
       x: 50,
-      y: 50
+      y: 50,
     });
     assert.equal(
       groupMouseenter,
@@ -1081,7 +1081,7 @@ suite('MouseEvents', function() {
 
     stage.simulateMouseMove({
       x: 10,
-      y: 10
+      y: 10,
     });
     assert.equal(
       groupMouseenter,
@@ -1113,7 +1113,7 @@ suite('MouseEvents', function() {
 
     stage.simulateMouseMove({
       x: 50,
-      y: 50
+      y: 50,
     });
 
     assert.equal(groupMouseenter, 1, 'move4 : mouseenter should not trigger');
@@ -1146,7 +1146,7 @@ suite('MouseEvents', function() {
   });
 
   // ======================================================
-  test('test mouseleave with multiple groups 2', function() {
+  test('test mouseleave with multiple groups 2', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -1159,7 +1159,7 @@ suite('MouseEvents', function() {
       y: 0,
       width: 200,
       height: 200,
-      fill: 'green'
+      fill: 'green',
     });
     group1.add(bigRect);
 
@@ -1174,7 +1174,7 @@ suite('MouseEvents', function() {
       y: 50,
       width: 100,
       height: 100,
-      fill: 'red'
+      fill: 'red',
     });
     group22.add(smallShape);
     stage.draw();
@@ -1194,42 +1194,42 @@ suite('MouseEvents', function() {
     var group22Mouseover = 0;
     var group22Mouseout = 0;
 
-    group1.on('mouseenter', function() {
+    group1.on('mouseenter', function () {
       group1Mouseenter += 1;
     });
-    group1.on('mouseleave', function() {
+    group1.on('mouseleave', function () {
       group1Mouseleave += 1;
     });
-    group1.on('mouseover', function() {
+    group1.on('mouseover', function () {
       group1Mouseover += 1;
     });
-    group1.on('mouseout', function() {
+    group1.on('mouseout', function () {
       group1Mouseout += 1;
     });
 
-    group21.on('mouseenter', function() {
+    group21.on('mouseenter', function () {
       group21Mouseenter += 1;
     });
-    group21.on('mouseleave', function() {
+    group21.on('mouseleave', function () {
       group21Mouseleave += 1;
     });
-    group21.on('mouseover', function() {
+    group21.on('mouseover', function () {
       group21Mouseover += 1;
     });
-    group21.on('mouseout', function() {
+    group21.on('mouseout', function () {
       group21Mouseout += 1;
     });
 
-    group22.on('mouseenter', function() {
+    group22.on('mouseenter', function () {
       group22Mouseenter += 1;
     });
-    group22.on('mouseleave', function() {
+    group22.on('mouseleave', function () {
       group22Mouseleave += 1;
     });
-    group22.on('mouseover', function() {
+    group22.on('mouseover', function () {
       group22Mouseover += 1;
     });
-    group22.on('mouseout', function() {
+    group22.on('mouseout', function () {
       group22Mouseout += 1;
     });
 
@@ -1237,7 +1237,7 @@ suite('MouseEvents', function() {
 
     stage.simulateMouseMove({
       x: 10,
-      y: 10
+      y: 10,
     });
 
     assert.equal(
@@ -1248,7 +1248,7 @@ suite('MouseEvents', function() {
 
     stage.simulateMouseMove({
       x: 60,
-      y: 60
+      y: 60,
     });
     assert.equal(
       group21Mouseenter,
@@ -1268,7 +1268,7 @@ suite('MouseEvents', function() {
 
     stage.simulateMouseMove({
       x: 10,
-      y: 10
+      y: 10,
     });
 
     assert.equal(
@@ -1289,7 +1289,7 @@ suite('MouseEvents', function() {
   });
 
   // ======================================================
-  test('test mouseleave and mouseenter on deep nesting', function() {
+  test('test mouseleave and mouseenter on deep nesting', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -1300,7 +1300,7 @@ suite('MouseEvents', function() {
       y: 0,
       width: stage.width(),
       height: stage.height(),
-      name: 'top-group'
+      name: 'top-group',
     });
     layer.add(group);
 
@@ -1309,7 +1309,7 @@ suite('MouseEvents', function() {
       x: 50,
       y: 50,
       radius: 50,
-      fill: 'green'
+      fill: 'green',
     });
     group.add(circle);
 
@@ -1317,14 +1317,14 @@ suite('MouseEvents', function() {
     var group2 = new Konva.Group({
       x: 0,
       y: 0,
-      name: 'group-2'
+      name: 'group-2',
     });
     group.add(group2);
 
     var group3 = new Konva.Group({
       x: 0,
       y: 0,
-      name: 'group-3'
+      name: 'group-3',
     });
     group2.add(group3);
 
@@ -1333,7 +1333,7 @@ suite('MouseEvents', function() {
       x: 50,
       y: 50,
       radius: 20,
-      fill: 'white'
+      fill: 'white',
     });
     group3.add(circle2);
 
@@ -1341,16 +1341,16 @@ suite('MouseEvents', function() {
 
     var mouseenter = 0;
     var mouseleave = 0;
-    group.on('mouseenter', function() {
+    group.on('mouseenter', function () {
       mouseenter += 1;
     });
-    group.on('mouseleave', function() {
+    group.on('mouseleave', function () {
       mouseleave += 1;
     });
     // move to big circle
     stage.simulateMouseMove({
       x: 20,
-      y: 20
+      y: 20,
     });
     assert.equal(mouseenter, 1, 'first enter big circle');
     assert.equal(mouseleave, 0, 'no leave on first move');
@@ -1358,7 +1358,7 @@ suite('MouseEvents', function() {
     // move to small inner circle
     stage.simulateMouseMove({
       x: 50,
-      y: 50
+      y: 50,
     });
     assert.equal(mouseenter, 1, 'enter small circle');
     assert.equal(mouseleave, 0, 'no leave on second move');
@@ -1366,7 +1366,7 @@ suite('MouseEvents', function() {
     // move to big circle
     stage.simulateMouseMove({
       x: 20,
-      y: 20
+      y: 20,
     });
     assert.equal(mouseenter, 1, 'second enter big circle');
     assert.equal(mouseleave, 0, 'no leave on third move');
@@ -1374,14 +1374,14 @@ suite('MouseEvents', function() {
     // move out of group
     stage.simulateMouseMove({
       x: 0,
-      y: 0
+      y: 0,
     });
     assert.equal(mouseenter, 1, 'mouseenter = 1 at the end');
     assert.equal(mouseleave, 1, 'first mouseleave');
   });
 
   // ======================================================
-  test('test dblclick to a wrong target', function() {
+  test('test dblclick to a wrong target', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -1391,7 +1391,7 @@ suite('MouseEvents', function() {
       y: 0,
       width: 100,
       height: 100,
-      fill: 'red'
+      fill: 'red',
     });
     layer.add(leftRect);
 
@@ -1400,7 +1400,7 @@ suite('MouseEvents', function() {
       y: 0,
       width: 100,
       height: 100,
-      fill: 'blue'
+      fill: 'blue',
     });
     layer.add(rightRect);
 
@@ -1410,40 +1410,40 @@ suite('MouseEvents', function() {
     var rightRectSingleClick = 0;
     var rightRectDblClick = 0;
 
-    leftRect.on('click', function() {
+    leftRect.on('click', function () {
       leftRectSingleClick++;
     });
-    rightRect.on('click', function() {
+    rightRect.on('click', function () {
       rightRectSingleClick++;
     });
-    rightRect.on('dblclick', function() {
+    rightRect.on('dblclick', function () {
       rightRectDblClick++;
     });
 
     stage.simulateMouseDown({
       x: 50,
-      y: 50
+      y: 50,
     });
     stage.simulateMouseUp({
       x: 50,
-      y: 50
+      y: 50,
     });
     assert.equal(leftRectSingleClick, 1, 'leftRect trigger a click');
 
     stage.simulateMouseDown({
       x: 150,
-      y: 50
+      y: 50,
     });
     stage.simulateMouseUp({
       x: 150,
-      y: 50
+      y: 50,
     });
     assert.equal(rightRectSingleClick, 1, 'rightRect trigger a click');
     assert.equal(rightRectDblClick, 0, 'rightRect dblClick should not trigger');
   });
 
   // ======================================================
-  test('test mouseleave + mouseenter with deep nesting', function() {
+  test('test mouseleave + mouseenter with deep nesting', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -1453,12 +1453,12 @@ suite('MouseEvents', function() {
       y: 0,
       width: 100,
       height: 100,
-      fill: 'green'
+      fill: 'green',
     });
     layer.add(leftRect);
 
     var rightGrandParentGroup = new Konva.Group({
-      name: 'rightGrandParentGroup'
+      name: 'rightGrandParentGroup',
     });
     layer.add(rightGrandParentGroup);
 
@@ -1470,7 +1470,7 @@ suite('MouseEvents', function() {
       y: 0,
       width: 100,
       height: 100,
-      fill: 'red'
+      fill: 'red',
     });
     rightParentGroup.add(rightRect);
     stage.draw();
@@ -1495,61 +1495,61 @@ suite('MouseEvents', function() {
     var rightRectMouseover = 0;
     var rightRectMouseout = 0;
 
-    leftRect.on('mouseenter', function() {
+    leftRect.on('mouseenter', function () {
       leftRectMouseenter += 1;
     });
-    leftRect.on('mouseleave', function() {
+    leftRect.on('mouseleave', function () {
       leftRectMouseleave += 1;
     });
-    leftRect.on('mouseover', function() {
+    leftRect.on('mouseover', function () {
       leftRectMouseover += 1;
     });
-    leftRect.on('mouseout', function() {
+    leftRect.on('mouseout', function () {
       leftRectMouseout += 1;
     });
 
-    rightGrandParentGroup.on('mouseenter', function() {
+    rightGrandParentGroup.on('mouseenter', function () {
       rightGrandParentGroupMouseenter += 1;
     });
-    rightGrandParentGroup.on('mouseleave', function() {
+    rightGrandParentGroup.on('mouseleave', function () {
       rightGrandParentGroupMouseleave += 1;
     });
-    rightGrandParentGroup.on('mouseover', function() {
+    rightGrandParentGroup.on('mouseover', function () {
       rightGrandParentGroupMouseover += 1;
     });
-    rightGrandParentGroup.on('mouseout', function() {
+    rightGrandParentGroup.on('mouseout', function () {
       rightGrandParentGroupMouseout += 1;
     });
 
-    rightParentGroup.on('mouseenter', function() {
+    rightParentGroup.on('mouseenter', function () {
       rightParentGroupMouseenter += 1;
     });
-    rightParentGroup.on('mouseleave', function() {
+    rightParentGroup.on('mouseleave', function () {
       rightParentGroupMouseleave += 1;
     });
-    rightParentGroup.on('mouseover', function() {
+    rightParentGroup.on('mouseover', function () {
       rightParentGroupMouseover += 1;
     });
-    rightParentGroup.on('mouseout', function() {
+    rightParentGroup.on('mouseout', function () {
       rightParentGroupMouseout += 1;
     });
 
-    rightRect.on('mouseenter', function() {
+    rightRect.on('mouseenter', function () {
       rightRectMouseenter += 1;
     });
-    rightRect.on('mouseleave', function() {
+    rightRect.on('mouseleave', function () {
       rightRectMouseleave += 1;
     });
-    rightRect.on('mouseover', function() {
+    rightRect.on('mouseover', function () {
       rightRectMouseover += 1;
     });
-    rightRect.on('mouseout', function() {
+    rightRect.on('mouseout', function () {
       rightRectMouseout += 1;
     });
 
     stage.simulateMouseMove({
       x: 50,
-      y: 50
+      y: 50,
     });
 
     assert.equal(
@@ -1560,7 +1560,7 @@ suite('MouseEvents', function() {
 
     stage.simulateMouseMove({
       x: 150,
-      y: 50
+      y: 50,
     });
 
     assert.equal(
@@ -1586,7 +1586,7 @@ suite('MouseEvents', function() {
 
     stage.simulateMouseMove({
       x: 50,
-      y: 50
+      y: 50,
     });
 
     assert.equal(
@@ -1613,7 +1613,7 @@ suite('MouseEvents', function() {
   });
 
   // ======================================================
-  test('test event bubbling', function() {
+  test('test event bubbling', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var circle = new Konva.Circle({
@@ -1623,7 +1623,7 @@ suite('MouseEvents', function() {
       strokeWidth: 4,
       fill: 'red',
       stroke: 'black',
-      id: 'myCircle'
+      id: 'myCircle',
     });
 
     var group1 = new Konva.Group();
@@ -1651,32 +1651,32 @@ suite('MouseEvents', function() {
     // events array
     var e = [];
 
-    circle.on('click', function() {
+    circle.on('click', function () {
       e.push('circle');
     });
-    group1.on('click', function() {
+    group1.on('click', function () {
       e.push('group1');
     });
-    group2.on('click', function() {
+    group2.on('click', function () {
       e.push('group2');
     });
-    layer.on('click', function(evt) {
+    layer.on('click', function (evt) {
       //console.log(evt)
       assert.equal(evt.target.id(), 'myCircle');
       assert.equal(evt.type, 'click');
       e.push('layer');
     });
-    stage.on('click', function(evt) {
+    stage.on('click', function (evt) {
       e.push('stage');
     });
     // click on circle
     stage.simulateMouseDown({
       x: 374,
-      y: 114
+      y: 114,
     });
     stage.simulateMouseUp({
       x: 374,
-      y: 114
+      y: 114,
     });
     Konva.DD._endDragAfter({ dragEndNode: circle });
 
@@ -1688,7 +1688,7 @@ suite('MouseEvents', function() {
   });
 
   // ======================================================
-  test('test custom circle hit function', function(done) {
+  test('test custom circle hit function', function (done) {
     var stage = addStage();
     var layer = new Konva.Layer();
     var circle = new Konva.Circle({
@@ -1698,14 +1698,14 @@ suite('MouseEvents', function() {
       strokeWidth: 4,
       fill: 'red',
       stroke: 'black',
-      hitFunc: function(context) {
+      hitFunc: function (context) {
         var _context = context._context;
 
         _context.beginPath();
         _context.arc(0, 0, this.getRadius() + 100, 0, Math.PI * 2, true);
         _context.closePath();
         context.fillStrokeShape(this);
-      }
+      },
     });
 
     circle.setDraggable(true);
@@ -1718,37 +1718,37 @@ suite('MouseEvents', function() {
     var mouseovers = 0;
     var mouseouts = 0;
 
-    circle.on('mouseover', function() {
+    circle.on('mouseover', function () {
       mouseovers++;
     });
 
-    circle.on('mouseout', function() {
+    circle.on('mouseout', function () {
       mouseouts++;
     });
 
-    setTimeout(function() {
+    setTimeout(function () {
       // move mouse far outside circle
       stage.simulateMouseMove({
         x: 113,
-        y: 112
+        y: 112,
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         assert.equal(mouseovers, 0, '1) mouseovers should be 0');
         assert.equal(mouseouts, 0, '1) mouseouts should be 0');
 
         stage.simulateMouseMove({
           x: 286,
-          y: 118
+          y: 118,
         });
 
         assert.equal(mouseovers, 1, '2) mouseovers should be 1');
         assert.equal(mouseouts, 0, '2)mouseouts should be 0');
 
-        setTimeout(function() {
+        setTimeout(function () {
           stage.simulateMouseMove({
             x: 113,
-            y: 112
+            y: 112,
           });
 
           assert.equal(mouseovers, 1, '3) mouseovers should be 1');
@@ -1758,7 +1758,7 @@ suite('MouseEvents', function() {
 
           // set drawBufferFunc with setter
 
-          circle.hitFunc(function(context) {
+          circle.hitFunc(function (context) {
             var _context = context._context;
             _context.beginPath();
             _context.arc(0, 0, this.getRadius() - 50, 0, Math.PI * 2, true);
@@ -1766,45 +1766,42 @@ suite('MouseEvents', function() {
             context.fillStrokeShape(this);
           });
 
-          layer
-            .getHitCanvas()
-            .getContext()
-            .clear();
+          layer.getHitCanvas().getContext().clear();
           layer.drawHit();
 
-          setTimeout(function() {
+          setTimeout(function () {
             // move mouse far outside circle
             stage.simulateMouseMove({
               x: 113,
-              y: 112
+              y: 112,
             });
 
             assert.equal(mouseovers, 1, '4) mouseovers should be 1');
             assert.equal(mouseouts, 1, '4) mouseouts should be 1');
 
-            setTimeout(function() {
+            setTimeout(function () {
               stage.simulateMouseMove({
                 x: 286,
-                y: 118
+                y: 118,
               });
 
               assert.equal(mouseovers, 1, '5) mouseovers should be 1');
               assert.equal(mouseouts, 1, '5) mouseouts should be 1');
 
-              setTimeout(function() {
+              setTimeout(function () {
                 stage.simulateMouseMove({
                   x: 321,
-                  y: 112
+                  y: 112,
                 });
 
                 assert.equal(mouseovers, 1, '6) mouseovers should be 1');
                 assert.equal(mouseouts, 1, '6) mouseouts should be 1');
 
-                setTimeout(function() {
+                setTimeout(function () {
                   // move to center of circle
                   stage.simulateMouseMove({
                     x: 375,
-                    y: 112
+                    y: 112,
                   });
 
                   assert.equal(mouseovers, 2, '7) mouseovers should be 2');
@@ -1820,7 +1817,7 @@ suite('MouseEvents', function() {
     }, 20);
   });
 
-  test('change ratio for hit graph', function() {
+  test('change ratio for hit graph', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var circle = new Konva.Circle({
@@ -1830,7 +1827,7 @@ suite('MouseEvents', function() {
       stroke: 'black',
       fill: 'red',
       strokeWidth: 5,
-      draggable: true
+      draggable: true,
     });
 
     layer.add(circle);
@@ -1841,22 +1838,22 @@ suite('MouseEvents', function() {
     layer.draw();
     var shape = layer.getIntersection({
       x: stage.width() / 2 - 55,
-      y: stage.height() / 2 - 55
+      y: stage.height() / 2 - 55,
     });
     assert.equal(!!shape, false, 'no shape here');
     shape = layer.getIntersection({
       x: stage.width() / 2 + 55,
-      y: stage.height() / 2 + 55
+      y: stage.height() / 2 + 55,
     });
     assert.equal(!!shape, false, 'no shape here');
     shape = layer.getIntersection({
       x: stage.width() / 2,
-      y: stage.height() / 2
+      y: stage.height() / 2,
     });
     assert.equal(shape, circle);
   });
 
-  test('double click after click should trigger event', function(done) {
+  test('double click after click should trigger event', function (done) {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -1866,7 +1863,7 @@ suite('MouseEvents', function() {
       y: 0,
       width: 200,
       height: 200,
-      fill: 'yellow'
+      fill: 'yellow',
     });
     layer.add(bigRect);
 
@@ -1874,7 +1871,7 @@ suite('MouseEvents', function() {
       x: 100,
       y: 100,
       width: 100,
-      fill: 'red'
+      fill: 'red',
     });
     layer.add(smallShape);
     layer.draw();
@@ -1883,53 +1880,53 @@ suite('MouseEvents', function() {
     var smallClicks = 0;
     var smallDblClicks = 0;
 
-    bigRect.on('click', function() {
+    bigRect.on('click', function () {
       bigClicks += 1;
     });
 
-    smallShape.on('click', function() {
+    smallShape.on('click', function () {
       smallClicks += 1;
     });
 
-    smallShape.on('dblclick', function() {
+    smallShape.on('dblclick', function () {
       smallDblClicks += 1;
     });
 
     stage.simulateMouseDown({
       x: 10,
-      y: 10
+      y: 10,
     });
     stage.simulateMouseUp({
       x: 10,
-      y: 10
+      y: 10,
     });
 
     assert.equal(bigClicks, 1, 'single click on big rect');
     assert.equal(smallClicks, 0, 'no  click on small rect');
     assert.equal(smallDblClicks, 0, 'no dblclick on small rect');
 
-    setTimeout(function() {
+    setTimeout(function () {
       stage.simulateMouseDown({
         x: 100,
-        y: 100
+        y: 100,
       });
       stage.simulateMouseUp({
         x: 100,
-        y: 100
+        y: 100,
       });
 
       assert.equal(bigClicks, 1, 'single click on big rect');
       assert.equal(smallClicks, 1, 'single click on small rect');
       assert.equal(smallDblClicks, 0, 'no dblclick on small rect');
 
-      setTimeout(function() {
+      setTimeout(function () {
         stage.simulateMouseDown({
           x: 100,
-          y: 100
+          y: 100,
         });
         stage.simulateMouseUp({
           x: 100,
-          y: 100
+          y: 100,
         });
 
         assert.equal(bigClicks, 1, 'single click on big rect');
@@ -1941,7 +1938,7 @@ suite('MouseEvents', function() {
     });
   });
 
-  test('double click after drag should trigger event', function(done) {
+  test('double click after drag should trigger event', function (done) {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -1952,7 +1949,7 @@ suite('MouseEvents', function() {
       width: 200,
       height: 200,
       fill: 'yellow',
-      draggable: true
+      draggable: true,
     });
     layer.add(bigRect);
 
@@ -1960,7 +1957,7 @@ suite('MouseEvents', function() {
       x: 100,
       y: 100,
       width: 100,
-      fill: 'red'
+      fill: 'red',
     });
     layer.add(smallShape);
     layer.draw();
@@ -1969,57 +1966,57 @@ suite('MouseEvents', function() {
     var smallClicks = 0;
     var smallDblClicks = 0;
 
-    bigRect.on('click', function() {
+    bigRect.on('click', function () {
       bigClicks += 1;
     });
 
-    smallShape.on('click', function() {
+    smallShape.on('click', function () {
       smallClicks += 1;
     });
 
-    smallShape.on('dblclick', function() {
+    smallShape.on('dblclick', function () {
       smallDblClicks += 1;
     });
 
     stage.simulateMouseDown({
       x: 10,
-      y: 10
+      y: 10,
     });
     stage.simulateMouseMove({
       x: 15,
-      y: 15
+      y: 15,
     });
     stage.simulateMouseUp({
       x: 15,
-      y: 15
+      y: 15,
     });
 
     assert.equal(bigClicks, 0, 'single click on big rect');
     assert.equal(smallClicks, 0, 'no  click on small rect');
     assert.equal(smallDblClicks, 0, 'no dblclick on small rect');
 
-    setTimeout(function() {
+    setTimeout(function () {
       stage.simulateMouseDown({
         x: 100,
-        y: 100
+        y: 100,
       });
       stage.simulateMouseUp({
         x: 100,
-        y: 100
+        y: 100,
       });
 
       assert.equal(bigClicks, 0, 'single click on big rect');
       assert.equal(smallClicks, 1, 'single click on small rect');
       assert.equal(smallDblClicks, 0, 'no dblclick on small rect');
 
-      setTimeout(function() {
+      setTimeout(function () {
         stage.simulateMouseDown({
           x: 100,
-          y: 100
+          y: 100,
         });
         stage.simulateMouseUp({
           x: 100,
-          y: 100
+          y: 100,
         });
 
         assert.equal(bigClicks, 0, 'single click on big rect');
@@ -2031,13 +2028,13 @@ suite('MouseEvents', function() {
     });
   });
 
-  test('test mouseenter on empty stage', function() {
+  test('test mouseenter on empty stage', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
 
     var mouseenterCount = 0;
-    stage.on('mouseenter', function() {
+    stage.on('mouseenter', function () {
       mouseenterCount += 1;
     });
 
@@ -2045,7 +2042,7 @@ suite('MouseEvents', function() {
     var evt = {
       clientX: 10,
       clientY: 10 + top,
-      button: 0
+      button: 0,
     };
 
     stage._mouseenter(evt);
@@ -2053,13 +2050,13 @@ suite('MouseEvents', function() {
     assert.equal(mouseenterCount, 1, 'mouseenterCount should be 1');
   });
 
-  test('test mouseleave on empty stage', function() {
+  test('test mouseleave on empty stage', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
 
     var mouseleave = 0;
-    stage.on('mouseleave', function() {
+    stage.on('mouseleave', function () {
       mouseleave += 1;
     });
 
@@ -2067,7 +2064,7 @@ suite('MouseEvents', function() {
     var evt = {
       clientX: 0,
       clientY: 0 + top,
-      button: 0
+      button: 0,
     };
 
     stage._mouseout(evt);
@@ -2075,7 +2072,7 @@ suite('MouseEvents', function() {
     assert.equal(mouseleave, 1, 'mouseleave should be 1');
   });
 
-  test('test mouseleave from the shape', function() {
+  test('test mouseleave from the shape', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -2084,38 +2081,38 @@ suite('MouseEvents', function() {
       fill: 'red',
       radius: 100,
       x: 200,
-      y: 0
+      y: 0,
     });
     layer.add(circle);
     layer.draw();
 
     var mouseleave = 0;
-    stage.on('mouseleave', function() {
+    stage.on('mouseleave', function () {
       mouseleave += 1;
     });
 
     var mouseout = 0;
-    stage.on('mouseout', function() {
+    stage.on('mouseout', function () {
       mouseout += 1;
     });
 
     var circleMouseleave = 0;
-    circle.on('mouseleave', function() {
+    circle.on('mouseleave', function () {
       circleMouseleave += 1;
     });
 
     var circleMouseout = 0;
-    circle.on('mouseout', function() {
+    circle.on('mouseout', function () {
       circleMouseout += 1;
     });
 
     var layerMouseleave = 0;
-    layer.on('mouseleave', function() {
+    layer.on('mouseleave', function () {
       layerMouseleave += 1;
     });
 
     var layerMouseout = 0;
-    layer.on('mouseout', function() {
+    layer.on('mouseout', function () {
       layerMouseout += 1;
     });
 
@@ -2126,7 +2123,7 @@ suite('MouseEvents', function() {
     var evt = {
       clientX: 200,
       clientY: -5 + top,
-      button: 0
+      button: 0,
     };
 
     stage._mouseout(evt);
@@ -2139,7 +2136,7 @@ suite('MouseEvents', function() {
     assert.equal(mouseout, 1, 'mouseout should be 1');
   });
 
-  test('should not trigger mouseenter on stage when we go to the shape from empty space', function() {
+  test('should not trigger mouseenter on stage when we go to the shape from empty space', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -2147,32 +2144,32 @@ suite('MouseEvents', function() {
     var rect = new Konva.Rect({
       width: 50,
       height: 50,
-      fill: 'red'
+      fill: 'red',
     });
     layer.add(rect);
 
     layer.draw();
 
     var mouseenter = 0;
-    stage.on('mouseenter', function() {
+    stage.on('mouseenter', function () {
       debugger;
       mouseenter += 1;
     });
 
     stage.simulateMouseMove({
       x: 100,
-      y: 100
+      y: 100,
     });
 
     stage.simulateMouseMove({
       x: 25,
-      y: 25
+      y: 25,
     });
 
     assert.equal(mouseenter, 0, 'mouseenter should be 1');
   });
 
-  test('should not trigger mouseleave after shape destroy', function() {
+  test('should not trigger mouseleave after shape destroy', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -2180,7 +2177,7 @@ suite('MouseEvents', function() {
     var rect = new Konva.Rect({
       width: 50,
       height: 50,
-      fill: 'red'
+      fill: 'red',
     });
     layer.add(rect);
 
@@ -2188,38 +2185,38 @@ suite('MouseEvents', function() {
 
     var mouseout = 0;
     var mouseleave = 0;
-    stage.on('mouseout', function() {
+    stage.on('mouseout', function () {
       mouseout += 1;
     });
 
-    rect.on('mouseout', function() {
+    rect.on('mouseout', function () {
       mouseout += 1;
     });
 
-    stage.on('mouseleave', function() {
+    stage.on('mouseleave', function () {
       mouseleave += 1;
     });
 
-    rect.on('mouseleave', function() {
+    rect.on('mouseleave', function () {
       mouseleave += 1;
     });
 
     stage.simulateMouseMove({
       x: 10,
-      y: 10
+      y: 10,
     });
 
     rect.destroy();
     layer.draw();
     stage.simulateMouseMove({
       x: 20,
-      y: 20
+      y: 20,
     });
     assert.equal(mouseout, 0);
     assert.equal(mouseleave, 0);
   });
 
-  test('should not trigger mouseenter on stage twice when we go to the shape directly', function() {
+  test('should not trigger mouseenter on stage twice when we go to the shape directly', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -2227,14 +2224,14 @@ suite('MouseEvents', function() {
     var rect = new Konva.Rect({
       width: 50,
       height: 50,
-      fill: 'red'
+      fill: 'red',
     });
     layer.add(rect);
 
     layer.draw();
 
     var mouseenter = 0;
-    stage.on('mouseenter', function() {
+    stage.on('mouseenter', function () {
       mouseenter += 1;
     });
 
@@ -2242,14 +2239,14 @@ suite('MouseEvents', function() {
     var evt = {
       clientX: 10,
       clientY: 10 + top,
-      button: 0
+      button: 0,
     };
 
     stage._mouseenter(evt);
 
     stage.simulateMouseMove({
       x: 10,
-      y: 10
+      y: 10,
     });
 
     stage._mouseout(evt);
@@ -2257,7 +2254,7 @@ suite('MouseEvents', function() {
     assert.equal(mouseenter, 1, 'mouseenter should be 1');
   });
 
-  test('should trigger mouse events if we set Konva.hitOnDragEnabled = true', function() {
+  test('should trigger mouse events if we set Konva.hitOnDragEnabled = true', function () {
     Konva.hitOnDragEnabled = true;
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -2267,40 +2264,40 @@ suite('MouseEvents', function() {
       width: 50,
       height: 50,
       fill: 'red',
-      draggable: true
+      draggable: true,
     });
     layer.add(rect);
 
     layer.draw();
 
     var mousemove = 0;
-    rect.on('mousemove', function() {
+    rect.on('mousemove', function () {
       mousemove += 1;
     });
 
     stage.simulateMouseDown({
       x: 10,
-      y: 10
+      y: 10,
     });
 
     stage.simulateMouseMove({
       x: 20,
-      y: 20
+      y: 20,
     });
     stage.simulateMouseMove({
       x: 30,
-      y: 30
+      y: 30,
     });
     stage.simulateMouseUp({
       x: 30,
-      y: 30
+      y: 30,
     });
 
     assert.equal(mousemove, 2, 'mousemove should be 2');
     Konva.hitOnDragEnabled = false;
   });
 
-  test('test scaled with CSS stage', function() {
+  test('test scaled with CSS stage', function () {
     var stage = addStage();
 
     stage.container().style.transform = 'scale(0.5)';
@@ -2312,25 +2309,25 @@ suite('MouseEvents', function() {
       width: 50,
       height: 50,
       fill: 'red',
-      draggable: true
+      draggable: true,
     });
     layer.add(rect);
 
     layer.draw();
 
     var clicks = 0;
-    rect.on('click', function() {
+    rect.on('click', function () {
       clicks += 1;
     });
 
     stage.simulateMouseDown({
       x: 40,
-      y: 40
+      y: 40,
     });
 
     stage.simulateMouseUp({
       x: 40,
-      y: 40
+      y: 40,
     });
 
     // should not register this click this click, because the stage is scaled
@@ -2340,11 +2337,11 @@ suite('MouseEvents', function() {
     // try touch too
     stage.simulateTouchStart({
       x: 30,
-      y: 30
+      y: 30,
     });
     stage.simulateTouchEnd({
       x: 30,
-      y: 30
+      y: 30,
     });
     assert.deepEqual(stage.getPointerPosition(), { x: 60, y: 60 });
   });

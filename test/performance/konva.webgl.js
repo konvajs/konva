@@ -1,8 +1,8 @@
-Konva.WebGLLayer = function(config) {
+Konva.WebGLLayer = function (config) {
   this.nodeType = 'Layer';
   this.canvas = new Konva.SceneWebGLCanvas();
   this.hitCanvas = new Konva.HitCanvas({
-    pixelRatio: 1
+    pixelRatio: 1,
   });
   // call super constructor
   Konva.BaseLayer.call(this, config);
@@ -10,7 +10,7 @@ Konva.WebGLLayer = function(config) {
 
 Konva.Util.extend(Konva.WebGLLayer, Konva.Layer);
 
-Konva.SceneWebGLCanvas = function(config) {
+Konva.SceneWebGLCanvas = function (config) {
   var conf = config || {};
   var width = conf.width || 0,
     height = conf.height || 0;
@@ -23,7 +23,7 @@ Konva.SceneWebGLCanvas = function(config) {
 
 Konva.Util.extend(Konva.SceneWebGLCanvas, Konva.SceneCanvas);
 
-Konva.SceneWebGLContext = function(canvas) {
+Konva.SceneWebGLContext = function (canvas) {
   this.canvas = canvas;
   this._context = canvas._canvas.getContext('webgl-2d');
 

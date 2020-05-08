@@ -1,16 +1,16 @@
-suite('Kaleidoscope', function() {
+suite('Kaleidoscope', function () {
   // ======================================================
-  test('basic', function(done) {
+  test('basic', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer();
       darth = new Konva.Image({
         x: 10,
         y: 10,
         image: imageObj,
-        draggable: true
+        draggable: true,
       });
 
       layer.add(darth);
@@ -42,17 +42,17 @@ suite('Kaleidoscope', function() {
   });
 
   // ======================================================
-  test('tween angle', function(done) {
+  test('tween angle', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer();
       darth = new Konva.Image({
         x: 10,
         y: 10,
         image: imageObj,
-        draggable: true
+        draggable: true,
       });
 
       layer.add(darth);
@@ -68,14 +68,14 @@ suite('Kaleidoscope', function() {
         node: darth,
         duration: 10.0,
         kaleidoscopeAngle: 720,
-        easing: Konva.Easings.EaseInOut
+        easing: Konva.Easings.EaseInOut,
       });
 
-      darth.on('mouseover', function() {
+      darth.on('mouseover', function () {
         tween.play();
       });
 
-      darth.on('mouseout', function() {
+      darth.on('mouseout', function () {
         tween.reverse();
       });
 
@@ -85,17 +85,17 @@ suite('Kaleidoscope', function() {
   });
 
   // ======================================================
-  test('tween power', function(done) {
+  test('tween power', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer();
       darth = new Konva.Image({
         x: 10,
         y: 10,
         image: imageObj,
-        draggable: true
+        draggable: true,
       });
 
       layer.add(darth);
@@ -111,14 +111,14 @@ suite('Kaleidoscope', function() {
         node: darth,
         duration: 2.0,
         kaleidoscopePower: 8,
-        easing: Konva.EasingsEaseInOut
+        easing: Konva.EasingsEaseInOut,
       });
 
-      darth.on('mouseover', function() {
+      darth.on('mouseover', function () {
         tween.play();
       });
 
-      darth.on('mouseout', function() {
+      darth.on('mouseout', function () {
         tween.reverse();
       });
 

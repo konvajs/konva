@@ -1,6 +1,6 @@
-suite('TextPath', function() {
+suite('TextPath', function () {
   // ======================================================
-  test('Render Text Along Line', function() {
+  test('Render Text Along Line', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -9,7 +9,7 @@ suite('TextPath', function() {
     var path = new Konva.Path({
       stroke: 'red',
       strokeWidth: 1,
-      data: c
+      data: c,
     });
 
     layer.add(path);
@@ -19,13 +19,13 @@ suite('TextPath', function() {
       fontSize: 24,
       fontFamily: 'Arial',
       text: "The quick brown fox jumped over the lazy dog's back",
-      data: c
+      data: c,
     });
-    textpath.on('mouseover', function() {
+    textpath.on('mouseover', function () {
       this.setFill('blue');
       layer.drawScene();
     });
-    textpath.on('mouseout', function() {
+    textpath.on('mouseout', function () {
       this.setFill('orange');
       layer.drawScene();
     });
@@ -49,7 +49,7 @@ suite('TextPath', function() {
   });
 
   // ======================================================
-  test.skip('Find Next Segment when Arc is in Path', function() {
+  test.skip('Find Next Segment when Arc is in Path', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -59,7 +59,7 @@ suite('TextPath', function() {
       y: 50,
       stroke: 'green',
       strokeWidth: 1,
-      data: c
+      data: c,
     });
 
     layer.add(path);
@@ -72,7 +72,7 @@ suite('TextPath', function() {
       fontFamily: 'Arial',
       text:
         "All mhe world's a smage, and all mhe men and women merely players.",
-      data: c
+      data: c,
     });
 
     layer.add(textpath);
@@ -85,7 +85,7 @@ suite('TextPath', function() {
   });
 
   // ======================================================
-  test('Check getter and setter', function() {
+  test('Check getter and setter', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -93,7 +93,7 @@ suite('TextPath', function() {
     var path = new Konva.TextPath({
       text: 'some text',
       stroke: 'red',
-      strokeWidth: 1
+      strokeWidth: 1,
     });
 
     layer.add(path);
@@ -107,7 +107,7 @@ suite('TextPath', function() {
   });
 
   // ======================================================
-  test('Render Text Along Vertical Line', function() {
+  test('Render Text Along Vertical Line', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -117,7 +117,7 @@ suite('TextPath', function() {
     var path = new Konva.Path({
       stroke: 'red',
       strokeWidth: 1,
-      data: c
+      data: c,
     });
 
     layer.add(path);
@@ -129,7 +129,7 @@ suite('TextPath', function() {
       fontSize: 18,
       fontFamily: 'Arial',
       text: "The quick brown fox jumped over the lazy dog's back",
-      data: c
+      data: c,
     });
 
     layer.add(textpath);
@@ -140,7 +140,7 @@ suite('TextPath', function() {
     path = new Konva.Path({
       stroke: 'red',
       strokeWidth: 1,
-      data: c
+      data: c,
     });
 
     layer.add(path);
@@ -152,7 +152,7 @@ suite('TextPath', function() {
       fontSize: 18,
       fontFamily: 'Arial',
       text: "The quick brown fox jumped over the lazy dog's back",
-      data: c
+      data: c,
     });
 
     layer.add(textpath);
@@ -160,7 +160,7 @@ suite('TextPath', function() {
   });
 
   // ======================================================
-  test('Render Text Along two connected Bezier', function() {
+  test('Render Text Along two connected Bezier', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -168,7 +168,7 @@ suite('TextPath', function() {
     var path = new Konva.Path({
       stroke: 'red',
       strokeWidth: 1,
-      data: c
+      data: c,
     });
 
     layer.add(path);
@@ -181,7 +181,7 @@ suite('TextPath', function() {
       fontFamily: 'Arial',
       text:
         "All the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.",
-      data: c
+      data: c,
     });
 
     layer.add(textpath);
@@ -189,7 +189,7 @@ suite('TextPath', function() {
   });
 
   // ======================================================
-  test('Render Text Along Elliptical Arc', function() {
+  test('Render Text Along Elliptical Arc', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -197,7 +197,7 @@ suite('TextPath', function() {
     var path = new Konva.Path({
       stroke: 'red',
       strokeWidth: 1,
-      data: c
+      data: c,
     });
 
     layer.add(path);
@@ -207,7 +207,7 @@ suite('TextPath', function() {
       fontSize: 10,
       text:
         "All the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.",
-      data: c
+      data: c,
     });
 
     layer.add(textpath);
@@ -215,7 +215,7 @@ suite('TextPath', function() {
   });
 
   // ======================================================
-  test('Render Text Along complex path', function() {
+  test('Render Text Along complex path', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -229,7 +229,7 @@ suite('TextPath', function() {
       text: Array(4).join(
         "All the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts."
       ),
-      data: c
+      data: c,
     });
 
     layer.add(textpath);
@@ -237,7 +237,7 @@ suite('TextPath', function() {
   });
 
   // ======================================================
-  test('Render Text Along complex path cached', function() {
+  test('Render Text Along complex path cached', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -252,7 +252,7 @@ suite('TextPath', function() {
       text:
         "All the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.",
       data: c,
-      draggable: true
+      draggable: true,
     });
 
     textpath.cache();
@@ -264,7 +264,7 @@ suite('TextPath', function() {
     showHit(layer);
   });
 
-  test('Text path with letter spacing', function() {
+  test('Text path with letter spacing', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -279,7 +279,7 @@ suite('TextPath', function() {
       letterSpacing: 5,
       text:
         "All the world's a stage, and all the men and women merely players.",
-      data: c
+      data: c,
     });
 
     textpath.cache();
@@ -290,7 +290,7 @@ suite('TextPath', function() {
     showHit(layer);
   });
 
-  test('Text path with align', function() {
+  test('Text path with align', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -303,7 +303,7 @@ suite('TextPath', function() {
       letterSpacing: 5,
       text: "All the world's a stage.",
       align: 'center',
-      data: c
+      data: c,
     });
 
     layer.add(textpath);
@@ -315,7 +315,7 @@ suite('TextPath', function() {
     assert.equal(layer.getContext().getTrace(true), trace);
   });
 
-  test.skip('Text path with center align - arc', function() {
+  test.skip('Text path with center align - arc', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -324,13 +324,13 @@ suite('TextPath', function() {
       fontSize: 20,
       text: 'Hello  World',
       align: 'right',
-      data: 'M 50 200 a 100 100 0 0 1 200 0'
+      data: 'M 50 200 a 100 100 0 0 1 200 0',
     });
     layer.add(textpath);
 
     var path = new Konva.Path({
       stroke: '#000',
-      data: 'M 50 200 a 100 100 0 0 1 200 0'
+      data: 'M 50 200 a 100 100 0 0 1 200 0',
     });
     layer.add(path);
     stage.add(layer);
@@ -341,7 +341,7 @@ suite('TextPath', function() {
     assert.equal(layer.getContext().getTrace(true), trace);
   });
 
-  test('Text path with align right', function() {
+  test('Text path with align right', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -349,7 +349,7 @@ suite('TextPath', function() {
 
     var path = new Konva.Path({
       stroke: 'red',
-      data: c
+      data: c,
     });
 
     layer.add(path);
@@ -360,7 +360,7 @@ suite('TextPath', function() {
       fontFamily: 'Arial',
       text: "All the world's a stage.",
       align: 'right',
-      data: c
+      data: c,
     });
 
     layer.add(textpath);
@@ -372,7 +372,7 @@ suite('TextPath', function() {
     assert.equal(layer.getContext().getTrace(), trace);
   });
 
-  test('Text path with justify align', function() {
+  test('Text path with justify align', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -387,7 +387,7 @@ suite('TextPath', function() {
       letterSpacing: 5,
       text: 'All the worlds a stage.',
       align: 'justify',
-      data: c
+      data: c,
     });
 
     layer.add(textpath);
@@ -399,7 +399,7 @@ suite('TextPath', function() {
     assert.equal(layer.getContext().getTrace(true), trace);
   });
 
-  test('Text path with underline', function() {
+  test('Text path with underline', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -413,7 +413,7 @@ suite('TextPath', function() {
       text: 'All the worlds a stage.',
       textDecoration: 'underline',
       data: c,
-      draggable: true
+      draggable: true,
     });
 
     layer.add(textpath);
@@ -425,7 +425,7 @@ suite('TextPath', function() {
     assert.equal(layer.getContext().getTrace(true), trace);
   });
 
-  test('Text with baseline', function() {
+  test('Text with baseline', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -434,7 +434,7 @@ suite('TextPath', function() {
     var path = new Konva.Path({
       stroke: 'red',
       strokeWidth: 1,
-      data: c
+      data: c,
     });
 
     layer.add(path);
@@ -445,13 +445,13 @@ suite('TextPath', function() {
       fontFamily: 'Arial',
       text: "The quick brown fox jumped over the lazy dog's back",
       data: c,
-      textBaseline: 'top'
+      textBaseline: 'top',
     });
-    textpath.on('mouseover', function() {
+    textpath.on('mouseover', function () {
       this.setFill('blue');
       layer.drawScene();
     });
-    textpath.on('mouseout', function() {
+    textpath.on('mouseout', function () {
       this.setFill('orange');
       layer.drawScene();
     });
@@ -461,7 +461,7 @@ suite('TextPath', function() {
     showHit(layer);
   });
 
-  test('Text with kerning', function() {
+  test('Text with kerning', function () {
     var stage = addStage();
 
     // simulate lack of kerning support
@@ -470,11 +470,11 @@ suite('TextPath', function() {
     var layer = new Konva.Layer();
     var pairs = {
       A: {
-        V: -0.07421875
+        V: -0.07421875,
       },
       V: {
-        A: -0.07421875
-      }
+        A: -0.07421875,
+      },
     };
 
     const kernedText = new Konva.TextPath({
@@ -484,11 +484,11 @@ suite('TextPath', function() {
       text: 'AV',
       fontSize: 60,
       data: 'M0,0 L200,0',
-      kerningFunc: function(leftChar, rightChar) {
+      kerningFunc: function (leftChar, rightChar) {
         return pairs.hasOwnProperty(leftChar)
           ? pairs[leftChar][rightChar] || 0
           : 0;
-      }
+      },
     });
 
     const unkernedText = new Konva.TextPath({
@@ -497,7 +497,7 @@ suite('TextPath', function() {
       fill: 'black',
       text: 'AV',
       fontSize: 60,
-      data: 'M0,0 L200,0'
+      data: 'M0,0 L200,0',
     });
 
     layer.add(kernedText);
@@ -510,7 +510,7 @@ suite('TextPath', function() {
     );
   });
 
-  test('Text with invalid kerning getter should not fail (fallback to unkerned)', function() {
+  test('Text with invalid kerning getter should not fail (fallback to unkerned)', function () {
     var stage = addStage();
 
     // simulate lack of kerning support
@@ -525,10 +525,10 @@ suite('TextPath', function() {
       text: 'AV',
       fontSize: 60,
       data: 'M0,0 L200,0',
-      kerningFunc: function(leftChar, rightChar) {
+      kerningFunc: function (leftChar, rightChar) {
         // getter that fails
         throw new Error('something went wrong');
-      }
+      },
     });
 
     const unkernedText = new Konva.TextPath({
@@ -537,7 +537,7 @@ suite('TextPath', function() {
       fill: 'black',
       text: 'AV',
       fontSize: 60,
-      data: 'M0,0 L200,0'
+      data: 'M0,0 L200,0',
     });
 
     layer.add(kernedText);
@@ -551,7 +551,7 @@ suite('TextPath', function() {
     );
   });
 
-  test('can set kerning after initialization', function() {
+  test('can set kerning after initialization', function () {
     var stage = addStage();
 
     // simulate lack of kerning support
@@ -566,13 +566,13 @@ suite('TextPath', function() {
       fill: 'black',
       text: 'AV',
       fontSize: 60,
-      data: 'M0,0 L200,0'
+      data: 'M0,0 L200,0',
     });
     layer.add(kernedText);
     layer.draw();
 
     var called = false;
-    kernedText.kerningFunc(function() {
+    kernedText.kerningFunc(function () {
       called = true;
       return 1;
     });
@@ -581,7 +581,7 @@ suite('TextPath', function() {
     assert.equal(called, true);
   });
 
-  test.skip('linear gradient for path', function() {
+  test.skip('linear gradient for path', function () {
     var stage = addStage();
 
     var layer = new Konva.Layer();
@@ -596,7 +596,7 @@ suite('TextPath', function() {
       fillLinearGradientStartPoint: { x: 0, y: 0 },
       fillLinearGradientEndPoint: { x: 200, y: 0 },
       fillLinearGradientColorStops: [0, 'yellow', 1, 'red'],
-      text: 'Text with gradient!!'
+      text: 'Text with gradient!!',
     });
     layer.add(text);
     layer.draw();
@@ -605,7 +605,7 @@ suite('TextPath', function() {
     console.log(trace);
   });
 
-  test('visual check for text path', function() {
+  test('visual check for text path', function () {
     var stage = addStage();
 
     var layer = new Konva.Layer();
@@ -622,7 +622,7 @@ suite('TextPath', function() {
         align: 'center',
         textBaseline: 'bottom',
         data:
-          'M -80.34441853748636 -247.27469423673992 A 260 260 0 0 1 80.34441853748628 -247.27469423673995'
+          'M -80.34441853748636 -247.27469423673992 A 260 260 0 0 1 80.34441853748628 -247.27469423673995',
       })
     );
 
@@ -637,13 +637,13 @@ suite('TextPath', function() {
         align: 'center',
         // textBaseline: 'bottom',
         data:
-          'M -80.34441853748636 -247.27469423673992 A 260 260 0 0 1 80.34441853748628 -247.27469423673995'
+          'M -80.34441853748636 -247.27469423673992 A 260 260 0 0 1 80.34441853748628 -247.27469423673995',
       })
     );
 
     layer.add(
       new Konva.Text({
-        text: 'Hello world'
+        text: 'Hello world',
       })
     );
 
@@ -652,13 +652,13 @@ suite('TextPath', function() {
         fill: '#333',
         text: 'Hello world',
         y: 20,
-        data: 'M 0 0 L100 0'
+        data: 'M 0 0 L100 0',
       })
     );
     layer.draw();
   });
 
-  test('client rect calculations', function() {
+  test('client rect calculations', function () {
     var stage = addStage();
 
     var layer = new Konva.Layer();
@@ -672,7 +672,7 @@ suite('TextPath', function() {
       fontFamily: 'Arial',
       align: 'right',
       text: 'test_path',
-      data: 'M 0,10 L 300 10'
+      data: 'M 0,10 L 300 10',
     });
     layer.add(textpath);
     layer.draw();

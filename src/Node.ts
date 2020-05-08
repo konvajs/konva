@@ -8,7 +8,7 @@ import { DD } from './DragAndDrop';
 import {
   getNumberValidator,
   getStringValidator,
-  getBooleanValidator
+  getBooleanValidator,
 } from './Validators';
 import { Stage } from './Stage';
 import { Context } from './Context';
@@ -18,14 +18,14 @@ import { BaseLayer } from './BaseLayer';
 export const ids: any = {};
 export const names: any = {};
 
-const _addId = function(node: Node, id: string | undefined) {
+const _addId = function (node: Node, id: string | undefined) {
   if (!id) {
     return;
   }
   ids[id] = node;
 };
 
-export const _removeId = function(id: string, node: any) {
+export const _removeId = function (id: string, node: any) {
   // node has no id
   if (!id) {
     return;
@@ -37,7 +37,7 @@ export const _removeId = function(id: string, node: any) {
   delete ids[id];
 };
 
-export const _addName = function(node: any, name: string) {
+export const _addName = function (node: any, name: string) {
   if (name) {
     if (!names[name]) {
       names[name] = [];
@@ -46,7 +46,7 @@ export const _addName = function(node: any, name: string) {
   }
 };
 
-export const _removeName = function(name: string, _id: number) {
+export const _removeName = function (name: string, _id: number) {
   if (!name) {
     return;
   }
@@ -153,7 +153,7 @@ var ABSOLUTE_OPACITY = 'absoluteOpacity',
     'rotationChange.konva',
     'offsetXChange.konva',
     'offsetYChange.konva',
-    'transformsEnabledChange.konva'
+    'transformsEnabledChange.konva',
   ].join(SPACE),
   SCALE_CHANGE_STR = ['scaleXChange.konva', 'scaleYChange.konva'].join(SPACE);
 
@@ -280,7 +280,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       return;
     }
     if (this.children) {
-      this.children.each(function(node) {
+      this.children.each(function (node) {
         node._clearSelfAndDescendantCache(attr, true);
       });
     }
@@ -364,7 +364,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     ) {
       rect = this.getClientRect({
         skipTransform: true,
-        relativeTo: this.getParent()
+        relativeTo: this.getParent(),
       });
     }
     var width = Math.ceil(conf.width || rect.width),
@@ -391,17 +391,17 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     var cachedSceneCanvas = new SceneCanvas({
         pixelRatio: pixelRatio,
         width: width,
-        height: height
+        height: height,
       }),
       cachedFilterCanvas = new SceneCanvas({
         pixelRatio: pixelRatio,
         width: 0,
-        height: 0
+        height: 0,
       }),
       cachedHitCanvas = new HitCanvas({
         pixelRatio: 1,
         width: width,
-        height: height
+        height: height,
       }),
       sceneContext = cachedSceneCanvas.getContext(),
       hitContext = cachedHitCanvas.getContext();
@@ -452,7 +452,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       filter: cachedFilterCanvas,
       hit: cachedHitCanvas,
       x: x,
-      y: y
+      y: y,
     });
 
     return this;
@@ -532,11 +532,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       { x: rect.x, y: rect.y },
       { x: rect.x + rect.width, y: rect.y },
       { x: rect.x + rect.width, y: rect.y + rect.height },
-      { x: rect.x, y: rect.y + rect.height }
+      { x: rect.x, y: rect.y + rect.height },
     ];
     var minX: number, minY: number, maxX: number, maxY: number;
     var trans = this.getAbsoluteTransform(top);
-    points.forEach(function(point) {
+    points.forEach(function (point) {
       var transformed = trans.point(point);
       if (minX === undefined) {
         minX = maxX = transformed.x;
@@ -551,7 +551,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       x: minX,
       y: minY,
       width: maxX - minX,
-      height: maxY - minY
+      height: maxY - minY,
     };
   }
   _drawCachedSceneCanvas(context: Context) {
@@ -742,7 +742,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
       this.eventListeners[baseEvent].push({
         name: name,
-        handler: handler
+        handler: handler,
       });
     }
 
@@ -808,14 +808,14 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     var e = {
       target: this,
       type: evt.type,
-      evt: evt
+      evt: evt,
     };
     this.fire(evt.type, e);
     return this;
   }
   addEventListener(type: string, handler: (e: Event) => void) {
     // we have to pass native event to handler
-    this.on(type, function(evt) {
+    this.on(type, function (evt) {
       handler.call(this, evt.evt);
     });
     return this;
@@ -827,7 +827,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   // like node.on
   _delegate(event: string, selector: string, handler: (e: Event) => void) {
     var stopNode = this;
-    this.on(event, function(evt) {
+    this.on(event, function (evt) {
       var targets = evt.target.findAncestors(selector, true, stopNode);
       for (var i = 0; i < targets.length; i++) {
         evt = Util.cloneObject(evt);
@@ -1182,7 +1182,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   getPosition() {
     return {
       x: this.x(),
-      y: this.y()
+      y: this.y(),
     };
   }
   getAbsolutePosition(top?) {
@@ -1228,7 +1228,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     it.translate(pos.x, pos.y);
     pos = {
       x: this.attrs.x + it.getTranslation().x,
-      y: this.attrs.y + it.getTranslation().y
+      y: this.attrs.y + it.getTranslation().y,
     };
     this._setTransform(origTrans);
     this.setPosition({ x: pos.x, y: pos.y });
@@ -1254,7 +1254,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       offsetX: this.offsetX(),
       offsetY: this.offsetY(),
       skewX: this.skewX(),
-      skewY: this.skewY()
+      skewY: this.skewY(),
     };
 
     this.attrs.x = 0;
@@ -1708,7 +1708,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (top) {
       at = new Transform();
       // start with stage and traverse downwards to self
-      this._eachAncestorReverse(function(node: Node) {
+      this._eachAncestorReverse(function (node: Node) {
         var transformsEnabled = node.transformsEnabled();
 
         if (transformsEnabled === 'all') {
@@ -1762,7 +1762,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     return {
       x: attrs.scaleX,
-      y: attrs.scaleY
+      y: attrs.scaleY,
     };
   }
   /**
@@ -1889,7 +1889,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       canvas = new SceneCanvas({
         width: config.width || box.width || (stage ? stage.width() : 0),
         height: config.height || box.height || (stage ? stage.height() : 0),
-        pixelRatio: pixelRatio
+        pixelRatio: pixelRatio,
       }),
       context = canvas.getContext();
 
@@ -2008,7 +2008,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
     var callback = config.callback;
     delete config.callback;
-    Util._urlToImage(this.toDataURL(config as any), function(img) {
+    Util._urlToImage(this.toDataURL(config as any), function (img) {
       callback(img);
     });
   }
@@ -2020,7 +2020,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   getSize() {
     return {
       width: this.width(),
-      height: this.height()
+      height: this.height(),
     };
   }
   /**
@@ -2082,7 +2082,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   _fireChangeEvent(attr, oldVal, newVal) {
     this._fire(attr + CHANGE, {
       oldVal: oldVal,
-      newVal: newVal
+      newVal: newVal,
     });
   }
   setId(id) {
@@ -2303,10 +2303,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       startPointerPos: pos,
       offset: {
         x: pos.x - ap.x,
-        y: pos.y - ap.y
+        y: pos.y - ap.y,
       },
       dragStatus: 'ready',
-      pointerId
+      pointerId,
     });
   }
 
@@ -2327,7 +2327,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       {
         type: 'dragstart',
         target: this,
-        evt: evt && evt.evt
+        evt: evt && evt.evt,
       },
       true
     );
@@ -2343,7 +2343,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
     var newNodePos = {
       x: pos.x - elem.offset.x,
-      y: pos.y - elem.offset.y
+      y: pos.y - elem.offset.y,
     };
 
     var dbf = this.dragBoundFunc();
@@ -2406,7 +2406,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   _listenDrag() {
     this._dragCleanup();
 
-    this.on('mousedown.konva touchstart.konva', function(evt) {
+    this.on('mousedown.konva touchstart.konva', function (evt) {
       var shouldCheckButton = evt.evt['button'] !== undefined;
       var canDrag =
         !shouldCheckButton || Konva.dragButtons.indexOf(evt.evt['button']) >= 0;
@@ -2418,7 +2418,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       }
 
       var hasDraggingChild = false;
-      DD._dragElements.forEach(elem => {
+      DD._dragElements.forEach((elem) => {
         if (this.isAncestorOf(elem.node)) {
           hasDraggingChild = true;
         }
@@ -2961,7 +2961,7 @@ Factory.addGetterSetter(Node, 'height', 0, getNumberValidator());
  * node.height(100);
  */
 
-Factory.addGetterSetter(Node, 'listening', 'inherit', function(val) {
+Factory.addGetterSetter(Node, 'listening', 'inherit', function (val) {
   var isValid = val === true || val === false || val === 'inherit';
   if (!isValid) {
     Util.warn(
@@ -3013,7 +3013,7 @@ Factory.addGetterSetter(Node, 'listening', 'inherit', function(val) {
 
 Factory.addGetterSetter(Node, 'preventDefault', true, getBooleanValidator());
 
-Factory.addGetterSetter(Node, 'filters', null, function(val) {
+Factory.addGetterSetter(Node, 'filters', null, function (val) {
   this._filterUpToDate = false;
   return val;
 });
@@ -3040,7 +3040,7 @@ Factory.addGetterSetter(Node, 'filters', null, function(val) {
  * ]);
  */
 
-Factory.addGetterSetter(Node, 'visible', 'inherit', function(val) {
+Factory.addGetterSetter(Node, 'visible', 'inherit', function (val) {
   var isValid = val === true || val === false || val === 'inherit';
   if (!isValid) {
     Util.warn(
@@ -3155,7 +3155,7 @@ Factory.addGetterSetter(Node, 'draggable', false, getBooleanValidator());
 Factory.backCompat(Node, {
   rotateDeg: 'rotate',
   setRotationDeg: 'setRotation',
-  getRotationDeg: 'getRotation'
+  getRotationDeg: 'getRotation',
 });
 
 Collection.mapMethods(Node);

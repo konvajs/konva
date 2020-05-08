@@ -1,6 +1,6 @@
-suite('Wedge', function() {
+suite('Wedge', function () {
   // ======================================================
-  test('add wedge', function() {
+  test('add wedge', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var wedge = new Konva.Wedge({
@@ -12,7 +12,7 @@ suite('Wedge', function() {
       stroke: 'black',
       strokeWidth: 4,
       name: 'myCircle',
-      draggable: true
+      draggable: true,
     });
 
     layer.add(wedge);
@@ -28,7 +28,7 @@ suite('Wedge', function() {
     );
   });
 
-  test('attrs sync', function() {
+  test('attrs sync', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var wedge = new Konva.Wedge({
@@ -38,7 +38,7 @@ suite('Wedge', function() {
       radius: 70,
       fill: 'green',
       stroke: 'black',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
 
     layer.add(wedge);
@@ -56,7 +56,7 @@ suite('Wedge', function() {
     assert.equal(wedge.getHeight(), 120);
   });
 
-  test('getSelfRect', function() {
+  test('getSelfRect', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var wedge = new Konva.Wedge({
@@ -66,7 +66,7 @@ suite('Wedge', function() {
       radius: 70,
       fill: 'green',
       stroke: 'black',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
 
     layer.add(wedge);
@@ -76,7 +76,7 @@ suite('Wedge', function() {
       x: -70,
       y: -70,
       width: 140,
-      height: 140
+      height: 140,
     });
   });
 });

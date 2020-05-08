@@ -1,4 +1,4 @@
-suite('Context', function() {
+suite('Context', function () {
   // ======================================================
   var contextMethods = [
     'clearRect',
@@ -34,7 +34,7 @@ suite('Context', function() {
     'getImageData',
     'putImageData',
     'save',
-    'restore'
+    'restore',
   ];
 
   var contextProperties = [
@@ -53,10 +53,10 @@ suite('Context', function() {
     'textAlign',
     'textBaseline',
     'globalAlpha',
-    'globalCompositeOperation'
+    'globalCompositeOperation',
   ];
 
-  test('context wrapper should work like native context', function() {
+  test('context wrapper should work like native context', function () {
     var stage = addStage();
 
     var layer = new Konva.Layer();
@@ -68,7 +68,7 @@ suite('Context', function() {
       fill: 'green',
       stroke: 'blue',
       strokeWidth: 4,
-      draggable: true
+      draggable: true,
     });
 
     layer.add(circle);
@@ -77,7 +77,7 @@ suite('Context', function() {
     var context = layer.getContext();
     var nativeContext = context._context;
 
-    contextMethods.forEach(function(method) {
+    contextMethods.forEach(function (method) {
       assert.equal(
         typeof nativeContext[method],
         'function',
@@ -90,7 +90,7 @@ suite('Context', function() {
       );
     });
 
-    contextProperties.forEach(function(prop) {
+    contextProperties.forEach(function (prop) {
       assert.equal(
         nativeContext[prop] !== undefined,
         true,

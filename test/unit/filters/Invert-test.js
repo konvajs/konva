@@ -1,16 +1,16 @@
-suite('Invert', function() {
+suite('Invert', function () {
   // ======================================================
-  test('basic', function(done) {
+  test('basic', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer();
       darth = new Konva.Image({
         x: 10,
         y: 10,
         image: imageObj,
-        draggable: true
+        draggable: true,
       });
 
       layer.add(darth);
@@ -26,18 +26,18 @@ suite('Invert', function() {
   });
 
   // ======================================================
-  test('crop', function(done) {
+  test('crop', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer();
       darth = new Konva.Image({
         x: 10,
         y: 10,
         image: imageObj,
         crop: { x: 128, y: 48, width: 256, height: 128 },
-        draggable: true
+        draggable: true,
       });
 
       layer.add(darth);
@@ -53,17 +53,17 @@ suite('Invert', function() {
   });
 
   // ======================================================
-  test('transparancy', function(done) {
+  test('transparancy', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer();
       darth = new Konva.Image({
         x: 10,
         y: 10,
         image: imageObj,
-        draggable: true
+        draggable: true,
       });
 
       layer.add(darth);

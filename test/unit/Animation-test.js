@@ -1,6 +1,6 @@
-suite('Animation', function() {
+suite('Animation', function () {
   // ======================================================
-  test('test start and stop', function() {
+  test('test start and stop', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var rect = new Konva.Rect({
@@ -10,7 +10,7 @@ suite('Animation', function() {
       height: 50,
       fill: 'green',
       stroke: 'black',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
 
     layer.add(rect);
@@ -21,9 +21,9 @@ suite('Animation', function() {
     // in ms
     var centerX = stage.getWidth() / 2 - 100 / 2;
 
-    var anim = new Konva.Animation(function(frame) {
+    var anim = new Konva.Animation(function (frame) {
       rect.setX(
-        amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX
+        amplitude * Math.sin((frame.time * 2 * Math.PI) / period) + centerX
       );
     }, layer);
     var a = Konva.Animation.animations;
@@ -51,7 +51,7 @@ suite('Animation', function() {
   });
 
   // ======================================================
-  test('layer batch draw', function() {
+  test('layer batch draw', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var rect = new Konva.Rect({
@@ -61,7 +61,7 @@ suite('Animation', function() {
       height: 50,
       fill: 'green',
       stroke: 'black',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
 
     layer.add(rect);
@@ -69,7 +69,7 @@ suite('Animation', function() {
 
     draws = 0;
 
-    layer.on('draw', function() {
+    layer.on('draw', function () {
       //console.log('draw')
       draws++;
     });
@@ -88,7 +88,7 @@ suite('Animation', function() {
   });
 
   // ======================================================
-  test('stage batch draw', function() {
+  test('stage batch draw', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var rect = new Konva.Rect({
@@ -98,7 +98,7 @@ suite('Animation', function() {
       height: 50,
       fill: 'green',
       stroke: 'black',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
 
     layer.add(rect);
@@ -106,7 +106,7 @@ suite('Animation', function() {
 
     draws = 0;
 
-    layer.on('draw', function() {
+    layer.on('draw', function () {
       //console.log('draw')
       draws++;
     });

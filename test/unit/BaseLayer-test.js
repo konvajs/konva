@@ -1,6 +1,6 @@
-suite('BaseLayer', function() {
+suite('BaseLayer', function () {
   // ======================================================
-  test('width and height', function() {
+  test('width and height', function () {
     Konva.showWarnings = false;
     var stage = addStage();
 

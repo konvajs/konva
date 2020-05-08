@@ -1,16 +1,16 @@
-suite('RGB', function() {
+suite('RGB', function () {
   // ======================================================
-  test('colorize basic', function(done) {
+  test('colorize basic', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer();
       darth = new Konva.Image({
         x: 10,
         y: 10,
         image: imageObj,
-        draggable: true
+        draggable: true,
       });
 
       layer.add(darth);
@@ -18,10 +18,7 @@ suite('RGB', function() {
 
       darth.cache();
       darth.filters([Konva.Filters.RGB]);
-      darth
-        .red(255)
-        .green(0)
-        .blue(128);
+      darth.red(255).green(0).blue(128);
       layer.draw();
 
       // Assert fails even though '[255,0,128] = [255,0,128]'
@@ -33,18 +30,18 @@ suite('RGB', function() {
   });
 
   // ======================================================
-  test('colorize crop', function(done) {
+  test('colorize crop', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer();
       darth = new Konva.Image({
         x: 10,
         y: 10,
         image: imageObj,
         crop: { x: 128, y: 48, width: 256, height: 128 },
-        draggable: true
+        draggable: true,
       });
 
       layer.add(darth);
@@ -52,10 +49,7 @@ suite('RGB', function() {
 
       darth.cache();
       darth.filters([Konva.Filters.RGB]);
-      darth
-        .red(0)
-        .green(255)
-        .blue(0);
+      darth.red(0).green(255).blue(0);
       layer.draw();
 
       // assert.deepEqual(darth.getFilterColorizeColor(), [0,255,0]);
@@ -66,7 +60,7 @@ suite('RGB', function() {
   });
 
   // ======================================================
-  test('colorize transparancy', function(done) {
+  test('colorize transparancy', function (done) {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -82,29 +76,26 @@ suite('RGB', function() {
       [255, 0, 255],
       [0, 0, 0],
       [128, 128, 128],
-      [255, 255, 255]
+      [255, 255, 255],
     ];
     var i,
       l = colors.length;
     var nAdded = 0;
     for (i = 0; i < l; i += 1) {
       var imageObj = new Image();
-      imageObj.onload = (function(color, x) {
-        return function() {
+      imageObj.onload = (function (color, x) {
+        return function () {
           var darth = new Konva.Image({
             x: x,
             y: 32,
             image: imageObj,
-            draggable: true
+            draggable: true,
           });
           layer.add(darth);
 
           darth.cache();
           darth.filters([Konva.Filters.RGB]);
-          darth
-            .red(color[0])
-            .green(color[1])
-            .blue(color[2]);
+          darth.red(color[0]).green(color[1]).blue(color[2]);
 
           nAdded += 1;
           if (nAdded >= l) {
@@ -113,7 +104,7 @@ suite('RGB', function() {
             done();
           }
         };
-      })(colors[i], -64 + i / l * stage.getWidth());
+      })(colors[i], -64 + (i / l) * stage.getWidth());
       imageObj.src = 'assets/lion.png';
     }
   });

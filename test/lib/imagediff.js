@@ -4,7 +4,7 @@
 // For original source and documentation visit:
 // http://www.github.com/HumbleSoftware/js-imagediff
 
-(function(name, definition) {
+(function (name, definition) {
   var root = this;
   if (typeof module !== 'undefined') {
     try {
@@ -22,7 +22,7 @@
   } else {
     root[name] = definition(root, name);
   }
-})('imagediff', function(root, name, Canvas) {
+})('imagediff', function (root, name, Canvas) {
   var TYPE_ARRAY = /\[object Array\]/i,
     TYPE_CANVAS = /\[object (Canvas|HTMLCanvasElement)\]/i,
     TYPE_CONTEXT = /\[object CanvasRenderingContext2D\]/i,
@@ -271,7 +271,7 @@
       if (!isImageType(arguments[i])) {
         throw {
           name: 'ImageTypeError',
-          message: 'Submitted object was not an image.'
+          message: 'Submitted object was not an image.',
         };
       }
     }
@@ -287,13 +287,13 @@
   }
 
   jasmine = {
-    toBeImageData: function() {
+    toBeImageData: function () {
       return imagediff.isImageData(this.actual);
     },
 
-    toImageDiffEqual: function(expected, tolerance) {
+    toImageDiffEqual: function (expected, tolerance) {
       if (typeof document !== UNDEFINED) {
-        this.message = function() {
+        this.message = function () {
           var div = get('div'),
             a = get('div', '<div>Actual:</div>'),
             b = get('div', '<div>Expected:</div>'),
@@ -326,7 +326,7 @@
       }
 
       return imagediff.equal(this.actual, expected, tolerance);
-    }
+    },
   };
 
   // Image Output
@@ -353,7 +353,7 @@
     isImageData: isImageData,
     isImageType: isImageType,
 
-    toImageData: function(object) {
+    toImageData: function (object) {
       checkType(object);
       if (isImageData(object)) {
         return copyImageData(object);
@@ -361,13 +361,13 @@
       return toImageData(object);
     },
 
-    equal: function(a, b, tolerance) {
+    equal: function (a, b, tolerance) {
       checkType(a, b);
       a = toImageData(a);
       b = toImageData(b);
       return equal(a, b, tolerance);
     },
-    diff: function(a, b, options) {
+    diff: function (a, b, options) {
       checkType(a, b);
       a = toImageData(a);
       b = toImageData(b);
@@ -377,10 +377,10 @@
     jasmine: jasmine,
 
     // Compatibility
-    noConflict: function() {
+    noConflict: function () {
       root[name] = previous;
       return imagediff;
-    }
+    },
   };
 
   if (typeof module !== 'undefined') {

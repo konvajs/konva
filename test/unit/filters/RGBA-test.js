@@ -1,27 +1,27 @@
-suite('RGBA', function() {
+suite('RGBA', function () {
   // ======================================================
-  test.skip('colorize basic', function(done) {
+  test.skip('colorize basic', function (done) {
     var data = [
       {
         color: '#2a6511',
         filter: [242, 193, 168, 0.33],
-        result: [108, 131, 67, 255]
+        result: [108, 131, 67, 255],
       },
       {
         color: '#e4d526',
         filter: [175, 98, 37, 0.79],
-        result: [186, 122, 37, 255]
-      }
+        result: [186, 122, 37, 255],
+      },
     ];
 
     var stage = new Konva.Stage({
       container: 'konva-container',
       width: data.length,
-      height: 1
+      height: 1,
     });
 
     var layer = new Konva.Layer({
-      id: 'layer'
+      id: 'layer',
     });
 
     for (var i = 0; i < data.length; i += 1) {
@@ -32,7 +32,7 @@ suite('RGBA', function() {
         y: 0,
         width: 1,
         height: 1,
-        fill: d.color
+        fill: d.color,
       });
 
       rect.cache();
@@ -51,7 +51,7 @@ suite('RGBA', function() {
 
     var context = layer.getCanvas().getContext();
 
-    var imageDataToArray = function(x) {
+    var imageDataToArray = function (x) {
       var imageData = context.getImageData(x, 0, 1, 1).data;
 
       return [imageData['0'], imageData['1'], imageData['2'], imageData['3']];

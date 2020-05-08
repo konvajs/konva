@@ -1,6 +1,6 @@
-suite('Ellipse', function() {
+suite('Ellipse', function () {
   // ======================================================
-  test('add ellipse', function() {
+  test('add ellipse', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var ellipse = new Konva.Ellipse({
@@ -9,7 +9,7 @@ suite('Ellipse', function() {
       radius: { x: 70, y: 35 },
       fill: 'green',
       stroke: 'black',
-      strokeWidth: 8
+      strokeWidth: 8,
     });
     layer.add(ellipse);
     stage.add(layer);
@@ -23,7 +23,7 @@ suite('Ellipse', function() {
   });
 
   // ======================================================
-  test('attrs sync', function() {
+  test('attrs sync', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var ellipse = new Konva.Ellipse({
@@ -32,7 +32,7 @@ suite('Ellipse', function() {
       radius: { x: 70, y: 35 },
       fill: 'green',
       stroke: 'black',
-      strokeWidth: 8
+      strokeWidth: 8,
     });
     layer.add(ellipse);
     stage.add(layer);
@@ -49,7 +49,7 @@ suite('Ellipse', function() {
     assert.equal(ellipse.radiusY(), 60);
   });
 
-  test('getSelfRect', function() {
+  test('getSelfRect', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var ellipse = new Konva.Ellipse({
@@ -58,7 +58,7 @@ suite('Ellipse', function() {
       radius: { x: 70, y: 35 },
       fill: 'green',
       stroke: 'black',
-      strokeWidth: 8
+      strokeWidth: 8,
     });
     layer.add(ellipse);
     stage.add(layer);
@@ -67,11 +67,11 @@ suite('Ellipse', function() {
       x: -70,
       y: -35,
       width: 140,
-      height: 70
+      height: 70,
     });
   });
 
-  test('cache', function() {
+  test('cache', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var ellipse = new Konva.Ellipse({
@@ -80,7 +80,7 @@ suite('Ellipse', function() {
       radius: { x: 70, y: 35 },
       fill: 'green',
       stroke: 'black',
-      strokeWidth: 8
+      strokeWidth: 8,
     });
     ellipse.cache();
     layer.add(ellipse);

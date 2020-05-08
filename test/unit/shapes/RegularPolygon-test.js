@@ -1,6 +1,6 @@
-suite('RegularPolygon', function() {
+suite('RegularPolygon', function () {
   // ======================================================
-  test('add regular polygon triangle', function() {
+  test('add regular polygon triangle', function () {
     var stage = addStage();
 
     var layer = new Konva.Layer();
@@ -16,8 +16,8 @@ suite('RegularPolygon', function() {
       name: 'foobar',
       center: {
         x: 0,
-        y: -50
-      }
+        y: -50,
+      },
     });
 
     layer.add(poly);
@@ -27,7 +27,7 @@ suite('RegularPolygon', function() {
   });
 
   // ======================================================
-  test('add regular polygon square', function() {
+  test('add regular polygon square', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -39,7 +39,7 @@ suite('RegularPolygon', function() {
       fill: 'green',
       stroke: 'blue',
       strokeWidth: 5,
-      name: 'foobar'
+      name: 'foobar',
     });
 
     layer.add(poly);
@@ -47,7 +47,7 @@ suite('RegularPolygon', function() {
   });
 
   // ======================================================
-  test('add regular polygon pentagon', function() {
+  test('add regular polygon pentagon', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -59,7 +59,7 @@ suite('RegularPolygon', function() {
       fill: 'green',
       stroke: 'blue',
       strokeWidth: 5,
-      name: 'foobar'
+      name: 'foobar',
     });
 
     layer.add(poly);
@@ -67,7 +67,7 @@ suite('RegularPolygon', function() {
   });
 
   // ======================================================
-  test('add regular polygon octogon', function() {
+  test('add regular polygon octogon', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -79,7 +79,7 @@ suite('RegularPolygon', function() {
       fill: 'green',
       stroke: 'blue',
       strokeWidth: 5,
-      name: 'foobar'
+      name: 'foobar',
     });
 
     layer.add(poly);
@@ -87,7 +87,7 @@ suite('RegularPolygon', function() {
   });
 
   // ======================================================
-  test('attr sync', function() {
+  test('attr sync', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -99,7 +99,7 @@ suite('RegularPolygon', function() {
       fill: 'green',
       stroke: 'blue',
       strokeWidth: 5,
-      name: 'foobar'
+      name: 'foobar',
     });
 
     layer.add(poly);
@@ -117,7 +117,7 @@ suite('RegularPolygon', function() {
     assert.equal(poly.getHeight(), 140);
   });
 
-  test('polygon cache', function() {
+  test('polygon cache', function () {
     Konva.pixelRatio = 1;
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -130,7 +130,7 @@ suite('RegularPolygon', function() {
       fill: 'green',
       stroke: 'black',
       strokeWidth: 5,
-      name: 'foobar'
+      name: 'foobar',
     });
     poly.cache();
     layer.add(poly);
@@ -140,7 +140,7 @@ suite('RegularPolygon', function() {
       x: -50,
       y: -50,
       height: 100,
-      width: 100
+      width: 100,
     });
 
     cloneAndCompareLayer(layer, 254);

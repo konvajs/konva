@@ -1,6 +1,6 @@
-suite('Canvas', function() {
+suite('Canvas', function () {
   // ======================================================
-  test('pixel ratio', function() {
+  test('pixel ratio', function () {
     var stage = addStage();
 
     var layer = new Konva.Layer();
@@ -12,7 +12,7 @@ suite('Canvas', function() {
       fill: 'green',
       stroke: 'blue',
       strokeWidth: 4,
-      draggable: true
+      draggable: true,
     });
 
     layer.add(circle);

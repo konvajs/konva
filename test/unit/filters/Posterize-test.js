@@ -1,16 +1,16 @@
-suite('Posterize', function() {
+suite('Posterize', function () {
   // ======================================================
-  test('on image tween', function(done) {
+  test('on image tween', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer();
       darth = new Konva.Image({
         x: 10,
         y: 10,
         image: imageObj,
-        draggable: true
+        draggable: true,
       });
 
       layer.add(darth);
@@ -25,14 +25,14 @@ suite('Posterize', function() {
         node: darth,
         duration: 1.0,
         levels: 0,
-        easing: Konva.Easings.Linear
+        easing: Konva.Easings.Linear,
       });
 
-      darth.on('mouseover', function() {
+      darth.on('mouseover', function () {
         tween.play();
       });
 
-      darth.on('mouseout', function() {
+      darth.on('mouseout', function () {
         tween.reverse();
       });
 

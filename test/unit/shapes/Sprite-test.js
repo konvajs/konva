@@ -1,8 +1,8 @@
-suite('Sprite', function() {
+suite('Sprite', function () {
   // ======================================================
-  test('add sprite', function(done) {
+  test('add sprite', function (done) {
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var stage = addStage();
       var layer = new Konva.Layer();
 
@@ -36,7 +36,7 @@ suite('Sprite', function() {
             262,
             0,
             49,
-            109
+            109,
           ],
           kicking: [
             0,
@@ -62,15 +62,15 @@ suite('Sprite', function() {
             287,
             109,
             41,
-            98
-          ]
+            98,
+          ],
         },
         frameRate: 10,
         draggable: true,
         shadowColor: 'black',
         shadowBlur: 3,
         shadowOffset: { x: 3, y: 1 },
-        shadowOpacity: 0.3
+        shadowOpacity: 0.3,
       });
 
       layer.add(sprite);
@@ -88,15 +88,15 @@ suite('Sprite', function() {
       sprite.start();
 
       // kick once
-      setTimeout(function() {
+      setTimeout(function () {
         sprite.setAnimation('kicking');
-        sprite.on('indexChange', function(evt) {
+        sprite.on('indexChange', function (evt) {
           if (evt.newVal === 0 && this.getAnimation() === 'kicking') {
             sprite.setAnimation('standing');
           }
         });
       }, 2000);
-      setTimeout(function() {
+      setTimeout(function () {
         sprite.stop();
       }, 3000);
 
@@ -106,9 +106,9 @@ suite('Sprite', function() {
   });
 
   // ======================================================
-  test('don`t update layer too many times', function(done) {
+  test('don`t update layer too many times', function (done) {
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var stage = addStage();
       var layer = new Konva.Layer();
 
@@ -142,15 +142,15 @@ suite('Sprite', function() {
             262,
             0,
             49,
-            109
-          ]
+            109,
+          ],
         },
         frameRate: 5,
         draggable: true,
         shadowColor: 'black',
         shadowBlur: 3,
         shadowOffset: { x: 3, y: 1 },
-        shadowOpacity: 0.3
+        shadowOpacity: 0.3,
       });
 
       layer.add(sprite);
@@ -158,13 +158,13 @@ suite('Sprite', function() {
 
       var oldDraw = layer.draw;
       var updateCount = 0;
-      layer.draw = function() {
+      layer.draw = function () {
         updateCount++;
         oldDraw.call(layer);
       };
 
       sprite.start();
-      setTimeout(function() {
+      setTimeout(function () {
         sprite.stop();
         assert.equal(updateCount < 7, true);
         done();
@@ -174,9 +174,9 @@ suite('Sprite', function() {
   });
 
   // ======================================================
-  test('don`t update layer too many times 2', function(done) {
+  test('don`t update layer too many times 2', function (done) {
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var stage = addStage();
       var layer = new Konva.Layer();
 
@@ -210,10 +210,10 @@ suite('Sprite', function() {
             262,
             0,
             49,
-            109
-          ]
+            109,
+          ],
         },
-        frameRate: 5
+        frameRate: 5,
       });
 
       var sprite2 = new Konva.Sprite({
@@ -246,10 +246,10 @@ suite('Sprite', function() {
             262,
             0,
             49,
-            109
-          ]
+            109,
+          ],
         },
-        frameRate: 20
+        frameRate: 20,
       });
 
       layer.add(sprite).add(sprite2);
@@ -257,14 +257,14 @@ suite('Sprite', function() {
 
       var oldDraw = layer.draw;
       var updateCount = 0;
-      layer.draw = function() {
+      layer.draw = function () {
         updateCount++;
         oldDraw.call(layer);
       };
 
       sprite.start();
       sprite2.start();
-      setTimeout(function() {
+      setTimeout(function () {
         sprite.stop();
         sprite2.stop();
         assert.equal(updateCount > 15, true);
@@ -275,9 +275,9 @@ suite('Sprite', function() {
     imageObj.src = 'assets/scorpion-sprite.png';
   });
 
-  test('check is sprite running', function(done) {
+  test('check is sprite running', function (done) {
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var stage = addStage();
       var layer = new Konva.Layer();
 
@@ -311,15 +311,15 @@ suite('Sprite', function() {
             262,
             0,
             49,
-            109
-          ]
+            109,
+          ],
         },
         frameRate: 50,
         draggable: true,
         shadowColor: 'black',
         shadowBlur: 3,
         shadowOffset: { x: 3, y: 1 },
-        shadowOpacity: 0.3
+        shadowOpacity: 0.3,
       });
 
       layer.add(sprite);
@@ -333,9 +333,9 @@ suite('Sprite', function() {
     imageObj.src = 'assets/scorpion-sprite.png';
   });
 
-  test('start do nothing if animation is already running', function(done) {
+  test('start do nothing if animation is already running', function (done) {
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var stage = addStage();
       var layer = new Konva.Layer();
 
@@ -369,22 +369,22 @@ suite('Sprite', function() {
             262,
             0,
             49,
-            109
-          ]
+            109,
+          ],
         },
         frameRate: 50,
         draggable: true,
         shadowColor: 'black',
         shadowBlur: 3,
         shadowOffset: { x: 3, y: 1 },
-        shadowOpacity: 0.3
+        shadowOpacity: 0.3,
       });
 
       layer.add(sprite);
       stage.add(layer);
 
       var counter = 0;
-      sprite.on('frameIndexChange.konva', function(event) {
+      sprite.on('frameIndexChange.konva', function (event) {
         counter += 1;
       });
 
@@ -392,7 +392,7 @@ suite('Sprite', function() {
       sprite.start();
       sprite.stop();
 
-      setTimeout(function() {
+      setTimeout(function () {
         assert.equal(counter, 0);
         done();
       }, 200);
@@ -401,9 +401,9 @@ suite('Sprite', function() {
   });
 
   // need fix.
-  test.skip('can change frame rate on fly', function(done) {
+  test.skip('can change frame rate on fly', function (done) {
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var stage = addStage();
       var layer = new Konva.Layer();
 
@@ -437,27 +437,27 @@ suite('Sprite', function() {
             262,
             0,
             49,
-            109
-          ]
+            109,
+          ],
         },
         frameRate: 50,
         draggable: true,
         shadowColor: 'black',
         shadowBlur: 3,
         shadowOffset: { x: 3, y: 1 },
-        shadowOpacity: 0.3
+        shadowOpacity: 0.3,
       });
 
       layer.add(sprite);
       stage.add(layer);
       assert.equal(sprite.frameRate(), 50);
-      setTimeout(function() {
+      setTimeout(function () {
         sprite.frameRate(100);
         assert.equal(sprite.frameRate(), 100);
         assert.equal(sprite.anim.isRunning(), false, '1');
       }, 23);
 
-      setTimeout(function() {
+      setTimeout(function () {
         sprite.start();
         sprite.frameRate(52);
         assert.equal(sprite.anim.isRunning(), true);

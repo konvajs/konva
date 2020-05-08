@@ -1,16 +1,16 @@
-suite('Solarize', function() {
+suite('Solarize', function () {
   // ======================================================
-  test('solarize', function(done) {
+  test('solarize', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer();
       darth = new Konva.Image({
         x: 10,
         y: 10,
         image: imageObj,
-        draggable: true
+        draggable: true,
       });
 
       layer.add(darth);

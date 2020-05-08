@@ -1,6 +1,6 @@
-suite('Blob', function() {
+suite('Blob', function () {
   // ======================================================
-  test('add blob', function() {
+  test('add blob', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -11,7 +11,7 @@ suite('Blob', function() {
       draggable: true,
       fill: '#aaf',
       tension: 0.8,
-      closed: true
+      closed: true,
     });
 
     layer.add(blob);
@@ -35,7 +35,7 @@ suite('Blob', function() {
   });
 
   // ======================================================
-  test('define tension first', function() {
+  test('define tension first', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -46,7 +46,7 @@ suite('Blob', function() {
       strokeWidth: 10,
       draggable: true,
       fill: '#aaf',
-      closed: true
+      closed: true,
     });
 
     layer.add(blob);
@@ -56,7 +56,7 @@ suite('Blob', function() {
   });
 
   // ======================================================
-  test('check for konva event handlers', function() {
+  test('check for konva event handlers', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -67,7 +67,7 @@ suite('Blob', function() {
       draggable: true,
       fill: '#aaf',
       tension: 0.8,
-      closed: true
+      closed: true,
     });
 
     layer.add(blob);
@@ -92,7 +92,7 @@ suite('Blob', function() {
     assert.equal(blob.eventListeners.tensionChange, undefined);
   });
 
-  test('cache', function() {
+  test('cache', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var blob = new Konva.Line({
@@ -104,7 +104,7 @@ suite('Blob', function() {
       draggable: true,
       fill: '#aaf',
       tension: 0.3,
-      closed: true
+      closed: true,
     });
 
     blob.cache();

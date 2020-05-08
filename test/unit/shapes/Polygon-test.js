@@ -1,5 +1,5 @@
-suite('Polygon', function() {
-  test('add polygon', function() {
+suite('Polygon', function () {
+  test('add polygon', function () {
     var stage = addStage();
 
     var layer = new Konva.Layer();
@@ -10,7 +10,7 @@ suite('Polygon', function() {
       fill: 'green',
       stroke: 'blue',
       strokeWidth: 5,
-      closed: true
+      closed: true,
     });
 
     layer.add(poly);

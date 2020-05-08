@@ -1,24 +1,24 @@
-suite('Mask', function() {
+suite('Mask', function () {
   // ======================================================
-  test('basic', function(done) {
+  test('basic', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer({
-        throttle: 999
+        throttle: 999,
       });
       var bamoon = new Konva.Image({
           x: 0,
           y: 0,
           image: imageObj,
-          draggable: true
+          draggable: true,
         }),
         filtered = new Konva.Image({
           x: 300,
           y: 0,
           image: imageObj,
-          draggable: true
+          draggable: true,
         });
 
       layer.add(bamoon);

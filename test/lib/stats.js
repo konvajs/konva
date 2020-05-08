@@ -1,5 +1,5 @@
 // stats.js - http://github.com/mrdoob/stats.js
-var Stats = function() {
+var Stats = function () {
   var l = Date.now(),
     m = l,
     g = 0,
@@ -14,7 +14,7 @@ var Stats = function() {
   f.id = 'stats';
   f.addEventListener(
     'mousedown',
-    function(b) {
+    function (b) {
       b.preventDefault();
       t(++s % 2);
     },
@@ -60,7 +60,7 @@ var Stats = function() {
       (j.style.cssText =
         'width:1px;height:30px;float:left;background-color:#131'),
       e.appendChild(j);
-  var t = function(b) {
+  var t = function (b) {
     s = b;
     switch (s) {
       case 0:
@@ -75,10 +75,10 @@ var Stats = function() {
     REVISION: 11,
     domElement: f,
     setMode: t,
-    begin: function() {
+    begin: function () {
       l = Date.now();
     },
-    end: function() {
+    end: function () {
       var b = Date.now();
       g = b - l;
       n = Math.min(n, g);
@@ -88,7 +88,7 @@ var Stats = function() {
       e.appendChild(e.firstChild).style.height = a + 'px';
       r++;
       b > m + 1e3 &&
-        ((h = Math.round(1e3 * r / (b - m))),
+        ((h = Math.round((1e3 * r) / (b - m))),
         (p = Math.min(p, h)),
         (q = Math.max(q, h)),
         (i.textContent = h + ' FPS (' + p + '-' + q + ')'),
@@ -98,8 +98,8 @@ var Stats = function() {
         (r = 0));
       return b;
     },
-    update: function() {
+    update: function () {
       l = this.end();
-    }
+    },
   };
 };

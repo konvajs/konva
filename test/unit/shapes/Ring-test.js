@@ -1,6 +1,6 @@
-suite('Ring', function() {
+suite('Ring', function () {
   // ======================================================
-  test('add ring', function() {
+  test('add ring', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var ring = new Konva.Ring({
@@ -11,7 +11,7 @@ suite('Ring', function() {
       fill: 'green',
       stroke: 'black',
       strokeWidth: 4,
-      draggable: true
+      draggable: true,
     });
     layer.add(ring);
     stage.add(layer);
@@ -25,7 +25,7 @@ suite('Ring', function() {
   });
 
   // ======================================================
-  test('ring attrs sync', function() {
+  test('ring attrs sync', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var ring = new Konva.Ring({
@@ -37,7 +37,7 @@ suite('Ring', function() {
       fill: 'green',
       stroke: 'black',
       strokeWidth: 4,
-      draggable: true
+      draggable: true,
     });
     layer.add(ring);
     stage.add(layer);
@@ -54,7 +54,7 @@ suite('Ring', function() {
     assert(ring.outerRadius(), 60);
   });
 
-  test('ring cache', function() {
+  test('ring cache', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var ring = new Konva.Ring({
@@ -66,7 +66,7 @@ suite('Ring', function() {
       fill: 'green',
       stroke: 'black',
       strokeWidth: 4,
-      draggable: true
+      draggable: true,
     });
 
     layer.add(ring);
@@ -76,7 +76,7 @@ suite('Ring', function() {
       x: -30,
       y: -30,
       width: 60,
-      height: 60
+      height: 60,
     });
 
     var layer2 = layer.clone();

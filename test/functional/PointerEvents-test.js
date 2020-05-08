@@ -1,9 +1,9 @@
 /* eslint-disable max-nested-callbacks */
 // TODO: repair it
-suite.skip('PointerEvents', function() {
+suite.skip('PointerEvents', function () {
   Konva._pointerEventsEnabled = true;
   // ======================================================
-  test('pointerdown pointerup pointermove', function(done) {
+  test('pointerdown pointerup pointermove', function (done) {
     var stage = addStage();
     var layer = new Konva.Layer();
     var circle = new Konva.Circle({
@@ -12,7 +12,7 @@ suite.skip('PointerEvents', function() {
       radius: 70,
       fill: 'red',
       stroke: 'black',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
 
     // mobile events
@@ -23,15 +23,15 @@ suite.skip('PointerEvents', function() {
     /*
      * mobile
      */
-    circle.on('pointerdown', function() {
+    circle.on('pointerdown', function () {
       pointerdown = true;
     });
 
-    circle.on('pointerup', function() {
+    circle.on('pointerup', function () {
       pointerup = true;
     });
 
-    circle.on('pointermove', function() {
+    circle.on('pointermove', function () {
       pointermove = true;
     });
 
@@ -45,7 +45,7 @@ suite.skip('PointerEvents', function() {
       clientX: 289,
       clientY: 100 + top,
       pointerId: 1,
-      preventDefault: function() {}
+      preventDefault: function () {},
     });
 
     assert(pointerdown, '1) pointerdown should be true');
@@ -55,7 +55,7 @@ suite.skip('PointerEvents', function() {
     // pointerup circle
     stage._pointerup({
       touches: [],
-      preventDefault: function() {}
+      preventDefault: function () {},
     });
 
     assert(pointerdown, '2) pointerdown should be true');
@@ -67,10 +67,10 @@ suite.skip('PointerEvents', function() {
       touches: [
         {
           clientX: 289,
-          clientY: 100 + top
-        }
+          clientY: 100 + top,
+        },
       ],
-      preventDefault: function() {}
+      preventDefault: function () {},
     });
 
     assert(pointerdown, '3) pointerdown should be true');
@@ -80,7 +80,7 @@ suite.skip('PointerEvents', function() {
     // pointerup circle to triger dbltap
     stage._pointerup({
       touches: [],
-      preventDefault: function() {}
+      preventDefault: function () {},
     });
     // end drag is tied to document mouseup and pointerup event
     // which can't be simulated.  call _endDrag manually
@@ -90,16 +90,16 @@ suite.skip('PointerEvents', function() {
     assert(!pointermove, '4) pointermove should be false');
     assert(pointerup, '4) pointerup should be true');
 
-    setTimeout(function() {
+    setTimeout(function () {
       // pointermove circle
       stage._pointermove({
         touches: [
           {
             clientX: 290,
-            clientY: 100 + top
-          }
+            clientY: 100 + top,
+          },
         ],
-        preventDefault: function() {}
+        preventDefault: function () {},
       });
 
       assert(pointerdown, '5) pointerdown should be true');
@@ -111,7 +111,7 @@ suite.skip('PointerEvents', function() {
   });
 
   // ======================================================
-  test('pointer capture', function(done) {
+  test('pointer capture', function (done) {
     var stage = addStage();
     var layer = new Konva.Layer();
     var circle = new Konva.Circle({
@@ -120,7 +120,7 @@ suite.skip('PointerEvents', function() {
       radius: 70,
       fill: 'red',
       stroke: 'black',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
 
     var circle2 = new Konva.Circle({
@@ -129,7 +129,7 @@ suite.skip('PointerEvents', function() {
       radius: 20,
       fill: 'red',
       stroke: 'black',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
 
     // mobile events
@@ -139,21 +139,21 @@ suite.skip('PointerEvents', function() {
     var pointerup = false;
     var pointermove = false;
 
-    circle2.on('pointerdown', function() {
+    circle2.on('pointerdown', function () {
       otherDownCount++;
     });
 
-    circle.on('pointerdown', function(event) {
+    circle.on('pointerdown', function (event) {
       downCount++;
       this.setPointerCapture(event.pointerId);
     });
 
-    circle.on('pointerup', function(evt) {
+    circle.on('pointerup', function (evt) {
       assert(this.hasPointerCapture(evt.pointerId), 'circle released capture');
       pointerup = true;
     });
 
-    circle.on('pointermove', function(evt) {
+    circle.on('pointermove', function (evt) {
       assert(this.hasPointerCapture(evt.pointerId), 'circle has capture');
       pointermove = true;
     });
@@ -169,7 +169,7 @@ suite.skip('PointerEvents', function() {
       clientX: 289,
       clientY: 10 + top,
       pointerId: 0,
-      preventDefault: function() {}
+      preventDefault: function () {},
     });
 
     assert(otherDownCount === 1, '6) otherDownCount should be 1');
@@ -182,7 +182,7 @@ suite.skip('PointerEvents', function() {
       clientX: 289,
       clientY: 100 + top,
       pointerId: 1,
-      preventDefault: function() {}
+      preventDefault: function () {},
     });
 
     assert(otherDownCount === 1, '7) otherDownCount should be 1');
@@ -195,7 +195,7 @@ suite.skip('PointerEvents', function() {
       clientX: 289,
       clientY: 10 + top,
       pointerId: 1,
-      preventDefault: function() {}
+      preventDefault: function () {},
     });
 
     assert(otherDownCount === 1, '8) otherDownCount should be 1');
@@ -203,13 +203,13 @@ suite.skip('PointerEvents', function() {
     assert(!pointermove, '8) pointermove should be false');
     assert(!pointerup, '8) pointerup should be true');
 
-    setTimeout(function() {
+    setTimeout(function () {
       // pointermove over circle 2
       stage._pointermove({
         clientX: 290,
         clientY: 10 + top,
         pointerId: 1,
-        preventDefault: function() {}
+        preventDefault: function () {},
       });
 
       assert(otherDownCount === 1, '9) otherDownCount should be 1');
@@ -217,14 +217,14 @@ suite.skip('PointerEvents', function() {
 
       stage._pointerup({
         pointerId: 1,
-        preventDefault: function() {}
+        preventDefault: function () {},
       });
 
       stage._pointerdown({
         clientX: 289,
         clientY: 10 + top,
         pointerId: 1,
-        preventDefault: function() {}
+        preventDefault: function () {},
       });
 
       assert(otherDownCount === 2, '10) otherDownCount should be 1');

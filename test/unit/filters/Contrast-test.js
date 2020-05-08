@@ -1,16 +1,16 @@
-suite('Filter Contrast', function() {
+suite('Filter Contrast', function () {
   // ======================================================
-  test('basic', function(done) {
+  test('basic', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer();
       var darth = new Konva.Image({
         x: 10,
         y: 10,
         image: imageObj,
-        draggable: true
+        draggable: true,
       });
 
       layer.add(darth);
@@ -29,17 +29,17 @@ suite('Filter Contrast', function() {
   });
 
   // ======================================================
-  test('tween', function(done) {
+  test('tween', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer();
       var darth = new Konva.Image({
         x: 10,
         y: 10,
         image: imageObj,
-        draggable: true
+        draggable: true,
       });
 
       layer.add(darth);
@@ -54,14 +54,14 @@ suite('Filter Contrast', function() {
         node: darth,
         duration: 2.0,
         contrast: 0,
-        easing: Konva.Easings.EaseInOut
+        easing: Konva.Easings.EaseInOut,
       });
 
-      darth.on('mouseover', function() {
+      darth.on('mouseover', function () {
         tween.play();
       });
 
-      darth.on('mouseout', function() {
+      darth.on('mouseout', function () {
         tween.reverse();
       });
 
@@ -71,18 +71,18 @@ suite('Filter Contrast', function() {
   });
 
   // ======================================================
-  test('crop', function(done) {
+  test('crop', function (done) {
     var stage = addStage();
 
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var layer = new Konva.Layer();
       var darth = new Konva.Image({
         x: 10,
         y: 10,
         image: imageObj,
         crop: { x: 128, y: 48, width: 256, height: 128 },
-        draggable: true
+        draggable: true,
       });
 
       layer.add(darth);

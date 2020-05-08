@@ -5,47 +5,47 @@ global.Konva = Konva;
 Konva.enableTrace = true;
 
 // Config MINIMAL test environment
-global.suite = function(title, func) {
+global.suite = function (title, func) {
   console.log('Suite : ' + title);
   func();
 };
 
-global.test = function(title, func) {
+global.test = function (title, func) {
   try {
     console.log('Run test: ' + title);
-    func(function() {});
+    func(function () {});
   } catch (e) {
     console.log('Error at ' + title, e);
     throw e;
   }
 };
-test.skip = function() {};
-global.assert = function(condtion, message) {
+test.skip = function () {};
+global.assert = function (condtion, message) {
   if (!condtion) {
     throw 'assert throw:' + message;
   }
 };
-global.assert.equal = function(left, right) {
+global.assert.equal = function (left, right) {
   if (left !== right) {
   }
 };
-global.assert.notEqual = function(left, right) {
+global.assert.notEqual = function (left, right) {
   if (left === right) {
     throw 'assert throw';
   }
 };
 
-global.addStage = function() {
+global.addStage = function () {
   return new Konva.Stage({
     width: 578,
-    height: 200
+    height: 200,
   });
 };
 
 // Some utils for testing
 global.konvaContainer = Konva.document.createElement('div');
 Konva.document.body.appendChild(konvaContainer);
-global.showHit = global.addContainer = function() {};
+global.showHit = global.addContainer = function () {};
 global.Image = Konva._nodeCanvas.Image;
 Image.prototype.style = {};
 eval(fs.readFileSync('./test/assets/tiger.js') + '');

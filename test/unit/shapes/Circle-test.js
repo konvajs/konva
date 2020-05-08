@@ -1,7 +1,7 @@
-suite('Circle', function() {
+suite('Circle', function () {
   // ======================================================
 
-  test('add circle to stage', function() {
+  test('add circle to stage', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var group = new Konva.Group();
@@ -13,7 +13,7 @@ suite('Circle', function() {
       stroke: 'black',
       strokeWidth: 4,
       name: 'myCircle',
-      draggable: true
+      draggable: true,
     });
 
     stage.add(layer);
@@ -41,7 +41,7 @@ suite('Circle', function() {
     );
   });
 
-  test('clone', function() {
+  test('clone', function () {
     var circle = new Konva.Circle();
     var clone = circle.clone();
     assert.equal(clone instanceof Konva.Circle, true);
@@ -49,9 +49,9 @@ suite('Circle', function() {
   });
 
   // ======================================================
-  test('add circle with pattern fill', function(done) {
+  test('add circle with pattern fill', function (done) {
     var imageObj = new Image();
-    imageObj.onload = function() {
+    imageObj.onload = function () {
       var stage = addStage();
       var layer = new Konva.Layer();
       var group = new Konva.Group();
@@ -65,7 +65,7 @@ suite('Circle', function() {
         stroke: 'black',
         strokeWidth: 4,
         name: 'myCircle',
-        draggable: true
+        draggable: true,
       });
 
       group.add(circle);
@@ -81,7 +81,7 @@ suite('Circle', function() {
 
       circle.setFillPatternOffset({
         x: 3,
-        y: 4
+        y: 4,
       });
       assert.equal(circle.getFillPatternOffset().x, 3);
       assert.equal(circle.getFillPatternOffset().y, 4);
@@ -92,7 +92,7 @@ suite('Circle', function() {
   });
 
   // ======================================================
-  test('add circle with radial gradient fill', function() {
+  test('add circle with radial gradient fill', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var group = new Konva.Group();
@@ -109,8 +109,8 @@ suite('Circle', function() {
       draggable: true,
       scale: {
         x: 0.5,
-        y: 0.5
-      }
+        y: 0.5,
+      },
     });
 
     group.add(circle);
@@ -127,7 +127,7 @@ suite('Circle', function() {
   });
 
   // ======================================================
-  test('add shape with linear gradient fill', function() {
+  test('add shape with linear gradient fill', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var group = new Konva.Group();
@@ -141,7 +141,7 @@ suite('Circle', function() {
       stroke: 'black',
       strokeWidth: 4,
       name: 'myCircle',
-      draggable: true
+      draggable: true,
     });
 
     group.add(circle);
@@ -175,7 +175,7 @@ suite('Circle', function() {
   });
 
   // ======================================================
-  test('set opacity after instantiation', function() {
+  test('set opacity after instantiation', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var group = new Konva.Group();
@@ -183,7 +183,7 @@ suite('Circle', function() {
       x: stage.getWidth() / 2,
       y: stage.getHeight() / 2,
       radius: 70,
-      fill: 'red'
+      fill: 'red',
     });
 
     group.add(circle);
@@ -198,7 +198,7 @@ suite('Circle', function() {
   });
 
   // ======================================================
-  test('attrs sync', function() {
+  test('attrs sync', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var circle = new Konva.Circle({
@@ -207,7 +207,7 @@ suite('Circle', function() {
       radius: 70,
       fill: 'green',
       stroke: 'black',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
 
     layer.add(circle);
@@ -226,7 +226,7 @@ suite('Circle', function() {
   });
 
   // ======================================================
-  test('set fill after instantiation', function() {
+  test('set fill after instantiation', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var circle = new Konva.Circle({
@@ -235,7 +235,7 @@ suite('Circle', function() {
       radius: 70,
       fill: 'green',
       stroke: 'black',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
     layer.add(circle);
 
@@ -244,7 +244,7 @@ suite('Circle', function() {
     stage.add(layer);
   });
 
-  test('getSelfRect', function() {
+  test('getSelfRect', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var circle = new Konva.Circle({
@@ -254,7 +254,7 @@ suite('Circle', function() {
       fill: 'green',
       stroke: 'black',
       strokeWidth: 4,
-      draggable: true
+      draggable: true,
     });
 
     layer.add(circle);
@@ -264,11 +264,11 @@ suite('Circle', function() {
       x: -50,
       y: -50,
       width: 100,
-      height: 100
+      height: 100,
     });
   });
 
-  test('cache', function() {
+  test('cache', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var circle = new Konva.Circle({
@@ -277,7 +277,7 @@ suite('Circle', function() {
       radius: 50,
       fill: 'green',
       stroke: 'black',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
 
     layer.add(circle);

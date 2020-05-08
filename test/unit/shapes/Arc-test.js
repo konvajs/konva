@@ -1,6 +1,6 @@
-suite('Arc', function() {
+suite('Arc', function () {
   // ======================================================
-  test('add arc', function() {
+  test('add arc', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var arc = new Konva.Arc({
@@ -13,7 +13,7 @@ suite('Arc', function() {
       stroke: 'black',
       strokeWidth: 4,
       name: 'myArc',
-      draggable: true
+      draggable: true,
     });
 
     layer.add(arc);
@@ -30,7 +30,7 @@ suite('Arc', function() {
   });
 
   // ======================================================
-  test('attrs sync', function() {
+  test('attrs sync', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var arc = new Konva.Arc({
@@ -43,7 +43,7 @@ suite('Arc', function() {
       stroke: 'black',
       strokeWidth: 4,
       name: 'myArc',
-      draggable: true
+      draggable: true,
     });
 
     layer.add(arc);
@@ -60,7 +60,7 @@ suite('Arc', function() {
     assert.equal(arc.getHeight(), 120);
   });
 
-  test('getSelfRect', function() {
+  test('getSelfRect', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var arc = new Konva.Arc({
@@ -73,7 +73,7 @@ suite('Arc', function() {
       stroke: 'black',
       strokeWidth: 4,
       name: 'myArc',
-      draggable: true
+      draggable: true,
     });
 
     layer.add(arc);
@@ -83,11 +83,11 @@ suite('Arc', function() {
       x: -80,
       y: -80,
       width: 160,
-      height: 160
+      height: 160,
     });
   });
 
-  test('cache', function() {
+  test('cache', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var arc = new Konva.Arc({
@@ -98,7 +98,7 @@ suite('Arc', function() {
       angle: 90,
       fill: 'green',
       stroke: 'black',
-      strokeWidth: 4
+      strokeWidth: 4,
     });
 
     layer.add(arc);
