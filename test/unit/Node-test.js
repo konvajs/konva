@@ -3202,35 +3202,35 @@ suite('Node', function () {
     assert.equal(layer.isVisible(), false);
     assert.equal(circle.isVisible(), false);
 
-    stage.setVisible('inherit');
+    stage.setVisible(true);
     layer.setVisible(false);
 
     assert.equal(stage.isVisible(), true);
     assert.equal(layer.isVisible(), false);
     assert.equal(circle.isVisible(), false);
 
-    layer.setVisible('inherit');
+    layer.setVisible(true);
     circle.setVisible(false);
 
     assert.equal(stage.isVisible(), true);
     assert.equal(layer.isVisible(), true);
     assert.equal(circle.isVisible(), false);
 
-    circle.setVisible('inherit');
+    circle.setVisible(true);
     stage.setVisible(true);
 
     assert.equal(stage.isVisible(), true);
     assert.equal(layer.isVisible(), true);
     assert.equal(circle.isVisible(), true);
 
-    stage.setVisible('inherit');
+    stage.setVisible(true);
     layer.setVisible(true);
 
     assert.equal(stage.isVisible(), true);
     assert.equal(layer.isVisible(), true);
     assert.equal(circle.isVisible(), true);
 
-    layer.setVisible('inherit');
+    layer.setVisible(true);
     circle.setVisible(true);
 
     assert.equal(stage.isVisible(), true);
