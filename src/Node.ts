@@ -1016,43 +1016,32 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
   }
   /**
-     * determine if node is visible by taking into account ancestors.
-     *
-     * Parent    | Self      | isVisible
-     * visible   | visible   |
-     * ----------+-----------+------------
-     * T         | T         | T
-     * T         | F         | F
-     * F         | T         | T
-     * F         | F         | F
-     * ----------+-----------+------------
-     * T         | I         | T
-     * F         | I         | F
-     * I         | I         | T
-
-      * @method
-      * @name Konva.Node#isVisible
-      * @returns {Boolean}
-      */
+   * determine if node is visible by taking into account ancestors.
+   *
+   * Parent    | Self      | isVisible
+   * visible   | visible   |
+   * ----------+-----------+------------
+   * T         | T         | T
+   * T         | F         | F
+   * F         | T         | F
+   * F         | F         | F
+   * @method
+   * @name Konva.Node#isVisible
+   * @returns {Boolean}
+   */
   isVisible() {
     return this._getCache(VISIBLE, this._isVisible);
   }
   _isVisible(relativeTo) {
-    var visible = this.visible(),
-      parent = this.getParent();
-
-    // the following conditions are a simplification of the truth table above.
-    // please modify carefully
-    if (visible === 'inherit') {
-      if (parent && parent !== relativeTo) {
-        return parent._isVisible(relativeTo);
-      } else {
-        return true;
-      }
-    } else if (relativeTo && relativeTo !== parent) {
-      return visible && parent._isVisible(relativeTo);
+    const visible = this.visible();
+    if (!visible) {
+      return false;
+    }
+    const parent = this.getParent();
+    if (parent && parent !== relativeTo) {
+      return parent._isVisible(relativeTo);
     } else {
-      return visible;
+      return true;
     }
   }
   /**
@@ -3040,24 +3029,15 @@ Factory.addGetterSetter(Node, 'filters', null, function (val) {
  * ]);
  */
 
-Factory.addGetterSetter(Node, 'visible', 'inherit', function (val) {
-  var isValid = val === true || val === false || val === 'inherit';
-  if (!isValid) {
-    Util.warn(
-      val +
-        ' is a not valid value for "visible" attribute. The value may be true, false or "inherit".'
-    );
-  }
-  return val;
-});
+Factory.addGetterSetter(Node, 'visible', true, getBooleanValidator());
 /**
- * get/set visible attr.  Can be "inherit", true, or false.  The default is "inherit".
+ * get/set visible attr.  Can be true, or false.  The default is true.
  *   If you need to determine if a node is visible or not
  *   by taking into account its parents, use the isVisible() method
  * @name Konva.Node#visible
  * @method
- * @param {Boolean|String} visible
- * @returns {Boolean|String}
+ * @param {Boolean} visible
+ * @returns {Boolean}
  * @example
  * // get visible attr
  * var visible = node.visible();
@@ -3065,11 +3045,9 @@ Factory.addGetterSetter(Node, 'visible', 'inherit', function (val) {
  * // make invisible
  * node.visible(false);
  *
- * // make visible
+ * // make visible (according to the parent)
  * node.visible(true);
  *
- * // make visible according to the parent
- * node.visible('inherit');
  */
 
 Factory.addGetterSetter(Node, 'transformsEnabled', 'all', getStringValidator());
