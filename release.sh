@@ -56,15 +56,6 @@ git commit -am "update cdn link" --allow-empty >/dev/null
 echo "create new git tag"
 git tag $1 >/dev/null
 
-
-
-echo "archive documentation"
-zip -r konva-v${new_version}-documentation.zip ./api/* >/dev/null
-rm -r ./api >/dev/null
-
-echo "documentation is generated"
-echo "include konva-v${new_version}-documentation.zip into version in github"
-
 cd ../konva
 git push >/dev/null
 git push --tags >/dev/null
