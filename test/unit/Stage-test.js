@@ -515,6 +515,12 @@ suite('Stage', function () {
       'greenCircle',
       '16) second intersection should be greenCircle'
     );
+
+    // now hide layer and but force visible for shape.
+
+    layer.hide();
+    redCircle.visible(true);
+    assert.equal(stage.getAllIntersections(redCircle.position()).length, 0);
   });
 
   // ======================================================
