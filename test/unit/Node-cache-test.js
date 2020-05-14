@@ -30,6 +30,7 @@ suite('Caching', function () {
 
     compareLayerAndCanvas(layer, canvas, 10);
     cloneAndCompareLayer(layer);
+    showHit(layer);
   });
 
   test('cache simple rectangle with transform', function () {
@@ -751,6 +752,34 @@ suite('Caching', function () {
     cloneAndCompareLayer(layer, 210);
   });
 
+  test('test group with opacity', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group({
+      x: 100,
+      y: 100,
+      draggable: true,
+    });
+    layer.add(group);
+
+    var circle = new Konva.Circle({
+      radius: 10,
+      fillRadialGradientStartRadius: 0,
+      fillRadialGradientEndRadius: 10,
+      fillRadialGradientColorStops: [0, 'red', 0.5, 'yellow', 1, 'black'],
+      opacity: 0.4,
+      strokeHitEnabled: false,
+      stroke: 'rgba(0,0,0,0)',
+    });
+    group.add(circle);
+    group.cache();
+    stage.draw();
+
+    cloneAndCompareLayer(layer, 100);
+  });
+
   test('test rect with float dimensions', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -829,6 +858,40 @@ suite('Caching', function () {
 
     rect.cache();
     layer.visible(true);
+    layer.draw();
+
+    var canvas = createCanvas();
+    var context = canvas.getContext('2d');
+    context.beginPath();
+    context.rect(100, 50, 100, 100);
+    context.closePath();
+    context.fillStyle = 'green';
+    context.fill();
+    showHit(layer);
+    compareLayerAndCanvas(layer, canvas, 5);
+    assert.equal(stage.getIntersection({ x: 150, y: 100 }), rect);
+  });
+
+  test('even if parent is not listening cache and hit should be created', function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer({
+      listening: false,
+    });
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 50,
+      width: 100,
+      height: 100,
+      fill: 'green',
+    });
+
+    layer.add(rect);
+    stage.add(layer);
+
+    rect.cache();
+    layer.listening(true);
     layer.draw();
 
     var canvas = createCanvas();
@@ -1269,7 +1332,6 @@ suite('Caching', function () {
     layer.add(circle);
     circle.cache();
 
-    console.log(circle._cache.get('canvas'));
     assert.equal(circle._cache.get('canvas').filter.width, 0);
     circle.filters([Konva.Filters.Blur]);
     layer.draw();

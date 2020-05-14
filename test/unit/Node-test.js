@@ -404,7 +404,7 @@ suite('Node', function () {
     layer.add(rect).add(rect2);
     stage.add(layer);
 
-    assert.equal(rect.getListening(), 'inherit');
+    assert.equal(rect.getListening(), true);
 
     assert.equal(rect.isListening(), true);
     rect.setListening(false);
@@ -1836,7 +1836,7 @@ suite('Node', function () {
     rect.setListening(false);
     assert.equal(rect.isListening(), false);
 
-    rect.setListening('inherit');
+    rect.setListening(true);
     assert.equal(rect.isListening(), true);
 
     layer.setListening(false);
@@ -1846,14 +1846,7 @@ suite('Node', function () {
     layer.setListening(true);
     assert.equal(rect.isListening(), true);
 
-    // even though we set stage listening to false, since the layer
-    // listening is set to try, rect listening will be true
     stage.setListening(false);
-    assert.equal(rect.isListening(), true);
-
-    // setting layer listening to inherit means that the layer listening
-    // will inherit the stage listening, which is false
-    layer.setListening('inherit');
     assert.equal(rect.isListening(), false);
   });
 
@@ -3133,14 +3126,14 @@ suite('Node', function () {
 
     showHit(layer);
 
-    assert.equal(rect.isListening(), true);
-    assert.equal(rect.shouldDrawHit(), true);
+    assert.equal(rect.isListening(), false);
+    assert.equal(rect.shouldDrawHit(), false);
 
     assert.equal(group.isListening(), false);
-    assert.equal(group.shouldDrawHit(), true, 'hit graph for group');
+    assert.equal(group.shouldDrawHit(), false, 'hit graph for group');
 
     assert.equal(layer.isListening(), false);
-    assert.equal(layer.shouldDrawHit(), true, 'hit graph for layer');
+    assert.equal(layer.shouldDrawHit(), false, 'hit graph for layer');
 
     var layerClick = 0;
     var groupClick = 0;
@@ -3156,7 +3149,6 @@ suite('Node', function () {
       layerClick += 1;
     });
     showHit(layer);
-    var top = stage.content.getBoundingClientRect().top;
 
     stage.simulateMouseDown({
       x: 150,
@@ -3167,7 +3159,7 @@ suite('Node', function () {
       y: 75,
     });
 
-    assert.equal(rectClick, 1, 'click on rectangle');
+    assert.equal(rectClick, 0, 'click on rectangle');
     assert.equal(groupClick, 0, 'no click on group');
     assert.equal(layerClick, 0, 'no click on layer');
   });

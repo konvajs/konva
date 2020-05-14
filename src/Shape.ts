@@ -5,14 +5,16 @@ import {
   getNumberValidator,
   getNumberOrAutoValidator,
   getStringValidator,
-  getBooleanValidator
+  getBooleanValidator,
 } from './Validators';
 
-import { Context } from './Context';
+import { Context, SceneContext } from './Context';
 import { _registerNode } from './Global';
 import * as PointerEvents from './PointerEvents';
 
 import { GetSet, Vector2d } from './types';
+import { HitCanvas, SceneCanvas, Canvas } from './Canvas';
+import { Container } from './Container';
 
 // hack from here https://stackoverflow.com/questions/52667959/what-is-the-purpose-of-bivariancehack-in-typescript-types/52668133#52668133
 export type ShapeConfigHandler<TTarget> = {
@@ -422,15 +424,33 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
   // why do we need buffer canvas?
   // it give better result when a shape has
   // stroke with fill and with some opacity
-  _useBufferCanvas(caching): boolean {
-    return !!(
-      (!caching || this.hasShadow()) &&
-      this.perfectDrawEnabled() &&
-      this.getAbsoluteOpacity() !== 1 &&
-      this.hasFill() &&
-      this.hasStroke() &&
-      this.getStage()
-    );
+  _useBufferCanvas(forceFill?: boolean): boolean {
+    // image and sprite still has "fill" as image
+    // so they use that method with forced fill
+    // it probably will be simpler, then copy/paste the code
+
+    // buffer canvas is available only inside the stage
+    if (!this.getStage()) {
+      return false;
+    }
+    // force skip buffer canvas
+    if (!this.perfectDrawEnabled()) {
+      return false;
+    }
+    const hasFill = forceFill || this.hasFill();
+    const hasStroke = this.hasStroke();
+    const isTransparent = this.getAbsoluteOpacity() !== 1;
+
+    if (hasFill && hasStroke && isTransparent) {
+      return true;
+    }
+
+    const hasShadow = this.hasShadow();
+    const strokeForShadow = this.shadowForStrokeEnabled();
+    if (hasFill && hasStroke && hasShadow && strokeForShadow) {
+      return true;
+    }
+    return false;
   }
   setStrokeHitEnabled(val: number) {
     Util.warn(
@@ -467,7 +487,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
       x: this._centroid ? -size.width / 2 : 0,
       y: this._centroid ? -size.height / 2 : 0,
       width: size.width,
-      height: size.height
+      height: size.height,
     };
   }
   getClientRect(attrs) {
@@ -513,17 +533,23 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
       y:
         -Math.round(strokeWidth / 2 + blurRadius) +
         Math.min(shadowOffsetY, 0) +
-        fillRect.y
+        fillRect.y,
     };
     if (!skipTransform) {
       return this._transformedRect(rect, relativeTo);
     }
     return rect;
   }
-  drawScene(can, top, caching, skipBuffer) {
+  drawScene(can?: SceneCanvas, top?: Node) {
+    // basically there are 4 drawing modes
+    // 1 - simple drawing when nothing is cached.
+    // 2 - when we are caching current
+    // 3 - when node is cached and we need to draw it into layer
+    // 4 - ??
+
     var layer = this.getLayer(),
       canvas = can || layer.getCanvas(),
-      context = canvas.getContext(),
+      context = canvas.getContext() as SceneContext,
       cachedCanvas = this._getCanvasCache(),
       drawFunc = this.sceneFunc(),
       hasShadow = this.hasShadow(),
@@ -532,9 +558,14 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
       bufferCanvas,
       bufferContext;
 
+    var caching = canvas.isCache;
+    var skipBuffer = canvas.isCache;
+    var cachingSelf = top === this;
+
     if (!this.isVisible() && !caching) {
       return this;
     }
+    // if node is cached we just need to draw from cache
     if (cachedCanvas) {
       context.save();
       layer._applyTransform(this, context, top);
@@ -542,12 +573,14 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
       context.restore();
       return this;
     }
+
     if (!drawFunc) {
       return this;
     }
+
     context.save();
     // if buffer canvas is needed
-    if (this._useBufferCanvas(caching) && !skipBuffer) {
+    if (this._useBufferCanvas() && !skipBuffer) {
       stage = this.getStage();
       bufferCanvas = stage.bufferCanvas;
       bufferContext = bufferCanvas.getContext();
@@ -555,95 +588,70 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
       bufferContext.save();
       bufferContext._applyLineJoin(this);
       // layer might be undefined if we are using cache before adding to layer
-      if (!caching) {
-        if (layer) {
-          layer._applyTransform(this, bufferContext, top);
-        } else {
-          var m = this.getAbsoluteTransform(top).getMatrix();
-          context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
-        }
-      }
+      var o = this.getAbsoluteTransform(top).getMatrix();
+      bufferContext.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
 
       drawFunc.call(this, bufferContext, this);
       bufferContext.restore();
 
       var ratio = bufferCanvas.pixelRatio;
-      if (hasShadow && !canvas.hitCanvas) {
-        context.save();
 
+      if (hasShadow) {
         context._applyShadow(this);
-        context._applyOpacity(this);
-        context._applyGlobalCompositeOperation(this);
-        context.drawImage(
-          bufferCanvas._canvas,
-          0,
-          0,
-          bufferCanvas.width / ratio,
-          bufferCanvas.height / ratio
-        );
-        context.restore();
-      } else {
-        context._applyOpacity(this);
-        context._applyGlobalCompositeOperation(this);
-        context.drawImage(
-          bufferCanvas._canvas,
-          0,
-          0,
-          bufferCanvas.width / ratio,
-          bufferCanvas.height / ratio
-        );
       }
+      context._applyOpacity(this);
+      context._applyGlobalCompositeOperation(this);
+      context.drawImage(
+        bufferCanvas._canvas,
+        0,
+        0,
+        bufferCanvas.width / ratio,
+        bufferCanvas.height / ratio
+      );
     } else {
-      // if buffer canvas is not needed
       context._applyLineJoin(this);
-      // layer might be undefined if we are using cache before adding to layer
-      if (!caching) {
-        if (layer) {
-          layer._applyTransform(this, context, top);
-        } else {
-          var o = this.getAbsoluteTransform(top).getMatrix();
-          context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
-        }
+
+      if (!cachingSelf) {
+        var o = this.getAbsoluteTransform(top).getMatrix();
+        context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
+        context._applyOpacity(this);
+        context._applyGlobalCompositeOperation(this);
       }
 
-      if (hasShadow && hasStroke && !canvas.hitCanvas) {
-        context.save();
-        // apply shadow
-        if (!caching) {
-          context._applyOpacity(this);
-          context._applyGlobalCompositeOperation(this);
-        }
+      if (hasShadow) {
         context._applyShadow(this);
+      }
 
-        drawFunc.call(this, context, this);
-        context.restore();
-        // if shape has stroke we need to redraw shape
-        // otherwise we will see a shadow under stroke (and over fill)
-        // but I think this is unexpected behavior
-        if (this.hasFill() && this.shadowForStrokeEnabled()) {
-          drawFunc.call(this, context, this);
-        }
-      } else if (hasShadow && !canvas.hitCanvas) {
-        context.save();
-        if (!caching) {
-          context._applyOpacity(this);
-          context._applyGlobalCompositeOperation(this);
-        }
-        context._applyShadow(this);
-        drawFunc.call(this, context, this);
-        context.restore();
-      } else {
-        if (!caching) {
-          context._applyOpacity(this);
-          context._applyGlobalCompositeOperation(this);
-        }
+      drawFunc.call(this, context, this);
+      // if shape has stroke we need to redraw shape
+      // otherwise we will see a shadow under stroke (and over fill)
+      // but I think this is unexpected behavior
+      if (
+        hasShadow &&
+        hasStroke &&
+        this.hasFill() &&
+        this.shadowForStrokeEnabled() &&
+        false
+      ) {
+        // TODO: are there any ways to avoid double draw?
+        // hint: https://stackoverflow.com/questions/13470101/getting-single-shadow-for-fill-and-stroke-on-html-canvas
+
+        // clear the shadow
+        context.setAttr('shadowColor', 0);
+        context.setAttr('shadowOffsetX', 0);
+        context.setAttr('shadowOffsetY', 0);
+        context.setAttr('shadowBlur', 0);
         drawFunc.call(this, context, this);
       }
     }
     context.restore();
     return this;
   }
-  drawHit(can, top?, caching?) {
+  drawHit(can?: HitCanvas, top?: Node) {
+    if (!this.shouldDrawHit(top)) {
+      return this;
+    }
+
     var layer = this.getLayer(),
       canvas = can || layer.hitCanvas,
       context = canvas && canvas.getContext(),
@@ -658,9 +666,6 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
       );
     }
 
-    if (!this.shouldDrawHit() && !caching) {
-      return this;
-    }
     if (cachedHitCanvas) {
       context.save();
       layer._applyTransform(this, context, top);
@@ -673,13 +678,11 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
     }
     context.save();
     context._applyLineJoin(this);
-    if (!caching) {
-      if (layer) {
-        layer._applyTransform(this, context, top);
-      } else {
-        var o = this.getAbsoluteTransform(top).getMatrix();
-        context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
-      }
+
+    const selfCache = this === top;
+    if (!selfCache) {
+      var o = this.getAbsoluteTransform(top).getMatrix();
+      context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
     }
     drawFunc.call(this, context, this);
     context.restore();
@@ -1580,7 +1583,7 @@ Factory.addGetterSetter(Shape, 'fillPatternScaleY', 1, getNumberValidator());
 
 Factory.addComponentsGetterSetter(Shape, 'fillLinearGradientStartPoint', [
   'x',
-  'y'
+  'y',
 ]);
 
 /**
@@ -1604,7 +1607,7 @@ Factory.addComponentsGetterSetter(Shape, 'fillLinearGradientStartPoint', [
 
 Factory.addComponentsGetterSetter(Shape, 'strokeLinearGradientStartPoint', [
   'x',
-  'y'
+  'y',
 ]);
 
 /**
@@ -1691,7 +1694,7 @@ Factory.addGetterSetter(Shape, 'strokeLinearGradientStartPointY', 0);
 
 Factory.addComponentsGetterSetter(Shape, 'fillLinearGradientEndPoint', [
   'x',
-  'y'
+  'y',
 ]);
 
 /**
@@ -1715,7 +1718,7 @@ Factory.addComponentsGetterSetter(Shape, 'fillLinearGradientEndPoint', [
 
 Factory.addComponentsGetterSetter(Shape, 'strokeLinearGradientEndPoint', [
   'x',
-  'y'
+  'y',
 ]);
 
 /**
@@ -1799,7 +1802,7 @@ Factory.addGetterSetter(Shape, 'strokeLinearGradientEndPointY', 0);
 
 Factory.addComponentsGetterSetter(Shape, 'fillRadialGradientStartPoint', [
   'x',
-  'y'
+  'y',
 ]);
 
 /**
@@ -1853,7 +1856,7 @@ Factory.addGetterSetter(Shape, 'fillRadialGradientStartPointY', 0);
 
 Factory.addComponentsGetterSetter(Shape, 'fillRadialGradientEndPoint', [
   'x',
-  'y'
+  'y',
 ]);
 
 /**
@@ -1932,7 +1935,7 @@ Factory.backCompat(Shape, {
 
   drawHitFunc: 'hitFunc',
   getDrawHitFunc: 'getHitFunc',
-  setDrawHitFunc: 'setHitFunc'
+  setDrawHitFunc: 'setHitFunc',
 });
 
 Collection.mapMethods(Shape);

@@ -36,11 +36,7 @@ export interface ImageConfig extends ShapeConfig {
  */
 export class Image extends Shape<ImageConfig> {
   _useBufferCanvas() {
-    return !!(
-      (this.hasShadow() || this.getAbsoluteOpacity() !== 1) &&
-      this.hasStroke() &&
-      this.getStage()
-    );
+    return super._useBufferCanvas(true);
   }
   _sceneFunc(context) {
     var width = this.width(),
@@ -63,7 +59,7 @@ export class Image extends Shape<ImageConfig> {
           0,
           0,
           width,
-          height
+          height,
         ];
       } else {
         params = [image, 0, 0, width, height];
@@ -114,9 +110,9 @@ export class Image extends Shape<ImageConfig> {
    */
   static fromURL(url, callback) {
     var img = Util.createImageElement();
-    img.onload = function() {
+    img.onload = function () {
       var image = new Image({
-        image: img
+        image: img,
       });
       callback(image);
     };

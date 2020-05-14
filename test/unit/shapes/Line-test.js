@@ -165,7 +165,7 @@ suite('Line', function () {
 
     assert.equal(
       trace,
-      'clearRect(0,0,578,200);save();lineJoin=round;transform(1,0,0,1,0,0);save();shadowColor=rgba(0,0,0,0.5);shadowBlur=20;shadowOffsetX=10;shadowOffsetY=10;beginPath();moveTo(73,160);lineTo(340,23);lineCap=round;lineWidth=20;strokeStyle=blue;stroke();restore();restore();'
+      'clearRect(0,0,578,200);save();lineJoin=round;transform(1,0,0,1,0,0);shadowColor=rgba(0,0,0,0.5);shadowBlur=20;shadowOffsetX=10;shadowOffsetY=10;beginPath();moveTo(73,160);lineTo(340,23);lineCap=round;lineWidth=20;strokeStyle=blue;stroke();restore();'
     );
   });
 

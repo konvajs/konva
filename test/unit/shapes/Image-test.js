@@ -270,7 +270,7 @@ suite('Image', function () {
       //console.log(trace);
       assert.equal(
         trace,
-        'clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);save();globalAlpha=0.5;shadowColor=rgba(0,0,0,0.1);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;drawImage([object HTMLImageElement],0,0,100,100);restore();restore();'
+        'clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);globalAlpha=0.5;shadowColor=rgba(0,0,0,0.1);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;drawImage([object HTMLImageElement],0,0,100,100);restore();'
       );
 
       done();
@@ -309,7 +309,7 @@ suite('Image', function () {
       //console.log(trace);
       assert.equal(
         trace,
-        'clearRect(0,0,578,200);save();save();shadowColor=rgba(0,0,0,0.5);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();restore();'
+        'clearRect(0,0,578,200);save();shadowColor=rgba(0,0,0,0.5);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();'
       );
 
       done();

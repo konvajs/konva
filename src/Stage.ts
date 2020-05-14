@@ -5,7 +5,7 @@ import { Konva } from './Global';
 import { SceneCanvas, HitCanvas } from './Canvas';
 import { GetSet, Vector2d } from './types';
 import { Shape } from './Shape';
-import { BaseLayer } from './BaseLayer';
+import { Layer } from './Layer';
 import { DD } from './DragAndDrop';
 import { _registerNode } from './Global';
 import * as PointerEvents from './PointerEvents';
@@ -80,7 +80,7 @@ var STAGE = 'Stage',
     POINTERMOVE,
     POINTERUP,
     POINTERCANCEL,
-    LOSTPOINTERCAPTURE
+    LOSTPOINTERCAPTURE,
   ],
   // cached variables
   eventsLength = EVENTS.length;
@@ -88,7 +88,7 @@ var STAGE = 'Stage',
 function addEvent(ctx, eventName) {
   ctx.content.addEventListener(
     eventName,
-    function(evt) {
+    function (evt) {
       ctx[UNDERSCORE + eventName](evt);
     },
     false
@@ -124,7 +124,7 @@ function checkNoClip(attrs: any = {}) {
  * });
  */
 
-export class Stage extends Container<BaseLayer> {
+export class Stage extends Container<Layer> {
   content: HTMLDivElement;
   pointerPos: Vector2d | null;
   _pointerPositions: (Vector2d & { id?: number })[] = [];
@@ -259,11 +259,11 @@ export class Stage extends Container<BaseLayer> {
     }
     return {
       x: pos.x,
-      y: pos.y
+      y: pos.y,
     };
   }
   _getPointerById(id?: number) {
-    return this._pointerPositions.find(p => p.id === id);
+    return this._pointerPositions.find((p) => p.id === id);
   }
   getPointersPositions() {
     return this._pointerPositions;
@@ -282,7 +282,7 @@ export class Stage extends Container<BaseLayer> {
       canvas = new SceneCanvas({
         width: config.width || this.width(),
         height: config.height || this.height(),
-        pixelRatio: config.pixelRatio || 1
+        pixelRatio: config.pixelRatio || 1,
       }),
       _context = canvas.getContext()._context,
       layers = this.children;
@@ -291,7 +291,7 @@ export class Stage extends Container<BaseLayer> {
       _context.translate(-1 * x, -1 * y);
     }
 
-    layers.each(function(layer) {
+    layers.each(function (layer) {
       if (!layer.isVisible()) {
         return;
       }
@@ -354,7 +354,7 @@ export class Stage extends Container<BaseLayer> {
     this.bufferHitCanvas.setSize(width, height);
 
     // set layer dimensions
-    this.children.each(layer => {
+    this.children.each((layer) => {
       layer.setSize({ width, height });
       layer.draw();
     });
@@ -446,12 +446,12 @@ export class Stage extends Container<BaseLayer> {
       this._fire(MOUSELEAVE, {
         evt: evt,
         target: this,
-        currentTarget: this
+        currentTarget: this,
       });
       this._fire(MOUSEOUT, {
         evt: evt,
         target: this,
-        currentTarget: this
+        currentTarget: this,
       });
     }
     this.pointerPos = undefined;
@@ -509,7 +509,7 @@ export class Stage extends Container<BaseLayer> {
             evt: evt,
             target: this,
             currentTarget: this,
-            pointerId
+            pointerId,
           });
           this.targetShape = null;
         }
@@ -517,7 +517,7 @@ export class Stage extends Container<BaseLayer> {
           evt: evt,
           target: this,
           currentTarget: this,
-          pointerId
+          pointerId,
         });
       }
 
@@ -551,7 +551,7 @@ export class Stage extends Container<BaseLayer> {
         evt: evt,
         target: this,
         currentTarget: this,
-        pointerId
+        pointerId,
       });
     }
 
@@ -587,7 +587,7 @@ export class Stage extends Container<BaseLayer> {
       clearTimeout(this.dblTimeout);
     }
 
-    this.dblTimeout = setTimeout(function() {
+    this.dblTimeout = setTimeout(function () {
       Konva.inDblClickWindow = false;
     }, Konva.dblClickWindow);
 
@@ -612,14 +612,14 @@ export class Stage extends Container<BaseLayer> {
         evt: evt,
         target: this,
         currentTarget: this,
-        pointerId
+        pointerId,
       });
       if (Konva.listenClickTap) {
         this._fire(CLICK, {
           evt: evt,
           target: this,
           currentTarget: this,
-          pointerId
+          pointerId,
         });
       }
 
@@ -628,7 +628,7 @@ export class Stage extends Container<BaseLayer> {
           evt: evt,
           target: this,
           currentTarget: this,
-          pointerId
+          pointerId,
         });
       }
     }
@@ -659,7 +659,7 @@ export class Stage extends Container<BaseLayer> {
       this._fire(CONTEXTMENU, {
         evt: evt,
         target: this,
-        currentTarget: this
+        currentTarget: this,
       });
     }
     this._fire(CONTENT_CONTEXTMENU, { evt: evt });
@@ -667,7 +667,7 @@ export class Stage extends Container<BaseLayer> {
   _touchstart(evt) {
     this.setPointersPositions(evt);
     var triggeredOnShape = false;
-    this._changedPointerPositions.forEach(pos => {
+    this._changedPointerPositions.forEach((pos) => {
       var shape = this.getIntersection(pos);
       Konva.listenClickTap = true;
       DD.justDragged = false;
@@ -695,7 +695,7 @@ export class Stage extends Container<BaseLayer> {
         evt: evt,
         target: this,
         currentTarget: this,
-        pointerId: this._changedPointerPositions[0].id
+        pointerId: this._changedPointerPositions[0].id,
       });
     }
 
@@ -708,7 +708,7 @@ export class Stage extends Container<BaseLayer> {
     if (eventsEnabled) {
       var triggeredOnShape = false;
       var processedShapesIds = {};
-      this._changedPointerPositions.forEach(pos => {
+      this._changedPointerPositions.forEach((pos) => {
         const shape =
           PointerEvents.getCapturedShape(pos.id) || this.getIntersection(pos);
 
@@ -733,7 +733,7 @@ export class Stage extends Container<BaseLayer> {
           evt: evt,
           target: this,
           currentTarget: this,
-          pointerId: this._changedPointerPositions[0].id
+          pointerId: this._changedPointerPositions[0].id,
         });
       }
 
@@ -758,7 +758,7 @@ export class Stage extends Container<BaseLayer> {
       clearTimeout(this.dblTimeout);
     }
 
-    this.dblTimeout = setTimeout(function() {
+    this.dblTimeout = setTimeout(function () {
       Konva.inDblClickWindow = false;
     }, Konva.dblClickWindow);
 
@@ -767,7 +767,7 @@ export class Stage extends Container<BaseLayer> {
     var tapTriggered = false;
     var dblTapTriggered = false;
 
-    this._changedPointerPositions.forEach(pos => {
+    this._changedPointerPositions.forEach((pos) => {
       var shape =
         (PointerEvents.getCapturedShape(pos.id) as Shape) ||
         this.getIntersection(pos);
@@ -811,7 +811,7 @@ export class Stage extends Container<BaseLayer> {
         evt: evt,
         target: this,
         currentTarget: this,
-        pointerId: this._changedPointerPositions[0].id
+        pointerId: this._changedPointerPositions[0].id,
       });
     }
 
@@ -820,7 +820,7 @@ export class Stage extends Container<BaseLayer> {
         evt: evt,
         target: this,
         currentTarget: this,
-        pointerId: this._changedPointerPositions[0].id
+        pointerId: this._changedPointerPositions[0].id,
       });
     }
     if (fireDblClick && !dblTapTriggered) {
@@ -828,7 +828,7 @@ export class Stage extends Container<BaseLayer> {
         evt: evt,
         target: this,
         currentTarget: this,
-        pointerId: this._changedPointerPositions[0].id
+        pointerId: this._changedPointerPositions[0].id,
       });
     }
     // content events
@@ -853,7 +853,7 @@ export class Stage extends Container<BaseLayer> {
       this._fire(WHEEL, {
         evt: evt,
         target: this,
-        currentTarget: this
+        currentTarget: this,
       });
     }
     this._fire(CONTENT_WHEEL, { evt: evt });
@@ -955,7 +955,7 @@ export class Stage extends Container<BaseLayer> {
         this._pointerPositions.push({
           id: touch.identifier,
           x: (touch.clientX - contentPosition.left) / contentPosition.scaleX,
-          y: (touch.clientY - contentPosition.top) / contentPosition.scaleY
+          y: (touch.clientY - contentPosition.top) / contentPosition.scaleY,
         });
       });
 
@@ -965,7 +965,7 @@ export class Stage extends Container<BaseLayer> {
           this._changedPointerPositions.push({
             id: touch.identifier,
             x: (touch.clientX - contentPosition.left) / contentPosition.scaleX,
-            y: (touch.clientY - contentPosition.top) / contentPosition.scaleY
+            y: (touch.clientY - contentPosition.top) / contentPosition.scaleY,
           });
         }
       );
@@ -975,11 +975,11 @@ export class Stage extends Container<BaseLayer> {
       y = (evt.clientY - contentPosition.top) / contentPosition.scaleY;
       this.pointerPos = {
         x: x,
-        y: y
+        y: y,
       };
       this._pointerPositions = [{ x, y, id: Util._getFirstPointerId(evt) }];
       this._changedPointerPositions = [
-        { x, y, id: Util._getFirstPointerId(evt) }
+        { x, y, id: Util._getFirstPointerId(evt) },
       ];
     }
   }
@@ -995,7 +995,7 @@ export class Stage extends Container<BaseLayer> {
         top: 0,
         left: 0,
         scaleX: 1,
-        scaleY: 1
+        scaleY: 1,
       };
     }
 
@@ -1007,18 +1007,18 @@ export class Stage extends Container<BaseLayer> {
       // sometimes clientWidth can be equals to 0
       // i saw it in react-konva test, looks like it is because of hidden testing element
       scaleX: rect.width / this.content.clientWidth || 1,
-      scaleY: rect.height / this.content.clientHeight || 1
+      scaleY: rect.height / this.content.clientHeight || 1,
     };
   }
   _buildDOM() {
     this.bufferCanvas = new SceneCanvas({
       width: this.width(),
-      height: this.height()
+      height: this.height(),
     });
     this.bufferHitCanvas = new HitCanvas({
       pixelRatio: 1,
       width: this.width(),
-      height: this.height()
+      height: this.height(),
     });
 
     if (!Konva.isBrowser) {
@@ -1056,11 +1056,11 @@ export class Stage extends Container<BaseLayer> {
   /**
    * batch draw
    * @method
-   * @name Konva.BaseLayer#batchDraw
+   * @name Konva.Layer#batchDraw
    * @return {Konva.Stage} this
    */
   batchDraw() {
-    this.children.each(function(layer) {
+    this.children.each(function (layer) {
       layer.batchDraw();
     });
     return this;

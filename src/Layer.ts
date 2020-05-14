@@ -1,13 +1,21 @@
 import { Util, Collection } from './Util';
-import { Container } from './Container';
+import { Container, ContainerConfig } from './Container';
+import { Node } from './Node';
 import { Factory } from './Factory';
-import { BaseLayer } from './BaseLayer';
-import { HitCanvas } from './Canvas';
-import { shapes } from './Shape';
+import { SceneCanvas, HitCanvas } from './Canvas';
+import { Stage } from './Stage';
 import { getBooleanValidator } from './Validators';
-import { _registerNode } from './Global';
 
 import { GetSet, Vector2d } from './types';
+import { Group } from './Group';
+import { Shape, shapes } from './Shape';
+import { _registerNode } from './Global';
+
+export interface LayerConfig extends ContainerConfig {
+  clearBeforeDraw?: boolean;
+  hitGraphEnabled?: boolean;
+  imageSmoothingEnabled?: boolean;
+}
 
 // constants
 var HASH = '#',
@@ -25,7 +33,7 @@ var HASH = '#',
     { x: -1, y: -1 }, // 2
     { x: 1, y: -1 }, // 4
     { x: 1, y: 1 }, // 6
-    { x: -1, y: 1 } // 8
+    { x: -1, y: 1 }, // 8
   ],
   INTERSECTION_OFFSETS_LEN = INTERSECTION_OFFSETS.length;
 
@@ -34,7 +42,7 @@ var HASH = '#',
  * to contain groups or shapes.
  * @constructor
  * @memberof Konva
- * @augments Konva.BaseLayer
+ * @augments Konva.Container
  * @param {Object} config
  * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
  * to clear the canvas before each layer draw.  The default value is true.
@@ -45,14 +53,176 @@ var HASH = '#',
  * stage.add(layer);
  * // now you can add shapes, groups into the layer
  */
-export class Layer extends BaseLayer {
+
+export abstract class Layer extends Container<Group | Shape> {
+  canvas = new SceneCanvas();
   hitCanvas = new HitCanvas({
-    pixelRatio: 1
+    pixelRatio: 1,
   });
 
+  _waitingForDraw = false;
+
+  constructor(config?: LayerConfig) {
+    super(config);
+    this.on('visibleChange', this._checkVisibility);
+    this._checkVisibility();
+
+    this.on('imageSmoothingEnabledChange', this._setSmoothEnabled);
+    this._setSmoothEnabled();
+  }
+  // for nodejs?
+  createPNGStream() {
+    const c = this.canvas._canvas as any;
+    return c.createPNGStream();
+  }
+  /**
+   * get layer canvas wrapper
+   * @method
+   * @name Konva.Layer#getCanvas
+   */
+  getCanvas() {
+    return this.canvas;
+  }
+  /**
+   * get layer hit canvas
+   * @method
+   * @name Konva.Layer#getHitCanvas
+   */
+  getHitCanvas() {
+    return this.hitCanvas;
+  }
+  /**
+   * get layer canvas context
+   * @method
+   * @name Konva.Layer#getContext
+   */
+  getContext() {
+    return this.getCanvas().getContext();
+  }
+  /**
+   * clear scene and hit canvas contexts tied to the layer.
+   * This function doesn't remove any nodes. It just clear canvas element.
+   * @method
+   * @name Konva.Layer#clear
+   * @param {Object} [bounds]
+   * @param {Number} [bounds.x]
+   * @param {Number} [bounds.y]
+   * @param {Number} [bounds.width]
+   * @param {Number} [bounds.height]
+   * @example
+   * layer.clear();
+   * layer.clear({
+   *   x : 0,
+   *   y : 0,
+   *   width : 100,
+   *   height : 100
+   * });
+   */
+  clear(bounds?) {
+    this.getContext().clear(bounds);
+    this.getHitCanvas().getContext().clear(bounds);
+    return this;
+  }
+  // extend Node.prototype.setZIndex
+  setZIndex(index) {
+    super.setZIndex(index);
+    var stage = this.getStage();
+    if (stage) {
+      stage.content.removeChild(this.getCanvas()._canvas);
+
+      if (index < stage.children.length - 1) {
+        stage.content.insertBefore(
+          this.getCanvas()._canvas,
+          stage.children[index + 1].getCanvas()._canvas
+        );
+      } else {
+        stage.content.appendChild(this.getCanvas()._canvas);
+      }
+    }
+    return this;
+  }
+  moveToTop() {
+    Node.prototype.moveToTop.call(this);
+    var stage = this.getStage();
+    if (stage) {
+      stage.content.removeChild(this.getCanvas()._canvas);
+      stage.content.appendChild(this.getCanvas()._canvas);
+    }
+    return true;
+  }
+  moveUp() {
+    var moved = Node.prototype.moveUp.call(this);
+    if (!moved) {
+      return false;
+    }
+    var stage = this.getStage();
+    if (!stage) {
+      return false;
+    }
+    stage.content.removeChild(this.getCanvas()._canvas);
+
+    if (this.index < stage.children.length - 1) {
+      stage.content.insertBefore(
+        this.getCanvas()._canvas,
+        stage.children[this.index + 1].getCanvas()._canvas
+      );
+    } else {
+      stage.content.appendChild(this.getCanvas()._canvas);
+    }
+    return true;
+  }
+  // extend Node.prototype.moveDown
+  moveDown() {
+    if (Node.prototype.moveDown.call(this)) {
+      var stage = this.getStage();
+      if (stage) {
+        var children = stage.children;
+        stage.content.removeChild(this.getCanvas()._canvas);
+        stage.content.insertBefore(
+          this.getCanvas()._canvas,
+          children[this.index + 1].getCanvas()._canvas
+        );
+      }
+      return true;
+    }
+    return false;
+  }
+  // extend Node.prototype.moveToBottom
+  moveToBottom() {
+    if (Node.prototype.moveToBottom.call(this)) {
+      var stage = this.getStage();
+      if (stage) {
+        var children = stage.children;
+        stage.content.removeChild(this.getCanvas()._canvas);
+        stage.content.insertBefore(
+          this.getCanvas()._canvas,
+          children[1].getCanvas()._canvas
+        );
+      }
+      return true;
+    }
+    return false;
+  }
+  getLayer() {
+    return this;
+  }
+  remove() {
+    var _canvas = this.getCanvas()._canvas;
+
+    Node.prototype.remove.call(this);
+
+    if (_canvas && _canvas.parentNode && Util._isInDocument(_canvas)) {
+      _canvas.parentNode.removeChild(_canvas);
+    }
+    return this;
+  }
+  getStage() {
+    return this.parent as Stage;
+  }
   setSize({ width, height }) {
-    super.setSize({ width, height });
+    this.canvas.setSize(width, height);
     this.hitCanvas.setSize(width, height);
+    this._setSmoothEnabled();
     return this;
   }
   _validateAdd(child) {
@@ -61,6 +231,94 @@ export class Layer extends BaseLayer {
       Util.throw('You may only add groups and shapes to a layer.');
     }
   }
+  _toKonvaCanvas(config) {
+    config = config || {};
+    config.width = config.width || this.getWidth();
+    config.height = config.height || this.getHeight();
+    config.x = config.x !== undefined ? config.x : this.x();
+    config.y = config.y !== undefined ? config.y : this.y();
+
+    return Node.prototype._toKonvaCanvas.call(this, config);
+  }
+
+  _checkVisibility() {
+    const visible = this.visible();
+    if (visible) {
+      this.canvas._canvas.style.display = 'block';
+    } else {
+      this.canvas._canvas.style.display = 'none';
+    }
+  }
+
+  _setSmoothEnabled() {
+    this.getContext()._context.imageSmoothingEnabled = this.imageSmoothingEnabled();
+  }
+  /**
+   * get/set width of layer. getter return width of stage. setter doing nothing.
+   * if you want change width use `stage.width(value);`
+   * @name Konva.Layer#width
+   * @method
+   * @returns {Number}
+   * @example
+   * var width = layer.width();
+   */
+  getWidth() {
+    if (this.parent) {
+      return this.parent.width();
+    }
+  }
+  setWidth() {
+    Util.warn(
+      'Can not change width of layer. Use "stage.width(value)" function instead.'
+    );
+  }
+  /**
+   * get/set height of layer.getter return height of stage. setter doing nothing.
+   * if you want change height use `stage.height(value);`
+   * @name Konva.Layer#height
+   * @method
+   * @returns {Number}
+   * @example
+   * var height = layer.height();
+   */
+  getHeight() {
+    if (this.parent) {
+      return this.parent.height();
+    }
+  }
+  setHeight() {
+    Util.warn(
+      'Can not change height of layer. Use "stage.height(value)" function instead.'
+    );
+  }
+
+  /**
+   * batch draw. this function will not do immediate draw
+   * but it will schedule drawing to next tick (requestAnimFrame)
+   * @method
+   * @name Konva.Layer#batchDraw
+   * @return {Konva.Layer} this
+   */
+  batchDraw() {
+    if (!this._waitingForDraw) {
+      this._waitingForDraw = true;
+      Util.requestAnimFrame(() => {
+        this.draw();
+        this._waitingForDraw = false;
+      });
+    }
+    return this;
+  }
+
+  // the apply transform method is handled by the Layer and FastLayer class
+  // because it is up to the layer to decide if an absolute or relative transform
+  // should be used
+  // TODO: remove that method
+  _applyTransform(shape, context, top) {
+    var m = shape.getAbsoluteTransform(top).getMatrix();
+    context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+  }
+
   /**
    * get visible intersection shape. This is the preferred
    * method for determining if a point intersects a shape or not
@@ -80,7 +338,7 @@ export class Layer extends BaseLayer {
   getIntersection(pos: Vector2d, selector?: string) {
     var obj, i, intersectionOffset, shape;
 
-    if (!this.hitGraphEnabled() || !this.isVisible()) {
+    if (!this.isListening() || !this.isVisible()) {
       return null;
     }
     // in some cases antialiased area may be bigger than 1px
@@ -92,7 +350,7 @@ export class Layer extends BaseLayer {
         intersectionOffset = INTERSECTION_OFFSETS[i];
         obj = this._getIntersection({
           x: pos.x + intersectionOffset.x * spiralSearchDistance,
-          y: pos.y + intersectionOffset.y * spiralSearchDistance
+          y: pos.y + intersectionOffset.y * spiralSearchDistance,
         });
         shape = obj.shape;
         if (shape && selector) {
@@ -133,16 +391,16 @@ export class Layer extends BaseLayer {
       shape = shapes[HASH + colorKey];
       if (shape) {
         return {
-          shape: shape
+          shape: shape,
         };
       }
       return {
-        antialiased: true
+        antialiased: true,
       };
     } else if (p3 > 0) {
       // antialiased pixel
       return {
-        antialiased: true
+        antialiased: true,
       };
     }
     // empty pixel
@@ -153,7 +411,7 @@ export class Layer extends BaseLayer {
       canvas = can || (layer && layer.getCanvas());
 
     this._fire(BEFORE_DRAW, {
-      node: this
+      node: this,
     });
 
     if (this.clearBeforeDraw()) {
@@ -163,7 +421,7 @@ export class Layer extends BaseLayer {
     Container.prototype.drawScene.call(this, canvas, top);
 
     this._fire(DRAW, {
-      node: this
+      node: this,
     });
 
     return this;
@@ -173,24 +431,14 @@ export class Layer extends BaseLayer {
       canvas = can || (layer && layer.hitCanvas);
 
     if (layer && layer.clearBeforeDraw()) {
-      layer
-        .getHitCanvas()
-        .getContext()
-        .clear();
+      layer.getHitCanvas().getContext().clear();
     }
 
     Container.prototype.drawHit.call(this, canvas, top);
     return this;
   }
-  clear(bounds?) {
-    BaseLayer.prototype.clear.call(this, bounds);
-    this.getHitCanvas()
-      .getContext()
-      .clear(bounds);
-    return this;
-  }
   /**
-   * enable hit graph
+   * enable hit graph. **DEPRECATED!** Use `layer.listening(true)` instead.
    * @name Konva.Layer#enableHitGraph
    * @method
    * @returns {Layer}
@@ -200,7 +448,7 @@ export class Layer extends BaseLayer {
     return this;
   }
   /**
-   * disable hit graph
+   * disable hit graph. **DEPRECATED!** Use `layer.listening(false)` instead.
    * @name Konva.Layer#disableHitGraph
    * @method
    * @returns {Layer}
@@ -208,6 +456,20 @@ export class Layer extends BaseLayer {
   disableHitGraph() {
     this.hitGraphEnabled(false);
     return this;
+  }
+
+  setHitGraphEnabled(val) {
+    Util.warn(
+      'hitGraphEnabled method is deprecated. Please use layer.listening() instead.'
+    );
+    this.listening(val);
+  }
+
+  getHitGraphEnabled(val) {
+    Util.warn(
+      'hitGraphEnabled method is deprecated. Please use layer.listening() instead.'
+    );
+    return this.listening();
   }
 
   /**
@@ -229,14 +491,54 @@ export class Layer extends BaseLayer {
   }
 
   hitGraphEnabled: GetSet<boolean, this>;
+
+  clearBeforeDraw: GetSet<boolean, this>;
+  imageSmoothingEnabled: GetSet<boolean, this>;
 }
 
 Layer.prototype.nodeType = 'Layer';
 _registerNode(Layer);
 
+/**
+ * get/set imageSmoothingEnabled flag
+ * For more info see https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/imageSmoothingEnabled
+ * @name Konva.Layer#imageSmoothingEnabled
+ * @method
+ * @param {Boolean} imageSmoothingEnabled
+ * @returns {Boolean}
+ * @example
+ * // get imageSmoothingEnabled flag
+ * var imageSmoothingEnabled = layer.imageSmoothingEnabled();
+ *
+ * layer.imageSmoothingEnabled(false);
+ *
+ * layer.imageSmoothingEnabled(true);
+ */
+Factory.addGetterSetter(Layer, 'imageSmoothingEnabled', true);
+
+/**
+ * get/set clearBeforeDraw flag which determines if the layer is cleared or not
+ *  before drawing
+ * @name Konva.Layer#clearBeforeDraw
+ * @method
+ * @param {Boolean} clearBeforeDraw
+ * @returns {Boolean}
+ * @example
+ * // get clearBeforeDraw flag
+ * var clearBeforeDraw = layer.clearBeforeDraw();
+ *
+ * // disable clear before draw
+ * layer.clearBeforeDraw(false);
+ *
+ * // enable clear before draw
+ * layer.clearBeforeDraw(true);
+ */
+Factory.addGetterSetter(Layer, 'clearBeforeDraw', true);
+
 Factory.addGetterSetter(Layer, 'hitGraphEnabled', true, getBooleanValidator());
 /**
- * get/set hitGraphEnabled flag.  Disabling the hit graph will greatly increase
+ * get/set hitGraphEnabled flag.  **DEPRECATED!** Use `layer.listening(false)` instead.
+ *  Disabling the hit graph will greatly increase
  *  draw performance because the hit graph will not be redrawn each time the layer is
  *  drawn.  This, however, also disables mouse/touch event detection
  * @name Konva.Layer#hitGraphEnabled
@@ -253,4 +555,5 @@ Factory.addGetterSetter(Layer, 'hitGraphEnabled', true, getBooleanValidator());
  * // enable hit graph
  * layer.hitGraphEnabled(true);
  */
+
 Collection.mapMethods(Layer);

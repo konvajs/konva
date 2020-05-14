@@ -13,7 +13,7 @@ import {
 import { Stage } from './Stage';
 import { Context } from './Context';
 import { Shape } from './Shape';
-import { BaseLayer } from './BaseLayer';
+import { Layer } from './Layer';
 
 export const ids: any = {};
 export const names: any = {};
@@ -407,6 +407,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       hitContext = cachedHitCanvas.getContext();
 
     cachedHitCanvas.isCache = true;
+    cachedSceneCanvas.isCache = true;
 
     this._cache.delete('canvas');
     this._filterUpToDate = false;
@@ -427,8 +428,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
     this._clearSelfAndDescendantCache(ABSOLUTE_SCALE);
 
-    this.drawScene(cachedSceneCanvas, this, true);
-    this.drawHit(cachedHitCanvas, this, true);
+    this.drawScene(cachedSceneCanvas, this);
+    this.drawHit(cachedHitCanvas, this);
     this._isUnderCache = false;
 
     sceneContext.restore();
@@ -468,18 +469,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return this._cache.has('canvas');
   }
 
-  abstract drawScene(
-    canvas?: Canvas,
-    top?: Node,
-    caching?: boolean,
-    skipBuffer?: boolean
-  ): void;
-  abstract drawHit(
-    canvas?: Canvas,
-    top?: Node,
-    caching?: boolean,
-    skipBuffer?: boolean
-  ): void;
+  abstract drawScene(canvas?: Canvas, top?: Node): void;
+  abstract drawHit(canvas?: Canvas, top?: Node): void;
   /**
    * Return client rectangle {x, y, width, height} of node. This rectangle also include all styling (strokes, shadows, etc).
    * The rectangle position is relative to parent container.
@@ -926,7 +917,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    */
   getAncestors() {
     var parent = this.getParent(),
-      ancestors = new Collection();
+      ancestors = new Collection<Node>();
 
     while (parent) {
       ancestors.push(parent);
@@ -985,12 +976,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * ----------+-----------+------------
    * T         | T         | T
    * T         | F         | F
-   * F         | T         | T
+   * F         | T         | F
    * F         | F         | F
-   * ----------+-----------+------------
-   * T         | I         | T
-   * F         | I         | F
-   * I         | I         | T
    *
    * @method
    * @name Konva.Node#isListening
@@ -999,20 +986,16 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   isListening() {
     return this._getCache(LISTENING, this._isListening);
   }
-  _isListening() {
-    var listening = this.listening(),
-      parent = this.getParent();
-
-    // the following conditions are a simplification of the truth table above.
-    // please modify carefully
-    if (listening === 'inherit') {
-      if (parent) {
-        return parent.isListening();
-      } else {
-        return true;
-      }
+  _isListening(relativeTo?: Node) {
+    const listening = this.listening();
+    if (!listening) {
+      return false;
+    }
+    const parent = this.getParent();
+    if (parent && parent !== relativeTo && this !== relativeTo) {
+      return parent._isListening(relativeTo);
     } else {
-      return listening;
+      return true;
     }
   }
   /**
@@ -1038,30 +1021,28 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       return false;
     }
     const parent = this.getParent();
-    if (parent && parent !== relativeTo) {
+    if (parent && parent !== relativeTo && this !== relativeTo) {
       return parent._isVisible(relativeTo);
     } else {
       return true;
     }
   }
-  /**
-   * determine if listening is enabled by taking into account descendants.  If self or any children
-   * have _isListeningEnabled set to true, then self also has listening enabled.
-   * @method
-   * @name Konva.Node#shouldDrawHit
-   * @returns {Boolean}
-   */
-  shouldDrawHit() {
+  shouldDrawHit(top?: Node) {
+    if (top) {
+      return this._isVisible(top) && this._isListening(top);
+    }
     var layer = this.getLayer();
+    var layerUnderDrag = false;
+    DD._dragElements.forEach((elem) => {
+      if (elem.dragStatus === 'dragging' && elem.node.getLayer() === layer) {
+        layerUnderDrag = true;
+      }
+    });
 
-    return (
-      (!layer && this.isListening() && this.isVisible()) ||
-      (layer &&
-        layer.hitGraphEnabled() &&
-        this.isListening() &&
-        this.isVisible())
-    );
+    var dragSkip = !Konva.hitOnDragEnabled && layerUnderDrag;
+    return this.isListening() && this.isVisible() && !dragSkip;
   }
+
   /**
    * show node. set visible = true
    * @method
@@ -1615,7 +1596,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#getLayer
    * @returns {Konva.Layer}
    */
-  getLayer(): BaseLayer | null {
+  getLayer(): Layer | null {
     var parent = this.getParent();
     return parent ? parent.getLayer() : null;
   }
@@ -2479,7 +2460,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
   id: GetSet<string, this>;
 
-  listening: GetSet<boolean | 'inherit', this>;
+  listening: GetSet<boolean, this>;
   name: GetSet<string, this>;
   offset: GetSet<Vector2d, this>;
   offsetX: GetSet<number, this>;
@@ -2500,7 +2481,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
   transformsEnabled: GetSet<string, this>;
 
-  visible: GetSet<boolean | 'inherit', this>;
+  visible: GetSet<boolean, this>;
   width: GetSet<number, this>;
   height: GetSet<number, this>;
 
@@ -2950,40 +2931,28 @@ Factory.addGetterSetter(Node, 'height', 0, getNumberValidator());
  * node.height(100);
  */
 
-Factory.addGetterSetter(Node, 'listening', 'inherit', function (val) {
-  var isValid = val === true || val === false || val === 'inherit';
-  if (!isValid) {
-    Util.warn(
-      val +
-        ' is a not valid value for "listening" attribute. The value may be true, false or "inherit".'
-    );
-  }
-  return val;
-});
+Factory.addGetterSetter(Node, 'listening', true, getBooleanValidator());
 /**
- * get/set listenig attr.  If you need to determine if a node is listening or not
+ * get/set listening attr.  If you need to determine if a node is listening or not
  *   by taking into account its parents, use the isListening() method
  * @name Konva.Node#listening
  * @method
- * @param {Boolean|String} listening Can be "inherit", true, or false.  The default is "inherit".
- * @returns {Boolean|String}
+ * @param {Boolean} listening Can be true, or false.  The default is true.
+ * @returns {Boolean}
  * @example
  * // get listening attr
  * var listening = node.listening();
  *
- * // stop listening for events
+ * // stop listening for events, remove node and all its children from hit graph
  * node.listening(false);
  *
- * // listen for events
- * node.listening(true);
- *
  * // listen to events according to the parent
- * node.listening('inherit');
+ * node.listening(true);
  */
 
 /**
  * get/set preventDefault
- * By default all shapes will prevent default behaviour
+ * By default all shapes will prevent default behavior
  * of a browser on a pointer move or tap.
  * that will prevent native scrolling when you are trying to drag&drop a node
  * but sometimes you may need to enable default actions

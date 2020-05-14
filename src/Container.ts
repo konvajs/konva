@@ -7,6 +7,7 @@ import { Konva } from './Global';
 
 import { GetSet, IRect } from './types';
 import { Shape } from './Shape';
+import { HitCanvas, SceneCanvas } from './Canvas';
 
 export interface ContainerConfig extends NodeConfig {
   clearBeforeDraw?: boolean;
@@ -53,7 +54,7 @@ export abstract class Container<ChildType extends Node> extends Node<
     }
 
     var results = new Collection();
-    this.children.each(function(child) {
+    this.children.each(function (child) {
       if (filterFunc(child)) {
         results.push(child);
       }
@@ -70,7 +71,8 @@ export abstract class Container<ChildType extends Node> extends Node<
     return this.getChildren().length > 0;
   }
   /**
-   * remove all children
+   * remove all children. Children will be still in memory.
+   * If you want to completely destroy all children please use "destroyChildren" method instead
    * @method
    * @name Konva.Container#removeChildren
    */
@@ -87,7 +89,7 @@ export abstract class Container<ChildType extends Node> extends Node<
     return this;
   }
   /**
-   * destroy all children
+   * destroy all children nodes.
    * @method
    * @name Konva.Container#destroyChildren
    */
@@ -135,7 +137,7 @@ export abstract class Container<ChildType extends Node> extends Node<
     child.parent = this;
     _children.push(child);
     this._fire('add', {
-      child: child
+      child: child,
     });
     // chainable
     return this;
@@ -227,7 +229,7 @@ export abstract class Container<ChildType extends Node> extends Node<
   ) {
     var retArr: Array<Node> = [];
 
-    this._descendants(node => {
+    this._descendants((node) => {
       const valid = node._isMatch(selector);
       if (valid) {
         retArr.push(node);
@@ -295,7 +297,7 @@ export abstract class Container<ChildType extends Node> extends Node<
     // call super method
     var node = Node.prototype.clone.call(this, obj);
 
-    this.getChildren().each(function(no) {
+    this.getChildren().each(function (no) {
       node.add(no.clone());
     });
     return node;
@@ -315,7 +317,7 @@ export abstract class Container<ChildType extends Node> extends Node<
   getAllIntersections(pos) {
     var arr = [];
 
-    this.find('Shape').each(function(shape: Shape) {
+    this.find('Shape').each(function (shape: Shape) {
       if (shape.isVisible() && shape.intersects(pos)) {
         arr.push(shape);
       }
@@ -324,73 +326,65 @@ export abstract class Container<ChildType extends Node> extends Node<
     return arr;
   }
   _setChildrenIndices() {
-    this.children.each(function(child, n) {
+    this.children.each(function (child, n) {
       child.index = n;
     });
   }
-  drawScene(can, top, caching) {
+  drawScene(can?: SceneCanvas, top?: Node) {
     var layer = this.getLayer(),
       canvas = can || (layer && layer.getCanvas()),
       context = canvas && canvas.getContext(),
       cachedCanvas = this._getCanvasCache(),
       cachedSceneCanvas = cachedCanvas && cachedCanvas.scene;
 
-    if (this.isVisible() || caching) {
-      if (!caching && cachedSceneCanvas) {
-        context.save();
-        layer._applyTransform(this, context, top);
-        this._drawCachedSceneCanvas(context);
-        context.restore();
-      } else {
-        // TODO: comment all arguments here
-        // describe why we use false for caching
-        // and why we use caching for skipBuffer, skipComposition
-        this._drawChildren(canvas, 'drawScene', top, false, caching, caching);
-      }
+    var caching = canvas && canvas.isCache;
+    if (!this.isVisible() && !caching) {
+      return this;
+    }
+
+    if (cachedSceneCanvas) {
+      context.save();
+      layer._applyTransform(this, context, top);
+      this._drawCachedSceneCanvas(context);
+      context.restore();
+    } else {
+      this._drawChildren('drawScene', canvas, top);
     }
     return this;
   }
-  drawHit(can, top, caching) {
+  drawHit(can?: HitCanvas, top?: Node) {
+    if (!this.shouldDrawHit(top)) {
+      return this;
+    }
+
     var layer = this.getLayer(),
       canvas = can || (layer && layer.hitCanvas),
       context = canvas && canvas.getContext(),
       cachedCanvas = this._getCanvasCache(),
       cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
-    if (this.shouldDrawHit(canvas) || caching) {
-      if (!caching && cachedHitCanvas) {
-        context.save();
-        layer._applyTransform(this, context, top);
-        this._drawCachedHitCanvas(context);
-        context.restore();
-      } else {
-        // TODO: comment all arguments here
-        // describe why we use false for caching
-        // and why we use caching for skipBuffer, skipComposition
-        this._drawChildren(canvas, 'drawHit', top, false, caching, caching);
-      }
+    if (cachedHitCanvas) {
+      context.save();
+      layer._applyTransform(this, context, top);
+      this._drawCachedHitCanvas(context);
+      context.restore();
+    } else {
+      this._drawChildren('drawHit', canvas, top);
     }
     return this;
   }
   // TODO: create ClipContainer
-  _drawChildren(
-    canvas,
-    drawMethod,
-    top,
-    caching?,
-    skipBuffer?,
-    skipComposition?
-  ) {
+  _drawChildren(drawMethod, canvas, top) {
     var layer = this.getLayer(),
       context = canvas && canvas.getContext(),
       clipWidth = this.clipWidth(),
       clipHeight = this.clipHeight(),
       clipFunc = this.clipFunc(),
-      hasClip = (clipWidth && clipHeight) || clipFunc,
-      clipX,
-      clipY;
+      hasClip = (clipWidth && clipHeight) || clipFunc;
 
-    if (hasClip && layer) {
+    const selfCache = top === this;
+
+    if (hasClip) {
       context.save();
       var transform = this.getAbsoluteTransform(top);
       var m = transform.getMatrix();
@@ -399,53 +393,37 @@ export abstract class Container<ChildType extends Node> extends Node<
       if (clipFunc) {
         clipFunc.call(this, context, this);
       } else {
-        clipX = this.clipX();
-        clipY = this.clipY();
+        var clipX = this.clipX();
+        var clipY = this.clipY();
         context.rect(clipX, clipY, clipWidth, clipHeight);
       }
       context.clip();
-      m = transform
-        .copy()
-        .invert()
-        .getMatrix();
+      m = transform.copy().invert().getMatrix();
       context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
     }
 
     var hasComposition =
+      !selfCache &&
       this.globalCompositeOperation() !== 'source-over' &&
-      !skipComposition &&
       drawMethod === 'drawScene';
-    if (hasComposition && layer) {
+
+    if (hasComposition) {
       context.save();
       context._applyGlobalCompositeOperation(this);
     }
 
-    this.children.each(function(child) {
-      child[drawMethod](canvas, top, caching, skipBuffer);
+    this.children.each(function (child) {
+      child[drawMethod](canvas, top);
     });
-    if (hasComposition && layer) {
+    if (hasComposition) {
       context.restore();
     }
 
-    if (hasClip && layer) {
+    if (hasClip) {
       context.restore();
     }
   }
-  shouldDrawHit(canvas?) {
-    if (canvas && canvas.isCache) {
-      return true;
-    }
-    var layer = this.getLayer();
-    var layerUnderDrag = false;
-    DD._dragElements.forEach(elem => {
-      if (elem.dragStatus === 'dragging' && elem.node.getLayer() === layer) {
-        layerUnderDrag = true;
-      }
-    });
 
-    var dragSkip = !Konva.hitOnDragEnabled && layerUnderDrag;
-    return layer && layer.hitGraphEnabled() && this.isVisible() && !dragSkip;
-  }
   getClientRect(config?: {
     skipTransform?: boolean;
     skipShadow?: boolean;
@@ -461,10 +439,10 @@ export abstract class Container<ChildType extends Node> extends Node<
       x: Infinity,
       y: Infinity,
       width: 0,
-      height: 0
+      height: 0,
     };
     var that = this;
-    this.children.each(function(child) {
+    this.children.each(function (child) {
       // skip invisible children
       if (!child.visible()) {
         return;
@@ -473,7 +451,7 @@ export abstract class Container<ChildType extends Node> extends Node<
       var rect = child.getClientRect({
         relativeTo: that,
         skipShadow: config.skipShadow,
-        skipStroke: config.skipStroke
+        skipStroke: config.skipStroke,
       });
 
       // skip invisible children (like empty groups)
@@ -510,14 +488,14 @@ export abstract class Container<ChildType extends Node> extends Node<
         x: minX,
         y: minY,
         width: maxX - minX,
-        height: maxY - minY
+        height: maxY - minY,
       };
     } else {
       selfRect = {
         x: 0,
         y: 0,
         width: 0,
-        height: 0
+        height: 0,
       };
     }
 
@@ -545,7 +523,7 @@ Factory.addComponentsGetterSetter(Container, 'clip', [
   'x',
   'y',
   'width',
-  'height'
+  'height',
 ]);
 /**
  * get/set clip

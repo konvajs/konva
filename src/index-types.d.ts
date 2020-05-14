@@ -60,7 +60,7 @@ declare namespace Konva {
   export const Collection: typeof import('./Util').Collection;
   export type Collection<Node> = import('./Util').Collection<Node>;
   export const Util: typeof import('./Util').Util;
-  
+
   export const Context: typeof import('./Context').Context;
   export type Context = import('./Context').Context;
 
@@ -70,7 +70,7 @@ declare namespace Konva {
 
   export const Layer: typeof import('./Layer').Layer;
   export type Layer = import('./Layer').Layer;
-  export type LayerConfig = import('./BaseLayer').LayerConfig;
+  export type LayerConfig = import('./Layer').LayerConfig;
 
   export const FastLayer: typeof import('./FastLayer').FastLayer;
   export type FastLayer = import('./FastLayer').FastLayer;

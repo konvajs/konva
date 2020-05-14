@@ -74,15 +74,15 @@ export class Sprite extends Shape<SpriteConfig> {
       this._updated = false;
       return updated;
     });
-    this.on('animationChange.konva', function() {
+    this.on('animationChange.konva', function () {
       // reset index when animation changes
       this.frameIndex(0);
     });
-    this.on('frameIndexChange.konva', function() {
+    this.on('frameIndexChange.konva', function () {
       this._updated = true;
     });
     // smooth change for frameRate
-    this.on('frameRateChange.konva', function() {
+    this.on('frameRateChange.konva', function () {
       if (!this.anim.isRunning()) {
         return;
       }
@@ -152,14 +152,12 @@ export class Sprite extends Shape<SpriteConfig> {
   }
 
   _useBufferCanvas() {
-    return (
-      (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasStroke()
-    );
+    return super._useBufferCanvas(true);
   }
 
   _setInterval() {
     var that = this;
-    this.interval = setInterval(function() {
+    this.interval = setInterval(function () {
       that._updateIndex();
     }, 1000 / this.frameRate());
   }
@@ -367,7 +365,7 @@ Factory.addGetterSetter(Sprite, 'frameRate', 17, getNumberValidator());
 Factory.backCompat(Sprite, {
   index: 'frameIndex',
   getIndex: 'getFrameIndex',
-  setIndex: 'setFrameIndex'
+  setIndex: 'setFrameIndex',
 });
 
 Collection.mapMethods(Sprite);

@@ -5,7 +5,7 @@ import { Konva } from '../Global';
 import {
   getNumberValidator,
   getStringValidator,
-  getNumberOrAutoValidator
+  getNumberOrAutoValidator,
 } from '../Validators';
 import { _registerNode } from '../Global';
 
@@ -60,7 +60,7 @@ var AUTO = 'auto',
     'height',
     'wrap',
     'ellipsis',
-    'letterSpacing'
+    'letterSpacing',
   ],
   // cached variables
   attrChangeListLen = ATTR_CHANGE_LIST.length;
@@ -93,13 +93,6 @@ function checkDefaultFill(config) {
   }
   return config;
 }
-
-// polyfill for IE11
-const trimRight =
-  String.prototype.trimRight ||
-  function polyfill() {
-    return this.replace(/[\s\xa0]+$/, '');
-  };
 
 /**
  * Text constructor
@@ -351,7 +344,7 @@ export class Text extends Shape<TextConfig> {
     _context.restore();
     return {
       width: metrics.width,
-      height: fontSize
+      height: fontSize,
     };
   }
   _getContextFont() {
@@ -375,7 +368,10 @@ export class Text extends Shape<TextConfig> {
       SPACE +
       this.fontSize() +
       PX_SPACE +
-      this.fontFamily()
+      // wrap font family into " so font families with spaces works ok
+      +'"' +
+      this.fontFamily() +
+      '"'
     );
   }
   _addTextLine(line) {
@@ -553,7 +549,7 @@ Text.prototype._attrsAffectingSize = [
   'fontSize',
   'padding',
   'wrap',
-  'lineHeight'
+  'lineHeight',
 ];
 _registerNode(Text);
 

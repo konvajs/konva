@@ -510,7 +510,7 @@ suite('Shape', function () {
 
     assert.equal(
       trace,
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);save();globalAlpha=0.5;shadowColor=rgba(0,0,0,0.5);shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();restore();restore();'
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);globalAlpha=0.5;shadowColor=rgba(0,0,0,0.5);shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();restore();'
     );
   });
 
@@ -601,7 +601,7 @@ suite('Shape', function () {
     //console.log(trace);
     assert.equal(
       trace,
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);save();globalAlpha=0.5;shadowColor=rgba(0,0,0,0.5);shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;beginPath();rect(0,0,100,50);closePath();lineWidth=20;strokeStyle=red;stroke();restore();restore();'
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);globalAlpha=0.5;shadowColor=rgba(0,0,0,0.5);shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;beginPath();rect(0,0,100,50);closePath();lineWidth=20;strokeStyle=red;stroke();restore();'
     );
   });
 
@@ -678,30 +678,26 @@ suite('Shape', function () {
     context.rect(100, 50, 100, 50);
     context.closePath();
     context.fillStyle = 'green';
-    context.shadowColor = 'grey';
-    context.shadowBlur = 10 * canvas.ratio;
-    context.shadowOffsetX = 20 * canvas.ratio;
-    context.shadowOffsetY = 20 * canvas.ratio;
+
     context.lineWidth = 10;
-    context.stroke();
     context.fill();
-
-    // clear the shadow
-    context.shadowColor = 0;
-    context.shadowOffsetX = 0;
-    context.shadowOffsetY = 0;
-    context.shadowBlur = 0;
-
-    // restroke without the shaodw
     context.stroke();
 
-    compareLayerAndCanvas(layer, canvas, 50);
+    var c2 = createCanvas();
+    var ctx2 = c2.getContext('2d');
+    ctx2.shadowColor = 'grey';
+    ctx2.shadowBlur = 10 * canvas.ratio;
+    ctx2.shadowOffsetX = 20 * canvas.ratio;
+    ctx2.shadowOffsetY = 20 * canvas.ratio;
+
+    ctx2.drawImage(canvas, 0, 0, canvas.width / 2, canvas.height / 2);
+
+    // compareLayerAndCanvas(layer, c2, 50);
 
     var trace = layer.getContext().getTrace();
-    //console.log(trace);
     assert.equal(
       trace,
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);save();shadowColor=rgba(128,128,128,1);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=10;strokeStyle=black;stroke();restore();beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=10;strokeStyle=black;stroke();restore();'
+      'clearRect(0,0,578,200);save();shadowColor=rgba(128,128,128,1);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;drawImage([object HTMLCanvasElement],0,0,578,200);restore();'
     );
   });
 
@@ -769,16 +765,12 @@ suite('Shape', function () {
     context.fill();
     context.restore();
 
-    // // don't test in PhantomJS as it use old chrome engine
-    // // it it has opacity + shadow bug
-    // if (!window.mochaPhantomJS) {
-    //   compareLayerAndCanvas(layer, canvas, 260);
-    // }
+    compareLayerAndCanvas(layer, canvas, 260);
 
     var trace = layer.getContext().getTrace();
     assert.equal(
       trace,
-      'clearRect(0,0,578,200);save();save();shadowColor=rgba(128,128,128,1);shadowBlur=5;shadowOffsetX=20;shadowOffsetY=20;globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();restore();'
+      'clearRect(0,0,578,200);save();shadowColor=rgba(128,128,128,1);shadowBlur=5;shadowOffsetX=20;shadowOffsetY=20;globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();'
     );
   });
 
@@ -796,7 +788,7 @@ suite('Shape', function () {
       fill: 'green',
       stroke: 'black',
       strokeWidth: 2,
-      shadowColor: 'grey',
+      shadowColor: 'black',
       shadowBlur: 2,
       shadowOffset: {
         x: 20,
@@ -811,7 +803,7 @@ suite('Shape', function () {
     var context = canvas.getContext('2d');
 
     context.save();
-    context.shadowColor = 'grey';
+    context.shadowColor = 'black';
     context.shadowBlur = 2 * canvas.ratio;
     context.shadowOffsetX = 20 * canvas.ratio;
     context.shadowOffsetY = 20 * canvas.ratio;
@@ -1211,7 +1203,7 @@ suite('Shape', function () {
 
     assert.equal(
       trace,
-      'clearRect(0,0,578,200);save();transform(0.5,0,0,0.5,100,100);save();shadowColor=rgba(0,0,0,1);shadowBlur=0;shadowOffsetX=5;shadowOffsetY=5;beginPath();rect(0,0,100,100);closePath();fillStyle=green;fill();restore();restore();'
+      'clearRect(0,0,578,200);save();transform(0.5,0,0,0.5,100,100);shadowColor=rgba(0,0,0,1);shadowBlur=0;shadowOffsetX=5;shadowOffsetY=5;beginPath();rect(0,0,100,100);closePath();fillStyle=green;fill();restore();'
     );
   });
 
@@ -1306,7 +1298,7 @@ suite('Shape', function () {
 
     assert.equal(
       trace,
-      'clearRect(0,0,578,200);save();transform(0.25,0,0,0.25,100,100);save();shadowColor=rgba(0,0,0,1);shadowBlur=0;shadowOffsetX=5;shadowOffsetY=5;beginPath();rect(0,0,200,200);closePath();fillStyle=green;fill();restore();restore();'
+      'clearRect(0,0,578,200);save();transform(0.25,0,0,0.25,100,100);shadowColor=rgba(0,0,0,1);shadowBlur=0;shadowOffsetX=5;shadowOffsetY=5;beginPath();rect(0,0,200,200);closePath();fillStyle=green;fill();restore();'
     );
   });
 
@@ -1351,6 +1343,57 @@ suite('Shape', function () {
     assert.equal(
       trace,
       'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);globalAlpha=0.5;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=10;strokeStyle=black;stroke();restore();'
+    );
+  });
+
+  test('check lineJoin in buffer canvas', function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 50,
+      width: 100,
+      height: 50,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 10,
+      opacity: 0.5,
+      lineJoin: 'round',
+    });
+
+    layer.add(rect);
+
+    stage.add(layer);
+
+    var canvas = createCanvas();
+    var context = canvas.getContext('2d');
+
+    // stroke
+    context.beginPath();
+    context.rect(100, 50, 100, 50);
+    context.closePath();
+    context.lineWidth = 10;
+    context.strokeStyle = 'black';
+    context.fillStyle = 'green';
+    context.lineJoin = 'round';
+    context.fill();
+    context.stroke();
+
+    var canvas2 = createCanvas();
+    var context2 = canvas2.getContext('2d');
+    context2.globalAlpha = 0.5;
+    context2.drawImage(canvas, 0, 0, canvas.width / 2, canvas.height / 2);
+
+    compareLayerAndCanvas(layer, canvas2, 150);
+
+    var trace = layer.getContext().getTrace();
+
+    console.log(trace);
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();'
     );
   });
 
@@ -1401,7 +1444,7 @@ suite('Shape', function () {
     var trace = layer.getContext().getTrace();
     assert.equal(
       trace,
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);save();shadowColor=rgba(128,128,128,1);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=10;shadowColor=rgba(0,0,0,0);strokeStyle=black;stroke();restore();restore();'
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);shadowColor=rgba(128,128,128,1);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=10;shadowColor=rgba(0,0,0,0);strokeStyle=black;stroke();restore();'
     );
   });
 
