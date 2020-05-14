@@ -366,10 +366,9 @@ export class Text extends Shape<TextConfig> {
       SPACE +
       this.fontVariant() +
       SPACE +
-      this.fontSize() +
-      PX_SPACE +
+      (this.fontSize() + PX_SPACE) +
       // wrap font family into " so font families with spaces works ok
-      +'"' +
+      '"' +
       this.fontFamily() +
       '"'
     );

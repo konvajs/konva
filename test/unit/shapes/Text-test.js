@@ -559,7 +559,7 @@ suite('Text', function () {
     stage.add(layer);
 
     var trace =
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,80);lineTo(189,80);stroke();restore();fillStyle=red;fillText(h,0,40);fillStyle=red;fillText(e,49,40);fillStyle=red;fillText(l,98,40);fillStyle=red;fillText(l,121,40);fillStyle=red;fillText(o,144,40);restore();save();save();beginPath();moveTo(0,160);lineTo(211,160);stroke();restore();fillStyle=red;fillText(w,0,120);fillStyle=red;fillText(o,63,120);fillStyle=red;fillText(r,112,120);fillStyle=red;fillText(l,144,120);fillStyle=red;fillText(d,167,120);restore();restore();';
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px "Arial";textBaseline=middle;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,80);lineTo(189,80);stroke();restore();fillStyle=red;fillText(h,0,40);fillStyle=red;fillText(e,49,40);fillStyle=red;fillText(l,98,40);fillStyle=red;fillText(l,121,40);fillStyle=red;fillText(o,144,40);restore();save();save();beginPath();moveTo(0,160);lineTo(211,160);stroke();restore();fillStyle=red;fillText(w,0,120);fillStyle=red;fillText(o,63,120);fillStyle=red;fillText(r,112,120);fillStyle=red;fillText(l,144,120);fillStyle=red;fillText(d,167,120);restore();restore();';
 
     assert.equal(layer.getContext().getTrace(), trace);
   });
@@ -703,7 +703,7 @@ suite('Text', function () {
     stage.add(layer);
 
     var trace =
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);beginPath();rect(0,0,200,100);closePath();lineWidth=2;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,10,10);font=normal normal 16px Arial;textBaseline=middle;textAlign=left;translate(10,42);save();fillStyle=#555;fillText(Some awesome text,17.523,8);restore();restore();';
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);beginPath();rect(0,0,200,100);closePath();lineWidth=2;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,10,10);font=normal normal 16px "Arial";textBaseline=middle;textAlign=left;translate(10,42);save();fillStyle=#555;fillText(Some awesome text,17.523,8);restore();restore();';
 
     assert.equal(layer.getContext().getTrace(), trace);
   });
@@ -942,7 +942,7 @@ suite('Text', function () {
     // this text should look like it is positioned in y = 40
 
     var trace =
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();rect(0,0,100,120);closePath();lineWidth=2;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,0,0);font=normal normal 40px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();fillStyle=black;fillText(Some good text,0,60);restore();restore();';
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();rect(0,0,100,120);closePath();lineWidth=2;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,0,0);font=normal normal 40px "Arial";textBaseline=middle;textAlign=left;translate(0,0);save();fillStyle=black;fillText(Some good text,0,60);restore();restore();';
 
     assert.equal(layer.getContext().getTrace(), trace);
   });
