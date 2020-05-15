@@ -9738,7 +9738,16 @@
        */
       Linear: function (t, b, c, d) {
           return (c * t) / d + b;
-      }
+      },
+      /**
+       * ease out back
+       * @function
+       * @memberof Konva.Easings
+       */
+      EaseOutBack: function (t, b, c, d, s) {
+        if (!s) s = 1.70158;
+	    return c * (( t = t / d - 1) * t * ((s + 1) * t + s ) + 1) + b;
+    }
   };
 
   // what is core parts of Konva?
