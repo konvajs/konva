@@ -24,9 +24,20 @@
     "rollup": "rollup -c",
     "clean": "rm -rf ./lib && rm -rf ./types",
     "compile": "npm run clean && npm run tsc && cp ./src/index-types.d.ts ./types && npm run rollup",
-    "watch": "rollup -c -w"
+    "watch": "rollup -c -w",
+    "size": "size-limit"
   },
+  "size-limit": [
+    {
+      "limit": "45 KB",
+      "path": "./lib/index.js"
+    },
+    {
+      "path": "./lib/Core.js"
+    }
+  ],
   "devDependencies": {
+    "@size-limit/preset-big-lib": "^4.5.0",
     "chai": "4.2.0",
     "github-release-from-changelog": "^2.1.1",
     "gulp": "^4.0.2",
@@ -40,6 +51,7 @@
     "gulp-replace": "^1.0.0",
     "gulp-typescript": "^5.0.1",
     "gulp-uglify": "^3.0.2",
+    "gulp-uglify-es": "^2.0.0",
     "gulp-util": "^3.0.8",
     "install": "^0.13.0",
     "mocha": "7.1.2",
@@ -51,6 +63,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-sourcemaps": "^0.6.1",
     "rollup-plugin-typescript2": "^0.27.0",
+    "size-limit": "^4.5.0",
     "typescript": "^3.8.3"
   },
   "keywords": [

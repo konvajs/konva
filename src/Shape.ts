@@ -541,11 +541,10 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
     return rect;
   }
   drawScene(can?: SceneCanvas, top?: Node) {
-    // basically there are 4 drawing modes
+    // basically there are 3 drawing modes
     // 1 - simple drawing when nothing is cached.
     // 2 - when we are caching current
     // 3 - when node is cached and we need to draw it into layer
-    // 4 - ??
 
     var layer = this.getLayer(),
       canvas = can || layer.getCanvas(),
@@ -623,26 +622,6 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
       }
 
       drawFunc.call(this, context, this);
-      // if shape has stroke we need to redraw shape
-      // otherwise we will see a shadow under stroke (and over fill)
-      // but I think this is unexpected behavior
-      if (
-        hasShadow &&
-        hasStroke &&
-        this.hasFill() &&
-        this.shadowForStrokeEnabled() &&
-        false
-      ) {
-        // TODO: are there any ways to avoid double draw?
-        // hint: https://stackoverflow.com/questions/13470101/getting-single-shadow-for-fill-and-stroke-on-html-canvas
-
-        // clear the shadow
-        context.setAttr('shadowColor', 0);
-        context.setAttr('shadowOffsetX', 0);
-        context.setAttr('shadowOffsetY', 0);
-        context.setAttr('shadowBlur', 0);
-        drawFunc.call(this, context, this);
-      }
     }
     context.restore();
     return this;

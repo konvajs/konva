@@ -2456,6 +2456,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   enhance: GetSet<number, this>;
   filters: GetSet<Filter[], this>;
   position: GetSet<Vector2d, this>;
+  absolutePosition: GetSet<Vector2d, this>;
   size: GetSet<{ width: number; height: number }, this>;
 
   id: GetSet<string, this>;
@@ -2547,6 +2548,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 Node.prototype.nodeType = 'Node';
 Node.prototype._attrsAffectingSize = [];
 
+const addGetterSetter = Factory.addGetterSetter;
+
 /**
  * get/set zIndex relative to the node's siblings who share the same parent.
  * Please remember that zIndex is not absolute (like in CSS). It is relative to parent element only.
@@ -2561,7 +2564,7 @@ Node.prototype._attrsAffectingSize = [];
  * // set index
  * node.zIndex(2);
  */
-Factory.addGetterSetter(Node, 'zIndex');
+addGetterSetter(Node, 'zIndex');
 
 /**
  * get/set node absolute position
@@ -2581,9 +2584,9 @@ Factory.addGetterSetter(Node, 'zIndex');
  *   y: 10
  * });
  */
-Factory.addGetterSetter(Node, 'absolutePosition');
+addGetterSetter(Node, 'absolutePosition');
 
-Factory.addGetterSetter(Node, 'position');
+addGetterSetter(Node, 'position');
 /**
  * get/set node position relative to parent
  * @name Konva.Node#position
@@ -2603,7 +2606,7 @@ Factory.addGetterSetter(Node, 'position');
  * });
  */
 
-Factory.addGetterSetter(Node, 'x', 0, getNumberValidator());
+addGetterSetter(Node, 'x', 0, getNumberValidator());
 
 /**
  * get/set x position
@@ -2619,7 +2622,7 @@ Factory.addGetterSetter(Node, 'x', 0, getNumberValidator());
  * node.x(5);
  */
 
-Factory.addGetterSetter(Node, 'y', 0, getNumberValidator());
+addGetterSetter(Node, 'y', 0, getNumberValidator());
 
 /**
  * get/set y position
@@ -2635,7 +2638,7 @@ Factory.addGetterSetter(Node, 'y', 0, getNumberValidator());
  * node.y(5);
  */
 
-Factory.addGetterSetter(
+addGetterSetter(
   Node,
   'globalCompositeOperation',
   'source-over',
@@ -2655,7 +2658,7 @@ Factory.addGetterSetter(
  * // set globalCompositeOperation
  * shape.globalCompositeOperation('source-in');
  */
-Factory.addGetterSetter(Node, 'opacity', 1, getNumberValidator());
+addGetterSetter(Node, 'opacity', 1, getNumberValidator());
 
 /**
  * get/set opacity.  Opacity values range from 0 to 1.
@@ -2673,7 +2676,7 @@ Factory.addGetterSetter(Node, 'opacity', 1, getNumberValidator());
  * node.opacity(0.5);
  */
 
-Factory.addGetterSetter(Node, 'name', '', getStringValidator());
+addGetterSetter(Node, 'name', '', getStringValidator());
 
 /**
  * get/set name
@@ -2692,7 +2695,7 @@ Factory.addGetterSetter(Node, 'name', '', getStringValidator());
  * node.name('foo bar');
  */
 
-Factory.addGetterSetter(Node, 'id', '', getStringValidator());
+addGetterSetter(Node, 'id', '', getStringValidator());
 
 /**
  * get/set id. Id is global for whole page.
@@ -2708,7 +2711,7 @@ Factory.addGetterSetter(Node, 'id', '', getStringValidator());
  * node.id('foo');
  */
 
-Factory.addGetterSetter(Node, 'rotation', 0, getNumberValidator());
+addGetterSetter(Node, 'rotation', 0, getNumberValidator());
 
 /**
  * get/set rotation in degrees
@@ -2745,7 +2748,7 @@ Factory.addComponentsGetterSetter(Node, 'scale', ['x', 'y']);
  * });
  */
 
-Factory.addGetterSetter(Node, 'scaleX', 1, getNumberValidator());
+addGetterSetter(Node, 'scaleX', 1, getNumberValidator());
 
 /**
  * get/set scale x
@@ -2761,7 +2764,7 @@ Factory.addGetterSetter(Node, 'scaleX', 1, getNumberValidator());
  * node.scaleX(2);
  */
 
-Factory.addGetterSetter(Node, 'scaleY', 1, getNumberValidator());
+addGetterSetter(Node, 'scaleY', 1, getNumberValidator());
 
 /**
  * get/set scale y
@@ -2798,7 +2801,7 @@ Factory.addComponentsGetterSetter(Node, 'skew', ['x', 'y']);
  * });
  */
 
-Factory.addGetterSetter(Node, 'skewX', 0, getNumberValidator());
+addGetterSetter(Node, 'skewX', 0, getNumberValidator());
 
 /**
  * get/set skew x
@@ -2814,7 +2817,7 @@ Factory.addGetterSetter(Node, 'skewX', 0, getNumberValidator());
  * node.skewX(3);
  */
 
-Factory.addGetterSetter(Node, 'skewY', 0, getNumberValidator());
+addGetterSetter(Node, 'skewY', 0, getNumberValidator());
 
 /**
  * get/set skew y
@@ -2850,7 +2853,7 @@ Factory.addComponentsGetterSetter(Node, 'offset', ['x', 'y']);
  * });
  */
 
-Factory.addGetterSetter(Node, 'offsetX', 0, getNumberValidator());
+addGetterSetter(Node, 'offsetX', 0, getNumberValidator());
 
 /**
  * get/set offset x
@@ -2866,7 +2869,7 @@ Factory.addGetterSetter(Node, 'offsetX', 0, getNumberValidator());
  * node.offsetX(3);
  */
 
-Factory.addGetterSetter(Node, 'offsetY', 0, getNumberValidator());
+addGetterSetter(Node, 'offsetY', 0, getNumberValidator());
 
 /**
  * get/set offset y
@@ -2882,7 +2885,7 @@ Factory.addGetterSetter(Node, 'offsetY', 0, getNumberValidator());
  * node.offsetY(3);
  */
 
-Factory.addGetterSetter(Node, 'dragDistance', null, getNumberValidator());
+addGetterSetter(Node, 'dragDistance', null, getNumberValidator());
 
 /**
  * get/set drag distance
@@ -2901,7 +2904,7 @@ Factory.addGetterSetter(Node, 'dragDistance', null, getNumberValidator());
  * Konva.dragDistance = 3;
  */
 
-Factory.addGetterSetter(Node, 'width', 0, getNumberValidator());
+addGetterSetter(Node, 'width', 0, getNumberValidator());
 /**
  * get/set width
  * @name Konva.Node#width
@@ -2916,7 +2919,7 @@ Factory.addGetterSetter(Node, 'width', 0, getNumberValidator());
  * node.width(100);
  */
 
-Factory.addGetterSetter(Node, 'height', 0, getNumberValidator());
+addGetterSetter(Node, 'height', 0, getNumberValidator());
 /**
  * get/set height
  * @name Konva.Node#height
@@ -2931,7 +2934,7 @@ Factory.addGetterSetter(Node, 'height', 0, getNumberValidator());
  * node.height(100);
  */
 
-Factory.addGetterSetter(Node, 'listening', true, getBooleanValidator());
+addGetterSetter(Node, 'listening', true, getBooleanValidator());
 /**
  * get/set listening attr.  If you need to determine if a node is listening or not
  *   by taking into account its parents, use the isListening() method
@@ -2969,9 +2972,9 @@ Factory.addGetterSetter(Node, 'listening', true, getBooleanValidator());
  * shape.preventDefault(false);
  */
 
-Factory.addGetterSetter(Node, 'preventDefault', true, getBooleanValidator());
+addGetterSetter(Node, 'preventDefault', true, getBooleanValidator());
 
-Factory.addGetterSetter(Node, 'filters', null, function (val) {
+addGetterSetter(Node, 'filters', null, function (val) {
   this._filterUpToDate = false;
   return val;
 });
@@ -2998,7 +3001,7 @@ Factory.addGetterSetter(Node, 'filters', null, function (val) {
  * ]);
  */
 
-Factory.addGetterSetter(Node, 'visible', true, getBooleanValidator());
+addGetterSetter(Node, 'visible', true, getBooleanValidator());
 /**
  * get/set visible attr.  Can be true, or false.  The default is true.
  *   If you need to determine if a node is visible or not
@@ -3019,7 +3022,7 @@ Factory.addGetterSetter(Node, 'visible', true, getBooleanValidator());
  *
  */
 
-Factory.addGetterSetter(Node, 'transformsEnabled', 'all', getStringValidator());
+addGetterSetter(Node, 'transformsEnabled', 'all', getStringValidator());
 
 /**
  * get/set transforms that are enabled.  Can be "all", "none", or "position".  The default
@@ -3056,7 +3059,7 @@ Factory.addGetterSetter(Node, 'transformsEnabled', 'all', getStringValidator());
  *   height: 200
  * });
  */
-Factory.addGetterSetter(Node, 'size');
+addGetterSetter(Node, 'size');
 
 /**
  * get/set drag bound function.  This is used to override the default
@@ -3079,7 +3082,7 @@ Factory.addGetterSetter(Node, 'size');
  *   };
  * });
  */
-Factory.addGetterSetter(Node, 'dragBoundFunc');
+addGetterSetter(Node, 'dragBoundFunc');
 
 /**
  * get/set draggable flag
@@ -3097,7 +3100,7 @@ Factory.addGetterSetter(Node, 'dragBoundFunc');
  * // disable drag and drop
  * node.draggable(false);
  */
-Factory.addGetterSetter(Node, 'draggable', false, getBooleanValidator());
+addGetterSetter(Node, 'draggable', false, getBooleanValidator());
 
 Factory.backCompat(Node, {
   rotateDeg: 'rotate',

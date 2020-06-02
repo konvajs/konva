@@ -31,7 +31,7 @@ function build() {
     .pipe(replace('@@date', new Date().toDateString()));
 }
 
-gulp.task('update-version-lib', function() {
+gulp.task('update-version-lib', function () {
   return gulp
     .src(['./lib/Global.js'])
     .pipe(replace('@@version', conf.version))
@@ -40,12 +40,12 @@ gulp.task('update-version-lib', function() {
 });
 
 // create usual build konva.js and konva.min.js
-gulp.task('pre-build', function() {
+gulp.task('pre-build', function () {
   return build()
     .pipe(rename('konva.js'))
     .pipe(gulp.dest('./'))
     .pipe(uglify({ output: { comments: /^!|@preserve|@license|@cc_on/i } }))
-    .on('error', function(err) {
+    .on('error', function (err) {
       gutil.log(gutil.colors.red('[Error]'), err.toString());
     })
     .pipe(rename('konva.min.js'))
@@ -55,18 +55,18 @@ gulp.task('pre-build', function() {
 gulp.task('build', gulp.parallel(['update-version-lib', 'pre-build']));
 
 // local server for better development
-gulp.task('server', function() {
+gulp.task('server', function () {
   connect.server();
 });
 
 // lint files
-gulp.task('lint', function() {
+gulp.task('lint', function () {
   return (
     gulp
       .src('./src/**/*.js')
       .pipe(
         eslint({
-          configFile: './.eslintrc'
+          configFile: './.eslintrc',
         })
       )
       // eslint.format() outputs the lint results to the console.
@@ -79,22 +79,22 @@ gulp.task('lint', function() {
 });
 
 // check code for duplication
-gulp.task('inspect', function() {
+gulp.task('inspect', function () {
   return gulp.src('./src/**/*.js').pipe(
     jscpd({
       'min-lines': 10,
-      verbose: true
+      verbose: true,
     })
   );
 });
 
 // // generate documentation
-gulp.task('api', function() {
+gulp.task('api', function () {
   return gulp.src('./konva.js').pipe(
     jsdoc({
       opts: {
-        destination: './api'
-      }
+        destination: './api',
+      },
     })
   );
 });

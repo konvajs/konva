@@ -6,16 +6,16 @@ var GET = 'get',
 
 export const Factory = {
   addGetterSetter(constructor, attr, def?, validator?, after?) {
-    this.addGetter(constructor, attr, def);
-    this.addSetter(constructor, attr, validator, after);
-    this.addOverloadedGetterSetter(constructor, attr);
+    Factory.addGetter(constructor, attr, def);
+    Factory.addSetter(constructor, attr, validator, after);
+    Factory.addOverloadedGetterSetter(constructor, attr);
   },
   addGetter(constructor, attr, def?) {
     var method = GET + Util._capitalize(attr);
 
     constructor.prototype[method] =
       constructor.prototype[method] ||
-      function() {
+      function () {
         var val = this.attrs[attr];
         return val === undefined ? def : val;
       };
@@ -30,7 +30,7 @@ export const Factory = {
   },
   overWriteSetter(constructor, attr, validator?, after?) {
     var method = SET + Util._capitalize(attr);
-    constructor.prototype[method] = function(val) {
+    constructor.prototype[method] = function (val) {
       if (validator && val !== undefined && val !== null) {
         val = validator.call(this, val, attr);
       }
@@ -53,7 +53,7 @@ export const Factory = {
       component;
 
     // getter
-    constructor.prototype[getter] = function() {
+    constructor.prototype[getter] = function () {
       var ret = {};
 
       for (n = 0; n < len; n++) {
@@ -67,7 +67,7 @@ export const Factory = {
     var basicValidator = getComponentValidator(components);
 
     // setter
-    constructor.prototype[setter] = function(val) {
+    constructor.prototype[setter] = function (val) {
       var oldVal = this.attrs[attr],
         key;
 
@@ -95,14 +95,14 @@ export const Factory = {
       return this;
     };
 
-    this.addOverloadedGetterSetter(constructor, attr);
+    Factory.addOverloadedGetterSetter(constructor, attr);
   },
   addOverloadedGetterSetter(constructor, attr) {
     var capitalizedAttr = Util._capitalize(attr),
       setter = SET + capitalizedAttr,
       getter = GET + capitalizedAttr;
 
-    constructor.prototype[attr] = function() {
+    constructor.prototype[attr] = function () {
       // setting
       if (arguments.length) {
         this[setter](arguments[0]);
@@ -120,18 +120,18 @@ export const Factory = {
     var message =
       attr +
       ' property is deprecated and will be removed soon. Look at Konva change log for more information.';
-    constructor.prototype[method] = function() {
+    constructor.prototype[method] = function () {
       Util.error(message);
       var val = this.attrs[attr];
       return val === undefined ? def : val;
     };
-    this.addSetter(constructor, attr, validator, function() {
+    Factory.addSetter(constructor, attr, validator, function () {
       Util.error(message);
     });
-    this.addOverloadedGetterSetter(constructor, attr);
+    Factory.addOverloadedGetterSetter(constructor, attr);
   },
   backCompat(constructor, methods) {
-    Util.each(methods, function(oldMethodName, newMethodName) {
+    Util.each(methods, function (oldMethodName, newMethodName) {
       var method = constructor.prototype[newMethodName];
       var oldGetter = GET + Util._capitalize(oldMethodName);
       var oldSetter = SET + Util._capitalize(oldMethodName);
@@ -154,5 +154,5 @@ export const Factory = {
   },
   afterSetFilter() {
     this._filterUpToDate = false;
-  }
+  },
 };

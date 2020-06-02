@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v6.0.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Thu May 14 2020
+   * Date: Tue Jun 02 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -1327,9 +1327,9 @@
   var GET = 'get', SET = 'set';
   var Factory = {
       addGetterSetter: function (constructor, attr, def, validator, after) {
-          this.addGetter(constructor, attr, def);
-          this.addSetter(constructor, attr, validator, after);
-          this.addOverloadedGetterSetter(constructor, attr);
+          Factory.addGetter(constructor, attr, def);
+          Factory.addSetter(constructor, attr, validator, after);
+          Factory.addOverloadedGetterSetter(constructor, attr);
       },
       addGetter: function (constructor, attr, def) {
           var method = GET + Util._capitalize(attr);
@@ -1392,7 +1392,7 @@
               }
               return this;
           };
-          this.addOverloadedGetterSetter(constructor, attr);
+          Factory.addOverloadedGetterSetter(constructor, attr);
       },
       addOverloadedGetterSetter: function (constructor, attr) {
           var capitalizedAttr = Util._capitalize(attr), setter = SET + capitalizedAttr, getter = GET + capitalizedAttr;
@@ -1416,10 +1416,10 @@
               var val = this.attrs[attr];
               return val === undefined ? def : val;
           };
-          this.addSetter(constructor, attr, validator, function () {
+          Factory.addSetter(constructor, attr, validator, function () {
               Util.error(message);
           });
-          this.addOverloadedGetterSetter(constructor, attr);
+          Factory.addOverloadedGetterSetter(constructor, attr);
       },
       backCompat: function (constructor, methods) {
           Util.each(methods, function (oldMethodName, newMethodName) {
@@ -1441,7 +1441,7 @@
       },
       afterSetFilter: function () {
           this._filterUpToDate = false;
-      }
+      },
   };
 
   /*! *****************************************************************************
@@ -4624,6 +4624,7 @@
   }());
   Node.prototype.nodeType = 'Node';
   Node.prototype._attrsAffectingSize = [];
+  var addGetterSetter = Factory.addGetterSetter;
   /**
    * get/set zIndex relative to the node's siblings who share the same parent.
    * Please remember that zIndex is not absolute (like in CSS). It is relative to parent element only.
@@ -4638,7 +4639,7 @@
    * // set index
    * node.zIndex(2);
    */
-  Factory.addGetterSetter(Node, 'zIndex');
+  addGetterSetter(Node, 'zIndex');
   /**
    * get/set node absolute position
    * @name Konva.Node#absolutePosition
@@ -4657,8 +4658,8 @@
    *   y: 10
    * });
    */
-  Factory.addGetterSetter(Node, 'absolutePosition');
-  Factory.addGetterSetter(Node, 'position');
+  addGetterSetter(Node, 'absolutePosition');
+  addGetterSetter(Node, 'position');
   /**
    * get/set node position relative to parent
    * @name Konva.Node#position
@@ -4677,7 +4678,7 @@
    *   y: 10
    * });
    */
-  Factory.addGetterSetter(Node, 'x', 0, getNumberValidator());
+  addGetterSetter(Node, 'x', 0, getNumberValidator());
   /**
    * get/set x position
    * @name Konva.Node#x
@@ -4691,7 +4692,7 @@
    * // set x
    * node.x(5);
    */
-  Factory.addGetterSetter(Node, 'y', 0, getNumberValidator());
+  addGetterSetter(Node, 'y', 0, getNumberValidator());
   /**
    * get/set y position
    * @name Konva.Node#y
@@ -4705,7 +4706,7 @@
    * // set y
    * node.y(5);
    */
-  Factory.addGetterSetter(Node, 'globalCompositeOperation', 'source-over', getStringValidator());
+  addGetterSetter(Node, 'globalCompositeOperation', 'source-over', getStringValidator());
   /**
    * get/set globalCompositeOperation of a shape
    * @name Konva.Node#globalCompositeOperation
@@ -4719,7 +4720,7 @@
    * // set globalCompositeOperation
    * shape.globalCompositeOperation('source-in');
    */
-  Factory.addGetterSetter(Node, 'opacity', 1, getNumberValidator());
+  addGetterSetter(Node, 'opacity', 1, getNumberValidator());
   /**
    * get/set opacity.  Opacity values range from 0 to 1.
    *  A node with an opacity of 0 is fully transparent, and a node
@@ -4735,7 +4736,7 @@
    * // set opacity
    * node.opacity(0.5);
    */
-  Factory.addGetterSetter(Node, 'name', '', getStringValidator());
+  addGetterSetter(Node, 'name', '', getStringValidator());
   /**
    * get/set name
    * @name Konva.Node#name
@@ -4752,7 +4753,7 @@
    * // also node may have multiple names (as css classes)
    * node.name('foo bar');
    */
-  Factory.addGetterSetter(Node, 'id', '', getStringValidator());
+  addGetterSetter(Node, 'id', '', getStringValidator());
   /**
    * get/set id. Id is global for whole page.
    * @name Konva.Node#id
@@ -4766,7 +4767,7 @@
    * // set id
    * node.id('foo');
    */
-  Factory.addGetterSetter(Node, 'rotation', 0, getNumberValidator());
+  addGetterSetter(Node, 'rotation', 0, getNumberValidator());
   /**
    * get/set rotation in degrees
    * @name Konva.Node#rotation
@@ -4799,7 +4800,7 @@
    *   y: 3
    * });
    */
-  Factory.addGetterSetter(Node, 'scaleX', 1, getNumberValidator());
+  addGetterSetter(Node, 'scaleX', 1, getNumberValidator());
   /**
    * get/set scale x
    * @name Konva.Node#scaleX
@@ -4813,7 +4814,7 @@
    * // set scale x
    * node.scaleX(2);
    */
-  Factory.addGetterSetter(Node, 'scaleY', 1, getNumberValidator());
+  addGetterSetter(Node, 'scaleY', 1, getNumberValidator());
   /**
    * get/set scale y
    * @name Konva.Node#scaleY
@@ -4846,7 +4847,7 @@
    *   y: 10
    * });
    */
-  Factory.addGetterSetter(Node, 'skewX', 0, getNumberValidator());
+  addGetterSetter(Node, 'skewX', 0, getNumberValidator());
   /**
    * get/set skew x
    * @name Konva.Node#skewX
@@ -4860,7 +4861,7 @@
    * // set skew x
    * node.skewX(3);
    */
-  Factory.addGetterSetter(Node, 'skewY', 0, getNumberValidator());
+  addGetterSetter(Node, 'skewY', 0, getNumberValidator());
   /**
    * get/set skew y
    * @name Konva.Node#skewY
@@ -4892,7 +4893,7 @@
    *   y: 10
    * });
    */
-  Factory.addGetterSetter(Node, 'offsetX', 0, getNumberValidator());
+  addGetterSetter(Node, 'offsetX', 0, getNumberValidator());
   /**
    * get/set offset x
    * @name Konva.Node#offsetX
@@ -4906,7 +4907,7 @@
    * // set offset x
    * node.offsetX(3);
    */
-  Factory.addGetterSetter(Node, 'offsetY', 0, getNumberValidator());
+  addGetterSetter(Node, 'offsetY', 0, getNumberValidator());
   /**
    * get/set offset y
    * @name Konva.Node#offsetY
@@ -4920,7 +4921,7 @@
    * // set offset y
    * node.offsetY(3);
    */
-  Factory.addGetterSetter(Node, 'dragDistance', null, getNumberValidator());
+  addGetterSetter(Node, 'dragDistance', null, getNumberValidator());
   /**
    * get/set drag distance
    * @name Konva.Node#dragDistance
@@ -4937,7 +4938,7 @@
    * // or set globally
    * Konva.dragDistance = 3;
    */
-  Factory.addGetterSetter(Node, 'width', 0, getNumberValidator());
+  addGetterSetter(Node, 'width', 0, getNumberValidator());
   /**
    * get/set width
    * @name Konva.Node#width
@@ -4951,7 +4952,7 @@
    * // set width
    * node.width(100);
    */
-  Factory.addGetterSetter(Node, 'height', 0, getNumberValidator());
+  addGetterSetter(Node, 'height', 0, getNumberValidator());
   /**
    * get/set height
    * @name Konva.Node#height
@@ -4965,7 +4966,7 @@
    * // set height
    * node.height(100);
    */
-  Factory.addGetterSetter(Node, 'listening', true, getBooleanValidator());
+  addGetterSetter(Node, 'listening', true, getBooleanValidator());
   /**
    * get/set listening attr.  If you need to determine if a node is listening or not
    *   by taking into account its parents, use the isListening() method
@@ -5001,8 +5002,8 @@
    * // set preventDefault
    * shape.preventDefault(false);
    */
-  Factory.addGetterSetter(Node, 'preventDefault', true, getBooleanValidator());
-  Factory.addGetterSetter(Node, 'filters', null, function (val) {
+  addGetterSetter(Node, 'preventDefault', true, getBooleanValidator());
+  addGetterSetter(Node, 'filters', null, function (val) {
       this._filterUpToDate = false;
       return val;
   });
@@ -5028,7 +5029,7 @@
    *   Konva.Filters.Invert
    * ]);
    */
-  Factory.addGetterSetter(Node, 'visible', true, getBooleanValidator());
+  addGetterSetter(Node, 'visible', true, getBooleanValidator());
   /**
    * get/set visible attr.  Can be true, or false.  The default is true.
    *   If you need to determine if a node is visible or not
@@ -5048,7 +5049,7 @@
    * node.visible(true);
    *
    */
-  Factory.addGetterSetter(Node, 'transformsEnabled', 'all', getStringValidator());
+  addGetterSetter(Node, 'transformsEnabled', 'all', getStringValidator());
   /**
    * get/set transforms that are enabled.  Can be "all", "none", or "position".  The default
    *  is "all"
@@ -5083,7 +5084,7 @@
    *   height: 200
    * });
    */
-  Factory.addGetterSetter(Node, 'size');
+  addGetterSetter(Node, 'size');
   /**
    * get/set drag bound function.  This is used to override the default
    *  drag and drop position.
@@ -5105,7 +5106,7 @@
    *   };
    * });
    */
-  Factory.addGetterSetter(Node, 'dragBoundFunc');
+  addGetterSetter(Node, 'dragBoundFunc');
   /**
    * get/set draggable flag
    * @name Konva.Node#draggable
@@ -5122,7 +5123,7 @@
    * // disable drag and drop
    * node.draggable(false);
    */
-  Factory.addGetterSetter(Node, 'draggable', false, getBooleanValidator());
+  addGetterSetter(Node, 'draggable', false, getBooleanValidator());
   Factory.backCompat(Node, {
       rotateDeg: 'rotate',
       setRotationDeg: 'setRotation',
@@ -7084,11 +7085,10 @@
           return rect;
       };
       Shape.prototype.drawScene = function (can, top) {
-          // basically there are 4 drawing modes
+          // basically there are 3 drawing modes
           // 1 - simple drawing when nothing is cached.
           // 2 - when we are caching current
           // 3 - when node is cached and we need to draw it into layer
-          // 4 - ??
           var layer = this.getLayer(), canvas = can || layer.getCanvas(), context = canvas.getContext(), cachedCanvas = this._getCanvasCache(), drawFunc = this.sceneFunc(), hasShadow = this.hasShadow(), hasStroke = this.hasStroke(), stage, bufferCanvas, bufferContext;
           var caching = canvas.isCache;
           var skipBuffer = canvas.isCache;
@@ -7141,23 +7141,6 @@
                   context._applyShadow(this);
               }
               drawFunc.call(this, context, this);
-              // if shape has stroke we need to redraw shape
-              // otherwise we will see a shadow under stroke (and over fill)
-              // but I think this is unexpected behavior
-              if (hasShadow &&
-                  hasStroke &&
-                  this.hasFill() &&
-                  this.shadowForStrokeEnabled() &&
-                  false) {
-                  // TODO: are there any ways to avoid double draw?
-                  // hint: https://stackoverflow.com/questions/13470101/getting-single-shadow-for-fill-and-stroke-on-html-canvas
-                  // clear the shadow
-                  context.setAttr('shadowColor', 0);
-                  context.setAttr('shadowOffsetX', 0);
-                  context.setAttr('shadowOffsetY', 0);
-                  context.setAttr('shadowBlur', 0);
-                  drawFunc.call(this, context, this);
-              }
           }
           context.restore();
           return this;
