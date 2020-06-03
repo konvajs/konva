@@ -180,6 +180,78 @@ suite('TouchEvents', function () {
     }, 17);
   });
 
+  test('tap on stage and second tap on shape should not trigger double tap (check after dbltap)', function (done) {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var bigRect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      width: 200,
+      height: 200,
+      fill: 'yellow',
+    });
+    layer.add(bigRect);
+
+    layer.draw();
+
+    var bigClicks = 0;
+    var bigDblClicks = 0;
+
+    // make dblclick
+    stage.simulateTouchStart({
+      x: 100,
+      y: 100,
+    });
+    stage.simulateTouchEnd({
+      x: 100,
+      y: 100,
+    });
+    stage.simulateTouchStart({
+      x: 100,
+      y: 100,
+    });
+    stage.simulateTouchEnd({
+      x: 100,
+      y: 100,
+    });
+
+    bigRect.on('tap', function () {
+      bigClicks += 1;
+    });
+
+    bigRect.on('dbltap', function () {
+      bigDblClicks += 1;
+    });
+
+    stage.simulateTouchStart({
+      x: 10,
+      y: 10,
+    });
+    stage.simulateTouchEnd({
+      x: 10,
+      y: 10,
+    });
+
+    assert.equal(bigClicks, 0);
+    assert.equal(bigDblClicks, 0);
+
+    stage.simulateTouchStart({
+      x: 100,
+      y: 100,
+    });
+    stage.simulateTouchEnd({
+      x: 100,
+      y: 100,
+    });
+
+    assert.equal(bigClicks, 1);
+    assert.equal(bigDblClicks, 0);
+
+    done();
+  });
+
   // test for https://github.com/konvajs/konva/issues/156
   test('touchstart out of shape, then touch end inside shape', function () {
     var stage = addStage();

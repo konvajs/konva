@@ -1938,6 +1938,78 @@ suite('MouseEvents', function () {
     });
   });
 
+  test('click on stage and second click on shape should not trigger double click (check after dblclick)', function (done) {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var bigRect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      width: 200,
+      height: 200,
+      fill: 'yellow',
+    });
+    layer.add(bigRect);
+
+    layer.draw();
+
+    var bigClicks = 0;
+    var bigDblClicks = 0;
+
+    // make dblclick
+    stage.simulateMouseDown({
+      x: 100,
+      y: 100,
+    });
+    stage.simulateMouseUp({
+      x: 100,
+      y: 100,
+    });
+    stage.simulateMouseDown({
+      x: 100,
+      y: 100,
+    });
+    stage.simulateMouseUp({
+      x: 100,
+      y: 100,
+    });
+
+    bigRect.on('click', function () {
+      bigClicks += 1;
+    });
+
+    bigRect.on('dblclick', function () {
+      bigDblClicks += 1;
+    });
+
+    stage.simulateMouseDown({
+      x: 10,
+      y: 10,
+    });
+    stage.simulateMouseUp({
+      x: 10,
+      y: 10,
+    });
+
+    assert.equal(bigClicks, 0);
+    assert.equal(bigDblClicks, 0);
+
+    stage.simulateMouseDown({
+      x: 100,
+      y: 100,
+    });
+    stage.simulateMouseUp({
+      x: 100,
+      y: 100,
+    });
+
+    assert.equal(bigClicks, 1);
+    assert.equal(bigDblClicks, 0);
+
+    done();
+  });
+
   test('double click after drag should trigger event', function (done) {
     var stage = addStage();
     var layer = new Konva.Layer();

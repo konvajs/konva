@@ -6,9 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Not released:
 
 * `inherit` option is removed from `visible` and `listening`. They now just have boolean values `true` or `false`. If you do `group.listeng(false);` then whole group and all its children will be removed from the hitgraph (and they will not listen to events);
-* `layer.hitGraphEnabled()` is deprecated. Just use `layer.listening()` instead
+* `layer.hitGraphEnabled()` is deprecated. Just use `layer.listening(false)` instead
 * Some performance fixes and code size optimizations
-* Better support for fonts with spaces inside (like `Font Awesome 5`).
+* Better support for font families with spaces inside (like `Font Awesome 5`).
+* Fix possible `dblclick` and `dbltap` triggers
 
 
 ## 6.0.0 - 2020-05-08

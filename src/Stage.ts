@@ -608,6 +608,7 @@ export class Stage extends Container<Layer> {
         }
       }
     } else {
+      this.clickEndShape = null;
       this._fire(MOUSEUP, {
         evt: evt,
         target: this,
@@ -816,6 +817,7 @@ export class Stage extends Container<Layer> {
     }
 
     if (Konva.listenClickTap && !tapTriggered) {
+      this.clickEndShape = null;
       this._fire(TAP, {
         evt: evt,
         target: this,

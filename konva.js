@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v6.0.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Jun 02 2020
+   * Date: Wed Jun 03 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -6226,6 +6226,7 @@
               }
           }
           else {
+              this.clickEndShape = null;
               this._fire(MOUSEUP, {
                   evt: evt,
                   target: this,
@@ -6411,6 +6412,7 @@
               });
           }
           if (Konva.listenClickTap && !tapTriggered) {
+              this.clickEndShape = null;
               this._fire(TAP, {
                   evt: evt,
                   target: this,
