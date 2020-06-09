@@ -220,7 +220,7 @@ function getSnap(snaps: Array<number>, newRotationRad: number, tol: number) {
  *
  * @example
  * var transformer = new Konva.Transformer({
- *   node: rectangle,
+ *   nodes: [rectangle],
  *   rotateAnchorOffset: 60,
  *   enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right']
  * });
@@ -1531,26 +1531,13 @@ Factory.addGetterSetter(Transformer, 'ignoreStroke', false);
  */
 Factory.addGetterSetter(Transformer, 'padding', 0, getNumberValidator());
 
-/**
- * get/set attached node of the Transformer. Transformer will adapt to its size and listen to its events.
- * **This method is deprecated and will be removed soon.** Please use `tr.nodes([shape1, shape2]);` instead
- * @method
- * @name Konva.Transformer#Konva.Transformer#node
- * @returns {Konva.Node}
- * @example
- * // get
- * const node = transformer.node();
- *
- * // set
- * transformer.node(shape);
- */
-
+// TODO: that property is deprecated
 Factory.addGetterSetter(Transformer, 'node');
 
 /**
  * get/set attached nodes of the Transformer. Transformer will adapt to their size and listen to their events
  * @method
- * @name Konva.Transformer#Konva.Transformer#node
+ * @name Konva.Transformer#nodes
  * @returns {Konva.Node}
  * @example
  * // get
@@ -1558,10 +1545,11 @@ Factory.addGetterSetter(Transformer, 'node');
  *
  * // set
  * transformer.nodes([rect, circle]);
- * // push new item:
  *
+ * // push new item:
  * const oldNodes = transformer.nodes();
  * const newNodes = oldNodes.concat([newShape]);
+ * // it is important to set new array instance (and concat method above will create it)
  * transformer.nodes(newNodes);
  */
 
