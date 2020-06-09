@@ -1390,7 +1390,6 @@ suite('Shape', function () {
 
     var trace = layer.getContext().getTrace();
 
-    console.log(trace);
     assert.equal(
       trace,
       'clearRect(0,0,578,200);save();globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();'

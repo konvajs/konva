@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v6.0.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Wed Jun 03 2020
+   * Date: Tue Jun 09 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -8753,6 +8753,7 @@
       function FastLayer(attrs) {
           var _this = _super.call(this, attrs) || this;
           _this.listening(false);
+          Util.warn('Konva.Fast layer is deprecated. Please use "new Konva.Layer({ listening: false })" instead.');
           return _this;
       }
       return FastLayer;
@@ -14688,7 +14689,7 @@
    *
    * @example
    * var transformer = new Konva.Transformer({
-   *   node: rectangle,
+   *   nodes: [rectangle],
    *   rotateAnchorOffset: 60,
    *   enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right']
    * });
@@ -15790,24 +15791,12 @@
    * transformer.padding(10);
    */
   Factory.addGetterSetter(Transformer, 'padding', 0, getNumberValidator());
-  /**
-   * get/set attached node of the Transformer. Transformer will adapt to its size and listen to its events.
-   * **This method is deprecated and will be removed soon.** Please use `tr.nodes([shape1, shape2]);` instead
-   * @method
-   * @name Konva.Transformer#Konva.Transformer#node
-   * @returns {Konva.Node}
-   * @example
-   * // get
-   * const node = transformer.node();
-   *
-   * // set
-   * transformer.node(shape);
-   */
+  // TODO: that property is deprecated
   Factory.addGetterSetter(Transformer, 'node');
   /**
    * get/set attached nodes of the Transformer. Transformer will adapt to their size and listen to their events
    * @method
-   * @name Konva.Transformer#Konva.Transformer#node
+   * @name Konva.Transformer#nodes
    * @returns {Konva.Node}
    * @example
    * // get
@@ -15815,10 +15804,11 @@
    *
    * // set
    * transformer.nodes([rect, circle]);
-   * // push new item:
    *
+   * // push new item:
    * const oldNodes = transformer.nodes();
    * const newNodes = oldNodes.concat([newShape]);
+   * // it is important to set new array instance (and concat method above will create it)
    * transformer.nodes(newNodes);
    */
   Factory.addGetterSetter(Transformer, 'nodes');
