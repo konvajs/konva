@@ -344,7 +344,8 @@ export abstract class Container<ChildType extends Node> extends Node<
 
     if (cachedSceneCanvas) {
       context.save();
-      layer._applyTransform(this, context, top);
+      var m = this.getAbsoluteTransform(top).getMatrix();
+      context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
       this._drawCachedSceneCanvas(context);
       context.restore();
     } else {
@@ -365,7 +366,8 @@ export abstract class Container<ChildType extends Node> extends Node<
 
     if (cachedHitCanvas) {
       context.save();
-      layer._applyTransform(this, context, top);
+      var m = this.getAbsoluteTransform(top).getMatrix();
+      context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
       this._drawCachedHitCanvas(context);
       context.restore();
     } else {
@@ -373,10 +375,8 @@ export abstract class Container<ChildType extends Node> extends Node<
     }
     return this;
   }
-  // TODO: create ClipContainer
   _drawChildren(drawMethod, canvas, top) {
-    var layer = this.getLayer(),
-      context = canvas && canvas.getContext(),
+    var context = canvas && canvas.getContext(),
       clipWidth = this.clipWidth(),
       clipHeight = this.clipHeight(),
       clipFunc = this.clipFunc(),

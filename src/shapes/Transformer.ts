@@ -1531,7 +1531,6 @@ Factory.addGetterSetter(Transformer, 'ignoreStroke', false);
  */
 Factory.addGetterSetter(Transformer, 'padding', 0, getNumberValidator());
 
-// TODO: that property is deprecated
 Factory.addGetterSetter(Transformer, 'node');
 
 /**

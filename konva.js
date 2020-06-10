@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v6.0.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Jun 09 2020
+   * Date: Wed Jun 10 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -301,8 +301,17 @@
   var Transform = /** @class */ (function () {
       function Transform(m) {
           if (m === void 0) { m = [1, 0, 0, 1, 0, 0]; }
+          this.dirty = false;
           this.m = (m && m.slice()) || [1, 0, 0, 1, 0, 0];
       }
+      Transform.prototype.reset = function () {
+          this.m[0] = 1;
+          this.m[1] = 0;
+          this.m[2] = 0;
+          this.m[3] = 1;
+          this.m[4] = 0;
+          this.m[5] = 0;
+      };
       /**
        * Copy Konva.Transform object
        * @method
@@ -313,6 +322,14 @@
        */
       Transform.prototype.copy = function () {
           return new Transform(this.m);
+      };
+      Transform.prototype.copyInto = function (tr) {
+          tr.m[0] = this.m[0];
+          tr.m[1] = this.m[1];
+          tr.m[2] = this.m[2];
+          tr.m[3] = this.m[3];
+          tr.m[4] = this.m[4];
+          tr.m[5] = this.m[5];
       };
       /**
        * Transform point
@@ -325,7 +342,7 @@
           var m = this.m;
           return {
               x: m[0] * point.x + m[2] * point.y + m[4],
-              y: m[1] * point.x + m[3] * point.y + m[5]
+              y: m[1] * point.x + m[3] * point.y + m[5],
           };
       };
       /**
@@ -385,7 +402,7 @@
       Transform.prototype.getTranslation = function () {
           return {
               x: this.m[4],
-              y: this.m[5]
+              y: this.m[5],
           };
       };
       /**
@@ -491,7 +508,7 @@
               scaleX: 0,
               scaleY: 0,
               skewX: 0,
-              skewY: 0
+              skewY: 0,
           };
           // Apply the QR-like decomposition.
           if (a != 0 || b != 0) {
@@ -666,7 +683,7 @@
       white: [255, 255, 255],
       whitesmoke: [245, 245, 245],
       yellow: [255, 255, 0],
-      yellowgreen: [154, 205, 5]
+      yellowgreen: [154, 205, 5],
   }, RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/, animQueue = [];
   /**
    * @namespace Util
@@ -789,7 +806,7 @@
           return {
               r: (bigint >> 16) & 255,
               g: (bigint >> 8) & 255,
-              b: bigint & 255
+              b: bigint & 255,
           };
       },
       /**
@@ -833,7 +850,7 @@
               return {
                   r: rgb[0],
                   g: rgb[1],
-                  b: rgb[2]
+                  b: rgb[2],
               };
           }
           else if (color[0] === HASH) {
@@ -846,7 +863,7 @@
               return {
                   r: parseInt(rgb[1], 10),
                   g: parseInt(rgb[2], 10),
-                  b: parseInt(rgb[3], 10)
+                  b: parseInt(rgb[3], 10),
               };
           }
           else {
@@ -854,7 +871,7 @@
               return {
                   r: 0,
                   g: 0,
-                  b: 0
+                  b: 0,
               };
           }
       },
@@ -879,7 +896,7 @@
               r: c[0],
               g: c[1],
               b: c[2],
-              a: 1
+              a: 1,
           };
       },
       // Parse rgb(n, n, n)
@@ -891,7 +908,7 @@
                   r: parts[0],
                   g: parts[1],
                   b: parts[2],
-                  a: 1
+                  a: 1,
               };
           }
       },
@@ -904,7 +921,7 @@
                   r: parts[0],
                   g: parts[1],
                   b: parts[2],
-                  a: parts[3]
+                  a: parts[3],
               };
           }
       },
@@ -915,7 +932,7 @@
                   r: parseInt(str.slice(1, 3), 16),
                   g: parseInt(str.slice(3, 5), 16),
                   b: parseInt(str.slice(5, 7), 16),
-                  a: 1
+                  a: 1,
               };
           }
       },
@@ -926,7 +943,7 @@
                   r: parseInt(str[1] + str[1], 16),
                   g: parseInt(str[2] + str[2], 16),
                   b: parseInt(str[3] + str[3], 16),
-                  a: 1
+                  a: 1,
               };
           }
       },
@@ -948,7 +965,7 @@
                       r: Math.round(val),
                       g: Math.round(val),
                       b: Math.round(val),
-                      a: 1
+                      a: 1,
                   };
               }
               if (l < 0.5) {
@@ -985,7 +1002,7 @@
                   r: Math.round(rgb[0]),
                   g: Math.round(rgb[1]),
                   b: Math.round(rgb[2]),
-                  a: 1
+                  a: 1,
               };
           }
       },
@@ -1145,13 +1162,13 @@
           for (n = 0; n < startArray.length; n += 2) {
               start.push({
                   x: startArray[n],
-                  y: startArray[n + 1]
+                  y: startArray[n + 1],
               });
           }
           for (n = 0; n < endArray.length; n += 2) {
               end.push({
                   x: endArray[n],
-                  y: endArray[n + 1]
+                  y: endArray[n + 1],
               });
           }
           var newStart = [];
@@ -1206,7 +1223,7 @@
           else {
               return evt.changedTouches[0].identifier;
           }
-      }
+      },
   };
 
   function _formatValue(val) {
@@ -2660,9 +2677,16 @@
       Node.prototype.getChildren = function () {
           return emptyChildren;
       };
-      /** @lends Konva.Node.prototype */
       Node.prototype._clearCache = function (attr) {
-          if (attr) {
+          // if we want to clear transform cache
+          // we don't really need to remove it from the cache
+          // but instead mark as "dirty"
+          // so we don't need to create a new instance next time
+          if ((attr === TRANSFORM || attr === ABSOLUTE_TRANSFORM) &&
+              this._cache.get(attr)) {
+              this._cache.get(attr).dirty = true;
+          }
+          else if (attr) {
               this._cache.delete(attr);
           }
           else {
@@ -2671,8 +2695,12 @@
       };
       Node.prototype._getCache = function (attr, privateGetter) {
           var cache = this._cache.get(attr);
+          // for transform the cache can be NOT empty
+          // but we still need to recalculate it if it is dirty
+          var isTransform = attr === TRANSFORM || attr === ABSOLUTE_TRANSFORM;
+          var invalid = cache === undefined || (isTransform && cache.dirty === true);
           // if not cached, we need to set it using the private getter method.
-          if (cache === undefined) {
+          if (invalid) {
               cache = privateGetter.call(this);
               this._cache.set(attr, cache);
           }
@@ -3934,12 +3962,13 @@
           }
           else {
               // try to use a cached value
+              at = this._cache.get(ABSOLUTE_TRANSFORM) || new Transform();
               if (this.parent) {
                   // transform will be cached
-                  at = this.parent.getAbsoluteTransform().copy();
+                  this.parent.getAbsoluteTransform().copyInto(at);
               }
               else {
-                  at = new Transform();
+                  at.reset();
               }
               var transformsEnabled = this.transformsEnabled();
               if (transformsEnabled === 'all') {
@@ -3948,6 +3977,7 @@
               else if (transformsEnabled === 'position') {
                   at.translate(this.x() - this.offsetX(), this.y() - this.offsetY());
               }
+              at.dirty = false;
               return at;
           }
       };
@@ -4009,7 +4039,9 @@
           return this._getCache(TRANSFORM, this._getTransform);
       };
       Node.prototype._getTransform = function () {
-          var m = new Transform(), x = this.x(), y = this.y(), rotation = Konva.getAngle(this.rotation()), scaleX = this.scaleX(), scaleY = this.scaleY(), skewX = this.skewX(), skewY = this.skewY(), offsetX = this.offsetX(), offsetY = this.offsetY();
+          var m = this._cache.get(TRANSFORM) || new Transform();
+          m.reset();
+          var x = this.x(), y = this.y(), rotation = Konva.getAngle(this.rotation()), scaleX = this.scaleX(), scaleY = this.scaleY(), skewX = this.skewX(), skewY = this.skewY(), offsetX = this.offsetX(), offsetY = this.offsetY();
           if (x !== 0 || y !== 0) {
               m.translate(x, y);
           }
@@ -4025,6 +4057,7 @@
           if (offsetX !== 0 || offsetY !== 0) {
               m.translate(-1 * offsetX, -1 * offsetY);
           }
+          m.dirty = false;
           return m;
       };
       /**
@@ -5465,7 +5498,8 @@
           }
           if (cachedSceneCanvas) {
               context.save();
-              layer._applyTransform(this, context, top);
+              var m = this.getAbsoluteTransform(top).getMatrix();
+              context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
               this._drawCachedSceneCanvas(context);
               context.restore();
           }
@@ -5481,7 +5515,8 @@
           var layer = this.getLayer(), canvas = can || (layer && layer.hitCanvas), context = canvas && canvas.getContext(), cachedCanvas = this._getCanvasCache(), cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
           if (cachedHitCanvas) {
               context.save();
-              layer._applyTransform(this, context, top);
+              var m = this.getAbsoluteTransform(top).getMatrix();
+              context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
               this._drawCachedHitCanvas(context);
               context.restore();
           }
@@ -5490,9 +5525,8 @@
           }
           return this;
       };
-      // TODO: create ClipContainer
       Container.prototype._drawChildren = function (drawMethod, canvas, top) {
-          var layer = this.getLayer(), context = canvas && canvas.getContext(), clipWidth = this.clipWidth(), clipHeight = this.clipHeight(), clipFunc = this.clipFunc(), hasClip = (clipWidth && clipHeight) || clipFunc;
+          var context = canvas && canvas.getContext(), clipWidth = this.clipWidth(), clipHeight = this.clipHeight(), clipFunc = this.clipFunc(), hasClip = (clipWidth && clipHeight) || clipFunc;
           var selfCache = top === this;
           if (hasClip) {
               context.save();
@@ -7101,7 +7135,8 @@
           // if node is cached we just need to draw from cache
           if (cachedCanvas) {
               context.save();
-              layer._applyTransform(this, context, top);
+              var m = this.getAbsoluteTransform(top).getMatrix();
+              context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
               this._drawCachedSceneCanvas(context);
               context.restore();
               return this;
@@ -7158,7 +7193,8 @@
           }
           if (cachedHitCanvas) {
               context.save();
-              layer._applyTransform(this, context, top);
+              var m = this.getAbsoluteTransform(top).getMatrix();
+              context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
               this._drawCachedHitCanvas(context);
               context.restore();
               return this;
@@ -7291,7 +7327,6 @@
    * // set hit stroke width always equals to scene stroke width
    * shape.hitStrokeWidth('auto');
    */
-  // TODO: probably we should deprecate it
   Factory.addGetterSetter(Shape, 'strokeHitEnabled', true, getBooleanValidator());
   /**
    * **deprecated, use hitStrokeWidth instead!** get/set strokeHitEnabled property. Useful for performance optimization.
@@ -8511,14 +8546,6 @@
               });
           }
           return this;
-      };
-      // the apply transform method is handled by the Layer and FastLayer class
-      // because it is up to the layer to decide if an absolute or relative transform
-      // should be used
-      // TODO: remove that method
-      Layer.prototype._applyTransform = function (shape, context, top) {
-          var m = shape.getAbsoluteTransform(top).getMatrix();
-          context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
       };
       /**
        * get visible intersection shape. This is the preferred
@@ -15791,7 +15818,6 @@
    * transformer.padding(10);
    */
   Factory.addGetterSetter(Transformer, 'padding', 0, getNumberValidator());
-  // TODO: that property is deprecated
   Factory.addGetterSetter(Transformer, 'node');
   /**
    * get/set attached nodes of the Transformer. Transformer will adapt to their size and listen to their events

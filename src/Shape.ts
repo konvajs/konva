@@ -567,7 +567,9 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
     // if node is cached we just need to draw from cache
     if (cachedCanvas) {
       context.save();
-      layer._applyTransform(this, context, top);
+
+      var m = this.getAbsoluteTransform(top).getMatrix();
+      context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
       this._drawCachedSceneCanvas(context);
       context.restore();
       return this;
@@ -647,7 +649,10 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
 
     if (cachedHitCanvas) {
       context.save();
-      layer._applyTransform(this, context, top);
+
+      var m = this.getAbsoluteTransform(top).getMatrix();
+      context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+
       this._drawCachedHitCanvas(context);
       context.restore();
       return this;
@@ -874,7 +879,6 @@ Factory.addGetterSetter(
  * shape.hitStrokeWidth('auto');
  */
 
-// TODO: probably we should deprecate it
 Factory.addGetterSetter(Shape, 'strokeHitEnabled', true, getBooleanValidator());
 
 /**

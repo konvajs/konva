@@ -310,15 +310,6 @@ export abstract class Layer extends Container<Group | Shape> {
     return this;
   }
 
-  // the apply transform method is handled by the Layer and FastLayer class
-  // because it is up to the layer to decide if an absolute or relative transform
-  // should be used
-  // TODO: remove that method
-  _applyTransform(shape, context, top) {
-    var m = shape.getAbsoluteTransform(top).getMatrix();
-    context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
-  }
-
   /**
    * get visible intersection shape. This is the preferred
    * method for determining if a point intersects a shape or not

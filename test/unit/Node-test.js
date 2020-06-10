@@ -138,9 +138,9 @@ suite('Node', function () {
     // transform cache
     assert.notEqual(circle._cache.get('transform'), undefined);
     circle.setX(100);
-    assert.equal(circle._cache.get('transform'), undefined);
+    assert.equal(circle._cache.get('transform').dirty, true);
     layer.draw();
-    assert.notEqual(circle._cache.get('transform'), undefined);
+    assert.equal(circle._cache.get('transform').dirty, false);
   });
 
   // ======================================================

@@ -241,9 +241,17 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return emptyChildren;
   }
 
-  /** @lends Konva.Node.prototype */
   _clearCache(attr?: string) {
-    if (attr) {
+    // if we want to clear transform cache
+    // we don't really need to remove it from the cache
+    // but instead mark as "dirty"
+    // so we don't need to create a new instance next time
+    if (
+      (attr === TRANSFORM || attr === ABSOLUTE_TRANSFORM) &&
+      this._cache.get(attr)
+    ) {
+      (this._cache.get(attr) as Transform).dirty = true;
+    } else if (attr) {
       this._cache.delete(attr);
     } else {
       this._cache.clear();
@@ -252,8 +260,13 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   _getCache(attr: string, privateGetter: Function) {
     var cache = this._cache.get(attr);
 
+    // for transform the cache can be NOT empty
+    // but we still need to recalculate it if it is dirty
+    var isTransform = attr === TRANSFORM || attr === ABSOLUTE_TRANSFORM;
+    var invalid = cache === undefined || (isTransform && cache.dirty === true);
+
     // if not cached, we need to set it using the private getter method.
-    if (cache === undefined) {
+    if (invalid) {
       cache = privateGetter.call(this);
       this._cache.set(attr, cache);
     }
@@ -1690,11 +1703,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       return at;
     } else {
       // try to use a cached value
+      at = this._cache.get(ABSOLUTE_TRANSFORM) || new Transform();
       if (this.parent) {
         // transform will be cached
-        at = this.parent.getAbsoluteTransform().copy();
+        this.parent.getAbsoluteTransform().copyInto(at);
       } else {
-        at = new Transform();
+        at.reset();
       }
       var transformsEnabled = this.transformsEnabled();
       if (transformsEnabled === 'all') {
@@ -1702,6 +1716,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       } else if (transformsEnabled === 'position') {
         at.translate(this.x() - this.offsetX(), this.y() - this.offsetY());
       }
+      at.dirty = false;
       return at;
     }
   }
@@ -1766,8 +1781,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return this._getCache(TRANSFORM, this._getTransform) as Transform;
   }
   _getTransform(): Transform {
-    var m = new Transform(),
-      x = this.x(),
+    var m: Transform = this._cache.get(TRANSFORM) || new Transform();
+    m.reset();
+
+    var x = this.x(),
       y = this.y(),
       rotation = Konva.getAngle(this.rotation()),
       scaleX = this.scaleX(),
@@ -1792,6 +1809,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (offsetX !== 0 || offsetY !== 0) {
       m.translate(-1 * offsetX, -1 * offsetY);
     }
+
+    m.dirty = false;
 
     return m;
   }
