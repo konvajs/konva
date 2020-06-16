@@ -2644,6 +2644,7 @@
           this.index = 0;
           this.parent = null;
           this._cache = new Map();
+          this._attachedDepsListeners = new Map();
           this._lastPos = null;
           this._batchingTransformChange = false;
           this._needClearTransformCache = false;
@@ -2705,6 +2706,20 @@
               this._cache.set(attr, cache);
           }
           return cache;
+      };
+      Node.prototype._calculate = function (name, deps, getter) {
+          var _this = this;
+          // if we are trying to calculate function for the first time
+          // we need to attach listeners for change events
+          if (!this._attachedDepsListeners.get(name)) {
+              var depsString = deps.map(function (dep) { return dep + 'Change.konva'; }).join(SPACE);
+              this.on(depsString, function () {
+                  _this._clearCache(name);
+              });
+              this._attachedDepsListeners.set(name, true);
+          }
+          // just use cache function
+          return this._getCache(name, getter);
       };
       Node.prototype._getCanvasCache = function () {
           return this._cache.get(CANVAS);
@@ -4044,6 +4059,9 @@
       Node.prototype._getTransform = function () {
           var m = this._cache.get(TRANSFORM) || new Transform();
           m.reset();
+          // I was trying to use attributes directly here
+          // but it doesn't work for Transformer well
+          // because it overwrite x,y getters
           var x = this.x(), y = this.y(), rotation = Konva.getAngle(this.rotation()), scaleX = this.scaleX(), scaleY = this.scaleY(), skewX = this.skewX(), skewY = this.skewY(), offsetX = this.offsetX(), offsetY = this.offsetY();
           if (x !== 0 || y !== 0) {
               m.translate(x, y);
@@ -6964,11 +6982,20 @@
        * @returns {Boolean}
        */
       Shape.prototype.hasFill = function () {
-          return (this.fillEnabled() &&
-              !!(this.fill() ||
-                  this.fillPatternImage() ||
-                  this.fillLinearGradientColorStops() ||
-                  this.fillRadialGradientColorStops()));
+          var _this = this;
+          return this._calculate('hasFill', [
+              'fillEnabled',
+              'fill',
+              'fillPatternImage',
+              'fillLinearGradientColorStops',
+              'fillRadialGradientColorStops',
+          ], function () {
+              return (_this.fillEnabled() &&
+                  !!(_this.fill() ||
+                      _this.fillPatternImage() ||
+                      _this.fillLinearGradientColorStops() ||
+                      _this.fillRadialGradientColorStops()));
+          });
       };
       /**
        * returns whether or not the shape will be stroked
@@ -6977,11 +7004,25 @@
        * @returns {Boolean}
        */
       Shape.prototype.hasStroke = function () {
-          return (this.strokeEnabled() &&
-              this.strokeWidth() &&
-              !!(this.stroke() || this.strokeLinearGradientColorStops())
-          // this.getStrokeRadialGradientColorStops()
-          );
+          var _this = this;
+          return this._calculate('hasStroke', [
+              'strokeEnabled',
+              'strokeWidth',
+              'stroke',
+              'strokeLinearGradientColorStops',
+          ], function () {
+              return (_this.strokeEnabled() &&
+                  _this.strokeWidth() &&
+                  !!(_this.stroke() || _this.strokeLinearGradientColorStops())
+              // this.getStrokeRadialGradientColorStops()
+              );
+          });
+          // return (
+          //   this.strokeEnabled() &&
+          //   this.strokeWidth() &&
+          //   !!(this.stroke() || this.strokeLinearGradientColorStops())
+          //   // this.getStrokeRadialGradientColorStops()
+          // );
       };
       Shape.prototype.hasHitStroke = function () {
           var width = this.hitStrokeWidth();
@@ -14806,7 +14847,7 @@
           var lastPos;
           node.on("dragstart." + EVENTS_NAME, function (e) {
               lastPos = node.getAbsolutePosition();
-              _this.fire('dragstart', e);
+              // this.fire('dragstart', e);
           });
           node.on("dragmove." + EVENTS_NAME, function (e) {
               if (!lastPos) {
@@ -14828,12 +14869,10 @@
                       y: otherAbs.y + dy,
                   });
                   otherNode.startDrag();
-                  // TODO: how to trigger event after all nodes are dragged?
-                  _this.fire('dragmove', e);
               });
-              node.on("dragend." + EVENTS_NAME, function (e) {
-                  _this.fire('dragend', e);
-              });
+              // node.on(`dragend.${EVENTS_NAME}`, (e) => {
+              //   this.fire('dragend', e);
+              // });
               lastPos = null;
           });
       };

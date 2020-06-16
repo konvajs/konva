@@ -197,6 +197,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   index = 0;
   parent: Container<Node> | null = null;
   _cache: Map<string, any> = new Map<string, any>();
+  _attachedDepsListeners: Map<string, boolean> = new Map<string, boolean>();
   _lastPos: Vector2d = null;
   _attrsAffectingSize!: string[];
   _batchingTransformChange = false;
@@ -273,6 +274,21 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     return cache;
   }
+
+  _calculate(name, deps, getter) {
+    // if we are trying to calculate function for the first time
+    // we need to attach listeners for change events
+    if (!this._attachedDepsListeners.get(name)) {
+      const depsString = deps.map((dep) => dep + 'Change.konva').join(SPACE);
+      this.on(depsString, () => {
+        this._clearCache(name);
+      });
+      this._attachedDepsListeners.set(name, true);
+    }
+    // just use cache function
+    return this._getCache(name, getter);
+  }
+
   _getCanvasCache() {
     return this._cache.get(CANVAS);
   }
@@ -1786,6 +1802,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     var m: Transform = this._cache.get(TRANSFORM) || new Transform();
     m.reset();
 
+    // I was trying to use attributes directly here
+    // but it doesn't work for Transformer well
+    // because it overwrite x,y getters
     var x = this.x(),
       y = this.y(),
       rotation = Konva.getAngle(this.rotation()),

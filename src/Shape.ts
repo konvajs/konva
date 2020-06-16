@@ -351,14 +351,26 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
    * @returns {Boolean}
    */
   hasFill() {
-    return (
-      this.fillEnabled() &&
-      !!(
-        this.fill() ||
-        this.fillPatternImage() ||
-        this.fillLinearGradientColorStops() ||
-        this.fillRadialGradientColorStops()
-      )
+    return this._calculate(
+      'hasFill',
+      [
+        'fillEnabled',
+        'fill',
+        'fillPatternImage',
+        'fillLinearGradientColorStops',
+        'fillRadialGradientColorStops',
+      ],
+      () => {
+        return (
+          this.fillEnabled() &&
+          !!(
+            this.fill() ||
+            this.fillPatternImage() ||
+            this.fillLinearGradientColorStops() ||
+            this.fillRadialGradientColorStops()
+          )
+        );
+      }
     );
   }
   /**
@@ -368,12 +380,29 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
    * @returns {Boolean}
    */
   hasStroke() {
-    return (
-      this.strokeEnabled() &&
-      this.strokeWidth() &&
-      !!(this.stroke() || this.strokeLinearGradientColorStops())
-      // this.getStrokeRadialGradientColorStops()
+    return this._calculate(
+      'hasStroke',
+      [
+        'strokeEnabled',
+        'strokeWidth',
+        'stroke',
+        'strokeLinearGradientColorStops',
+      ],
+      () => {
+        return (
+          this.strokeEnabled() &&
+          this.strokeWidth() &&
+          !!(this.stroke() || this.strokeLinearGradientColorStops())
+          // this.getStrokeRadialGradientColorStops()
+        );
+      }
     );
+    // return (
+    //   this.strokeEnabled() &&
+    //   this.strokeWidth() &&
+    //   !!(this.stroke() || this.strokeLinearGradientColorStops())
+    //   // this.getStrokeRadialGradientColorStops()
+    // );
   }
   hasHitStroke() {
     const width = this.hitStrokeWidth();

@@ -3861,9 +3861,9 @@ suite('Transformer', function () {
     // proxy drag to other nodes
     assert.equal(rect2.x(), 105);
     assert.equal(rect2.y(), 105);
-    assert.equal(dragstart, 2);
-    assert.equal(dragmove, 2);
-    assert.equal(dragend, 2);
+    assert.equal(dragstart, 1);
+    assert.equal(dragmove, 1);
+    assert.equal(dragend, 1);
   });
 
   test('reattach from several and drag one', function () {

@@ -316,7 +316,7 @@ export class Transformer extends Group {
     let lastPos;
     node.on(`dragstart.${EVENTS_NAME}`, (e) => {
       lastPos = node.getAbsolutePosition();
-      this.fire('dragstart', e);
+      // this.fire('dragstart', e);
     });
     node.on(`dragmove.${EVENTS_NAME}`, (e) => {
       if (!lastPos) {
@@ -338,12 +338,10 @@ export class Transformer extends Group {
           y: otherAbs.y + dy,
         });
         otherNode.startDrag();
-        // TODO: how to trigger event after all nodes are dragged?
-        this.fire('dragmove', e);
       });
-      node.on(`dragend.${EVENTS_NAME}`, (e) => {
-        this.fire('dragend', e);
-      });
+      // node.on(`dragend.${EVENTS_NAME}`, (e) => {
+      //   this.fire('dragend', e);
+      // });
       lastPos = null;
     });
   }
