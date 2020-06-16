@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v6.0.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Wed Jun 10 2020
+   * Date: Tue Jun 16 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -3277,24 +3277,27 @@
        * });
        */
       Node.prototype.setAttrs = function (config) {
-          var key, method;
-          if (!config) {
-              return this;
-          }
-          for (key in config) {
-              if (key === CHILDREN) {
-                  continue;
+          var _this = this;
+          this._batchTransformChanges(function () {
+              var key, method;
+              if (!config) {
+                  return _this;
               }
-              method = SET$1 + Util._capitalize(key);
-              // use setter if available
-              if (Util._isFunction(this[method])) {
-                  this[method](config[key]);
+              for (key in config) {
+                  if (key === CHILDREN) {
+                      continue;
+                  }
+                  method = SET$1 + Util._capitalize(key);
+                  // use setter if available
+                  if (Util._isFunction(_this[method])) {
+                      _this[method](config[key]);
+                  }
+                  else {
+                      // otherwise set directly
+                      _this._setAttr(key, config[key]);
+                  }
               }
-              else {
-                  // otherwise set directly
-                  this._setAttr(key, config[key]);
-              }
-          }
+          });
           return this;
       };
       /**
@@ -14801,10 +14804,11 @@
       Transformer.prototype._proxyDrag = function (node) {
           var _this = this;
           var lastPos;
-          node.on("dragstart." + EVENTS_NAME, function () {
+          node.on("dragstart." + EVENTS_NAME, function (e) {
               lastPos = node.getAbsolutePosition();
+              _this.fire('dragstart', e);
           });
-          node.on("dragmove." + EVENTS_NAME, function () {
+          node.on("dragmove." + EVENTS_NAME, function (e) {
               if (!lastPos) {
                   return;
               }
@@ -14824,6 +14828,11 @@
                       y: otherAbs.y + dy,
                   });
                   otherNode.startDrag();
+                  // TODO: how to trigger event after all nodes are dragged?
+                  _this.fire('dragmove', e);
+              });
+              node.on("dragend." + EVENTS_NAME, function (e) {
+                  _this.fire('dragend', e);
               });
               lastPos = null;
           });

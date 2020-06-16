@@ -961,24 +961,26 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * });
    */
   setAttrs(config: any) {
-    var key, method;
+    this._batchTransformChanges(() => {
+      var key, method;
+      if (!config) {
+        return this;
+      }
+      for (key in config) {
+        if (key === CHILDREN) {
+          continue;
+        }
+        method = SET + Util._capitalize(key);
+        // use setter if available
+        if (Util._isFunction(this[method])) {
+          this[method](config[key]);
+        } else {
+          // otherwise set directly
+          this._setAttr(key, config[key]);
+        }
+      }
+    });
 
-    if (!config) {
-      return this;
-    }
-    for (key in config) {
-      if (key === CHILDREN) {
-        continue;
-      }
-      method = SET + Util._capitalize(key);
-      // use setter if available
-      if (Util._isFunction(this[method])) {
-        this[method](config[key]);
-      } else {
-        // otherwise set directly
-        this._setAttr(key, config[key]);
-      }
-    }
     return this;
   }
   /**

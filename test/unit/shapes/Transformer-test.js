@@ -3829,6 +3829,18 @@ suite('Transformer', function () {
     var tr = new Konva.Transformer({
       nodes: [rect1, rect2],
     });
+
+    // make sure drag also triggers on the transformer.
+    tr.on('dragstart', () => {
+      dragstart += 1;
+    });
+    tr.on('dragmove', () => {
+      dragmove += 1;
+    });
+    tr.on('dragend', () => {
+      dragend += 1;
+    });
+
     layer.add(tr);
     layer.draw();
 
@@ -3849,9 +3861,9 @@ suite('Transformer', function () {
     // proxy drag to other nodes
     assert.equal(rect2.x(), 105);
     assert.equal(rect2.y(), 105);
-    assert.equal(dragstart, 1);
-    assert.equal(dragmove, 1);
-    assert.equal(dragend, 1);
+    assert.equal(dragstart, 2);
+    assert.equal(dragmove, 2);
+    assert.equal(dragend, 2);
   });
 
   test('reattach from several and drag one', function () {
