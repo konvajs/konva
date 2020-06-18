@@ -316,7 +316,11 @@ export class Transformer extends Group {
     let lastPos;
     node.on(`dragstart.${EVENTS_NAME}`, (e) => {
       lastPos = node.getAbsolutePosition();
-      // this.fire('dragstart', e);
+      // actual dragging of Transformer doesn't make sense
+      // but we need to proxy drag events
+      if (!this.isDragging() && node !== this.findOne('.back')) {
+        this.startDrag();
+      }
     });
     node.on(`dragmove.${EVENTS_NAME}`, (e) => {
       if (!lastPos) {
@@ -339,9 +343,6 @@ export class Transformer extends Group {
         });
         otherNode.startDrag();
       });
-      // node.on(`dragend.${EVENTS_NAME}`, (e) => {
-      //   this.fire('dragend', e);
-      // });
       lastPos = null;
     });
   }

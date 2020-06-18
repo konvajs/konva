@@ -3853,17 +3853,22 @@ suite('Transformer', function () {
       y: 80,
     });
 
+    stage.simulateMouseMove({
+      x: 85,
+      y: 85,
+    });
+
     stage.simulateMouseUp({
       x: 80,
       y: 80,
     });
 
     // proxy drag to other nodes
-    assert.equal(rect2.x(), 105);
-    assert.equal(rect2.y(), 105);
-    assert.equal(dragstart, 1);
-    assert.equal(dragmove, 1);
-    assert.equal(dragend, 1);
+    assert.equal(rect2.x(), 110);
+    assert.equal(rect2.y(), 110);
+    assert.equal(dragstart, 2);
+    assert.equal(dragmove, 3);
+    assert.equal(dragend, 2);
   });
 
   test('reattach from several and drag one', function () {
@@ -4023,6 +4028,13 @@ suite('Transformer', function () {
 
     stage.simulateMouseDown({
       x: 110,
+      y: 90,
+    });
+
+    // move mouse twice
+    // because first move will jus trigger start dragging
+    stage.simulateMouseMove({
+      x: 120,
       y: 90,
     });
     stage.simulateMouseMove({

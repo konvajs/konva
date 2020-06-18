@@ -6,7 +6,7 @@ import { Util } from './Util';
 export const DD = {
   get isDragging() {
     var flag = false;
-    DD._dragElements.forEach(elem => {
+    DD._dragElements.forEach((elem) => {
       if (elem.dragStatus === 'dragging') {
         flag = true;
       }
@@ -17,7 +17,7 @@ export const DD = {
   get node() {
     // return first dragging node
     var node: Node | undefined;
-    DD._dragElements.forEach(elem => {
+    DD._dragElements.forEach((elem) => {
       node = elem.node;
     });
     return node;
@@ -40,6 +40,7 @@ export const DD = {
 
   // methods
   _drag(evt) {
+    const nodesToFireEvents: Array<Node> = [];
     DD._dragElements.forEach((elem, key) => {
       const { node } = elem;
       // we need to find pointer relative to that node
@@ -52,7 +53,7 @@ export const DD = {
         elem.pointerId = Util._getFirstPointerId(evt);
       }
       const pos = stage._changedPointerPositions.find(
-        pos => pos.id === elem.pointerId
+        (pos) => pos.id === elem.pointerId
       );
 
       // not related pointer
@@ -75,14 +76,16 @@ export const DD = {
         }
       }
       node._setDragPosition(evt, elem);
-
-      // execute ondragmove if defined
+      nodesToFireEvents.push(node);
+    });
+    // call dragmove only after ALL positions are changed
+    nodesToFireEvents.forEach((node) => {
       node.fire(
         'dragmove',
         {
           type: 'dragmove',
           target: node,
-          evt: evt
+          evt: evt,
         },
         true
       );
@@ -101,7 +104,7 @@ export const DD = {
       }
 
       const pos = stage._changedPointerPositions.find(
-        pos => pos.id === elem.pointerId
+        (pos) => pos.id === elem.pointerId
       );
 
       // that pointer is not related
@@ -132,7 +135,7 @@ export const DD = {
           {
             type: 'dragend',
             target: elem.node,
-            evt: evt
+            evt: evt,
           },
           true
         );
@@ -141,7 +144,7 @@ export const DD = {
         DD._dragElements.delete(key);
       }
     });
-  }
+  },
 };
 
 if (Konva.isBrowser) {

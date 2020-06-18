@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v6.0.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Jun 16 2020
+   * Date: Thu Jun 18 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2459,6 +2459,7 @@
       _dragElements: new Map(),
       // methods
       _drag: function (evt) {
+          var nodesToFireEvents = [];
           DD._dragElements.forEach(function (elem, key) {
               var node = elem.node;
               // we need to find pointer relative to that node
@@ -2487,11 +2488,14 @@
                   }
               }
               node._setDragPosition(evt, elem);
-              // execute ondragmove if defined
+              nodesToFireEvents.push(node);
+          });
+          // call dragmove only after ALL positions are changed
+          nodesToFireEvents.forEach(function (node) {
               node.fire('dragmove', {
                   type: 'dragmove',
                   target: node,
-                  evt: evt
+                  evt: evt,
               }, true);
           });
       },
@@ -2529,14 +2533,14 @@
                   elem.node.fire('dragend', {
                       type: 'dragend',
                       target: elem.node,
-                      evt: evt
+                      evt: evt,
                   }, true);
               }
               if (elem.dragStatus !== 'dragging') {
                   DD._dragElements.delete(key);
               }
           });
-      }
+      },
   };
   if (Konva.isBrowser) {
       window.addEventListener('mouseup', DD._endDragBefore, true);
@@ -5047,8 +5051,8 @@
    * in that case you can set the property to false
    * @name Konva.Node#preventDefault
    * @method
-   * @param {Number} preventDefault
-   * @returns {Number}
+   * @param {Boolean} preventDefault
+   * @returns {Boolean}
    * @example
    * // get preventDefault
    * var shouldPrevent = shape.preventDefault();
@@ -14847,7 +14851,11 @@
           var lastPos;
           node.on("dragstart." + EVENTS_NAME, function (e) {
               lastPos = node.getAbsolutePosition();
-              // this.fire('dragstart', e);
+              // actual dragging of Transformer doesn't make sense
+              // but we need to proxy drag events
+              if (!_this.isDragging() && node !== _this.findOne('.back')) {
+                  _this.startDrag();
+              }
           });
           node.on("dragmove." + EVENTS_NAME, function (e) {
               if (!lastPos) {
@@ -14870,9 +14878,6 @@
                   });
                   otherNode.startDrag();
               });
-              // node.on(`dragend.${EVENTS_NAME}`, (e) => {
-              //   this.fire('dragend', e);
-              // });
               lastPos = null;
           });
       };

@@ -3002,8 +3002,8 @@ addGetterSetter(Node, 'listening', true, getBooleanValidator());
  * in that case you can set the property to false
  * @name Konva.Node#preventDefault
  * @method
- * @param {Number} preventDefault
- * @returns {Number}
+ * @param {Boolean} preventDefault
+ * @returns {Boolean}
  * @example
  * // get preventDefault
  * var shouldPrevent = shape.preventDefault();
