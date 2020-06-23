@@ -5,13 +5,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Not released:
 
+## 7.0.0 - 2020-06-23
+
 * **BREAKING** `inherit` option is removed from `visible` and `listening`. They now just have boolean values `true` or `false`. If you do `group.listening(false);` then whole group and all its children will be removed from the hitGraph (and they will not listen to events). Probably 99% `Konva` applications will be not affected by this *breaking change*.
 * `layer.hitGraphEnabled()` is deprecated. Just use `layer.listening(false)` instead
-* Many performance fixes and code size optimizations
 * Better support for font families with spaces inside (like `Font Awesome 5`).
 * Fix wrong `dblclick` and `dbltap` triggers
 * Deprecate `Konva.FastLayer`. Use `new Konva.Layer({ listening: false });` instead.
-* Up to 20% performance boost for many moving nodes.
+* Many performance fixes and code size optimizations. Up to 20% performance boost for many moving nodes.
 * `dragmove` event will be fired on `Konva.Transformer` too when you drag a node.
 * `dragmove` triggers only after ALL positions of dragging nodes are changed
 
