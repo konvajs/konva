@@ -463,7 +463,8 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
       return false;
     }
     // force skip buffer canvas
-    if (!this.perfectDrawEnabled()) {
+    const perfectDrawEnabled = this.attrs.perfectDrawEnabled ?? true;
+    if (!perfectDrawEnabled) {
       return false;
     }
     const hasFill = forceFill || this.hasFill();
@@ -579,9 +580,8 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
       canvas = can || layer.getCanvas(),
       context = canvas.getContext() as SceneContext,
       cachedCanvas = this._getCanvasCache(),
-      drawFunc = this.sceneFunc(),
+      drawFunc = this.getSceneFunc(),
       hasShadow = this.hasShadow(),
-      hasStroke = this.hasStroke(),
       stage,
       bufferCanvas,
       bufferContext;

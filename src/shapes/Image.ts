@@ -39,16 +39,16 @@ export class Image extends Shape<ImageConfig> {
     return super._useBufferCanvas(true);
   }
   _sceneFunc(context) {
-    var width = this.width(),
-      height = this.height(),
-      image = this.image(),
+    var width = this.getWidth(),
+      height = this.getHeight(),
+      image = this.attrs.image,
       cropWidth,
       cropHeight,
       params;
 
     if (image) {
-      cropWidth = this.cropWidth();
-      cropHeight = this.cropHeight();
+      cropWidth = this.attrs.cropWidth;
+      cropHeight = this.attrs.cropHeight;
       if (cropWidth && cropHeight) {
         params = [
           image,
@@ -87,12 +87,10 @@ export class Image extends Shape<ImageConfig> {
     context.fillStrokeShape(this);
   }
   getWidth() {
-    var image = this.image();
-    return this.attrs.width ?? (image ? image.width : 0);
+    return this.attrs.width ?? (this.image()?.width || 0);
   }
   getHeight() {
-    var image = this.image();
-    return this.attrs.height ?? (image ? image.height : 0);
+    return this.attrs.height ?? (this.image()?.height || 0);
   }
 
   /**

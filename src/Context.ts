@@ -261,7 +261,7 @@ export class Context {
     }
   }
   _applyLineJoin(shape: Shape) {
-    var lineJoin = shape.lineJoin();
+    var lineJoin = shape.attrs.lineJoin;
     if (lineJoin) {
       this.setAttr('lineJoin', lineJoin);
     }

@@ -93,6 +93,8 @@
             x: 10,
             y: 10,
             perfectDrawEnabled: false,
+            width: wabbitTexture.width,
+            height: wabbitTexture.height,
           });
 
           bunny.speedX = Math.random() * 10;
@@ -101,7 +103,22 @@
           bunnys.push(bunny);
           layer.add(bunny);
         }
-        layer.draw();
+        // layer.draw();
+        // console.clear();
+        // bunnys.forEach((b) => {
+        //   b.position({
+        //     x: Math.random() * window.innerWidth,
+        //     y: Math.random() * window.innerHeight,
+        //   });
+        // });
+        // layer.draw();
+        // bunnys.forEach((b) => {
+        //   b.position({
+        //     x: Math.random() * window.innerWidth,
+        //     y: Math.random() * window.innerHeight,
+        //   });
+        // });
+        // layer.draw();
       }
 
       function onTouchStart(event) {
@@ -124,6 +141,8 @@
               x: 0,
               y: 0,
               perfectDrawEnabled: false,
+              width: wabbitTexture.width,
+              height: wabbitTexture.height,
             });
             bunny.speedX = Math.random() * 10;
             bunny.speedY = Math.random() * 10 - 5;

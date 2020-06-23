@@ -1732,7 +1732,13 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       if (transformsEnabled === 'all') {
         at.multiply(this.getTransform());
       } else if (transformsEnabled === 'position') {
-        at.translate(this.x() - this.offsetX(), this.y() - this.offsetY());
+        // use "attrs" directly, because it is a bit faster
+        const x = this.attrs.x || 0;
+        const y = this.attrs.y || 0;
+        const offsetX = this.attrs.offsetX || 0;
+        const offsetY = this.attrs.offsetY || 0;
+
+        at.translate(x - offsetX, y - offsetY);
       }
       at.dirty = false;
       return at;
@@ -1808,12 +1814,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     var x = this.x(),
       y = this.y(),
       rotation = Konva.getAngle(this.rotation()),
-      scaleX = this.scaleX(),
-      scaleY = this.scaleY(),
-      skewX = this.skewX(),
-      skewY = this.skewY(),
-      offsetX = this.offsetX(),
-      offsetY = this.offsetY();
+      scaleX = this.attrs.scaleX ?? 1,
+      scaleY = this.attrs.scaleY ?? 1,
+      skewX = this.attrs.skewX || 0,
+      skewY = this.attrs.skewY || 0,
+      offsetX = this.attrs.offsetX || 0,
+      offsetY = this.attrs.offsetY || 0;
 
     if (x !== 0 || y !== 0) {
       m.translate(x, y);
