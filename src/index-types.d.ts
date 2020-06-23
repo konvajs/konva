@@ -59,6 +59,9 @@ declare namespace Konva {
 
   export const Collection: typeof import('./Util').Collection;
   export type Collection<Node> = import('./Util').Collection<Node>;
+  export const Transform: typeof import('./Util').Transform;
+  export type Transform = import('./Util').Transform;
+
   export const Util: typeof import('./Util').Util;
 
   export const Context: typeof import('./Context').Context;
