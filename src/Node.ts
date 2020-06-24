@@ -1490,6 +1490,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     obj.attrs = {};
 
+    
+    if (attrs.image) {
+      obj.attrs.imageSource = attrs.image.getAttribute('src');
+    }
+
     for (key in attrs) {
       val = attrs[key];
       // if value is object and object is not plain

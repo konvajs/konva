@@ -10,7 +10,7 @@
     "types",
     "lib"
   ],
-  "main": "./lib/index.js",
+  "main": "./konva.js",
   "typings": "./types/index-types.d.ts",
   "scripts": {
     "start": "npm run watch & gulp",
