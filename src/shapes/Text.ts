@@ -64,6 +64,22 @@ var AUTO = 'auto',
   ],
   // cached variables
   attrChangeListLen = ATTR_CHANGE_LIST.length;
+
+function normalizeFontFamily(fontFamily: string) {
+  return fontFamily
+    .split(',')
+    .map((family) => {
+      family = family.trim();
+      const hasSpace = family.indexOf(' ') >= 0;
+      const hasQuotes = family.indexOf('"') >= 0 || family.indexOf("'") >= 0;
+      if (hasSpace && !hasQuotes) {
+        family = `"${family}"`;
+      }
+      return family;
+    })
+    .join(', ');
+}
+
 var dummyContext;
 function getDummyContext() {
   if (dummyContext) {
@@ -361,6 +377,7 @@ export class Text extends Shape<TextConfig> {
         this.fontFamily()
       );
     }
+
     return (
       this.fontStyle() +
       SPACE +
@@ -368,9 +385,7 @@ export class Text extends Shape<TextConfig> {
       SPACE +
       (this.fontSize() + PX_SPACE) +
       // wrap font family into " so font families with spaces works ok
-      '"' +
-      this.fontFamily() +
-      '"'
+      normalizeFontFamily(this.fontFamily())
     );
   }
   _addTextLine(line) {

@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.0.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Jun 23 2020
+   * Date: Thu Jun 25 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -13274,6 +13274,20 @@
   ], 
   // cached variables
   attrChangeListLen$1 = ATTR_CHANGE_LIST$1.length;
+  function normalizeFontFamily(fontFamily) {
+      return fontFamily
+          .split(',')
+          .map(function (family) {
+          family = family.trim();
+          var hasSpace = family.indexOf(' ') >= 0;
+          var hasQuotes = family.indexOf('"') >= 0 || family.indexOf("'") >= 0;
+          if (hasSpace && !hasQuotes) {
+              family = "\"" + family + "\"";
+          }
+          return family;
+      })
+          .join(', ');
+  }
   var dummyContext$1;
   function getDummyContext$1() {
       if (dummyContext$1) {
@@ -13586,9 +13600,7 @@
               SPACE$1 +
               (this.fontSize() + PX_SPACE) +
               // wrap font family into " so font families with spaces works ok
-              '"' +
-              this.fontFamily() +
-              '"');
+              normalizeFontFamily(this.fontFamily()));
       };
       Text.prototype._addTextLine = function (line) {
           if (this.align() === JUSTIFY) {
