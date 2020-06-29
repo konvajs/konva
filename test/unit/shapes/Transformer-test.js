@@ -1318,6 +1318,48 @@ suite('Transformer', function () {
     });
   });
 
+  test('slightly move for cache check (top-left anchor)', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 20,
+      y: 20,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+    });
+    layer.add(tr);
+
+    layer.draw();
+
+    var anchor = tr.findOne('.top-left');
+    assert.almostEqual(anchor.getAbsolutePosition().x, 20);
+
+    tr.simulateMouseDown({
+      x: 20,
+      y: 20,
+    });
+
+    tr.simulateMouseMove({
+      x: 20,
+      y: 20,
+    });
+
+    tr.simulateMouseUp();
+    layer.draw();
+
+    assert.almostEqual(rect.x(), 20);
+    assert.almostEqual(rect.y(), 20);
+  });
+
   test('rotation snaps', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

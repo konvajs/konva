@@ -3,8 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-- no released:
+## 7.0.1 - 2020-06-29
+
 * Fixes for different font families support.
+* Fixes for `Konva.Transformer` positions
+* Types fixes for better Typescript support
 
 
 ## 7.0.0 - 2020-06-23

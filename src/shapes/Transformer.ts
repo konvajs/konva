@@ -825,6 +825,7 @@ export class Transformer extends Group {
 
     x = absPos.x;
     y = absPos.y;
+
     var width =
       this.findOne('.bottom-right').x() - this.findOne('.top-left').x();
 
@@ -1011,9 +1012,7 @@ export class Transformer extends Group {
         .multiply(localTransform);
 
       const attrs = newLocalTransform.decompose();
-      node._batchTransformChanges(() => {
-        node.setAttrs(attrs);
-      });
+      node.setAttrs(attrs);
       this._fire('transform', { evt: evt, target: node });
       node._fire('transform', { evt: evt, target: node });
     });
@@ -1035,9 +1034,7 @@ export class Transformer extends Group {
 
   _batchChangeChild(selector: string, attrs: any) {
     const anchor = this.findOne(selector);
-    anchor._batchTransformChanges(() => {
-      anchor.setAttrs(attrs);
-    });
+    anchor.setAttrs(attrs);
   }
 
   update() {
@@ -1052,17 +1049,15 @@ export class Transformer extends Group {
 
     var anchorSize = this.anchorSize();
     this.find('._anchor').each((node) => {
-      node._batchTransformChanges(() => {
-        node.setAttrs({
-          width: anchorSize,
-          height: anchorSize,
-          offsetX: anchorSize / 2,
-          offsetY: anchorSize / 2,
-          stroke: this.anchorStroke(),
-          strokeWidth: this.anchorStrokeWidth(),
-          fill: this.anchorFill(),
-          cornerRadius: this.anchorCornerRadius(),
-        });
+      node.setAttrs({
+        width: anchorSize,
+        height: anchorSize,
+        offsetX: anchorSize / 2,
+        offsetY: anchorSize / 2,
+        stroke: this.anchorStroke(),
+        strokeWidth: this.anchorStrokeWidth(),
+        fill: this.anchorFill(),
+        cornerRadius: this.anchorCornerRadius(),
       });
     });
 

@@ -54,7 +54,7 @@ var HASH = '#',
  * // now you can add shapes, groups into the layer
  */
 
-export abstract class Layer extends Container<Group | Shape> {
+export class Layer extends Container<Group | Shape> {
   canvas = new SceneCanvas();
   hitCanvas = new HitCanvas({
     pixelRatio: 1,

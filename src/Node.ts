@@ -1212,8 +1212,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return absoluteTransform.getTranslation();
   }
   setAbsolutePosition(pos) {
-    var origTrans = this._clearTransform(),
-      it;
+    var origTrans = this._clearTransform();
 
     // don't clear translation
     this.attrs.x = origTrans.x;
@@ -1223,7 +1222,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     // important, use non cached value
     this._clearCache(TRANSFORM);
-    it = this._getAbsoluteTransform();
+    var it = this._getAbsoluteTransform().copy();
 
     it.invert();
     it.translate(pos.x, pos.y);
@@ -1233,6 +1232,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     };
     this._setTransform(origTrans);
     this.setPosition({ x: pos.x, y: pos.y });
+    this._clearCache(TRANSFORM);
+    this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
 
     return this;
   }

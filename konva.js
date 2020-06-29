@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.0.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Thu Jun 25 2020
+   * Date: Mon Jun 29 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -3514,7 +3514,7 @@
           return absoluteTransform.getTranslation();
       };
       Node.prototype.setAbsolutePosition = function (pos) {
-          var origTrans = this._clearTransform(), it;
+          var origTrans = this._clearTransform();
           // don't clear translation
           this.attrs.x = origTrans.x;
           this.attrs.y = origTrans.y;
@@ -3522,7 +3522,7 @@
           delete origTrans.y;
           // important, use non cached value
           this._clearCache(TRANSFORM);
-          it = this._getAbsoluteTransform();
+          var it = this._getAbsoluteTransform().copy();
           it.invert();
           it.translate(pos.x, pos.y);
           pos = {
@@ -3531,6 +3531,8 @@
           };
           this._setTransform(origTrans);
           this.setPosition({ x: pos.x, y: pos.y });
+          this._clearCache(TRANSFORM);
+          this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
           return this;
       };
       Node.prototype._setTransform = function (trans) {
@@ -15445,9 +15447,7 @@
                   .multiply(parentTransform)
                   .multiply(localTransform);
               var attrs = newLocalTransform.decompose();
-              node._batchTransformChanges(function () {
-                  node.setAttrs(attrs);
-              });
+              node.setAttrs(attrs);
               _this._fire('transform', { evt: evt, target: node });
               node._fire('transform', { evt: evt, target: node });
           });
@@ -15468,9 +15468,7 @@
       };
       Transformer.prototype._batchChangeChild = function (selector, attrs) {
           var anchor = this.findOne(selector);
-          anchor._batchTransformChanges(function () {
-              anchor.setAttrs(attrs);
-          });
+          anchor.setAttrs(attrs);
       };
       Transformer.prototype.update = function () {
           var _this = this;
@@ -15483,17 +15481,15 @@
           var padding = this.padding();
           var anchorSize = this.anchorSize();
           this.find('._anchor').each(function (node) {
-              node._batchTransformChanges(function () {
-                  node.setAttrs({
-                      width: anchorSize,
-                      height: anchorSize,
-                      offsetX: anchorSize / 2,
-                      offsetY: anchorSize / 2,
-                      stroke: _this.anchorStroke(),
-                      strokeWidth: _this.anchorStrokeWidth(),
-                      fill: _this.anchorFill(),
-                      cornerRadius: _this.anchorCornerRadius(),
-                  });
+              node.setAttrs({
+                  width: anchorSize,
+                  height: anchorSize,
+                  offsetX: anchorSize / 2,
+                  offsetY: anchorSize / 2,
+                  stroke: _this.anchorStroke(),
+                  strokeWidth: _this.anchorStrokeWidth(),
+                  fill: _this.anchorFill(),
+                  cornerRadius: _this.anchorCornerRadius(),
               });
           });
           this._batchChangeChild('.top-left', {
