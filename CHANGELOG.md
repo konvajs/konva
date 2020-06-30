@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 7.0.2 - 2020-06-30
+
+* Fix wrong trigger `dbltap` and `click` on mobile
+
 ## 7.0.1 - 2020-06-29
 
 * Fixes for different font families support.

@@ -135,8 +135,9 @@ export class Stage extends Container<Layer> {
   targetShape: Shape;
   clickStartShape: Shape;
   clickEndShape: Shape;
-  dblTimeout: any;
   tapStartShape: Shape;
+  tapEndShape: Shape;
+  dblTimeout: any;
 
   constructor(config: StageConfig) {
     super(checkNoClip(config));
@@ -747,7 +748,7 @@ export class Stage extends Container<Layer> {
   _touchend(evt) {
     this.setPointersPositions(evt);
 
-    var clickEndShape = this.clickEndShape,
+    var tapEndShape = this.tapEndShape,
       fireDblClick = false;
 
     if (Konva.inDblClickWindow) {
@@ -786,7 +787,7 @@ export class Stage extends Container<Layer> {
       }
       processedShapesIds[shape._id] = true;
 
-      this.clickEndShape = shape;
+      this.tapEndShape = shape;
       shape._fireAndBubble(TOUCHEND, { evt: evt, pointerId: pos.id });
       triggeredOnShape = true;
 
@@ -795,7 +796,7 @@ export class Stage extends Container<Layer> {
         tapTriggered = true;
         shape._fireAndBubble(TAP, { evt: evt, pointerId: pos.id });
 
-        if (fireDblClick && clickEndShape && clickEndShape === shape) {
+        if (fireDblClick && tapEndShape && tapEndShape === shape) {
           dblTapTriggered = true;
           shape._fireAndBubble(DBL_TAP, { evt: evt, pointerId: pos.id });
         }
@@ -817,7 +818,7 @@ export class Stage extends Container<Layer> {
     }
 
     if (Konva.listenClickTap && !tapTriggered) {
-      this.clickEndShape = null;
+      this.tapEndShape = null;
       this._fire(TAP, {
         evt: evt,
         target: this,
@@ -840,6 +841,10 @@ export class Stage extends Container<Layer> {
       if (fireDblClick) {
         this._fire(CONTENT_DBL_TAP, { evt: evt });
       }
+    }
+
+    if (this.preventDefault() && evt.cancelable) {
+      evt.preventDefault();
     }
 
     Konva.listenClickTap = false;
