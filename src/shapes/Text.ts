@@ -267,9 +267,7 @@ export class Text extends Shape<TextConfig> {
           var letter = text[li];
           // skip justify for the last line
           if (letter === ' ' && n !== textArrLen - 1 && align === JUSTIFY) {
-            lineTranslateX += Math.floor(
-              (totalWidth - padding * 2 - width) / spacesNumber
-            );
+            lineTranslateX += (totalWidth - padding * 2 - width) / spacesNumber;
             // context.translate(
             //   Math.floor((totalWidth - padding * 2 - width) / spacesNumber),
             //   0
@@ -279,8 +277,7 @@ export class Text extends Shape<TextConfig> {
           this._partialTextY = translateY + lineTranslateY;
           this._partialText = letter;
           context.fillStrokeShape(this);
-          lineTranslateX +=
-            Math.round(this.measureSize(letter).width) + letterSpacing;
+          lineTranslateX += this.measureSize(letter).width + letterSpacing;
         }
       } else {
         this._partialTextX = lineTranslateX;

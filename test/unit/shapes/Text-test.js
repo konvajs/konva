@@ -559,7 +559,7 @@ suite('Text', function () {
     stage.add(layer);
 
     var trace =
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,80);lineTo(189,80);stroke();restore();fillStyle=red;fillText(h,0,40);fillStyle=red;fillText(e,49,40);fillStyle=red;fillText(l,98,40);fillStyle=red;fillText(l,121,40);fillStyle=red;fillText(o,144,40);restore();save();save();beginPath();moveTo(0,160);lineTo(211,160);stroke();restore();fillStyle=red;fillText(w,0,120);fillStyle=red;fillText(o,63,120);fillStyle=red;fillText(r,112,120);fillStyle=red;fillText(l,144,120);fillStyle=red;fillText(d,167,120);restore();restore();';
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,80);lineTo(189,80);stroke();restore();fillStyle=red;fillText(h,0,40);fillStyle=red;fillText(e,49.492,40);fillStyle=red;fillText(l,98.984,40);fillStyle=red;fillText(l,121.758,40);fillStyle=red;fillText(o,144.531,40);restore();save();save();beginPath();moveTo(0,160);lineTo(211,160);stroke();restore();fillStyle=red;fillText(w,0,120);fillStyle=red;fillText(o,62.773,120);fillStyle=red;fillText(r,112.266,120);fillStyle=red;fillText(l,143.906,120);fillStyle=red;fillText(d,166.68,120);restore();restore();';
 
     assert.equal(layer.getContext().getTrace(), trace);
   });
@@ -747,6 +747,79 @@ suite('Text', function () {
     layer.add(text);
     layer.draw();
     assert.equal(text.getTextWidth() > 0 && text.getTextWidth() < 100, true);
+  });
+
+  test('get text width of long text with spacing (check it visually!)', function () {
+    var stage = addStage();
+    stage.draggable(true);
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var textProps = {
+      x: 10,
+      y: 10,
+      fontSize: 19,
+      text:
+        'very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text.',
+      draggable: true,
+    };
+
+    var text1 = new Konva.Text(textProps);
+    layer.add(text1);
+    var box1 = new Konva.Rect(
+      Object.assign(text1.getClientRect(), { stroke: 'black' })
+    );
+    layer.add(box1);
+
+    // demo2
+    var text2 = new Konva.Text(
+      Object.assign(textProps, { letterSpacing: 4, y: 50 })
+    );
+    layer.add(text2);
+    var box2 = new Konva.Rect(
+      Object.assign(text2.getClientRect(), { stroke: 'black' })
+    );
+    layer.add(box2);
+
+    // demo3
+
+    var text3 = new Konva.Text(
+      Object.assign(textProps, {
+        text:
+          'gregrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg4g4g4',
+        letterSpacing: 4,
+        fontSize: 20,
+        y: 100,
+      })
+    );
+    layer.add(text3);
+    var box3 = new Konva.Rect(
+      Object.assign(text3.getClientRect(), { stroke: 'black' })
+    );
+    layer.add(box3);
+
+    // demo4
+    var text4 = new Konva.Text(
+      Object.assign(textProps, {
+        text:
+          'gregrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg4g4g4',
+        letterSpacing: 4,
+        fontSize: 19,
+        y: 150,
+      })
+    );
+    layer.add(text4);
+    var box4 = new Konva.Rect(
+      Object.assign(text4.getClientRect(), { stroke: 'black' })
+    );
+    layer.add(box4);
+
+    layer.draw();
+
+    assert.almostEqual(text1.width(), 1724.50048828125);
+    assert.almostEqual(text2.width(), 2612.50048828125);
+    assert.almostEqual(text3.width(), 2005.376953125);
+    assert.almostEqual(text4.width(), 1932.30810546875);
   });
 
   test('default text color should be black', function () {

@@ -308,7 +308,7 @@ export abstract class Container<ChildType extends Node> extends Node<
    * because it performs very poorly.  Please use the {@link Konva.Stage#getIntersection} method if at all possible
    * because it performs much better
    * @method
-   * @name Konva.Container#getIntersection
+   * @name Konva.Container#getAllIntersections
    * @param {Object} pos
    * @param {Number} pos.x
    * @param {Number} pos.y

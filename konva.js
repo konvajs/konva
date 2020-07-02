@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.0.2
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Jun 30 2020
+   * Date: Thu Jul 02 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -5503,7 +5503,7 @@
        * because it performs very poorly.  Please use the {@link Konva.Stage#getIntersection} method if at all possible
        * because it performs much better
        * @method
-       * @name Konva.Container#getIntersection
+       * @name Konva.Container#getAllIntersections
        * @param {Object} pos
        * @param {Number} pos.x
        * @param {Number} pos.y
@@ -13502,7 +13502,7 @@
                       var letter = text[li];
                       // skip justify for the last line
                       if (letter === ' ' && n !== textArrLen - 1 && align === JUSTIFY) {
-                          lineTranslateX += Math.floor((totalWidth - padding * 2 - width) / spacesNumber);
+                          lineTranslateX += (totalWidth - padding * 2 - width) / spacesNumber;
                           // context.translate(
                           //   Math.floor((totalWidth - padding * 2 - width) / spacesNumber),
                           //   0
@@ -13512,8 +13512,7 @@
                       this._partialTextY = translateY + lineTranslateY;
                       this._partialText = letter;
                       context.fillStrokeShape(this);
-                      lineTranslateX +=
-                          Math.round(this.measureSize(letter).width) + letterSpacing;
+                      lineTranslateX += this.measureSize(letter).width + letterSpacing;
                   }
               }
               else {
