@@ -219,7 +219,7 @@ export abstract class Container<ChildType extends Node> extends Node<
    *  return node.getType() === 'Shape'
    * })
    */
-  findOne<ChildNode extends Node = Node>(selector: string | Function): Node {
+  findOne<ChildNode extends Node = Node>(selector: string | Function) {
     var result = this._generalFind<ChildNode>(selector, true);
     return result.length > 0 ? result[0] : undefined;
   }
@@ -227,9 +227,9 @@ export abstract class Container<ChildType extends Node> extends Node<
     selector: string | Function,
     findOne: boolean
   ) {
-    var retArr: Array<Node> = [];
+    var retArr: Array<ChildNode> = [];
 
-    this._descendants((node) => {
+    this._descendants((node: ChildNode) => {
       const valid = node._isMatch(selector);
       if (valid) {
         retArr.push(node);
@@ -240,7 +240,7 @@ export abstract class Container<ChildType extends Node> extends Node<
       return false;
     });
 
-    return Collection.toCollection(retArr);
+    return Collection.toCollection<ChildNode>(retArr);
   }
   private _descendants(fn: (n: Node) => boolean) {
     let shouldStop = false;

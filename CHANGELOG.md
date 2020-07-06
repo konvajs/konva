@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+* Fix incorrect text rendering with `letterSpacing !== 0`
+* Typescript fixes
+
 ## 7.0.2 - 2020-06-30
 
 * Fix wrong trigger `dbltap` and `click` on mobile
