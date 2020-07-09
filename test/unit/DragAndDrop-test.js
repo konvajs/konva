@@ -1126,4 +1126,46 @@ suite('DragAndDrop', function () {
     assert.equal(circle.x(), 70);
     assert.equal(circle.y(), 70);
   });
+
+  test('disable drag on click', function () {
+    var stage = addStage();
+    stage.draggable(true);
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var circle = new Konva.Circle({
+      x: 70,
+      y: 70,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle',
+      draggable: true,
+    });
+    layer.add(circle);
+    layer.draw();
+
+    circle.on('click', function () {
+      circle.draggable(false);
+      circle.draggable(true);
+    });
+
+    var dragstart = 0;
+    var dragend = 0;
+
+    stage.on('dragstart', function (e) {
+      dragstart += 1;
+    });
+    stage.on('dragend', function (e) {
+      dragend += 1;
+    });
+
+    stage.simulateMouseDown({ x: 70, y: 75 });
+    stage.simulateMouseUp({ x: 70, y: 70 });
+
+    // drag events should not be called
+    assert.equal(dragstart, 0);
+    assert.equal(dragend, 0);
+  });
 });

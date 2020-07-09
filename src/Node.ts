@@ -2461,8 +2461,17 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
        * drag and drop mode
        */
       var stage = this.getStage();
-      if (stage && DD._dragElements.has(this._id)) {
+      if (!stage) {
+        return;
+      }
+      const dragElement = DD._dragElements.get(this._id);
+      const isDragging = dragElement && dragElement.dragStatus === 'dragging';
+      const isReady = dragElement && dragElement.dragStatus === 'ready';
+
+      if (isDragging) {
         this.stopDrag();
+      } else if (isReady) {
+        DD._dragElements.delete(this._id);
       }
     }
   }

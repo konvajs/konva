@@ -64,10 +64,10 @@ export class Layer extends Container<Group | Shape> {
 
   constructor(config?: LayerConfig) {
     super(config);
-    this.on('visibleChange', this._checkVisibility);
+    this.on('visibleChange.konva', this._checkVisibility);
     this._checkVisibility();
 
-    this.on('imageSmoothingEnabledChange', this._setSmoothEnabled);
+    this.on('imageSmoothingEnabledChange.konva', this._setSmoothEnabled);
     this._setSmoothEnabled();
   }
   // for nodejs?

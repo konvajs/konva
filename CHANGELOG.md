@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 7.0.3 - 2020-07-09
+
+* Fix wring `dragend` trigger on `draggable` property change inside `click`
 * Fix incorrect text rendering with `letterSpacing !== 0`
 * Typescript fixes
 
