@@ -188,10 +188,6 @@ in particular if you have a bug fix, enhancement, or a new shape (see `src/shape
 
 ## Contributors
 
-### Code Contributors
-
-This project exists thanks to all the people who contribute.
-<a href="https://github.com/konvajs/konva/graphs/contributors"><img src="https://opencollective.com/konva/contributors.svg?width=890&button=false" /></a>
 
 ### Financial Contributors
 
