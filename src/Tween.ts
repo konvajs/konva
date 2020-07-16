@@ -9,7 +9,7 @@ var blacklist = {
     duration: 1,
     easing: 1,
     onFinish: 1,
-    yoyo: 1
+    yoyo: 1,
   },
   PAUSED = 1,
   PLAYING = 2,
@@ -159,7 +159,8 @@ class TweenEngine {
  *   node: node,
  *   rotationDeg: 360,
  *   duration: 1,
- *   easing: Konva.Easings.EaseInOut
+ *   easing: Konva.Easings.EaseInOut,
+ *   onFinish: () => console.log('finished')
  * });
  *
  * // play tween
@@ -207,13 +208,13 @@ export class Tween {
         'Tween constructor have `node` that is not in a layer. Please add node into layer first.'
       );
     }
-    this.anim = new Animation(function() {
+    this.anim = new Animation(function () {
       that.tween.onEnterFrame();
     }, layers);
 
     this.tween = new TweenEngine(
       key,
-      function(i) {
+      function (i) {
         that._tweenFunc(i);
       },
       easing,
@@ -281,7 +282,11 @@ export class Tween {
         if (end.length > start.length) {
           // so in this case we will increase number of starting points
           trueStart = start;
-          start = Util._prepareArrayForTween(start, end, (node as Line).closed());
+          start = Util._prepareArrayForTween(
+            start,
+            end,
+            (node as Line).closed()
+          );
         } else {
           // in this case we will increase number of eding points
           trueEnd = end;
@@ -301,7 +306,7 @@ export class Tween {
               r: endRGBA.r - startRGBA.r,
               g: endRGBA.g - startRGBA.g,
               b: endRGBA.b - startRGBA.b,
-              a: endRGBA.a - startRGBA.a
+              a: endRGBA.a - startRGBA.a,
             });
           }
         }
@@ -317,7 +322,7 @@ export class Tween {
         r: endRGBA.r - start.r,
         g: endRGBA.g - start.g,
         b: endRGBA.b - start.b,
-        a: endRGBA.a - start.a
+        a: endRGBA.a - start.a,
       };
     } else {
       diff = end - start;
@@ -328,7 +333,7 @@ export class Tween {
       diff: diff,
       end: end,
       trueEnd: trueEnd,
-      trueStart: trueStart
+      trueStart: trueStart,
     };
     Tween.tweens[nodeId][key] = this._id;
   }
@@ -530,10 +535,10 @@ export class Tween {
  *   }
  * });
  */
-Node.prototype.to = function(params) {
+Node.prototype.to = function (params) {
   var onFinish = params.onFinish;
   params.node = this;
-  params.onFinish = function() {
+  params.onFinish = function () {
     this.destroy();
     if (onFinish) {
       onFinish();
@@ -781,5 +786,5 @@ export const Easings = {
    */
   Linear(t, b, c, d) {
     return (c * t) / d + b;
-  }
+  },
 };
