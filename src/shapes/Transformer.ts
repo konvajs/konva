@@ -33,6 +33,7 @@ export interface TransformerConfig extends ContainerConfig {
   centeredScaling?: boolean;
   enabledAnchors?: Array<string>;
   node?: Rect;
+  ignoreStroke?: boolean;
   boundBoxFunc?: (oldBox: Box, newBox: Box) => Box;
 }
 
