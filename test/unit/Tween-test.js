@@ -252,6 +252,23 @@ suite('Tween', function () {
     }, 50);
   });
 
+  test('tween to call update callback', function (done) {
+    var stage = addStage();
+    var updateCount = 0;
+
+    stage.to({
+      x: 10,
+      duration: 0.01,
+      onUpdate: function () {
+        updateCount++;
+      },
+      onFinish: function () {
+        assert(updateCount === 3, 'updateCount should equal 3');
+        done();
+      },
+    });
+  });
+
   suite('tween array with different length', function () {
     test('prepare array closed', function () {
       var start = [0, 0, 10, 0, 10, 10];
