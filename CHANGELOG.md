@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+* Add `onUpdate` callbacks to `Konva.Tween` configuration and `node.to()` method.
+
 ## 7.0.3 - 2020-07-09
 
 * Fix wring `dragend` trigger on `draggable` property change inside `click`
