@@ -38,6 +38,7 @@ class TweenEngine {
   onPause: Function;
   onReset: Function;
   onFinish: Function;
+  onUpdate: Function;
 
   constructor(prop, propFunc, func, begin, finish, duration, yoyo) {
     this.prop = prop;
@@ -129,6 +130,7 @@ class TweenEngine {
   }
   update() {
     this.setPosition(this.getPosition(this._time));
+    this.fire('onUpdate');
   }
   onEnterFrame() {
     var t = this.getTimer() - this._startTime;
@@ -179,6 +181,7 @@ export class Tween {
   _id: number;
   onFinish: Function;
   onReset: Function;
+  onUpdate: Function;
 
   constructor(config) {
     var that = this,
@@ -249,6 +252,7 @@ export class Tween {
     // callbacks
     this.onFinish = config.onFinish;
     this.onReset = config.onReset;
+    this.onUpdate = config.onUpdate;
   }
   _addAttr(key, end) {
     var node = this.node,
@@ -437,6 +441,11 @@ export class Tween {
         this.onReset();
       }
     };
+    this.tween.onUpdate = () => {
+      if (this.onUpdate) {
+        this.onUpdate.call(this);
+      }
+    }
   }
   /**
    * play
