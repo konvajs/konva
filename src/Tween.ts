@@ -158,11 +158,15 @@ class TweenEngine {
  * @example
  * // instantiate new tween which fully rotates a node in 1 second
  * var tween = new Konva.Tween({
+ *   // list of tween specific properties
  *   node: node,
- *   rotationDeg: 360,
  *   duration: 1,
  *   easing: Konva.Easings.EaseInOut,
- *   onFinish: () => console.log('finished')
+ *   onUpdate: () => console.log('node attrs updated')
+ *   onFinish: () => console.log('finished'),
+ *   // set new values for any attributes of a passed node
+ *   rotation: 360,
+ *   fill: 'red'
  * });
  *
  * // play tween
@@ -445,7 +449,7 @@ export class Tween {
       if (this.onUpdate) {
         this.onUpdate.call(this);
       }
-    }
+    };
   }
   /**
    * play
@@ -539,9 +543,8 @@ export class Tween {
  * circle.to({
  *   x : 50,
  *   duration : 0.5,
- *   onFinish: () => {
- *      console.log('finished');
- *   }
+ *   onUpdate: () => console.log('props updated'),
+ *   onFinish: () => console.log('finished'),
  * });
  */
 Node.prototype.to = function (params) {
