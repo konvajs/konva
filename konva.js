@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.0.3
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Thu Jul 09 2020
+   * Date: Thu Jul 30 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2641,7 +2641,6 @@
    */
   var Node = /** @class */ (function () {
       function Node(config) {
-          var _this = this;
           this._id = idCounter++;
           this.eventListeners = {};
           this.attrs = {};
@@ -2656,25 +2655,12 @@
           this._isUnderCache = false;
           this.children = emptyChildren;
           this._dragEventId = null;
+          this._shouldFireChangeEvents = false;
+          // on initial set attrs wi don't need to fire change events
+          // because nobody is listening to them yet
           this.setAttrs(config);
-          // event bindings for cache handling
-          this.on(TRANSFORM_CHANGE_STR, function () {
-              if (_this._batchingTransformChange) {
-                  _this._needClearTransformCache = true;
-                  return;
-              }
-              _this._clearCache(TRANSFORM);
-              _this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
-          });
-          this.on('visibleChange.konva', function () {
-              _this._clearSelfAndDescendantCache(VISIBLE);
-          });
-          this.on('listeningChange.konva', function () {
-              _this._clearSelfAndDescendantCache(LISTENING);
-          });
-          this.on('opacityChange.konva', function () {
-              _this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
-          });
+          this._shouldFireChangeEvents = true;
+          // all change event listeners are attached to the prototype
       }
       Node.prototype.hasChildren = function () {
           return false;
@@ -4425,7 +4411,7 @@
           }
           return this;
       };
-      Node.prototype._setAttr = function (key, val) {
+      Node.prototype._setAttr = function (key, val, skipFire) {
           var oldVal = this.attrs[key];
           if (oldVal === val && !Util.isObject(val)) {
               return;
@@ -4436,7 +4422,9 @@
           else {
               this.attrs[key] = val;
           }
-          this._fireChangeEvent(key, oldVal, val);
+          if (this._shouldFireChangeEvents) {
+              this._fireChangeEvent(key, oldVal, val);
+          }
       };
       Node.prototype._setComponentAttr = function (key, component, val) {
           var oldVal;
@@ -4480,9 +4468,29 @@
               }
           }
       };
+      Node.prototype._getListeners = function (eventType) {
+          var totalEvents = [];
+          var obj;
+          while (true) {
+              obj = obj ? Object.getPrototypeOf(obj) : this;
+              if (!obj) {
+                  break;
+              }
+              if (!obj.eventListeners) {
+                  continue;
+              }
+              var events = obj.eventListeners[eventType];
+              if (!events) {
+                  continue;
+              }
+              totalEvents = events.concat(totalEvents);
+              obj = Object.getPrototypeOf(obj);
+          }
+          return totalEvents;
+      };
       Node.prototype._fire = function (eventType, evt) {
-          var events = this.eventListeners[eventType], i;
-          if (events) {
+          var events = this._getListeners(eventType), i;
+          if (events.length) {
               evt = evt || {};
               evt.currentTarget = this;
               evt.type = eventType;
@@ -4699,6 +4707,26 @@
   }());
   Node.prototype.nodeType = 'Node';
   Node.prototype._attrsAffectingSize = [];
+  // attache events listeners once into prototype
+  // that way we don't spend too much time on making an new instance
+  Node.prototype.eventListeners = {};
+  Node.prototype.on.call(Node.prototype, TRANSFORM_CHANGE_STR, function () {
+      if (this._batchingTransformChange) {
+          this._needClearTransformCache = true;
+          return;
+      }
+      this._clearCache(TRANSFORM);
+      this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
+  });
+  Node.prototype.on.call(Node.prototype, 'visibleChange.konva', function () {
+      this._clearSelfAndDescendantCache(VISIBLE);
+  });
+  Node.prototype.on.call(Node.prototype, 'listeningChange.konva', function () {
+      this._clearSelfAndDescendantCache(LISTENING);
+  });
+  Node.prototype.on.call(Node.prototype, 'opacityChange.konva', function () {
+      this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
+  });
   var addGetterSetter = Factory.addGetterSetter;
   /**
    * get/set zIndex relative to the node's siblings who share the same parent.
@@ -6881,11 +6909,6 @@
           }
           _this.colorKey = key;
           shapes[key] = _this;
-          _this.on('shadowColorChange.konva shadowBlurChange.konva shadowOffsetChange.konva shadowOpacityChange.konva shadowEnabledChange.konva', _clearHasShadowCache);
-          _this.on('shadowColorChange.konva shadowOpacityChange.konva shadowEnabledChange.konva', _clearGetShadowRGBACache);
-          _this.on('fillPriorityChange.konva fillPatternImageChange.konva fillPatternRepeatChange.konva fillPatternScaleXChange.konva fillPatternScaleYChange.konva', _clearFillPatternCache);
-          _this.on('fillPriorityChange.konva fillLinearGradientColorStopsChange.konva fillLinearGradientStartPointXChange.konva fillLinearGradientStartPointYChange.konva fillLinearGradientEndPointXChange.konva fillLinearGradientEndPointYChange.konva', _clearLinearGradientCache);
-          _this.on('fillPriorityChange.konva fillRadialGradientColorStopsChange.konva fillRadialGradientStartPointXChange.konva fillRadialGradientStartPointYChange.konva fillRadialGradientEndPointXChange.konva fillRadialGradientEndPointYChange.konva fillRadialGradientStartRadiusChange.konva fillRadialGradientEndRadiusChange.konva', _clearRadialGradientCache);
           return _this;
       }
       /**
@@ -7343,6 +7366,12 @@
   Shape.prototype._centroid = false;
   Shape.prototype.nodeType = 'Shape';
   _registerNode(Shape);
+  Shape.prototype.eventListeners = {};
+  Shape.prototype.on.call(Shape.prototype, 'shadowColorChange.konva shadowBlurChange.konva shadowOffsetChange.konva shadowOpacityChange.konva shadowEnabledChange.konva', _clearHasShadowCache);
+  Shape.prototype.on.call(Shape.prototype, 'shadowColorChange.konva shadowOpacityChange.konva shadowEnabledChange.konva', _clearGetShadowRGBACache);
+  Shape.prototype.on.call(Shape.prototype, 'fillPriorityChange.konva fillPatternImageChange.konva fillPatternRepeatChange.konva fillPatternScaleXChange.konva fillPatternScaleYChange.konva', _clearFillPatternCache);
+  Shape.prototype.on.call(Shape.prototype, 'fillPriorityChange.konva fillLinearGradientColorStopsChange.konva fillLinearGradientStartPointXChange.konva fillLinearGradientStartPointYChange.konva fillLinearGradientEndPointXChange.konva fillLinearGradientEndPointYChange.konva', _clearLinearGradientCache);
+  Shape.prototype.on.call(Shape.prototype, 'fillPriorityChange.konva fillRadialGradientColorStopsChange.konva fillRadialGradientStartPointXChange.konva fillRadialGradientStartPointYChange.konva fillRadialGradientEndPointXChange.konva fillRadialGradientEndPointYChange.konva fillRadialGradientStartRadiusChange.konva fillRadialGradientEndRadiusChange.konva', _clearRadialGradientCache);
   // add getters and setters
   Factory.addGetterSetter(Shape, 'stroke', undefined, getStringValidator());
   /**
@@ -9137,7 +9166,7 @@
       duration: 1,
       easing: 1,
       onFinish: 1,
-      yoyo: 1
+      yoyo: 1,
   }, PAUSED = 1, PLAYING = 2, REVERSING = 3, idCounter$1 = 0, colorAttrs = ['fill', 'stroke', 'shadowColor'];
   var TweenEngine = /** @class */ (function () {
       function TweenEngine(prop, propFunc, func, begin, finish, duration, yoyo) {
@@ -9234,6 +9263,7 @@
       };
       TweenEngine.prototype.update = function () {
           this.setPosition(this.getPosition(this._time));
+          this.fire('onUpdate');
       };
       TweenEngine.prototype.onEnterFrame = function () {
           var t = this.getTimer() - this._startTime;
@@ -9262,10 +9292,15 @@
    * @example
    * // instantiate new tween which fully rotates a node in 1 second
    * var tween = new Konva.Tween({
+   *   // list of tween specific properties
    *   node: node,
-   *   rotationDeg: 360,
    *   duration: 1,
-   *   easing: Konva.Easings.EaseInOut
+   *   easing: Konva.Easings.EaseInOut,
+   *   onUpdate: () => console.log('node attrs updated')
+   *   onFinish: () => console.log('finished'),
+   *   // set new values for any attributes of a passed node
+   *   rotation: 360,
+   *   fill: 'red'
    * });
    *
    * // play tween
@@ -9321,6 +9356,7 @@
           // callbacks
           this.onFinish = config.onFinish;
           this.onReset = config.onReset;
+          this.onUpdate = config.onUpdate;
       }
       Tween.prototype._addAttr = function (key, end) {
           var node = this.node, nodeId = node._id, start, diff, tweenId, n, len, trueEnd, trueStart, endRGBA;
@@ -9361,7 +9397,7 @@
                               r: endRGBA.r - startRGBA.r,
                               g: endRGBA.g - startRGBA.g,
                               b: endRGBA.b - startRGBA.b,
-                              a: endRGBA.a - startRGBA.a
+                              a: endRGBA.a - startRGBA.a,
                           });
                       }
                   }
@@ -9379,7 +9415,7 @@
                   r: endRGBA.r - start.r,
                   g: endRGBA.g - start.g,
                   b: endRGBA.b - start.b,
-                  a: endRGBA.a - start.a
+                  a: endRGBA.a - start.a,
               };
           }
           else {
@@ -9390,7 +9426,7 @@
               diff: diff,
               end: end,
               trueEnd: trueEnd,
-              trueStart: trueStart
+              trueStart: trueStart,
           };
           Tween.tweens[nodeId][key] = this._id;
       };
@@ -9479,6 +9515,11 @@
               }
               if (_this.onReset) {
                   _this.onReset();
+              }
+          };
+          this.tween.onUpdate = function () {
+              if (_this.onUpdate) {
+                  _this.onUpdate.call(_this);
               }
           };
       };
@@ -9570,9 +9611,8 @@
    * circle.to({
    *   x : 50,
    *   duration : 0.5,
-   *   onFinish: () => {
-   *      console.log('finished');
-   *   }
+   *   onUpdate: () => console.log('props updated'),
+   *   onFinish: () => console.log('finished'),
    * });
    */
   Node.prototype.to = function (params) {
@@ -9821,7 +9861,7 @@
        */
       Linear: function (t, b, c, d) {
           return (c * t) / d + b;
-      }
+      },
   };
 
   // what is core parts of Konva?

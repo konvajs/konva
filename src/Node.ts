@@ -208,30 +208,17 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   children = emptyChildren;
   nodeType!: string;
   className!: string;
+
   _dragEventId: number | null = null;
+  _shouldFireChangeEvents = false;
 
   constructor(config?: Config) {
+    // on initial set attrs wi don't need to fire change events
+    // because nobody is listening to them yet
     this.setAttrs(config);
+    this._shouldFireChangeEvents = true;
 
-    // event bindings for cache handling
-    this.on(TRANSFORM_CHANGE_STR, () => {
-      if (this._batchingTransformChange) {
-        this._needClearTransformCache = true;
-        return;
-      }
-      this._clearCache(TRANSFORM);
-      this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
-    });
-
-    this.on('visibleChange.konva', () => {
-      this._clearSelfAndDescendantCache(VISIBLE);
-    });
-    this.on('listeningChange.konva', () => {
-      this._clearSelfAndDescendantCache(LISTENING);
-    });
-    this.on('opacityChange.konva', () => {
-      this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
-    });
+    // all change event listeners are attached to the prototype
   }
 
   hasChildren() {
@@ -2218,7 +2205,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
     return this;
   }
-  _setAttr(key, val) {
+  _setAttr(key, val, skipFire = false) {
     var oldVal = this.attrs[key];
     if (oldVal === val && !Util.isObject(val)) {
       return;
@@ -2228,7 +2215,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     } else {
       this.attrs[key] = val;
     }
-    this._fireChangeEvent(key, oldVal, val);
+    if (this._shouldFireChangeEvents) {
+      this._fireChangeEvent(key, oldVal, val);
+    }
   }
   _setComponentAttr(key, component, val) {
     var oldVal;
@@ -2280,11 +2269,32 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       }
     }
   }
+
+  _getListeners(eventType) {
+    let totalEvents = [];
+    let obj;
+    while (true) {
+      obj = obj ? Object.getPrototypeOf(obj) : this;
+      if (!obj) {
+        break;
+      }
+      if (!obj.eventListeners) {
+        continue;
+      }
+      const events = obj.eventListeners[eventType];
+      if (!events) {
+        continue;
+      }
+      totalEvents = events.concat(totalEvents);
+      obj = Object.getPrototypeOf(obj);
+    }
+    return totalEvents;
+  }
   _fire(eventType, evt) {
-    var events = this.eventListeners[eventType],
+    var events = this._getListeners(eventType),
       i;
 
-    if (events) {
+    if (events.length) {
       evt = evt || {};
       evt.currentTarget = this;
       evt.type = eventType;
@@ -2603,6 +2613,28 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
 Node.prototype.nodeType = 'Node';
 Node.prototype._attrsAffectingSize = [];
+
+// attache events listeners once into prototype
+// that way we don't spend too much time on making an new instance
+Node.prototype.eventListeners = {};
+Node.prototype.on.call(Node.prototype, TRANSFORM_CHANGE_STR, function () {
+  if (this._batchingTransformChange) {
+    this._needClearTransformCache = true;
+    return;
+  }
+  this._clearCache(TRANSFORM);
+  this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
+});
+
+Node.prototype.on.call(Node.prototype, 'visibleChange.konva', function () {
+  this._clearSelfAndDescendantCache(VISIBLE);
+});
+Node.prototype.on.call(Node.prototype, 'listeningChange.konva', function () {
+  this._clearSelfAndDescendantCache(LISTENING);
+});
+Node.prototype.on.call(Node.prototype, 'opacityChange.konva', function () {
+  this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
+});
 
 const addGetterSetter = Factory.addGetterSetter;
 

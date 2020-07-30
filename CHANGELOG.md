@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Unreleased
 
 * Add `onUpdate` callbacks to `Konva.Tween` configuration and `node.to()` method.
+* Up to 6x faster initializations of objects, like `const shape = new Konva.Shape()`.
 
 ## 7.0.3 - 2020-07-09
 

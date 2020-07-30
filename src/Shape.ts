@@ -182,31 +182,6 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
 
     this.colorKey = key;
     shapes[key] = this;
-
-    this.on(
-      'shadowColorChange.konva shadowBlurChange.konva shadowOffsetChange.konva shadowOpacityChange.konva shadowEnabledChange.konva',
-      _clearHasShadowCache
-    );
-
-    this.on(
-      'shadowColorChange.konva shadowOpacityChange.konva shadowEnabledChange.konva',
-      _clearGetShadowRGBACache
-    );
-
-    this.on(
-      'fillPriorityChange.konva fillPatternImageChange.konva fillPatternRepeatChange.konva fillPatternScaleXChange.konva fillPatternScaleYChange.konva',
-      _clearFillPatternCache
-    );
-
-    this.on(
-      'fillPriorityChange.konva fillLinearGradientColorStopsChange.konva fillLinearGradientStartPointXChange.konva fillLinearGradientStartPointYChange.konva fillLinearGradientEndPointXChange.konva fillLinearGradientEndPointYChange.konva',
-      _clearLinearGradientCache
-    );
-
-    this.on(
-      'fillPriorityChange.konva fillRadialGradientColorStopsChange.konva fillRadialGradientStartPointXChange.konva fillRadialGradientStartPointYChange.konva fillRadialGradientEndPointXChange.konva fillRadialGradientEndPointYChange.konva fillRadialGradientStartRadiusChange.konva fillRadialGradientEndRadiusChange.konva',
-      _clearRadialGradientCache
-    );
   }
 
   /**
@@ -841,6 +816,37 @@ Shape.prototype._strokeFuncHit = _strokeFuncHit;
 Shape.prototype._centroid = false;
 Shape.prototype.nodeType = 'Shape';
 _registerNode(Shape);
+
+Shape.prototype.eventListeners = {};
+Shape.prototype.on.call(
+  Shape.prototype,
+  'shadowColorChange.konva shadowBlurChange.konva shadowOffsetChange.konva shadowOpacityChange.konva shadowEnabledChange.konva',
+  _clearHasShadowCache
+);
+
+Shape.prototype.on.call(
+  Shape.prototype,
+  'shadowColorChange.konva shadowOpacityChange.konva shadowEnabledChange.konva',
+  _clearGetShadowRGBACache
+);
+
+Shape.prototype.on.call(
+  Shape.prototype,
+  'fillPriorityChange.konva fillPatternImageChange.konva fillPatternRepeatChange.konva fillPatternScaleXChange.konva fillPatternScaleYChange.konva',
+  _clearFillPatternCache
+);
+
+Shape.prototype.on.call(
+  Shape.prototype,
+  'fillPriorityChange.konva fillLinearGradientColorStopsChange.konva fillLinearGradientStartPointXChange.konva fillLinearGradientStartPointYChange.konva fillLinearGradientEndPointXChange.konva fillLinearGradientEndPointYChange.konva',
+  _clearLinearGradientCache
+);
+
+Shape.prototype.on.call(
+  Shape.prototype,
+  'fillPriorityChange.konva fillRadialGradientColorStopsChange.konva fillRadialGradientStartPointXChange.konva fillRadialGradientStartPointYChange.konva fillRadialGradientEndPointXChange.konva fillRadialGradientEndPointYChange.konva fillRadialGradientStartRadiusChange.konva fillRadialGradientEndRadiusChange.konva',
+  _clearRadialGradientCache
+);
 
 // add getters and setters
 Factory.addGetterSetter(Shape, 'stroke', undefined, getStringValidator());
