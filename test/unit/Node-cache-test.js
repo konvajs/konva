@@ -315,7 +315,7 @@ suite('Caching', function () {
     layer.add(rect);
     stage.add(layer);
 
-    cloneAndCompareLayer(layer, 50);
+    cloneAndCompareLayer(layer, 200);
   });
 
   test('cache rectangle with fill and shadow and some transform', function () {

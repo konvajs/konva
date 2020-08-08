@@ -3,7 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 7.0.5
+
+* Fixes for `node.cache()` function.
+
+## 7.0.4
 
 * Add `onUpdate` callbacks to `Konva.Tween` configuration and `node.to()` method.
 * Up to 6x faster initializations of objects, like `const shape = new Konva.Shape()`.
