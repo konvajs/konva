@@ -1301,7 +1301,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     // there's no need to build a family tree.  just execute
     // func with this because it will be the only node
     if (top && top._id === this._id) {
-      func(this);
+      // func(this);
       return;
     }
 

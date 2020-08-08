@@ -292,6 +292,32 @@ suite('Caching', function () {
     compareLayerAndCanvas(layer, canvas, 50);
   });
 
+  test('cache rectangle with fill and shadow with negative offset and scale', function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 50,
+      width: 50,
+      height: 25,
+      fill: 'green',
+      shadowOffsetX: -10,
+      shadowOffsetY: -10,
+      shadowColor: 'black',
+      shadowBlur: 10,
+      scaleX: 2,
+      scaleY: 2,
+    });
+    rect.cache();
+
+    layer.add(rect);
+    stage.add(layer);
+
+    cloneAndCompareLayer(layer, 50);
+  });
+
   test('cache rectangle with fill and shadow and some transform', function () {
     var stage = addStage();
 
@@ -1108,6 +1134,74 @@ suite('Caching', function () {
     layer.clearCache();
     // make sure all cleared for children
     assert.equal(callCount, 1);
+  });
+
+  it('caching group with clip', function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var width = 100;
+    var height = 100;
+    var verts = [
+      { x: width * 0.2, y: 0 },
+      { x: width, y: 0 },
+      { x: width * 0.8, y: height },
+      { x: 0, y: height },
+    ];
+
+    var clipFunc = (ctx) => {
+      for (let i = 0; i < verts.length; i++) {
+        const vertex = verts[i];
+        if (i === 0) {
+          ctx.moveTo(vertex.x, vertex.y);
+        } else {
+          ctx.lineTo(vertex.x, vertex.y);
+        }
+      }
+      ctx.closePath();
+    };
+
+    var group1 = new Konva.Group({
+      clipFunc: clipFunc,
+      x: 50,
+      y: 50,
+      listening: false,
+    });
+    layer.add(group1);
+    var rect1 = new Konva.Rect({
+      fill: 'green',
+      width: 100,
+      height: 100,
+    });
+    group1.add(rect1);
+
+    layer.draw();
+    group1.cache();
+
+    layer.draw();
+
+    // var group2 = group1.clone({
+    //   x: height - 20,
+    //   y: 50,
+    // });
+    // group2.findOne('Rect').fill('red');
+    // layer.add(group2);
+    // group2.cache();
+
+    // var group3 = group1.clone({
+    //   x: width + 20,
+    // });
+    // layer.add(group3);
+    // group3.findOne('Rect').x(150);
+    // group2.cache();
+
+    layer.draw();
+
+    cloneAndCompareLayer(layer, 10);
+
+    // throw 1;
   });
 
   it('check caching with global composite operation', function () {
