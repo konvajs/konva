@@ -405,10 +405,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     y -= offset;
 
     var cachedSceneCanvas = new SceneCanvas({
-      pixelRatio: pixelRatio,
-      width: width,
-      height: height,
-    }),
+        pixelRatio: pixelRatio,
+        width: width,
+        height: height,
+      }),
       cachedFilterCanvas = new SceneCanvas({
         pixelRatio: pixelRatio,
         width: 0,
@@ -632,8 +632,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
             if (typeof filter !== 'function') {
               Util.error(
                 'Filter should be type of function, but got ' +
-                typeof filter +
-                ' instead. Please check correct filters'
+                  typeof filter +
+                  ' instead. Please check correct filters'
               );
               continue;
             }
@@ -643,8 +643,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         } catch (e) {
           Util.error(
             'Unable to apply filter. ' +
-            e.message +
-            ' This post my help you https://konvajs.org/docs/posts/Tainted_Canvas.html.'
+              e.message +
+              ' This post my help you https://konvajs.org/docs/posts/Tainted_Canvas.html.'
           );
         }
 
@@ -1414,10 +1414,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (zIndex < 0 || zIndex >= this.parent.children.length) {
       Util.warn(
         'Unexpected value ' +
-        zIndex +
-        ' for zIndex property. zIndex is just index of a node in children of its parent. Expected value is from 0 to ' +
-        (this.parent.children.length - 1) +
-        '.'
+          zIndex +
+          ' for zIndex property. zIndex is just index of a node in children of its parent. Expected value is from 0 to ' +
+          (this.parent.children.length - 1) +
+          '.'
       );
     }
     var index = this.index;
@@ -1585,8 +1585,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       if (!Util.isValidSelector(sel)) {
         Util.warn(
           'Selector "' +
-          sel +
-          '" is invalid. Allowed selectors examples are "#foo", ".bar" or "Group".'
+            sel +
+            '" is invalid. Allowed selectors examples are "#foo", ".bar" or "Group".'
         );
         Util.warn(
           'If you have a custom shape with such className, please change it to start with upper letter like "Triangle".'
@@ -2544,7 +2544,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   skewX: GetSet<number, this>;
   skewY: GetSet<number, this>;
 
-  to: (params: animOptions) => void;
+  to: (params: AnimTo) => void;
 
   transformsEnabled: GetSet<string, this>;
 
@@ -2591,8 +2591,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (!_NODES_REGISTRY[className]) {
       Util.warn(
         'Can not find a node with class name "' +
-        className +
-        '". Fallback to "Shape".'
+          className +
+          '". Fallback to "Shape".'
       );
       className = 'Shape';
     }
@@ -2611,20 +2611,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   }
 }
 
-interface animOptions {
-  x?: number
-  y?: number;
-  height?: number;
-  width?: number;
-  skewX?: number;
-  skewY?: number;
-  scaleY?: number;
-  scaleX?: number;
-  rotation?: number;
-  opacity?: number;
-  offsetY?: number;
-  offsetX?: number;
-  brightness?: number;
+interface AnimTo extends NodeConfig {
+  onFinish?: Function;
+  onUpdate?: Function;
+  duration?: number;
 }
 
 Node.prototype.nodeType = 'Node';
