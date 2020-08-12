@@ -93,6 +93,7 @@ declare namespace Konva {
 
   export const Tween: typeof import('./Tween').Tween;
   export type Tween = import('./Tween').Tween;
+  export type TweenConfig = import('./Tween').TweenConfig;
   export const Easings: typeof import('./Tween').Easings;
 
   export const Arc: typeof import('./shapes/Arc').Arc;

@@ -2544,7 +2544,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   skewX: GetSet<number, this>;
   skewY: GetSet<number, this>;
 
-  to: (params: any) => void;
+  to: (params: AnimTo) => void;
 
   transformsEnabled: GetSet<string, this>;
 
@@ -2609,6 +2609,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     return no;
   }
+}
+
+interface AnimTo extends NodeConfig {
+  onFinish?: Function;
+  onUpdate?: Function;
+  duration?: number;
 }
 
 Node.prototype.nodeType = 'Node';

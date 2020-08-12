@@ -1,6 +1,6 @@
 import { Util } from './Util';
 import { Animation } from './Animation';
-import { Node } from './Node';
+import { Node, NodeConfig } from './Node';
 import { Konva } from './Global';
 import { Line } from './shapes/Line';
 
@@ -149,6 +149,13 @@ class TweenEngine {
   }
 }
 
+export interface TweenConfig extends NodeConfig {
+  onFinish?: Function;
+  onUpdate?: Function;
+  duration?: number;
+  node: Node;
+}
+
 /**
  * Tween constructor.  Tweens enable you to animate a node between the current state and a new state.
  *  You can play, pause, reverse, seek, reset, and finish tweens.  By default, tweens are animated using
@@ -187,7 +194,7 @@ export class Tween {
   onReset: Function;
   onUpdate: Function;
 
-  constructor(config) {
+  constructor(config: TweenConfig) {
     var that = this,
       node = config.node,
       nodeId = node._id,
