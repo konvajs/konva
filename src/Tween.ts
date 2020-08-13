@@ -196,7 +196,7 @@ export class Tween {
 
   constructor(config: TweenConfig) {
     var that = this,
-      node = config.node,
+      node = config.node as any,
       nodeId = node._id,
       duration,
       easing = config.easing || Easings.Linear,
@@ -563,7 +563,7 @@ Node.prototype.to = function (params) {
       onFinish();
     }
   };
-  var tween = new Tween(params);
+  var tween = new Tween(params as any);
   tween.play();
 };
 
