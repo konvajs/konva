@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "outDir": "lib",
-    "module": "es2015",
-    "target": "es5",
+    "module": "ES2015",
+    "target": "ES5",
     "noEmitOnError": true,
     "lib": ["es2015", "dom"]
     // "noImplicitAny": true

@@ -378,6 +378,42 @@ suite('Layer', function () {
     assert.equal(layer.shouldDrawHit(), true);
   });
 
+  // ======================================================
+  test('should not draw hit on stage drag', function () {
+    var stage = addStage();
+    stage.draggable(true);
+    var layer = new Konva.Layer();
+
+    var circle = new Konva.Circle({
+      x: stage.getWidth() / 2,
+      y: stage.getHeight() / 2,
+      radius: 70,
+      fill: 'red',
+      stroke: 'black',
+      strokeWidth: 4,
+    });
+
+    layer.add(circle);
+    stage.add(layer);
+
+    stage.simulateMouseDown({
+      x: circle.x(),
+      y: circle.y(),
+    });
+
+    stage.simulateMouseMove({
+      x: circle.x() + 10,
+      y: circle.y() + 10,
+    });
+    assert.equal(stage.isDragging(), true, 'dragging of stage is ok');
+    assert.equal(layer.shouldDrawHit(), false);
+
+    stage.simulateMouseUp({
+      x: 291,
+      y: 112,
+    });
+  });
+
   test('get/set layer size', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

@@ -1050,9 +1050,14 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       return this._isVisible(top) && this._isListening(top);
     }
     var layer = this.getLayer();
+
     var layerUnderDrag = false;
     DD._dragElements.forEach((elem) => {
-      if (elem.dragStatus === 'dragging' && elem.node.getLayer() === layer) {
+      if (elem.dragStatus !== 'dragging') {
+        return;
+      } else if (elem.node.nodeType === 'Stage') {
+        layerUnderDrag = true;
+      } else if (elem.node.getLayer() === layer) {
         layerUnderDrag = true;
       }
     });
