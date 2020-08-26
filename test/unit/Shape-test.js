@@ -2066,4 +2066,46 @@ suite('Shape', function () {
     var shape = layer.getIntersection({ x: 50, y: 70 });
     assert.equal(shape, line);
   });
+
+  test('validation on stroke should accept gradients', function () {
+    var callCount = 0;
+    var oldWarn = Konva.Util.warn;
+    Konva.Util.warn = function () {
+      callCount += 1;
+    };
+
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext('2d');
+
+    var gradient = ctx.createLinearGradient(0, 75, 100, 75);
+    gradient.addColorStop(0.0, 'rgba(255,255,255,1)');
+    gradient.addColorStop(1 / 6, 'rgba(255,255,255,0.8)');
+    gradient.addColorStop(2 / 6, 'rgba(255,255,255,0.6)');
+    gradient.addColorStop(3 / 6, 'rgba(255,255,255,0.4)');
+    gradient.addColorStop(4 / 6, 'rgba(255,255,255,0.3)');
+    gradient.addColorStop(5 / 6, 'rgba(255,255,255,0.2)');
+    gradient.addColorStop(1.0, 'rgba(255,255,255, 0)');
+
+    var star = new Konva.Star({
+      x: 200,
+      y: 100,
+      numPoints: 5,
+      innerRadius: 40,
+      outerRadius: 70,
+
+      stroke: gradient,
+      strokeWidth: 5,
+      draggable: true,
+    });
+    layer.add(star);
+
+    layer.draw();
+
+    assert.equal(callCount, 0);
+    Konva.Util.warn = oldWarn;
+  });
 });

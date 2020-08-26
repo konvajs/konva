@@ -6,6 +6,7 @@ import {
   getNumberOrAutoValidator,
   getStringValidator,
   getBooleanValidator,
+  getStringOrGradientValidator,
 } from './Validators';
 
 import { Context, SceneContext } from './Context';
@@ -849,7 +850,12 @@ Shape.prototype.on.call(
 );
 
 // add getters and setters
-Factory.addGetterSetter(Shape, 'stroke', undefined, getStringValidator());
+Factory.addGetterSetter(
+  Shape,
+  'stroke',
+  undefined,
+  getStringOrGradientValidator()
+);
 
 /**
  * get/set stroke color
@@ -1220,7 +1226,12 @@ Factory.addGetterSetter(Shape, 'fillPatternImage');
  * imageObj.src = 'path/to/image/jpg';
  */
 
-Factory.addGetterSetter(Shape, 'fill', undefined, getStringValidator());
+Factory.addGetterSetter(
+  Shape,
+  'fill',
+  undefined,
+  getStringOrGradientValidator()
+);
 
 /**
  * get/set fill color

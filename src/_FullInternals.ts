@@ -84,6 +84,6 @@ export const Konva = Core.Util._assign(Core, {
     RGBA,
     Sepia,
     Solarize,
-    Threshold
-  }
+    Threshold,
+  },
 });

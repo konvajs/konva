@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### not released:
+
+* `string` and `fill` properties validation can accept `CanvasGradient` as valid value
+
 ## 7.0.6
 
 * Better performance for stage dragging

@@ -66,6 +66,7 @@ export function getNumberOrAutoValidator() {
     };
   }
 }
+
 export function getStringValidator() {
   if (Konva.isUnminified) {
     return function (val: any, attr: string) {
@@ -81,6 +82,26 @@ export function getStringValidator() {
     };
   }
 }
+
+export function getStringOrGradientValidator() {
+  if (Konva.isUnminified) {
+    return function (val: any, attr: string) {
+      const isString = Util._isString(val);
+      const isGradient =
+        Object.prototype.toString.call(val) === '[object CanvasGradient]';
+      if (!(isString || isGradient)) {
+        Util.warn(
+          _formatValue(val) +
+            ' is a not valid value for "' +
+            attr +
+            '" attribute. The value should be a string or a native gradient.'
+        );
+      }
+      return val;
+    };
+  }
+}
+
 export function getFunctionValidator() {
   if (Konva.isUnminified) {
     return function (val: any, attr: string) {
