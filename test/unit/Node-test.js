@@ -434,6 +434,8 @@ suite('Node', function () {
     layer.drawHit();
 
     showHit(layer);
+
+    assert.equal(layer.getIntersection({ x: 60, y: 60 }), null);
   });
 
   // ======================================================

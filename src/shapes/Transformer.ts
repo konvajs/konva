@@ -320,7 +320,7 @@ export class Transformer extends Group {
       // actual dragging of Transformer doesn't make sense
       // but we need to proxy drag events
       if (!this.isDragging() && node !== this.findOne('.back')) {
-        this.startDrag();
+        this.startDrag(e, false);
       }
     });
     node.on(`dragmove.${EVENTS_NAME}`, (e) => {

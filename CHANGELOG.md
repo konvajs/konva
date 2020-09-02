@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### not released:
 
+* fixes for `dragstart` event when `Konva.Transformer` is used. `dragstart` will not bubble from transformer.
 * `string` and `fill` properties validation can accept `CanvasGradient` as valid value
 
 ## 7.0.6

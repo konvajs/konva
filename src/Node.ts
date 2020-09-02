@@ -2347,7 +2347,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @method
    * @name Konva.Node#startDrag
    */
-  startDrag(evt?: any) {
+  startDrag(evt?: any, bubbleEvent = true) {
     if (!DD._dragElements.has(this._id)) {
       this._createDragElement(evt);
     }
@@ -2361,7 +2361,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         target: this,
         evt: evt && evt.evt,
       },
-      true
+      bubbleEvent
     );
   }
 

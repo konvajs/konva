@@ -3873,7 +3873,8 @@ suite('Transformer', function () {
     });
 
     // make sure drag also triggers on the transformer.
-    tr.on('dragstart', () => {
+    tr.on('dragstart', (e) => {
+      assert.equal(!!e.evt, true);
       dragstart += 1;
     });
     tr.on('dragmove', () => {
@@ -3881,6 +3882,12 @@ suite('Transformer', function () {
     });
     tr.on('dragend', () => {
       dragend += 1;
+    });
+
+    // also drag should bubble to stage
+    // two times for two rects
+    stage.on('dragstart', () => {
+      dragstart += 1;
     });
 
     layer.add(tr);
@@ -3908,7 +3915,7 @@ suite('Transformer', function () {
     // proxy drag to other nodes
     assert.equal(rect2.x(), 110);
     assert.equal(rect2.y(), 110);
-    assert.equal(dragstart, 2);
+    assert.equal(dragstart, 4);
     assert.equal(dragmove, 3);
     assert.equal(dragend, 2);
   });

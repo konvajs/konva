@@ -227,6 +227,15 @@ beforeEach(function () {
   Konva.inDblClickWindow = false;
   Konva.DD && (Konva.DD.isDragging = false);
   Konva.DD && (Konva.DD.node = undefined);
+
+  if (
+    !(
+      this.currentTest.body.indexOf('assert') !== -1 ||
+      this.currentTest.body.toLowerCase().indexOf('compare') !== -1
+    )
+  ) {
+    debugger;
+  }
 });
 
 Konva.UA.mobile = false;
