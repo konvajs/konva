@@ -3,7 +3,7 @@ import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { Group } from '../Group';
 import { ContainerConfig } from '../Container';
-import { getNumberValidator } from '../Validators';
+import {getNumberOrArrayOfNumbersValidator, getNumberValidator} from '../Validators';
 import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
@@ -195,18 +195,32 @@ export interface TagConfig extends ShapeConfig {
 export class Tag extends Shape<TagConfig> {
   _sceneFunc(context) {
     var width = this.width(),
-      height = this.height(),
-      pointerDirection = this.pointerDirection(),
-      pointerWidth = this.pointerWidth(),
-      pointerHeight = this.pointerHeight(),
-      cornerRadius = Math.min(this.cornerRadius(), width / 2, height / 2);
+        height = this.height(),
+        pointerDirection = this.pointerDirection(),
+        pointerWidth = this.pointerWidth(),
+        pointerHeight = this.pointerHeight(),
+        cornerRadius = this.cornerRadius();
+
+    let topLeft = 0;
+    let topRight = 0;
+    let bottomLeft = 0;
+    let bottomRight = 0;
+
+    if (typeof cornerRadius === 'number') {
+      topLeft = topRight = bottomLeft = bottomRight = Math.min(
+          cornerRadius,
+          width / 2,
+          height / 2
+      );
+    } else {
+      topLeft = Math.min(cornerRadius[0] || 0, width / 2, height / 2);
+      topRight = Math.min(cornerRadius[1] || 0, width / 2, height / 2);
+      bottomRight = Math.min(cornerRadius[2] || 0, width / 2, height / 2);
+      bottomLeft = Math.min(cornerRadius[3] || 0, width / 2, height / 2);
+    }
 
     context.beginPath();
-    if (!cornerRadius) {
-      context.moveTo(0, 0);
-    } else {
-      context.moveTo(cornerRadius, 0);
-    }
+    context.moveTo(topLeft, 0);
 
     if (pointerDirection === UP) {
       context.lineTo((width - pointerWidth) / 2, 0);
@@ -214,19 +228,15 @@ export class Tag extends Shape<TagConfig> {
       context.lineTo((width + pointerWidth) / 2, 0);
     }
 
-    if (!cornerRadius) {
-      context.lineTo(width, 0);
-    } else {
-      context.lineTo(width - cornerRadius, 0);
-      context.arc(
-        width - cornerRadius,
-        cornerRadius,
-        cornerRadius,
+    context.lineTo(width - topRight, 0);
+    context.arc(
+        width - topRight,
+        topRight,
+        topRight,
         (Math.PI * 3) / 2,
         0,
         false
-      );
-    }
+    );
 
     if (pointerDirection === RIGHT) {
       context.lineTo(width, (height - pointerHeight) / 2);
@@ -234,19 +244,15 @@ export class Tag extends Shape<TagConfig> {
       context.lineTo(width, (height + pointerHeight) / 2);
     }
 
-    if (!cornerRadius) {
-      context.lineTo(width, height);
-    } else {
-      context.lineTo(width, height - cornerRadius);
-      context.arc(
-        width - cornerRadius,
-        height - cornerRadius,
-        cornerRadius,
+    context.lineTo(width, height - bottomRight);
+    context.arc(
+        width - bottomRight,
+        height - bottomRight,
+        bottomRight,
         0,
         Math.PI / 2,
         false
-      );
-    }
+    );
 
     if (pointerDirection === DOWN) {
       context.lineTo((width + pointerWidth) / 2, height);
@@ -254,19 +260,15 @@ export class Tag extends Shape<TagConfig> {
       context.lineTo((width - pointerWidth) / 2, height);
     }
 
-    if (!cornerRadius) {
-      context.lineTo(0, height);
-    } else {
-      context.lineTo(cornerRadius, height);
-      context.arc(
-        cornerRadius,
-        height - cornerRadius,
-        cornerRadius,
+    context.lineTo(bottomLeft, height);
+    context.arc(
+        bottomLeft,
+        height - bottomLeft,
+        bottomLeft,
         Math.PI / 2,
         Math.PI,
         false
-      );
-    }
+    );
 
     if (pointerDirection === LEFT) {
       context.lineTo(0, (height + pointerHeight) / 2);
@@ -274,17 +276,14 @@ export class Tag extends Shape<TagConfig> {
       context.lineTo(0, (height - pointerHeight) / 2);
     }
 
-    if (cornerRadius) {
-      context.lineTo(0, cornerRadius);
-      context.arc(
-        cornerRadius,
-        cornerRadius,
-        cornerRadius,
+    context.lineTo(0, topLeft);
+    context.arc(
+        topLeft,
+        topLeft,
+        topLeft,
         Math.PI,
         (Math.PI * 3) / 2,
-        false
-      );
-    }
+        false);
 
     context.closePath();
     context.fillStrokeShape(this);
@@ -369,8 +368,12 @@ Factory.addGetterSetter(Tag, 'pointerHeight', 0, getNumberValidator());
  * @returns {Number}
  * @example
  * tag.cornerRadius(20);
+ *
+ * // set different corner radius values
+ * // top-left, top-right, bottom-right, bottom-left
+ * tag.cornerRadius([0, 10, 20, 30]);
  */
 
-Factory.addGetterSetter(Tag, 'cornerRadius', 0, getNumberValidator());
+Factory.addGetterSetter(Tag, 'cornerRadius', 0, getNumberOrArrayOfNumbersValidator(4));
 
 Collection.mapMethods(Tag);
