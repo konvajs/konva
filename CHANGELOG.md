@@ -3,7 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-* 
+## 7.1.0
+
+* Multi row support for `ellipsis` config for `Konva.Text`
 * Better `Konva.Transfomer` behavior when single attached node is programmatically rotated.
 
 ## 7.0.7
