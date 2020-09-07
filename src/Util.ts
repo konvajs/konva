@@ -564,7 +564,7 @@ export const Util = {
   _isPlainObject(obj: any) {
     return !!obj && obj.constructor === Object;
   },
-  _isArray(obj: any) {
+  _isArray(obj: any): obj is Array<any> {
     return Object.prototype.toString.call(obj) === OBJECT_ARRAY;
   },
   _isNumber(obj: any): obj is number {
