@@ -48,6 +48,25 @@ export function getNumberValidator() {
     };
   }
 }
+
+export function getNumberOrArrayOfNumbersValidator(noOfElements: number) {
+  if (Konva.isUnminified) {
+    return function <T>(val: T, attr: string): T | void {
+      let isNumber = Util._isNumber(val);
+      let isValidArray = Util._isArray(val) && val.length == noOfElements;
+      if (!isNumber && !isValidArray) {
+        Util.warn(
+            _formatValue(val) +
+            ' is a not valid value for "' +
+            attr +
+            '" attribute. The value should be a number or Array<number>(' + noOfElements + ')'
+        );
+      }
+      return val;
+    };
+  }
+}
+
 export function getNumberOrAutoValidator() {
   if (Konva.isUnminified) {
     return function <T extends string>(val: T, attr: string): T | void {
