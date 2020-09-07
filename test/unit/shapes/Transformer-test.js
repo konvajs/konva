@@ -211,6 +211,34 @@ suite('Transformer', function () {
     assert.almostEqual(tr.rotation(), rect.rotation());
   });
 
+  test('transformer should follow rotation on single node', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 60,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+    });
+    layer.add(tr);
+
+    layer.draw();
+
+    rect.rotation(45);
+    layer.draw();
+
+    assert.equal(tr.rotation(), 45);
+  });
+
   test('try to fit simple rotated rectangle - 2', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

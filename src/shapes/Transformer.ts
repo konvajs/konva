@@ -292,6 +292,11 @@ export class Transformer extends Group {
         .join(' ');
 
       const onChange = () => {
+        //
+        if (this.nodes().length === 1) {
+          this.rotation(this.nodes()[0].rotation());
+        }
+
         this._resetTransformCache();
         if (!this._transforming) {
           this.update();

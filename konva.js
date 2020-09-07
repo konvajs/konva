@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.0.7
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Wed Sep 02 2020
+   * Date: Mon Sep 07 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -3026,7 +3026,7 @@
        * @method
        * @name Konva.Node#on
        * @param {String} evtStr e.g. 'click', 'mousedown touchstart', 'mousedown.foo touchstart.foo'
-       * @param {Function} handler The handler function is passed an event object
+       * @param {Function} handler The handler function. The first argument of that function is event object. Event object has `target` as main target of the event, `currentTarget` as current node listener and `evt` as native browser event.
        * @returns {Konva.Node}
        * @example
        * // add click listener
@@ -14919,6 +14919,10 @@
                   .map(function (prop) { return prop + 'Change.' + EVENTS_NAME; })
                   .join(' ');
               var onChange = function () {
+                  //
+                  if (_this.nodes().length === 1) {
+                      _this.rotation(_this.nodes()[0].rotation());
+                  }
                   _this._resetTransformCache();
                   if (!_this._transforming) {
                       _this.update();
