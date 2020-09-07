@@ -425,7 +425,7 @@ suite('Text', function () {
   });
 
   // ======================================================
-  test.skip('multiline with ellipsis', function () {
+  test('multiline with ellipsis', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -433,7 +433,7 @@ suite('Text', function () {
       x: 10,
       y: 10,
       text:
-        "HEADING\n\nAll the world's a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.",
+        "HEADING\n\nAll the world's a stage, merely players. They have theirrrrrrr exits and theirrrrr entrances; And one man in his time plays many parts.",
       fontSize: 14,
       fontFamily: 'Calibri',
       fontStyle: 'normal',
@@ -447,10 +447,8 @@ suite('Text', function () {
     layer.add(text);
     stage.add(layer);
 
-    assert.equal(text.textArr.length, 3);
-    assert.equal(text.textArr[2].text.slice(-1), '…');
-
-    throw 1;
+    assert.equal(text.textArr.length, 7);
+    assert.equal(text.textArr[6].text.slice(-1), '…');
   });
 
   // ======================================================

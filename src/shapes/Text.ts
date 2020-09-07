@@ -6,6 +6,7 @@ import {
   getNumberValidator,
   getStringValidator,
   getNumberOrAutoValidator,
+  getBooleanValidator,
 } from '../Validators';
 import { _registerNode } from '../Global';
 
@@ -488,6 +489,21 @@ export class Text extends Shape<TextConfig> {
               !shouldWrap ||
               (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx)
             ) {
+              var lastLine = this.textArr[this.textArr.length - 1];
+              if (lastLine) {
+                var haveSpace =
+                  this._getTextWidth(lastLine.text + ELLIPSIS) < maxWidth;
+                if (!haveSpace) {
+                  lastLine.text = lastLine.text.slice(
+                    0,
+                    lastLine.text.length - 3
+                  );
+                }
+
+                this.textArr.splice(this.textArr.length - 1, 1);
+                this._addTextLine(lastLine.text + ELLIPSIS);
+              }
+
               /*
                * stop wrapping if wrapping is disabled or if adding
                * one more line would overflow the fixed height
@@ -751,21 +767,22 @@ Factory.addGetterSetter(Text, 'lineHeight', 1, getNumberValidator());
 Factory.addGetterSetter(Text, 'wrap', WORD);
 
 /**
- * get/set ellipsis.  Can be true or false. Default is false.
- * if Konva.Text config is set to wrap="none" and ellipsis=true, then it will add "..." to the end
+ * get/set ellipsis. Can be true or false. Default is false. If ellipses is true,
+ * Konva will add "..." at the end of the text if it doesn't have enough space to write characters.
+ * That is possible only when you limit both width and height of the text
  * @name Konva.Text#ellipsis
  * @method
  * @param {Boolean} ellipsis
  * @returns {Boolean}
  * @example
- * // get ellipsis
+ * // get ellipsis param, returns true or false
  * var ellipsis = text.ellipsis();
  *
  * // set ellipsis
  * text.ellipsis(true);
  */
 
-Factory.addGetterSetter(Text, 'ellipsis', false);
+Factory.addGetterSetter(Text, 'ellipsis', false, getBooleanValidator());
 
 /**
  * set letter spacing property. Default value is 0.

@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+* 
+* Better `Konva.Transfomer` behavior when single attached node is programmatically rotated.
+
 ## 7.0.7
 
 * fixes for `dragstart` event when `Konva.Transformer` is used. `dragstart` will not bubble from transformer.
