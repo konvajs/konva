@@ -354,7 +354,7 @@ export class Transformer extends Group {
   }
 
   getNodes() {
-    return this._nodes;
+    return this._nodes || [];
   }
   /**
    * return the name of current active anchor
