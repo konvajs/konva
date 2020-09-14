@@ -347,7 +347,7 @@ export class Transformer extends Group {
           x: otherAbs.x + dx,
           y: otherAbs.y + dy,
         });
-        otherNode.startDrag();
+        otherNode.startDrag(e);
       });
       lastPos = null;
     });

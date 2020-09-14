@@ -3856,7 +3856,7 @@ suite('Transformer', function () {
     assert.almostEqual(tr.y(), 100);
   });
 
-  test('drag several nodes', function () {
+  test.only('drag several nodes', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -3914,7 +3914,8 @@ suite('Transformer', function () {
 
     // also drag should bubble to stage
     // two times for two rects
-    stage.on('dragstart', () => {
+    stage.on('dragstart', (e) => {
+      assert.equal(!!e.evt, true);
       dragstart += 1;
     });
 
