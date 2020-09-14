@@ -11,7 +11,7 @@
   <body>
     <div id="container"></div>
     <script src="../../konva.js"></script>
-    <!-- <script src="https://unpkg.com/konva@6.0.0/konva.min.js"></script> -->
+    <!-- <script src="https://unpkg.com/konva@^7/konva.min.js"></script> -->
     <script src="http://www.html5canvastutorials.com/lib/stats/stats.js"></script>
     <script defer="defer">
       var lastTime = 0;
@@ -78,12 +78,14 @@
       document.addEventListener('touchend', onTouchEnd, true);
 
       function createShape() {
-        return new Konva.Circle({
+        return new Konva.Rect({
           transformsEnabled: 'position',
           x: 10,
           y: 10,
           perfectDrawEnabled: false,
-          radius: 10,
+          // radius: 10,
+          width: 10,
+          height: 10,
           fill: Konva.Util.getRandomColor(),
         });
       }

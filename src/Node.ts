@@ -722,7 +722,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     evtStr: K,
     handler: KonvaEventListener<this, NodeEventMap[K]>
   ) {
-    this._cache && this._cache.delete(ALL_LISTENERS);
+    // this._cache && this._cache.delete(ALL_LISTENERS);
     if (arguments.length === 3) {
       return this._delegate.apply(this, arguments);
     }
@@ -2279,10 +2279,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   }
 
   _getListeners(eventType) {
-    const events = this._cache.get(ALL_LISTENERS);
-    if (events) {
-      return events;
-    }
+    // const events = this._cache.get(ALL_LISTENERS);
+    // if (events && events[eventType]) {
+    //   return events[eventType];
+    // }
 
     let totalEvents = [];
     let obj;
@@ -2301,7 +2301,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       totalEvents = events.concat(totalEvents);
       obj = Object.getPrototypeOf(obj);
     }
-    this._cache.set(ALL_LISTENERS, totalEvents);
+    // this._cache.set(ALL_LISTENERS, totalEvents);
     return totalEvents;
   }
   _fire(eventType, evt) {

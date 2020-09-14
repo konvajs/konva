@@ -3,7 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-* Some performance fixes and optimizations
+## 7.1.1
+
 * fixes for `dragstart` event when `Konva.Transformer` is used. `dragstart` event will have correct native `evt` reference
 * Better unicode support in `Konva.Text` and `Konva.TextPath`. Emoji should work better now 👍
 

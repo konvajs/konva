@@ -1,4 +1,4 @@
-suite('Stage', function () {
+suite.only('Stage', function () {
   // ======================================================
   test('instantiate stage with id', function () {
     var container = Konva.document.createElement('div');
@@ -828,7 +828,6 @@ suite('Stage', function () {
     var clicks = 0;
 
     stage.on('click', function () {
-      debugger;
       clicks += 1;
     });
 
