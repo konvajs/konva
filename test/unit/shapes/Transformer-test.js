@@ -3856,7 +3856,7 @@ suite('Transformer', function () {
     assert.almostEqual(tr.y(), 100);
   });
 
-  test.only('drag several nodes', function () {
+  test('drag several nodes', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
