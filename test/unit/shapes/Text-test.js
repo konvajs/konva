@@ -137,6 +137,31 @@ suite('Text', function () {
     compareLayerAndCanvas(layer, canvas, 254);
   });
 
+  test('check emoji with letterSpacing', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      x: 10,
+      y: 10,
+      text: '😬',
+      fontSize: 50,
+      letterSpacing: 1,
+    });
+
+    layer.add(text);
+    stage.add(layer);
+
+    var canvas = createCanvas();
+    var context = canvas.getContext('2d');
+    context.textBaseline = 'middle';
+    context.font = 'normal normal 50px Arial';
+    context.fillStyle = 'darkgrey';
+    context.fillText('😬', 10, 10 + 25);
+
+    compareLayerAndCanvas(layer, canvas, 254);
+  });
+
   test('text cache with fill and shadow', function () {
     var stage = addStage();
     var layer1 = new Konva.Layer();

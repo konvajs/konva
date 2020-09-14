@@ -12,6 +12,14 @@ import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
 
+export function stringToArray(string: string) {
+  // we need to use `Array.from` because it can split unicode string correctly
+  // we also can use some regexp magic from lodash:
+  // https://github.com/lodash/lodash/blob/fb1f99d9d90ad177560d771bc5953a435b2dc119/lodash.toarray/index.js#L256
+  // but I decided it is too much code for that small fix
+  return Array.from(string);
+}
+
 export interface TextConfig extends ShapeConfig {
   text?: string;
   fontFamily?: string;
@@ -264,8 +272,9 @@ export class Text extends Shape<TextConfig> {
       if (letterSpacing !== 0 || align === JUSTIFY) {
         //   var words = text.split(' ');
         spacesNumber = text.split(' ').length - 1;
-        for (var li = 0; li < text.length; li++) {
-          var letter = text[li];
+        var array = stringToArray(text);
+        for (var li = 0; li < array.length; li++) {
+          var letter = array[li];
           // skip justify for the last line
           if (letter === ' ' && n !== textArrLen - 1 && align === JUSTIFY) {
             lineTranslateX += (totalWidth - padding * 2 - width) / spacesNumber;

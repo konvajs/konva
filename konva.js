@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.1.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Mon Sep 07 2020
+   * Date: Mon Sep 14 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -1255,6 +1255,21 @@
                       ' is a not valid value for "' +
                       attr +
                       '" attribute. The value should be a number.');
+              }
+              return val;
+          };
+      }
+  }
+  function getNumberOrArrayOfNumbersValidator(noOfElements) {
+      if (Konva.isUnminified) {
+          return function (val, attr) {
+              var isNumber = Util._isNumber(val);
+              var isValidArray = Util._isArray(val) && val.length == noOfElements;
+              if (!isNumber && !isValidArray) {
+                  Util.warn(_formatValue(val) +
+                      ' is a not valid value for "' +
+                      attr +
+                      '" attribute. The value should be a number or Array<number>(' + noOfElements + ')');
               }
               return val;
           };
@@ -4833,7 +4848,7 @@
    */
   addGetterSetter(Node, 'globalCompositeOperation', 'source-over', getStringValidator());
   /**
-   * get/set globalCompositeOperation of a shape
+   * get/set globalCompositeOperation of a node. globalCompositeOperation DOESN'T affect hit graph of nodes. So they are still trigger to events as they have default "source-over" globalCompositeOperation.
    * @name Konva.Node#globalCompositeOperation
    * @method
    * @param {String} type
@@ -11378,59 +11393,50 @@
           return _super !== null && _super.apply(this, arguments) || this;
       }
       Tag.prototype._sceneFunc = function (context) {
-          var width = this.width(), height = this.height(), pointerDirection = this.pointerDirection(), pointerWidth = this.pointerWidth(), pointerHeight = this.pointerHeight(), cornerRadius = Math.min(this.cornerRadius(), width / 2, height / 2);
-          context.beginPath();
-          if (!cornerRadius) {
-              context.moveTo(0, 0);
+          var width = this.width(), height = this.height(), pointerDirection = this.pointerDirection(), pointerWidth = this.pointerWidth(), pointerHeight = this.pointerHeight(), cornerRadius = this.cornerRadius();
+          var topLeft = 0;
+          var topRight = 0;
+          var bottomLeft = 0;
+          var bottomRight = 0;
+          if (typeof cornerRadius === 'number') {
+              topLeft = topRight = bottomLeft = bottomRight = Math.min(cornerRadius, width / 2, height / 2);
           }
           else {
-              context.moveTo(cornerRadius, 0);
+              topLeft = Math.min(cornerRadius[0] || 0, width / 2, height / 2);
+              topRight = Math.min(cornerRadius[1] || 0, width / 2, height / 2);
+              bottomRight = Math.min(cornerRadius[2] || 0, width / 2, height / 2);
+              bottomLeft = Math.min(cornerRadius[3] || 0, width / 2, height / 2);
           }
+          context.beginPath();
+          context.moveTo(topLeft, 0);
           if (pointerDirection === UP) {
               context.lineTo((width - pointerWidth) / 2, 0);
               context.lineTo(width / 2, -1 * pointerHeight);
               context.lineTo((width + pointerWidth) / 2, 0);
           }
-          if (!cornerRadius) {
-              context.lineTo(width, 0);
-          }
-          else {
-              context.lineTo(width - cornerRadius, 0);
-              context.arc(width - cornerRadius, cornerRadius, cornerRadius, (Math.PI * 3) / 2, 0, false);
-          }
+          context.lineTo(width - topRight, 0);
+          context.arc(width - topRight, topRight, topRight, (Math.PI * 3) / 2, 0, false);
           if (pointerDirection === RIGHT) {
               context.lineTo(width, (height - pointerHeight) / 2);
               context.lineTo(width + pointerWidth, height / 2);
               context.lineTo(width, (height + pointerHeight) / 2);
           }
-          if (!cornerRadius) {
-              context.lineTo(width, height);
-          }
-          else {
-              context.lineTo(width, height - cornerRadius);
-              context.arc(width - cornerRadius, height - cornerRadius, cornerRadius, 0, Math.PI / 2, false);
-          }
+          context.lineTo(width, height - bottomRight);
+          context.arc(width - bottomRight, height - bottomRight, bottomRight, 0, Math.PI / 2, false);
           if (pointerDirection === DOWN) {
               context.lineTo((width + pointerWidth) / 2, height);
               context.lineTo(width / 2, height + pointerHeight);
               context.lineTo((width - pointerWidth) / 2, height);
           }
-          if (!cornerRadius) {
-              context.lineTo(0, height);
-          }
-          else {
-              context.lineTo(cornerRadius, height);
-              context.arc(cornerRadius, height - cornerRadius, cornerRadius, Math.PI / 2, Math.PI, false);
-          }
+          context.lineTo(bottomLeft, height);
+          context.arc(bottomLeft, height - bottomLeft, bottomLeft, Math.PI / 2, Math.PI, false);
           if (pointerDirection === LEFT) {
               context.lineTo(0, (height + pointerHeight) / 2);
               context.lineTo(-1 * pointerWidth, height / 2);
               context.lineTo(0, (height - pointerHeight) / 2);
           }
-          if (cornerRadius) {
-              context.lineTo(0, cornerRadius);
-              context.arc(cornerRadius, cornerRadius, cornerRadius, Math.PI, (Math.PI * 3) / 2, false);
-          }
+          context.lineTo(0, topLeft);
+          context.arc(topLeft, topLeft, topLeft, Math.PI, (Math.PI * 3) / 2, false);
           context.closePath();
           context.fillStrokeShape(this);
       };
@@ -11500,8 +11506,12 @@
    * @returns {Number}
    * @example
    * tag.cornerRadius(20);
+   *
+   * // set different corner radius values
+   * // top-left, top-right, bottom-right, bottom-left
+   * tag.cornerRadius([0, 10, 20, 30]);
    */
-  Factory.addGetterSetter(Tag, 'cornerRadius', 0, getNumberValidator());
+  Factory.addGetterSetter(Tag, 'cornerRadius', 0, getNumberOrArrayOfNumbersValidator(4));
   Collection.mapMethods(Tag);
 
   /**
@@ -12433,10 +12443,10 @@
                   topLeft = topRight = bottomLeft = bottomRight = Math.min(cornerRadius, width / 2, height / 2);
               }
               else {
-                  topLeft = Math.min(cornerRadius[0], width / 2, height / 2);
-                  topRight = Math.min(cornerRadius[1], width / 2, height / 2);
-                  bottomRight = Math.min(cornerRadius[2], width / 2, height / 2);
-                  bottomLeft = Math.min(cornerRadius[3], width / 2, height / 2);
+                  topLeft = Math.min(cornerRadius[0] || 0, width / 2, height / 2);
+                  topRight = Math.min(cornerRadius[1] || 0, width / 2, height / 2);
+                  bottomRight = Math.min(cornerRadius[2] || 0, width / 2, height / 2);
+                  bottomLeft = Math.min(cornerRadius[3] || 0, width / 2, height / 2);
               }
               context.moveTo(topLeft, 0);
               context.lineTo(width - topRight, 0);
@@ -12472,7 +12482,7 @@
    * // top-left, top-right, bottom-right, bottom-left
    * rect.cornerRadius([0, 10, 20, 30]);
    */
-  Factory.addGetterSetter(Rect, 'cornerRadius', 0);
+  Factory.addGetterSetter(Rect, 'cornerRadius', 0, getNumberOrArrayOfNumbersValidator(4));
   Collection.mapMethods(Rect);
 
   /**
@@ -13329,6 +13339,13 @@
   Factory.addGetterSetter(Star, 'outerRadius', 0, getNumberValidator());
   Collection.mapMethods(Star);
 
+  function stringToArray(string) {
+      // we need to use `Array.from` because it can split unicode string correctly
+      // we also can use some regexp magic from lodash:
+      // https://github.com/lodash/lodash/blob/fb1f99d9d90ad177560d771bc5953a435b2dc119/lodash.toarray/index.js#L256
+      // but I decided it is too much code for that small fix
+      return Array.from(string);
+  }
   // constants
   var AUTO = 'auto', 
   //CANVAS = 'canvas',
@@ -13569,8 +13586,9 @@
               if (letterSpacing !== 0 || align === JUSTIFY) {
                   //   var words = text.split(' ');
                   spacesNumber = text.split(' ').length - 1;
-                  for (var li = 0; li < text.length; li++) {
-                      var letter = text[li];
+                  var array = stringToArray(text);
+                  for (var li = 0; li < array.length; li++) {
+                      var letter = array[li];
                       // skip justify for the last line
                       if (letter === ' ' && n !== textArrLen - 1 && align === JUSTIFY) {
                           lineTranslateX += (totalWidth - padding * 2 - width) / spacesNumber;
@@ -14283,7 +14301,7 @@
           _context.restore();
           return {
               width: metrics.width,
-              height: parseInt(this.attrs.fontSize, 10)
+              height: parseInt(this.attrs.fontSize, 10),
           };
       };
       TextPath.prototype._setTextData = function () {
@@ -14309,7 +14327,7 @@
           if (align === 'right') {
               offset = Math.max(0, fullPathWidth - textFullWidth);
           }
-          var charArr = this.text().split('');
+          var charArr = stringToArray(this.text());
           var spacesNumber = this.text().split(' ').length - 1;
           var p0, p1, pathCmd;
           var pIndex = -1;
@@ -14333,7 +14351,7 @@
                   else if (pathData[j].command === 'M') {
                       p0 = {
                           x: pathData[j].points[0],
-                          y: pathData[j].points[1]
+                          y: pathData[j].points[1],
                       };
                   }
               }
@@ -14485,7 +14503,7 @@
                   text: charArr[i],
                   rotation: rotation,
                   p0: p0,
-                  p1: p1
+                  p1: p1,
               });
               p0 = p1;
           }
@@ -14496,7 +14514,7 @@
                   x: 0,
                   y: 0,
                   width: 0,
-                  height: 0
+                  height: 0,
               };
           }
           var points = [];
@@ -14524,7 +14542,7 @@
               x: minX - fontSize / 2,
               y: minY - fontSize / 2,
               width: maxX - minX + fontSize,
-              height: maxY - minY + fontSize
+              height: maxY - minY + fontSize,
           };
       };
       return TextPath;
@@ -14989,7 +15007,7 @@
           });
       };
       Transformer.prototype.getNodes = function () {
-          return this._nodes;
+          return this._nodes || [];
       };
       /**
        * return the name of current active anchor

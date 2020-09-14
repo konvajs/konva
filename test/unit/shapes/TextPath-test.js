@@ -315,6 +315,31 @@ suite('TextPath', function () {
     assert.equal(layer.getContext().getTrace(true), trace);
   });
 
+  test('Text path with emoji', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var c = 'M10,10 300, 10';
+
+    var textpath = new Konva.TextPath({
+      fill: 'black',
+      fontSize: 10,
+      fontFamily: 'Arial',
+      letterSpacing: 5,
+      text: '😬',
+      align: 'center',
+      data: c,
+    });
+
+    layer.add(textpath);
+    stage.add(layer);
+
+    var trace =
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);font=normal normal 10px Arial;textBaseline=middle;textAlign=left;save();save();translate(144.438,10);rotate(0);fillStyle=black;fillText(😬,0,0);restore();restore();restore();';
+
+    assert.equal(layer.getContext().getTrace(), trace);
+  });
+
   test.skip('Text path with center align - arc', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

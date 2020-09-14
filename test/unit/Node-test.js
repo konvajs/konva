@@ -1813,6 +1813,12 @@ suite('Node', function () {
 
     layer.add(circle);
     stage.add(layer);
+
+    var trace = layer.getContext().getTrace();
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1.879,0.684,-0.342,0.94,14.581,42.306);beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();'
+    );
   });
 
   // ======================================================

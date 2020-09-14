@@ -2,7 +2,7 @@ import { Util, Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { Path } from './Path';
-import { Text } from './Text';
+import { Text, stringToArray } from './Text';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
@@ -91,7 +91,7 @@ export class TextPath extends Shape<TextPathConfig> {
     super(config);
 
     this.dataArray = Path.parsePathData(this.attrs.data);
-    this.on('dataChange.konva', function() {
+    this.on('dataChange.konva', function () {
       this.dataArray = Path.parsePathData(this.attrs.data);
       this._setTextData();
     });
@@ -213,7 +213,7 @@ export class TextPath extends Shape<TextPathConfig> {
 
     return {
       width: metrics.width,
-      height: parseInt(this.attrs.fontSize, 10)
+      height: parseInt(this.attrs.fontSize, 10),
     };
   }
   _setTextData() {
@@ -248,7 +248,7 @@ export class TextPath extends Shape<TextPathConfig> {
       offset = Math.max(0, fullPathWidth - textFullWidth);
     }
 
-    var charArr = this.text().split('');
+    var charArr = stringToArray(this.text());
     var spacesNumber = this.text().split(' ').length - 1;
 
     var p0, p1, pathCmd;
@@ -264,7 +264,7 @@ export class TextPath extends Shape<TextPathConfig> {
     //   }
     // }
 
-    var getNextPathSegment = function() {
+    var getNextPathSegment = function () {
       currentT = 0;
       var pathData = that.dataArray;
 
@@ -276,7 +276,7 @@ export class TextPath extends Shape<TextPathConfig> {
         } else if (pathData[j].command === 'M') {
           p0 = {
             x: pathData[j].points[0],
-            y: pathData[j].points[1]
+            y: pathData[j].points[1],
           };
         }
       }
@@ -284,7 +284,7 @@ export class TextPath extends Shape<TextPathConfig> {
       return {};
     };
 
-    var findSegmentToFitCharacter = function(c) {
+    var findSegmentToFitCharacter = function (c) {
       var glyphWidth = that._getTextSize(c).width + letterSpacing;
 
       if (c === ' ' && align === 'justify') {
@@ -494,7 +494,7 @@ export class TextPath extends Shape<TextPathConfig> {
         text: charArr[i],
         rotation: rotation,
         p0: p0,
-        p1: p1
+        p1: p1,
       });
       p0 = p1;
     }
@@ -505,12 +505,12 @@ export class TextPath extends Shape<TextPathConfig> {
         x: 0,
         y: 0,
         width: 0,
-        height: 0
+        height: 0,
       };
     }
     var points = [];
 
-    this.glyphInfo.forEach(function(info) {
+    this.glyphInfo.forEach(function (info) {
       points.push(info.p0.x);
       points.push(info.p0.y);
       points.push(info.p1.x);
@@ -534,7 +534,7 @@ export class TextPath extends Shape<TextPathConfig> {
       x: minX - fontSize / 2,
       y: minY - fontSize / 2,
       width: maxX - minX + fontSize,
-      height: maxY - minY + fontSize
+      height: maxY - minY + fontSize,
     };
   }
 

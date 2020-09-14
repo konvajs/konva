@@ -2745,7 +2745,7 @@ addGetterSetter(
 );
 
 /**
- * get/set globalCompositeOperation of a shape
+ * get/set globalCompositeOperation of a node. globalCompositeOperation DOESN'T affect hit graph of nodes. So they are still trigger to events as they have default "source-over" globalCompositeOperation.
  * @name Konva.Node#globalCompositeOperation
  * @method
  * @param {String} type

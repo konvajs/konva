@@ -234,7 +234,7 @@ beforeEach(function () {
       this.currentTest.body.toLowerCase().indexOf('compare') !== -1
     )
   ) {
-    debugger;
+    console.error(this.currentTest.title);
   }
 });
 
@@ -250,7 +250,7 @@ afterEach(function () {
 
   if (!isFailed && !isManual) {
     Konva.stages.forEach(function (stage) {
-      stage.destroy();
+      // stage.destroy();
     });
     if (Konva.DD._dragElements.size) {
       throw 'Why drag elements are not cleaned?';
