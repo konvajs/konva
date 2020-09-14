@@ -2152,9 +2152,6 @@
           if (fillPatternRotation) {
               this.rotate(fillPatternRotation);
           }
-          if (fillPatternScaleX || fillPatternScaleY) {
-              this.scale(fillPatternScaleX, fillPatternScaleY);
-          }
           if (fillPatternOffsetX || fillPatternOffsetY) {
               this.translate(-1 * fillPatternOffsetX, -1 * fillPatternOffsetY);
           }
@@ -7003,15 +7000,16 @@
           if (this.fillPatternImage()) {
               var ctx = getDummyContext();
               var pattern = ctx.createPattern(this.fillPatternImage(), this.fillPatternRepeat() || 'repeat');
-              // TODO: how to enable it? It doesn't work in FF...
-              // pattern.setTransform({
-              //   a: this.fillPatternScaleX(), // Horizontal scaling. A value of 1 results in no scaling.
-              //   b: 0, // Vertical skewing.
-              //   c: 0, // Horizontal skewing.
-              //   d: this.fillPatternScaleY(), // Vertical scaling. A value of 1 results in no scaling.
-              //   e: 0, // Horizontal translation (moving).
-              //   f: 0 // Vertical translation (moving).
-              // });
+              if (pattern && pattern.setTransform) {
+                  pattern.setTransform({
+                      a: this.fillPatternScaleX(),
+                      b: 0,
+                      c: 0,
+                      d: this.fillPatternScaleY(),
+                      e: 0,
+                      f: 0,
+                  });
+              }
               return pattern;
           }
       };

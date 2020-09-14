@@ -676,7 +676,7 @@ export class SceneContext extends Context {
     }
 
     if (fillPatternScaleX || fillPatternScaleY) {
-      this.scale(fillPatternScaleX, fillPatternScaleY);
+      // this.scale(fillPatternScaleX, fillPatternScaleY);
     }
 
     if (fillPatternOffsetX || fillPatternOffsetY) {
