@@ -126,6 +126,7 @@ export interface NodeConfig {
 
 // CONSTANTS
 var ABSOLUTE_OPACITY = 'absoluteOpacity',
+  ALL_LISTENERS = 'allEventListeners',
   ABSOLUTE_TRANSFORM = 'absoluteTransform',
   ABSOLUTE_SCALE = 'absoluteScale',
   CANVAS = 'canvas',
@@ -195,6 +196,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   } = {};
   attrs: any = {};
   index = 0;
+  _allEventListeners: null | Array<Function> = null;
   parent: Container<Node> | null = null;
   _cache: Map<string, any> = new Map<string, any>();
   _attachedDepsListeners: Map<string, boolean> = new Map<string, boolean>();
@@ -720,6 +722,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     evtStr: K,
     handler: KonvaEventListener<this, NodeEventMap[K]>
   ) {
+    this._cache && this._cache.delete(ALL_LISTENERS);
     if (arguments.length === 3) {
       return this._delegate.apply(this, arguments);
     }
@@ -2276,6 +2279,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   }
 
   _getListeners(eventType) {
+    const events = this._cache.get(ALL_LISTENERS);
+    if (events) {
+      return events;
+    }
+
     let totalEvents = [];
     let obj;
     while (true) {
@@ -2293,6 +2301,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       totalEvents = events.concat(totalEvents);
       obj = Object.getPrototypeOf(obj);
     }
+    this._cache.set(ALL_LISTENERS, totalEvents);
     return totalEvents;
   }
   _fire(eventType, evt) {

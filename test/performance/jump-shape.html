@@ -77,14 +77,19 @@
       document.addEventListener('touchstart', onTouchStart, true);
       document.addEventListener('touchend', onTouchEnd, true);
 
-      for (var i = 0; i < startBunnyCount; i++) {
-        var bunny = new Konva.Text({
+      function createShape() {
+        return new Konva.Circle({
           transformsEnabled: 'position',
           x: 10,
           y: 10,
           perfectDrawEnabled: false,
-          text: 'text',
+          radius: 10,
+          fill: Konva.Util.getRandomColor(),
         });
+      }
+
+      for (var i = 0; i < startBunnyCount; i++) {
+        var bunny = createShape();
 
         bunny.speedX = Math.random() * 10;
         bunny.speedY = Math.random() * 10 - 5;
@@ -107,13 +112,7 @@
           // add 10 at a time :)
 
           for (var i = 0; i < amount; i++) {
-            var bunny = new Konva.Text({
-              transformsEnabled: 'position',
-              x: 10,
-              y: 10,
-              perfectDrawEnabled: false,
-              text: 'text',
-            });
+            var bunny = createShape();
             bunny.speedX = Math.random() * 10;
             bunny.speedY = Math.random() * 10 - 5;
             bunnys.push(bunny);

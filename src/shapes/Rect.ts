@@ -4,7 +4,7 @@ import { Shape, ShapeConfig } from '../Shape';
 import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
-import {getNumberOrArrayOfNumbersValidator} from "../Validators";
+import { getNumberOrArrayOfNumbersValidator } from '../Validators';
 export interface RectConfig extends ShapeConfig {
   cornerRadius?: number | number[];
 }
@@ -52,7 +52,7 @@ export class Rect extends Shape<RectConfig> {
       } else {
         topLeft = Math.min(cornerRadius[0] || 0, width / 2, height / 2);
         topRight = Math.min(cornerRadius[1] || 0, width / 2, height / 2);
-        bottomRight = Math.min(cornerRadius[2] ||0, width / 2, height / 2);
+        bottomRight = Math.min(cornerRadius[2] || 0, width / 2, height / 2);
         bottomLeft = Math.min(cornerRadius[3] || 0, width / 2, height / 2);
       }
       context.moveTo(topLeft, 0);
@@ -113,6 +113,11 @@ _registerNode(Rect);
  * // top-left, top-right, bottom-right, bottom-left
  * rect.cornerRadius([0, 10, 20, 30]);
  */
-Factory.addGetterSetter(Rect, 'cornerRadius', 0, getNumberOrArrayOfNumbersValidator(4));
+Factory.addGetterSetter(
+  Rect,
+  'cornerRadius',
+  0,
+  getNumberOrArrayOfNumbersValidator(4)
+);
 
 Collection.mapMethods(Rect);

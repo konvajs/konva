@@ -30,7 +30,7 @@ export interface CircleConfig extends ShapeConfig {
 export class Circle extends Shape<CircleConfig> {
   _sceneFunc(context) {
     context.beginPath();
-    context.arc(0, 0, this.radius(), 0, Math.PI * 2, false);
+    context.arc(0, 0, this.attrs.radius || 0, 0, Math.PI * 2, false);
     context.closePath();
     context.fillStrokeShape(this);
   }
