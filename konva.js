@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.1.1
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Mon Sep 14 2020
+   * Date: Wed Sep 16 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -13716,7 +13716,7 @@
       Text.prototype._setTextData = function () {
           var lines = this.text().split('\n'), fontSize = +this.fontSize(), textWidth = 0, lineHeightPx = this.lineHeight() * fontSize, width = this.attrs.width, height = this.attrs.height, fixedWidth = width !== AUTO && width !== undefined, fixedHeight = height !== AUTO && height !== undefined, padding = this.padding(), maxWidth = width - padding * 2, maxHeightPx = height - padding * 2, currentHeightPx = 0, wrap = this.wrap(), 
           // align = this.align(),
-          shouldWrap = wrap !== NONE$1, wrapAtWord = wrap !== CHAR && shouldWrap, shouldAddEllipsis = this.ellipsis() && !shouldWrap;
+          shouldWrap = wrap !== NONE$1, wrapAtWord = wrap !== CHAR && shouldWrap, shouldAddEllipsis = this.ellipsis();
           this.textArr = [];
           getDummyContext$1().font = this._getContextFont();
           var additionalWidth = shouldAddEllipsis ? this._getTextWidth(ELLIPSIS) : 0;
@@ -13786,8 +13786,10 @@
                                   if (!haveSpace) {
                                       lastLine.text = lastLine.text.slice(0, lastLine.text.length - 3);
                                   }
-                                  this.textArr.splice(this.textArr.length - 1, 1);
-                                  this._addTextLine(lastLine.text + ELLIPSIS);
+                                  if (shouldAddEllipsis) {
+                                      this.textArr.splice(this.textArr.length - 1, 1);
+                                      this._addTextLine(lastLine.text + ELLIPSIS);
+                                  }
                               }
                               /*
                                * stop wrapping if wrapping is disabled or if adding

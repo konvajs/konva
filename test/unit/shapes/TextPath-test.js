@@ -627,7 +627,6 @@ suite('TextPath', function () {
     layer.draw();
 
     var trace = layer.getContext().getTrace();
-    console.log(trace);
   });
 
   test('visual check for text path', function () {

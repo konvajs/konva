@@ -427,7 +427,7 @@ export class Text extends Shape<TextConfig> {
       // align = this.align(),
       shouldWrap = wrap !== NONE,
       wrapAtWord = wrap !== CHAR && shouldWrap,
-      shouldAddEllipsis = this.ellipsis() && !shouldWrap;
+      shouldAddEllipsis = this.ellipsis();
 
     this.textArr = [];
     getDummyContext().font = this._getContextFont();
@@ -509,8 +509,10 @@ export class Text extends Shape<TextConfig> {
                   );
                 }
 
-                this.textArr.splice(this.textArr.length - 1, 1);
-                this._addTextLine(lastLine.text + ELLIPSIS);
+                if (shouldAddEllipsis) {
+                  this.textArr.splice(this.textArr.length - 1, 1);
+                  this._addTextLine(lastLine.text + ELLIPSIS);
+                }
               }
 
               /*

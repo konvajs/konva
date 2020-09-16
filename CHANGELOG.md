@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 7.1.2
+
+* fix ellipses behavior for `Konva.Text`.
+* fix scaled fill pattern for text.
+
 ## 7.1.1
 
 * fixes for `dragstart` event when `Konva.Transformer` is used. `dragstart` event will have correct native `evt` reference

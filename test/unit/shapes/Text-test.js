@@ -477,6 +477,28 @@ suite('Text', function () {
   });
 
   // ======================================================
+  test('make sure we respect false for ellipsis', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      x: 10,
+      y: 10,
+      text: 'Hello foo bar',
+      wrap: 'word',
+      ellipsis: false,
+      width: 60,
+      height: 20,
+    });
+
+    layer.add(text);
+    stage.add(layer);
+
+    assert.equal(text.textArr.length, 1);
+    assert.equal(text.textArr[0].text, 'Hello foo');
+  });
+
+  // ======================================================
   test('text multi line with justify align', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
