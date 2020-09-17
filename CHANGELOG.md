@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 7.1.3
+
+* Text rendering fixes
+
 ## 7.1.2
 
 * fix ellipses behavior for `Konva.Text`.

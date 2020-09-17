@@ -500,16 +500,16 @@ export class Text extends Shape<TextConfig> {
             ) {
               var lastLine = this.textArr[this.textArr.length - 1];
               if (lastLine) {
-                var haveSpace =
-                  this._getTextWidth(lastLine.text + ELLIPSIS) < maxWidth;
-                if (!haveSpace) {
-                  lastLine.text = lastLine.text.slice(
-                    0,
-                    lastLine.text.length - 3
-                  );
-                }
-
                 if (shouldAddEllipsis) {
+                  var haveSpace =
+                    this._getTextWidth(lastLine.text + ELLIPSIS) < maxWidth;
+                  if (!haveSpace) {
+                    lastLine.text = lastLine.text.slice(
+                      0,
+                      lastLine.text.length - 3
+                    );
+                  }
+
                   this.textArr.splice(this.textArr.length - 1, 1);
                   this._addTextLine(lastLine.text + ELLIPSIS);
                 }

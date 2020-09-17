@@ -491,7 +491,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   abstract drawHit(canvas?: Canvas, top?: Node): void;
   /**
    * Return client rectangle {x, y, width, height} of node. This rectangle also include all styling (strokes, shadows, etc).
-   * The rectangle position is relative to parent container.
    * The purpose of the method is similar to getBoundingClientRect API of the DOM.
    * @method
    * @name Konva.Node#getClientRect

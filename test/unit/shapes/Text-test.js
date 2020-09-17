@@ -499,6 +499,40 @@ suite('Text', function () {
   });
 
   // ======================================================
+  test.only('wrap none check', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      x: 10,
+      y: 10,
+      text: 'Hello foo bar',
+      wrap: 'none',
+      ellipsis: false,
+      width: 60,
+      height: 20,
+    });
+
+    layer.add(
+      new Konva.Rect({
+        ...text.getClientRect(),
+        fill: 'rgba(0, 0, 0, 0.4)',
+      })
+    );
+
+    layer.add(text);
+    stage.add(layer);
+
+    assert.equal(text.textArr.length, 1);
+    assert.equal(text.textArr[0].text, 'Hello foo b');
+
+    var trace =
+      'fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();restore();save();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();restore();restore();';
+
+    assert.equal(layer.getContext().getTrace(true), trace);
+  });
+
+  // ======================================================
   test('text multi line with justify align', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
