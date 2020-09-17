@@ -167,11 +167,16 @@ export class Text extends Shape<TextConfig> {
   }
 
   _sceneFunc(context) {
+    var textArr = this.textArr,
+      textArrLen = textArr.length;
+
+    if (!this.text()) {
+      return;
+    }
+
     var padding = this.padding(),
       fontSize = this.fontSize(),
       lineHeightPx = this.lineHeight() * fontSize,
-      textArr = this.textArr,
-      textArrLen = textArr.length,
       verticalAlign = this.verticalAlign(),
       alignY = 0,
       align = this.align(),

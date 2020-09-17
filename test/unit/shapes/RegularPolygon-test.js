@@ -44,6 +44,13 @@ suite('RegularPolygon', function () {
 
     layer.add(poly);
     stage.add(layer);
+
+    var trace = layer.getContext().getTrace();
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,200,100);beginPath();moveTo(0,-50);lineTo(50,0);lineTo(0,50);lineTo(-50,0);closePath();fillStyle=green;fill();lineWidth=5;strokeStyle=blue;stroke();restore();'
+    );
   });
 
   // ======================================================
@@ -64,6 +71,13 @@ suite('RegularPolygon', function () {
 
     layer.add(poly);
     stage.add(layer);
+
+    var trace = layer.getContext().getTrace();
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,200,100);beginPath();moveTo(0,-50);lineTo(47.553,-15.451);lineTo(29.389,40.451);lineTo(-29.389,40.451);lineTo(-47.553,-15.451);closePath();fillStyle=green;fill();lineWidth=5;strokeStyle=blue;stroke();restore();'
+    );
   });
 
   // ======================================================
@@ -84,6 +98,13 @@ suite('RegularPolygon', function () {
 
     layer.add(poly);
     stage.add(layer);
+
+    var trace = layer.getContext().getTrace();
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,200,100);beginPath();moveTo(0,-50);lineTo(35.355,-35.355);lineTo(50,0);lineTo(35.355,35.355);lineTo(0,50);lineTo(-35.355,35.355);lineTo(-50,0);lineTo(-35.355,-35.355);closePath();fillStyle=green;fill();lineWidth=5;strokeStyle=blue;stroke();restore();'
+    );
   });
 
   // ======================================================

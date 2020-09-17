@@ -50,6 +50,8 @@ suite('Stage', function () {
       width: 578,
       height: 200,
     });
+
+    assert.equal(stage.container(), container);
   });
 
   // ======================================================

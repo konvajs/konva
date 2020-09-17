@@ -740,7 +740,7 @@ suite('Caching', function () {
       fillRadialGradientEndRadius: 10,
       fillRadialGradientColorStops: [0, 'red', 0.5, 'yellow', 1, 'black'],
       opacity: 0.4,
-      strokeHitEnabled: false,
+      hitStrokeWidth: 0,
       stroke: 'rgba(0,0,0,0)',
     });
     group.add(circle);
@@ -768,7 +768,7 @@ suite('Caching', function () {
       fillRadialGradientEndRadius: 10,
       fillRadialGradientColorStops: [0, 'red', 0.5, 'yellow', 1, 'black'],
       opacity: 0.4,
-      strokeHitEnabled: false,
+      hitStrokeWidth: 0,
       stroke: 'rgba(0,0,0,0)',
     });
     group.add(circle);
@@ -796,7 +796,7 @@ suite('Caching', function () {
       fillRadialGradientEndRadius: 10,
       fillRadialGradientColorStops: [0, 'red', 0.5, 'yellow', 1, 'black'],
       opacity: 0.4,
-      strokeHitEnabled: false,
+      hitStrokeWidth: 0,
       stroke: 'rgba(0,0,0,0)',
     });
     group.add(circle);

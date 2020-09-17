@@ -99,6 +99,6 @@ function make_stage() {
 
   // circlesLayer = new Konva.FastLayer();
   circlesLayer = new Konva.Layer({
-    hitGraphEnabled: false,
+    listening: false,
   });
 }

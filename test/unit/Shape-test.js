@@ -133,6 +133,13 @@ suite('Shape', function () {
 
     layer.add(shape);
     stage.add(layer);
+
+    var trace = layer.getContext().getTrace();
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,200,100);beginPath();moveTo(0,0);lineTo(100,0);lineTo(100,100);closePath();fillStyle=green;fill();lineWidth=5;strokeStyle=blue;stroke();restore();'
+    );
   });
 
   // ======================================================
@@ -912,8 +919,8 @@ suite('Shape', function () {
 
     imageObj.onload = function () {
       var lion = new Konva.Image({
-        x: 200,
-        y: 40,
+        x: 0,
+        y: 0,
         image: imageObj,
         draggable: true,
         shadowColor: 'black',
@@ -923,28 +930,26 @@ suite('Shape', function () {
       });
 
       // override color key with black
-      lion.colorKey = '#000000';
-      Konva.shapes['#000000'] = lion;
+      // lion.colorKey = '#000000';
+      // Konva.shapes['#000000'] = lion;
 
       layer.add(lion);
 
       stage.add(layer);
 
-      lion.cache();
+      assert.equal(layer.getIntersection({ x: 10, y: 10 }), lion);
 
-      //document.body.appendChild(lion._getCanvasCache().hit._canvas);
+      lion.cache();
 
       lion.drawHitFromCache();
 
       layer.draw();
 
+      assert.equal(layer.getIntersection({ x: 10, y: 10 }), null);
+      assert.equal(layer.getIntersection({ x: 50, y: 50 }), lion);
       done();
     };
     imageObj.src = 'assets/lion.png';
-
-    showHit(layer);
-
-    layer.hitCanvas._canvas.style.border = '2px solid black';
   });
 
   test('test defaults', function () {
@@ -1045,10 +1050,10 @@ suite('Shape', function () {
       draggable: true,
     });
     // default value
-    assert.equal(rect.strokeHitEnabled(), true);
+    assert.equal(rect.hitStrokeWidth(), 'auto');
 
-    rect.strokeHitEnabled(false);
-    assert.equal(rect.strokeHitEnabled(), false);
+    rect.hitStrokeWidth(0);
+    assert.equal(rect.hitStrokeWidth(), 0);
 
     layer.add(rect);
     stage.add(layer);
@@ -1062,7 +1067,7 @@ suite('Shape', function () {
     );
   });
 
-  test('hitStrokeWidth', function () {
+  test.skip('hitStrokeWidth', function () {
     var stage = addStage();
 
     var layer = new Konva.Layer();

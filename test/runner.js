@@ -234,7 +234,7 @@ beforeEach(function () {
       this.currentTest.body.toLowerCase().indexOf('compare') !== -1
     )
   ) {
-    // console.error(this.currentTest.title);
+    console.error(this.currentTest.title);
   }
 });
 

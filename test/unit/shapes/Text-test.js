@@ -11,6 +11,11 @@ suite('Text', function () {
 
     layer.add(text);
     layer.draw();
+
+    var trace =
+      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);restore();';
+
+    assert.equal(layer.getContext().getTrace(), trace);
   });
 
   // ======================================================
@@ -644,7 +649,11 @@ suite('Text', function () {
 
     layer.add(text);
     stage.add(layer);
-    //console.log(layer.getContext().getTrace());
+
+    assert.equal(
+      layer.getContext().getTrace(),
+      "clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);shadowColor=rgba(255,0,0,0.5);shadowBlur=1;shadowOffsetX=10;shadowOffsetY=10;font=normal normal 16px Calibri;textBaseline=middle;textAlign=left;translate(20,20);save();fillStyle=#555;fillText(HEADING,133.563,8);restore();save();fillStyle=#555;fillText(,170,24);restore();save();fillStyle=#555;fillText(All the world's a stage, and all the men and women,6.602,40);restore();save();fillStyle=#555;fillText(merely players. They have their exits and their,21.168,56);restore();save();fillStyle=#555;fillText(entrances; And one man in his time plays many,18.035,72);restore();save();fillStyle=#555;fillText(parts.,152.449,88);restore();restore();"
+    );
   });
 
   // ======================================================

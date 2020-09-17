@@ -727,13 +727,6 @@ suite('Container', function () {
   });
 
   // ======================================================
-  test('add layer', function () {
-    var stage = addStage();
-    var layer = new Konva.Layer();
-    stage.add(layer);
-  });
-
-  // ======================================================
   test('remove all children from layer', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -855,6 +848,12 @@ suite('Container', function () {
     group.add(circle);
     layer.add(group);
     stage.add(layer);
+
+    var trace = layer.getContext().getTrace();
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,289,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();'
+    );
   });
 
   // ======================================================
@@ -906,6 +905,12 @@ suite('Container', function () {
     blueLayer.draw();
     blueGroup2.setPosition(100, 0);
     blueLayer.draw();
+
+    var trace = blueLayer.getContext().getTrace();
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,389,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=blue;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,289,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=blue;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,289,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=blue;fill();lineWidth=4;strokeStyle=black;stroke();restore();'
+    );
   });
 
   // ======================================================

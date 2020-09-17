@@ -196,8 +196,14 @@ suite('Circle', function () {
     circle.setOpacity(0.5);
     layer.draw();
 
-    circle.setOpacity(0.5);
+    circle.setOpacity(1);
     layer.draw();
+
+    var trace = layer.getContext().getTrace();
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,289,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=red;fill();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,289,100);globalAlpha=0.5;beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=red;fill();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,289,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=red;fill();restore();'
+    );
   });
 
   // ======================================================
@@ -245,6 +251,12 @@ suite('Circle', function () {
     circle.setFill('blue');
 
     stage.add(layer);
+
+    var trace = layer.getContext().getTrace();
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,289,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=blue;fill();lineWidth=4;strokeStyle=black;stroke();restore();'
+    );
   });
 
   test('getSelfRect', function () {
