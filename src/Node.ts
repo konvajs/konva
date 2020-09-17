@@ -721,7 +721,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     evtStr: K,
     handler: KonvaEventListener<this, NodeEventMap[K]>
   ) {
-    // this._cache && this._cache.delete(ALL_LISTENERS);
+    this._cache && this._cache.delete(ALL_LISTENERS);
+
     if (arguments.length === 3) {
       return this._delegate.apply(this, arguments);
     }
@@ -787,6 +788,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       parts,
       baseEvent,
       name;
+
+    this._cache && this._cache.delete(ALL_LISTENERS);
 
     if (!evtStr) {
       // remove all events
@@ -2278,36 +2281,34 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   }
 
   _getListeners(eventType) {
-    // const events = this._cache.get(ALL_LISTENERS);
-    // if (events && events[eventType]) {
-    //   return events[eventType];
-    // }
+    let listeners = this._cache.get(ALL_LISTENERS);
+    // if no cache for listeners, we need to pre calculate it
+    if (!listeners) {
+      listeners = {};
+      let obj = this;
+      while (obj) {
+        if (!obj.eventListeners) {
+          obj = Object.getPrototypeOf(obj);
+          continue;
+        }
+        for (var event in obj.eventListeners) {
+          const newEvents = obj.eventListeners[event];
+          const oldEvents = listeners[event] || [];
 
-    let totalEvents = [];
-    let obj;
-    while (true) {
-      obj = obj ? Object.getPrototypeOf(obj) : this;
-      if (!obj) {
-        break;
+          listeners[event] = newEvents.concat(oldEvents);
+        }
+        obj = Object.getPrototypeOf(obj);
       }
-      if (!obj.eventListeners) {
-        continue;
-      }
-      const events = obj.eventListeners[eventType];
-      if (!events) {
-        continue;
-      }
-      totalEvents = events.concat(totalEvents);
-      obj = Object.getPrototypeOf(obj);
+      this._cache.set(ALL_LISTENERS, listeners);
     }
-    // this._cache.set(ALL_LISTENERS, totalEvents);
-    return totalEvents;
+
+    return listeners[eventType];
   }
   _fire(eventType, evt) {
     var events = this._getListeners(eventType),
       i;
 
-    if (events.length) {
+    if (events) {
       evt = evt || {};
       evt.currentTarget = this;
       evt.type = eventType;

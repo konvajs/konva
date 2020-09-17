@@ -2624,7 +2624,7 @@
       }
   };
   // CONSTANTS
-  var ABSOLUTE_OPACITY = 'absoluteOpacity', ABSOLUTE_TRANSFORM = 'absoluteTransform', ABSOLUTE_SCALE = 'absoluteScale', CANVAS = 'canvas', CHANGE = 'Change', CHILDREN = 'children', KONVA = 'konva', LISTENING = 'listening', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', NAME = 'name', SET$1 = 'set', SHAPE = 'Shape', SPACE = ' ', STAGE = 'stage', TRANSFORM = 'transform', UPPER_STAGE = 'Stage', VISIBLE = 'visible', TRANSFORM_CHANGE_STR = [
+  var ABSOLUTE_OPACITY = 'absoluteOpacity', ALL_LISTENERS = 'allEventListeners', ABSOLUTE_TRANSFORM = 'absoluteTransform', ABSOLUTE_SCALE = 'absoluteScale', CANVAS = 'canvas', CHANGE = 'Change', CHILDREN = 'children', KONVA = 'konva', LISTENING = 'listening', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', NAME = 'name', SET$1 = 'set', SHAPE = 'Shape', SPACE = ' ', STAGE = 'stage', TRANSFORM = 'transform', UPPER_STAGE = 'Stage', VISIBLE = 'visible', TRANSFORM_CHANGE_STR = [
       'xChange.konva',
       'yChange.konva',
       'scaleXChange.konva',
@@ -3090,7 +3090,7 @@
        * });
        */
       Node.prototype.on = function (evtStr, handler) {
-          // this._cache && this._cache.delete(ALL_LISTENERS);
+          this._cache && this._cache.delete(ALL_LISTENERS);
           if (arguments.length === 3) {
               return this._delegate.apply(this, arguments);
           }
@@ -3139,6 +3139,7 @@
        */
       Node.prototype.off = function (evtStr, callback) {
           var events = (evtStr || '').split(SPACE), len = events.length, n, t, event, parts, baseEvent, name;
+          this._cache && this._cache.delete(ALL_LISTENERS);
           if (!evtStr) {
               // remove all events
               for (t in this.eventListeners) {
@@ -4503,33 +4504,30 @@
           }
       };
       Node.prototype._getListeners = function (eventType) {
-          // const events = this._cache.get(ALL_LISTENERS);
-          // if (events && events[eventType]) {
-          //   return events[eventType];
-          // }
-          var totalEvents = [];
-          var obj;
-          while (true) {
-              obj = obj ? Object.getPrototypeOf(obj) : this;
-              if (!obj) {
-                  break;
+          var listeners = this._cache.get(ALL_LISTENERS);
+          // if no cache for listeners, we need to pre calculate it
+          if (!listeners) {
+              listeners = {};
+              var obj = this;
+              while (obj) {
+                  if (!obj.eventListeners) {
+                      obj = Object.getPrototypeOf(obj);
+                      continue;
+                  }
+                  for (var event in obj.eventListeners) {
+                      var newEvents = obj.eventListeners[event];
+                      var oldEvents = listeners[event] || [];
+                      listeners[event] = newEvents.concat(oldEvents);
+                  }
+                  obj = Object.getPrototypeOf(obj);
               }
-              if (!obj.eventListeners) {
-                  continue;
-              }
-              var events = obj.eventListeners[eventType];
-              if (!events) {
-                  continue;
-              }
-              totalEvents = events.concat(totalEvents);
-              obj = Object.getPrototypeOf(obj);
+              this._cache.set(ALL_LISTENERS, listeners);
           }
-          // this._cache.set(ALL_LISTENERS, totalEvents);
-          return totalEvents;
+          return listeners[eventType];
       };
       Node.prototype._fire = function (eventType, evt) {
           var events = this._getListeners(eventType), i;
-          if (events.length) {
+          if (events) {
               evt = evt || {};
               evt.currentTarget = this;
               evt.type = eventType;
