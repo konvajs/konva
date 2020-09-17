@@ -499,7 +499,7 @@ suite('Text', function () {
   });
 
   // ======================================================
-  test.only('wrap none check', function () {
+  test('wrap none check', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -527,9 +527,9 @@ suite('Text', function () {
     assert.equal(text.textArr[0].text, 'Hello foo b');
 
     var trace =
-      'fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();restore();save();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();restore();restore();';
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);beginPath();rect(0,0,60,20);closePath();fillStyle=rgba(0, 0, 0, 0.4);fill();restore();save();transform(1,0,0,1,10,10);font=normal normal 12px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();fillStyle=black;fillText(Hello foo b,0,6);restore();restore();';
 
-    assert.equal(layer.getContext().getTrace(true), trace);
+    assert.equal(layer.getContext().getTrace(), trace);
   });
 
   // ======================================================
