@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.1.3
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Thu Sep 17 2020
+   * Date: Fri Sep 25 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -15230,6 +15230,12 @@
           });
           this.add(back);
           this._proxyDrag(back);
+          // do not bubble drag from the back shape
+          // because we already "drag" whole transformer
+          // so we don't want to trigger drag twice on transformer
+          back.on('dragend', function (e) {
+              e.cancelBubble = true;
+          });
       };
       Transformer.prototype._handleMouseDown = function (e) {
           this._movingAnchorName = e.target.name().split(' ')[0];

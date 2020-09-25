@@ -4101,6 +4101,10 @@ suite('Transformer', function () {
       nodes: [rect1, rect2],
       shouldOverdrawWholeArea: true,
     });
+
+    tr.on('dragend', () => {
+      dragend += 1;
+    });
     layer.add(tr);
     layer.draw();
 
@@ -4132,7 +4136,7 @@ suite('Transformer', function () {
     assert.equal(rect2.y(), 100);
     assert.equal(dragstart, 2);
     assert.equal(dragmove, 2);
-    assert.equal(dragend, 2);
+    assert.equal(dragend, 3);
   });
 
   test('reattach to several nodes', function () {

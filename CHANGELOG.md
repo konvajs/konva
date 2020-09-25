@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+* Fix double `dragend` trigger on `Konva.Transformer`
+
 ## 7.1.3
 
 * Text rendering fixes

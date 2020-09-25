@@ -595,6 +595,12 @@ export class Transformer extends Group {
     });
     this.add(back);
     this._proxyDrag(back);
+    // do not bubble drag from the back shape
+    // because we already "drag" whole transformer
+    // so we don't want to trigger drag twice on transformer
+    back.on('dragend', (e) => {
+      e.cancelBubble = true;
+    });
   }
   _handleMouseDown(e) {
     this._movingAnchorName = e.target.name().split(' ')[0];
