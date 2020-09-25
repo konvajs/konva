@@ -2285,7 +2285,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     // if no cache for listeners, we need to pre calculate it
     if (!listeners) {
       listeners = {};
-      let obj = this;
+      let obj = Object.getPrototypeOf(this);
       while (obj) {
         if (!obj.eventListeners) {
           obj = Object.getPrototypeOf(obj);
@@ -2305,16 +2305,23 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return listeners[eventType];
   }
   _fire(eventType, evt) {
-    var events = this._getListeners(eventType),
-      i;
+    evt = evt || {};
+    evt.currentTarget = this;
+    evt.type = eventType;
 
-    if (events) {
-      evt = evt || {};
-      evt.currentTarget = this;
-      evt.type = eventType;
+    const topListeners = this._getListeners(eventType);
+    if (topListeners) {
+      for (var i = 0; i < topListeners.length; i++) {
+        topListeners[i].handler.call(this, evt);
+      }
+    }
 
-      for (i = 0; i < events.length; i++) {
-        events[i].handler.call(this, evt);
+    // it is important to iterate over self listeners without cache
+    // because events can be added/removed while firing
+    const selfListeners = this.eventListeners[eventType];
+    if (selfListeners) {
+      for (var i = 0; i < selfListeners.length; i++) {
+        selfListeners[i].handler.call(this, evt);
       }
     }
   }

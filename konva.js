@@ -4508,7 +4508,7 @@
           // if no cache for listeners, we need to pre calculate it
           if (!listeners) {
               listeners = {};
-              var obj = this;
+              var obj = Object.getPrototypeOf(this);
               while (obj) {
                   if (!obj.eventListeners) {
                       obj = Object.getPrototypeOf(obj);
@@ -4526,13 +4526,21 @@
           return listeners[eventType];
       };
       Node.prototype._fire = function (eventType, evt) {
-          var events = this._getListeners(eventType), i;
-          if (events) {
-              evt = evt || {};
-              evt.currentTarget = this;
-              evt.type = eventType;
-              for (i = 0; i < events.length; i++) {
-                  events[i].handler.call(this, evt);
+          evt = evt || {};
+          evt.currentTarget = this;
+          evt.type = eventType;
+          var topListeners = this._getListeners(eventType);
+          if (topListeners) {
+              for (var i = 0; i < topListeners.length; i++) {
+                  topListeners[i].handler.call(this, evt);
+              }
+          }
+          // it is important to iterate over self listeners without cache
+          // because events can be added/removed while firing
+          var selfListeners = this.eventListeners[eventType];
+          if (selfListeners) {
+              for (var i = 0; i < selfListeners.length; i++) {
+                  selfListeners[i].handler.call(this, evt);
               }
           }
       };

@@ -145,6 +145,46 @@ suite('DragAndDrop', function () {
   });
 
   // ======================================================
+  test('changing draggable on mousedown should take effect', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var circle = new Konva.Circle({
+      x: stage.getWidth() / 2,
+      y: stage.getHeight() / 2,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle',
+    });
+
+    layer.add(circle);
+    stage.add(layer);
+
+    circle.on('mousedown', () => {
+      circle.draggable(true);
+    });
+
+    stage.simulateMouseDown({
+      x: circle.x(),
+      y: circle.y(),
+    });
+
+    stage.simulateMouseMove({
+      x: circle.x() + 10,
+      y: circle.y() + 10,
+    });
+
+    assert.equal(circle.isDragging(), true);
+
+    stage.simulateMouseUp({
+      x: circle.x() + 10,
+      y: circle.y() + 10,
+    });
+  });
+
+  // ======================================================
   test('while dragging do not draw hit', function () {
     var stage = addStage();
 
