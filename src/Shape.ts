@@ -76,13 +76,20 @@ export interface ShapeConfig extends NodeConfig {
   perfectDrawEnabled?: boolean;
 }
 
+export interface ShapegGetClientRectConfig {
+  skipTransform?: boolean;
+  skipShadow?: boolean;
+  skipStroke?: boolean;
+  relativeTo?: Node;
+}
+
 var HAS_SHADOW = 'hasShadow';
 var SHADOW_RGBA = 'shadowRGBA';
 var patternImage = 'patternImage';
 var linearGradient = 'linearGradient';
 var radialGradient = 'radialGradient';
 
-var dummyContext;
+let dummyContext: CanvasRenderingContext2D;
 function getDummyContext(): CanvasRenderingContext2D {
   if (dummyContext) {
     return dummyContext;
@@ -496,40 +503,39 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
       height: size.height,
     };
   }
-  getClientRect(attrs) {
-    attrs = attrs || {};
-    var skipTransform = attrs.skipTransform;
+  getClientRect(config: ShapegGetClientRectConfig = {}) {
+    const skipTransform = config.skipTransform;
 
-    var relativeTo = attrs.relativeTo;
+    const relativeTo = config.relativeTo;
 
-    var fillRect = this.getSelfRect();
+    const fillRect = this.getSelfRect();
 
-    var applyStroke = !attrs.skipStroke && this.hasStroke();
-    var strokeWidth = (applyStroke && this.strokeWidth()) || 0;
+    const applyStroke = !config.skipStroke && this.hasStroke();
+    const strokeWidth = (applyStroke && this.strokeWidth()) || 0;
 
-    var fillAndStrokeWidth = fillRect.width + strokeWidth;
-    var fillAndStrokeHeight = fillRect.height + strokeWidth;
+    const fillAndStrokeWidth = fillRect.width + strokeWidth;
+    const fillAndStrokeHeight = fillRect.height + strokeWidth;
 
-    var applyShadow = !attrs.skipShadow && this.hasShadow();
-    var shadowOffsetX = applyShadow ? this.shadowOffsetX() : 0;
-    var shadowOffsetY = applyShadow ? this.shadowOffsetY() : 0;
+    const applyShadow = !config.skipShadow && this.hasShadow();
+    const shadowOffsetX = applyShadow ? this.shadowOffsetX() : 0;
+    const shadowOffsetY = applyShadow ? this.shadowOffsetY() : 0;
 
-    var preWidth = fillAndStrokeWidth + Math.abs(shadowOffsetX);
-    var preHeight = fillAndStrokeHeight + Math.abs(shadowOffsetY);
+    const preWidth = fillAndStrokeWidth + Math.abs(shadowOffsetX);
+    const preHeight = fillAndStrokeHeight + Math.abs(shadowOffsetY);
 
-    var blurRadius = (applyShadow && this.shadowBlur()) || 0;
+    const blurRadius = (applyShadow && this.shadowBlur()) || 0;
 
-    var width = preWidth + blurRadius * 2;
-    var height = preHeight + blurRadius * 2;
+    const width = preWidth + blurRadius * 2;
+    const height = preHeight + blurRadius * 2;
 
     // if stroke, for example = 3
     // we need to set x to 1.5, but after Math.round it will be 2
     // as we have additional offset we need to increase width and height by 1 pixel
-    var roundingOffset = 0;
+    let roundingOffset = 0;
     if (Math.round(strokeWidth / 2) !== strokeWidth / 2) {
       roundingOffset = 1;
     }
-    var rect = {
+    const rect = {
       width: width + roundingOffset,
       height: height + roundingOffset,
       x:
