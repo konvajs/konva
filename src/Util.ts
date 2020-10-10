@@ -15,21 +15,14 @@ import { IRect, RGB, RGBA, Vector2d } from './types';
  * // fill all rectangles with a single function
  * shapes.fill('red');
  */
-export class Collection<Child extends Node> {
-  [index: number]: Child;
+export class Collection<Child extends Node> extends Array<Child> {
+  constructor(...args) {
+    super(...args);
 
-  // @ts-ignore
-  length: number;
-  // @ts-ignore
-  each: (f: (child: Child, index: number) => void) => void;
-  // @ts-ignore
-  toArray: () => Array<Child>;
-  // @ts-ignore
-  push: (item: Child) => void;
-  // @ts-ignore
-  unshift: (item: Child) => void;
-  // @ts-ignore
-  splice: (start: number, length: number, replace?: any) => void;
+    // This is necessary for our new methods to be added to Collection.prototype.
+    // See https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
+    Object.setPrototypeOf(this, Collection.prototype);
+  }
 
   /**
    * convert array into a collection
@@ -68,41 +61,41 @@ export class Collection<Child extends Node> {
       Collection._mapMethod(methodName);
     }
   };
+
+  /**
+   * iterate through node array and run a function for each node.
+   *  The node and index is passed into the function
+   * @method
+   * @name Konva.Collection#each
+   * @param {Function} func
+   * @example
+   * // get all nodes with name foo inside layer, and set x to 10 for each
+   * layer.find('.foo').each(function(shape, n) {
+   *   shape.setX(10);
+   * });
+   */
+  each(func) {
+    for (var n = 0; n < this.length; n++) {
+      func(this[n], n);
+    }
+  }
+
+  /**
+   * convert collection into an array
+   * @method
+   * @name Konva.Collection#toArray
+   */
+  toArray() {
+    var arr = [],
+      len = this.length,
+      n;
+
+    for (n = 0; n < len; n++) {
+      arr.push(this[n]);
+    }
+    return arr;
+  }
 }
-
-Collection.prototype = [] as any;
-/**
- * iterate through node array and run a function for each node.
- *  The node and index is passed into the function
- * @method
- * @name Konva.Collection#each
- * @param {Function} func
- * @example
- * // get all nodes with name foo inside layer, and set x to 10 for each
- * layer.find('.foo').each(function(shape, n) {
- *   shape.setX(10);
- * });
- */
-Collection.prototype.each = function (func) {
-  for (var n = 0; n < this.length; n++) {
-    func(this[n], n);
-  }
-};
-/**
- * convert collection into an array
- * @method
- * @name Konva.Collection#toArray
- */
-Collection.prototype.toArray = function () {
-  var arr = [],
-    len = this.length,
-    n;
-
-  for (n = 0; n < len; n++) {
-    arr.push(this[n]);
-  }
-  return arr;
-};
 
 /*
  * Last updated November 2011
