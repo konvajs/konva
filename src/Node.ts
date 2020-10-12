@@ -118,7 +118,7 @@ export interface NodeConfig {
   offsetY?: number;
   draggable?: boolean;
   dragDistance?: number;
-  dragBoundFunc?: (pos: Vector2d) => Vector2d;
+  dragBoundFunc?: (this: Node, pos: Vector2d) => Vector2d;
   preventDefault?: boolean;
   globalCompositeOperation?: globalCompositeOperationType;
   filters?: Array<Filter>;
@@ -2533,7 +2533,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   threshold: GetSet<number, this>;
   value: GetSet<number, this>;
 
-  dragBoundFunc: GetSet<(pos: Vector2d) => Vector2d, this>;
+  dragBoundFunc: GetSet<(this: Node, pos: Vector2d) => Vector2d, this>;
   draggable: GetSet<boolean, this>;
   dragDistance: GetSet<number, this>;
   embossBlend: GetSet<boolean, this>;
