@@ -598,6 +598,12 @@ export class Transformer extends Group {
     // do not bubble drag from the back shape
     // because we already "drag" whole transformer
     // so we don't want to trigger drag twice on transformer
+    back.on('dragstart', (e) => {
+      e.cancelBubble = true;
+    });
+    back.on('dragmove', (e) => {
+      e.cancelBubble = true;
+    });
     back.on('dragend', (e) => {
       e.cancelBubble = true;
     });

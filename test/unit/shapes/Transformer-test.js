@@ -4048,7 +4048,7 @@ suite('Transformer', function () {
     assert.equal(click, 1);
   });
 
-  test('drag several nodes by transformer back', function () {
+  test.only('drag several nodes by transformer back', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -4102,6 +4102,12 @@ suite('Transformer', function () {
       shouldOverdrawWholeArea: true,
     });
 
+    tr.on('dragstart', () => {
+      dragstart += 1;
+    });
+    tr.on('dragmove', () => {
+      dragmove += 1;
+    });
     tr.on('dragend', () => {
       dragend += 1;
     });
@@ -4134,8 +4140,8 @@ suite('Transformer', function () {
     assert.equal(rect1.y(), 50);
     assert.equal(rect2.x(), 110);
     assert.equal(rect2.y(), 100);
-    assert.equal(dragstart, 2);
-    assert.equal(dragmove, 2);
+    assert.equal(dragstart, 3);
+    assert.equal(dragmove, 3);
     assert.equal(dragend, 3);
   });
 

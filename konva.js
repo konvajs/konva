@@ -7087,16 +7087,16 @@
               height: size.height,
           };
       };
-      Shape.prototype.getClientRect = function (attrs) {
-          attrs = attrs || {};
-          var skipTransform = attrs.skipTransform;
-          var relativeTo = attrs.relativeTo;
+      Shape.prototype.getClientRect = function (config) {
+          if (config === void 0) { config = {}; }
+          var skipTransform = config.skipTransform;
+          var relativeTo = config.relativeTo;
           var fillRect = this.getSelfRect();
-          var applyStroke = !attrs.skipStroke && this.hasStroke();
+          var applyStroke = !config.skipStroke && this.hasStroke();
           var strokeWidth = (applyStroke && this.strokeWidth()) || 0;
           var fillAndStrokeWidth = fillRect.width + strokeWidth;
           var fillAndStrokeHeight = fillRect.height + strokeWidth;
-          var applyShadow = !attrs.skipShadow && this.hasShadow();
+          var applyShadow = !config.skipShadow && this.hasShadow();
           var shadowOffsetX = applyShadow ? this.shadowOffsetX() : 0;
           var shadowOffsetY = applyShadow ? this.shadowOffsetY() : 0;
           var preWidth = fillAndStrokeWidth + Math.abs(shadowOffsetX);
@@ -14038,6 +14038,12 @@
           // do not bubble drag from the back shape
           // because we already "drag" whole transformer
           // so we don't want to trigger drag twice on transformer
+          back.on('dragstart', function (e) {
+              e.cancelBubble = true;
+          });
+          back.on('dragmove', function (e) {
+              e.cancelBubble = true;
+          });
           back.on('dragend', function (e) {
               e.cancelBubble = true;
           });
