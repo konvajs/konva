@@ -19,7 +19,7 @@ export class Collection<Child extends Node> {
   [index: number]: Child;
 
   // @ts-ignore
-  [Symbol.iterator](): Iterator<T>;
+  [Symbol.iterator](): Iterator<Child>;
   // @ts-ignore
   length: number;
   // @ts-ignore
