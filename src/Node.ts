@@ -2280,7 +2280,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
   }
 
-  _getListeners(eventType) {
+  _getProtoListeners(eventType) {
     let listeners = this._cache.get(ALL_LISTENERS);
     // if no cache for listeners, we need to pre calculate it
     if (!listeners) {
@@ -2309,7 +2309,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     evt.currentTarget = this;
     evt.type = eventType;
 
-    const topListeners = this._getListeners(eventType);
+    const topListeners = this._getProtoListeners(eventType);
     if (topListeners) {
       for (var i = 0; i < topListeners.length; i++) {
         topListeners[i].handler.call(this, evt);

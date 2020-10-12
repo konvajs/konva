@@ -19,6 +19,8 @@ export class Collection<Child extends Node> {
   [index: number]: Child;
 
   // @ts-ignore
+  [Symbol.iterator](): Iterator<T>;
+  // @ts-ignore
   length: number;
   // @ts-ignore
   each: (f: (child: Child, index: number) => void) => void;
