@@ -91,7 +91,7 @@ function getDummyContext(): CanvasRenderingContext2D {
   return dummyContext;
 }
 
-export const shapes = {};
+export const shapes: { [key: string]: Shape } = {};
 
 // TODO: idea - use only "remove" (or destroy method)
 // how? on add, check that every inner shape has reference in konva store with color
@@ -172,7 +172,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
   constructor(config?: Config) {
     super(config);
     // set colorKey
-    var key;
+    let key: string;
 
     while (true) {
       key = Util.getRandomColor();

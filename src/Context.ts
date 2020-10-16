@@ -369,7 +369,17 @@ export class Context {
    * @method
    * @name Konva.Context#drawImage
    */
-  drawImage(a0, a1, a2, a3?, a4?, a5?, a6?, a7?, a8?) {
+  drawImage(
+    a0: CanvasImageSource,
+    a1: number,
+    a2: number,
+    a3?: number,
+    a4?: number,
+    a5?: number,
+    a6?: number,
+    a7?: number,
+    a8?: number
+  ) {
     var a = arguments,
       _context = this._context;
 
@@ -386,7 +396,16 @@ export class Context {
    * @method
    * @name Konva.Context#ellipse
    */
-  ellipse(a0, a1, a2, a3, a4, a5, a6, a7) {
+  ellipse(
+    a0: number,
+    a1: number,
+    a2: number,
+    a3: number,
+    a4: number,
+    a5: number,
+    a6: number,
+    a7?: boolean
+  ) {
     this._context.ellipse(a0, a1, a2, a3, a4, a5, a6, a7);
   }
   /**

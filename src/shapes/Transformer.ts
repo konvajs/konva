@@ -11,7 +11,7 @@ import { _registerNode } from '../Global';
 
 import { GetSet, IRect, Vector2d } from '../types';
 
-interface Box extends IRect {
+export interface Box extends IRect {
   rotation: number;
 }
 
@@ -1202,7 +1202,7 @@ export class Transformer extends Group {
   keepRatio: GetSet<boolean, this>;
   centeredScaling: GetSet<boolean, this>;
   ignoreStroke: GetSet<boolean, this>;
-  boundBoxFunc: GetSet<(oldBox: IRect, newBox: IRect) => IRect, this>;
+  boundBoxFunc: GetSet<(oldBox: Box, newBox: Box) => Box, this>;
   shouldOverdrawWholeArea: GetSet<boolean, this>;
 }
 
