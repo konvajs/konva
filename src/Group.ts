@@ -3,7 +3,6 @@ import { Container } from './Container';
 import { _registerNode } from './Global';
 import { Node } from './Node';
 import { Shape } from './Shape';
-import Konva from './index-types';
 
 /**
  * Group constructor.  Groups are used to contain shapes or other groups.
