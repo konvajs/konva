@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 7.1.4
+
+* Perf fixes
 * Change events trigger flow, so adding new events INSIDE event callback will work correctly.
 * Fix double `dragend`, `dragstart`, `dragmove` triggers on `Konva.Transformer`
 
