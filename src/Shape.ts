@@ -21,6 +21,9 @@ export type ShapeConfigHandler<TTarget> = {
   bivarianceHack(ctx: Context, shape: TTarget): void;
 }['bivarianceHack'];
 
+export type LineJoin = 'round' | 'bevel' | 'miter';
+export type LineCap = 'butt' | 'round' | 'square';
+
 export interface ShapeConfig extends NodeConfig {
   fill?: string;
   fillPatternImage?: HTMLImageElement;
@@ -58,8 +61,8 @@ export interface ShapeConfig extends NodeConfig {
   strokeScaleEnabled?: boolean;
   strokeHitEnabled?: boolean;
   strokeEnabled?: boolean;
-  lineJoin?: string;
-  lineCap?: string;
+  lineJoin?: LineJoin;
+  lineCap?: LineCap;
   sceneFunc?: (con: Context, shape: Shape) => void;
   hitFunc?: (con: Context, shape: Shape) => void;
   shadowColor?: string;
@@ -98,7 +101,7 @@ function getDummyContext(): CanvasRenderingContext2D {
   return dummyContext;
 }
 
-export const shapes = {};
+export const shapes: { [key: string]: Shape } = {};
 
 // TODO: idea - use only "remove" (or destroy method)
 // how? on add, check that every inner shape has reference in konva store with color
@@ -179,7 +182,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
   constructor(config?: Config) {
     super(config);
     // set colorKey
-    var key;
+    let key: string;
 
     while (true) {
       key = Util.getRandomColor();
@@ -795,8 +798,8 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
   fillPatternY: GetSet<number, this>;
   fillPriority: GetSet<string, this>;
   hitFunc: GetSet<ShapeConfigHandler<this>, this>;
-  lineCap: GetSet<string, this>;
-  lineJoin: GetSet<string, this>;
+  lineCap: GetSet<LineCap, this>;
+  lineJoin: GetSet<LineJoin, this>;
   perfectDrawEnabled: GetSet<boolean, this>;
   sceneFunc: GetSet<ShapeConfigHandler<this>, this>;
   shadowColor: GetSet<string, this>;
