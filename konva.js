@@ -8710,7 +8710,6 @@
        * var group = layer.getIntersection({x: 50, y: 50}, 'Group');
        */
       Layer.prototype.getIntersection = function (pos, selector) {
-          var obj, i, intersectionOffset, shape;
           if (!this.isListening() || !this.isVisible()) {
               return null;
           }
@@ -8719,13 +8718,13 @@
           var spiralSearchDistance = 1;
           var continueSearch = false;
           while (true) {
-              for (i = 0; i < INTERSECTION_OFFSETS_LEN; i++) {
-                  intersectionOffset = INTERSECTION_OFFSETS[i];
-                  obj = this._getIntersection({
+              for (var i = 0; i < INTERSECTION_OFFSETS_LEN; i++) {
+                  var intersectionOffset = INTERSECTION_OFFSETS[i];
+                  var obj = this._getIntersection({
                       x: pos.x + intersectionOffset.x * spiralSearchDistance,
                       y: pos.y + intersectionOffset.y * spiralSearchDistance,
                   });
-                  shape = obj.shape;
+                  var shape = obj.shape;
                   if (shape && selector) {
                       return shape.findAncestor(selector, true);
                   }
@@ -8751,11 +8750,12 @@
       };
       Layer.prototype._getIntersection = function (pos) {
           var ratio = this.hitCanvas.pixelRatio;
-          var p = this.hitCanvas.context.getImageData(Math.round(pos.x * ratio), Math.round(pos.y * ratio), 1, 1).data, p3 = p[3], colorKey, shape;
+          var p = this.hitCanvas.context.getImageData(Math.round(pos.x * ratio), Math.round(pos.y * ratio), 1, 1).data;
+          var p3 = p[3];
           // fully opaque pixel
           if (p3 === 255) {
-              colorKey = Util._rgbToHex(p[0], p[1], p[2]);
-              shape = shapes[HASH$1 + colorKey];
+              var colorKey = Util._rgbToHex(p[0], p[1], p[2]);
+              var shape = shapes[HASH$1 + colorKey];
               if (shape) {
                   return {
                       shape: shape,
@@ -11056,10 +11056,13 @@
           return _super.prototype._useBufferCanvas.call(this, true);
       };
       Image.prototype._sceneFunc = function (context) {
-          var width = this.getWidth(), height = this.getHeight(), image = this.attrs.image, cropWidth, cropHeight, params;
+          var width = this.getWidth();
+          var height = this.getHeight();
+          var image = this.attrs.image;
+          var params;
           if (image) {
-              cropWidth = this.attrs.cropWidth;
-              cropHeight = this.attrs.cropHeight;
+              var cropWidth = this.attrs.cropWidth;
+              var cropHeight = this.attrs.cropHeight;
               if (cropWidth && cropHeight) {
                   params = [
                       image,
