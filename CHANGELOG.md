@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 7.1.6
+
+* Fix for correct image/dataURL/canvas exports  for `Konva.Stage`.
+
 ## 7.1.5
 
 * Performance fixes for dragging many nodes with `Konva.Transformer`.

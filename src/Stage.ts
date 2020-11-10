@@ -278,18 +278,21 @@ export class Stage extends Container<Layer> {
   _toKonvaCanvas(config) {
     config = config || {};
 
-    var x = config.x || 0,
-      y = config.y || 0,
-      canvas = new SceneCanvas({
-        width: config.width || this.width(),
-        height: config.height || this.height(),
-        pixelRatio: config.pixelRatio || 1,
-      }),
-      _context = canvas.getContext()._context,
-      layers = this.children;
+    config.x = config.x || 0;
+    config.y = config.y || 0;
+    config.width = config.width || this.width();
+    config.height = config.height || this.height();
 
-    if (x || y) {
-      _context.translate(-1 * x, -1 * y);
+    var canvas = new SceneCanvas({
+      width: config.width,
+      height: config.height,
+      pixelRatio: config.pixelRatio || 1,
+    });
+    var _context = canvas.getContext()._context;
+    var layers = this.children;
+
+    if (config.x || config.y) {
+      _context.translate(-1 * config.x, -1 * config.y);
     }
 
     layers.each(function (layer) {
@@ -299,8 +302,8 @@ export class Stage extends Container<Layer> {
       var layerCanvas = layer._toKonvaCanvas(config);
       _context.drawImage(
         layerCanvas._canvas,
-        x,
-        y,
+        config.x,
+        config.y,
         layerCanvas.getWidth() / layerCanvas.getPixelRatio(),
         layerCanvas.getHeight() / layerCanvas.getPixelRatio()
       );
