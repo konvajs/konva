@@ -43,7 +43,7 @@ export enum KonvaNodeEvent {
   dbltap = 'dbltap',
   dragstart = 'dragstart',
   dragmove = 'dragmove',
-  dragend = 'dragend'
+  dragend = 'dragend',
 }
 
 export interface RGB {

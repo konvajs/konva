@@ -360,7 +360,7 @@ export class Stage extends Container<Layer> {
       layer.draw();
     });
   }
-  add(layer) {
+  add(layer: Layer) {
     if (arguments.length > 1) {
       for (var i = 0; i < arguments.length; i++) {
         this.add(arguments[i]);

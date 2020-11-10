@@ -326,9 +326,7 @@ export class Layer extends Container<Group | Shape> {
    * // or if you interested in shape parent:
    * var group = layer.getIntersection({x: 50, y: 50}, 'Group');
    */
-  getIntersection(pos: Vector2d, selector?: string) {
-    var obj, i, intersectionOffset, shape;
-
+  getIntersection(pos: Vector2d, selector?: string): Node | null {
     if (!this.isListening() || !this.isVisible()) {
       return null;
     }
@@ -337,13 +335,13 @@ export class Layer extends Container<Group | Shape> {
     var spiralSearchDistance = 1;
     var continueSearch = false;
     while (true) {
-      for (i = 0; i < INTERSECTION_OFFSETS_LEN; i++) {
-        intersectionOffset = INTERSECTION_OFFSETS[i];
-        obj = this._getIntersection({
+      for (let i = 0; i < INTERSECTION_OFFSETS_LEN; i++) {
+        const intersectionOffset = INTERSECTION_OFFSETS[i];
+        const obj = this._getIntersection({
           x: pos.x + intersectionOffset.x * spiralSearchDistance,
           y: pos.y + intersectionOffset.y * spiralSearchDistance,
         });
-        shape = obj.shape;
+        const shape = obj.shape;
         if (shape && selector) {
           return shape.findAncestor(selector, true);
         } else if (shape) {
@@ -365,21 +363,20 @@ export class Layer extends Container<Group | Shape> {
       }
     }
   }
-  _getIntersection(pos) {
-    var ratio = this.hitCanvas.pixelRatio;
-    var p = this.hitCanvas.context.getImageData(
-        Math.round(pos.x * ratio),
-        Math.round(pos.y * ratio),
-        1,
-        1
-      ).data,
-      p3 = p[3],
-      colorKey,
-      shape;
+  _getIntersection(pos: Vector2d): { shape?: Shape; antialiased?: boolean } {
+    const ratio = this.hitCanvas.pixelRatio;
+    const p = this.hitCanvas.context.getImageData(
+      Math.round(pos.x * ratio),
+      Math.round(pos.y * ratio),
+      1,
+      1
+    ).data;
+    const p3 = p[3];
+
     // fully opaque pixel
     if (p3 === 255) {
-      colorKey = Util._rgbToHex(p[0], p[1], p[2]);
-      shape = shapes[HASH + colorKey];
+      const colorKey = Util._rgbToHex(p[0], p[1], p[2]);
+      const shape = shapes[HASH + colorKey];
       if (shape) {
         return {
           shape: shape,
