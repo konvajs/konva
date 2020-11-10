@@ -1214,6 +1214,37 @@ suite('Text', function () {
     layer.draw();
   });
 
+  test.skip('we should be able to clip underline by group', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group({
+      clipX: 10,
+      clipY: 10,
+      clipWidth: 100,
+      clipHeight: 27,
+    });
+    layer.add(group);
+
+    var text = new Konva.Text({
+      x: 10,
+      y: 10,
+      width: 100,
+      text: 'Hello World',
+      textDecoration: ['underline'],
+      fontSize: 40,
+    });
+    group.add(text);
+
+    layer.draw();
+
+    console.log(layer.getContext().getTrace());
+
+    // assert.equal(layer.getContext().getTrace(), trace);
+    throw 1;
+  });
+
   test('image gradient for text', function (done) {
     Konva.pixelRatio = 1;
     var imageObj = new Image();

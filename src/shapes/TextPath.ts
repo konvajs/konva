@@ -627,7 +627,7 @@ Factory.addGetterSetter(TextPath, 'fontStyle', NORMAL);
 
 /**
  * get/set horizontal align of text.  Can be 'left', 'center', 'right' or 'justify'
- * @name Konva.Text#align
+ * @name Konva.TextPath#align
  * @method
  * @param {String} align
  * @returns {String}

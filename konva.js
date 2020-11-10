@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.1.4
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Wed Oct 21 2020
+   * Date: Tue Nov 10 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2550,7 +2550,7 @@
               var drawNode = elem.node.getLayer() ||
                   (elem.node instanceof Konva['Stage'] && elem.node);
               if (drawNode) {
-                  drawNode.draw();
+                  drawNode.batchDraw();
               }
           });
       },
@@ -6770,7 +6770,7 @@
       /**
        * batch draw
        * @method
-       * @name Konva.Layer#batchDraw
+       * @name Konva.Stage#batchDraw
        * @return {Konva.Stage} this
        */
       Stage.prototype.batchDraw = function () {
@@ -10765,7 +10765,7 @@
   _registerNode(Circle);
   /**
    * get/set radius
-   * @name Konva.Arrow#radius
+   * @name Konva.Circle#radius
    * @method
    * @param {Number} radius
    * @returns {Number}
@@ -13307,44 +13307,44 @@
   _registerNode(Star);
   /**
    * get/set number of points
-   * @name Konva.Ring#numPoints
+   * @name Konva.Star#numPoints
    * @method
    * @param {Number} numPoints
    * @returns {Number}
    * @example
    * // get inner radius
-   * var numPoints = ring.numPoints();
+   * var numPoints = star.numPoints();
    *
    * // set inner radius
-   * ring.numPoints(20);
+   * star.numPoints(20);
    */
   Factory.addGetterSetter(Star, 'numPoints', 5, getNumberValidator());
   /**
    * get/set innerRadius
-   * @name Konva.Ring#innerRadius
+   * @name Konva.Star#innerRadius
    * @method
    * @param {Number} innerRadius
    * @returns {Number}
    * @example
    * // get inner radius
-   * var innerRadius = ring.innerRadius();
+   * var innerRadius = star.innerRadius();
    *
    * // set inner radius
-   * ring.innerRadius(20);
+   * star.innerRadius(20);
    */
   Factory.addGetterSetter(Star, 'innerRadius', 0, getNumberValidator());
   /**
    * get/set outerRadius
-   * @name Konva.Ring#outerRadius
+   * @name Konva.Star#outerRadius
    * @method
    * @param {Number} outerRadius
    * @returns {Number}
    * @example
    * // get inner radius
-   * var outerRadius = ring.outerRadius();
+   * var outerRadius = star.outerRadius();
    *
    * // set inner radius
-   * ring.outerRadius(20);
+   * star.outerRadius(20);
    */
   Factory.addGetterSetter(Star, 'outerRadius', 0, getNumberValidator());
   Collection.mapMethods(Star);
@@ -14631,7 +14631,7 @@
   Factory.addGetterSetter(TextPath, 'fontStyle', NORMAL$1);
   /**
    * get/set horizontal align of text.  Can be 'left', 'center', 'right' or 'justify'
-   * @name Konva.Text#align
+   * @name Konva.TextPath#align
    * @method
    * @param {String} align
    * @returns {String}
@@ -14968,7 +14968,7 @@
                       _this.rotation(_this.nodes()[0].rotation());
                   }
                   _this._resetTransformCache();
-                  if (!_this._transforming) {
+                  if (!_this._transforming && !_this.isDragging()) {
                       _this.update();
                   }
               };

@@ -298,7 +298,7 @@ export class Transformer extends Group {
         }
 
         this._resetTransformCache();
-        if (!this._transforming) {
+        if (!this._transforming && !this.isDragging()) {
           this.update();
         }
       };

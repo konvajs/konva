@@ -1063,7 +1063,7 @@ export class Stage extends Container<Layer> {
   /**
    * batch draw
    * @method
-   * @name Konva.Layer#batchDraw
+   * @name Konva.Stage#batchDraw
    * @return {Konva.Stage} this
    */
   batchDraw() {

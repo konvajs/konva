@@ -4,18 +4,18 @@ var canvas = require('canvas');
 // mock window
 Konva.window = {
   Image: canvas.Image,
-  devicePixelRatio: 1
+  devicePixelRatio: 1,
 };
 // mock document
 Konva.document = {
-  createElement: function() {},
+  createElement: function () {},
   documentElement: {
-    addEventListener: function() {}
-  }
+    addEventListener: function () {},
+  },
 };
 
 // make some global injections
-global.requestAnimationFrame = cb => {
+global.requestAnimationFrame = (cb) => {
   setImmediate(cb);
 };
 
@@ -26,7 +26,7 @@ Konva.Util.createCanvasElement = () => {
   return node;
 };
 
-// create canvas in Node env
+// create image in Node env
 Konva.Util.createImageElement = () => {
   const node = new canvas.Image();
   node.style = {};

@@ -121,9 +121,9 @@ export const DD = {
 
       const drawNode =
         elem.node.getLayer() ||
-        (elem.node instanceof Konva['Stage'] && elem.node);
+        ((elem.node instanceof Konva['Stage'] && elem.node) as any);
       if (drawNode) {
-        drawNode.draw();
+        drawNode.batchDraw();
       }
     });
   },

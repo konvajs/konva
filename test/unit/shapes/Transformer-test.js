@@ -4396,4 +4396,28 @@ suite('Transformer', function () {
     });
     assert.equal(callCount, 1);
   });
+
+  // TODO: what can we test here?
+  test('performance check - drag several nodes', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    for (var i = 0; i < 500; i++) {
+      var shape = new Konva.Circle({
+        x: 100,
+        y: 100,
+        radius: 50,
+        fill: 'red',
+        draggable: true,
+      });
+      layer.add(shape);
+    }
+    var shapes = layer.find('Circle').toArray();
+    var tr = new Konva.Transformer({
+      nodes: shapes,
+    });
+    layer.add(tr);
+    layer.draw();
+  });
 });

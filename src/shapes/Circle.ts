@@ -61,7 +61,7 @@ _registerNode(Circle);
 
 /**
  * get/set radius
- * @name Konva.Arrow#radius
+ * @name Konva.Circle#radius
  * @method
  * @param {Number} radius
  * @returns {Number}

@@ -402,19 +402,19 @@ suite('DragAndDrop', function () {
 
     setTimeout(function () {
       assert.equal(stage.isDragging(), true);
-
       stage.simulateMouseUp({
         x: stage.width() / 2 - 50,
         y: stage.height() / 2,
       });
+      setTimeout(function () {
+        var shape = layer.getIntersection({
+          x: stage.width() / 2 + 5,
+          y: stage.height() / 2,
+        });
 
-      var shape = layer.getIntersection({
-        x: stage.width() / 2 + 5,
-        y: stage.height() / 2,
-      });
-
-      assert.equal(shape, circle);
-      done();
+        assert.equal(shape, circle);
+        done();
+      }, 100);
     }, 50);
   });
 
