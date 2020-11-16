@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 7.1.6
+## 7.1.7
 
 * Fix incorrect rendering of `TextPath` in some cases.
 
