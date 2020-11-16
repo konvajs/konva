@@ -25,6 +25,8 @@ export interface TextConfig extends ShapeConfig {
   fontFamily?: string;
   fontSize?: number;
   fontStyle?: string;
+  fontVariant?: string;
+  textDecoration?: string;
   align?: string;
   verticalAlign?: string;
   padding?: number;
