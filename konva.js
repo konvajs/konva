@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.1.6
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Nov 10 2020
+   * Date: Mon Nov 16 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -14391,7 +14391,7 @@
               var attempts = 0;
               p1 = undefined;
               while (Math.abs(glyphWidth - currLen) / glyphWidth > 0.01 &&
-                  attempts < 25) {
+                  attempts < 50) {
                   attempts++;
                   var cumulativePathLength = currLen;
                   while (pathCmd === undefined) {

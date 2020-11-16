@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 7.1.6
 
+* Fix incorrect rendering of `TextPath` in some cases.
+
+## 7.1.6
+
 * Fix for correct image/dataURL/canvas exports  for `Konva.Stage`.
 
 ## 7.1.5

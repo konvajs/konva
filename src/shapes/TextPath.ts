@@ -297,7 +297,7 @@ export class TextPath extends Shape<TextPathConfig> {
       p1 = undefined;
       while (
         Math.abs(glyphWidth - currLen) / glyphWidth > 0.01 &&
-        attempts < 25
+        attempts < 50
       ) {
         attempts++;
         var cumulativePathLength = currLen;
