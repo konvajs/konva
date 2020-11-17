@@ -32,22 +32,49 @@ export interface RegularPolygonConfig extends ShapeConfig {
  */
 export class RegularPolygon extends Shape<RegularPolygonConfig> {
   _sceneFunc(context) {
-    var sides = this.sides(),
-      radius = this.radius(),
-      n,
-      x,
-      y;
+    const points = this._getPoints();
 
     context.beginPath();
-    context.moveTo(0, 0 - radius);
+    context.moveTo(points[0].x, points[0].y);
 
-    for (n = 1; n < sides; n++) {
-      x = radius * Math.sin((n * 2 * Math.PI) / sides);
-      y = -1 * radius * Math.cos((n * 2 * Math.PI) / sides);
-      context.lineTo(x, y);
+    for (var n = 1; n < points.length; n++) {
+      context.lineTo(points[n].x, points[n].y);
     }
+
     context.closePath();
     context.fillStrokeShape(this);
+  }
+  _getPoints() {
+    const sides = this.attrs.sides;
+    const radius = this.attrs.radius || 0;
+    const points = [];
+    for (var n = 0; n < sides; n++) {
+      points.push({
+        x: radius * Math.sin((n * 2 * Math.PI) / sides),
+        y: -1 * radius * Math.cos((n * 2 * Math.PI) / sides),
+      });
+    }
+    return points;
+  }
+  getSelfRect() {
+    const points = this._getPoints();
+
+    var minX = points[0].x;
+    var maxX = points[0].y;
+    var minY = points[0].x;
+    var maxY = points[0].y;
+    points.forEach((point) => {
+      minX = Math.min(minX, point.x);
+      maxX = Math.max(maxX, point.x);
+      minY = Math.min(minY, point.y);
+      maxY = Math.max(maxY, point.y);
+    });
+    return {
+      x: minX,
+      y: minY,
+      width: maxX - minX,
+      height: maxY - minY,
+    };
   }
   getWidth() {
     return this.radius() * 2;

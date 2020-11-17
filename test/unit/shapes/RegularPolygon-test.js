@@ -167,4 +167,36 @@ suite('RegularPolygon', function () {
     cloneAndCompareLayer(layer, 254);
     Konva.pixelRatio = undefined;
   });
+
+  test.only('triangle - bounding box', function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var poly = new Konva.RegularPolygon({
+      x: 200,
+      y: 100,
+      sides: 3,
+      radius: 50,
+      fill: 'green',
+      stroke: 'blue',
+      strokeWidth: 5,
+      name: 'foobar',
+    });
+
+    layer.add(poly);
+
+    var tr = new Konva.Transformer({
+      nodes: [poly],
+    });
+    layer.add(tr);
+
+    layer.draw();
+
+    var box = poly.getClientRect();
+
+    assert.equal(box.width, 92.60254037844388);
+    assert.equal(box.height, 81.00000000000003);
+  });
 });
