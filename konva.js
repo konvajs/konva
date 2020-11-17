@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.1.7
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Mon Nov 16 2020
+   * Date: Tue Nov 17 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -11755,7 +11755,7 @@
               x: Math.round(minX),
               y: Math.round(minY),
               width: Math.round(maxX - minX),
-              height: Math.round(maxY - minY)
+              height: Math.round(maxY - minY),
           };
       };
       /**
@@ -11791,14 +11791,14 @@
               point = this.dataArray[i - 1].points.slice(-2);
               return {
                   x: point[0],
-                  y: point[1]
+                  y: point[1],
               };
           }
           if (length < 0.01) {
               point = this.dataArray[i].points.slice(0, 2);
               return {
                   x: point[0],
-                  y: point[1]
+                  y: point[1],
               };
           }
           var cp = this.dataArray[i];
@@ -11838,21 +11838,24 @@
               // vertical line
               pt = {
                   x: fromX,
-                  y: fromY + rise
+                  y: fromY + rise,
               };
           }
           else if ((fromY - P1y) / (fromX - P1x + 0.00000001) === m) {
               pt = {
                   x: fromX + run,
-                  y: fromY + rise
+                  y: fromY + rise,
               };
           }
           else {
               var ix, iy;
               var len = this.getLineLength(P1x, P1y, P2x, P2y);
-              if (len < 0.00000001) {
-                  return undefined;
-              }
+              // if (len < 0.00000001) {
+              //   return {
+              //     x: P1x,
+              //     y: P1y,
+              //   };
+              // }
               var u = (fromX - P1x) * (P2x - P1x) + (fromY - P1y) * (P2y - P1y);
               u = u / (len * len);
               ix = P1x + u * (P2x - P1x);
@@ -11866,7 +11869,7 @@
               rise = m * run;
               pt = {
                   x: ix + run,
-                  y: iy + rise
+                  y: iy + rise,
               };
           }
           return pt;
@@ -11888,7 +11891,7 @@
           var y = P4y * CB1(pct) + P3y * CB2(pct) + P2y * CB3(pct) + P1y * CB4(pct);
           return {
               x: x,
-              y: y
+              y: y,
           };
       };
       Path.getPointOnQuadraticBezier = function (pct, P1x, P1y, P2x, P2y, P3x, P3y) {
@@ -11905,18 +11908,18 @@
           var y = P3y * QB1(pct) + P2y * QB2(pct) + P1y * QB3(pct);
           return {
               x: x,
-              y: y
+              y: y,
           };
       };
       Path.getPointOnEllipticalArc = function (cx, cy, rx, ry, theta, psi) {
           var cosPsi = Math.cos(psi), sinPsi = Math.sin(psi);
           var pt = {
               x: rx * Math.cos(theta),
-              y: ry * Math.sin(theta)
+              y: ry * Math.sin(theta),
           };
           return {
               x: cx + (pt.x * cosPsi - pt.y * sinPsi),
-              y: cy + (pt.x * sinPsi + pt.y * cosPsi)
+              y: cy + (pt.x * sinPsi + pt.y * cosPsi),
           };
       };
       /*
@@ -11974,7 +11977,7 @@
               's',
               'S',
               'a',
-              'A'
+              'A',
           ];
           // convert white spaces to commas
           cs = cs.replace(new RegExp(' ', 'g'), ',');
@@ -12199,9 +12202,9 @@
                       points: points,
                       start: {
                           x: startX,
-                          y: startY
+                          y: startY,
                       },
-                      pathLength: this.calcLength(startX, startY, cmd || c, points)
+                      pathLength: this.calcLength(startX, startY, cmd || c, points),
                   });
               }
               if (c === 'z' || c === 'Z') {
@@ -12209,7 +12212,7 @@
                       command: 'z',
                       points: [],
                       start: undefined,
-                      pathLength: 0
+                      pathLength: 0,
                   });
               }
           }
@@ -14391,7 +14394,7 @@
               var attempts = 0;
               p1 = undefined;
               while (Math.abs(glyphWidth - currLen) / glyphWidth > 0.01 &&
-                  attempts < 50) {
+                  attempts < 5) {
                   attempts++;
                   var cumulativePathLength = currLen;
                   while (pathCmd === undefined) {
@@ -14453,7 +14456,12 @@
                               currentT += (glyphWidth - currLen) / pathCmd.pathLength;
                           }
                           else {
-                              currentT -= (currLen - glyphWidth) / pathCmd.pathLength;
+                              currentT = currentT - (currLen - glyphWidth) / pathCmd.pathLength;
+                              // that one is a weird check
+                              // but I have to add it to fix some drawings (they are in the testing)
+                              if (currentT < 0) {
+                                  currentT += 0.02;
+                              }
                           }
                           if (currentT > 1.0) {
                               currentT = 1.0;
