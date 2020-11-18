@@ -189,7 +189,7 @@ export abstract class Container<ChildType extends Node> extends Node<
    *  return node.getType() === 'Node' && node.getAbsoluteOpacity() < 1;
    * });
    */
-  find<ChildNode extends Node = Node>(selector): Collection<Node> {
+  find<ChildNode extends Node = Node>(selector): Collection<ChildNode> {
     // protecting _generalFind to prevent user from accidentally adding
     // second argument and getting unexpected `findOne` result
     return this._generalFind<ChildNode>(selector, false);
