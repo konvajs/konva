@@ -1003,7 +1003,7 @@ export class Transformer extends Group {
     newTr.rotate(newAttrs.rotation);
     newTr.scale(newAttrs.width / baseSize, newAttrs.height / baseSize);
 
-    // now lets think we had [old transform] and now we have [new transform]
+    // now lets think we had [old transform] and n ow we have [new transform]
     // Now, the questions is: how can we transform "parent" to go from [old transform] into [new transform]
     // in equation it will be:
     // [delta transform] * [old transform] = [new transform]
@@ -1033,6 +1033,7 @@ export class Transformer extends Group {
       node.setAttrs(attrs);
       this._fire('transform', { evt: evt, target: node });
       node._fire('transform', { evt: evt, target: node });
+      node.getLayer()?.batchDraw();
     });
     this.rotation(Util._getRotation(newAttrs.rotation));
     this._resetTransformCache();
