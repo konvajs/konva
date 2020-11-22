@@ -522,6 +522,34 @@ suite('Shape', function () {
   });
 
   // ======================================================
+  test('draw fill after stroke', function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 50,
+      width: 100,
+      height: 50,
+      fill: 'green',
+      stroke: 'red',
+      strokeWidth: 10,
+      fillAfterStrokeEnabled: true,
+    });
+
+    layer.add(rect);
+    stage.add(layer);
+
+    var trace = layer.getContext().getTrace();
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);beginPath();rect(0,0,100,50);closePath();lineWidth=10;strokeStyle=red;stroke();fillStyle=green;fill();restore();'
+    );
+  });
+
+  // ======================================================
   test('test strokeWidth = 0', function () {
     var stage = addStage();
 

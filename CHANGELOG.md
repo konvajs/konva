@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+* New property `fillAfterStrokeEnabled` for `Konva.Shape`. See API docs for more information.
+* Fix for `Konva.Transformer` when it may fail to draw.
+
 ## 7.1.9
 
 * Fix autodrawing for `Konva.Transformer` when it is on a different layer

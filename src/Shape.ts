@@ -57,6 +57,7 @@ export interface ShapeConfig extends NodeConfig {
   fillPriority?: string;
   stroke?: string;
   strokeWidth?: number;
+  fillAfterStrokeEnabled?: boolean;
   hitStrokeWidth?: number | string;
   strokeScaleEnabled?: boolean;
   strokeHitEnabled?: boolean;
@@ -79,7 +80,7 @@ export interface ShapeConfig extends NodeConfig {
   perfectDrawEnabled?: boolean;
 }
 
-export interface ShapegGetClientRectConfig {
+export interface ShapeGetClientRectConfig {
   skipTransform?: boolean;
   skipShadow?: boolean;
   skipStroke?: boolean;
@@ -506,7 +507,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
       height: size.height,
     };
   }
-  getClientRect(config: ShapegGetClientRectConfig = {}) {
+  getClientRect(config: ShapeGetClientRectConfig = {}) {
     const skipTransform = config.skipTransform;
 
     const relativeTo = config.relativeTo;
@@ -812,6 +813,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
   shadowBlur: GetSet<number, this>;
   stroke: GetSet<string, this>;
   strokeEnabled: GetSet<boolean, this>;
+  fillAfterStrokeEnabled: GetSet<boolean, this>;
   strokeScaleEnabled: GetSet<boolean, this>;
   strokeHitEnabled: GetSet<boolean, this>;
   strokeWidth: GetSet<number, this>;
@@ -904,6 +906,25 @@ Factory.addGetterSetter(Shape, 'strokeWidth', 2, getNumberValidator());
  *
  * // set stroke width
  * shape.strokeWidth(10);
+ */
+
+Factory.addGetterSetter(Shape, 'fillAfterStrokeEnabled', false);
+
+/**
+ * get/set fillAfterStrokeEnabled property. By default Konva is drawing filling first, then stroke on top of the fill.
+ * In rare situations you may want a different behavior. When you have a stroke first then fill on top of it.
+ * Especially useful for Text objects.
+ * Default is false.
+ * @name Konva.Shape#fillAfterStrokeEnabled
+ * @method
+ * @param {Boolean} fillAfterStrokeEnabled
+ * @returns {Boolean}
+ * @example
+ * // get stroke width
+ * var fillAfterStrokeEnabled = shape.fillAfterStrokeEnabled();
+ *
+ * // set stroke width
+ * shape.fillAfterStrokeEnabled(true);
  */
 
 Factory.addGetterSetter(

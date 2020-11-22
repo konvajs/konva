@@ -158,17 +158,17 @@ suite('RegularPolygon', function () {
     stage.add(layer);
 
     assert.deepEqual(poly.getSelfRect(), {
-      x: -50,
+      x: -47.55282581475768,
       y: -50,
-      height: 100,
-      width: 100,
+      height: 90.45084971874738,
+      width: 95.10565162951536,
     });
 
     cloneAndCompareLayer(layer, 254);
     Konva.pixelRatio = undefined;
   });
 
-  test.only('triangle - bounding box', function () {
+  test('triangle - bounding box', function () {
     var stage = addStage();
 
     var layer = new Konva.Layer();

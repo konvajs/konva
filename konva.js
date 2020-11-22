@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.1.9
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Fri Nov 20 2020
+   * Date: Sun Nov 22 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -1662,8 +1662,14 @@
        * @param {Konva.Shape} shape
        */
       Context.prototype.fillStrokeShape = function (shape) {
-          this.fillShape(shape);
-          this.strokeShape(shape);
+          if (shape.attrs.fillAfterStrokeEnabled) {
+              this.strokeShape(shape);
+              this.fillShape(shape);
+          }
+          else {
+              this.fillShape(shape);
+              this.strokeShape(shape);
+          }
       };
       Context.prototype.getTrace = function (relaxed) {
           var traceArr = this.traceArr, len = traceArr.length, str = '', n, trace, method, args;
@@ -6889,6 +6895,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -7462,6 +7469,23 @@
    *
    * // set stroke width
    * shape.strokeWidth(10);
+   */
+  Factory.addGetterSetter(Shape, 'fillAfterStrokeEnabled', false);
+  /**
+   * get/set fillAfterStrokeEnabled property. By default Konva is drawing filling first, then stroke on top of the fill.
+   * In rare situations you may want a different behavior. When you have a stroke first then fill on top of it.
+   * Especially useful for Text objects.
+   * Default is false.
+   * @name Konva.Shape#fillAfterStrokeEnabled
+   * @method
+   * @param {Boolean} fillAfterStrokeEnabled
+   * @returns {Boolean}
+   * @example
+   * // get stroke width
+   * var fillAfterStrokeEnabled = shape.fillAfterStrokeEnabled();
+   *
+   * // set stroke width
+   * shape.fillAfterStrokeEnabled(true);
    */
   Factory.addGetterSetter(Shape, 'hitStrokeWidth', 'auto', getNumberOrAutoValidator());
   /**
@@ -9983,6 +10007,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -10173,6 +10198,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -10468,6 +10494,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -10686,6 +10713,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -10824,6 +10852,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -10999,6 +11028,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -11573,6 +11603,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -12394,6 +12425,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -12547,6 +12579,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -12735,6 +12768,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -12889,6 +12923,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -13257,6 +13292,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -13506,6 +13542,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -14184,6 +14221,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -15653,6 +15691,7 @@
       };
       Transformer.prototype.update = function () {
           var _this = this;
+          var _a;
           var attrs = this._getNodeRect();
           this.rotation(Util._getRotation(attrs.rotation));
           var width = attrs.width;
@@ -15740,6 +15779,7 @@
               x: 0,
               y: 0,
           });
+          (_a = this.getLayer()) === null || _a === void 0 ? void 0 : _a.batchDraw();
       };
       /**
        * determine if transformer is in active transform
@@ -16156,6 +16196,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true

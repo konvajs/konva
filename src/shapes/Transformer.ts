@@ -1149,6 +1149,7 @@ export class Transformer extends Group {
       x: 0,
       y: 0,
     });
+    this.getLayer()?.batchDraw();
   }
   /**
    * determine if transformer is in active transform

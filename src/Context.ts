@@ -143,8 +143,13 @@ export class Context {
    * @param {Konva.Shape} shape
    */
   fillStrokeShape(shape: Shape) {
-    this.fillShape(shape);
-    this.strokeShape(shape);
+    if (shape.attrs.fillAfterStrokeEnabled) {
+      this.strokeShape(shape);
+      this.fillShape(shape);
+    } else {
+      this.fillShape(shape);
+      this.strokeShape(shape);
+    }
   }
 
   getTrace(relaxed) {
