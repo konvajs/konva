@@ -297,7 +297,7 @@ export class TextPath extends Shape<TextPathConfig> {
       p1 = undefined;
       while (
         Math.abs(glyphWidth - currLen) / glyphWidth > 0.01 &&
-        attempts < 5
+        attempts < 20
       ) {
         attempts++;
         var cumulativePathLength = currLen;
@@ -384,14 +384,12 @@ export class TextPath extends Shape<TextPathConfig> {
                 currentT = glyphWidth / pathCmd.pathLength;
               }
             } else if (glyphWidth > currLen) {
-              currentT += (glyphWidth - currLen) / pathCmd.pathLength;
+              currentT += (glyphWidth - currLen) / pathCmd.pathLength / 2;
             } else {
-              currentT = currentT - (currLen - glyphWidth) / pathCmd.pathLength;
-              // that one is a weird check
-              // but I have to add it to fix some drawings (they are in the testing)
-              if (currentT < 0) {
-                currentT += 0.02;
-              }
+              currentT = Math.max(
+                currentT - (currLen - glyphWidth) / pathCmd.pathLength / 2,
+                0
+              );
             }
 
             if (currentT > 1.0) {

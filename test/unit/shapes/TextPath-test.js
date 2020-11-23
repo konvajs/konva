@@ -740,7 +740,7 @@ suite('TextPath', function () {
 
     var rect = textpath.getClientRect();
 
-    assert.equal(rect.height, 332.3365704376247, 'check height');
+    assert.equal(rect.height, 328.9307620828596, 'check height');
 
     textpath.text('');
     rect = textpath.getClientRect();
@@ -789,7 +789,7 @@ suite('TextPath', function () {
     layer.draw();
 
     var rect = textpath.getClientRect();
-    assert.equal(rect.width, 298.50744485064837);
-    assert.equal(rect.height, 170.74755779649587);
+    assert.equal(rect.width, 298.50662860798093);
+    assert.equal(rect.height, 170.7386880372827);
   });
 });

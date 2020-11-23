@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.1.9
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Sun Nov 22 2020
+   * Date: Mon Nov 23 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -14461,7 +14461,7 @@
               var attempts = 0;
               p1 = undefined;
               while (Math.abs(glyphWidth - currLen) / glyphWidth > 0.01 &&
-                  attempts < 5) {
+                  attempts < 20) {
                   attempts++;
                   var cumulativePathLength = currLen;
                   while (pathCmd === undefined) {
@@ -14520,15 +14520,10 @@
                               }
                           }
                           else if (glyphWidth > currLen) {
-                              currentT += (glyphWidth - currLen) / pathCmd.pathLength;
+                              currentT += (glyphWidth - currLen) / pathCmd.pathLength / 2;
                           }
                           else {
-                              currentT = currentT - (currLen - glyphWidth) / pathCmd.pathLength;
-                              // that one is a weird check
-                              // but I have to add it to fix some drawings (they are in the testing)
-                              if (currentT < 0) {
-                                  currentT += 0.02;
-                              }
+                              currentT = Math.max(currentT - (currLen - glyphWidth) / pathCmd.pathLength / 2, 0);
                           }
                           if (currentT > 1.0) {
                               currentT = 1.0;
