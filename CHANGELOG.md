@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+* Fix correct rendering of `Konva.Label` when heigh of text is changed
+
 ## 7.2.0
 
 * New property `fillAfterStrokeEnabled` for `Konva.Shape`. See API docs for more information.

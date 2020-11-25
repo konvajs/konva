@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.2.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Mon Nov 23 2020
+   * Date: Wed Nov 25 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -11272,7 +11272,8 @@
       'padding',
       'lineHeight',
       'text',
-      'width'
+      'width',
+      'height',
   ], CHANGE_KONVA = 'Change.konva', NONE = 'none', UP = 'up', RIGHT = 'right', DOWN = 'down', LEFT = 'left', 
   // cached variables
   attrChangeListLen = ATTR_CHANGE_LIST.length;
@@ -11411,11 +11412,11 @@
                   x: -1 * x,
                   y: -1 * y,
                   width: width,
-                  height: height
+                  height: height,
               });
               text.setAttrs({
                   x: -1 * x,
-                  y: -1 * y
+                  y: -1 * y,
               });
           }
       };
@@ -11510,7 +11511,7 @@
               x: x,
               y: y,
               width: width,
-              height: height
+              height: height,
           };
       };
       return Tag;

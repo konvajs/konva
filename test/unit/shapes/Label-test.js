@@ -277,6 +277,9 @@ suite('Label', function () {
 
     layer.draw();
     assert.equal(tag.width(), text.width());
+
+    text.height(200);
+    assert.equal(tag.height(), text.height());
   });
 
   test('tag cornerRadius', function () {
