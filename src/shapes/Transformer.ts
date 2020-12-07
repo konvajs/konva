@@ -611,7 +611,6 @@ export class Transformer extends Group {
   _handleMouseDown(e) {
     this._movingAnchorName = e.target.name().split(' ')[0];
 
-    // var node = this.getNode();
     var attrs = this._getNodeRect();
     var width = attrs.width;
     var height = attrs.height;
@@ -633,7 +632,9 @@ export class Transformer extends Group {
       y: pos.y - ap.y,
     };
     this._fire('transformstart', { evt: e, target: this.getNode() });
-    this.getNode()._fire('transformstart', { evt: e, target: this.getNode() });
+    this._nodes.forEach((target) => {
+      target._fire('transformstart', { evt: e, target });
+    });
   }
   _handleMouseMove(e) {
     var x, y, newHypotenuse;
@@ -878,7 +879,9 @@ export class Transformer extends Group {
       this._fire('transformend', { evt: e, target: node });
 
       if (node) {
-        node.fire('transformend', { evt: e, target: node });
+        this._nodes.forEach((target) => {
+          target._fire('transformend', { evt: e, target });
+        });
       }
       this._movingAnchorName = null;
     }

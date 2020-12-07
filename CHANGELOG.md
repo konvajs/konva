@@ -3,7 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 7.2.1
+
 * Fix correct rendering of `Konva.Label` when heigh of text is changed
+* Fix correct `transformstart` and `transformend` events when several nodes are attached with `Konva.Transformer`
 
 ## 7.2.0
 

@@ -3788,6 +3788,82 @@ suite('Transformer', function () {
     assert.almostEqual(tr.rotation(), 180);
   });
 
+  test('events on several nodes', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect1 = new Konva.Rect({
+      x: 100,
+      y: 60,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect1);
+    var rect2 = new Konva.Rect({
+      x: 100,
+      y: 60,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect2);
+
+    var transformstart = 0;
+    var transform = 0;
+    var transformend = 0;
+
+    rect1.on('transformstart', function () {
+      transformstart += 1;
+    });
+    rect1.on('transform', function () {
+      transform += 1;
+    });
+    rect1.on('transformend', function () {
+      transformend += 1;
+    });
+
+    rect2.on('transformstart', function () {
+      transformstart += 1;
+    });
+    rect2.on('transform', function () {
+      transform += 1;
+    });
+    rect2.on('transformend', function () {
+      transformend += 1;
+    });
+
+    var tr = new Konva.Transformer({
+      nodes: [rect1, rect2],
+    });
+    layer.add(tr);
+
+    layer.draw();
+
+    stage.simulateMouseDown({
+      x: 100,
+      y: 60,
+    });
+
+    var top = stage.content.getBoundingClientRect().top;
+    tr._handleMouseMove({
+      clientX: 105,
+      clientY: 60 + top,
+    });
+
+    tr.simulateMouseUp({
+      x: 105,
+      y: 60,
+    });
+
+    assert.equal(transformstart, 2);
+    assert.equal(transform, 2);
+    assert.equal(transformend, 2);
+  });
+
   test('transform several rotated nodes', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

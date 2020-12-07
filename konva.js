@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.2.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Wed Nov 25 2020
+   * Date: Mon Dec 07 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -15333,7 +15333,6 @@
       };
       Transformer.prototype._handleMouseDown = function (e) {
           this._movingAnchorName = e.target.name().split(' ')[0];
-          // var node = this.getNode();
           var attrs = this._getNodeRect();
           var width = attrs.width;
           var height = attrs.height;
@@ -15352,7 +15351,9 @@
               y: pos.y - ap.y,
           };
           this._fire('transformstart', { evt: e, target: this.getNode() });
-          this.getNode()._fire('transformstart', { evt: e, target: this.getNode() });
+          this._nodes.forEach(function (target) {
+              target._fire('transformstart', { evt: e, target: target });
+          });
       };
       Transformer.prototype._handleMouseMove = function (e) {
           var x, y, newHypotenuse;
@@ -15543,7 +15544,9 @@
               var node = this.getNode();
               this._fire('transformend', { evt: e, target: node });
               if (node) {
-                  node.fire('transformend', { evt: e, target: node });
+                  this._nodes.forEach(function (target) {
+                      target._fire('transformend', { evt: e, target: target });
+                  });
               }
               this._movingAnchorName = null;
           }
