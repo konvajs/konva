@@ -1050,7 +1050,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       return true;
     }
   }
-  shouldDrawHit(top?: Node) {
+  shouldDrawHit(top?: Node, skipDragCheck = false) {
     if (top) {
       return this._isVisible(top) && this._isListening(top);
     }
@@ -1067,7 +1067,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       }
     });
 
-    var dragSkip = !Konva.hitOnDragEnabled && layerUnderDrag;
+    var dragSkip = !skipDragCheck && !Konva.hitOnDragEnabled && layerUnderDrag;
     return this.isListening() && this.isVisible() && !dragSkip;
   }
 

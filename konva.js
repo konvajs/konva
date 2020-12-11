@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.2.1
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Mon Dec 07 2020
+   * Date: Fri Dec 11 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -3401,7 +3401,8 @@
               return true;
           }
       };
-      Node.prototype.shouldDrawHit = function (top) {
+      Node.prototype.shouldDrawHit = function (top, skipDragCheck) {
+          if (skipDragCheck === void 0) { skipDragCheck = false; }
           if (top) {
               return this._isVisible(top) && this._isListening(top);
           }
@@ -3418,7 +3419,7 @@
                   layerUnderDrag = true;
               }
           });
-          var dragSkip = !Konva.hitOnDragEnabled && layerUnderDrag;
+          var dragSkip = !skipDragCheck && !Konva.hitOnDragEnabled && layerUnderDrag;
           return this.isListening() && this.isVisible() && !dragSkip;
       };
       /**
@@ -7156,7 +7157,7 @@
       Shape.prototype.intersects = function (point) {
           var stage = this.getStage(), bufferHitCanvas = stage.bufferHitCanvas, p;
           bufferHitCanvas.getContext().clear();
-          this.drawHit(bufferHitCanvas);
+          this.drawHit(bufferHitCanvas, null, true);
           p = bufferHitCanvas.context.getImageData(Math.round(point.x), Math.round(point.y), 1, 1).data;
           return p[3] > 0;
       };
@@ -7335,8 +7336,9 @@
           context.restore();
           return this;
       };
-      Shape.prototype.drawHit = function (can, top) {
-          if (!this.shouldDrawHit(top)) {
+      Shape.prototype.drawHit = function (can, top, skipDragCheck) {
+          if (skipDragCheck === void 0) { skipDragCheck = false; }
+          if (!this.shouldDrawHit(top, skipDragCheck)) {
               return this;
           }
           var layer = this.getLayer(), canvas = can || layer.hitCanvas, context = canvas && canvas.getContext(), drawFunc = this.hitFunc() || this.sceneFunc(), cachedCanvas = this._getCanvasCache(), cachedHitCanvas = cachedCanvas && cachedCanvas.hit;

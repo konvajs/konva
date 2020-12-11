@@ -421,7 +421,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
       p;
 
     bufferHitCanvas.getContext().clear();
-    this.drawHit(bufferHitCanvas);
+    this.drawHit(bufferHitCanvas, null, true);
     p = bufferHitCanvas.context.getImageData(
       Math.round(point.x),
       Math.round(point.y),
@@ -643,8 +643,8 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
     context.restore();
     return this;
   }
-  drawHit(can?: HitCanvas, top?: Node) {
-    if (!this.shouldDrawHit(top)) {
+  drawHit(can?: HitCanvas, top?: Node, skipDragCheck = false) {
+    if (!this.shouldDrawHit(top, skipDragCheck)) {
       return this;
     }
 

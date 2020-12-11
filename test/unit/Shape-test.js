@@ -894,6 +894,32 @@ suite('Shape', function () {
   });
 
   // ======================================================
+  test('shape intersect while dragging', function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+
+    var rect = new Konva.Rect({
+      fill: '#ff0000',
+      x: 50,
+      y: 50,
+      width: 200,
+      height: 200,
+      draggable: true,
+      shadowColor: '#000', // if all shadow properties removed, works fine
+    });
+    layer.add(rect);
+    stage.add(layer);
+
+    stage.simulateMouseDown({ x: 55, y: 55 });
+    stage.simulateMouseMove({ x: 65, y: 65 });
+
+    //error here
+    assert.equal(rect.intersects({ x: 65, y: 65 }), true);
+    stage.simulateMouseUp({ x: 65, y: 65 });
+  });
+
+  // ======================================================
   test('overloaded getters and setters', function () {
     var stage = addStage();
 
