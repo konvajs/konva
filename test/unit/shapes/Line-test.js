@@ -315,7 +315,7 @@ suite('Line', function () {
     assert.equal(Math.round(client.height), 147, 'check height');
   });
 
-  test.only('getClientRect with tension 2', function () {
+  test('getClientRect with tension 2', function () {
     var stage = addStage();
     stage.draggable(true);
     var layer = new Konva.Layer();

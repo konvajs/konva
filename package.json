@@ -27,6 +27,20 @@
     "watch": "rollup -c -w",
     "size": "size-limit"
   },
+  "funding": [
+    {
+      "type": "patreon",
+      "url": "https://www.patreon.com/lavrton"
+    },
+    {
+      "type": "opencollective",
+      "url": "https://opencollective.com/konva"
+    },
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/lavrton"
+    }
+  ],
   "size-limit": [
     {
       "limit": "47 KB",
