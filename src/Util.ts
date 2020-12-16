@@ -986,6 +986,9 @@ export const Util = {
         p[n + 3],
         tension
       );
+      if (isNaN(cp[0])) {
+        continue;
+      }
       allPoints.push(cp[0]);
       allPoints.push(cp[1]);
       allPoints.push(p[n]);
