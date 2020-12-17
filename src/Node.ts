@@ -1779,7 +1779,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#getAbsoluteRotation
    * @returns {Number}
    * @example
-   * // get absolute scale x
+   * // get absolute rotation
    * var rotation = node.getAbsoluteRotation();
    */
   getAbsoluteRotation() {
