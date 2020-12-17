@@ -3165,8 +3165,8 @@ addGetterSetter(Node, 'transformsEnabled', 'all', getStringValidator());
  * @example
  * // get node size
  * var size = node.size();
- * var x = size.x;
- * var y = size.y;
+ * var width = size.width;
+ * var height = size.height;
  *
  * // set size
  * node.size({
