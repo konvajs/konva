@@ -463,7 +463,7 @@ export class Text extends Shape<TextConfig> {
               substrWidth = this._getTextWidth(substr) + additionalWidth;
             if (substrWidth <= maxWidth) {
               low = mid + 1;
-              match = substr + (shouldAddEllipsis ? ELLIPSIS : '');
+              match = substr;
               matchWidth = substrWidth;
             } else {
               high = mid;

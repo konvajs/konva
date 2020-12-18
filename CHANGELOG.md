@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 * Fix wrong size calculations for `Konva.Line` with tension
 * Fix `shape.intersects()` behavior when a node is dragged
+* Fix ellipsis rendering for `Konva.Text`
 
 ## 7.2.1
 

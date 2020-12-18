@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.2.1
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Wed Dec 16 2020
+   * Date: Fri Dec 18 2020
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -13831,7 +13831,7 @@
                           var mid = (low + high) >>> 1, substr = line.slice(0, mid + 1), substrWidth = this._getTextWidth(substr) + additionalWidth;
                           if (substrWidth <= maxWidth) {
                               low = mid + 1;
-                              match = substr + (shouldAddEllipsis ? ELLIPSIS : '');
+                              match = substr;
                               matchWidth = substrWidth;
                           }
                           else {

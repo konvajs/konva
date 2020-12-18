@@ -479,6 +479,12 @@ suite('Text', function () {
 
     assert.equal(text.textArr.length, 7);
     assert.equal(text.textArr[6].text.slice(-1), '…');
+
+    var trace =
+      "clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 14px Calibri;textBaseline=middle;textAlign=left;translate(0,0);save();fillStyle=black;fillText(HEADING,18.117,7);restore();save();fillStyle=black;fillText(,50,21);restore();save();fillStyle=black;fillText(All the world's,8.687,35);restore();save();fillStyle=black;fillText(a stage, merely,7.826,49);restore();save();fillStyle=black;fillText(players. They,11.903,63);restore();save();fillStyle=black;fillText(have theirrrrrrr,8.222,77);restore();save();fillStyle=black;fillText(exits and…,17.922,91);restore();restore();";
+
+    console.log(layer.getContext().getTrace());
+    assert.equal(layer.getContext().getTrace(), trace);
   });
 
   // ======================================================
