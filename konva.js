@@ -4076,7 +4076,7 @@
        * @name Konva.Node#getAbsoluteRotation
        * @returns {Number}
        * @example
-       * // get absolute scale x
+       * // get absolute rotation
        * var rotation = node.getAbsoluteRotation();
        */
       Node.prototype.getAbsoluteRotation = function () {
@@ -5234,8 +5234,8 @@
    * @example
    * // get node size
    * var size = node.size();
-   * var x = size.x;
-   * var y = size.y;
+   * var width = size.width;
+   * var height = size.height;
    *
    * // set size
    * node.size({
