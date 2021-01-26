@@ -31,6 +31,7 @@ export interface TextConfig extends ShapeConfig {
   verticalAlign?: string;
   padding?: number;
   lineHeight?: number;
+  letterSpacing?: number;
   wrap?: string;
   ellipsis?: boolean;
 }

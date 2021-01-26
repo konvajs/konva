@@ -4496,4 +4496,42 @@ suite('Transformer', function () {
     layer.add(tr);
     layer.draw();
   });
+
+  // we don't support height = 0
+  test.skip('try to tranform zero size shape', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var shape = new Konva.Line({
+      x: stage.getWidth() / 4,
+      y: stage.getHeight() / 4,
+      points: [0, 0, 200, 0],
+      fill: 'black',
+      stroke: 'black',
+      strokeWidth: 4,
+      draggable: true,
+    });
+    layer.add(shape);
+
+    var tr = new Konva.Transformer({
+      nodes: [shape],
+      enabledAnchors: ['middle-left', 'middle-right'],
+      ignoreStroke: true,
+    });
+    layer.add(tr);
+
+    layer.draw();
+
+    tr.simulateMouseDown({
+      x: stage.width() / 2,
+      y: stage.height() / 2,
+    });
+    tr.simulateMouseDown({
+      x: stage.width() / 2 + 100,
+      y: stage.height() / 2,
+    });
+    tr.simulateMouseUp();
+    assert.equal(shape.scaleX(), 0.5);
+  });
 });

@@ -29,6 +29,7 @@ export interface TransformerConfig extends ContainerConfig {
   anchorStroke?: string;
   anchorStrokeWidth?: number;
   anchorSize?: number;
+  anchorCornerRadius?: number;
   keepRatio?: boolean;
   centeredScaling?: boolean;
   enabledAnchors?: Array<string>;

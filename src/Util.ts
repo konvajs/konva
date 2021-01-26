@@ -599,7 +599,9 @@ export const Util = {
   },
   _sign(number: number) {
     if (number === 0) {
-      return 0;
+      // that is not what sign usually returns
+      // but that is what we need
+      return 1;
     }
     if (number > 0) {
       return 1;

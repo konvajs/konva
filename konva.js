@@ -731,7 +731,9 @@
       },
       _sign: function (number) {
           if (number === 0) {
-              return 0;
+              // that is not what sign usually returns
+              // but that is what we need
+              return 1;
           }
           if (number > 0) {
               return 1;
@@ -3504,6 +3506,21 @@
               y: this.y(),
           };
       };
+      /**
+       * get absolute position of a node. That function can be used to calculate absolute position, but relative to any ancestor
+       * @method
+       * @name Konva.Node#getAbsolutePosition
+       * @param {Object} Ancestor optional ancestor node
+       * @returns {Konva.Node}
+       * @example
+       *
+       * // returns absolute position relative to top-left corner of canvas
+       * node.getAbsolutePosition();
+       *
+       * // calculate absolute position of node, inside stage
+       * // so stage transforms are ignored
+       * node.getAbsolutePosition(stage)
+       */
       Node.prototype.getAbsolutePosition = function (top) {
           var haveCachedParent = false;
           var parent = this.parent;

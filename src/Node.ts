@@ -1183,6 +1183,21 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       y: this.y(),
     };
   }
+  /**
+   * get absolute position of a node. That function can be used to calculate absolute position, but relative to any ancestor
+   * @method
+   * @name Konva.Node#getAbsolutePosition
+   * @param {Object} Ancestor optional ancestor node
+   * @returns {Konva.Node}
+   * @example
+   *
+   * // returns absolute position relative to top-left corner of canvas
+   * node.getAbsolutePosition();
+   *
+   * // calculate absolute position of node, inside stage
+   * // so stage transforms are ignored
+   * node.getAbsolutePosition(stage)
+   */
   getAbsolutePosition(top?) {
     let haveCachedParent = false;
     let parent = this.parent;
