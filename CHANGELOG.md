@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 7.2.3
+
+* Fix transformer rotation when parent of a node is rotated too.
+
 ## 7.2.2
 
 * Fix wrong size calculations for `Konva.Line` with tension

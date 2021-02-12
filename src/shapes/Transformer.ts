@@ -283,7 +283,7 @@ export class Transformer extends Group {
     }
     this._nodes = nodes;
     if (nodes.length === 1) {
-      this.rotation(nodes[0].rotation());
+      this.rotation(nodes[0].getAbsoluteRotation());
     } else {
       this.rotation(0);
     }
@@ -295,7 +295,7 @@ export class Transformer extends Group {
       const onChange = () => {
         //
         if (this.nodes().length === 1) {
-          this.rotation(this.nodes()[0].rotation());
+          this.rotation(this.nodes()[0].getAbsoluteRotation());
         }
 
         this._resetTransformCache();
@@ -524,7 +524,7 @@ export class Transformer extends Group {
       name: name + ' _anchor',
       dragDistance: 0,
       // make it draggable,
-      // so activating the anchror will not start drag&drop of any parent
+      // so activating the anchor will not start drag&drop of any parent
       draggable: true,
       hitStrokeWidth: TOUCH_DEVICE ? 10 : 'auto',
     });

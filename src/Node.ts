@@ -2809,7 +2809,7 @@ addGetterSetter(Node, 'opacity', 1, getNumberValidator());
 addGetterSetter(Node, 'name', '', getStringValidator());
 
 /**
- * get/set name
+ * get/set name.
  * @name Konva.Node#name
  * @method
  * @param {String} name

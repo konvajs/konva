@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.2.2
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Jan 26 2021
+   * Date: Fri Feb 12 2021
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -4915,7 +4915,7 @@
    */
   addGetterSetter(Node, 'name', '', getStringValidator());
   /**
-   * get/set name
+   * get/set name.
    * @name Konva.Node#name
    * @method
    * @param {String} name
@@ -5473,7 +5473,7 @@
        * You can provide a string with '#' for id selections and '.' for name selections.
        * Or a function that will return true/false when a node is passed through.  See example below.
        * With strings you can also select by type or class name. Pass multiple selectors
-       * separated by a space.
+       * separated by a comma.
        * @method
        * @name Konva.Container#find
        * @param {String | Function} selector
@@ -15056,7 +15056,7 @@
           }
           this._nodes = nodes;
           if (nodes.length === 1) {
-              this.rotation(nodes[0].rotation());
+              this.rotation(nodes[0].getAbsoluteRotation());
           }
           else {
               this.rotation(0);
@@ -15068,7 +15068,7 @@
               var onChange = function () {
                   //
                   if (_this.nodes().length === 1) {
-                      _this.rotation(_this.nodes()[0].rotation());
+                      _this.rotation(_this.nodes()[0].getAbsoluteRotation());
                   }
                   _this._resetTransformCache();
                   if (!_this._transforming && !_this.isDragging()) {
@@ -15283,7 +15283,7 @@
               name: name + ' _anchor',
               dragDistance: 0,
               // make it draggable,
-              // so activating the anchror will not start drag&drop of any parent
+              // so activating the anchor will not start drag&drop of any parent
               draggable: true,
               hitStrokeWidth: TOUCH_DEVICE ? 10 : 'auto',
           });

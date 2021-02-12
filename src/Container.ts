@@ -28,9 +28,9 @@ export interface ContainerConfig extends NodeConfig {
  * @@nodeParams
  * @@containerParams
  */
-export abstract class Container<ChildType extends Node> extends Node<
-  ContainerConfig
-> {
+export abstract class Container<
+  ChildType extends Node
+> extends Node<ContainerConfig> {
   children = new Collection<ChildType>();
 
   /**
@@ -154,7 +154,7 @@ export abstract class Container<ChildType extends Node> extends Node<
    * You can provide a string with '#' for id selections and '.' for name selections.
    * Or a function that will return true/false when a node is passed through.  See example below.
    * With strings you can also select by type or class name. Pass multiple selectors
-   * separated by a space.
+   * separated by a comma.
    * @method
    * @name Konva.Container#find
    * @param {String | Function} selector

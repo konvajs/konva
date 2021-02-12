@@ -239,6 +239,80 @@ suite('Transformer', function () {
     assert.equal(tr.rotation(), 45);
   });
 
+  test('try to fit simple rotated rectangle in group', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group({
+      rotation: 45,
+      x: 50,
+      y: 50,
+    });
+    layer.add(group);
+
+    var rect = new Konva.Rect({
+      draggable: true,
+      width: 100,
+      height: 150,
+      fill: 'yellow',
+    });
+    group.add(rect);
+
+    var tr = new Konva.Transformer();
+    layer.add(tr);
+    tr.nodes([rect]);
+
+    layer.draw();
+
+    tr._fitNodesInto({
+      x: 50,
+      y: 50,
+      width: 100,
+      height: 150,
+      rotation: 0,
+    });
+
+    assert.almostEqual(rect.x(), 0);
+    assert.almostEqual(rect.y(), 0);
+    assert.almostEqual(tr.width(), 100);
+    assert.almostEqual(tr.height(), 150);
+    assert.almostEqual(rect.rotation(), -45);
+  });
+
+  test('transformer should follow rotation on single node inside group', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group({
+      rotation: 45,
+    });
+    layer.add(group);
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 60,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    group.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+    });
+    group.add(tr);
+
+    layer.draw();
+
+    rect.rotation(45);
+    layer.draw();
+
+    assert.equal(isClose(tr.rotation(), 90), true);
+  });
+
   test('try to fit simple rotated rectangle - 2', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -2332,7 +2406,7 @@ suite('Transformer', function () {
       x: 50,
       y: 1,
     });
-    assert.equal(stage.content.style.cursor, 'ew-resize');
+    assert.equal(stage.content.style.cursor, 'ns-resize');
   });
 
   test('check drag with transformer', function () {
