@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 7.2.4
+
+* Fix wrong `mouseleave` trigger for `Konva.Stage`
+
 ## 7.2.3
 
 * Fix transformer rotation when parent of a node is rotated too.

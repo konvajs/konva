@@ -69,7 +69,7 @@ var STAGE = 'Stage',
     MOUSEDOWN,
     MOUSEMOVE,
     MOUSEUP,
-    MOUSEOUT,
+    MOUSELEAVE,
     TOUCHSTART,
     TOUCHMOVE,
     TOUCHEND,
@@ -436,7 +436,7 @@ export class Stage extends Container<Layer> {
     this._fire(CONTENT_MOUSEOVER, { evt: evt });
     this._fire(MOUSEOVER, { evt: evt, target: this, currentTarget: this });
   }
-  _mouseout(evt) {
+  _mouseleave(evt) {
     this.setPointersPositions(evt);
     var targetShape = this.targetShape?.getStage() ? this.targetShape : null;
 

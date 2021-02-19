@@ -1241,6 +1241,29 @@ suite('Stage', function () {
     compareCanvases(stage.toCanvas(), layer.toCanvas(), 200);
   });
 
+  test('listen to mouseleave event on container', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle({
+      x: stage.width() / 2,
+      y: stage.height() / 2,
+      fill: 'black',
+      radius: 50,
+    });
+    layer.add(circle);
+    stage.add(layer);
+
+    var count = 0;
+    stage.on('mouseleave', function () {
+      count += 1;
+    });
+    stage.on('mouseout', function () {
+      count += 1;
+    });
+    stage._mouseleave({});
+    assert.equal(count, 2);
+  });
+
   test('toDataURL with hidden layer', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
