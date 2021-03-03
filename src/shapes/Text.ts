@@ -596,6 +596,7 @@ Text.prototype._attrsAffectingSize = [
   'padding',
   'wrap',
   'lineHeight',
+  'letterSpacing',
 ];
 _registerNode(Text);
 

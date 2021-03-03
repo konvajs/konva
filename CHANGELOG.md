@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 7.2.5
+
+* Fix transform update on `letterSpacing` change of `Konva.Text`
+
 ## 7.2.4
 
 * Fix wrong `mouseleave` trigger for `Konva.Stage`

@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.2.4
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Fri Feb 19 2021
+   * Date: Wed Mar 03 2021
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -13962,6 +13962,7 @@
       'padding',
       'wrap',
       'lineHeight',
+      'letterSpacing',
   ];
   _registerNode(Text);
   /**
