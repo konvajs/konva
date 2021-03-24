@@ -33,14 +33,6 @@ Konva.Util.createImageElement = () => {
   return node;
 };
 
-Konva.Util._urlToImage = (url, callback) => {
-  const imageObj = Konva.Util.createImageElement();
-  imageObj.onload = function () {
-    callback(imageObj);
-  };
-  imageObj.src = url;
-};
-
 // _checkVisibility use dom element, in node we can skip it
 Konva.Stage.prototype._checkVisibility = () => {};
 
