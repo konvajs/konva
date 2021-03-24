@@ -666,7 +666,7 @@ export const Util = {
    */
   _urlToImage(url: string, callback: Function) {
     // if arg is a string, then it's a data url
-    var imageObj = new glob.Image();
+    var imageObj = Util.createImageElement();
     imageObj.onload = function () {
       callback(imageObj);
     };
