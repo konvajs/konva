@@ -2527,6 +2527,41 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this.off('touchstart.konva');
   }
 
+  /**
+   * determine if node (at least partially) is currently in user-visible area
+   * @method
+   * @param {(Number | Object)} margin optional margin in pixels
+   * @param {Number} margin.x
+   * @param {Number} margin.y
+   * @returns {Boolean}
+   * @name Konva.Node#isClientRectOnScreen
+   */
+  isClientRectOnScreen(margin?: number | {x: number; y: number;}): boolean {
+    const _margin = 
+      margin === undefined
+        ? {x: 0, y: 0} 
+        : isNaN(margin as any)
+          ? margin as {x: number; y: number;} 
+          : {x: margin as number, y: margin as number}
+    ;
+    type Rect = {[k in 'x'|'y'|'width'|'height']: number};
+    const haveIntersection = (r1: Rect, r2: Rect) => !(
+      r2.x > r1.x + r1.width ||
+      r2.x + r2.width < r1.x ||
+      r2.y > r1.y + r1.height ||
+      r2.y + r2.height < r1.y
+    );
+    const stage = this.getStage();
+    if(!stage) return false;
+    const screenRect = {
+      x: (-stage.x() - _margin.x) / stage.scaleX(),
+      y: (-stage.y() - _margin.y) / stage.scaleY(),
+      width: (stage.width() +  _margin.x) / stage.scaleX(),
+      height: (stage.height() +  + _margin.y) / stage.scaleY()
+    };
+    return haveIntersection(screenRect, this.getClientRect({relativeTo: stage as any}));
+  }
+
   preventDefault: GetSet<boolean, this>;
 
   // from filters
