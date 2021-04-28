@@ -85,12 +85,17 @@ var STAGE = 'Stage',
   // cached variables
   eventsLength = EVENTS.length;
 
-function addEvent(ctx, eventName) {
+function addEvent(ctx, eventName, handler) {
   ctx.content.addEventListener(
     eventName,
-    function (evt) {
-      ctx[UNDERSCORE + eventName](evt);
-    },
+    handler,
+    false
+  );
+}
+function removeEvent(ctx, eventName, handler) {
+  ctx.content.removeEventListener(
+    eventName,
+    handler,
     false
   );
 }
@@ -138,6 +143,9 @@ export class Stage extends Container<Layer> {
   tapStartShape: Shape;
   tapEndShape: Shape;
   dblTimeout: any;
+  _domEventListeners: {
+    [event: string]: (evt) => any,
+  } = {};
 
   constructor(config: StageConfig) {
     super(checkNoClip(config));
@@ -424,8 +432,13 @@ export class Stage extends Container<Layer> {
       return;
     }
     for (var n = 0; n < eventsLength; n++) {
-      addEvent(this, EVENTS[n]);
+      const evt = EVENTS[n];
+      this._domEventListeners[evt] = this[UNDERSCORE + evt].bind(this)
+      addEvent(this, evt, this._domEventListeners[evt]);
     }
+  }
+  _removeContentEventListener(evt) {
+    removeEvent(this, evt, this._domEventListeners[evt]);
   }
   _mouseenter(evt) {
     this.setPointersPositions(evt);
