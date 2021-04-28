@@ -3,8 +3,85 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-### not released:
+## 7.2.5
 
+* Fix transform update on `letterSpacing` change of `Konva.Text`
+
+## 7.2.4
+
+* Fix wrong `mouseleave` trigger for `Konva.Stage`
+
+## 7.2.3
+
+* Fix transformer rotation when parent of a node is rotated too.
+
+## 7.2.2
+
+* Fix wrong size calculations for `Konva.Line` with tension
+* Fix `shape.intersects()` behavior when a node is dragged
+* Fix ellipsis rendering for `Konva.Text`
+
+## 7.2.1
+
+* Fix correct rendering of `Konva.Label` when heigh of text is changed
+* Fix correct `transformstart` and `transformend` events when several nodes are attached with `Konva.Transformer`
+
+## 7.2.0
+
+* New property `fillAfterStrokeEnabled` for `Konva.Shape`. See API docs for more information.
+* Fix for `Konva.Transformer` when it may fail to draw.
+* Fix rendering of `TextPath` one more time.
+
+## 7.1.9
+
+* Fix autodrawing for `Konva.Transformer` when it is on a different layer
+* Fix `Konva.RegularPolygon` size calculations.
+
+## 7.1.8
+
+* Fix incorrect rendering of `TextPath` in some cases. (again)
+
+## 7.1.7
+
+* Fix incorrect rendering of `TextPath` in some cases.
+
+## 7.1.6
+
+* Fix for correct image/dataURL/canvas exports  for `Konva.Stage`.
+
+## 7.1.5
+
+* Performance fixes for dragging many nodes with `Konva.Transformer`.
+* Documentation updates
+
+## 7.1.4
+
+* Perf fixes
+* Change events trigger flow, so adding new events INSIDE event callback will work correctly.
+* Fix double `dragend`, `dragstart`, `dragmove` triggers on `Konva.Transformer`
+
+## 7.1.3
+
+* Text rendering fixes
+
+## 7.1.2
+
+* fix ellipses behavior for `Konva.Text`.
+* fix scaled fill pattern for text.
+
+## 7.1.1
+
+* fixes for `dragstart` event when `Konva.Transformer` is used. `dragstart` event will have correct native `evt` reference
+* Better unicode support in `Konva.Text` and `Konva.TextPath`. Emoji should work better now 👍
+
+## 7.1.0
+
+* Multi row support for `ellipsis` config for `Konva.Text`
+* Better `Konva.Transfomer` behavior when single attached node is programmatically rotated.
+
+## 7.0.7
+
+* fixes for `dragstart` event when `Konva.Transformer` is used. `dragstart` will not bubble from transformer.
 * `string` and `fill` properties validation can accept `CanvasGradient` as valid value
 
 ## 7.0.6

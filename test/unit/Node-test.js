@@ -338,6 +338,56 @@ suite('Node', function () {
   });
 
   // ======================================================
+  test('toDataURL with moved layer', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer({
+      x: 50,
+      y: 50,
+    });
+    stage.add(layer);
+
+    var circle = new Konva.Circle({
+      fill: 'green',
+      x: 50,
+      y: 50,
+      radius: 50,
+    });
+    layer.add(circle);
+
+    stage.draw();
+    var stageExport = stage.toCanvas({
+      pixelRatio: layer.getCanvas().getPixelRatio(),
+    });
+    compareLayerAndCanvas(layer, stageExport);
+  });
+
+  // ======================================================
+  test('toDataURL with moved layer and moved export', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer({});
+    stage.add(layer);
+
+    var circle = new Konva.Circle({
+      fill: 'green',
+      x: 50,
+      y: 50,
+      radius: 50,
+    });
+    layer.add(circle);
+
+    stage.draw();
+    var stageExport = stage.toCanvas({
+      x: 50,
+      y: 50,
+      pixelRatio: layer.getCanvas().getPixelRatio(),
+    });
+    layer.x(-50);
+    layer.y(-50);
+    layer.draw();
+    compareLayerAndCanvas(layer, stageExport);
+  });
+
+  // ======================================================
   test('toDataURL of moved shape', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -434,6 +484,8 @@ suite('Node', function () {
     layer.drawHit();
 
     showHit(layer);
+
+    assert.equal(layer.getIntersection({ x: 60, y: 60 }), null);
   });
 
   // ======================================================
@@ -1811,6 +1863,12 @@ suite('Node', function () {
 
     layer.add(circle);
     stage.add(layer);
+
+    var trace = layer.getContext().getTrace();
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1.879,0.684,-0.342,0.94,14.581,42.306);beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();'
+    );
   });
 
   // ======================================================

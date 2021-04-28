@@ -3,7 +3,10 @@ import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { Group } from '../Group';
 import { ContainerConfig } from '../Container';
-import { getNumberValidator } from '../Validators';
+import {
+  getNumberOrArrayOfNumbersValidator,
+  getNumberValidator,
+} from '../Validators';
 import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
@@ -18,7 +21,8 @@ var ATTR_CHANGE_LIST = [
     'padding',
     'lineHeight',
     'text',
-    'width'
+    'width',
+    'height',
   ],
   CHANGE_KONVA = 'Change.konva',
   NONE = 'none',
@@ -70,7 +74,7 @@ var ATTR_CHANGE_LIST = [
 export class Label extends Group {
   constructor(config) {
     super(config);
-    this.on('add.konva', function(evt) {
+    this.on('add.konva', function (evt) {
       this._addListeners(evt.child);
       this._sync();
     });
@@ -99,7 +103,7 @@ export class Label extends Group {
   _addListeners(text) {
     var that = this,
       n;
-    var func = function() {
+    var func = function () {
       that._sync();
     };
 
@@ -157,12 +161,12 @@ export class Label extends Group {
         x: -1 * x,
         y: -1 * y,
         width: width,
-        height: height
+        height: height,
       });
 
       text.setAttrs({
         x: -1 * x,
-        y: -1 * y
+        y: -1 * y,
       });
     }
   }
@@ -199,14 +203,28 @@ export class Tag extends Shape<TagConfig> {
       pointerDirection = this.pointerDirection(),
       pointerWidth = this.pointerWidth(),
       pointerHeight = this.pointerHeight(),
-      cornerRadius = Math.min(this.cornerRadius(), width / 2, height / 2);
+      cornerRadius = this.cornerRadius();
+
+    let topLeft = 0;
+    let topRight = 0;
+    let bottomLeft = 0;
+    let bottomRight = 0;
+
+    if (typeof cornerRadius === 'number') {
+      topLeft = topRight = bottomLeft = bottomRight = Math.min(
+        cornerRadius,
+        width / 2,
+        height / 2
+      );
+    } else {
+      topLeft = Math.min(cornerRadius[0] || 0, width / 2, height / 2);
+      topRight = Math.min(cornerRadius[1] || 0, width / 2, height / 2);
+      bottomRight = Math.min(cornerRadius[2] || 0, width / 2, height / 2);
+      bottomLeft = Math.min(cornerRadius[3] || 0, width / 2, height / 2);
+    }
 
     context.beginPath();
-    if (!cornerRadius) {
-      context.moveTo(0, 0);
-    } else {
-      context.moveTo(cornerRadius, 0);
-    }
+    context.moveTo(topLeft, 0);
 
     if (pointerDirection === UP) {
       context.lineTo((width - pointerWidth) / 2, 0);
@@ -214,19 +232,15 @@ export class Tag extends Shape<TagConfig> {
       context.lineTo((width + pointerWidth) / 2, 0);
     }
 
-    if (!cornerRadius) {
-      context.lineTo(width, 0);
-    } else {
-      context.lineTo(width - cornerRadius, 0);
-      context.arc(
-        width - cornerRadius,
-        cornerRadius,
-        cornerRadius,
-        (Math.PI * 3) / 2,
-        0,
-        false
-      );
-    }
+    context.lineTo(width - topRight, 0);
+    context.arc(
+      width - topRight,
+      topRight,
+      topRight,
+      (Math.PI * 3) / 2,
+      0,
+      false
+    );
 
     if (pointerDirection === RIGHT) {
       context.lineTo(width, (height - pointerHeight) / 2);
@@ -234,19 +248,15 @@ export class Tag extends Shape<TagConfig> {
       context.lineTo(width, (height + pointerHeight) / 2);
     }
 
-    if (!cornerRadius) {
-      context.lineTo(width, height);
-    } else {
-      context.lineTo(width, height - cornerRadius);
-      context.arc(
-        width - cornerRadius,
-        height - cornerRadius,
-        cornerRadius,
-        0,
-        Math.PI / 2,
-        false
-      );
-    }
+    context.lineTo(width, height - bottomRight);
+    context.arc(
+      width - bottomRight,
+      height - bottomRight,
+      bottomRight,
+      0,
+      Math.PI / 2,
+      false
+    );
 
     if (pointerDirection === DOWN) {
       context.lineTo((width + pointerWidth) / 2, height);
@@ -254,19 +264,15 @@ export class Tag extends Shape<TagConfig> {
       context.lineTo((width - pointerWidth) / 2, height);
     }
 
-    if (!cornerRadius) {
-      context.lineTo(0, height);
-    } else {
-      context.lineTo(cornerRadius, height);
-      context.arc(
-        cornerRadius,
-        height - cornerRadius,
-        cornerRadius,
-        Math.PI / 2,
-        Math.PI,
-        false
-      );
-    }
+    context.lineTo(bottomLeft, height);
+    context.arc(
+      bottomLeft,
+      height - bottomLeft,
+      bottomLeft,
+      Math.PI / 2,
+      Math.PI,
+      false
+    );
 
     if (pointerDirection === LEFT) {
       context.lineTo(0, (height + pointerHeight) / 2);
@@ -274,17 +280,8 @@ export class Tag extends Shape<TagConfig> {
       context.lineTo(0, (height - pointerHeight) / 2);
     }
 
-    if (cornerRadius) {
-      context.lineTo(0, cornerRadius);
-      context.arc(
-        cornerRadius,
-        cornerRadius,
-        cornerRadius,
-        Math.PI,
-        (Math.PI * 3) / 2,
-        false
-      );
-    }
+    context.lineTo(0, topLeft);
+    context.arc(topLeft, topLeft, topLeft, Math.PI, (Math.PI * 3) / 2, false);
 
     context.closePath();
     context.fillStrokeShape(this);
@@ -314,7 +311,7 @@ export class Tag extends Shape<TagConfig> {
       x: x,
       y: y,
       width: width,
-      height: height
+      height: height,
     };
   }
 
@@ -369,8 +366,17 @@ Factory.addGetterSetter(Tag, 'pointerHeight', 0, getNumberValidator());
  * @returns {Number}
  * @example
  * tag.cornerRadius(20);
+ *
+ * // set different corner radius values
+ * // top-left, top-right, bottom-right, bottom-left
+ * tag.cornerRadius([0, 10, 20, 30]);
  */
 
-Factory.addGetterSetter(Tag, 'cornerRadius', 0, getNumberValidator());
+Factory.addGetterSetter(
+  Tag,
+  'cornerRadius',
+  0,
+  getNumberOrArrayOfNumbersValidator(4)
+);
 
 Collection.mapMethods(Tag);

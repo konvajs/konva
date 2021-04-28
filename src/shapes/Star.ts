@@ -79,46 +79,46 @@ _registerNode(Star);
 
 /**
  * get/set number of points
- * @name Konva.Ring#numPoints
+ * @name Konva.Star#numPoints
  * @method
  * @param {Number} numPoints
  * @returns {Number}
  * @example
  * // get inner radius
- * var numPoints = ring.numPoints();
+ * var numPoints = star.numPoints();
  *
  * // set inner radius
- * ring.numPoints(20);
+ * star.numPoints(20);
  */
 Factory.addGetterSetter(Star, 'numPoints', 5, getNumberValidator());
 
 /**
  * get/set innerRadius
- * @name Konva.Ring#innerRadius
+ * @name Konva.Star#innerRadius
  * @method
  * @param {Number} innerRadius
  * @returns {Number}
  * @example
  * // get inner radius
- * var innerRadius = ring.innerRadius();
+ * var innerRadius = star.innerRadius();
  *
  * // set inner radius
- * ring.innerRadius(20);
+ * star.innerRadius(20);
  */
 Factory.addGetterSetter(Star, 'innerRadius', 0, getNumberValidator());
 
 /**
  * get/set outerRadius
- * @name Konva.Ring#outerRadius
+ * @name Konva.Star#outerRadius
  * @method
  * @param {Number} outerRadius
  * @returns {Number}
  * @example
  * // get inner radius
- * var outerRadius = ring.outerRadius();
+ * var outerRadius = star.outerRadius();
  *
  * // set inner radius
- * ring.outerRadius(20);
+ * star.outerRadius(20);
  */
 
 Factory.addGetterSetter(Star, 'outerRadius', 0, getNumberValidator());

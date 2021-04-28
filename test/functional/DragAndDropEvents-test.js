@@ -73,7 +73,7 @@ suite('DragAndDropEvents', function () {
 
     setTimeout(function () {
       stage.simulateMouseMove({
-        x: 100,
+        x: 385,
         y: 98,
       });
 
@@ -85,7 +85,7 @@ suite('DragAndDropEvents', function () {
       assert(!dragEnd, 'dragend event should not have been triggered 10');
 
       stage.simulateMouseUp({
-        x: 100,
+        x: 385,
         y: 98,
       });
 
@@ -107,7 +107,7 @@ suite('DragAndDropEvents', function () {
 
       assert.equal(greenCircle.getX(), 40, 'green circle x should be 40');
       assert.equal(greenCircle.getY(), 40, 'green circle y should be 40');
-      assert.equal(circle.getX(), 100, 'circle x should be 100');
+      assert.equal(circle.getX(), 385, 'circle x should be 100');
       assert.equal(circle.getY(), 100, 'circle y should be 100');
 
       showHit(layer);

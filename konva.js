@@ -1,14 +1,14 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
-  (global = global || self, global.Konva = factory());
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Konva = factory());
 }(this, (function () { 'use strict';
 
   /*
-   * Konva JavaScript Framework v7.0.6
+   * Konva JavaScript Framework v7.2.5
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Wed Aug 26 2020
+   * Date: Wed Mar 03 2021
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -76,7 +76,7 @@
               : {};
   var Konva = {
       _global: glob,
-      version: '7.0.6',
+      version: '7.2.5',
       isBrowser: detectBrowser(),
       isUnminified: /param/.test(function (param) { }.toString()),
       dblClickWindow: 400,
@@ -528,6 +528,7 @@
               result.skewX = 0;
               result.skewY = (a * c + b * d) / delta;
           }
+          else ;
           result.rotation = Util._getRotation(result.rotation);
           return result;
       };
@@ -731,7 +732,9 @@
       },
       _sign: function (number) {
           if (number === 0) {
-              return 0;
+              // that is not what sign usually returns
+              // but that is what we need
+              return 1;
           }
           if (number > 0) {
               return 1;
@@ -952,7 +955,7 @@
           // Check hsl() format
           if (/hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.test(str)) {
               // Extract h, s, l
-              var _a = /hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.exec(str), _ = _a[0], hsl = _a.slice(1);
+              var _a = /hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.exec(str); _a[0]; var hsl = _a.slice(1);
               var h = Number(hsl[0]) / 360;
               var s = Number(hsl[1]) / 100;
               var l = Number(hsl[2]) / 100;
@@ -1087,6 +1090,9 @@
           var len = p.length, allPoints = [], n, cp;
           for (n = 2; n < len - 2; n += 2) {
               cp = Util._getControlPoints(p[n - 2], p[n - 1], p[n], p[n + 1], p[n + 2], p[n + 3], tension);
+              if (isNaN(cp[0])) {
+                  continue;
+              }
               allPoints.push(cp[0]);
               allPoints.push(cp[1]);
               allPoints.push(p[n]);
@@ -1255,6 +1261,21 @@
                       ' is a not valid value for "' +
                       attr +
                       '" attribute. The value should be a number.');
+              }
+              return val;
+          };
+      }
+  }
+  function getNumberOrArrayOfNumbersValidator(noOfElements) {
+      if (Konva.isUnminified) {
+          return function (val, attr) {
+              var isNumber = Util._isNumber(val);
+              var isValidArray = Util._isArray(val) && val.length == noOfElements;
+              if (!isNumber && !isValidArray) {
+                  Util.warn(_formatValue(val) +
+                      ' is a not valid value for "' +
+                      attr +
+                      '" attribute. The value should be a number or Array<number>(' + noOfElements + ')');
               }
               return val;
           };
@@ -1477,25 +1498,25 @@
   };
 
   /*! *****************************************************************************
-  Copyright (c) Microsoft Corporation. All rights reserved.
-  Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-  this file except in compliance with the License. You may obtain a copy of the
-  License at http://www.apache.org/licenses/LICENSE-2.0
+  Copyright (c) Microsoft Corporation.
 
-  THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-  KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-  WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-  MERCHANTABLITY OR NON-INFRINGEMENT.
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted.
 
-  See the Apache Version 2.0 License for specific language governing permissions
-  and limitations under the License.
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+  REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+  AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+  INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+  LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+  OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+  PERFORMANCE OF THIS SOFTWARE.
   ***************************************************************************** */
   /* global Reflect, Promise */
 
   var extendStatics = function(d, b) {
       extendStatics = Object.setPrototypeOf ||
           ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-          function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+          function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
       return extendStatics(d, b);
   };
 
@@ -1647,8 +1668,14 @@
        * @param {Konva.Shape} shape
        */
       Context.prototype.fillStrokeShape = function (shape) {
-          this.fillShape(shape);
-          this.strokeShape(shape);
+          if (shape.attrs.fillAfterStrokeEnabled) {
+              this.strokeShape(shape);
+              this.fillShape(shape);
+          }
+          else {
+              this.fillShape(shape);
+              this.strokeShape(shape);
+          }
       };
       Context.prototype.getTrace = function (relaxed) {
           var traceArr = this.traceArr, len = traceArr.length, str = '', n, trace, method, args;
@@ -2130,15 +2157,12 @@
           shape._fillFunc(this);
       };
       SceneContext.prototype._fillPattern = function (shape) {
-          var fillPatternX = shape.getFillPatternX(), fillPatternY = shape.getFillPatternY(), fillPatternRotation = Konva.getAngle(shape.getFillPatternRotation()), fillPatternOffsetX = shape.getFillPatternOffsetX(), fillPatternOffsetY = shape.getFillPatternOffsetY(), fillPatternScaleX = shape.getFillPatternScaleX(), fillPatternScaleY = shape.getFillPatternScaleY();
+          var fillPatternX = shape.getFillPatternX(), fillPatternY = shape.getFillPatternY(), fillPatternRotation = Konva.getAngle(shape.getFillPatternRotation()), fillPatternOffsetX = shape.getFillPatternOffsetX(), fillPatternOffsetY = shape.getFillPatternOffsetY(); shape.getFillPatternScaleX(); shape.getFillPatternScaleY();
           if (fillPatternX || fillPatternY) {
               this.translate(fillPatternX || 0, fillPatternY || 0);
           }
           if (fillPatternRotation) {
               this.rotate(fillPatternRotation);
-          }
-          if (fillPatternScaleX || fillPatternScaleY) {
-              this.scale(fillPatternScaleX, fillPatternScaleY);
           }
           if (fillPatternOffsetX || fillPatternOffsetY) {
               this.translate(-1 * fillPatternOffsetX, -1 * fillPatternOffsetY);
@@ -2538,7 +2562,7 @@
               var drawNode = elem.node.getLayer() ||
                   (elem.node instanceof Konva['Stage'] && elem.node);
               if (drawNode) {
-                  drawNode.draw();
+                  drawNode.batchDraw();
               }
           });
       },
@@ -2612,7 +2636,7 @@
       }
   };
   // CONSTANTS
-  var ABSOLUTE_OPACITY = 'absoluteOpacity', ABSOLUTE_TRANSFORM = 'absoluteTransform', ABSOLUTE_SCALE = 'absoluteScale', CANVAS = 'canvas', CHANGE = 'Change', CHILDREN = 'children', KONVA = 'konva', LISTENING = 'listening', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', NAME = 'name', SET$1 = 'set', SHAPE = 'Shape', SPACE = ' ', STAGE = 'stage', TRANSFORM = 'transform', UPPER_STAGE = 'Stage', VISIBLE = 'visible', TRANSFORM_CHANGE_STR = [
+  var ABSOLUTE_OPACITY = 'absoluteOpacity', ALL_LISTENERS = 'allEventListeners', ABSOLUTE_TRANSFORM = 'absoluteTransform', ABSOLUTE_SCALE = 'absoluteScale', CANVAS = 'canvas', CHANGE = 'Change', CHILDREN = 'children', KONVA = 'konva', LISTENING = 'listening', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', NAME = 'name', SET$1 = 'set', SHAPE = 'Shape', SPACE = ' ', STAGE = 'stage', TRANSFORM = 'transform', UPPER_STAGE = 'Stage', VISIBLE = 'visible', TRANSFORM_CHANGE_STR = [
       'xChange.konva',
       'yChange.konva',
       'scaleXChange.konva',
@@ -2660,6 +2684,7 @@
           this.eventListeners = {};
           this.attrs = {};
           this.index = 0;
+          this._allEventListeners = null;
           this.parent = null;
           this._cache = new Map();
           this._attachedDepsListeners = new Map();
@@ -2895,7 +2920,6 @@
       };
       /**
        * Return client rectangle {x, y, width, height} of node. This rectangle also include all styling (strokes, shadows, etc).
-       * The rectangle position is relative to parent container.
        * The purpose of the method is similar to getBoundingClientRect API of the DOM.
        * @method
        * @name Konva.Node#getClientRect
@@ -3026,7 +3050,7 @@
        * @method
        * @name Konva.Node#on
        * @param {String} evtStr e.g. 'click', 'mousedown touchstart', 'mousedown.foo touchstart.foo'
-       * @param {Function} handler The handler function is passed an event object
+       * @param {Function} handler The handler function. The first argument of that function is event object. Event object has `target` as main target of the event, `currentTarget` as current node listener and `evt` as native browser event.
        * @returns {Konva.Node}
        * @example
        * // add click listener
@@ -3078,6 +3102,7 @@
        * });
        */
       Node.prototype.on = function (evtStr, handler) {
+          this._cache && this._cache.delete(ALL_LISTENERS);
           if (arguments.length === 3) {
               return this._delegate.apply(this, arguments);
           }
@@ -3126,6 +3151,7 @@
        */
       Node.prototype.off = function (evtStr, callback) {
           var events = (evtStr || '').split(SPACE), len = events.length, n, t, event, parts, baseEvent, name;
+          this._cache && this._cache.delete(ALL_LISTENERS);
           if (!evtStr) {
               // remove all events
               for (t in this.eventListeners) {
@@ -3381,7 +3407,8 @@
               return true;
           }
       };
-      Node.prototype.shouldDrawHit = function (top) {
+      Node.prototype.shouldDrawHit = function (top, skipDragCheck) {
+          if (skipDragCheck === void 0) { skipDragCheck = false; }
           if (top) {
               return this._isVisible(top) && this._isListening(top);
           }
@@ -3398,7 +3425,7 @@
                   layerUnderDrag = true;
               }
           });
-          var dragSkip = !Konva.hitOnDragEnabled && layerUnderDrag;
+          var dragSkip = !skipDragCheck && !Konva.hitOnDragEnabled && layerUnderDrag;
           return this.isListening() && this.isVisible() && !dragSkip;
       };
       /**
@@ -3499,6 +3526,21 @@
               y: this.y(),
           };
       };
+      /**
+       * get absolute position of a node. That function can be used to calculate absolute position, but relative to any ancestor
+       * @method
+       * @name Konva.Node#getAbsolutePosition
+       * @param {Object} Ancestor optional ancestor node
+       * @returns {Konva.Node}
+       * @example
+       *
+       * // returns absolute position relative to top-left corner of canvas
+       * node.getAbsolutePosition();
+       *
+       * // calculate absolute position of node, inside stage
+       * // so stage transforms are ignored
+       * node.getAbsolutePosition(stage)
+       */
       Node.prototype.getAbsolutePosition = function (top) {
           var haveCachedParent = false;
           var parent = this.parent;
@@ -4052,7 +4094,7 @@
        * @name Konva.Node#getAbsoluteRotation
        * @returns {Number}
        * @example
-       * // get absolute scale x
+       * // get absolute rotation
        * var rotation = node.getAbsoluteRotation();
        */
       Node.prototype.getAbsoluteRotation = function () {
@@ -4489,34 +4531,44 @@
               }
           }
       };
-      Node.prototype._getListeners = function (eventType) {
-          var totalEvents = [];
-          var obj;
-          while (true) {
-              obj = obj ? Object.getPrototypeOf(obj) : this;
-              if (!obj) {
-                  break;
+      Node.prototype._getProtoListeners = function (eventType) {
+          var listeners = this._cache.get(ALL_LISTENERS);
+          // if no cache for listeners, we need to pre calculate it
+          if (!listeners) {
+              listeners = {};
+              var obj = Object.getPrototypeOf(this);
+              while (obj) {
+                  if (!obj.eventListeners) {
+                      obj = Object.getPrototypeOf(obj);
+                      continue;
+                  }
+                  for (var event in obj.eventListeners) {
+                      var newEvents = obj.eventListeners[event];
+                      var oldEvents = listeners[event] || [];
+                      listeners[event] = newEvents.concat(oldEvents);
+                  }
+                  obj = Object.getPrototypeOf(obj);
               }
-              if (!obj.eventListeners) {
-                  continue;
-              }
-              var events = obj.eventListeners[eventType];
-              if (!events) {
-                  continue;
-              }
-              totalEvents = events.concat(totalEvents);
-              obj = Object.getPrototypeOf(obj);
+              this._cache.set(ALL_LISTENERS, listeners);
           }
-          return totalEvents;
+          return listeners[eventType];
       };
       Node.prototype._fire = function (eventType, evt) {
-          var events = this._getListeners(eventType), i;
-          if (events.length) {
-              evt = evt || {};
-              evt.currentTarget = this;
-              evt.type = eventType;
-              for (i = 0; i < events.length; i++) {
-                  events[i].handler.call(this, evt);
+          evt = evt || {};
+          evt.currentTarget = this;
+          evt.type = eventType;
+          var topListeners = this._getProtoListeners(eventType);
+          if (topListeners) {
+              for (var i = 0; i < topListeners.length; i++) {
+                  topListeners[i].handler.call(this, evt);
+              }
+          }
+          // it is important to iterate over self listeners without cache
+          // because events can be added/removed while firing
+          var selfListeners = this.eventListeners[eventType];
+          if (selfListeners) {
+              for (var i = 0; i < selfListeners.length; i++) {
+                  selfListeners[i].handler.call(this, evt);
               }
           }
       };
@@ -4555,7 +4607,8 @@
        * @method
        * @name Konva.Node#startDrag
        */
-      Node.prototype.startDrag = function (evt) {
+      Node.prototype.startDrag = function (evt, bubbleEvent) {
+          if (bubbleEvent === void 0) { bubbleEvent = true; }
           if (!DD._dragElements.has(this._id)) {
               this._createDragElement(evt);
           }
@@ -4565,7 +4618,7 @@
               type: 'dragstart',
               target: this,
               evt: evt && evt.evt,
-          }, true);
+          }, bubbleEvent);
       };
       Node.prototype._setDragPosition = function (evt, elem) {
           // const pointers = this.getStage().getPointersPositions();
@@ -4832,7 +4885,7 @@
    */
   addGetterSetter(Node, 'globalCompositeOperation', 'source-over', getStringValidator());
   /**
-   * get/set globalCompositeOperation of a shape
+   * get/set globalCompositeOperation of a node. globalCompositeOperation DOESN'T affect hit graph of nodes. So they are still trigger to events as they have default "source-over" globalCompositeOperation.
    * @name Konva.Node#globalCompositeOperation
    * @method
    * @param {String} type
@@ -4862,7 +4915,7 @@
    */
   addGetterSetter(Node, 'name', '', getStringValidator());
   /**
-   * get/set name
+   * get/set name.
    * @name Konva.Node#name
    * @method
    * @param {String} name
@@ -5199,8 +5252,8 @@
    * @example
    * // get node size
    * var size = node.size();
-   * var x = size.x;
-   * var y = size.y;
+   * var width = size.width;
+   * var height = size.height;
    *
    * // set size
    * node.size({
@@ -5420,7 +5473,7 @@
        * You can provide a string with '#' for id selections and '.' for name selections.
        * Or a function that will return true/false when a node is passed through.  See example below.
        * With strings you can also select by type or class name. Pass multiple selectors
-       * separated by a space.
+       * separated by a comma.
        * @method
        * @name Konva.Container#find
        * @param {String | Function} selector
@@ -5876,7 +5929,7 @@
       MOUSEDOWN,
       MOUSEMOVE,
       MOUSEUP,
-      MOUSEOUT,
+      MOUSELEAVE$1,
       TOUCHSTART,
       TOUCHMOVE,
       TOUCHEND,
@@ -6073,20 +6126,26 @@
       };
       Stage.prototype._toKonvaCanvas = function (config) {
           config = config || {};
-          var x = config.x || 0, y = config.y || 0, canvas = new SceneCanvas({
-              width: config.width || this.width(),
-              height: config.height || this.height(),
+          config.x = config.x || 0;
+          config.y = config.y || 0;
+          config.width = config.width || this.width();
+          config.height = config.height || this.height();
+          var canvas = new SceneCanvas({
+              width: config.width,
+              height: config.height,
               pixelRatio: config.pixelRatio || 1,
-          }), _context = canvas.getContext()._context, layers = this.children;
-          if (x || y) {
-              _context.translate(-1 * x, -1 * y);
+          });
+          var _context = canvas.getContext()._context;
+          var layers = this.children;
+          if (config.x || config.y) {
+              _context.translate(-1 * config.x, -1 * config.y);
           }
           layers.each(function (layer) {
               if (!layer.isVisible()) {
                   return;
               }
               var layerCanvas = layer._toKonvaCanvas(config);
-              _context.drawImage(layerCanvas._canvas, x, y, layerCanvas.getWidth() / layerCanvas.getPixelRatio(), layerCanvas.getHeight() / layerCanvas.getPixelRatio());
+              _context.drawImage(layerCanvas._canvas, config.x, config.y, layerCanvas.getWidth() / layerCanvas.getPixelRatio(), layerCanvas.getHeight() / layerCanvas.getPixelRatio());
           });
           return canvas;
       };
@@ -6197,7 +6256,7 @@
           this._fire(CONTENT_MOUSEOVER, { evt: evt });
           this._fire(MOUSEOVER, { evt: evt, target: this, currentTarget: this });
       };
-      Stage.prototype._mouseout = function (evt) {
+      Stage.prototype._mouseleave = function (evt) {
           var _a;
           this.setPointersPositions(evt);
           var targetShape = ((_a = this.targetShape) === null || _a === void 0 ? void 0 : _a.getStage()) ? this.targetShape : null;
@@ -6745,7 +6804,7 @@
       /**
        * batch draw
        * @method
-       * @name Konva.Layer#batchDraw
+       * @name Konva.Stage#batchDraw
        * @return {Konva.Stage} this
        */
       Stage.prototype.batchDraw = function () {
@@ -6858,6 +6917,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -6980,15 +7040,16 @@
           if (this.fillPatternImage()) {
               var ctx = getDummyContext();
               var pattern = ctx.createPattern(this.fillPatternImage(), this.fillPatternRepeat() || 'repeat');
-              // TODO: how to enable it? It doesn't work in FF...
-              // pattern.setTransform({
-              //   a: this.fillPatternScaleX(), // Horizontal scaling. A value of 1 results in no scaling.
-              //   b: 0, // Vertical skewing.
-              //   c: 0, // Horizontal skewing.
-              //   d: this.fillPatternScaleY(), // Vertical scaling. A value of 1 results in no scaling.
-              //   e: 0, // Horizontal translation (moving).
-              //   f: 0 // Vertical translation (moving).
-              // });
+              if (pattern && pattern.setTransform) {
+                  pattern.setTransform({
+                      a: this.fillPatternScaleX(),
+                      b: 0,
+                      c: 0,
+                      d: this.fillPatternScaleY(),
+                      e: 0,
+                      f: 0,
+                  });
+              }
               return pattern;
           }
       };
@@ -7117,7 +7178,7 @@
       Shape.prototype.intersects = function (point) {
           var stage = this.getStage(), bufferHitCanvas = stage.bufferHitCanvas, p;
           bufferHitCanvas.getContext().clear();
-          this.drawHit(bufferHitCanvas);
+          this.drawHit(bufferHitCanvas, null, true);
           p = bufferHitCanvas.context.getImageData(Math.round(point.x), Math.round(point.y), 1, 1).data;
           return p[3] > 0;
       };
@@ -7195,16 +7256,16 @@
               height: size.height,
           };
       };
-      Shape.prototype.getClientRect = function (attrs) {
-          attrs = attrs || {};
-          var skipTransform = attrs.skipTransform;
-          var relativeTo = attrs.relativeTo;
+      Shape.prototype.getClientRect = function (config) {
+          if (config === void 0) { config = {}; }
+          var skipTransform = config.skipTransform;
+          var relativeTo = config.relativeTo;
           var fillRect = this.getSelfRect();
-          var applyStroke = !attrs.skipStroke && this.hasStroke();
+          var applyStroke = !config.skipStroke && this.hasStroke();
           var strokeWidth = (applyStroke && this.strokeWidth()) || 0;
           var fillAndStrokeWidth = fillRect.width + strokeWidth;
           var fillAndStrokeHeight = fillRect.height + strokeWidth;
-          var applyShadow = !attrs.skipShadow && this.hasShadow();
+          var applyShadow = !config.skipShadow && this.hasShadow();
           var shadowOffsetX = applyShadow ? this.shadowOffsetX() : 0;
           var shadowOffsetY = applyShadow ? this.shadowOffsetY() : 0;
           var preWidth = fillAndStrokeWidth + Math.abs(shadowOffsetX);
@@ -7296,8 +7357,9 @@
           context.restore();
           return this;
       };
-      Shape.prototype.drawHit = function (can, top) {
-          if (!this.shouldDrawHit(top)) {
+      Shape.prototype.drawHit = function (can, top, skipDragCheck) {
+          if (skipDragCheck === void 0) { skipDragCheck = false; }
+          if (!this.shouldDrawHit(top, skipDragCheck)) {
               return this;
           }
           var layer = this.getLayer(), canvas = can || layer.hitCanvas, context = canvas && canvas.getContext(), drawFunc = this.hitFunc() || this.sceneFunc(), cachedCanvas = this._getCanvasCache(), cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
@@ -7430,6 +7492,23 @@
    *
    * // set stroke width
    * shape.strokeWidth(10);
+   */
+  Factory.addGetterSetter(Shape, 'fillAfterStrokeEnabled', false);
+  /**
+   * get/set fillAfterStrokeEnabled property. By default Konva is drawing filling first, then stroke on top of the fill.
+   * In rare situations you may want a different behavior. When you have a stroke first then fill on top of it.
+   * Especially useful for Text objects.
+   * Default is false.
+   * @name Konva.Shape#fillAfterStrokeEnabled
+   * @method
+   * @param {Boolean} fillAfterStrokeEnabled
+   * @returns {Boolean}
+   * @example
+   * // get stroke width
+   * var fillAfterStrokeEnabled = shape.fillAfterStrokeEnabled();
+   *
+   * // set stroke width
+   * shape.fillAfterStrokeEnabled(true);
    */
   Factory.addGetterSetter(Shape, 'hitStrokeWidth', 'auto', getNumberOrAutoValidator());
   /**
@@ -8684,7 +8763,6 @@
        * var group = layer.getIntersection({x: 50, y: 50}, 'Group');
        */
       Layer.prototype.getIntersection = function (pos, selector) {
-          var obj, i, intersectionOffset, shape;
           if (!this.isListening() || !this.isVisible()) {
               return null;
           }
@@ -8693,13 +8771,13 @@
           var spiralSearchDistance = 1;
           var continueSearch = false;
           while (true) {
-              for (i = 0; i < INTERSECTION_OFFSETS_LEN; i++) {
-                  intersectionOffset = INTERSECTION_OFFSETS[i];
-                  obj = this._getIntersection({
+              for (var i = 0; i < INTERSECTION_OFFSETS_LEN; i++) {
+                  var intersectionOffset = INTERSECTION_OFFSETS[i];
+                  var obj = this._getIntersection({
                       x: pos.x + intersectionOffset.x * spiralSearchDistance,
                       y: pos.y + intersectionOffset.y * spiralSearchDistance,
                   });
-                  shape = obj.shape;
+                  var shape = obj.shape;
                   if (shape && selector) {
                       return shape.findAncestor(selector, true);
                   }
@@ -8725,11 +8803,12 @@
       };
       Layer.prototype._getIntersection = function (pos) {
           var ratio = this.hitCanvas.pixelRatio;
-          var p = this.hitCanvas.context.getImageData(Math.round(pos.x * ratio), Math.round(pos.y * ratio), 1, 1).data, p3 = p[3], colorKey, shape;
+          var p = this.hitCanvas.context.getImageData(Math.round(pos.x * ratio), Math.round(pos.y * ratio), 1, 1).data;
+          var p3 = p[3];
           // fully opaque pixel
           if (p3 === 255) {
-              colorKey = Util._rgbToHex(p[0], p[1], p[2]);
-              shape = shapes[HASH$1 + colorKey];
+              var colorKey = Util._rgbToHex(p[0], p[1], p[2]);
+              var shape = shapes[HASH$1 + colorKey];
               if (shape) {
                   return {
                       shape: shape,
@@ -9951,6 +10030,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -10141,6 +10221,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -10436,6 +10517,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -10654,6 +10736,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -10711,7 +10794,7 @@
       }
       Circle.prototype._sceneFunc = function (context) {
           context.beginPath();
-          context.arc(0, 0, this.radius(), 0, Math.PI * 2, false);
+          context.arc(0, 0, this.attrs.radius || 0, 0, Math.PI * 2, false);
           context.closePath();
           context.fillStrokeShape(this);
       };
@@ -10739,7 +10822,7 @@
   _registerNode(Circle);
   /**
    * get/set radius
-   * @name Konva.Arrow#radius
+   * @name Konva.Circle#radius
    * @method
    * @param {Number} radius
    * @returns {Number}
@@ -10792,6 +10875,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -10967,6 +11051,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -11030,10 +11115,13 @@
           return _super.prototype._useBufferCanvas.call(this, true);
       };
       Image.prototype._sceneFunc = function (context) {
-          var width = this.getWidth(), height = this.getHeight(), image = this.attrs.image, cropWidth, cropHeight, params;
+          var width = this.getWidth();
+          var height = this.getHeight();
+          var image = this.attrs.image;
+          var params;
           if (image) {
-              cropWidth = this.attrs.cropWidth;
-              cropHeight = this.attrs.cropHeight;
+              var cropWidth = this.attrs.cropWidth;
+              var cropHeight = this.attrs.cropHeight;
               if (cropWidth && cropHeight) {
                   params = [
                       image,
@@ -11207,7 +11295,8 @@
       'padding',
       'lineHeight',
       'text',
-      'width'
+      'width',
+      'height',
   ], CHANGE_KONVA = 'Change.konva', NONE = 'none', UP = 'up', RIGHT = 'right', DOWN = 'down', LEFT = 'left', 
   // cached variables
   attrChangeListLen = ATTR_CHANGE_LIST.length;
@@ -11346,11 +11435,11 @@
                   x: -1 * x,
                   y: -1 * y,
                   width: width,
-                  height: height
+                  height: height,
               });
               text.setAttrs({
                   x: -1 * x,
-                  y: -1 * y
+                  y: -1 * y,
               });
           }
       };
@@ -11377,59 +11466,50 @@
           return _super !== null && _super.apply(this, arguments) || this;
       }
       Tag.prototype._sceneFunc = function (context) {
-          var width = this.width(), height = this.height(), pointerDirection = this.pointerDirection(), pointerWidth = this.pointerWidth(), pointerHeight = this.pointerHeight(), cornerRadius = Math.min(this.cornerRadius(), width / 2, height / 2);
-          context.beginPath();
-          if (!cornerRadius) {
-              context.moveTo(0, 0);
+          var width = this.width(), height = this.height(), pointerDirection = this.pointerDirection(), pointerWidth = this.pointerWidth(), pointerHeight = this.pointerHeight(), cornerRadius = this.cornerRadius();
+          var topLeft = 0;
+          var topRight = 0;
+          var bottomLeft = 0;
+          var bottomRight = 0;
+          if (typeof cornerRadius === 'number') {
+              topLeft = topRight = bottomLeft = bottomRight = Math.min(cornerRadius, width / 2, height / 2);
           }
           else {
-              context.moveTo(cornerRadius, 0);
+              topLeft = Math.min(cornerRadius[0] || 0, width / 2, height / 2);
+              topRight = Math.min(cornerRadius[1] || 0, width / 2, height / 2);
+              bottomRight = Math.min(cornerRadius[2] || 0, width / 2, height / 2);
+              bottomLeft = Math.min(cornerRadius[3] || 0, width / 2, height / 2);
           }
+          context.beginPath();
+          context.moveTo(topLeft, 0);
           if (pointerDirection === UP) {
               context.lineTo((width - pointerWidth) / 2, 0);
               context.lineTo(width / 2, -1 * pointerHeight);
               context.lineTo((width + pointerWidth) / 2, 0);
           }
-          if (!cornerRadius) {
-              context.lineTo(width, 0);
-          }
-          else {
-              context.lineTo(width - cornerRadius, 0);
-              context.arc(width - cornerRadius, cornerRadius, cornerRadius, (Math.PI * 3) / 2, 0, false);
-          }
+          context.lineTo(width - topRight, 0);
+          context.arc(width - topRight, topRight, topRight, (Math.PI * 3) / 2, 0, false);
           if (pointerDirection === RIGHT) {
               context.lineTo(width, (height - pointerHeight) / 2);
               context.lineTo(width + pointerWidth, height / 2);
               context.lineTo(width, (height + pointerHeight) / 2);
           }
-          if (!cornerRadius) {
-              context.lineTo(width, height);
-          }
-          else {
-              context.lineTo(width, height - cornerRadius);
-              context.arc(width - cornerRadius, height - cornerRadius, cornerRadius, 0, Math.PI / 2, false);
-          }
+          context.lineTo(width, height - bottomRight);
+          context.arc(width - bottomRight, height - bottomRight, bottomRight, 0, Math.PI / 2, false);
           if (pointerDirection === DOWN) {
               context.lineTo((width + pointerWidth) / 2, height);
               context.lineTo(width / 2, height + pointerHeight);
               context.lineTo((width - pointerWidth) / 2, height);
           }
-          if (!cornerRadius) {
-              context.lineTo(0, height);
-          }
-          else {
-              context.lineTo(cornerRadius, height);
-              context.arc(cornerRadius, height - cornerRadius, cornerRadius, Math.PI / 2, Math.PI, false);
-          }
+          context.lineTo(bottomLeft, height);
+          context.arc(bottomLeft, height - bottomLeft, bottomLeft, Math.PI / 2, Math.PI, false);
           if (pointerDirection === LEFT) {
               context.lineTo(0, (height + pointerHeight) / 2);
               context.lineTo(-1 * pointerWidth, height / 2);
               context.lineTo(0, (height - pointerHeight) / 2);
           }
-          if (cornerRadius) {
-              context.lineTo(0, cornerRadius);
-              context.arc(cornerRadius, cornerRadius, cornerRadius, Math.PI, (Math.PI * 3) / 2, false);
-          }
+          context.lineTo(0, topLeft);
+          context.arc(topLeft, topLeft, topLeft, Math.PI, (Math.PI * 3) / 2, false);
           context.closePath();
           context.fillStrokeShape(this);
       };
@@ -11454,7 +11534,7 @@
               x: x,
               y: y,
               width: width,
-              height: height
+              height: height,
           };
       };
       return Tag;
@@ -11499,8 +11579,12 @@
    * @returns {Number}
    * @example
    * tag.cornerRadius(20);
+   *
+   * // set different corner radius values
+   * // top-left, top-right, bottom-right, bottom-left
+   * tag.cornerRadius([0, 10, 20, 30]);
    */
-  Factory.addGetterSetter(Tag, 'cornerRadius', 0, getNumberValidator());
+  Factory.addGetterSetter(Tag, 'cornerRadius', 0, getNumberOrArrayOfNumbersValidator(4));
   Collection.mapMethods(Tag);
 
   /**
@@ -11543,6 +11627,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -11725,7 +11810,7 @@
               x: Math.round(minX),
               y: Math.round(minY),
               width: Math.round(maxX - minX),
-              height: Math.round(maxY - minY)
+              height: Math.round(maxY - minY),
           };
       };
       /**
@@ -11761,14 +11846,14 @@
               point = this.dataArray[i - 1].points.slice(-2);
               return {
                   x: point[0],
-                  y: point[1]
+                  y: point[1],
               };
           }
           if (length < 0.01) {
               point = this.dataArray[i].points.slice(0, 2);
               return {
                   x: point[0],
-                  y: point[1]
+                  y: point[1],
               };
           }
           var cp = this.dataArray[i];
@@ -11808,21 +11893,24 @@
               // vertical line
               pt = {
                   x: fromX,
-                  y: fromY + rise
+                  y: fromY + rise,
               };
           }
           else if ((fromY - P1y) / (fromX - P1x + 0.00000001) === m) {
               pt = {
                   x: fromX + run,
-                  y: fromY + rise
+                  y: fromY + rise,
               };
           }
           else {
               var ix, iy;
               var len = this.getLineLength(P1x, P1y, P2x, P2y);
-              if (len < 0.00000001) {
-                  return undefined;
-              }
+              // if (len < 0.00000001) {
+              //   return {
+              //     x: P1x,
+              //     y: P1y,
+              //   };
+              // }
               var u = (fromX - P1x) * (P2x - P1x) + (fromY - P1y) * (P2y - P1y);
               u = u / (len * len);
               ix = P1x + u * (P2x - P1x);
@@ -11836,7 +11924,7 @@
               rise = m * run;
               pt = {
                   x: ix + run,
-                  y: iy + rise
+                  y: iy + rise,
               };
           }
           return pt;
@@ -11858,7 +11946,7 @@
           var y = P4y * CB1(pct) + P3y * CB2(pct) + P2y * CB3(pct) + P1y * CB4(pct);
           return {
               x: x,
-              y: y
+              y: y,
           };
       };
       Path.getPointOnQuadraticBezier = function (pct, P1x, P1y, P2x, P2y, P3x, P3y) {
@@ -11875,18 +11963,18 @@
           var y = P3y * QB1(pct) + P2y * QB2(pct) + P1y * QB3(pct);
           return {
               x: x,
-              y: y
+              y: y,
           };
       };
       Path.getPointOnEllipticalArc = function (cx, cy, rx, ry, theta, psi) {
           var cosPsi = Math.cos(psi), sinPsi = Math.sin(psi);
           var pt = {
               x: rx * Math.cos(theta),
-              y: ry * Math.sin(theta)
+              y: ry * Math.sin(theta),
           };
           return {
               x: cx + (pt.x * cosPsi - pt.y * sinPsi),
-              y: cy + (pt.x * sinPsi + pt.y * cosPsi)
+              y: cy + (pt.x * sinPsi + pt.y * cosPsi),
           };
       };
       /*
@@ -11944,7 +12032,7 @@
               's',
               'S',
               'a',
-              'A'
+              'A',
           ];
           // convert white spaces to commas
           cs = cs.replace(new RegExp(' ', 'g'), ',');
@@ -12169,9 +12257,9 @@
                       points: points,
                       start: {
                           x: startX,
-                          y: startY
+                          y: startY,
                       },
-                      pathLength: this.calcLength(startX, startY, cmd || c, points)
+                      pathLength: this.calcLength(startX, startY, cmd || c, points),
                   });
               }
               if (c === 'z' || c === 'Z') {
@@ -12179,7 +12267,7 @@
                       command: 'z',
                       points: [],
                       start: undefined,
-                      pathLength: 0
+                      pathLength: 0,
                   });
               }
           }
@@ -12361,6 +12449,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -12432,10 +12521,10 @@
                   topLeft = topRight = bottomLeft = bottomRight = Math.min(cornerRadius, width / 2, height / 2);
               }
               else {
-                  topLeft = Math.min(cornerRadius[0], width / 2, height / 2);
-                  topRight = Math.min(cornerRadius[1], width / 2, height / 2);
-                  bottomRight = Math.min(cornerRadius[2], width / 2, height / 2);
-                  bottomLeft = Math.min(cornerRadius[3], width / 2, height / 2);
+                  topLeft = Math.min(cornerRadius[0] || 0, width / 2, height / 2);
+                  topRight = Math.min(cornerRadius[1] || 0, width / 2, height / 2);
+                  bottomRight = Math.min(cornerRadius[2] || 0, width / 2, height / 2);
+                  bottomLeft = Math.min(cornerRadius[3] || 0, width / 2, height / 2);
               }
               context.moveTo(topLeft, 0);
               context.lineTo(width - topRight, 0);
@@ -12471,7 +12560,7 @@
    * // top-left, top-right, bottom-right, bottom-left
    * rect.cornerRadius([0, 10, 20, 30]);
    */
-  Factory.addGetterSetter(Rect, 'cornerRadius', 0);
+  Factory.addGetterSetter(Rect, 'cornerRadius', 0, getNumberOrArrayOfNumbersValidator(4));
   Collection.mapMethods(Rect);
 
   /**
@@ -12514,6 +12603,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -12572,16 +12662,45 @@
           return _super !== null && _super.apply(this, arguments) || this;
       }
       RegularPolygon.prototype._sceneFunc = function (context) {
-          var sides = this.sides(), radius = this.radius(), n, x, y;
+          var points = this._getPoints();
           context.beginPath();
-          context.moveTo(0, 0 - radius);
-          for (n = 1; n < sides; n++) {
-              x = radius * Math.sin((n * 2 * Math.PI) / sides);
-              y = -1 * radius * Math.cos((n * 2 * Math.PI) / sides);
-              context.lineTo(x, y);
+          context.moveTo(points[0].x, points[0].y);
+          for (var n = 1; n < points.length; n++) {
+              context.lineTo(points[n].x, points[n].y);
           }
           context.closePath();
           context.fillStrokeShape(this);
+      };
+      RegularPolygon.prototype._getPoints = function () {
+          var sides = this.attrs.sides;
+          var radius = this.attrs.radius || 0;
+          var points = [];
+          for (var n = 0; n < sides; n++) {
+              points.push({
+                  x: radius * Math.sin((n * 2 * Math.PI) / sides),
+                  y: -1 * radius * Math.cos((n * 2 * Math.PI) / sides),
+              });
+          }
+          return points;
+      };
+      RegularPolygon.prototype.getSelfRect = function () {
+          var points = this._getPoints();
+          var minX = points[0].x;
+          var maxX = points[0].y;
+          var minY = points[0].x;
+          var maxY = points[0].y;
+          points.forEach(function (point) {
+              minX = Math.min(minX, point.x);
+              maxX = Math.max(maxX, point.x);
+              minY = Math.min(minY, point.y);
+              maxY = Math.max(maxY, point.y);
+          });
+          return {
+              x: minX,
+              y: minY,
+              width: maxX - minX,
+              height: maxY - minY,
+          };
       };
       RegularPolygon.prototype.getWidth = function () {
           return this.radius() * 2;
@@ -12673,6 +12792,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -12827,6 +12947,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -13195,6 +13316,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -13286,48 +13408,55 @@
   _registerNode(Star);
   /**
    * get/set number of points
-   * @name Konva.Ring#numPoints
+   * @name Konva.Star#numPoints
    * @method
    * @param {Number} numPoints
    * @returns {Number}
    * @example
    * // get inner radius
-   * var numPoints = ring.numPoints();
+   * var numPoints = star.numPoints();
    *
    * // set inner radius
-   * ring.numPoints(20);
+   * star.numPoints(20);
    */
   Factory.addGetterSetter(Star, 'numPoints', 5, getNumberValidator());
   /**
    * get/set innerRadius
-   * @name Konva.Ring#innerRadius
+   * @name Konva.Star#innerRadius
    * @method
    * @param {Number} innerRadius
    * @returns {Number}
    * @example
    * // get inner radius
-   * var innerRadius = ring.innerRadius();
+   * var innerRadius = star.innerRadius();
    *
    * // set inner radius
-   * ring.innerRadius(20);
+   * star.innerRadius(20);
    */
   Factory.addGetterSetter(Star, 'innerRadius', 0, getNumberValidator());
   /**
    * get/set outerRadius
-   * @name Konva.Ring#outerRadius
+   * @name Konva.Star#outerRadius
    * @method
    * @param {Number} outerRadius
    * @returns {Number}
    * @example
    * // get inner radius
-   * var outerRadius = ring.outerRadius();
+   * var outerRadius = star.outerRadius();
    *
    * // set inner radius
-   * ring.outerRadius(20);
+   * star.outerRadius(20);
    */
   Factory.addGetterSetter(Star, 'outerRadius', 0, getNumberValidator());
   Collection.mapMethods(Star);
 
+  function stringToArray(string) {
+      // we need to use `Array.from` because it can split unicode string correctly
+      // we also can use some regexp magic from lodash:
+      // https://github.com/lodash/lodash/blob/fb1f99d9d90ad177560d771bc5953a435b2dc119/lodash.toarray/index.js#L256
+      // but I decided it is too much code for that small fix
+      return Array.from(string);
+  }
   // constants
   var AUTO = 'auto', 
   //CANVAS = 'canvas',
@@ -13437,6 +13566,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -13502,7 +13632,11 @@
           return _this;
       }
       Text.prototype._sceneFunc = function (context) {
-          var padding = this.padding(), fontSize = this.fontSize(), lineHeightPx = this.lineHeight() * fontSize, textArr = this.textArr, textArrLen = textArr.length, verticalAlign = this.verticalAlign(), alignY = 0, align = this.align(), totalWidth = this.getWidth(), letterSpacing = this.letterSpacing(), fill = this.fill(), textDecoration = this.textDecoration(), shouldUnderline = textDecoration.indexOf('underline') !== -1, shouldLineThrough = textDecoration.indexOf('line-through') !== -1, n;
+          var textArr = this.textArr, textArrLen = textArr.length;
+          if (!this.text()) {
+              return;
+          }
+          var padding = this.padding(), fontSize = this.fontSize(), lineHeightPx = this.lineHeight() * fontSize, verticalAlign = this.verticalAlign(), alignY = 0, align = this.align(), totalWidth = this.getWidth(), letterSpacing = this.letterSpacing(), fill = this.fill(), textDecoration = this.textDecoration(), shouldUnderline = textDecoration.indexOf('underline') !== -1, shouldLineThrough = textDecoration.indexOf('line-through') !== -1, n;
           var translateY = 0;
           var translateY = lineHeightPx / 2;
           var lineTranslateX = 0;
@@ -13568,8 +13702,9 @@
               if (letterSpacing !== 0 || align === JUSTIFY) {
                   //   var words = text.split(' ');
                   spacesNumber = text.split(' ').length - 1;
-                  for (var li = 0; li < text.length; li++) {
-                      var letter = text[li];
+                  var array = stringToArray(text);
+                  for (var li = 0; li < array.length; li++) {
+                      var letter = array[li];
                       // skip justify for the last line
                       if (letter === ' ' && n !== textArrLen - 1 && align === JUSTIFY) {
                           lineTranslateX += (totalWidth - padding * 2 - width) / spacesNumber;
@@ -13692,7 +13827,7 @@
       Text.prototype._setTextData = function () {
           var lines = this.text().split('\n'), fontSize = +this.fontSize(), textWidth = 0, lineHeightPx = this.lineHeight() * fontSize, width = this.attrs.width, height = this.attrs.height, fixedWidth = width !== AUTO && width !== undefined, fixedHeight = height !== AUTO && height !== undefined, padding = this.padding(), maxWidth = width - padding * 2, maxHeightPx = height - padding * 2, currentHeightPx = 0, wrap = this.wrap(), 
           // align = this.align(),
-          shouldWrap = wrap !== NONE$1, wrapAtWord = wrap !== CHAR && shouldWrap, shouldAddEllipsis = this.ellipsis() && !shouldWrap;
+          shouldWrap = wrap !== NONE$1, wrapAtWord = wrap !== CHAR && shouldWrap, shouldAddEllipsis = this.ellipsis();
           this.textArr = [];
           getDummyContext$1().font = this._getContextFont();
           var additionalWidth = shouldAddEllipsis ? this._getTextWidth(ELLIPSIS) : 0;
@@ -13714,7 +13849,7 @@
                           var mid = (low + high) >>> 1, substr = line.slice(0, mid + 1), substrWidth = this._getTextWidth(substr) + additionalWidth;
                           if (substrWidth <= maxWidth) {
                               low = mid + 1;
-                              match = substr + (shouldAddEllipsis ? ELLIPSIS : '');
+                              match = substr;
                               matchWidth = substrWidth;
                           }
                           else {
@@ -13756,6 +13891,17 @@
                           currentHeightPx += lineHeightPx;
                           if (!shouldWrap ||
                               (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx)) {
+                              var lastLine = this.textArr[this.textArr.length - 1];
+                              if (lastLine) {
+                                  if (shouldAddEllipsis) {
+                                      var haveSpace = this._getTextWidth(lastLine.text + ELLIPSIS) < maxWidth;
+                                      if (!haveSpace) {
+                                          lastLine.text = lastLine.text.slice(0, lastLine.text.length - 3);
+                                      }
+                                      this.textArr.splice(this.textArr.length - 1, 1);
+                                      this._addTextLine(lastLine.text + ELLIPSIS);
+                                  }
+                              }
                               /*
                                * stop wrapping if wrapping is disabled or if adding
                                * one more line would overflow the fixed height
@@ -13816,6 +13962,7 @@
       'padding',
       'wrap',
       'lineHeight',
+      'letterSpacing',
   ];
   _registerNode(Text);
   /**
@@ -13986,20 +14133,21 @@
    */
   Factory.addGetterSetter(Text, 'wrap', WORD);
   /**
-   * get/set ellipsis.  Can be true or false. Default is false.
-   * if Konva.Text config is set to wrap="none" and ellipsis=true, then it will add "..." to the end
+   * get/set ellipsis. Can be true or false. Default is false. If ellipses is true,
+   * Konva will add "..." at the end of the text if it doesn't have enough space to write characters.
+   * That is possible only when you limit both width and height of the text
    * @name Konva.Text#ellipsis
    * @method
    * @param {Boolean} ellipsis
    * @returns {Boolean}
    * @example
-   * // get ellipsis
+   * // get ellipsis param, returns true or false
    * var ellipsis = text.ellipsis();
    *
    * // set ellipsis
    * text.ellipsis(true);
    */
-  Factory.addGetterSetter(Text, 'ellipsis', false);
+  Factory.addGetterSetter(Text, 'ellipsis', false, getBooleanValidator());
   /**
    * set letter spacing property. Default value is 0.
    * @name Konva.Text#letterSpacing
@@ -14098,6 +14246,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
@@ -14272,7 +14421,7 @@
           _context.restore();
           return {
               width: metrics.width,
-              height: parseInt(this.attrs.fontSize, 10)
+              height: parseInt(this.attrs.fontSize, 10),
           };
       };
       TextPath.prototype._setTextData = function () {
@@ -14298,7 +14447,7 @@
           if (align === 'right') {
               offset = Math.max(0, fullPathWidth - textFullWidth);
           }
-          var charArr = this.text().split('');
+          var charArr = stringToArray(this.text());
           var spacesNumber = this.text().split(' ').length - 1;
           var p0, p1, pathCmd;
           var pIndex = -1;
@@ -14322,7 +14471,7 @@
                   else if (pathData[j].command === 'M') {
                       p0 = {
                           x: pathData[j].points[0],
-                          y: pathData[j].points[1]
+                          y: pathData[j].points[1],
                       };
                   }
               }
@@ -14337,7 +14486,7 @@
               var attempts = 0;
               p1 = undefined;
               while (Math.abs(glyphWidth - currLen) / glyphWidth > 0.01 &&
-                  attempts < 25) {
+                  attempts < 20) {
                   attempts++;
                   var cumulativePathLength = currLen;
                   while (pathCmd === undefined) {
@@ -14396,10 +14545,10 @@
                               }
                           }
                           else if (glyphWidth > currLen) {
-                              currentT += (glyphWidth - currLen) / pathCmd.pathLength;
+                              currentT += (glyphWidth - currLen) / pathCmd.pathLength / 2;
                           }
                           else {
-                              currentT -= (currLen - glyphWidth) / pathCmd.pathLength;
+                              currentT = Math.max(currentT - (currLen - glyphWidth) / pathCmd.pathLength / 2, 0);
                           }
                           if (currentT > 1.0) {
                               currentT = 1.0;
@@ -14474,7 +14623,7 @@
                   text: charArr[i],
                   rotation: rotation,
                   p0: p0,
-                  p1: p1
+                  p1: p1,
               });
               p0 = p1;
           }
@@ -14485,7 +14634,7 @@
                   x: 0,
                   y: 0,
                   width: 0,
-                  height: 0
+                  height: 0,
               };
           }
           var points = [];
@@ -14513,7 +14662,7 @@
               x: minX - fontSize / 2,
               y: minY - fontSize / 2,
               width: maxX - minX + fontSize,
-              height: maxY - minY + fontSize
+              height: maxY - minY + fontSize,
           };
       };
       return TextPath;
@@ -14586,7 +14735,7 @@
   Factory.addGetterSetter(TextPath, 'fontStyle', NORMAL$1);
   /**
    * get/set horizontal align of text.  Can be 'left', 'center', 'right' or 'justify'
-   * @name Konva.Text#align
+   * @name Konva.TextPath#align
    * @method
    * @param {String} align
    * @returns {String}
@@ -14908,7 +15057,7 @@
           }
           this._nodes = nodes;
           if (nodes.length === 1) {
-              this.rotation(nodes[0].rotation());
+              this.rotation(nodes[0].getAbsoluteRotation());
           }
           else {
               this.rotation(0);
@@ -14918,8 +15067,12 @@
                   .map(function (prop) { return prop + 'Change.' + EVENTS_NAME; })
                   .join(' ');
               var onChange = function () {
+                  //
+                  if (_this.nodes().length === 1) {
+                      _this.rotation(_this.nodes()[0].getAbsoluteRotation());
+                  }
                   _this._resetTransformCache();
-                  if (!_this._transforming) {
+                  if (!_this._transforming && !_this.isDragging()) {
                       _this.update();
                   }
               };
@@ -14946,7 +15099,7 @@
               // actual dragging of Transformer doesn't make sense
               // but we need to proxy drag events
               if (!_this.isDragging() && node !== _this.findOne('.back')) {
-                  _this.startDrag();
+                  _this.startDrag(e, false);
               }
           });
           node.on("dragmove." + EVENTS_NAME, function (e) {
@@ -14968,13 +15121,13 @@
                       x: otherAbs.x + dx,
                       y: otherAbs.y + dy,
                   });
-                  otherNode.startDrag();
+                  otherNode.startDrag(e);
               });
               lastPos = null;
           });
       };
       Transformer.prototype.getNodes = function () {
-          return this._nodes;
+          return this._nodes || [];
       };
       /**
        * return the name of current active anchor
@@ -15131,7 +15284,7 @@
               name: name + ' _anchor',
               dragDistance: 0,
               // make it draggable,
-              // so activating the anchror will not start drag&drop of any parent
+              // so activating the anchor will not start drag&drop of any parent
               draggable: true,
               hitStrokeWidth: TOUCH_DEVICE ? 10 : 'auto',
           });
@@ -15189,10 +15342,21 @@
           });
           this.add(back);
           this._proxyDrag(back);
+          // do not bubble drag from the back shape
+          // because we already "drag" whole transformer
+          // so we don't want to trigger drag twice on transformer
+          back.on('dragstart', function (e) {
+              e.cancelBubble = true;
+          });
+          back.on('dragmove', function (e) {
+              e.cancelBubble = true;
+          });
+          back.on('dragend', function (e) {
+              e.cancelBubble = true;
+          });
       };
       Transformer.prototype._handleMouseDown = function (e) {
           this._movingAnchorName = e.target.name().split(' ')[0];
-          // var node = this.getNode();
           var attrs = this._getNodeRect();
           var width = attrs.width;
           var height = attrs.height;
@@ -15211,7 +15375,9 @@
               y: pos.y - ap.y,
           };
           this._fire('transformstart', { evt: e, target: this.getNode() });
-          this.getNode()._fire('transformstart', { evt: e, target: this.getNode() });
+          this._nodes.forEach(function (target) {
+              target._fire('transformstart', { evt: e, target: target });
+          });
       };
       Transformer.prototype._handleMouseMove = function (e) {
           var x, y, newHypotenuse;
@@ -15402,7 +15568,9 @@
               var node = this.getNode();
               this._fire('transformend', { evt: e, target: node });
               if (node) {
-                  node.fire('transformend', { evt: e, target: node });
+                  this._nodes.forEach(function (target) {
+                      target._fire('transformend', { evt: e, target: target });
+                  });
               }
               this._movingAnchorName = null;
           }
@@ -15495,7 +15663,7 @@
           newTr.translate(newAttrs.x, newAttrs.y);
           newTr.rotate(newAttrs.rotation);
           newTr.scale(newAttrs.width / baseSize, newAttrs.height / baseSize);
-          // now lets think we had [old transform] and now we have [new transform]
+          // now lets think we had [old transform] and n ow we have [new transform]
           // Now, the questions is: how can we transform "parent" to go from [old transform] into [new transform]
           // in equation it will be:
           // [delta transform] * [old transform] = [new transform]
@@ -15503,6 +15671,7 @@
           // [delta transform] = [new transform] * [old transform inverted]
           var delta = newTr.multiply(oldTr.invert());
           this._nodes.forEach(function (node) {
+              var _a;
               // for each node we have the same [delta transform]
               // the equations is
               // [delta transform] * [parent transform] * [old local transform] = [parent transform] * [new local transform]
@@ -15522,6 +15691,7 @@
               node.setAttrs(attrs);
               _this._fire('transform', { evt: evt, target: node });
               node._fire('transform', { evt: evt, target: node });
+              (_a = node.getLayer()) === null || _a === void 0 ? void 0 : _a.batchDraw();
           });
           this.rotation(Util._getRotation(newAttrs.rotation));
           this._resetTransformCache();
@@ -15544,6 +15714,7 @@
       };
       Transformer.prototype.update = function () {
           var _this = this;
+          var _a;
           var attrs = this._getNodeRect();
           this.rotation(Util._getRotation(attrs.rotation));
           var width = attrs.width;
@@ -15631,6 +15802,7 @@
               x: 0,
               y: 0,
           });
+          (_a = this.getLayer()) === null || _a === void 0 ? void 0 : _a.batchDraw();
       };
       /**
        * determine if transformer is in active transform
@@ -16047,6 +16219,7 @@
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
      * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true

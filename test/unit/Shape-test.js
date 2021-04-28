@@ -133,6 +133,13 @@ suite('Shape', function () {
 
     layer.add(shape);
     stage.add(layer);
+
+    var trace = layer.getContext().getTrace();
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,200,100);beginPath();moveTo(0,0);lineTo(100,0);lineTo(100,100);closePath();fillStyle=green;fill();lineWidth=5;strokeStyle=blue;stroke();restore();'
+    );
   });
 
   // ======================================================
@@ -515,6 +522,34 @@ suite('Shape', function () {
   });
 
   // ======================================================
+  test('draw fill after stroke', function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 50,
+      width: 100,
+      height: 50,
+      fill: 'green',
+      stroke: 'red',
+      strokeWidth: 10,
+      fillAfterStrokeEnabled: true,
+    });
+
+    layer.add(rect);
+    stage.add(layer);
+
+    var trace = layer.getContext().getTrace();
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);beginPath();rect(0,0,100,50);closePath();lineWidth=10;strokeStyle=red;stroke();fillStyle=green;fill();restore();'
+    );
+  });
+
+  // ======================================================
   test('test strokeWidth = 0', function () {
     var stage = addStage();
 
@@ -859,6 +894,32 @@ suite('Shape', function () {
   });
 
   // ======================================================
+  test('shape intersect while dragging', function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+
+    var rect = new Konva.Rect({
+      fill: '#ff0000',
+      x: 50,
+      y: 50,
+      width: 200,
+      height: 200,
+      draggable: true,
+      shadowColor: '#000', // if all shadow properties removed, works fine
+    });
+    layer.add(rect);
+    stage.add(layer);
+
+    stage.simulateMouseDown({ x: 55, y: 55 });
+    stage.simulateMouseMove({ x: 65, y: 65 });
+
+    //error here
+    assert.equal(rect.intersects({ x: 65, y: 65 }), true);
+    stage.simulateMouseUp({ x: 65, y: 65 });
+  });
+
+  // ======================================================
   test('overloaded getters and setters', function () {
     var stage = addStage();
 
@@ -912,8 +973,8 @@ suite('Shape', function () {
 
     imageObj.onload = function () {
       var lion = new Konva.Image({
-        x: 200,
-        y: 40,
+        x: 0,
+        y: 0,
         image: imageObj,
         draggable: true,
         shadowColor: 'black',
@@ -923,28 +984,26 @@ suite('Shape', function () {
       });
 
       // override color key with black
-      lion.colorKey = '#000000';
-      Konva.shapes['#000000'] = lion;
+      // lion.colorKey = '#000000';
+      // Konva.shapes['#000000'] = lion;
 
       layer.add(lion);
 
       stage.add(layer);
 
-      lion.cache();
+      assert.equal(layer.getIntersection({ x: 10, y: 10 }), lion);
 
-      //document.body.appendChild(lion._getCanvasCache().hit._canvas);
+      lion.cache();
 
       lion.drawHitFromCache();
 
       layer.draw();
 
+      assert.equal(layer.getIntersection({ x: 10, y: 10 }), null);
+      assert.equal(layer.getIntersection({ x: 50, y: 50 }), lion);
       done();
     };
     imageObj.src = 'assets/lion.png';
-
-    showHit(layer);
-
-    layer.hitCanvas._canvas.style.border = '2px solid black';
   });
 
   test('test defaults', function () {
@@ -1045,10 +1104,10 @@ suite('Shape', function () {
       draggable: true,
     });
     // default value
-    assert.equal(rect.strokeHitEnabled(), true);
+    assert.equal(rect.hitStrokeWidth(), 'auto');
 
-    rect.strokeHitEnabled(false);
-    assert.equal(rect.strokeHitEnabled(), false);
+    rect.hitStrokeWidth(0);
+    assert.equal(rect.hitStrokeWidth(), 0);
 
     layer.add(rect);
     stage.add(layer);
@@ -1062,7 +1121,7 @@ suite('Shape', function () {
     );
   });
 
-  test('hitStrokeWidth', function () {
+  test.skip('hitStrokeWidth', function () {
     var stage = addStage();
 
     var layer = new Konva.Layer();

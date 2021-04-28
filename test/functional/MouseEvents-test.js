@@ -108,7 +108,7 @@ suite('MouseEvents', function () {
 
       assert.equal(stageContentMousemove, 1);
 
-      stage._mouseout({
+      stage._mouseleave({
         offsetX: 0,
         offsetY: 0,
       });
@@ -2139,7 +2139,7 @@ suite('MouseEvents', function () {
       button: 0,
     };
 
-    stage._mouseout(evt);
+    stage._mouseleave(evt);
 
     assert.equal(mouseleave, 1, 'mouseleave should be 1');
   });
@@ -2198,7 +2198,7 @@ suite('MouseEvents', function () {
       button: 0,
     };
 
-    stage._mouseout(evt);
+    stage._mouseleave(evt);
 
     assert.equal(circleMouseleave, 1, 'circleMouseleave should be 1');
     assert.equal(circleMouseout, 1, 'circleMouseout should be 1');
@@ -2321,7 +2321,7 @@ suite('MouseEvents', function () {
       y: 10,
     });
 
-    stage._mouseout(evt);
+    stage._mouseleave(evt);
 
     assert.equal(mouseenter, 1, 'mouseenter should be 1');
   });

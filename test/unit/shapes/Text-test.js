@@ -11,6 +11,11 @@ suite('Text', function () {
 
     layer.add(text);
     layer.draw();
+
+    var trace =
+      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);restore();';
+
+    assert.equal(layer.getContext().getTrace(), trace);
   });
 
   // ======================================================
@@ -133,6 +138,31 @@ suite('Text', function () {
     context.fillText('Hello World!', 10, 10 + 50 + 25);
     context.fillStyle = 'black';
     context.fillText('Hello World!', 10, 10 + 25);
+
+    compareLayerAndCanvas(layer, canvas, 254);
+  });
+
+  test('check emoji with letterSpacing', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      x: 10,
+      y: 10,
+      text: '😬',
+      fontSize: 50,
+      letterSpacing: 1,
+    });
+
+    layer.add(text);
+    stage.add(layer);
+
+    var canvas = createCanvas();
+    var context = canvas.getContext('2d');
+    context.textBaseline = 'middle';
+    context.font = 'normal normal 50px Arial';
+    context.fillStyle = 'darkgrey';
+    context.fillText('😬', 10, 10 + 25);
 
     compareLayerAndCanvas(layer, canvas, 254);
   });
@@ -425,6 +455,95 @@ suite('Text', function () {
   });
 
   // ======================================================
+  test('multiline with ellipsis', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      x: 10,
+      y: 10,
+      text:
+        "HEADING\n\nAll the world's a stage, merely players. They have theirrrrrrr exits and theirrrrr entrances; And one man in his time plays many parts.",
+      fontSize: 14,
+      fontFamily: 'Calibri',
+      fontStyle: 'normal',
+      width: 100,
+      padding: 0,
+      align: 'center',
+      height: 100,
+      ellipsis: true,
+    });
+
+    layer.add(text);
+    stage.add(layer);
+
+    assert.equal(text.textArr.length, 7);
+    assert.equal(text.textArr[6].text.slice(-1), '…');
+
+    var trace =
+      "clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 14px Calibri;textBaseline=middle;textAlign=left;translate(0,0);save();fillStyle=black;fillText(HEADING,18.117,7);restore();save();fillStyle=black;fillText(,50,21);restore();save();fillStyle=black;fillText(All the world's,8.687,35);restore();save();fillStyle=black;fillText(a stage, merely,7.826,49);restore();save();fillStyle=black;fillText(players. They,11.903,63);restore();save();fillStyle=black;fillText(have theirrrrrrr,8.222,77);restore();save();fillStyle=black;fillText(exits and…,17.922,91);restore();restore();";
+
+    console.log(layer.getContext().getTrace());
+    assert.equal(layer.getContext().getTrace(), trace);
+  });
+
+  // ======================================================
+  test('make sure we respect false for ellipsis', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      x: 10,
+      y: 10,
+      text: 'Hello foo bar',
+      wrap: 'word',
+      ellipsis: false,
+      width: 60,
+      height: 20,
+    });
+
+    layer.add(text);
+    stage.add(layer);
+
+    assert.equal(text.textArr.length, 1);
+    assert.equal(text.textArr[0].text, 'Hello foo');
+  });
+
+  // ======================================================
+  test('wrap none check', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      x: 10,
+      y: 10,
+      text: 'Hello foo bar',
+      wrap: 'none',
+      ellipsis: false,
+      width: 60,
+      height: 20,
+    });
+
+    layer.add(
+      new Konva.Rect({
+        ...text.getClientRect(),
+        fill: 'rgba(0, 0, 0, 0.4)',
+      })
+    );
+
+    layer.add(text);
+    stage.add(layer);
+
+    assert.equal(text.textArr.length, 1);
+    assert.equal(text.textArr[0].text, 'Hello foo b');
+
+    var trace =
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);beginPath();rect(0,0,60,20);closePath();fillStyle=rgba(0, 0, 0, 0.4);fill();restore();save();transform(1,0,0,1,10,10);font=normal normal 12px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();fillStyle=black;fillText(Hello foo b,0,6);restore();restore();';
+
+    assert.equal(layer.getContext().getTrace(), trace);
+  });
+
+  // ======================================================
   test('text multi line with justify align', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -536,7 +655,11 @@ suite('Text', function () {
 
     layer.add(text);
     stage.add(layer);
-    //console.log(layer.getContext().getTrace());
+
+    assert.equal(
+      layer.getContext().getTrace(),
+      "clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);shadowColor=rgba(255,0,0,0.5);shadowBlur=1;shadowOffsetX=10;shadowOffsetY=10;font=normal normal 16px Calibri;textBaseline=middle;textAlign=left;translate(20,20);save();fillStyle=#555;fillText(HEADING,133.563,8);restore();save();fillStyle=#555;fillText(,170,24);restore();save();fillStyle=#555;fillText(All the world's a stage, and all the men and women,6.602,40);restore();save();fillStyle=#555;fillText(merely players. They have their exits and their,21.168,56);restore();save();fillStyle=#555;fillText(entrances; And one man in his time plays many,18.035,72);restore();save();fillStyle=#555;fillText(parts.,152.449,88);restore();restore();"
+    );
   });
 
   // ======================================================
@@ -1097,6 +1220,37 @@ suite('Text', function () {
     layer.draw();
   });
 
+  test.skip('we should be able to clip underline by group', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group({
+      clipX: 10,
+      clipY: 10,
+      clipWidth: 100,
+      clipHeight: 27,
+    });
+    layer.add(group);
+
+    var text = new Konva.Text({
+      x: 10,
+      y: 10,
+      width: 100,
+      text: 'Hello World',
+      textDecoration: ['underline'],
+      fontSize: 40,
+    });
+    group.add(text);
+
+    layer.draw();
+
+    console.log(layer.getContext().getTrace());
+
+    // assert.equal(layer.getContext().getTrace(), trace);
+    throw 1;
+  });
+
   test('image gradient for text', function (done) {
     Konva.pixelRatio = 1;
     var imageObj = new Image();
@@ -1131,7 +1285,7 @@ suite('Text', function () {
     imageObj.src = 'assets/darth-vader.jpg';
   });
 
-  test.skip('image gradient for text with scale', function (done) {
+  test('image gradient for text with scale', function (done) {
     Konva.pixelRatio = 1;
     var imageObj = new Image();
     imageObj.onload = function () {

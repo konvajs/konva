@@ -61,6 +61,13 @@ suite('Path', function () {
     layer.add(path);
 
     stage.add(layer);
+
+    var trace = layer.getContext().getTrace();
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();lineJoin=round;transform(1,0,0,1,0,0);beginPath();moveTo(200,100);lineTo(300,100);lineTo(300,150);lineCap=round;lineWidth=20;strokeStyle=#333;stroke();restore();'
+    );
   });
 
   //=======================================================
@@ -80,6 +87,13 @@ suite('Path', function () {
     layer.add(path);
 
     stage.add(layer);
+
+    var trace = layer.getContext().getTrace();
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();lineJoin=round;transform(1,0,0,1,0,0);beginPath();moveTo(4.114,28.971);lineTo(12.953,79.176);lineTo(35.934,30.739);closePath();moveTo(-0.482,42.76);lineTo(-0.482,61.145);bezierCurveTo(13.627,48.934,24.095,54.93,34.52,61.145);lineTo(36.824,52.544);lineTo(23.56,52.544);bezierCurveTo(25.787,47.08,30.731,40.71,16.701,40.665);bezierCurveTo(12.781,53.564,7.208,55.308,-0.482,42.76);closePath();lineCap=round;lineWidth=1;strokeStyle=#000;stroke();restore();'
+    );
   });
 
   //=======================================================
@@ -99,6 +113,13 @@ suite('Path', function () {
     layer.add(path);
 
     stage.add(layer);
+
+    var trace = layer.getContext().getTrace();
+
+    assert.equal(
+      trace,
+      'bezierCurveTo(140.037,77.432,145.348,79.212,147.897,81.051);bezierCurveTo(148.404,81.566,148.176,82.027,147.799,82.479);lineTo(151.701,81.337);bezierCurveTo(151.108,81.216,149.841,81.357,149.988,80.957);bezierCurveTo(149.129,79.006,146.301,78.196,144.373,76.864);bezierCurveTo(143.303,75.83,144.472,75.257,145.134,74.58);closePath();moveTo(43.206,42.601);lineTo(55.579,74.009);lineTo(58.72,73.91);lineTo(47.204,44.407);bezierCurveTo(46.095,43.67,46.03,42.307,43.206,42.599);closePath();moveTo(24.552,42.031);lineTo(37.02,73.723);lineTo(40.161,73.821);lineTo(27.693,42.129);closePath();moveTo(26.838,84.384);lineTo(24.201,84.319);lineTo(24.364,85.054);lineTo(28.073,95.01);lineTo(30.431,93.842);closePath();moveTo(46.25,84.95);lineTo(39.879,94.851);lineTo(41.969,96.467);lineTo(49.106,85.05);lineTo(49.41,84.615);lineTo(46.467,84.585);closePath();moveTo(34.158,93.236);bezierCurveTo(28.428,93.236,23.79,97.796,23.79,103.42);bezierCurveTo(23.79,109.045,28.428,113.605,34.158,113.605);bezierCurveTo(39.887,113.605,44.534,109.045,44.534,103.42);bezierCurveTo(44.534,97.796,39.887,93.236,34.158,93.236);closePath();moveTo(34.158,95.709);bezierCurveTo(38.468,95.709,41.969,99.163,41.969,103.42);bezierCurveTo(41.969,107.678,38.468,111.132,34.158,111.132);bezierCurveTo(29.848,111.132,26.355,107.678,26.355,103.42);bezierCurveTo(26.355,99.163,29.848,95.709,34.158,95.709);closePath();moveTo(37.686,73.914);bezierCurveTo(36.396,73.907,34.711,73.952,34.284,75.365);lineTo(34.264,82.86);bezierCurveTo(34.851,83.621,35.688,83.548,36.501,83.574);lineTo(63.03,83.429);lineTo(71.667,84.19);lineTo(71.667,76.671);bezierCurveTo(71.57,75.908,71.094,75.467,70.239,75.339);bezierCurveTo(61.126,73.734,49.245,73.929,37.69,73.911);closePath();moveTo(20.96,41.269);bezierCurveTo(20.95,41.873,21.535,42.151,21.535,42.151);lineTo(58.958,42.336);bezierCurveTo(54.064,41.351,42.365,39.477,26.123,39.553);bezierCurveTo(24.552,39.66,20.971,40.662,20.96,41.266);closePath();moveTo(24.313,55.545);bezierCurveTo(21.513,55.559,18.717,55.575,15.93,55.601);lineTo(15.93,55.601);lineTo(15.933,57.049);lineTo(14.759,57.062);lineTo(14.766,58.306);lineTo(15.95,58.364);bezierCurveTo(14.607,58.585,12.994,59.67,12.895,61.841);bezierCurveTo(12.905,65.11,12.908,68.38,12.908,71.649);lineTo(11.696,71.652);lineTo(11.677,69.291);lineTo(6.992,69.294);lineTo(6.992,75.196);lineTo(11.624,75.203);lineTo(11.594,73.447);lineTo(12.903,73.424);lineTo(12.913,82.605);bezierCurveTo(12.906,83.92,15.652,86.239,17.455,86.239);lineTo(22.267,83.244);bezierCurveTo(23.884,83.136,24.025,83.726,24.151,84.321);lineTo(59.819,84.64);lineTo(66.729,83.829);moveTo(71.723,83.243);lineTo(156.94,73.252);bezierCurveTo(161.88,72.764,171.856,50.996,153.189,47.695);bezierCurveTo(148.061,46.808,137.657,52.535,131.749,56.8);bezierCurveTo(129.436,58.755,130.007,60.884,131.775,62.783);lineTo(59.566,54.671);lineTo(57.443,54.67);bezierCurveTo(56.477,56.06,54.285,57.93,52.888,58.723);moveTo(49.36,58.361);bezierCurveTo(47.661,57.323,46.395,55.557,44.826,55.486);bezierCurveTo(40.922,55.487,36.922,55.493,32.944,55.499);moveTo(29.862,55.506);bezierCurveTo(28.819,55.509,27.78,55.513,26.746,55.516);lineCap=round;lineWidth=1;strokeStyle=#000;stroke();restore();'
+    );
   });
 
   //=======================================================
@@ -246,6 +267,13 @@ suite('Path', function () {
 
     layer.add(path);
     stage.add(layer);
+
+    var trace = layer.getContext().getTrace();
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(12.582,9.551);bezierCurveTo(3.251,16.237,0.921,29.021,7.08,38.564);lineTo(4.72,40.253);lineTo(9.613,42.515);lineTo(14.506,44.777);lineTo(13.938,39.417);lineTo(13.371,34.058);lineTo(11.006,35.752);bezierCurveTo(6.349,28.377,8.176,18.567,15.358,13.422);bezierCurveTo(22.809,8.084,33.175,9.797,38.514,17.246);bezierCurveTo(43.851,24.695,42.139,35.059,34.693,40.398);lineTo(37.55,44.386);bezierCurveTo(47.167,37.493,49.377,24.109,42.485,14.49);bezierCurveTo(35.591,4.87,22.204,2.658,12.582,9.551);closePath();fillStyle=#ccc;fill();lineWidth=1;strokeStyle=#999;stroke();restore();'
+    );
   });
 
   // ======================================================

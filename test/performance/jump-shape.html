@@ -11,7 +11,7 @@
   <body>
     <div id="container"></div>
     <script src="../../konva.js"></script>
-    <!-- <script src="https://unpkg.com/konva@6.0.0/konva.min.js"></script> -->
+    <!-- <script src="https://unpkg.com/konva@^7/konva.min.js"></script> -->
     <script src="http://www.html5canvastutorials.com/lib/stats/stats.js"></script>
     <script defer="defer">
       var lastTime = 0;
@@ -77,14 +77,21 @@
       document.addEventListener('touchstart', onTouchStart, true);
       document.addEventListener('touchend', onTouchEnd, true);
 
-      for (var i = 0; i < startBunnyCount; i++) {
-        var bunny = new Konva.Text({
+      function createShape() {
+        return new Konva.Rect({
           transformsEnabled: 'position',
           x: 10,
           y: 10,
           perfectDrawEnabled: false,
-          text: 'text',
+          // radius: 10,
+          width: 10,
+          height: 10,
+          fill: Konva.Util.getRandomColor(),
         });
+      }
+
+      for (var i = 0; i < startBunnyCount; i++) {
+        var bunny = createShape();
 
         bunny.speedX = Math.random() * 10;
         bunny.speedY = Math.random() * 10 - 5;
@@ -107,13 +114,7 @@
           // add 10 at a time :)
 
           for (var i = 0; i < amount; i++) {
-            var bunny = new Konva.Text({
-              transformsEnabled: 'position',
-              x: 10,
-              y: 10,
-              perfectDrawEnabled: false,
-              text: 'text',
-            });
+            var bunny = createShape();
             bunny.speedX = Math.random() * 10;
             bunny.speedY = Math.random() * 10 - 5;
             bunnys.push(bunny);

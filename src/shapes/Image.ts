@@ -5,6 +5,7 @@ import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
 import { GetSet, IRect } from '../types';
+import { Context } from '../Context';
 
 export interface ImageConfig extends ShapeConfig {
   image: CanvasImageSource | undefined;
@@ -38,17 +39,15 @@ export class Image extends Shape<ImageConfig> {
   _useBufferCanvas() {
     return super._useBufferCanvas(true);
   }
-  _sceneFunc(context) {
-    var width = this.getWidth(),
-      height = this.getHeight(),
-      image = this.attrs.image,
-      cropWidth,
-      cropHeight,
-      params;
+  _sceneFunc(context: Context) {
+    const width = this.getWidth();
+    const height = this.getHeight();
+    const image = this.attrs.image;
+    let params;
 
     if (image) {
-      cropWidth = this.attrs.cropWidth;
-      cropHeight = this.attrs.cropHeight;
+      const cropWidth = this.attrs.cropWidth;
+      const cropHeight = this.attrs.cropHeight;
       if (cropWidth && cropHeight) {
         params = [
           image,

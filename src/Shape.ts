@@ -21,6 +21,9 @@ export type ShapeConfigHandler<TTarget> = {
   bivarianceHack(ctx: Context, shape: TTarget): void;
 }['bivarianceHack'];
 
+export type LineJoin = 'round' | 'bevel' | 'miter';
+export type LineCap = 'butt' | 'round' | 'square';
+
 export interface ShapeConfig extends NodeConfig {
   fill?: string;
   fillPatternImage?: HTMLImageElement;
@@ -54,12 +57,13 @@ export interface ShapeConfig extends NodeConfig {
   fillPriority?: string;
   stroke?: string;
   strokeWidth?: number;
+  fillAfterStrokeEnabled?: boolean;
   hitStrokeWidth?: number | string;
   strokeScaleEnabled?: boolean;
   strokeHitEnabled?: boolean;
   strokeEnabled?: boolean;
-  lineJoin?: string;
-  lineCap?: string;
+  lineJoin?: LineJoin;
+  lineCap?: LineCap;
   sceneFunc?: (con: Context, shape: Shape) => void;
   hitFunc?: (con: Context, shape: Shape) => void;
   shadowColor?: string;
@@ -76,13 +80,20 @@ export interface ShapeConfig extends NodeConfig {
   perfectDrawEnabled?: boolean;
 }
 
+export interface ShapeGetClientRectConfig {
+  skipTransform?: boolean;
+  skipShadow?: boolean;
+  skipStroke?: boolean;
+  relativeTo?: Node;
+}
+
 var HAS_SHADOW = 'hasShadow';
 var SHADOW_RGBA = 'shadowRGBA';
 var patternImage = 'patternImage';
 var linearGradient = 'linearGradient';
 var radialGradient = 'radialGradient';
 
-var dummyContext;
+let dummyContext: CanvasRenderingContext2D;
 function getDummyContext(): CanvasRenderingContext2D {
   if (dummyContext) {
     return dummyContext;
@@ -91,7 +102,7 @@ function getDummyContext(): CanvasRenderingContext2D {
   return dummyContext;
 }
 
-export const shapes = {};
+export const shapes: { [key: string]: Shape } = {};
 
 // TODO: idea - use only "remove" (or destroy method)
 // how? on add, check that every inner shape has reference in konva store with color
@@ -172,7 +183,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
   constructor(config?: Config) {
     super(config);
     // set colorKey
-    var key;
+    let key: string;
 
     while (true) {
       key = Util.getRandomColor();
@@ -242,15 +253,16 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
         this.fillPatternImage(),
         this.fillPatternRepeat() || 'repeat'
       );
-      // TODO: how to enable it? It doesn't work in FF...
-      // pattern.setTransform({
-      //   a: this.fillPatternScaleX(), // Horizontal scaling. A value of 1 results in no scaling.
-      //   b: 0, // Vertical skewing.
-      //   c: 0, // Horizontal skewing.
-      //   d: this.fillPatternScaleY(), // Vertical scaling. A value of 1 results in no scaling.
-      //   e: 0, // Horizontal translation (moving).
-      //   f: 0 // Vertical translation (moving).
-      // });
+      if (pattern && pattern.setTransform) {
+        pattern.setTransform({
+          a: this.fillPatternScaleX(), // Horizontal scaling. A value of 1 results in no scaling.
+          b: 0, // Vertical skewing.
+          c: 0, // Horizontal skewing.
+          d: this.fillPatternScaleY(), // Vertical scaling. A value of 1 results in no scaling.
+          e: 0, // Horizontal translation (moving).
+          f: 0, // Vertical translation (moving).
+        });
+      }
       return pattern;
     }
   }
@@ -409,7 +421,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
       p;
 
     bufferHitCanvas.getContext().clear();
-    this.drawHit(bufferHitCanvas);
+    this.drawHit(bufferHitCanvas, null, true);
     p = bufferHitCanvas.context.getImageData(
       Math.round(point.x),
       Math.round(point.y),
@@ -495,40 +507,39 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
       height: size.height,
     };
   }
-  getClientRect(attrs) {
-    attrs = attrs || {};
-    var skipTransform = attrs.skipTransform;
+  getClientRect(config: ShapeGetClientRectConfig = {}) {
+    const skipTransform = config.skipTransform;
 
-    var relativeTo = attrs.relativeTo;
+    const relativeTo = config.relativeTo;
 
-    var fillRect = this.getSelfRect();
+    const fillRect = this.getSelfRect();
 
-    var applyStroke = !attrs.skipStroke && this.hasStroke();
-    var strokeWidth = (applyStroke && this.strokeWidth()) || 0;
+    const applyStroke = !config.skipStroke && this.hasStroke();
+    const strokeWidth = (applyStroke && this.strokeWidth()) || 0;
 
-    var fillAndStrokeWidth = fillRect.width + strokeWidth;
-    var fillAndStrokeHeight = fillRect.height + strokeWidth;
+    const fillAndStrokeWidth = fillRect.width + strokeWidth;
+    const fillAndStrokeHeight = fillRect.height + strokeWidth;
 
-    var applyShadow = !attrs.skipShadow && this.hasShadow();
-    var shadowOffsetX = applyShadow ? this.shadowOffsetX() : 0;
-    var shadowOffsetY = applyShadow ? this.shadowOffsetY() : 0;
+    const applyShadow = !config.skipShadow && this.hasShadow();
+    const shadowOffsetX = applyShadow ? this.shadowOffsetX() : 0;
+    const shadowOffsetY = applyShadow ? this.shadowOffsetY() : 0;
 
-    var preWidth = fillAndStrokeWidth + Math.abs(shadowOffsetX);
-    var preHeight = fillAndStrokeHeight + Math.abs(shadowOffsetY);
+    const preWidth = fillAndStrokeWidth + Math.abs(shadowOffsetX);
+    const preHeight = fillAndStrokeHeight + Math.abs(shadowOffsetY);
 
-    var blurRadius = (applyShadow && this.shadowBlur()) || 0;
+    const blurRadius = (applyShadow && this.shadowBlur()) || 0;
 
-    var width = preWidth + blurRadius * 2;
-    var height = preHeight + blurRadius * 2;
+    const width = preWidth + blurRadius * 2;
+    const height = preHeight + blurRadius * 2;
 
     // if stroke, for example = 3
     // we need to set x to 1.5, but after Math.round it will be 2
     // as we have additional offset we need to increase width and height by 1 pixel
-    var roundingOffset = 0;
+    let roundingOffset = 0;
     if (Math.round(strokeWidth / 2) !== strokeWidth / 2) {
       roundingOffset = 1;
     }
-    var rect = {
+    const rect = {
       width: width + roundingOffset,
       height: height + roundingOffset,
       x:
@@ -632,8 +643,8 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
     context.restore();
     return this;
   }
-  drawHit(can?: HitCanvas, top?: Node) {
-    if (!this.shouldDrawHit(top)) {
+  drawHit(can?: HitCanvas, top?: Node, skipDragCheck = false) {
+    if (!this.shouldDrawHit(top, skipDragCheck)) {
       return this;
     }
 
@@ -788,8 +799,8 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
   fillPatternY: GetSet<number, this>;
   fillPriority: GetSet<string, this>;
   hitFunc: GetSet<ShapeConfigHandler<this>, this>;
-  lineCap: GetSet<string, this>;
-  lineJoin: GetSet<string, this>;
+  lineCap: GetSet<LineCap, this>;
+  lineJoin: GetSet<LineJoin, this>;
   perfectDrawEnabled: GetSet<boolean, this>;
   sceneFunc: GetSet<ShapeConfigHandler<this>, this>;
   shadowColor: GetSet<string, this>;
@@ -802,6 +813,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
   shadowBlur: GetSet<number, this>;
   stroke: GetSet<string, this>;
   strokeEnabled: GetSet<boolean, this>;
+  fillAfterStrokeEnabled: GetSet<boolean, this>;
   strokeScaleEnabled: GetSet<boolean, this>;
   strokeHitEnabled: GetSet<boolean, this>;
   strokeWidth: GetSet<number, this>;
@@ -894,6 +906,25 @@ Factory.addGetterSetter(Shape, 'strokeWidth', 2, getNumberValidator());
  *
  * // set stroke width
  * shape.strokeWidth(10);
+ */
+
+Factory.addGetterSetter(Shape, 'fillAfterStrokeEnabled', false);
+
+/**
+ * get/set fillAfterStrokeEnabled property. By default Konva is drawing filling first, then stroke on top of the fill.
+ * In rare situations you may want a different behavior. When you have a stroke first then fill on top of it.
+ * Especially useful for Text objects.
+ * Default is false.
+ * @name Konva.Shape#fillAfterStrokeEnabled
+ * @method
+ * @param {Boolean} fillAfterStrokeEnabled
+ * @returns {Boolean}
+ * @example
+ * // get stroke width
+ * var fillAfterStrokeEnabled = shape.fillAfterStrokeEnabled();
+ *
+ * // set stroke width
+ * shape.fillAfterStrokeEnabled(true);
  */
 
 Factory.addGetterSetter(

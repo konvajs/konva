@@ -39,7 +39,7 @@ export class Path extends Shape<PathConfig> {
     for (var i = 0; i < this.dataArray.length; ++i) {
       this.pathLength += this.dataArray[i].pathLength;
     }
-    this.on('dataChange.konva', function() {
+    this.on('dataChange.konva', function () {
       this.dataArray = Path.parsePathData(this.data());
       this.pathLength = 0;
       for (var i = 0; i < this.dataArray.length; ++i) {
@@ -108,7 +108,7 @@ export class Path extends Shape<PathConfig> {
   }
   getSelfRect() {
     var points = [];
-    this.dataArray.forEach(function(data) {
+    this.dataArray.forEach(function (data) {
       if (data.command === 'A') {
         // Approximates by breaking curve into line segments
         var start = data.points[4];
@@ -192,7 +192,7 @@ export class Path extends Shape<PathConfig> {
       x: Math.round(minX),
       y: Math.round(minY),
       width: Math.round(maxX - minX),
-      height: Math.round(maxY - minY)
+      height: Math.round(maxY - minY),
     };
   }
   /**
@@ -233,7 +233,7 @@ export class Path extends Shape<PathConfig> {
       point = this.dataArray[i - 1].points.slice(-2);
       return {
         x: point[0],
-        y: point[1]
+        y: point[1],
       };
     }
 
@@ -241,7 +241,7 @@ export class Path extends Shape<PathConfig> {
       point = this.dataArray[i].points.slice(0, 2);
       return {
         x: point[0],
-        y: point[1]
+        y: point[1],
       };
     }
 
@@ -312,20 +312,23 @@ export class Path extends Shape<PathConfig> {
       // vertical line
       pt = {
         x: fromX,
-        y: fromY + rise
+        y: fromY + rise,
       };
     } else if ((fromY - P1y) / (fromX - P1x + 0.00000001) === m) {
       pt = {
         x: fromX + run,
-        y: fromY + rise
+        y: fromY + rise,
       };
     } else {
       var ix, iy;
 
       var len = this.getLineLength(P1x, P1y, P2x, P2y);
-      if (len < 0.00000001) {
-        return undefined;
-      }
+      // if (len < 0.00000001) {
+      //   return {
+      //     x: P1x,
+      //     y: P1y,
+      //   };
+      // }
       var u = (fromX - P1x) * (P2x - P1x) + (fromY - P1y) * (P2y - P1y);
       u = u / (len * len);
       ix = P1x + u * (P2x - P1x);
@@ -340,7 +343,7 @@ export class Path extends Shape<PathConfig> {
       rise = m * run;
       pt = {
         x: ix + run,
-        y: iy + rise
+        y: iy + rise,
       };
     }
 
@@ -365,7 +368,7 @@ export class Path extends Shape<PathConfig> {
 
     return {
       x: x,
-      y: y
+      y: y,
     };
   }
   static getPointOnQuadraticBezier(pct, P1x, P1y, P2x, P2y, P3x, P3y) {
@@ -383,7 +386,7 @@ export class Path extends Shape<PathConfig> {
 
     return {
       x: x,
-      y: y
+      y: y,
     };
   }
   static getPointOnEllipticalArc(cx, cy, rx, ry, theta, psi) {
@@ -391,11 +394,11 @@ export class Path extends Shape<PathConfig> {
       sinPsi = Math.sin(psi);
     var pt = {
       x: rx * Math.cos(theta),
-      y: ry * Math.sin(theta)
+      y: ry * Math.sin(theta),
     };
     return {
       x: cx + (pt.x * cosPsi - pt.y * sinPsi),
-      y: cy + (pt.x * sinPsi + pt.y * cosPsi)
+      y: cy + (pt.x * sinPsi + pt.y * cosPsi),
     };
   }
   /*
@@ -456,7 +459,7 @@ export class Path extends Shape<PathConfig> {
       's',
       'S',
       'a',
-      'A'
+      'A',
     ];
     // convert white spaces to commas
     cs = cs.replace(new RegExp(' ', 'g'), ',');
@@ -715,9 +718,9 @@ export class Path extends Shape<PathConfig> {
           points: points,
           start: {
             x: startX,
-            y: startY
+            y: startY,
           },
-          pathLength: this.calcLength(startX, startY, cmd || c, points)
+          pathLength: this.calcLength(startX, startY, cmd || c, points),
         });
       }
 
@@ -726,7 +729,7 @@ export class Path extends Shape<PathConfig> {
           command: 'z',
           points: [],
           start: undefined,
-          pathLength: 0
+          pathLength: 0,
         });
       }
     }
@@ -906,13 +909,13 @@ export class Path extends Shape<PathConfig> {
     var cx = (x1 + x2) / 2.0 + Math.cos(psi) * cxp - Math.sin(psi) * cyp;
     var cy = (y1 + y2) / 2.0 + Math.sin(psi) * cxp + Math.cos(psi) * cyp;
 
-    var vMag = function(v) {
+    var vMag = function (v) {
       return Math.sqrt(v[0] * v[0] + v[1] * v[1]);
     };
-    var vRatio = function(u, v) {
+    var vRatio = function (u, v) {
       return (u[0] * v[0] + u[1] * v[1]) / (vMag(u) * vMag(v));
     };
-    var vAngle = function(u, v) {
+    var vAngle = function (u, v) {
       return (u[0] * v[1] < u[1] * v[0] ? -1 : 1) * Math.acos(vRatio(u, v));
     };
     var theta = vAngle([1, 0], [(xp - cxp) / rx, (yp - cyp) / ry]);

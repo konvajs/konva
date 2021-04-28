@@ -19,6 +19,8 @@ export class Collection<Child extends Node> {
   [index: number]: Child;
 
   // @ts-ignore
+  [Symbol.iterator](): Iterator<Child>;
+  // @ts-ignore
   length: number;
   // @ts-ignore
   each: (f: (child: Child, index: number) => void) => void;
@@ -564,7 +566,7 @@ export const Util = {
   _isPlainObject(obj: any) {
     return !!obj && obj.constructor === Object;
   },
-  _isArray(obj: any) {
+  _isArray(obj: any): obj is Array<any> {
     return Object.prototype.toString.call(obj) === OBJECT_ARRAY;
   },
   _isNumber(obj: any): obj is number {
@@ -597,7 +599,9 @@ export const Util = {
   },
   _sign(number: number) {
     if (number === 0) {
-      return 0;
+      // that is not what sign usually returns
+      // but that is what we need
+      return 1;
     }
     if (number > 0) {
       return 1;
@@ -662,7 +666,7 @@ export const Util = {
    */
   _urlToImage(url: string, callback: Function) {
     // if arg is a string, then it's a data url
-    var imageObj = new glob.Image();
+    var imageObj = Util.createImageElement();
     imageObj.onload = function () {
       callback(imageObj);
     };
@@ -984,6 +988,9 @@ export const Util = {
         p[n + 3],
         tension
       );
+      if (isNaN(cp[0])) {
+        continue;
+      }
       allPoints.push(cp[0]);
       allPoints.push(cp[1]);
       allPoints.push(p[n]);

@@ -364,17 +364,17 @@ suite('Layer', function () {
     layer.add(circle);
     stage.add(layer);
 
-    assert.equal(layer.hitGraphEnabled(), true);
+    assert.equal(layer.listening(), true);
     assert.equal(layer.shouldDrawHit(), true);
 
-    layer.disableHitGraph();
+    layer.listening(false);
 
-    assert.equal(layer.hitGraphEnabled(), false);
+    assert.equal(layer.listening(), false);
     assert.equal(layer.shouldDrawHit(), false);
 
-    layer.enableHitGraph();
+    layer.listening(true);
 
-    assert.equal(layer.hitGraphEnabled(), true);
+    assert.equal(layer.listening(), true);
     assert.equal(layer.shouldDrawHit(), true);
   });
 

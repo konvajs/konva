@@ -118,7 +118,7 @@ export interface NodeConfig {
   offsetY?: number;
   draggable?: boolean;
   dragDistance?: number;
-  dragBoundFunc?: (pos: Vector2d) => Vector2d;
+  dragBoundFunc?: (this: Node, pos: Vector2d) => Vector2d;
   preventDefault?: boolean;
   globalCompositeOperation?: globalCompositeOperationType;
   filters?: Array<Filter>;
@@ -126,6 +126,7 @@ export interface NodeConfig {
 
 // CONSTANTS
 var ABSOLUTE_OPACITY = 'absoluteOpacity',
+  ALL_LISTENERS = 'allEventListeners',
   ABSOLUTE_TRANSFORM = 'absoluteTransform',
   ABSOLUTE_SCALE = 'absoluteScale',
   CANVAS = 'canvas',
@@ -195,6 +196,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   } = {};
   attrs: any = {};
   index = 0;
+  _allEventListeners: null | Array<Function> = null;
   parent: Container<Node> | null = null;
   _cache: Map<string, any> = new Map<string, any>();
   _attachedDepsListeners: Map<string, boolean> = new Map<string, boolean>();
@@ -489,7 +491,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   abstract drawHit(canvas?: Canvas, top?: Node): void;
   /**
    * Return client rectangle {x, y, width, height} of node. This rectangle also include all styling (strokes, shadows, etc).
-   * The rectangle position is relative to parent container.
    * The purpose of the method is similar to getBoundingClientRect API of the DOM.
    * @method
    * @name Konva.Node#getClientRect
@@ -665,7 +666,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @method
    * @name Konva.Node#on
    * @param {String} evtStr e.g. 'click', 'mousedown touchstart', 'mousedown.foo touchstart.foo'
-   * @param {Function} handler The handler function is passed an event object
+   * @param {Function} handler The handler function. The first argument of that function is event object. Event object has `target` as main target of the event, `currentTarget` as current node listener and `evt` as native browser event.
    * @returns {Konva.Node}
    * @example
    * // add click listener
@@ -720,6 +721,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     evtStr: K,
     handler: KonvaEventListener<this, NodeEventMap[K]>
   ) {
+    this._cache && this._cache.delete(ALL_LISTENERS);
+
     if (arguments.length === 3) {
       return this._delegate.apply(this, arguments);
     }
@@ -785,6 +788,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       parts,
       baseEvent,
       name;
+
+    this._cache && this._cache.delete(ALL_LISTENERS);
 
     if (!evtStr) {
       // remove all events
@@ -1045,7 +1050,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       return true;
     }
   }
-  shouldDrawHit(top?: Node) {
+  shouldDrawHit(top?: Node, skipDragCheck = false) {
     if (top) {
       return this._isVisible(top) && this._isListening(top);
     }
@@ -1062,7 +1067,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       }
     });
 
-    var dragSkip = !Konva.hitOnDragEnabled && layerUnderDrag;
+    var dragSkip = !skipDragCheck && !Konva.hitOnDragEnabled && layerUnderDrag;
     return this.isListening() && this.isVisible() && !dragSkip;
   }
 
@@ -1178,6 +1183,21 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       y: this.y(),
     };
   }
+  /**
+   * get absolute position of a node. That function can be used to calculate absolute position, but relative to any ancestor
+   * @method
+   * @name Konva.Node#getAbsolutePosition
+   * @param {Object} Ancestor optional ancestor node
+   * @returns {Konva.Node}
+   * @example
+   *
+   * // returns absolute position relative to top-left corner of canvas
+   * node.getAbsolutePosition();
+   *
+   * // calculate absolute position of node, inside stage
+   * // so stage transforms are ignored
+   * node.getAbsolutePosition(stage)
+   */
   getAbsolutePosition(top?) {
     let haveCachedParent = false;
     let parent = this.parent;
@@ -1774,7 +1794,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#getAbsoluteRotation
    * @returns {Number}
    * @example
-   * // get absolute scale x
+   * // get absolute rotation
    * var rotation = node.getAbsoluteRotation();
    */
   getAbsoluteRotation() {
@@ -2275,37 +2295,48 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
   }
 
-  _getListeners(eventType) {
-    let totalEvents = [];
-    let obj;
-    while (true) {
-      obj = obj ? Object.getPrototypeOf(obj) : this;
-      if (!obj) {
-        break;
+  _getProtoListeners(eventType) {
+    let listeners = this._cache.get(ALL_LISTENERS);
+    // if no cache for listeners, we need to pre calculate it
+    if (!listeners) {
+      listeners = {};
+      let obj = Object.getPrototypeOf(this);
+      while (obj) {
+        if (!obj.eventListeners) {
+          obj = Object.getPrototypeOf(obj);
+          continue;
+        }
+        for (var event in obj.eventListeners) {
+          const newEvents = obj.eventListeners[event];
+          const oldEvents = listeners[event] || [];
+
+          listeners[event] = newEvents.concat(oldEvents);
+        }
+        obj = Object.getPrototypeOf(obj);
       }
-      if (!obj.eventListeners) {
-        continue;
-      }
-      const events = obj.eventListeners[eventType];
-      if (!events) {
-        continue;
-      }
-      totalEvents = events.concat(totalEvents);
-      obj = Object.getPrototypeOf(obj);
+      this._cache.set(ALL_LISTENERS, listeners);
     }
-    return totalEvents;
+
+    return listeners[eventType];
   }
   _fire(eventType, evt) {
-    var events = this._getListeners(eventType),
-      i;
+    evt = evt || {};
+    evt.currentTarget = this;
+    evt.type = eventType;
 
-    if (events.length) {
-      evt = evt || {};
-      evt.currentTarget = this;
-      evt.type = eventType;
+    const topListeners = this._getProtoListeners(eventType);
+    if (topListeners) {
+      for (var i = 0; i < topListeners.length; i++) {
+        topListeners[i].handler.call(this, evt);
+      }
+    }
 
-      for (i = 0; i < events.length; i++) {
-        events[i].handler.call(this, evt);
+    // it is important to iterate over self listeners without cache
+    // because events can be added/removed while firing
+    const selfListeners = this.eventListeners[eventType];
+    if (selfListeners) {
+      for (var i = 0; i < selfListeners.length; i++) {
+        selfListeners[i].handler.call(this, evt);
       }
     }
   }
@@ -2347,7 +2378,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @method
    * @name Konva.Node#startDrag
    */
-  startDrag(evt?: any) {
+  startDrag(evt?: any, bubbleEvent = true) {
     if (!DD._dragElements.has(this._id)) {
       this._createDragElement(evt);
     }
@@ -2361,7 +2392,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         target: this,
         evt: evt && evt.evt,
       },
-      true
+      bubbleEvent
     );
   }
 
@@ -2517,7 +2548,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   threshold: GetSet<number, this>;
   value: GetSet<number, this>;
 
-  dragBoundFunc: GetSet<(pos: Vector2d) => Vector2d, this>;
+  dragBoundFunc: GetSet<(this: Node, pos: Vector2d) => Vector2d, this>;
   draggable: GetSet<boolean, this>;
   dragDistance: GetSet<number, this>;
   embossBlend: GetSet<boolean, this>;
@@ -2745,7 +2776,7 @@ addGetterSetter(
 );
 
 /**
- * get/set globalCompositeOperation of a shape
+ * get/set globalCompositeOperation of a node. globalCompositeOperation DOESN'T affect hit graph of nodes. So they are still trigger to events as they have default "source-over" globalCompositeOperation.
  * @name Konva.Node#globalCompositeOperation
  * @method
  * @param {String} type
@@ -2778,7 +2809,7 @@ addGetterSetter(Node, 'opacity', 1, getNumberValidator());
 addGetterSetter(Node, 'name', '', getStringValidator());
 
 /**
- * get/set name
+ * get/set name.
  * @name Konva.Node#name
  * @method
  * @param {String} name
@@ -3149,8 +3180,8 @@ addGetterSetter(Node, 'transformsEnabled', 'all', getStringValidator());
  * @example
  * // get node size
  * var size = node.size();
- * var x = size.x;
- * var y = size.y;
+ * var width = size.width;
+ * var height = size.height;
  *
  * // set size
  * node.size({

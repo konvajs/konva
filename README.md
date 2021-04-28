@@ -23,7 +23,7 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
 # Quick Look
 
 ```html
-<script src="https://unpkg.com/konva@3.1.0/konva.js"></script>
+<script src="https://unpkg.com/konva@7.2.5/konva.min.js"></script>
 <div id="container"></div>
 <script>
     var stage = new Konva.Stage({
@@ -65,7 +65,7 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
 
 Konva works in all modern mobile and desktop browsers. A browser need to be capable to run javascript code from ES2015 spec. For older browsers you may need polyfills for missing functions.
 
-At the current moment `Konva` doesn't work in IE11 directly. To make it work you just need to provide some polyfills such as `Array.prototype.find`, `String.prototype.trimLeft` and `String.prototype.trimRight`.
+At the current moment `Konva` doesn't work in IE11 directly. To make it work you just need to provide some polyfills such as `Array.prototype.find`, `String.prototype.trimLeft`, `String.prototype.trimRight`, `Array.from`.
 
 # Loading and installing Konva
 
@@ -74,10 +74,10 @@ Konva supports UMD loading. So you can use all possible variants to load the fra
 ### 1 Load Konva via classical `<script>` tag:
 
 ```html
-<script src="https://unpkg.com/konva@^4.0.3/konva.js"></script>
+<script src="https://unpkg.com/konva@7.2.5/konva.min.js"></script>
 ```
 
-You can also use a CDN: [https://unpkg.com/konva@^4.0.3/konva.js](https://unpkg.com/konva@^4.0.3/konva.js)
+You can also use a CDN: [https://unpkg.com/konva@7.2.5/konva.min.js](https://unpkg.com/konva@7.2.5/konva.min.js)
 
 ### 2 Install with npm:
 
