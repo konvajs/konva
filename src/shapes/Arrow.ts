@@ -12,6 +12,7 @@ export interface ArrowConfig extends LineConfig {
   pointerLength?: number;
   pointerWidth?: number;
   pointerAtBeginning?: boolean;
+  pointerAtEnding?: boolean;
 }
 
 /**
@@ -25,7 +26,8 @@ export interface ArrowConfig extends LineConfig {
  *   The default is 0
  * @param {Number} config.pointerLength Arrow pointer length. Default value is 10.
  * @param {Number} config.pointerWidth Arrow pointer width. Default value is 10.
- * @param {Boolean} config.pointerAtBeginning Do we need to draw pointer on both sides?. Default false.
+ * @param {Boolean} config.pointerAtBeginning Do we need to draw pointer on beginning position?. Default false.
+ * @param {Boolean} config.pointerAtEnding Do we need to draw pointer on ending position?. Default true.
  * @@shapeParams
  * @@nodeParams
  * @example
@@ -64,15 +66,17 @@ export class Arrow extends Line<ArrowConfig> {
     var length = this.pointerLength();
     var width = this.pointerWidth();
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.translate(points[n - 2], points[n - 1]);
-    ctx.rotate(radians);
-    ctx.moveTo(0, 0);
-    ctx.lineTo(-length, width / 2);
-    ctx.lineTo(-length, -width / 2);
-    ctx.closePath();
-    ctx.restore();
+    if (this.pointerAtEnding()) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.translate(points[n - 2], points[n - 1]);
+      ctx.rotate(radians);
+      ctx.moveTo(0, 0);
+      ctx.lineTo(-length, width / 2);
+      ctx.lineTo(-length, -width / 2);
+      ctx.closePath();
+      ctx.restore();
+    }
 
     if (this.pointerAtBeginning()) {
       ctx.save();
@@ -125,6 +129,7 @@ export class Arrow extends Line<ArrowConfig> {
 
   pointerLength: GetSet<number, this>;
   pointerWidth: GetSet<number, this>;
+  pointerAtEnding: GetSet<boolean, this>;
   pointerAtBeginning: GetSet<boolean, this>;
 }
 
@@ -177,4 +182,19 @@ Factory.addGetterSetter(Arrow, 'pointerWidth', 10, getNumberValidator());
  */
 
 Factory.addGetterSetter(Arrow, 'pointerAtBeginning', false);
+/**
+ * get/set pointerAtEnding
+ * @name Konva.Arrow#pointerAtEnding
+ * @method
+ * @param {Number} Should pointer displayed at ending of arrow. The default is true.
+ * @returns {Boolean}
+ * @example
+ * // get value
+ * var pointerAtEnding = line.pointerAtEnding();
+ *
+ * // set value
+ * line.pointerAtEnding(false);
+ */
+
+Factory.addGetterSetter(Arrow, 'pointerAtEnding', true);
 Collection.mapMethods(Arrow);
