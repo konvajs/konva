@@ -1,4 +1,3 @@
-import { Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { Animation } from '../Animation';
@@ -367,5 +366,3 @@ Factory.backCompat(Sprite, {
   getIndex: 'getFrameIndex',
   setIndex: 'setFrameIndex',
 });
-
-Collection.mapMethods(Sprite);

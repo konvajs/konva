@@ -1,4 +1,4 @@
-import { Util, Collection } from './Util';
+import { Util } from './Util';
 import { Factory } from './Factory';
 import { Node, NodeConfig } from './Node';
 import {
@@ -55,7 +55,7 @@ export interface ShapeConfig extends NodeConfig {
   fillRadialGradientColorStops?: Array<number | string>;
   fillEnabled?: boolean;
   fillPriority?: string;
-  stroke?: string;
+  stroke?: string | CanvasGradient;
   strokeWidth?: number;
   fillAfterStrokeEnabled?: boolean;
   hitStrokeWidth?: number | string;
@@ -169,9 +169,9 @@ function _clearRadialGradientCache() {
  *   }
  *});
  */
-export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
-  Config
-> {
+export class Shape<
+  Config extends ShapeConfig = ShapeConfig
+> extends Node<Config> {
   _centroid: boolean;
   colorKey: string;
 
@@ -656,9 +656,8 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
       cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
     if (!this.colorKey) {
-      console.log(this);
       Util.warn(
-        'Looks like your canvas has a destroyed shape in it. Do not reuse shape after you destroyed it. See the shape in logs above. If you want to reuse shape you should call remove() instead of destroy()'
+        'Looks like your canvas has a destroyed shape in it. Do not reuse shape after you destroyed it. If you want to reuse shape you should call remove() instead of destroy()'
       );
     }
 
@@ -777,7 +776,7 @@ export class Shape<Config extends ShapeConfig = ShapeConfig> extends Node<
   fillLinearRadialEndPoint: GetSet<Vector2d, this>;
   fillLinearRadialEndPointX: GetSet<number, this>;
   fillLinearRadialEndPointY: GetSet<number, this>;
-  fillPatternImage: GetSet<HTMLImageElement, this>;
+  fillPatternImage: GetSet<HTMLImageElement | HTMLCanvasElement, this>;
   fillRadialGradientStartRadius: GetSet<number, this>;
   fillRadialGradientEndRadius: GetSet<number, this>;
   fillRadialGradientColorStops: GetSet<Array<number | string>, this>;
@@ -1996,5 +1995,3 @@ Factory.backCompat(Shape, {
   getDrawHitFunc: 'getHitFunc',
   setDrawHitFunc: 'setHitFunc',
 });
-
-Collection.mapMethods(Shape);

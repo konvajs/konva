@@ -1,4 +1,3 @@
-import { Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { getNumberValidator } from '../Validators';
@@ -122,5 +121,3 @@ Factory.addGetterSetter(Star, 'innerRadius', 0, getNumberValidator());
  */
 
 Factory.addGetterSetter(Star, 'outerRadius', 0, getNumberValidator());
-
-Collection.mapMethods(Star);

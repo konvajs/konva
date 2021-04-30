@@ -1,14 +1,14 @@
-var gulp = require('gulp');
-var rename = require('gulp-rename');
-var uglify = require('gulp-uglify-es').default;
-var replace = require('gulp-replace');
-var jsdoc = require('gulp-jsdoc3');
-var connect = require('gulp-connect');
-var jscpd = require('gulp-jscpd');
-var eslint = require('gulp-eslint');
-var gutil = require('gulp-util');
+import gulp from 'gulp';
+import rename from 'gulp-rename';
+import uglify from 'gulp-uglify-es';
+import replace from 'gulp-replace';
+import jsdoc from 'gulp-jsdoc3';
+import connect from 'gulp-connect';
+import jscpd from 'gulp-jscpd';
+import eslint from 'gulp-eslint';
+import gutil from 'gulp-util';
 
-var fs = require('fs');
+import fs from 'fs';
 var NodeParams = fs
   .readFileSync('./resources/doc-includes/NodeParams.txt')
   .toString();
@@ -19,7 +19,7 @@ var ShapeParams = fs
   .readFileSync('./resources/doc-includes/ShapeParams.txt')
   .toString();
 
-var conf = require('./package.json');
+const conf = JSON.parse(fs.readFileSync('./package.json'));
 
 function build() {
   return gulp
@@ -44,7 +44,9 @@ gulp.task('pre-build', function () {
   return build()
     .pipe(rename('konva.js'))
     .pipe(gulp.dest('./'))
-    .pipe(uglify({ output: { comments: /^!|@preserve|@license|@cc_on/i } }))
+    .pipe(
+      uglify.default({ output: { comments: /^!|@preserve|@license|@cc_on/i } })
+    )
     .on('error', function (err) {
       gutil.log(gutil.colors.red('[Error]'), err.toString());
     })

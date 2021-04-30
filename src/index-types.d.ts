@@ -28,6 +28,7 @@ import { Solarize } from './filters/Solarize';
 import { Threshold } from './filters/Threshold';
 
 declare namespace Konva {
+  export let enableTrace: number;
   export let pixelRatio: number;
   export let dragDistance: number;
   export let angleDeg: boolean;
@@ -43,9 +44,9 @@ declare namespace Konva {
   export type Node = import('./Node').Node;
   export type NodeConfig = import('./Node').NodeConfig;
 
-  export type KonvaEventObject<EventType> = import('./Node').KonvaEventObject<
+  export type KonvaEventObject<
     EventType
-  >;
+  > = import('./Node').KonvaEventObject<EventType>;
 
   export type KonvaPointerEvent = import('./PointerEvents').KonvaPointerEvent;
 
@@ -58,8 +59,6 @@ declare namespace Konva {
   export type Container = import('./Container').Container<Node>;
   export type ContainerConfig = import('./Container').ContainerConfig;
 
-  export const Collection: typeof import('./Util').Collection;
-  export type Collection<Node> = import('./Util').Collection<Node>;
   export const Transform: typeof import('./Util').Transform;
   export type Transform = import('./Util').Transform;
 

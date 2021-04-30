@@ -1,5 +1,4 @@
-import { Util, Collection } from './Util';
-import { Container } from './Container';
+import { Util } from './Util';
 import { Layer } from './Layer';
 import { _registerNode } from './Global';
 
@@ -28,5 +27,3 @@ export class FastLayer extends Layer {
 
 FastLayer.prototype.nodeType = 'FastLayer';
 _registerNode(FastLayer);
-
-Collection.mapMethods(FastLayer);

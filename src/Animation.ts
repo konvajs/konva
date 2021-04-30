@@ -1,15 +1,16 @@
 import { glob } from './Global';
 import { Layer } from './Layer';
 import { IFrame, AnimationFn } from './types';
+import { Util } from './Util';
 
-var now = (function(): () => number {
+var now = (function (): () => number {
   if (glob.performance && glob.performance.now) {
-    return function() {
+    return function () {
       return glob.performance.now();
     };
   }
 
-  return function() {
+  return function () {
     return new Date().getTime();
   };
 })();
@@ -42,11 +43,11 @@ export class Animation {
 
   layers: Layer[];
 
-  frame : IFrame = {
+  frame: IFrame = {
     time: 0,
     timeDiff: 0,
     lastTime: now(),
-    frameRate: 0
+    frameRate: 0,
   };
 
   constructor(func: AnimationFn, layers?) {
@@ -67,7 +68,7 @@ export class Animation {
       lays = [];
     } else if (layers.length > 0) {
       // if passing in an array of Layers
-      // NOTE: layers could be an array or Konva.Collection.  for simplicity, I'm just inspecting
+      // NOTE: layers could be an array.  for simplicity, I'm just inspecting
       // the length property to check for both cases
       lays = layers;
     } else {
@@ -242,7 +243,7 @@ export class Animation {
     var Anim = Animation;
     if (Anim.animations.length) {
       Anim._runFrames();
-      requestAnimationFrame(Anim._animationLoop);
+      Util.requestAnimFrame(Anim._animationLoop);
     } else {
       Anim.animRunning = false;
     }
@@ -250,7 +251,7 @@ export class Animation {
   static _handleAnimation() {
     if (!this.animRunning) {
       this.animRunning = true;
-      requestAnimationFrame(this._animationLoop);
+      Util.requestAnimFrame(this._animationLoop);
     }
   }
 }

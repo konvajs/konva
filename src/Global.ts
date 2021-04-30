@@ -24,7 +24,7 @@ function detectBrowser() {
   );
 }
 
-const _detectIE = function(ua) {
+const _detectIE = function (ua) {
   var msie = ua.indexOf('msie ');
   if (msie > 0) {
     // IE 10 or older => return version number
@@ -48,7 +48,7 @@ const _detectIE = function(ua) {
   return false;
 };
 
-export const _parseUA = function(userAgent) {
+export const _parseUA = function (userAgent) {
   var ua = userAgent.toLowerCase(),
     // jQuery UA regex
     match =
@@ -71,7 +71,7 @@ export const _parseUA = function(userAgent) {
     isIE: _detectIE(ua),
     // adding mobile flab
     mobile: mobile,
-    ieMobile: ieMobile // If this is true (i.e., WP8), then Konva touch events are executed instead of equivalent Konva mouse events
+    ieMobile: ieMobile, // If this is true (i.e., WP8), then Konva touch events are executed instead of equivalent Konva mouse events
   };
 };
 
@@ -90,13 +90,14 @@ export const Konva = {
   _global: glob,
   version: '@@version',
   isBrowser: detectBrowser(),
-  isUnminified: /param/.test(function(param) {}.toString()),
+  isUnminified: /param/.test(function (param) {}.toString()),
   dblClickWindow: 400,
   getAngle(angle) {
     return Konva.angleDeg ? angle * PI_OVER_180 : angle;
   },
   enableTrace: false,
   _pointerEventsEnabled: false,
+  autoDrawEnabled: false,
   /**
    * Should we enable hit detection while dragging? For performance reasons, by default it is false.
    * But on some rare cases you want to see hit graph and check intersections. Just set it to true.
@@ -137,7 +138,7 @@ export const Konva = {
    * // before any Konva code:
    * Konva.pixelRatio = 1;
    */
-  pixelRatio: undefined,
+  pixelRatio: (typeof window !== 'undefined' && window.devicePixelRatio) || 1,
 
   /**
    * Drag distance property. If you start to drag a node you may want to wait until pointer is moved to some distance from start point,
@@ -207,12 +208,14 @@ export const Konva = {
   _injectGlobal(Konva) {
     glob.Konva = Konva;
   },
-  _parseUA
+  _parseUA,
 };
 
 export const _NODES_REGISTRY = {};
 
-export const _registerNode = NodeClass => {
+export const _registerNode = (NodeClass) => {
   _NODES_REGISTRY[NodeClass.prototype.getClassName()] = NodeClass;
   Konva[NodeClass.prototype.getClassName()] = NodeClass;
 };
+
+Konva._injectGlobal(Konva);

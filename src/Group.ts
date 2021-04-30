@@ -1,4 +1,4 @@
-import { Util, Collection } from './Util';
+import { Util } from './Util';
 import { Container } from './Container';
 import { _registerNode } from './Global';
 import { Node } from './Node';
@@ -26,5 +26,3 @@ export class Group extends Container<Group | Shape> {
 
 Group.prototype.nodeType = 'Group';
 _registerNode(Group);
-
-Collection.mapMethods(Group);

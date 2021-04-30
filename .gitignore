@@ -1,4 +1,7 @@
 dist
+es
+.parcel-cache
+test-build
 documentation
 analysis
 node_modules

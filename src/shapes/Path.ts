@@ -1,4 +1,3 @@
-import { Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { _registerNode } from '../Global';
@@ -6,7 +5,7 @@ import { _registerNode } from '../Global';
 import { GetSet } from '../types';
 
 export interface PathConfig extends ShapeConfig {
-  data: string;
+  data?: string;
 }
 /**
  * Path constructor.
@@ -960,5 +959,3 @@ _registerNode(Path);
  * path.data('M200,100h100v50z');
  */
 Factory.addGetterSetter(Path, 'data');
-
-Collection.mapMethods(Path);

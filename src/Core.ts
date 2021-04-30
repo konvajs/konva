@@ -1,8 +1,5 @@
 // enter file of limited Konva version with only core functions
+export { Konva } from './_CoreInternals';
+import { Konva } from './_CoreInternals';
 
-var Konva = require('./_CoreInternals').Konva;
-// add Konva to global variable
-Konva._injectGlobal(Konva);
-exports['default'] = Konva;
-Konva.default = Konva;
-module.exports = exports['default'];
+export default Konva;

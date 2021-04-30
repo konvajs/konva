@@ -1,4 +1,3 @@
-import { Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { GetSet } from '../types';
@@ -127,5 +126,3 @@ Factory.addGetterSetter(RegularPolygon, 'radius', 0, getNumberValidator());
  * shape.sides(10);
  */
 Factory.addGetterSetter(RegularPolygon, 'sides', 0, getNumberValidator());
-
-Collection.mapMethods(RegularPolygon);

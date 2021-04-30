@@ -1,4 +1,3 @@
-import { Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { getNumberValidator } from '../Validators';
@@ -118,5 +117,3 @@ Factory.addGetterSetter(Ellipse, 'radiusY', 0, getNumberValidator());
  * // set radius y
  * ellipse.radiusY(200);
  */
-
-Collection.mapMethods(Ellipse);

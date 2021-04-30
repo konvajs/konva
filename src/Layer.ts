@@ -1,4 +1,4 @@
-import { Util, Collection } from './Util';
+import { Util } from './Util';
 import { Container, ContainerConfig } from './Container';
 import { Node } from './Node';
 import { Factory } from './Factory';
@@ -84,6 +84,14 @@ export class Layer extends Container<Group | Shape> {
     return this.canvas;
   }
   /**
+   * get native canvas element
+   * @method
+   * @name Konva.Layer#getCanvas
+   */
+  getCanvasElement() {
+    return this.canvas._canvas;
+  }
+  /**
    * get layer hit canvas
    * @method
    * @name Konva.Layer#getHitCanvas
@@ -127,16 +135,16 @@ export class Layer extends Container<Group | Shape> {
   setZIndex(index) {
     super.setZIndex(index);
     var stage = this.getStage();
-    if (stage) {
-      stage.content.removeChild(this.getCanvas()._canvas);
+    if (stage && stage.content) {
+      stage.content.removeChild(this.getCanvasElement());
 
       if (index < stage.children.length - 1) {
         stage.content.insertBefore(
-          this.getCanvas()._canvas,
+          this.getCanvasElement(),
           stage.children[index + 1].getCanvas()._canvas
         );
       } else {
-        stage.content.appendChild(this.getCanvas()._canvas);
+        stage.content.appendChild(this.getCanvasElement());
       }
     }
     return this;
@@ -144,9 +152,9 @@ export class Layer extends Container<Group | Shape> {
   moveToTop() {
     Node.prototype.moveToTop.call(this);
     var stage = this.getStage();
-    if (stage) {
-      stage.content.removeChild(this.getCanvas()._canvas);
-      stage.content.appendChild(this.getCanvas()._canvas);
+    if (stage && stage.content) {
+      stage.content.removeChild(this.getCanvasElement());
+      stage.content.appendChild(this.getCanvasElement());
     }
     return true;
   }
@@ -156,18 +164,18 @@ export class Layer extends Container<Group | Shape> {
       return false;
     }
     var stage = this.getStage();
-    if (!stage) {
+    if (!stage || !stage.content) {
       return false;
     }
-    stage.content.removeChild(this.getCanvas()._canvas);
+    stage.content.removeChild(this.getCanvasElement());
 
     if (this.index < stage.children.length - 1) {
       stage.content.insertBefore(
-        this.getCanvas()._canvas,
+        this.getCanvasElement(),
         stage.children[this.index + 1].getCanvas()._canvas
       );
     } else {
-      stage.content.appendChild(this.getCanvas()._canvas);
+      stage.content.appendChild(this.getCanvasElement());
     }
     return true;
   }
@@ -177,11 +185,13 @@ export class Layer extends Container<Group | Shape> {
       var stage = this.getStage();
       if (stage) {
         var children = stage.children;
-        stage.content.removeChild(this.getCanvas()._canvas);
-        stage.content.insertBefore(
-          this.getCanvas()._canvas,
-          children[this.index + 1].getCanvas()._canvas
-        );
+        if (stage.content) {
+          stage.content.removeChild(this.getCanvasElement());
+          stage.content.insertBefore(
+            this.getCanvasElement(),
+            children[this.index + 1].getCanvas()._canvas
+          );
+        }
       }
       return true;
     }
@@ -193,11 +203,13 @@ export class Layer extends Container<Group | Shape> {
       var stage = this.getStage();
       if (stage) {
         var children = stage.children;
-        stage.content.removeChild(this.getCanvas()._canvas);
-        stage.content.insertBefore(
-          this.getCanvas()._canvas,
-          children[1].getCanvas()._canvas
-        );
+        if (stage.content) {
+          stage.content.removeChild(this.getCanvasElement());
+          stage.content.insertBefore(
+            this.getCanvasElement(),
+            children[1].getCanvas()._canvas
+          );
+        }
       }
       return true;
     }
@@ -207,7 +219,7 @@ export class Layer extends Container<Group | Shape> {
     return this;
   }
   remove() {
-    var _canvas = this.getCanvas()._canvas;
+    var _canvas = this.getCanvasElement();
 
     Node.prototype.remove.call(this);
 
@@ -394,7 +406,7 @@ export class Layer extends Container<Group | Shape> {
     // empty pixel
     return {};
   }
-  drawScene(can, top) {
+  drawScene(can?: SceneCanvas, top?: Node) {
     var layer = this.getLayer(),
       canvas = can || (layer && layer.getCanvas());
 
@@ -414,7 +426,7 @@ export class Layer extends Container<Group | Shape> {
 
     return this;
   }
-  drawHit(can, top) {
+  drawHit(can?: HitCanvas, top?: Node) {
     var layer = this.getLayer(),
       canvas = can || (layer && layer.hitCanvas);
 
@@ -466,7 +478,7 @@ export class Layer extends Container<Group | Shape> {
    * @method
    */
   toggleHitCanvas() {
-    if (!this.parent) {
+    if (!this.parent || !this.parent['content']) {
       return;
     }
     var parent = this.parent as any;
@@ -543,5 +555,3 @@ Factory.addGetterSetter(Layer, 'hitGraphEnabled', true, getBooleanValidator());
  * // enable hit graph
  * layer.hitGraphEnabled(true);
  */
-
-Collection.mapMethods(Layer);

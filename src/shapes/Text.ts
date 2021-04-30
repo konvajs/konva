@@ -1,4 +1,4 @@
-import { Util, Collection } from '../Util';
+import { Util } from '../Util';
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { Konva } from '../Global';
@@ -850,5 +850,3 @@ Factory.addGetterSetter(Text, 'text', '', getStringValidator());
  */
 
 Factory.addGetterSetter(Text, 'textDecoration', '');
-
-Collection.mapMethods(Text);

@@ -1,110 +1,5 @@
-import { glob, Konva } from './Global';
-import { Node } from './Node';
+import { Konva } from './Global';
 import { IRect, RGB, RGBA, Vector2d } from './types';
-
-/**
- * Collection constructor. Collection extends Array.
- * This class is used in conjunction with {@link Konva.Container#find}
- * The good thing about collection is that it has ALL methods of all Konva nodes. Take a look into examples.
- * @constructor
- * @memberof Konva
- * @example
- *
- * // find all rectangles and return them as Collection
- * const shapes = layer.find('Rect');
- * // fill all rectangles with a single function
- * shapes.fill('red');
- */
-export class Collection<Child extends Node> {
-  [index: number]: Child;
-
-  // @ts-ignore
-  [Symbol.iterator](): Iterator<Child>;
-  // @ts-ignore
-  length: number;
-  // @ts-ignore
-  each: (f: (child: Child, index: number) => void) => void;
-  // @ts-ignore
-  toArray: () => Array<Child>;
-  // @ts-ignore
-  push: (item: Child) => void;
-  // @ts-ignore
-  unshift: (item: Child) => void;
-  // @ts-ignore
-  splice: (start: number, length: number, replace?: any) => void;
-
-  /**
-   * convert array into a collection
-   * @method
-   * @memberof Konva.Collection
-   * @param {Array} arr
-   */
-  static toCollection<ChildNode extends Node = Node>(arr: Array<ChildNode>) {
-    var collection = new Collection<ChildNode>(),
-      len = arr.length,
-      n;
-
-    for (n = 0; n < len; n++) {
-      collection.push(arr[n]);
-    }
-    return collection;
-  }
-
-  static _mapMethod(methodName: any) {
-    Collection.prototype[methodName] = function () {
-      var len = this.length,
-        i;
-
-      var args = [].slice.call(arguments);
-      for (i = 0; i < len; i++) {
-        this[i][methodName].apply(this[i], args);
-      }
-
-      return this;
-    };
-  }
-
-  static mapMethods = function (constructor: Function) {
-    var prot = constructor.prototype;
-    for (var methodName in prot) {
-      Collection._mapMethod(methodName);
-    }
-  };
-}
-
-Collection.prototype = [] as any;
-/**
- * iterate through node array and run a function for each node.
- *  The node and index is passed into the function
- * @method
- * @name Konva.Collection#each
- * @param {Function} func
- * @example
- * // get all nodes with name foo inside layer, and set x to 10 for each
- * layer.find('.foo').each(function(shape, n) {
- *   shape.setX(10);
- * });
- */
-Collection.prototype.each = function (func) {
-  for (var n = 0; n < this.length; n++) {
-    func(this[n], n);
-  }
-};
-/**
- * convert collection into an array
- * @method
- * @name Konva.Collection#toArray
- */
-Collection.prototype.toArray = function () {
-  var arr = [],
-    len = this.length,
-    n;
-
-  for (n = 0; n < len; n++) {
-    arr.push(this[n]);
-  }
-  return arr;
-};
 
 /*
  * Last updated November 2011
@@ -612,8 +507,13 @@ export const Util = {
 
   requestAnimFrame(callback: Function) {
     animQueue.push(callback);
+    const req =
+      (typeof requestAnimationFrame !== 'undefined' && requestAnimationFrame) ||
+      function (f) {
+        setTimeout(f, 60);
+      };
     if (animQueue.length === 1) {
-      requestAnimationFrame(function () {
+      req(function () {
         const queue = animQueue;
         animQueue = [];
         queue.forEach(function (cb) {
@@ -653,7 +553,7 @@ export const Util = {
       if (util._isNumber(val)) {
         val = Math.round(val * 1000) / 1000;
       } else if (!util._isString(val)) {
-        val = val.toString();
+        val = val + '';
       }
 
       retArr.push(val);

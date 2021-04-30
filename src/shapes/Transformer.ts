@@ -1,4 +1,4 @@
-import { Util, Collection, Transform } from '../Util';
+import { Util, Transform } from '../Util';
 import { Factory } from '../Factory';
 import { Node } from '../Node';
 import { Shape } from '../Shape';
@@ -305,7 +305,7 @@ export class Transformer extends Group {
       };
       node.on(additionalEvents, onChange);
       node.on(TRANSFORM_CHANGE_STR, onChange);
-      node.on(`_clearTransformCache.${EVENTS_NAME}`, onChange);
+      node.on(`absoluteTransformChange.${EVENTS_NAME}`, onChange);
       node.on(`xChange.${EVENTS_NAME} yChange.${EVENTS_NAME}`, onChange);
       this._proxyDrag(node);
     });
@@ -544,11 +544,13 @@ export class Transformer extends Group {
     anchor.on('mouseenter', () => {
       var rad = Konva.getAngle(this.rotation());
       var cursor = getCursor(name, rad);
-      anchor.getStage().content.style.cursor = cursor;
+      anchor.getStage().content &&
+        (anchor.getStage().content.style.cursor = cursor);
       this._cursorChange = true;
     });
     anchor.on('mouseout', () => {
-      anchor.getStage().content.style.cursor = '';
+      anchor.getStage().content &&
+        (anchor.getStage().content.style.cursor = '');
       this._cursorChange = false;
     });
     this.add(anchor);
@@ -620,10 +622,12 @@ export class Transformer extends Group {
     this.sin = Math.abs(height / hypotenuse);
     this.cos = Math.abs(width / hypotenuse);
 
-    window.addEventListener('mousemove', this._handleMouseMove);
-    window.addEventListener('touchmove', this._handleMouseMove);
-    window.addEventListener('mouseup', this._handleMouseUp, true);
-    window.addEventListener('touchend', this._handleMouseUp, true);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('mousemove', this._handleMouseMove);
+      window.addEventListener('touchmove', this._handleMouseMove);
+      window.addEventListener('mouseup', this._handleMouseUp, true);
+      window.addEventListener('touchend', this._handleMouseUp, true);
+    }
 
     this._transforming = true;
     var ap = e.target.getAbsolutePosition();
@@ -872,10 +876,12 @@ export class Transformer extends Group {
   _removeEvents(e?) {
     if (this._transforming) {
       this._transforming = false;
-      window.removeEventListener('mousemove', this._handleMouseMove);
-      window.removeEventListener('touchmove', this._handleMouseMove);
-      window.removeEventListener('mouseup', this._handleMouseUp, true);
-      window.removeEventListener('touchend', this._handleMouseUp, true);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('mousemove', this._handleMouseMove);
+        window.removeEventListener('touchmove', this._handleMouseMove);
+        window.removeEventListener('mouseup', this._handleMouseUp, true);
+        window.removeEventListener('touchend', this._handleMouseUp, true);
+      }
       var node = this.getNode();
       this._fire('transformend', { evt: e, target: node });
 
@@ -887,7 +893,7 @@ export class Transformer extends Group {
       this._movingAnchorName = null;
     }
   }
-  _fitNodesInto(newAttrs, evt) {
+  _fitNodesInto(newAttrs, evt?) {
     var oldAttrs = this._getNodeRect();
 
     const minSize = 1;
@@ -1071,7 +1077,7 @@ export class Transformer extends Group {
     var padding = this.padding();
 
     var anchorSize = this.anchorSize();
-    this.find('._anchor').each((node) => {
+    this.find('._anchor').forEach((node) => {
       node.setAttrs({
         width: anchorSize,
         height: anchorSize,
@@ -1181,7 +1187,7 @@ export class Transformer extends Group {
   }
   destroy() {
     if (this.getStage() && this._cursorChange) {
-      this.getStage().content.style.cursor = '';
+      this.getStage().content && (this.getStage().content.style.cursor = '');
     }
     Group.prototype.destroy.call(this);
     this.detach();
@@ -1607,5 +1613,3 @@ Factory.backCompat(Transformer, {
   rotateHandlerOffset: 'rotateAnchorOffset',
   enabledHandlers: 'enabledAnchors',
 });
-
-Collection.mapMethods(Transformer);

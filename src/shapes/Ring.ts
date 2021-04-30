@@ -1,4 +1,3 @@
-import { Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { GetSet } from '../types';
@@ -93,5 +92,3 @@ Factory.addGetterSetter(Ring, 'innerRadius', 0, getNumberValidator());
  * ring.outerRadius(20);
  */
 Factory.addGetterSetter(Ring, 'outerRadius', 0, getNumberValidator());
-
-Collection.mapMethods(Ring);

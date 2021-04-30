@@ -1,4 +1,4 @@
-import { Util, Collection } from './Util';
+import { Util } from './Util';
 import { Factory } from './Factory';
 import { Container, ContainerConfig } from './Container';
 import { Konva } from './Global';
@@ -223,11 +223,12 @@ export class Stage extends Container<Layer> {
     }
     return this;
   }
-  clone(obj) {
+  clone(obj?) {
     if (!obj) {
       obj = {};
     }
-    obj.container = document.createElement('div');
+    obj.container =
+      typeof document !== 'undefined' && document.createElement('div');
     return Container.prototype.clone.call(this, obj);
   }
 
@@ -295,7 +296,7 @@ export class Stage extends Container<Layer> {
       _context.translate(-1 * config.x, -1 * config.y);
     }
 
-    layers.each(function (layer) {
+    layers.forEach(function (layer) {
       if (!layer.isVisible()) {
         return;
       }
@@ -326,18 +327,17 @@ export class Stage extends Container<Layer> {
    * // or if you interested in shape parent:
    * var group = stage.getIntersection({x: 50, y: 50}, 'Group');
    */
-  getIntersection(pos: Vector2d | null, selector?: string): Shape | null {
+  getIntersection(pos: Vector2d | null, selector?: string) {
     if (!pos) {
       return null;
     }
     var layers = this.children,
       len = layers.length,
       end = len - 1,
-      n,
-      shape;
+      n;
 
     for (n = end; n >= 0; n--) {
-      shape = layers[n].getIntersection(pos, selector);
+      const shape = layers[n].getIntersection(pos, selector);
       if (shape) {
         return shape;
       }
@@ -358,12 +358,12 @@ export class Stage extends Container<Layer> {
     this.bufferHitCanvas.setSize(width, height);
 
     // set layer dimensions
-    this.children.each((layer) => {
+    this.children.forEach((layer) => {
       layer.setSize({ width, height });
       layer.draw();
     });
   }
-  add(layer: Layer) {
+  add(layer: Layer, ...rest) {
     if (arguments.length > 1) {
       for (var i = 0; i < arguments.length; i++) {
         this.add(arguments[i]);
@@ -412,12 +412,12 @@ export class Stage extends Container<Layer> {
   }
 
   /**
-   * returns a {@link Konva.Collection} of layers
+   * returns an array of layers
    * @method
    * @name Konva.Stage#getLayers
    */
   getLayers() {
-    return this.getChildren();
+    return this.children;
   }
   _bindContentEvents() {
     if (!Konva.isBrowser) {
@@ -470,11 +470,10 @@ export class Stage extends Container<Layer> {
     }
     this.setPointersPositions(evt);
     var pointerId = Util._getFirstPointerId(evt);
-    var shape: Shape;
     var targetShape = this.targetShape?.getStage() ? this.targetShape : null;
     var eventsEnabled = !DD.isDragging || Konva.hitOnDragEnabled;
     if (eventsEnabled) {
-      shape = this.getIntersection(this.getPointerPosition());
+      const shape = this.getIntersection(this.getPointerPosition()) as Shape;
       if (shape && shape.isListening()) {
         var differentTarget = targetShape !== shape;
         if (eventsEnabled && differentTarget) {
@@ -542,7 +541,7 @@ export class Stage extends Container<Layer> {
     }
     this.setPointersPositions(evt);
     var pointerId = Util._getFirstPointerId(evt);
-    var shape = this.getIntersection(this.getPointerPosition());
+    var shape = this.getIntersection(this.getPointerPosition()) as Shape;
 
     DD.justDragged = false;
     Konva.listenClickTap = true;
@@ -576,7 +575,7 @@ export class Stage extends Container<Layer> {
     }
     this.setPointersPositions(evt);
     var pointerId = Util._getFirstPointerId(evt);
-    var shape = this.getIntersection(this.getPointerPosition()),
+    var shape = this.getIntersection(this.getPointerPosition()) as Shape,
       clickStartShape = this.clickStartShape,
       clickEndShape = this.clickEndShape,
       fireDblClick = false;
@@ -673,7 +672,7 @@ export class Stage extends Container<Layer> {
     this.setPointersPositions(evt);
     var triggeredOnShape = false;
     this._changedPointerPositions.forEach((pos) => {
-      var shape = this.getIntersection(pos);
+      var shape = this.getIntersection(pos) as Shape;
       Konva.listenClickTap = true;
       DD.justDragged = false;
       const hasShape = shape && shape.isListening();
@@ -775,7 +774,7 @@ export class Stage extends Container<Layer> {
     this._changedPointerPositions.forEach((pos) => {
       var shape =
         (PointerEvents.getCapturedShape(pos.id) as Shape) ||
-        this.getIntersection(pos);
+        (this.getIntersection(pos) as Shape);
 
       if (shape) {
         shape.releaseCapture(pos.id);
@@ -961,7 +960,7 @@ export class Stage extends Container<Layer> {
       // so we have to iterate
       this._pointerPositions = [];
       this._changedPointerPositions = [];
-      Collection.prototype.each.call(evt.touches, (touch: any) => {
+      Array.prototype.forEach.call(evt.touches, (touch: any) => {
         this._pointerPositions.push({
           id: touch.identifier,
           x: (touch.clientX - contentPosition.left) / contentPosition.scaleX,
@@ -969,7 +968,7 @@ export class Stage extends Container<Layer> {
         });
       });
 
-      Collection.prototype.each.call(
+      Array.prototype.forEach.call(
         evt.changedTouches || evt.touches,
         (touch: any) => {
           this._changedPointerPositions.push({
@@ -1070,7 +1069,7 @@ export class Stage extends Container<Layer> {
    * @return {Konva.Stage} this
    */
   batchDraw() {
-    this.children.each(function (layer) {
+    this.children.forEach(function (layer) {
       layer.batchDraw();
     });
     return this;

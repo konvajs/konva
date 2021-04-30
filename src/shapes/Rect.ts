@@ -1,4 +1,3 @@
-import { Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { _registerNode } from '../Global';
@@ -119,5 +118,3 @@ Factory.addGetterSetter(
   0,
   getNumberOrArrayOfNumbersValidator(4)
 );
-
-Collection.mapMethods(Rect);

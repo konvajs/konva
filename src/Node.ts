@@ -1,4 +1,4 @@
-import { Util, Collection, Transform } from './Util';
+import { Util, Transform } from './Util';
 import { Factory } from './Factory';
 import { SceneCanvas, HitCanvas, Canvas } from './Canvas';
 import { Konva, _NODES_REGISTRY } from './Global';
@@ -159,7 +159,7 @@ var ABSOLUTE_OPACITY = 'absoluteOpacity',
   SCALE_CHANGE_STR = ['scaleXChange.konva', 'scaleYChange.konva'].join(SPACE);
 
 // TODO: can we remove children from node?
-const emptyChildren: Collection<any> = new Collection();
+const emptyChildren = [];
 
 let idCounter = 1;
 
@@ -207,7 +207,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
   _filterUpToDate = false;
   _isUnderCache = false;
-  children = emptyChildren;
   nodeType!: string;
   className!: string;
 
@@ -288,19 +287,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   _clearSelfAndDescendantCache(attr?: string, forceEvent?: boolean) {
     this._clearCache(attr);
     // trigger clear cache, so transformer can use it
-    if (forceEvent && attr === ABSOLUTE_TRANSFORM) {
-      this.fire('_clearTransformCache');
-    }
-
-    // skip clearing if node is cached with canvas
-    // for performance reasons !!!
-    if (this.isCached()) {
-      return;
-    }
-    if (this.children) {
-      this.children.each(function (node) {
-        node._clearSelfAndDescendantCache(attr, true);
-      });
+    if (attr === ABSOLUTE_TRANSFORM) {
+      this.fire('absoluteTransformChange');
     }
   }
   /**
@@ -779,7 +767,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // remove listener by name
    * node.off('click.foo');
    */
-  off(evtStr: string, callback?: Function) {
+  off(evtStr?: string, callback?: Function) {
     var events = (evtStr || '').split(SPACE),
       len = events.length,
       n,
@@ -930,15 +918,15 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * get ancestors
    * @method
    * @name Konva.Node#getAncestors
-   * @returns {Konva.Collection}
+   * @returns {Array}
    * @example
-   * shape.getAncestors().each(function(node) {
+   * shape.getAncestors().forEach(function(node) {
    *   console.log(node.getId());
    * })
    */
   getAncestors() {
     var parent = this.getParent(),
-      ancestors = new Collection<Node>();
+      ancestors: Array<Node> = [];
 
     while (parent) {
       ancestors.push(parent);
@@ -1118,7 +1106,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         index++;
 
         if (child.nodeType !== SHAPE) {
-          nodes = nodes.concat(child.getChildren().toArray());
+          nodes = nodes.concat(child.getChildren().slice());
         }
 
         if (child._id === that._id) {
@@ -1589,7 +1577,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // get one of the parent group
    * var group = node.findAncestors('.mygroup');
    */
-  findAncestor(selector, includeSelf?, stopNode?) {
+  findAncestor(selector?: string, includeSelf?: boolean, stopNode?: Node) {
     return this.findAncestors(selector, includeSelf, stopNode)[0];
   }
   // is current node match passed selector?
@@ -1950,7 +1938,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @example
    * var canvas = node.toCanvas();
    */
-  toCanvas(config) {
+  toCanvas(config?) {
     return this._toKonvaCanvas(config)._canvas;
   }
   /**
@@ -2242,6 +2230,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
     if (this._shouldFireChangeEvents) {
       this._fireChangeEvent(key, oldVal, val);
+    }
+    if (Konva.autoDrawEnabled) {
+      const drawNode = this.getLayer() || this.getStage();
+      drawNode?.batchDraw();
     }
   }
   _setComponentAttr(key, component, val) {
@@ -3237,5 +3229,3 @@ Factory.backCompat(Node, {
   setRotationDeg: 'setRotation',
   getRotationDeg: 'getRotation',
 });
-
-Collection.mapMethods(Node);

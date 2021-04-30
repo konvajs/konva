@@ -1,9 +1,7 @@
-import { Util, Collection } from './Util';
+import { Util } from './Util';
 import { Factory } from './Factory';
 import { Node, NodeConfig } from './Node';
-import { DD } from './DragAndDrop';
 import { getNumberValidator } from './Validators';
-import { Konva } from './Global';
 
 import { GetSet, IRect } from './types';
 import { Shape } from './Shape';
@@ -31,14 +29,14 @@ export interface ContainerConfig extends NodeConfig {
 export abstract class Container<
   ChildType extends Node
 > extends Node<ContainerConfig> {
-  children = new Collection<ChildType>();
+  children: Array<ChildType> | undefined = [];
 
   /**
-   * returns a {@link Konva.Collection} of direct descendant nodes
+   * returns an array of direct descendant nodes
    * @method
    * @name Konva.Container#getChildren
    * @param {Function} [filterFunc] filter function
-   * @returns {Konva.Collection}
+   * @returns {Array}
    * @example
    * // get all children
    * var children = layer.getChildren();
@@ -50,11 +48,12 @@ export abstract class Container<
    */
   getChildren(filterFunc?: (item: Node) => boolean) {
     if (!filterFunc) {
-      return this.children;
+      return this.children || [];
     }
 
-    var results = new Collection();
-    this.children.each(function (child) {
+    const children = this.children || [];
+    var results: Array<ChildType> = [];
+    children.forEach(function (child) {
       if (filterFunc(child)) {
         results.push(child);
       }
@@ -77,15 +76,13 @@ export abstract class Container<
    * @name Konva.Container#removeChildren
    */
   removeChildren() {
-    var child;
-    for (var i = 0; i < this.children.length; i++) {
-      child = this.children[i];
+    this.getChildren().forEach((child) => {
       // reset parent to prevent many _setChildrenIndices calls
       child.parent = null;
       child.index = 0;
       child.remove();
-    }
-    this.children = new Collection();
+    });
+    this.children = [];
     return this;
   }
   /**
@@ -94,15 +91,13 @@ export abstract class Container<
    * @name Konva.Container#destroyChildren
    */
   destroyChildren() {
-    var child;
-    for (var i = 0; i < this.children.length; i++) {
-      child = this.children[i];
+    this.getChildren().forEach((child) => {
       // reset parent to prevent many _setChildrenIndices calls
       child.parent = null;
       child.index = 0;
       child.destroy();
-    }
-    this.children = new Collection();
+    });
+    this.children = [];
     return this;
   }
   abstract _validateAdd(node: Node): void;
@@ -130,12 +125,11 @@ export abstract class Container<
       child.moveTo(this);
       return this;
     }
-    var _children = this.children;
     this._validateAdd(child);
     child._clearCaches();
-    child.index = _children.length;
+    child.index = this.getChildren().length;
     child.parent = this;
-    _children.push(child);
+    this.getChildren().push(child);
     this._fire('add', {
       child: child,
     });
@@ -150,7 +144,7 @@ export abstract class Container<
     return this;
   }
   /**
-   * return a {@link Konva.Collection} of nodes that match the selector.
+   * return an array of nodes that match the selector.
    * You can provide a string with '#' for id selections and '.' for name selections.
    * Or a function that will return true/false when a node is passed through.  See example below.
    * With strings you can also select by type or class name. Pass multiple selectors
@@ -158,7 +152,7 @@ export abstract class Container<
    * @method
    * @name Konva.Container#find
    * @param {String | Function} selector
-   * @returns {Collection}
+   * @returns {Array}
    * @example
    *
    * Passing a string as a selector
@@ -189,17 +183,10 @@ export abstract class Container<
    *  return node.getType() === 'Node' && node.getAbsoluteOpacity() < 1;
    * });
    */
-  find<ChildNode extends Node = Node>(selector): Collection<ChildNode> {
+  find<ChildNode extends Node = Node>(selector): Array<ChildNode> {
     // protecting _generalFind to prevent user from accidentally adding
     // second argument and getting unexpected `findOne` result
     return this._generalFind<ChildNode>(selector, false);
-  }
-
-  get(selector) {
-    Util.warn(
-      'collection.get() method is deprecated. Please use collection.find() instead.'
-    );
-    return this.find(selector);
   }
   /**
    * return a first node from `find` method
@@ -240,12 +227,12 @@ export abstract class Container<
       return false;
     });
 
-    return Collection.toCollection<ChildNode>(retArr);
+    return retArr;
   }
   private _descendants(fn: (n: Node) => boolean) {
     let shouldStop = false;
-    for (var i = 0; i < this.children.length; i++) {
-      const child = this.children[i];
+    const children = this.getChildren();
+    for (const child of children) {
       shouldStop = fn(child);
       if (shouldStop) {
         return true;
@@ -266,12 +253,9 @@ export abstract class Container<
 
     obj.children = [];
 
-    var children = this.getChildren();
-    var len = children.length;
-    for (var n = 0; n < len; n++) {
-      var child = children[n];
+    this.getChildren().forEach((child) => {
       obj.children.push(child.toObject());
-    }
+    });
 
     return obj;
   }
@@ -297,10 +281,10 @@ export abstract class Container<
     // call super method
     var node = Node.prototype.clone.call(this, obj);
 
-    this.getChildren().each(function (no) {
+    this.getChildren().forEach(function (no) {
       node.add(no.clone());
     });
-    return node;
+    return node as this;
   }
   /**
    * get all shapes that intersect a point.  Note: because this method must clear a temporary
@@ -317,7 +301,7 @@ export abstract class Container<
   getAllIntersections(pos) {
     var arr = [];
 
-    this.find('Shape').each(function (shape: Shape) {
+    this.find('Shape').forEach(function (shape: Shape) {
       if (shape.isVisible() && shape.intersects(pos)) {
         arr.push(shape);
       }
@@ -325,8 +309,19 @@ export abstract class Container<
 
     return arr;
   }
+  _clearSelfAndDescendantCache(attr?: string, forceEvent?: boolean) {
+    super._clearSelfAndDescendantCache(attr, forceEvent);
+    // skip clearing if node is cached with canvas
+    // for performance reasons !!!
+    if (this.isCached()) {
+      return;
+    }
+    this.children?.forEach(function (node) {
+      node._clearSelfAndDescendantCache(attr, forceEvent);
+    });
+  }
   _setChildrenIndices() {
-    this.children.each(function (child, n) {
+    this.children?.forEach(function (child, n) {
       child.index = n;
     });
   }
@@ -412,7 +407,7 @@ export abstract class Container<
       context._applyGlobalCompositeOperation(this);
     }
 
-    this.children.each(function (child) {
+    this.children?.forEach(function (child) {
       child[drawMethod](canvas, top);
     });
     if (hasComposition) {
@@ -442,7 +437,7 @@ export abstract class Container<
       height: 0,
     };
     var that = this;
-    this.children.each(function (child) {
+    this.children?.forEach(function (child) {
       // skip invisible children
       if (!child.visible()) {
         return;
@@ -634,5 +629,3 @@ Factory.addGetterSetter(Container, 'clipFunc');
  *   ctx.rect(0, 0, 100, 100);
  * });
  */
-
-Collection.mapMethods(Container);

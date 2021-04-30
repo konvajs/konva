@@ -67,7 +67,9 @@ suite('Manual', function () {
     var velocity = 360; // 1 rev per second
 
     var anim = new Konva.Animation(function (frame) {
-      layer.find('Rect').rotate((velocity * frame.timeDiff) / 1000);
+      layer
+        .find('Rect')
+        .forEach((rect) => rect.rotate((velocity * frame.timeDiff) / 1000));
     }, layer);
 
     anim.start();

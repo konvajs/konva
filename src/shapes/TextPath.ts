@@ -1,4 +1,4 @@
-import { Util, Collection } from '../Util';
+import { Util } from '../Util';
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { Path } from './Path';
@@ -98,7 +98,7 @@ export class TextPath extends Shape<TextPathConfig> {
 
     // update text data for certain attr changes
     this.on(
-      'textChange.konva alignChange.konva letterSpacingChange.konva kerningFuncChange.konva',
+      'textChange.konva alignChange.konva letterSpacingChange.konva kerningFuncChange.konva fontSizeChange.konva',
       this._setTextData
     );
 
@@ -738,5 +738,3 @@ Factory.addGetterSetter(TextPath, 'textDecoration', null);
  * });
  */
 Factory.addGetterSetter(TextPath, 'kerningFunc', null);
-
-Collection.mapMethods(TextPath);

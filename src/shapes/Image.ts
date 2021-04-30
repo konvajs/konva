@@ -1,4 +1,4 @@
-import { Util, Collection } from '../Util';
+import { Util } from '../Util';
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { getNumberValidator } from '../Validators';
@@ -86,10 +86,10 @@ export class Image extends Shape<ImageConfig> {
     context.fillStrokeShape(this);
   }
   getWidth() {
-    return this.attrs.width ?? (this.image()?.width || 0);
+    return this.attrs.width ?? this.image()?.width;
   }
   getHeight() {
-    return this.attrs.height ?? (this.image()?.height || 0);
+    return this.attrs.height ?? this.image()?.height;
   }
 
   /**
@@ -225,5 +225,3 @@ Factory.addGetterSetter(Image, 'cropHeight', 0, getNumberValidator());
  * // set crop height
  * image.cropHeight(20);
  */
-
-Collection.mapMethods(Image);

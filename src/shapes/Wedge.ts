@@ -1,4 +1,3 @@
-import { Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { Konva } from '../Global';
@@ -124,7 +123,5 @@ Factory.addGetterSetter(Wedge, 'clockwise', false);
 Factory.backCompat(Wedge, {
   angleDeg: 'angle',
   getAngleDeg: 'getAngle',
-  setAngleDeg: 'setAngle'
+  setAngleDeg: 'setAngle',
 });
-
-Collection.mapMethods(Wedge);

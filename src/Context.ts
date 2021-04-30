@@ -152,7 +152,7 @@ export class Context {
     }
   }
 
-  getTrace(relaxed) {
+  getTrace(relaxed?, rounded?) {
     var traceArr = this.traceArr,
       len = traceArr.length,
       str = '',
@@ -175,6 +175,11 @@ export class Context {
           if (Util._isArray(args[0])) {
             str += OPEN_PAREN_BRACKET + args.join(COMMA) + CLOSE_BRACKET_PAREN;
           } else {
+            if (rounded) {
+              args = args.map((a) =>
+                typeof a === 'number' ? Math.floor(a) : a
+              );
+            }
             str += OPEN_PAREN + args.join(COMMA) + CLOSE_PAREN;
           }
         }
@@ -611,7 +616,6 @@ export class Context {
   _enableTrace() {
     var that = this,
       len = CONTEXT_METHODS.length,
-      _simplifyArray = Util._simplifyArray,
       origSetter = this.setAttr,
       n,
       args;
@@ -622,7 +626,7 @@ export class Context {
         ret;
 
       that[methodName] = function () {
-        args = _simplifyArray(Array.prototype.slice.call(arguments, 0));
+        args = Util._simplifyArray(Array.prototype.slice.call(arguments, 0));
         ret = origMethod.apply(that, arguments);
 
         that._trace({

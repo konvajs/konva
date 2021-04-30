@@ -1,4 +1,3 @@
-import { Collection } from '../Util';
 import { Factory } from '../Factory';
 import { Line, LineConfig } from './Line';
 import { GetSet } from '../types';
@@ -119,7 +118,7 @@ export class Arrow extends Line<ArrowConfig> {
       x: lineRect.x - offset,
       y: lineRect.y - offset,
       width: lineRect.width + offset * 2,
-      height: lineRect.height + offset * 2
+      height: lineRect.height + offset * 2,
     };
   }
 
@@ -177,4 +176,3 @@ Factory.addGetterSetter(Arrow, 'pointerWidth', 10, getNumberValidator());
  */
 
 Factory.addGetterSetter(Arrow, 'pointerAtBeginning', false);
-Collection.mapMethods(Arrow);

@@ -1,4 +1,4 @@
-import { Util, Collection } from '../Util';
+import { Util } from '../Util';
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { getNumberValidator, getNumberArrayValidator } from '../Validators';
@@ -8,7 +8,7 @@ import { GetSet } from '../types';
 import { Context } from '../Context';
 
 export interface LineConfig extends ShapeConfig {
-  points: number[];
+  points?: number[];
   tension?: number;
   closed?: boolean;
   bezier?: boolean;
@@ -38,14 +38,14 @@ export interface LineConfig extends ShapeConfig {
  * });
  */
 
-export class Line<Config extends LineConfig = LineConfig> extends Shape<
-  Config
-> {
+export class Line<
+  Config extends LineConfig = LineConfig
+> extends Shape<Config> {
   constructor(config?: Config) {
     super(config);
     this.on(
       'pointsChange.konva tensionChange.konva closedChange.konva bezierChange.konva',
-      function() {
+      function () {
         this._clearCache('tensionPoints');
       }
     );
@@ -172,7 +172,7 @@ export class Line<Config extends LineConfig = LineConfig> extends Shape<
           firstControlPoints[0],
           firstControlPoints[1],
           p[0],
-          p[1]
+          p[1],
         ]);
 
     return tp;
@@ -191,7 +191,7 @@ export class Line<Config extends LineConfig = LineConfig> extends Shape<
         x: points[0] || 0,
         y: points[1] || 0,
         width: 0,
-        height: 0
+        height: 0,
       };
     }
     if (this.tension() !== 0) {
@@ -200,7 +200,7 @@ export class Line<Config extends LineConfig = LineConfig> extends Shape<
         points[1],
         ...this._getTensionPoints(),
         points[points.length - 2],
-        points[points.length - 1]
+        points[points.length - 1],
       ];
     } else {
       points = this.points();
@@ -222,7 +222,7 @@ export class Line<Config extends LineConfig = LineConfig> extends Shape<
       x: minX,
       y: minY,
       width: maxX - minX,
-      height: maxY - minY
+      height: maxY - minY,
     };
   }
 
@@ -305,5 +305,3 @@ Factory.addGetterSetter(Line, 'points', [], getNumberArrayValidator());
  * // push a new point
  * line.points(line.points().concat([70, 80]));
  */
-
-Collection.mapMethods(Line);

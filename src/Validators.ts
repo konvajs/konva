@@ -56,10 +56,12 @@ export function getNumberOrArrayOfNumbersValidator(noOfElements: number) {
       let isValidArray = Util._isArray(val) && val.length == noOfElements;
       if (!isNumber && !isValidArray) {
         Util.warn(
-            _formatValue(val) +
+          _formatValue(val) +
             ' is a not valid value for "' +
             attr +
-            '" attribute. The value should be a number or Array<number>(' + noOfElements + ')'
+            '" attribute. The value should be a number or Array<number>(' +
+            noOfElements +
+            ')'
         );
       }
       return val;
@@ -107,7 +109,8 @@ export function getStringOrGradientValidator() {
     return function (val: any, attr: string) {
       const isString = Util._isString(val);
       const isGradient =
-        Object.prototype.toString.call(val) === '[object CanvasGradient]';
+        Object.prototype.toString.call(val) === '[object CanvasGradient]' ||
+        (val && val.addColorStop);
       if (!(isString || isGradient)) {
         Util.warn(
           _formatValue(val) +
