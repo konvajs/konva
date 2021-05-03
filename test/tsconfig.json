@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "strict": true
+    "outDir": "lib",
+    "target": "ES2015",
+    "noEmitOnError": true,
+    "moduleResolution": "node",
+    "lib": ["ES2015", "dom"]
   },
-  "files": ["../types/index-types.d.ts"]
+  "include": ["../src/*.ts"]
 }

@@ -5,7 +5,7 @@ import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
 export interface CircleConfig extends ShapeConfig {
-  radius: number;
+  radius?: number;
 }
 
 /**

@@ -169,6 +169,7 @@ type NodeEventMap = GlobalEventHandlersEventMap & {
 };
 
 export interface KonvaEventObject<EventType> {
+  type: string;
   target: Shape | Stage;
   evt: EventType;
   currentTarget: Node;

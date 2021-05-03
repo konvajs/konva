@@ -11,7 +11,6 @@ docs
 homedocs
 jsdoc-template
 api
-test/sandbox.html
 package-lock.json
 lib
 src_old

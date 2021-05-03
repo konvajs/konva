@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>KonvaJS Sandbox</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=1.0, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+    <!-- <script src="https://cdn.rawgit.com/hammerjs/touchemulator/master/touch-emulator.js"></script> -->
+    <script>
+      TouchEmulator();
+    </script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.7/hammer.js"></script> -->
+    <!-- <script src="https://cdn.rawgit.com/hammerjs/touchemulator/master/touch-emulator.js"></script> -->
+    <!-- <script src="./hammer.js"></script> -->
+  </head>
+
+  <body>
+    Some text
+    <div id="container"></div>
+    <script src="../konva.js"></script>
+    <script>
+      // by default Konva prevent some events when node is dragging
+      // it improve the performance and work well for 95% of cases
+      // we need to enable all events on Konva, even when we are dragging a node
+      // so it triggers touchmove correctly
+      Konva.hitOnDragEnabled = true;
+
+      var width = window.innerWidth;
+      var height = window.innerHeight;
+
+      var stage = new Konva.Stage({
+        container: 'container',
+        width: width,
+        height: height,
+        draggable: true,
+      });
+
+      var layer = new Konva.Layer();
+      stage.add(layer);
+
+      var rect1 = new Konva.Rect({
+        x: 60,
+        y: 60,
+        width: 300,
+        height: 300,
+        fill: 'red',
+        name: 'rect',
+        draggable: true,
+      });
+      layer.add(rect1);
+
+      var rect2 = new Konva.Rect({
+        x: 150,
+        y: 100,
+        width: 150,
+        height: 90,
+        rotation: 45,
+        fill: 'green',
+        name: 'rect',
+        draggable: true,
+      });
+      layer.add(rect2);
+
+      var tr = new Konva.Transformer();
+      layer.add(tr);
+
+      // by default select the first shape
+      tr.nodes([rect1, rect2]);
+
+      layer.draw();
+
+      function getDistance(p1, p2) {
+        return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+      }
+
+      function getCenter(p1, p2) {
+        return {
+          x: (p1.x + p2.x) / 2,
+          y: (p1.y + p2.y) / 2,
+        };
+      }
+      let lastCenter = null;
+      let lastDist = null;
+
+      stage.on('touchmove', function (e) {
+        e.evt.preventDefault();
+        var touch1 = e.evt.touches[0];
+        var touch2 = e.evt.touches[1];
+
+        if (touch1 && touch2) {
+          // if the stage was under Konva's drag&drop
+          // we need to stop it, and implement our own pan logic with two pointers
+          if (stage.isDragging()) {
+            stage.stopDrag();
+          }
+
+          var p1 = {
+            x: touch1.clientX,
+            y: touch1.clientY,
+          };
+          var p2 = {
+            x: touch2.clientX,
+            y: touch2.clientY,
+          };
+
+          if (!lastCenter) {
+            lastCenter = getCenter(p1, p2);
+            return;
+          }
+          var newCenter = getCenter(p1, p2);
+
+          var dist = getDistance(p1, p2);
+
+          if (!lastDist) {
+            lastDist = dist;
+          }
+
+          // local coordinates of center point
+          var pointTo = {
+            x: (newCenter.x - stage.x()) / stage.scaleX(),
+            y: (newCenter.y - stage.y()) / stage.scaleX(),
+          };
+
+          var scale = stage.scaleX() * (dist / lastDist);
+
+          stage.scaleX(scale);
+          stage.scaleY(scale);
+
+          // calculate new position of the stage
+          var newPos = {
+            x: 2 * newCenter.x - pointTo.x * scale - lastCenter.x,
+            y: 2 * newCenter.y - pointTo.y * scale - lastCenter.y,
+          };
+
+          stage.position(newPos);
+
+          stage.batchDraw();
+          lastDist = dist;
+          lastCenter = newCenter;
+        }
+      });
+
+      stage.on('touchend', function () {
+        lastDist = 0;
+        lastCenter = null;
+      });
+
+      const col = new Konva.Collection();
+      const array = [];
+
+      for (var i = 0; i < 10000; i++) {
+        const shape = new Konva.Rect();
+        layer.add(shape);
+        col.push(shape);
+        array.push(shape);
+      }
+
+      console.time('collection');
+      col.forEach((shape) => {
+        shape.x(10);
+      });
+      console.timeEnd('collection');
+
+      console.time('array');
+      array.forEach((shape) => {
+        shape.x(15);
+      });
+      console.timeEnd('array');
+
+      Konva.autoDrawEnabled = true;
+
+      console.time('collection');
+      col.forEach((shape) => {
+        shape.x(10);
+      });
+      console.timeEnd('collection');
+
+      console.time('array');
+      array.forEach((shape) => {
+        shape.x(15);
+      });
+      console.timeEnd('array');
+
+      layer.on('draw', () => {
+        console.error('draw');
+      });
+    </script>
+  </body>
+</html>
