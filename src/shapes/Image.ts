@@ -38,7 +38,7 @@ export interface ImageConfig extends ShapeConfig {
 export class Image extends Shape<ImageConfig> {
   constructor(attrs: ImageConfig) {
     super(attrs);
-    this.on('imageChange.konva', (e) => {
+    this.on('imageChange.konva', () => {
       this._setImageLoad();
     });
 

@@ -1475,7 +1475,7 @@ describe('Caching', function () {
     });
   });
 
-  test('hit from cache with custom pixelRatio', function () {
+  it('hit from cache with custom pixelRatio', function () {
     var stage = addStage();
 
     var layer = new Konva.Layer();
@@ -1496,7 +1496,7 @@ describe('Caching', function () {
     });
     layer.draw();
 
-    var hitCanvas = rect._cache.get("canvas").hit;
+    var hitCanvas = rect._cache.get('canvas').hit;
     assert.equal(hitCanvas._canvas.width, rect.width() * 0.2);
     assert.equal(hitCanvas._canvas.height, rect.height() * 0.2);
     assert.equal(hitCanvas.pixelRatio, 0.2);
@@ -1508,8 +1508,9 @@ describe('Caching', function () {
     context.closePath();
     context.fillStyle = 'green';
     context.fill();
-    showHit(layer);
+
     compareLayerAndCanvas(layer, canvas, 5);
+
     assert.equal(stage.getIntersection({ x: 150, y: 100 }), rect);
   });
 });

@@ -102,7 +102,7 @@ describe('AutoDraw', function () {
   });
 
   // ======================================================
-  it.only('redraw for images', function (done) {
+  it('redraw for images', function (done) {
     // don't test on node, because of specific url access
     if (isNode) {
       return;
