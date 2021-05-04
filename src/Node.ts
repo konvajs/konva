@@ -323,6 +323,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *  region for debugging purposes
    * @param {Number} [config.pixelRatio] change quality (or pixel ratio) of cached image. pixelRatio = 2 will produce 2x sized cache.
    * @param {Boolean} [config.imageSmoothingEnabled] control imageSmoothingEnabled property of created canvas for cache
+   * @param {Number} [config.hitCanvasPixelRatio] change quality (or pixel ratio) of cached hit canvas.
    * @returns {Konva.Node}
    * @example
    * // cache a shape with the x,y position of the bounding box at the center and
@@ -358,6 +359,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     offset?: number;
     pixelRatio?: number;
     imageSmoothingEnabled?: boolean;
+    hitCanvasPixelRatio?: number;
   }) {
     var conf = config || {};
     var rect = {} as IRect;
@@ -381,7 +383,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       x = conf.x === undefined ? rect.x : conf.x,
       y = conf.y === undefined ? rect.y : conf.y,
       offset = conf.offset || 0,
-      drawBorder = conf.drawBorder || false;
+      drawBorder = conf.drawBorder || false,
+      hitCanvasPixelRatio = conf.hitCanvasPixelRatio || 1;
 
     if (!width || !height) {
       Util.error(
@@ -407,7 +410,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         height: 0,
       }),
       cachedHitCanvas = new HitCanvas({
-        pixelRatio: 1,
+        pixelRatio: hitCanvasPixelRatio,
         width: width,
         height: height,
       }),
@@ -417,7 +420,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     cachedHitCanvas.isCache = true;
     cachedSceneCanvas.isCache = true;
 
-    this._cache.delete('canvas');
+    this._cache.delete(CANVAS);
     this._filterUpToDate = false;
 
     if (conf.imageSmoothingEnabled === false) {
@@ -476,7 +479,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @returns {Boolean}
    */
   isCached() {
-    return this._cache.has('canvas');
+    return this._cache.has(CANVAS);
   }
 
   abstract drawScene(canvas?: Canvas, top?: Node): void;
@@ -579,7 +582,13 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       hitCanvas = canvasCache.hit;
     context.save();
     context.translate(canvasCache.x, canvasCache.y);
-    context.drawImage(hitCanvas._canvas, 0, 0);
+    context.drawImage(
+      hitCanvas._canvas,
+      0,
+      0,
+      hitCanvas.width / hitCanvas.pixelRatio,
+      hitCanvas.height / hitCanvas.pixelRatio,
+    );
     context.restore();
   }
   _getCachedSceneCanvas() {

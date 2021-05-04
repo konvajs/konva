@@ -1474,4 +1474,42 @@ describe('Caching', function () {
       done();
     });
   });
+
+  test('hit from cache with custom pixelRatio', function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 50,
+      width: 100,
+      height: 100,
+      fill: 'green',
+    });
+
+    layer.add(rect);
+    stage.add(layer);
+
+    rect.cache({
+      hitCanvasPixelRatio: 0.2,
+    });
+    layer.draw();
+
+    var hitCanvas = rect._cache.get("canvas").hit;
+    assert.equal(hitCanvas._canvas.width, rect.width() * 0.2);
+    assert.equal(hitCanvas._canvas.height, rect.height() * 0.2);
+    assert.equal(hitCanvas.pixelRatio, 0.2);
+
+    var canvas = createCanvas();
+    var context = canvas.getContext('2d');
+    context.beginPath();
+    context.rect(100, 50, 100, 100);
+    context.closePath();
+    context.fillStyle = 'green';
+    context.fill();
+    showHit(layer);
+    compareLayerAndCanvas(layer, canvas, 5);
+    assert.equal(stage.getIntersection({ x: 150, y: 100 }), rect);
+  });
 });
