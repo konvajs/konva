@@ -105,7 +105,7 @@ describe('AutoDraw', function () {
   it('redraw for images', function (done) {
     // don't test on node, because of specific url access
     if (isNode) {
-      return;
+      return done();
     }
     var stage = addStage();
     var layer = new Konva.Layer();

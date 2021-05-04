@@ -3762,8 +3762,10 @@ describe('Node', function () {
   });
 
   it('show warning when we are trying to use non-objects for component setters', function () {
+    if (!Konva.isUnminified) {
+      return;
+    }
     var stage = addStage();
-
     var callCount = 0;
     var oldWarn = Konva.Util.warn;
     Konva.Util.warn = function () {
