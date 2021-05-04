@@ -8,7 +8,7 @@ import {
   simulateTouchMove,
 } from './utis';
 
-describe('TouchEvents', function () {
+describe.skip('TouchEvents', function () {
   // ======================================================
   it('stage content touch events', function () {
     var stage = addStage();

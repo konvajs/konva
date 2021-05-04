@@ -10,18 +10,6 @@
     </script>
 
     <script>
-      beforeEach(function () {
-        Konva.inDblClickWindow = false;
-        const body = this.currentTest.body.toLowerCase();
-        if (
-          !(body.indexOf('assert') !== -1 || body.indexOf('compare') !== -1)
-        ) {
-          console.error(
-            'Found test without asserts: ' + this.currentTest.title
-          );
-        }
-      });
-
       afterEach(function () {
         var isFailed = this.currentTest.state == 'failed';
         var isManual = this.currentTest.parent.title === 'Manual';

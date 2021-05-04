@@ -13,6 +13,11 @@ import { imagediff } from './imagediff';
 import { Layer } from '../../src/Layer';
 import { Stage } from '../../src/Stage';
 
+// reset some data
+beforeEach(function () {
+  Konva.inDblClickWindow = false;
+});
+
 export const isNode = typeof global.document === 'undefined';
 export const isBrowser = !isNode;
 
@@ -31,7 +36,8 @@ export function addContainer() {
 }
 
 export function addStage(attrs?) {
-  var container = !isNode && global.document.createElement('div');
+  var container =
+    (!isNode && global.document.createElement('div')) || undefined;
 
   var stage = new Konva.Stage({
     container: container,

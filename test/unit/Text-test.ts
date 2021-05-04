@@ -876,10 +876,17 @@ describe('Text', function () {
     layer.add(text);
     stage.add(layer);
 
-    assert.equal(
-      layer.getContext().getTrace(false, true),
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);beginPath();rect(0,0,200,100);closePath();lineWidth=2;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,10,10);font=normal normal 16px Arial;textBaseline=middle;textAlign=left;translate(10,42);save();fillStyle=#555;fillText(Some awesome text,17,8);restore();restore();'
-    );
+    if (isBrowser) {
+      assert.equal(
+        layer.getContext().getTrace(false, true),
+        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);beginPath();rect(0,0,200,100);closePath();lineWidth=2;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,10,10);font=normal normal 16px Arial;textBaseline=middle;textAlign=left;translate(10,42);save();fillStyle=#555;fillText(Some awesome text,17,8);restore();restore();'
+      );
+    } else {
+      assert.equal(
+        layer.getContext().getTrace(false, true),
+        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);beginPath();rect(0,0,200,100);closePath();lineWidth=2;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,10,10);font=normal normal 16px Arial;textBaseline=middle;textAlign=left;translate(10,42);save();fillStyle=#555;fillText(Some awesome text,18,8);restore();restore();'
+      );
+    }
   });
 
   it('get text width', function () {
@@ -964,10 +971,13 @@ describe('Text', function () {
 
     layer.draw();
 
-    assert.equal(Math.abs(Math.round(text1.width()) - 1725) < 4, true);
-    assert.equal(Math.abs(Math.round(text2.width()) - 2613) < 4, true);
-    assert.equal(Math.abs(Math.round(text3.width()) - 2005) < 4, true);
-    assert.equal(Math.abs(Math.round(text4.width()) - 1932) < 4, true);
+    // on nodejs the length is very different
+    // so we need to adjust offset
+    const diff = isBrowser ? 4 : 50;
+    assert.equal(Math.abs(Math.round(text1.width()) - 1725) < diff, true);
+    assert.equal(Math.abs(Math.round(text2.width()) - 2613) < diff, true);
+    assert.equal(Math.abs(Math.round(text3.width()) - 2005) < diff, true);
+    assert.equal(Math.abs(Math.round(text4.width()) - 1932) < diff, true);
   });
 
   it('default text color should be black', function () {

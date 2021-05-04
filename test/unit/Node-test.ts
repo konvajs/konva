@@ -11,9 +11,10 @@ import {
   addContainer,
   loadImage,
   Konva,
+  isBrowser,
 } from './utis';
 
-describe.skip('Node', function () {
+describe('Node', function () {
   // ======================================================
   it('getType and getClassName', function () {
     var stage = addStage();
@@ -1086,52 +1087,6 @@ describe.skip('Node', function () {
       // just check clone without crashes
       done();
     });
-  });
-
-  // ======================================================
-  it('node caching', function (done) {
-    var stage = addStage();
-    var layer = new Konva.Layer();
-    var group = new Konva.Group();
-
-    var points = [73, 250, 73, 160, 340, 23, 500, 109, 499, 139, 342, 93];
-
-    var poly = new Konva.Line({
-      points: points,
-      fill: 'green',
-      stroke: 'blue',
-      strokeWidth: 5,
-      draggable: true,
-      closed: true,
-    });
-
-    group.add(poly);
-    layer.add(group);
-    stage.add(layer);
-
-    poly.toImage({
-      width: 500,
-      height: 300,
-      callback: function (imageObj) {
-        //document.body.appendChild(imageObj)
-        assert.equal(Konva.Util._isElement(imageObj), true);
-
-        var cachedShape = new Konva.Image({
-          image: imageObj,
-          draggable: true,
-          stroke: 'red',
-          strokeWidth: 5,
-          x: 50,
-          y: -120,
-        });
-
-        layer.add(cachedShape);
-        layer.draw();
-        done();
-      },
-    });
-
-    showHit(layer);
   });
 
   // ======================================================
@@ -2353,12 +2308,19 @@ describe.skip('Node', function () {
     //console.log(sceneTrace);
 
     var bufferTrace = stage.bufferCanvas.getContext().getTrace();
-    //console.log(bufferTrace);
 
-    assert.equal(
-      sceneTrace,
-      'clearRect(0,0,578,200);save();globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();'
-    );
+    if (isBrowser) {
+      assert.equal(
+        sceneTrace,
+        'clearRect(0,0,578,200);save();globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();'
+      );
+    } else {
+      assert.equal(
+        sceneTrace,
+        'clearRect(0,0,578,200);save();globalAlpha=0.5;drawImage([object Object],0,0,578,200);restore();'
+      );
+    }
+
     assert.equal(
       bufferTrace,
       'clearRect(0,0,578,200);save();transform(1,0,0,1,289,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=20;strokeStyle=black;stroke();restore();'
@@ -3128,15 +3090,21 @@ describe.skip('Node', function () {
     layer.add(group);
     stage.add(layer);
 
-    assert.equal(stage.content.style.display, 'none');
+    if (isBrowser) {
+      assert.equal(stage.content.style.display, 'none');
+    }
 
     stage.show();
     stage.draw();
-    assert.equal(stage.content.style.display, '');
+    if (isBrowser) {
+      assert.equal(stage.content.style.display, '');
+    }
 
     stage.hide();
     stage.draw();
-    assert.equal(stage.content.style.display, 'none');
+    if (isBrowser) {
+      assert.equal(stage.content.style.display, 'none');
+    }
   });
 
   // ======================================================

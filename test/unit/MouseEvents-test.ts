@@ -8,6 +8,7 @@ import {
   simulateMouseUp,
   simulateTouchStart,
   simulateTouchEnd,
+  isNode,
 } from './utis';
 
 describe('MouseEvents', function () {
@@ -188,8 +189,6 @@ describe('MouseEvents', function () {
   // ======================================================
   it('test listening true/false with clicks', function () {
     var stage = addStage();
-
-    var top = stage.content.getBoundingClientRect().top;
 
     var layer = new Konva.Layer();
 
@@ -418,8 +417,6 @@ describe('MouseEvents', function () {
     layer.add(circle);
     stage.add(layer);
 
-    var top = stage.content.getBoundingClientRect().top;
-
     assert.equal(circle.fill(), 'red', 'circle fill should be red');
     assert.equal(circle.stroke(), 'black', 'circle stroke should be black');
 
@@ -505,8 +502,6 @@ describe('MouseEvents', function () {
 
     layer.add(circle);
     stage.add(layer);
-
-    var top = stage.content.getBoundingClientRect().top;
 
     setTimeout(function () {
       // move mouse to center of circle to trigger mouseover
@@ -646,8 +641,6 @@ describe('MouseEvents', function () {
     layer.add(group);
     stage.add(layer);
 
-    var top = stage.content.getBoundingClientRect().top;
-
     var groupMousedowns = 0;
     var greenCircleMousedowns = 0;
 
@@ -722,7 +715,6 @@ describe('MouseEvents', function () {
     stage.add(layer);
     layer.draw();
 
-    var top = stage.content.getBoundingClientRect().top;
     simulateMouseDown(stage, {
       x: 135,
       y: 30,
@@ -764,7 +756,6 @@ describe('MouseEvents', function () {
 
     stage.add(layer);
 
-    var top = stage.content.getBoundingClientRect().top;
     // move mouse slowly
     for (var i = 99; i < 129; i++) {
       simulateMouseMove(stage, {
@@ -845,8 +836,6 @@ describe('MouseEvents', function () {
 
     layer.add(group);
     stage.add(layer);
-
-    var top = stage.content.getBoundingClientRect().top;
 
     setTimeout(function () {
       // move mouse outside of circles
@@ -1007,8 +996,6 @@ describe('MouseEvents', function () {
     group2.on('mouseout', function () {
       group2Mouseout += 1;
     });
-
-    var top = stage.content.getBoundingClientRect().top;
 
     simulateMouseMove(stage, {
       x: 10,
@@ -1235,8 +1222,6 @@ describe('MouseEvents', function () {
     group22.on('mouseout', function () {
       group22Mouseout += 1;
     });
-
-    var top = stage.content.getBoundingClientRect().top;
 
     simulateMouseMove(stage, {
       x: 10,
@@ -1649,8 +1634,6 @@ describe('MouseEvents', function () {
     layer.add(group2);
     stage.add(layer);
 
-    var top = stage.content.getBoundingClientRect().top;
-
     // events array
     var e = [];
 
@@ -1715,8 +1698,6 @@ describe('MouseEvents', function () {
 
     layer.add(circle);
     stage.add(layer);
-
-    var top = stage.content.getBoundingClientRect().top;
 
     var mouseovers = 0;
     var mouseouts = 0;
@@ -2111,7 +2092,7 @@ describe('MouseEvents', function () {
       mouseenterCount += 1;
     });
 
-    var top = stage.content.getBoundingClientRect().top;
+    var top = (stage.content && stage.content.getBoundingClientRect().top) || 0;
     var evt = {
       clientX: 10,
       clientY: 10 + top,
@@ -2133,7 +2114,7 @@ describe('MouseEvents', function () {
       mouseleave += 1;
     });
 
-    var top = stage.content.getBoundingClientRect().top;
+    var top = (stage.content && stage.content.getBoundingClientRect().top) || 0;
     var evt = {
       clientX: 0,
       clientY: 0 + top,
@@ -2192,7 +2173,7 @@ describe('MouseEvents', function () {
     // move into a circle
     simulateMouseMove(stage, { x: 200, y: 5 });
 
-    var top = stage.content.getBoundingClientRect().top;
+    var top = (stage.content && stage.content.getBoundingClientRect().top) || 0;
     var evt = {
       clientX: 200,
       clientY: -5 + top,
@@ -2308,7 +2289,7 @@ describe('MouseEvents', function () {
       mouseenter += 1;
     });
 
-    var top = stage.content.getBoundingClientRect().top;
+    var top = (stage.content && stage.content.getBoundingClientRect().top) || 0;
     var evt = {
       clientX: 10,
       clientY: 10 + top,
@@ -2371,6 +2352,9 @@ describe('MouseEvents', function () {
   });
 
   it('test scaled with CSS stage', function () {
+    if (isNode) {
+      return;
+    }
     var stage = addStage();
 
     stage.container().style.transform = 'scale(0.5)';

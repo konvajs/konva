@@ -263,7 +263,6 @@ describe('DragAndDropEvents', function () {
     layer.add(circle);
     stage.add(layer);
     circle.dragDistance(4);
-    var top = stage.content.getBoundingClientRect().top;
 
     simulateMouseDown(stage, {
       x: 40,
@@ -327,8 +326,6 @@ describe('DragAndDropEvents', function () {
     layer.add(circle);
     stage.add(layer);
 
-    var top = stage.content.getBoundingClientRect().top;
-
     /*
      * simulate drag and drop
      */
@@ -389,8 +386,6 @@ describe('DragAndDropEvents', function () {
     layer.add(circle2);
 
     stage.add(layer);
-
-    var top = stage.content.getBoundingClientRect().top;
 
     /*
      * simulate drag and drop
