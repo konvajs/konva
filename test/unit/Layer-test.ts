@@ -302,7 +302,7 @@ describe('Layer', function () {
 
     stage.add(layer);
 
-    assert(layer.getCanvasElement().style.display === 'none');
+    assert(layer.getNativeCanvasElement().style.display === 'none');
   });
 
   // ======================================================

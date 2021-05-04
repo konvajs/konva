@@ -303,6 +303,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   clearCache() {
     this._cache.delete(CANVAS);
     this._clearSelfAndDescendantCache();
+    this._requestDraw();
     return this;
   }
   /**
@@ -462,6 +463,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       x: x,
       y: y,
     });
+
+    this._requestDraw();
 
     return this;
   }
@@ -2219,6 +2222,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
     return this;
   }
+  _requestDraw() {
+    if (Konva.autoDrawEnabled) {
+      const drawNode = this.getLayer() || this.getStage();
+      drawNode?.batchDraw();
+    }
+  }
   _setAttr(key, val, skipFire = false) {
     var oldVal = this.attrs[key];
     if (oldVal === val && !Util.isObject(val)) {
@@ -2232,10 +2241,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (this._shouldFireChangeEvents) {
       this._fireChangeEvent(key, oldVal, val);
     }
-    if (Konva.autoDrawEnabled) {
-      const drawNode = this.getLayer() || this.getStage();
-      drawNode?.batchDraw();
-    }
+    this._requestDraw();
   }
   _setComponentAttr(key, component, val) {
     var oldVal;

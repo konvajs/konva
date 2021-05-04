@@ -3,7 +3,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## **NOT RELEASED V8**
+
+- All updates on canvas will do automatic redraw with `layer.batchDraw()`. This features is configurable with `Konva.autoDrawEnbaled` property.
+- Full migration to ES modules package, commonjs code is removed
+- `konva-node` is merged into `konva` npm package. One package works for both environments.
 - Fix `TextPath` recalculations on `fontSize` change
+- `Konva.Collection` is removed. `container.children` is a simple array now. `container.find()` will return also a simple array instead of `Konva.Collection()`.
+- Better typescript support. Now every module has its own `*.d.ts` file.
+- New method `layer.getNativeCanvasElement()`
 
 ## 7.2.5
 

@@ -11,12 +11,13 @@
   <body>
     <div id="container"></div>
     <!-- this line for dev version -->
-    <script src="../../"></script>
+    <script src="../../src/index.ts"></script>
     <!-- this line for old version -->
     <!-- <script src="https://unpkg.com/konva@7.0.3/konva.min.js"></script> -->
     <script src="http://www.html5canvastutorials.com/lib/stats/stats.js"></script>
     <script defer="defer">
       Konva.isUnminified = false;
+      // Konva.autoDrawEnabled = trye;
       var lastTime = 0;
 
       var width = window.innerWidth;
@@ -189,7 +190,10 @@
             y: pos.y,
           });
         }
-        layer.draw();
+        if (!Konva.autoDrawEnabled) {
+          layer.draw();
+        }
+
         requestAnimationFrame(update);
         stats.end();
       }

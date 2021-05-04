@@ -133,6 +133,7 @@ export abstract class Container<
     this._fire('add', {
       child: child,
     });
+    this._requestDraw();
     // chainable
     return this;
   }
@@ -324,6 +325,7 @@ export abstract class Container<
     this.children?.forEach(function (child, n) {
       child.index = n;
     });
+    this._requestDraw();
   }
   drawScene(can?: SceneCanvas, top?: Node) {
     var layer = this.getLayer(),

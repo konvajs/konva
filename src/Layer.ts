@@ -88,7 +88,7 @@ export class Layer extends Container<Group | Shape> {
    * @method
    * @name Konva.Layer#getCanvas
    */
-  getCanvasElement() {
+  getNativeCanvasElement() {
     return this.canvas._canvas;
   }
   /**
@@ -136,15 +136,15 @@ export class Layer extends Container<Group | Shape> {
     super.setZIndex(index);
     var stage = this.getStage();
     if (stage && stage.content) {
-      stage.content.removeChild(this.getCanvasElement());
+      stage.content.removeChild(this.getNativeCanvasElement());
 
       if (index < stage.children.length - 1) {
         stage.content.insertBefore(
-          this.getCanvasElement(),
+          this.getNativeCanvasElement(),
           stage.children[index + 1].getCanvas()._canvas
         );
       } else {
-        stage.content.appendChild(this.getCanvasElement());
+        stage.content.appendChild(this.getNativeCanvasElement());
       }
     }
     return this;
@@ -153,8 +153,8 @@ export class Layer extends Container<Group | Shape> {
     Node.prototype.moveToTop.call(this);
     var stage = this.getStage();
     if (stage && stage.content) {
-      stage.content.removeChild(this.getCanvasElement());
-      stage.content.appendChild(this.getCanvasElement());
+      stage.content.removeChild(this.getNativeCanvasElement());
+      stage.content.appendChild(this.getNativeCanvasElement());
     }
     return true;
   }
@@ -167,15 +167,15 @@ export class Layer extends Container<Group | Shape> {
     if (!stage || !stage.content) {
       return false;
     }
-    stage.content.removeChild(this.getCanvasElement());
+    stage.content.removeChild(this.getNativeCanvasElement());
 
     if (this.index < stage.children.length - 1) {
       stage.content.insertBefore(
-        this.getCanvasElement(),
+        this.getNativeCanvasElement(),
         stage.children[this.index + 1].getCanvas()._canvas
       );
     } else {
-      stage.content.appendChild(this.getCanvasElement());
+      stage.content.appendChild(this.getNativeCanvasElement());
     }
     return true;
   }
@@ -186,9 +186,9 @@ export class Layer extends Container<Group | Shape> {
       if (stage) {
         var children = stage.children;
         if (stage.content) {
-          stage.content.removeChild(this.getCanvasElement());
+          stage.content.removeChild(this.getNativeCanvasElement());
           stage.content.insertBefore(
-            this.getCanvasElement(),
+            this.getNativeCanvasElement(),
             children[this.index + 1].getCanvas()._canvas
           );
         }
@@ -204,9 +204,9 @@ export class Layer extends Container<Group | Shape> {
       if (stage) {
         var children = stage.children;
         if (stage.content) {
-          stage.content.removeChild(this.getCanvasElement());
+          stage.content.removeChild(this.getNativeCanvasElement());
           stage.content.insertBefore(
-            this.getCanvasElement(),
+            this.getNativeCanvasElement(),
             children[1].getCanvas()._canvas
           );
         }
@@ -219,7 +219,7 @@ export class Layer extends Container<Group | Shape> {
     return this;
   }
   remove() {
-    var _canvas = this.getCanvasElement();
+    var _canvas = this.getNativeCanvasElement();
 
     Node.prototype.remove.call(this);
 

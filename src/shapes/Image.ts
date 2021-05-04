@@ -36,6 +36,22 @@ export interface ImageConfig extends ShapeConfig {
  * imageObj.src = '/path/to/image.jpg'
  */
 export class Image extends Shape<ImageConfig> {
+  constructor(attrs: ImageConfig) {
+    super(attrs);
+    this.on('imageChange.konva', (e) => {
+      this._setImageLoad();
+    });
+
+    this._setImageLoad();
+  }
+  _setImageLoad() {
+    const image = this.image();
+    if (image && image['addEventListener']) {
+      image['addEventListener']('load', () => {
+        this._requestDraw();
+      });
+    }
+  }
   _useBufferCanvas() {
     return super._useBufferCanvas(true);
   }

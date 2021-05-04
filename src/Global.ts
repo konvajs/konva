@@ -97,7 +97,16 @@ export const Konva = {
   },
   enableTrace: false,
   _pointerEventsEnabled: false,
-  autoDrawEnabled: false,
+  /**
+   * Should Konva automatically update canvas on any changes. Default is true.
+   * @property autoDrawEnabled
+   * @default true
+   * @name autoDrawEnabled
+   * @memberof Konva
+   * @example
+   * Konva.autoDrawEnabled = true;
+   */
+  autoDrawEnabled: true,
   /**
    * Should we enable hit detection while dragging? For performance reasons, by default it is false.
    * But on some rare cases you want to see hit graph and check intersections. Just set it to true.

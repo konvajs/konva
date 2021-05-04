@@ -1069,7 +1069,7 @@ export class Stage extends Container<Layer> {
    * @return {Konva.Stage} this
    */
   batchDraw() {
-    this.children.forEach(function (layer) {
+    this.getChildren().forEach(function (layer) {
       layer.batchDraw();
     });
     return this;

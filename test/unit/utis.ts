@@ -15,7 +15,7 @@ import { Stage } from '../../src/Stage';
 
 // reset some data
 beforeEach(function () {
-  Konva.inDblClickWindow = false;
+  Konva['inDblClickWindow'] = false;
 });
 
 export const isNode = typeof global.document === 'undefined';
@@ -120,7 +120,7 @@ export function compareCanvases(canvas1, canvas2, tol?, secondTol?) {
 }
 
 export function compareLayerAndCanvas(layer: Layer, canvas, tol?, secondTol?) {
-  compareCanvases(layer.getCanvasElement(), canvas, tol, secondTol);
+  compareCanvases(layer.getNativeCanvasElement(), canvas, tol, secondTol);
 }
 
 export function cloneAndCompareLayer(layer: Layer, tol?, secondTol?) {
@@ -131,7 +131,12 @@ export function cloneAndCompareLayer(layer: Layer, tol?, secondTol?) {
 }
 
 export function compareLayers(layer1: Layer, layer2: Layer, tol?, secondTol?) {
-  compareLayerAndCanvas(layer1, layer2.getCanvasElement(), tol, secondTol);
+  compareLayerAndCanvas(
+    layer1,
+    layer2.getNativeCanvasElement(),
+    tol,
+    secondTol
+  );
 }
 
 export function createCanvas() {
@@ -152,7 +157,7 @@ export function showHit(layer) {
   getContainer().appendChild(canvas);
 }
 
-Konva.UA.mobile = false;
+Konva['UA'].mobile = false;
 
 export function simulateMouseDown(stage, pos) {
   var top = isNode ? 0 : stage.content.getBoundingClientRect().top;
