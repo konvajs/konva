@@ -8,7 +8,7 @@ import {
   simulateTouchMove,
 } from './test-utils';
 
-describe.skip('TouchEvents', function () {
+describe('TouchEvents', function () {
   // ======================================================
   it('stage content touch events', function () {
     var stage = addStage();

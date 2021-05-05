@@ -61,7 +61,7 @@
     }
   ],
   "devDependencies": {
-    "@parcel/transformer-image": "^2.0.0-beta.2",
+    "@parcel/transformer-image": "2.0.0-beta.2",
     "@size-limit/preset-big-lib": "^4.10.2",
     "@types/mocha": "^8.2.2",
     "canvas": "^2.7.0",
@@ -80,7 +80,7 @@
     "mocha": "8.3.2",
     "mocha-headless-chrome": "^3.1.0",
     "parcel": "^2.0.0-beta.2",
-    "rollup": "^2.46.0",
+    "rollup": "^2.47.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-sourcemaps": "^0.6.3",
