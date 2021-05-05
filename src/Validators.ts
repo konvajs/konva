@@ -1,5 +1,5 @@
-import { Konva } from './Global.js';
-import { Util } from './Util.js';
+import { Konva } from './Global';
+import { Util } from './Util';
 
 function _formatValue(val: any) {
   if (Util._isString(val)) {

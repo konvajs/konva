@@ -1,9 +1,9 @@
-import { Factory } from '../Factory.js';
-import { Shape, ShapeConfig } from '../Shape.js';
-import { _registerNode } from '../Global.js';
+import { Factory } from '../Factory';
+import { Shape, ShapeConfig } from '../Shape';
+import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
-import { getNumberOrArrayOfNumbersValidator } from '../Validators.js';
+import { getNumberOrArrayOfNumbersValidator } from '../Validators';
 export interface RectConfig extends ShapeConfig {
   cornerRadius?: number | number[];
 }

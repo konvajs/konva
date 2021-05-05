@@ -1,7 +1,7 @@
-import { Util } from './Util.js';
-import { Animation } from './Animation.js';
-import { Node, NodeConfig } from './Node.js';
-import { Konva } from './Global.js';
+import { Util } from './Util';
+import { Animation } from './Animation';
+import { Node, NodeConfig } from './Node';
+import { Konva } from './Global';
 import { Line } from './shapes/Line';
 
 var blacklist = {

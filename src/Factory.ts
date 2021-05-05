@@ -1,5 +1,5 @@
-import { Util } from './Util.js';
-import { getComponentValidator } from './Validators.js';
+import { Util } from './Util';
+import { getComponentValidator } from './Validators';
 
 var GET = 'get',
   SET = 'set';

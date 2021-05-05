@@ -1,20 +1,20 @@
-import { Util } from './Util.js';
-import { Factory } from './Factory.js';
-import { Node, NodeConfig } from './Node.js';
+import { Util } from './Util';
+import { Factory } from './Factory';
+import { Node, NodeConfig } from './Node';
 import {
   getNumberValidator,
   getNumberOrAutoValidator,
   getStringValidator,
   getBooleanValidator,
   getStringOrGradientValidator,
-} from './Validators.js';
+} from './Validators';
 
-import { Context, SceneContext } from './Context.js';
-import { _registerNode } from './Global.js';
-import * as PointerEvents from './PointerEvents.js';
+import { Context, SceneContext } from './Context';
+import { _registerNode } from './Global';
+import * as PointerEvents from './PointerEvents';
 
 import { GetSet, Vector2d } from './types';
-import { HitCanvas, SceneCanvas } from './Canvas.js';
+import { HitCanvas, SceneCanvas } from './Canvas';
 
 // hack from here https://stackoverflow.com/questions/52667959/what-is-the-purpose-of-bivariancehack-in-typescript-types/52668133#52668133
 export type ShapeConfigHandler<TTarget> = {

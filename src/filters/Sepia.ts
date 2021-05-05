@@ -1,4 +1,4 @@
-import { Filter } from '../Node.js';
+import { Filter } from '../Node';
 
 // based on https://stackoverflow.com/questions/1061093/how-is-a-sepia-tone-created
 

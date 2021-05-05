@@ -1,4 +1,4 @@
-import { Konva } from './Global.js';
+import { Konva } from './Global';
 import { IRect, RGB, RGBA, Vector2d } from './types';
 
 /*

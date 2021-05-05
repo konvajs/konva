@@ -1,11 +1,11 @@
-import { Util } from '../Util.js';
-import { Factory } from '../Factory.js';
-import { Shape, ShapeConfig } from '../Shape.js';
-import { getNumberValidator } from '../Validators.js';
-import { _registerNode } from '../Global.js';
+import { Util } from '../Util';
+import { Factory } from '../Factory';
+import { Shape, ShapeConfig } from '../Shape';
+import { getNumberValidator } from '../Validators';
+import { _registerNode } from '../Global';
 
 import { GetSet, IRect } from '../types';
-import { Context } from '../Context.js';
+import { Context } from '../Context';
 
 export interface ImageConfig extends ShapeConfig {
   image: CanvasImageSource | undefined;

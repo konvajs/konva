@@ -1,6 +1,6 @@
-import { Factory } from '../Factory.js';
-import { Node, Filter } from '../Node.js';
-import { getNumberValidator } from '../Validators.js';
+import { Factory } from '../Factory';
+import { Node, Filter } from '../Node';
+import { getNumberValidator } from '../Validators';
 /**
  * Posterize Filter. Adjusts the channels so that there are no more
  *  than n different values for that channel. This is also applied

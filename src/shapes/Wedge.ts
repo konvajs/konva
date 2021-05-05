@@ -1,8 +1,8 @@
-import { Factory } from '../Factory.js';
-import { Shape, ShapeConfig } from '../Shape.js';
-import { Konva } from '../Global.js';
-import { getNumberValidator } from '../Validators.js';
-import { _registerNode } from '../Global.js';
+import { Factory } from '../Factory';
+import { Shape, ShapeConfig } from '../Shape';
+import { Konva } from '../Global';
+import { getNumberValidator } from '../Validators';
+import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
 

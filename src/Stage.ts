@@ -1,14 +1,14 @@
-import { Util } from './Util.js';
-import { Factory } from './Factory.js';
-import { Container, ContainerConfig } from './Container.js';
-import { Konva } from './Global.js';
-import { SceneCanvas, HitCanvas } from './Canvas.js';
+import { Util } from './Util';
+import { Factory } from './Factory';
+import { Container, ContainerConfig } from './Container';
+import { Konva } from './Global';
+import { SceneCanvas, HitCanvas } from './Canvas';
 import { GetSet, Vector2d } from './types';
-import { Shape } from './Shape.js';
-import { Layer } from './Layer.js';
-import { DD } from './DragAndDrop.js';
-import { _registerNode } from './Global.js';
-import * as PointerEvents from './PointerEvents.js';
+import { Shape } from './Shape';
+import { Layer } from './Layer';
+import { DD } from './DragAndDrop';
+import { _registerNode } from './Global';
+import * as PointerEvents from './PointerEvents';
 
 export interface StageConfig extends ContainerConfig {
   container: HTMLDivElement | string;
@@ -464,7 +464,6 @@ export class Stage extends Container<Layer> {
     this._fire(CONTENT_MOUSEOUT, { evt: evt });
   }
   _mousemove(evt) {
-
     this.setPointersPositions(evt);
     var pointerId = Util._getFirstPointerId(evt);
     var targetShape = this.targetShape?.getStage() ? this.targetShape : null;

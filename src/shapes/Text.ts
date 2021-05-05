@@ -1,14 +1,14 @@
-import { Util } from '../Util.js';
-import { Factory } from '../Factory.js';
-import { Shape, ShapeConfig } from '../Shape.js';
-import { Konva } from '../Global.js';
+import { Util } from '../Util';
+import { Factory } from '../Factory';
+import { Shape, ShapeConfig } from '../Shape';
+import { Konva } from '../Global';
 import {
   getNumberValidator,
   getStringValidator,
   getNumberOrAutoValidator,
   getBooleanValidator,
-} from '../Validators.js';
-import { _registerNode } from '../Global.js';
+} from '../Validators';
+import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
 

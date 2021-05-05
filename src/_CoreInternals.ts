@@ -1,26 +1,26 @@
 // what is core parts of Konva?
-import { Konva as Global } from './Global.js';
+import { Konva as Global } from './Global';
 
-import { Util, Transform } from './Util.js';
-import { Node, ids, names } from './Node.js';
-import { Container } from './Container.js';
+import { Util, Transform } from './Util';
+import { Node, ids, names } from './Node';
+import { Container } from './Container';
 
-import { Stage, stages } from './Stage.js';
+import { Stage, stages } from './Stage';
 
-import { Layer } from './Layer.js';
-import { FastLayer } from './FastLayer.js';
+import { Layer } from './Layer';
+import { FastLayer } from './FastLayer';
 
-import { Group } from './Group.js';
+import { Group } from './Group';
 
-import { DD } from './DragAndDrop.js';
+import { DD } from './DragAndDrop';
 
-import { Shape, shapes } from './Shape.js';
+import { Shape, shapes } from './Shape';
 
-import { Animation } from './Animation.js';
-import { Tween, Easings } from './Tween.js';
+import { Animation } from './Animation';
+import { Tween, Easings } from './Tween';
 
-import { Context } from './Context.js';
-import { Canvas } from './Canvas.js';
+import { Context } from './Context';
+import { Canvas } from './Canvas';
 
 export const Konva = Util._assign(Global, {
   Util,

@@ -1,8 +1,8 @@
 /*eslint-disable max-depth */
-import { Factory } from '../Factory.js';
-import { Util } from '../Util.js';
-import { Node, Filter } from '../Node.js';
-import { getNumberValidator } from '../Validators.js';
+import { Factory } from '../Factory';
+import { Util } from '../Util';
+import { Node, Filter } from '../Node';
+import { getNumberValidator } from '../Validators';
 
 /**
  * Pixelate Filter. Averages groups of pixels and redraws

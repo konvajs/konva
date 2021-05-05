@@ -1,19 +1,19 @@
-import { Util, Transform } from './Util.js';
-import { Factory } from './Factory.js';
-import { SceneCanvas, HitCanvas, Canvas } from './Canvas.js';
-import { Konva } from './Global.js';
-import { Container } from './Container.js';
+import { Util, Transform } from './Util';
+import { Factory } from './Factory';
+import { SceneCanvas, HitCanvas, Canvas } from './Canvas';
+import { Konva } from './Global';
+import { Container } from './Container';
 import { GetSet, Vector2d, IRect } from './types';
-import { DD } from './DragAndDrop.js';
+import { DD } from './DragAndDrop';
 import {
   getNumberValidator,
   getStringValidator,
   getBooleanValidator,
-} from './Validators.js';
-import { Stage } from './Stage.js';
-import { Context } from './Context.js';
-import { Shape } from './Shape.js';
-import { Layer } from './Layer.js';
+} from './Validators';
+import { Stage } from './Stage';
+import { Context } from './Context';
+import { Shape } from './Shape';
+import { Layer } from './Layer';
 
 export const ids: any = {};
 export const names: any = {};
@@ -1162,7 +1162,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this._batchingTransformChange = false;
     if (this._needClearTransformCache) {
       this._clearCache(TRANSFORM);
-      this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM, true);
+      this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
     }
     this._needClearTransformCache = false;
   }
@@ -1208,7 +1208,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (haveCachedParent && !top) {
       // make fake top element
       // "true" is not a node, but it will just allow skip all caching
-      top = true;
+      top = true as any;
     }
     var absoluteMatrix = this.getAbsoluteTransform(top).getMatrix(),
       absoluteTransform = new Transform(),
@@ -1553,7 +1553,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // get one of the parent group
    * var parentGroups = node.findAncestors('Group');
    */
-  findAncestors(selector: string, includeSelf?: boolean, stopNode?: Container) {
+  findAncestors(selector: string, includeSelf?: boolean, stopNode?: Node) {
     var res: Array<Node> = [];
 
     if (includeSelf && this._isMatch(selector)) {

@@ -1,4 +1,4 @@
-import { Filter } from '../Node.js';
+import { Filter } from '../Node';
 /**
  * Invert Filter
  * @function

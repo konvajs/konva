@@ -1,6 +1,6 @@
-import { Factory } from '../Factory.js';
-import { Node, Filter } from '../Node.js';
-import { RGBComponent } from '../Validators.js';
+import { Factory } from '../Factory';
+import { Node, Filter } from '../Node';
+import { RGBComponent } from '../Validators';
 
 /**
  * RGB Filter

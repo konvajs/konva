@@ -1,7 +1,7 @@
-import { Util } from './Util.js';
-import { Konva } from './Global.js';
-import { Canvas } from './Canvas.js';
-import { Shape } from './Shape.js';
+import { Util } from './Util';
+import { Konva } from './Global';
+import { Canvas } from './Canvas';
+import { Shape } from './Shape';
 
 var COMMA = ',',
   OPEN_PAREN = '(',

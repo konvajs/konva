@@ -1,15 +1,15 @@
-import { Util } from './Util.js';
-import { Container, ContainerConfig } from './Container.js';
-import { Node } from './Node.js';
-import { Factory } from './Factory.js';
-import { SceneCanvas, HitCanvas } from './Canvas.js';
-import { Stage } from './Stage.js';
-import { getBooleanValidator } from './Validators.js';
+import { Util } from './Util';
+import { Container, ContainerConfig } from './Container';
+import { Node } from './Node';
+import { Factory } from './Factory';
+import { SceneCanvas, HitCanvas } from './Canvas';
+import { Stage } from './Stage';
+import { getBooleanValidator } from './Validators';
 
 import { GetSet, Vector2d } from './types';
-import { Group } from './Group.js';
-import { Shape, shapes } from './Shape.js';
-import { _registerNode } from './Global.js';
+import { Group } from './Group';
+import { Shape, shapes } from './Shape';
+import { _registerNode } from './Global';
 
 export interface LayerConfig extends ContainerConfig {
   clearBeforeDraw?: boolean;

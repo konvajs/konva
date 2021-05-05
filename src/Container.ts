@@ -1,10 +1,10 @@
-import { Factory } from './Factory.js';
-import { Node, NodeConfig } from './Node.js';
-import { getNumberValidator } from './Validators.js';
+import { Factory } from './Factory';
+import { Node, NodeConfig } from './Node';
+import { getNumberValidator } from './Validators';
 
 import { GetSet, IRect } from './types';
-import { Shape } from './Shape.js';
-import { HitCanvas, SceneCanvas } from './Canvas.js';
+import { Shape } from './Shape';
+import { HitCanvas, SceneCanvas } from './Canvas';
 
 export interface ContainerConfig extends NodeConfig {
   clearBeforeDraw?: boolean;
@@ -309,15 +309,15 @@ export abstract class Container<
 
     return arr;
   }
-  _clearSelfAndDescendantCache(attr?: string, forceEvent?: boolean) {
-    super._clearSelfAndDescendantCache(attr, forceEvent);
+  _clearSelfAndDescendantCache(attr?: string) {
+    super._clearSelfAndDescendantCache(attr);
     // skip clearing if node is cached with canvas
     // for performance reasons !!!
     if (this.isCached()) {
       return;
     }
     this.children?.forEach(function (node) {
-      node._clearSelfAndDescendantCache(attr, forceEvent);
+      node._clearSelfAndDescendantCache(attr);
     });
   }
   _setChildrenIndices() {

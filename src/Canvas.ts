@@ -1,8 +1,8 @@
-import { Util } from './Util.js';
-import { SceneContext, HitContext, Context } from './Context.js';
-import { Konva } from './Global.js';
-import { Factory } from './Factory.js';
-import { getNumberValidator } from './Validators.js';
+import { Util } from './Util';
+import { SceneContext, HitContext, Context } from './Context';
+import { Konva } from './Global';
+import { Factory } from './Factory';
+import { getNumberValidator } from './Validators';
 
 // calculate pixel ratio
 var _pixelRatio;

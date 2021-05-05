@@ -16,7 +16,7 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
 
 - **Visit:** The [Home Page](http://konvajs.org/) and follow on [Twitter](https://twitter.com/lavrton)
 - **Discover:** [Tutorials](http://konvajs.org/docs), [API Documentation](http://konvajs.org/api)
-- **Help:** [StackOverflow](http://stackoverflow.com/questions/tagged/konvajs), [Chat](https://gitter.im/konvajs/konva)
+- **Help:** [StackOverflow](http://stackoverflow.com/questions/tagged/konvajs), [Discord Chat](https://discord.gg/8FqZwVT)
 
 # Quick Look
 
