@@ -18,6 +18,25 @@ beforeEach(function () {
   Konva['inDblClickWindow'] = false;
 });
 
+// clear after test
+afterEach(function () {
+  var isFailed = this.currentTest.state == 'failed';
+  var isManual = this.currentTest.parent.title === 'Manual';
+
+  Konva.stages.forEach(function (stage) {
+    clearTimeout(stage.dblTimeout);
+  });
+
+  if (!isFailed && !isManual) {
+    Konva.stages.forEach(function (stage) {
+      stage.destroy();
+    });
+    if (Konva.DD._dragElements.size) {
+      throw 'Why drag elements are not cleaned?';
+    }
+  }
+});
+
 export const isNode = typeof global.document === 'undefined';
 export const isBrowser = !isNode;
 

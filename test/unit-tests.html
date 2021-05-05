@@ -8,27 +8,6 @@
     <script>
       mocha.setup('bdd');
     </script>
-
-    <script>
-      afterEach(function () {
-        var isFailed = this.currentTest.state == 'failed';
-        var isManual = this.currentTest.parent.title === 'Manual';
-
-        Konva.stages.forEach(function (stage) {
-          clearTimeout(stage.dblTimeout);
-        });
-
-        if (!isFailed && !isManual) {
-          Konva.stages.forEach(function (stage) {
-            stage.destroy();
-          });
-          if (Konva.DD._dragElements.size) {
-            throw 'Why drag elements are not cleaned?';
-          }
-        }
-      });
-    </script>
-
     <script>
       // CORE
       import './unit/Animation-test.ts';
