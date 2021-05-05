@@ -7,7 +7,7 @@
     "lib": ["ES2015", "dom"],
     "moduleResolution": "node",
     "declaration": true,
-    "noImplicitAny": true,
+    // "noImplicitAny": true,
     // "strict": true
   },
   "include": ["./src/*.ts"]
