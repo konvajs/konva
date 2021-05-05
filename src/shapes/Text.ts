@@ -1,14 +1,14 @@
-import { Util } from '../Util';
-import { Factory } from '../Factory';
-import { Shape, ShapeConfig } from '../Shape';
-import { Konva } from '../Global';
+import { Util } from '../Util.js';
+import { Factory } from '../Factory.js';
+import { Shape, ShapeConfig } from '../Shape.js';
+import { Konva } from '../Global.js';
 import {
   getNumberValidator,
   getStringValidator,
   getNumberOrAutoValidator,
   getBooleanValidator,
-} from '../Validators';
-import { _registerNode } from '../Global';
+} from '../Validators.js';
+import { _registerNode } from '../Global.js';
 
 import { GetSet } from '../types';
 
@@ -379,20 +379,6 @@ export class Text extends Shape<TextConfig> {
     };
   }
   _getContextFont() {
-    // IE don't want to work with usual font style
-    // bold was not working
-    // removing font variant will solve
-    // fix for: https://github.com/konvajs/konva/issues/94
-    if (Konva.UA.isIE) {
-      return (
-        this.fontStyle() +
-        SPACE +
-        this.fontSize() +
-        PX_SPACE +
-        this.fontFamily()
-      );
-    }
-
     return (
       this.fontStyle() +
       SPACE +

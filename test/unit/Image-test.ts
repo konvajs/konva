@@ -8,7 +8,7 @@ import {
   loadImage,
   isNode,
   isBrowser,
-} from './utis';
+} from './test-utils';
 
 describe('Image', function () {
   // ======================================================

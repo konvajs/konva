@@ -1,6 +1,6 @@
-import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
-import { RGBComponent } from '../Validators';
+import { Factory } from '../Factory.js';
+import { Node, Filter } from '../Node.js';
+import { RGBComponent } from '../Validators.js';
 
 /**
  * RGB Filter
@@ -16,7 +16,7 @@ import { RGBComponent } from '../Validators';
  * node.green(200);
  */
 
-export const RGB: Filter = function(imageData) {
+export const RGB: Filter = function (imageData) {
   var data = imageData.data,
     nPixels = data.length,
     red = this.red(),
@@ -35,7 +35,7 @@ export const RGB: Filter = function(imageData) {
   }
 };
 
-Factory.addGetterSetter(Node, 'red', 0, function(val) {
+Factory.addGetterSetter(Node, 'red', 0, function (val) {
   this._filterUpToDate = false;
   if (val > 255) {
     return 255;
@@ -54,7 +54,7 @@ Factory.addGetterSetter(Node, 'red', 0, function(val) {
  * @returns {Integer}
  */
 
-Factory.addGetterSetter(Node, 'green', 0, function(val) {
+Factory.addGetterSetter(Node, 'green', 0, function (val) {
   this._filterUpToDate = false;
   if (val > 255) {
     return 255;

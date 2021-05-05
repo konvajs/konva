@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { addStage, Konva, loadImage } from '../unit/utis';
+import { addStage, Konva, loadImage } from '../unit/test-utils';
 
 describe('RGB', function () {
   // ======================================================

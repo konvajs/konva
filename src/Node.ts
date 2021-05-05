@@ -1,19 +1,19 @@
-import { Util, Transform } from './Util';
-import { Factory } from './Factory';
-import { SceneCanvas, HitCanvas, Canvas } from './Canvas';
-import { Konva, _NODES_REGISTRY } from './Global';
-import { Container } from './Container';
+import { Util, Transform } from './Util.js';
+import { Factory } from './Factory.js';
+import { SceneCanvas, HitCanvas, Canvas } from './Canvas.js';
+import { Konva } from './Global.js';
+import { Container } from './Container.js';
 import { GetSet, Vector2d, IRect } from './types';
-import { DD } from './DragAndDrop';
+import { DD } from './DragAndDrop.js';
 import {
   getNumberValidator,
   getStringValidator,
   getBooleanValidator,
-} from './Validators';
-import { Stage } from './Stage';
-import { Context } from './Context';
-import { Shape } from './Shape';
-import { Layer } from './Layer';
+} from './Validators.js';
+import { Stage } from './Stage.js';
+import { Context } from './Context.js';
+import { Shape } from './Shape.js';
+import { Layer } from './Layer.js';
 
 export const ids: any = {};
 export const names: any = {};
@@ -227,10 +227,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return false;
   }
 
-  getChildren() {
-    return emptyChildren;
-  }
-
   _clearCache(attr?: string) {
     // if we want to clear transform cache
     // we don't really need to remove it from the cache
@@ -264,7 +260,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return cache;
   }
 
-  _calculate(name, deps, getter) {
+  _calculate(name: string, deps: Array<string>, getter: Function) {
     // if we are trying to calculate function for the first time
     // we need to attach listeners for change events
     if (!this._attachedDepsListeners.get(name)) {
@@ -285,7 +281,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * when the logic for a cached result depends on ancestor propagation, use this
    * method to clear self and children cache
    */
-  _clearSelfAndDescendantCache(attr?: string, forceEvent?: boolean) {
+  _clearSelfAndDescendantCache(attr?: string) {
     this._clearCache(attr);
     // trigger clear cache, so transformer can use it
     if (attr === ABSOLUTE_TRANSFORM) {
@@ -587,7 +583,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       0,
       0,
       hitCanvas.width / hitCanvas.pixelRatio,
-      hitCanvas.height / hitCanvas.pixelRatio,
+      hitCanvas.height / hitCanvas.pixelRatio
     );
     context.restore();
   }
@@ -1010,7 +1006,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   isListening() {
     return this._getCache(LISTENING, this._isListening);
   }
-  _isListening(relativeTo?: Node) {
+  _isListening(relativeTo?: Node): boolean {
     const listening = this.listening();
     if (!listening) {
       return false;
@@ -1039,7 +1035,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   isVisible() {
     return this._getCache(VISIBLE, this._isVisible);
   }
-  _isVisible(relativeTo) {
+  _isVisible(relativeTo?: Node): boolean {
     const visible = this.visible();
     if (!visible) {
       return false;
@@ -1171,7 +1167,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this._needClearTransformCache = false;
   }
 
-  setPosition(pos) {
+  setPosition(pos: Vector2d) {
     this._batchTransformChanges(() => {
       this.x(pos.x);
       this.y(pos.y);
@@ -1199,7 +1195,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // so stage transforms are ignored
    * node.getAbsolutePosition(stage)
    */
-  getAbsolutePosition(top?) {
+  getAbsolutePosition(top?: Node) {
     let haveCachedParent = false;
     let parent = this.parent;
     while (parent) {
@@ -1224,7 +1220,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     return absoluteTransform.getTranslation();
   }
-  setAbsolutePosition(pos) {
+  setAbsolutePosition(pos: Vector2d) {
     var origTrans = this._clearTransform();
 
     // don't clear translation
@@ -1300,7 +1296,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *   y: 2
    * });
    */
-  move(change) {
+  move(change: Vector2d) {
     var changeX = change.x,
       changeY = change.y,
       x = this.x(),
@@ -1350,7 +1346,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @param {Number} theta
    * @returns {Konva.Node}
    */
-  rotate(theta) {
+  rotate(theta: number) {
     this.rotation(this.rotation() + theta);
     return this;
   }
@@ -1479,7 +1475,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // move node from current layer into layer2
    * node.moveTo(layer2);
    */
-  moveTo(newContainer) {
+  moveTo(newContainer: Container) {
     // do nothing if new container is already parent
     if (this.getParent() !== newContainer) {
       this._remove();
@@ -1557,7 +1553,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // get one of the parent group
    * var parentGroups = node.findAncestors('Group');
    */
-  findAncestors(selector, includeSelf?, stopNode?) {
+  findAncestors(selector: string, includeSelf?: boolean, stopNode?: Container) {
     var res: Array<Node> = [];
 
     if (includeSelf && this._isMatch(selector)) {
@@ -1575,7 +1571,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
     return res;
   }
-  isAncestorOf(node) {
+  isAncestorOf(node: Node) {
     return false;
   }
   /**
@@ -1590,11 +1586,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // get one of the parent group
    * var group = node.findAncestors('.mygroup');
    */
-  findAncestor(selector?: string, includeSelf?: boolean, stopNode?: Node) {
+  findAncestor(selector?: string, includeSelf?: boolean, stopNode?: Container) {
     return this.findAncestors(selector, includeSelf, stopNode)[0];
   }
   // is current node match passed selector?
-  _isMatch(selector) {
+  _isMatch(selector: string | Function) {
     if (!selector) {
       return false;
     }
@@ -1687,7 +1683,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // fire click event that bubbles
    * node.fire('click', null, true);
    */
-  fire(eventType, evt: any = {}, bubble?) {
+  fire(eventType: string, evt: any = {}, bubble?: boolean) {
     evt.target = evt.target || this;
     // bubble
     if (bubble) {
@@ -1768,7 +1764,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // get absolute scale x
    * var scaleX = node.getAbsoluteScale().x;
    */
-  getAbsoluteScale(top?) {
+  getAbsoluteScale(top?: Node) {
     // do not cache this calculations,
     // because it use cache transform
     // this is special logic for caching with some shapes with shadow
@@ -1872,7 +1868,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *   x: 5
    * });
    */
-  clone(obj?) {
+  clone(obj?: any) {
     // instantiate new node
     var attrs = Util.cloneObject(this.attrs),
       key,
@@ -2071,7 +2067,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   getType() {
     return this.nodeType;
   }
-  getDragDistance() {
+  getDragDistance(): number {
     // compare with undefined because we need to track 0 value
     if (this.attrs.dragDistance !== undefined) {
       return this.attrs.dragDistance;
@@ -2435,11 +2431,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       this._lastPos.y !== newNodePos.y
     ) {
       this.setAbsolutePosition(newNodePos);
-      if (this.getLayer()) {
-        this.getLayer().batchDraw();
-      } else if (this.getStage()) {
-        this.getStage().batchDraw();
-      }
+      this._requestDraw();
     }
 
     this._lastPos = newNodePos;
@@ -2632,7 +2624,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       obj.attrs.container = container;
     }
 
-    if (!_NODES_REGISTRY[className]) {
+    if (!Konva[className]) {
       Util.warn(
         'Can not find a node with class name "' +
           className +
@@ -2641,7 +2633,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       className = 'Shape';
     }
 
-    const Class = _NODES_REGISTRY[className];
+    const Class = Konva[className];
 
     no = new Class(obj.attrs);
     if (children) {

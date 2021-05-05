@@ -1,6 +1,6 @@
 import { assert } from 'chai';
-import { Shape } from '../../src/Shape';
-import { addStage, Konva, compareLayers } from './utis';
+import { Shape } from '../../src/Shape.js';
+import { addStage, Konva, compareLayers } from './test-utils';
 
 describe('Container', function () {
   // ======================================================

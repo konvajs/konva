@@ -1,7 +1,7 @@
-import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
-import { Util } from '../Util';
-import { getNumberValidator } from '../Validators';
+import { Factory } from '../Factory.js';
+import { Node, Filter } from '../Node.js';
+import { Util } from '../Util.js';
+import { getNumberValidator } from '../Validators.js';
 /**
  * Emboss Filter.
  * Pixastic Lib - Emboss filter - v0.1.0
@@ -18,7 +18,7 @@ import { getNumberValidator } from '../Validators';
  * node.embossDirection('right');
  * node.embossBlend(true);
  */
-export const Emboss: Filter = function(imageData) {
+export const Emboss: Filter = function (imageData) {
   // pixastic strength is between 0 and 10.  I want it between 0 and 1
   // pixastic greyLevel is between 0 and 255.  I want it between 0 and 1.  Also,
   // a max value of greyLevel yields a white emboss, and the min value yields a black

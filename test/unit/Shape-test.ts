@@ -12,7 +12,7 @@ import {
   compareLayers,
   loadImage,
   Konva,
-} from './utis';
+} from './test-utils';
 
 describe('Shape', function () {
   // ======================================================

@@ -1,7 +1,7 @@
-import { Konva } from './Global';
-import { Node } from './Node';
+import { Konva } from './Global.js';
+import { Node } from './Node.js';
 import { Vector2d } from './types';
-import { Util } from './Util';
+import { Util } from './Util.js';
 
 export const DD = {
   get isDragging() {

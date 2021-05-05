@@ -6,7 +6,7 @@ import {
   simulatePointerDown,
   simulatePointerMove,
   simulatePointerUp,
-} from './utis';
+} from './test-utils';
 
 // TODO: restore it!
 describe.skip('PointerEvents', function () {

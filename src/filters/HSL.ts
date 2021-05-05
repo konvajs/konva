@@ -1,6 +1,6 @@
-import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
-import { getNumberValidator } from '../Validators';
+import { Factory } from '../Factory.js';
+import { Node, Filter } from '../Node.js';
+import { getNumberValidator } from '../Validators.js';
 
 Factory.addGetterSetter(
   Node,
@@ -58,7 +58,7 @@ Factory.addGetterSetter(
  * image.luminance(0.2);
  */
 
-export const HSL: Filter = function(imageData) {
+export const HSL: Filter = function (imageData) {
   var data = imageData.data,
     nPixels = data.length,
     v = 1,

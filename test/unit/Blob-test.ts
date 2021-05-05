@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import { Line } from '../../src/shapes/Line';
 
-import { addStage, Konva, cloneAndCompareLayer } from './utis';
+import { addStage, Konva, cloneAndCompareLayer } from './test-utils';
 
 describe('Blob', function () {
   // ======================================================

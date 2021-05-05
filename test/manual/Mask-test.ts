@@ -1,4 +1,4 @@
-import { addStage, Konva, loadImage } from '../unit/utis';
+import { addStage, Konva, loadImage } from '../unit/test-utils';
 
 describe('Mask', function () {
   // ======================================================

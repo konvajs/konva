@@ -1,29 +1,25 @@
-// TODO: restore
-// function equal(val1, val2, message) {
-//   if (val1 !== val2) {
-//     throw new Error('Not passed: ' + message);
-//   }
-// }
+function equal(val1, val2, message) {
+  if (val1 !== val2) {
+    throw new Error('Not passed: ' + message);
+  }
+}
 
-// // try to import only core
-// let { Konva } = require('../lib/Core');
+// try to import only core
+import Konva from '../lib/Core.js';
 
-// // no external shapes
+// no external shapes
 // equal(Konva.Rect, undefined, 'no external shapes');
 
-// let Rect = require('../lib/shapes/Rect').Rect;
+import { Rect } from '../lib/shapes/Rect.js';
 
-// equal(Rect !== undefined, true, 'Rect is defined');
+equal(Rect !== undefined, true, 'Rect is defined');
 
-// equal(Konva.Rect, Rect, 'Rect is injected');
+equal(Konva.Rect, Rect, 'Rect is injected');
 
-// // now import from package.json
-// const oldKonva = Konva;
-// Konva = require('../');
+import Konva2 from '../lib/index-node.js';
 
-// equal(Konva.Rect, Rect, 'Same rects');
+equal(Konva2.Rect, Rect, 'Rect is injected');
 
-// // check global injection
-// equal(global.Konva, Konva, 'injected');
+equal(Konva2, Konva, 'Same Konva');
 
-// equal(Konva, oldKonva, 'Full package is the same as core.');
+console.log('Import tests are passed.');

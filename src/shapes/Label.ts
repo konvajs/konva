@@ -1,15 +1,15 @@
-import { Factory } from '../Factory';
-import { Shape, ShapeConfig } from '../Shape';
-import { Group } from '../Group';
-import { ContainerConfig } from '../Container';
+import { Factory } from '../Factory.js';
+import { Shape, ShapeConfig } from '../Shape.js';
+import { Group } from '../Group.js';
+import { ContainerConfig } from '../Container.js';
 import {
   getNumberOrArrayOfNumbersValidator,
   getNumberValidator,
-} from '../Validators';
-import { _registerNode } from '../Global';
+} from '../Validators.js';
+import { _registerNode } from '../Global.js';
 
 import { GetSet } from '../types';
-import { Text } from './Text';
+import { Text } from './Text.js';
 
 export interface LabelConfig extends ContainerConfig {}
 

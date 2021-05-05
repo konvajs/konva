@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { addStage, Konva, compareLayers } from './utis';
+import { addStage, Konva, compareLayers } from './test-utils';
 
 describe('Ring', function () {
   // ======================================================

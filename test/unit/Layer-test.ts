@@ -9,7 +9,7 @@ import {
   Konva,
   loadImage,
   isNode,
-} from './utis';
+} from './test-utils';
 
 describe('Layer', function () {
   // ======================================================

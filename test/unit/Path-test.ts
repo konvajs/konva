@@ -10,7 +10,7 @@ import {
   compareLayerAndCanvas,
   cloneAndCompareLayer,
   isNode,
-} from './utis';
+} from './test-utils';
 
 describe('Path', function () {
   // ======================================================

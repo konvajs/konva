@@ -1,4 +1,4 @@
-import { Filter } from '../Node';
+import { Filter } from '../Node.js';
 /**
  * Solarize Filter
  * Pixastic Lib - Solarize filter - v0.1.0
@@ -13,7 +13,7 @@ import { Filter } from '../Node';
  * node.filters([Konva.Filters.Solarize]);
  */
 
-export const Solarize: Filter = function(imageData) {
+export const Solarize: Filter = function (imageData) {
   var data = imageData.data,
     w = imageData.width,
     h = imageData.height,

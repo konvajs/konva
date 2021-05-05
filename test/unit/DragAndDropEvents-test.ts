@@ -6,7 +6,7 @@ import {
   simulateMouseDown,
   simulateMouseMove,
   simulateMouseUp,
-} from './utis';
+} from './test-utils';
 
 describe('DragAndDropEvents', function () {
   // ======================================================

@@ -1,7 +1,7 @@
-import { glob } from './Global';
-import { Layer } from './Layer';
+import { glob } from './Global.js';
+import { Layer } from './Layer.js';
 import { IFrame, AnimationFn } from './types';
-import { Util } from './Util';
+import { Util } from './Util.js';
 
 var now = (function (): () => number {
   if (glob.performance && glob.performance.now) {

@@ -1,10 +1,10 @@
-import { Util } from '../Util';
-import { Factory } from '../Factory';
-import { Shape, ShapeConfig } from '../Shape';
-import { Path } from './Path';
-import { Text, stringToArray } from './Text';
-import { getNumberValidator } from '../Validators';
-import { _registerNode } from '../Global';
+import { Util } from '../Util.js';
+import { Factory } from '../Factory.js';
+import { Shape, ShapeConfig } from '../Shape.js';
+import { Path } from './Path.js';
+import { Text, stringToArray } from './Text.js';
+import { getNumberValidator } from '../Validators.js';
+import { _registerNode } from '../Global.js';
 
 import { GetSet, Vector2d } from '../types';
 

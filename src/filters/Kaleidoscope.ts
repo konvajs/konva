@@ -1,7 +1,7 @@
-import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
-import { Util } from '../Util';
-import { getNumberValidator } from '../Validators';
+import { Factory } from '../Factory.js';
+import { Node, Filter } from '../Node.js';
+import { Util } from '../Util.js';
+import { getNumberValidator } from '../Validators.js';
 
 /*
  * ToPolar Filter. Converts image data to polar coordinates. Performs
@@ -19,7 +19,7 @@ import { getNumberValidator } from '../Validators';
  *  default is in the middle
  */
 
-var ToPolar = function(src, dst, opt) {
+var ToPolar = function (src, dst, opt) {
   var srcPixels = src.data,
     dstPixels = dst.data,
     xSize = src.width,
@@ -96,7 +96,7 @@ var ToPolar = function(src, dst, opt) {
  *  0 is no rotation, 360 degrees is a full rotation
  */
 
-var FromPolar = function(src, dst, opt) {
+var FromPolar = function (src, dst, opt) {
   var srcPixels = src.data,
     dstPixels = dst.data,
     xSize = src.width,
@@ -177,7 +177,7 @@ var FromPolar = function(src, dst, opt) {
  * node.kaleidoscopePower(3);
  * node.kaleidoscopeAngle(45);
  */
-export const Kaleidoscope: Filter = function(imageData) {
+export const Kaleidoscope: Filter = function (imageData) {
   var xSize = imageData.width,
     ySize = imageData.height;
 
@@ -201,7 +201,7 @@ export const Kaleidoscope: Filter = function(imageData) {
   // Convert thhe original to polar coordinates
   ToPolar(imageData, scratchData, {
     polarCenterX: xSize / 2,
-    polarCenterY: ySize / 2
+    polarCenterY: ySize / 2,
   });
 
   // Determine how big each section will be, if it's too small

@@ -24,57 +24,6 @@ function detectBrowser() {
   );
 }
 
-const _detectIE = function (ua) {
-  var msie = ua.indexOf('msie ');
-  if (msie > 0) {
-    // IE 10 or older => return version number
-    return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
-  }
-
-  var trident = ua.indexOf('trident/');
-  if (trident > 0) {
-    // IE 11 => return version number
-    var rv = ua.indexOf('rv:');
-    return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
-  }
-
-  var edge = ua.indexOf('edge/');
-  if (edge > 0) {
-    // Edge (IE 12+) => return version number
-    return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
-  }
-
-  // other browser
-  return false;
-};
-
-export const _parseUA = function (userAgent) {
-  var ua = userAgent.toLowerCase(),
-    // jQuery UA regex
-    match =
-      /(chrome)[ /]([\w.]+)/.exec(ua) ||
-      /(webkit)[ /]([\w.]+)/.exec(ua) ||
-      /(opera)(?:.*version|)[ /]([\w.]+)/.exec(ua) ||
-      /(msie) ([\w.]+)/.exec(ua) ||
-      (ua.indexOf('compatible') < 0 &&
-        /(mozilla)(?:.*? rv:([\w.]+)|)/.exec(ua)) ||
-      [],
-    // adding mobile flag as well
-    mobile = !!userAgent.match(
-      /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i
-    ),
-    ieMobile = !!userAgent.match(/IEMobile/i);
-
-  return {
-    browser: match[1] || '',
-    version: match[2] || '0',
-    isIE: _detectIE(ua),
-    // adding mobile flab
-    mobile: mobile,
-    ieMobile: ieMobile, // If this is true (i.e., WP8), then Konva touch events are executed instead of equivalent Konva mouse events
-  };
-};
-
 declare const WorkerGlobalScope: any;
 
 export const glob: any =
@@ -90,9 +39,9 @@ export const Konva = {
   _global: glob,
   version: '@@version',
   isBrowser: detectBrowser(),
-  isUnminified: /param/.test(function (param) {}.toString()),
+  isUnminified: /param/.test(function (param: any) {}.toString()),
   dblClickWindow: 400,
-  getAngle(angle) {
+  getAngle(angle: number) {
     return Konva.angleDeg ? angle * PI_OVER_180 : angle;
   },
   enableTrace: false,
@@ -210,20 +159,15 @@ export const Konva = {
     return !!Konva['DD'].node;
   },
   // user agent
-  UA: _parseUA((glob.navigator && glob.navigator.userAgent) || ''),
   document: glob.document,
   // insert Konva into global namespace (window)
   // it is required for npm packages
   _injectGlobal(Konva) {
     glob.Konva = Konva;
   },
-  _parseUA,
 };
 
-export const _NODES_REGISTRY = {};
-
-export const _registerNode = (NodeClass) => {
-  _NODES_REGISTRY[NodeClass.prototype.getClassName()] = NodeClass;
+export const _registerNode = (NodeClass: any) => {
   Konva[NodeClass.prototype.getClassName()] = NodeClass;
 };
 

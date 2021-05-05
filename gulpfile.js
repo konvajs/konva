@@ -4,8 +4,6 @@ import uglify from 'gulp-uglify-es';
 import replace from 'gulp-replace';
 import jsdoc from 'gulp-jsdoc3';
 import connect from 'gulp-connect';
-import jscpd from 'gulp-jscpd';
-import eslint from 'gulp-eslint';
 import gutil from 'gulp-util';
 
 import fs from 'fs';
@@ -59,35 +57,6 @@ gulp.task('build', gulp.parallel(['update-version-lib', 'pre-build']));
 // local server for better development
 gulp.task('server', function () {
   connect.server();
-});
-
-// lint files
-gulp.task('lint', function () {
-  return (
-    gulp
-      .src('./src/**/*.js')
-      .pipe(
-        eslint({
-          configFile: './.eslintrc',
-        })
-      )
-      // eslint.format() outputs the lint results to the console.
-      // Alternatively use eslint.formatEach() (see Docs).
-      .pipe(eslint.format())
-      // To have the process exit with an error code (1) on
-      // lint error, return the stream and pipe to failOnError last.
-      .pipe(eslint.failOnError())
-  );
-});
-
-// check code for duplication
-gulp.task('inspect', function () {
-  return gulp.src('./src/**/*.js').pipe(
-    jscpd({
-      'min-lines': 10,
-      verbose: true,
-    })
-  );
 });
 
 // // generate documentation

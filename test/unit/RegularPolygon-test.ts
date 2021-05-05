@@ -5,7 +5,7 @@ import {
   Konva,
   cloneAndCompareLayer,
   assertAlmostEqual,
-} from './utis';
+} from './test-utils';
 
 describe('RegularPolygon', function () {
   // ======================================================

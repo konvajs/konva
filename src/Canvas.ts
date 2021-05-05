@@ -1,8 +1,8 @@
-import { Util } from './Util';
-import { SceneContext, HitContext, Context } from './Context';
-import { Konva } from './Global';
-import { Factory } from './Factory';
-import { getNumberValidator } from './Validators';
+import { Util } from './Util.js';
+import { SceneContext, HitContext, Context } from './Context.js';
+import { Konva } from './Global.js';
+import { Factory } from './Factory.js';
+import { getNumberValidator } from './Validators.js';
 
 // calculate pixel ratio
 var _pixelRatio;
@@ -12,7 +12,7 @@ function getDevicePixelRatio() {
   }
   var canvas = Util.createCanvasElement();
   var context = canvas.getContext('2d') as any;
-  _pixelRatio = (function() {
+  _pixelRatio = (function () {
     var devicePixelRatio = Konva._global.devicePixelRatio || 1,
       backingStoreRatio =
         context.webkitBackingStorePixelRatio ||

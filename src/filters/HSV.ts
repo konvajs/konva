@@ -1,6 +1,6 @@
-import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
-import { getNumberValidator } from '../Validators';
+import { Factory } from '../Factory.js';
+import { Node, Filter } from '../Node.js';
+import { getNumberValidator } from '../Validators.js';
 
 /**
  * HSV Filter. Adjusts the hue, saturation and value
@@ -14,7 +14,7 @@ import { getNumberValidator } from '../Validators';
  * image.value(200);
  */
 
-export const HSV: Filter = function(imageData) {
+export const HSV: Filter = function (imageData) {
   var data = imageData.data,
     nPixels = data.length,
     v = Math.pow(2, this.value()),

@@ -1,8 +1,8 @@
-import { Factory } from '../Factory';
-import { Shape, ShapeConfig } from '../Shape';
+import { Factory } from '../Factory.js';
+import { Shape, ShapeConfig } from '../Shape.js';
 import { GetSet } from '../types';
-import { getNumberValidator } from '../Validators';
-import { _registerNode } from '../Global';
+import { getNumberValidator } from '../Validators.js';
+import { _registerNode } from '../Global.js';
 
 export interface CircleConfig extends ShapeConfig {
   radius?: number;

@@ -1,6 +1,6 @@
-import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
-import { getNumberValidator } from '../Validators';
+import { Factory } from '../Factory.js';
+import { Node, Filter } from '../Node.js';
+import { getNumberValidator } from '../Validators.js';
 
 /**
  * Brighten Filter.
@@ -12,7 +12,7 @@ import { getNumberValidator } from '../Validators';
  * node.filters([Konva.Filters.Brighten]);
  * node.brightness(0.8);
  */
-export const Brighten: Filter = function(imageData) {
+export const Brighten: Filter = function (imageData) {
   var brightness = this.brightness() * 255,
     data = imageData.data,
     len = data.length,

@@ -10,8 +10,8 @@ Konva.enableTrace = true;
 Konva.showWarnings = true;
 
 import { imagediff } from './imagediff';
-import { Layer } from '../../src/Layer';
-import { Stage } from '../../src/Stage';
+import { Layer } from '../../src/Layer.js';
+import { Stage } from '../../src/Stage.js';
 
 // reset some data
 beforeEach(function () {
@@ -156,8 +156,6 @@ export function showHit(layer) {
 
   getContainer().appendChild(canvas);
 }
-
-Konva['UA'].mobile = false;
 
 export function simulateMouseDown(stage, pos) {
   var top = isNode ? 0 : stage.content.getBoundingClientRect().top;

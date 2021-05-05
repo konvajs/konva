@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { addStage, Konva } from './utis';
+import { addStage, Konva } from './test-utils';
 
 describe('Context', function () {
   // ======================================================

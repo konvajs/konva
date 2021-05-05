@@ -1,6 +1,11 @@
 import { assert } from 'chai';
 
-import { addStage, Konva, createCanvas, compareLayerAndCanvas } from './utis';
+import {
+  addStage,
+  Konva,
+  createCanvas,
+  compareLayerAndCanvas,
+} from './test-utils';
 
 describe('Ellipse', function () {
   // ======================================================

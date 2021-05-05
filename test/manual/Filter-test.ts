@@ -1,4 +1,4 @@
-import { addStage, Konva, cloneAndCompareLayer } from '../unit/utis';
+import { addStage, Konva, cloneAndCompareLayer } from '../unit/test-utils';
 
 describe('Filter', function () {
   it('pixelRaio check', function () {

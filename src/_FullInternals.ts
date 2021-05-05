@@ -1,46 +1,46 @@
 // we need to import core of the Konva and then extend it with all additional objects
 
-import { Konva as Core } from './_CoreInternals';
+import { Konva as Core } from './_CoreInternals.js';
 
 // shapes
-import { Arc } from './shapes/Arc';
-import { Arrow } from './shapes/Arrow';
-import { Circle } from './shapes/Circle';
-import { Ellipse } from './shapes/Ellipse';
-import { Image } from './shapes/Image';
-import { Label, Tag } from './shapes/Label';
-import { Line } from './shapes/Line';
-import { Path } from './shapes/Path';
-import { Rect } from './shapes/Rect';
-import { RegularPolygon } from './shapes/RegularPolygon';
-import { Ring } from './shapes/Ring';
-import { Sprite } from './shapes/Sprite';
-import { Star } from './shapes/Star';
-import { Text } from './shapes/Text';
-import { TextPath } from './shapes/TextPath';
-import { Transformer } from './shapes/Transformer';
-import { Wedge } from './shapes/Wedge';
+import { Arc } from './shapes/Arc.js';
+import { Arrow } from './shapes/Arrow.js';
+import { Circle } from './shapes/Circle.js';
+import { Ellipse } from './shapes/Ellipse.js';
+import { Image } from './shapes/Image.js';
+import { Label, Tag } from './shapes/Label.js';
+import { Line } from './shapes/Line.js';
+import { Path } from './shapes/Path.js';
+import { Rect } from './shapes/Rect.js';
+import { RegularPolygon } from './shapes/RegularPolygon.js';
+import { Ring } from './shapes/Ring.js';
+import { Sprite } from './shapes/Sprite.js';
+import { Star } from './shapes/Star.js';
+import { Text } from './shapes/Text.js';
+import { TextPath } from './shapes/TextPath.js';
+import { Transformer } from './shapes/Transformer.js';
+import { Wedge } from './shapes/Wedge.js';
 
 // filters
-import { Blur } from './filters/Blur';
-import { Brighten } from './filters/Brighten';
-import { Contrast } from './filters/Contrast';
-import { Emboss } from './filters/Emboss';
-import { Enhance } from './filters/Enhance';
-import { Grayscale } from './filters/Grayscale';
-import { HSL } from './filters/HSL';
-import { HSV } from './filters/HSV';
-import { Invert } from './filters/Invert';
-import { Kaleidoscope } from './filters/Kaleidoscope';
-import { Mask } from './filters/Mask';
-import { Noise } from './filters/Noise';
-import { Pixelate } from './filters/Pixelate';
-import { Posterize } from './filters/Posterize';
-import { RGB } from './filters/RGB';
-import { RGBA } from './filters/RGBA';
-import { Sepia } from './filters/Sepia';
-import { Solarize } from './filters/Solarize';
-import { Threshold } from './filters/Threshold';
+import { Blur } from './filters/Blur.js';
+import { Brighten } from './filters/Brighten.js';
+import { Contrast } from './filters/Contrast.js';
+import { Emboss } from './filters/Emboss.js';
+import { Enhance } from './filters/Enhance.js';
+import { Grayscale } from './filters/Grayscale.js';
+import { HSL } from './filters/HSL.js';
+import { HSV } from './filters/HSV.js';
+import { Invert } from './filters/Invert.js';
+import { Kaleidoscope } from './filters/Kaleidoscope.js';
+import { Mask } from './filters/Mask.js';
+import { Noise } from './filters/Noise.js';
+import { Pixelate } from './filters/Pixelate.js';
+import { Posterize } from './filters/Posterize.js';
+import { RGB } from './filters/RGB.js';
+import { RGBA } from './filters/RGBA.js';
+import { Sepia } from './filters/Sepia.js';
+import { Solarize } from './filters/Solarize.js';
+import { Threshold } from './filters/Threshold.js';
 
 export const Konva = Core.Util._assign(Core, {
   Arc,

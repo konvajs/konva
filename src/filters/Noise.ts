@@ -1,6 +1,6 @@
-import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
-import { getNumberValidator } from '../Validators';
+import { Factory } from '../Factory.js';
+import { Node, Filter } from '../Node.js';
+import { getNumberValidator } from '../Validators.js';
 
 /**
  * Noise Filter. Randomly adds or substracts to the color channels
@@ -14,7 +14,7 @@ import { getNumberValidator } from '../Validators';
  * node.filters([Konva.Filters.Noise]);
  * node.noise(0.8);
  */
-export const Noise: Filter = function(imageData) {
+export const Noise: Filter = function (imageData) {
   var amount = this.noise() * 255,
     data = imageData.data,
     nPixels = data.length,

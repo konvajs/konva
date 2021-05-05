@@ -1,13 +1,13 @@
-import { Util, Transform } from '../Util';
-import { Factory } from '../Factory';
-import { Node } from '../Node';
-import { Shape } from '../Shape';
-import { Rect } from './Rect';
-import { Group } from '../Group';
-import { ContainerConfig } from '../Container';
-import { Konva } from '../Global';
-import { getNumberValidator } from '../Validators';
-import { _registerNode } from '../Global';
+import { Util, Transform } from '../Util.js';
+import { Factory } from '../Factory.js';
+import { Node } from '../Node.js';
+import { Shape } from '../Shape.js';
+import { Rect } from './Rect.js';
+import { Group } from '../Group.js';
+import { ContainerConfig } from '../Container.js';
+import { Konva } from '../Global.js';
+import { getNumberValidator } from '../Validators.js';
+import { _registerNode } from '../Global.js';
 
 import { GetSet, IRect, Vector2d } from '../types';
 

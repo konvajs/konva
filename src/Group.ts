@@ -1,8 +1,8 @@
-import { Util } from './Util';
-import { Container } from './Container';
-import { _registerNode } from './Global';
-import { Node } from './Node';
-import { Shape } from './Shape';
+import { Util } from './Util.js';
+import { Container } from './Container.js';
+import { _registerNode } from './Global.js';
+import { Node } from './Node.js';
+import { Shape } from './Shape.js';
 
 /**
  * Group constructor.  Groups are used to contain shapes or other groups.

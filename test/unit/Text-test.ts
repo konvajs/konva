@@ -10,7 +10,7 @@ import {
   isBrowser,
   isNode,
   assertAlmostEqual,
-} from './utis';
+} from './test-utils';
 
 describe('Text', function () {
   // ======================================================

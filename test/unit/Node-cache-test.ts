@@ -8,7 +8,7 @@ import {
   createCanvas,
   loadImage,
   getPixelRatio,
-} from './utis';
+} from './test-utils';
 
 describe('Caching', function () {
   it('cache simple rectangle', function () {

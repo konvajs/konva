@@ -1,4 +1,4 @@
-import { addStage, cloneAndCompareLayer, Konva } from './utis';
+import { addStage, cloneAndCompareLayer, Konva } from './test-utils';
 
 describe('Group', function () {
   // ======================================================

@@ -1,6 +1,6 @@
-import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
-import { getNumberValidator } from '../Validators';
+import { Factory } from '../Factory.js';
+import { Node, Filter } from '../Node.js';
+import { getNumberValidator } from '../Validators.js';
 /**
  * Posterize Filter. Adjusts the channels so that there are no more
  *  than n different values for that channel. This is also applied
@@ -16,7 +16,7 @@ import { getNumberValidator } from '../Validators';
  * node.levels(0.8); // between 0 and 1
  */
 
-export const Posterize: Filter = function(imageData) {
+export const Posterize: Filter = function (imageData) {
   // level must be between 1 and 255
   var levels = Math.round(this.levels() * 254) + 1,
     data = imageData.data,

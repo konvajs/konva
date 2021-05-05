@@ -1,8 +1,8 @@
 /*eslint-disable max-depth */
-import { Factory } from '../Factory';
-import { Util } from '../Util';
-import { Node, Filter } from '../Node';
-import { getNumberValidator } from '../Validators';
+import { Factory } from '../Factory.js';
+import { Util } from '../Util.js';
+import { Node, Filter } from '../Node.js';
+import { getNumberValidator } from '../Validators.js';
 
 /**
  * Pixelate Filter. Averages groups of pixels and redraws
@@ -18,7 +18,7 @@ import { getNumberValidator } from '../Validators';
  * node.pixelSize(10);
  */
 
-export const Pixelate: Filter = function(imageData) {
+export const Pixelate: Filter = function (imageData) {
   var pixelSize = Math.ceil(this.pixelSize()),
     width = imageData.width,
     height = imageData.height,

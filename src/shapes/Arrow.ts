@@ -1,8 +1,8 @@
-import { Factory } from '../Factory';
-import { Line, LineConfig } from './Line';
+import { Factory } from '../Factory.js';
+import { Line, LineConfig } from './Line.js';
 import { GetSet } from '../types';
-import { getNumberValidator } from '../Validators';
-import { _registerNode } from '../Global';
+import { getNumberValidator } from '../Validators.js';
+import { _registerNode } from '../Global.js';
 
 export interface ArrowConfig extends LineConfig {
   points: number[];

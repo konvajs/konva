@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { Shape } from '../../src/Shape';
+import { Shape } from '../../src/Shape.js';
 
 import {
   addStage,
@@ -12,7 +12,7 @@ import {
   loadImage,
   Konva,
   isBrowser,
-} from './utis';
+} from './test-utils';
 
 describe('Node', function () {
   // ======================================================

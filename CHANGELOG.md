@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - `Konva.Collection` is removed. `container.children` is a simple array now. `container.find()` will return also a simple array instead of `Konva.Collection()`.
 - Better typescript support. Now every module has its own `*.d.ts` file.
 - New method `layer.getNativeCanvasElement()`
+- Removed `Konva.UA`, `Konva._parseUA` (it was used for old browser detection)
 
 ## 7.2.5
 

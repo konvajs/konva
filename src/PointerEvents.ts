@@ -1,8 +1,8 @@
-import { KonvaEventObject } from './Node';
-import { Konva } from './Global';
+import { KonvaEventObject } from './Node.js';
+import { Konva } from './Global.js';
 
-import { Shape } from './Shape';
-import { Stage } from './Stage';
+import { Shape } from './Shape.js';
+import { Stage } from './Stage.js';
 
 const Captures = new Map<number, Shape | Stage>();
 
@@ -21,7 +21,7 @@ export function getCapturedShape(pointerId: number) {
 export function createEvent(evt: PointerEvent): KonvaPointerEvent {
   return {
     evt,
-    pointerId: evt.pointerId
+    pointerId: evt.pointerId,
   } as any;
 }
 

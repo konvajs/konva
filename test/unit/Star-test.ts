@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { addStage, Konva, cloneAndCompareLayer } from './utis';
+import { addStage, Konva, cloneAndCompareLayer } from './test-utils';
 
 describe('Star', function () {
   // ======================================================

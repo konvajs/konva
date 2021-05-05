@@ -6,7 +6,7 @@ import {
   createCanvas,
   compareLayerAndCanvas,
   loadImage,
-} from './utis';
+} from './test-utils';
 
 describe('Circle', function () {
   // ======================================================

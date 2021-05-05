@@ -1,6 +1,6 @@
-import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
-import { getNumberValidator } from '../Validators';
+import { Factory } from '../Factory.js';
+import { Node, Filter } from '../Node.js';
+import { getNumberValidator } from '../Validators.js';
 /*
  the Gauss filter
  master repo: https://github.com/pavelpower/kineticjsGaussFilter
@@ -309,7 +309,7 @@ var mul_table = [
   265,
   263,
   261,
-  259
+  259,
 ];
 
 var shg_table = [
@@ -567,7 +567,7 @@ var shg_table = [
   24,
   24,
   24,
-  24
+  24,
 ];
 
 function filterGaussBlurRGBA(imageData, radius) {

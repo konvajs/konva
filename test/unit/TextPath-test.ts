@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { addStage, Konva, cloneAndCompareLayer, isBrowser } from './utis';
+import { addStage, Konva, cloneAndCompareLayer, isBrowser } from './test-utils';
 
 describe('TextPath', function () {
   // ======================================================

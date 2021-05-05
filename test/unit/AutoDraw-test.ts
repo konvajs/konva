@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { addStage, isNode, Konva } from './utis';
+import { addStage, isNode, Konva } from './test-utils';
 
 describe('AutoDraw', function () {
   // ======================================================

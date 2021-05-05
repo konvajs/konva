@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { Konva } from './utis';
+import { Konva } from './test-utils';
 
 describe('Util', function () {
   it('get()', function () {

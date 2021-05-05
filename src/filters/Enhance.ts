@@ -1,6 +1,6 @@
-import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
-import { getNumberValidator } from '../Validators';
+import { Factory } from '../Factory.js';
+import { Node, Filter } from '../Node.js';
+import { getNumberValidator } from '../Validators.js';
 
 function remap(fromValue, fromMin, fromMax, toMin, toMax) {
   // Compute the range of the data
@@ -37,7 +37,7 @@ function remap(fromValue, fromMin, fromMax, toMin, toMax) {
  * node.filters([Konva.Filters.Enhance]);
  * node.enhance(0.4);
  */
-export const Enhance: Filter = function(imageData) {
+export const Enhance: Filter = function (imageData) {
   var data = imageData.data,
     nSubPixels = data.length,
     rMin = data[0],

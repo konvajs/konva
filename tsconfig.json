@@ -6,7 +6,9 @@
     "noEmitOnError": true,
     "lib": ["ES2015", "dom"],
     "moduleResolution": "node",
-    "declaration": true
+    "declaration": true,
+    "noImplicitAny": true,
+    // "strict": true
   },
   "include": ["./src/*.ts"]
 }

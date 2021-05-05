@@ -1,11 +1,10 @@
-import { Util } from './Util';
-import { Factory } from './Factory';
-import { Node, NodeConfig } from './Node';
-import { getNumberValidator } from './Validators';
+import { Factory } from './Factory.js';
+import { Node, NodeConfig } from './Node.js';
+import { getNumberValidator } from './Validators.js';
 
 import { GetSet, IRect } from './types';
-import { Shape } from './Shape';
-import { HitCanvas, SceneCanvas } from './Canvas';
+import { Shape } from './Shape.js';
+import { HitCanvas, SceneCanvas } from './Canvas.js';
 
 export interface ContainerConfig extends NodeConfig {
   clearBeforeDraw?: boolean;
@@ -27,7 +26,7 @@ export interface ContainerConfig extends NodeConfig {
  * @@containerParams
  */
 export abstract class Container<
-  ChildType extends Node
+  ChildType extends Node = Node
 > extends Node<ContainerConfig> {
   children: Array<ChildType> | undefined = [];
 

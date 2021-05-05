@@ -9,7 +9,7 @@ import {
   simulateMouseMove as sm,
   simulateMouseUp as su,
   assertAlmostEqual,
-} from './utis';
+} from './test-utils';
 
 function simulateMouseDown(tr, pos) {
   sd(tr.getStage(), pos);
@@ -1410,7 +1410,6 @@ describe('Transformer', function () {
     assertAlmostEqual(rect.scaleY(), 1);
     assertAlmostEqual(rect.rotation(), -180);
   });
-
 
   it('slightly move for cache check (top-left anchor)', function () {
     var stage = addStage();

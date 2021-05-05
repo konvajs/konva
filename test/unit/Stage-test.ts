@@ -15,7 +15,7 @@ import {
   isNode,
   isBrowser,
   Konva,
-} from './utis';
+} from './test-utils';
 
 describe('Stage', function () {
   // ======================================================
