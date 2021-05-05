@@ -133,8 +133,6 @@ describe('TouchEvents', function () {
     layer.add(circle);
     stage.add(layer);
 
-    var top = stage.content.getBoundingClientRect().top;
-
     // reset inDoubleClickWindow
     Konva.inDblClickWindow = false;
 
@@ -286,8 +284,6 @@ describe('TouchEvents', function () {
     var circleTouchend = 0;
     var stageContentTouchstart = 0;
     var stageContentTouchend = 0;
-
-    var top = stage.content.getBoundingClientRect().top;
 
     circle.on('touchend', function () {
       circleTouchend++;

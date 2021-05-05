@@ -1,6 +1,6 @@
 import { assert } from 'chai';
-import KonvaModule from '../../lib/index';
-import '../../lib/index-node';
+import KonvaModule from '../../src/index';
+import '../../src/index-node';
 
 export const Konva = KonvaModule;
 
@@ -10,8 +10,8 @@ Konva.enableTrace = true;
 Konva.showWarnings = true;
 
 import { imagediff } from './imagediff';
-import { Layer } from '../../lib/Layer.js';
-import { Stage } from '../../lib/Stage.js';
+import { Layer } from '../../src/Layer.js';
+import { Stage } from '../../src/Stage.js';
 
 // reset some data
 beforeEach(function () {

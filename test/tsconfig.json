@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
-    "outDir": "lib",
     "target": "ES2015",
     "noEmitOnError": true,
     "moduleResolution": "node",
-    "lib": ["ES2015", "dom"]
+    "lib": ["ES2015", "dom"],
+    "module": "CommonJS"
   },
   "include": ["../src/*.ts"]
 }
