@@ -125,6 +125,36 @@ describe('Image', function () {
   });
 
   // ======================================================
+  it('try image will fill pattern', function (done) {
+    loadImage('darth-vader.jpg', (imageObj) => {
+      loadImage('lion.png', (lion) => {
+        var stage = addStage();
+
+        var layer = new Konva.Layer();
+        var darth = new Konva.Image({
+          x: 20,
+          y: 20,
+          image: lion,
+          draggable: true,
+          fillPatternImage: imageObj,
+          fillPatternRepeat: 'no-repeat',
+          fillPatternX: 50,
+        });
+
+        layer.add(darth);
+        stage.add(layer);
+
+        assert.equal(
+          layer.getContext().getTrace(true),
+          'clearRect();save();transform();beginPath();rect();closePath();fillStyle;fill();drawImage();restore();'
+        );
+
+        done();
+      });
+    });
+  });
+
+  // ======================================================
   it('crop and scale image', function (done) {
     loadImage('darth-vader.jpg', (imageObj) => {
       var stage = addStage();
