@@ -492,6 +492,11 @@ export class Path extends Shape<PathConfig> {
       var p = [];
 
       for (var j = 0, jlen = coords.length; j < jlen; j++) {
+        // extra case for merged flags
+        if (coords[j] === '00') {
+          p.push(0, 0);
+          continue;
+        }
         var parsed = parseFloat(coords[j]);
         if (!isNaN(parsed)) {
           p.push(parsed);

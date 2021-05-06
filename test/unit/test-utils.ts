@@ -27,6 +27,8 @@ afterEach(function () {
     clearTimeout(stage.dblTimeout);
   });
 
+  console.log(isFailed);
+
   if (!isFailed && !isManual) {
     Konva.stages.forEach(function (stage) {
       stage.destroy();

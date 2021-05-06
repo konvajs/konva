@@ -13,6 +13,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Better typescript support. Now every module has its own `*.d.ts` file.
 - New method `layer.getNativeCanvasElement()`
 - Removed `Konva.UA`, `Konva._parseUA` (it was used for old browser detection)
+- Fixed Arrow head position when an arrow has tension
+- `textPath.getKerning()` is removed
 
 ## 7.2.5
 

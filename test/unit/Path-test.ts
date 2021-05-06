@@ -1424,4 +1424,44 @@ describe('Path', function () {
       height: 100,
     });
   });
+
+  it('check arc parsing', function () {
+    var stage = addStage();
+    var layer1 = new Konva.Layer();
+    stage.add(layer1);
+
+    const weirdPath = new Konva.Path({
+      x: 40,
+      y: 40,
+      scale: { x: 5, y: 5 },
+      data:
+        'M16 5.095c0-2.255-1.88-4.083-4.2-4.083-1.682 0-3.13.964-3.8 2.352' +
+        'a4.206 4.206 0 00-3.8-2.352' + // Merged arc command flags (00)
+        'C1.88 1.012 0 2.84 0 5.095c0 .066.007.13.01.194H.004c.001.047.01.096.014.143l.013.142c.07.8.321 1.663.824 2.573C2.073 10.354 4.232 12.018 8 15c3.767-2.982 5.926-4.647 7.144-6.854.501-.905.752-1.766.823-2.562.007-.055.012-.11.016-.164.003-.043.012-.088.013-.13h-.006c.003-.066.01-.13.01-.195z',
+      fill: 'red',
+    });
+    layer1.add(weirdPath);
+    layer1.draw();
+
+    const layer2 = new Konva.Layer();
+    stage.add(layer2);
+
+    const normalPath = new Konva.Path({
+      x: 40,
+      y: 40,
+      scale: { x: 5, y: 5 },
+      data:
+        'M16 5.095c0-2.255-1.88-4.083-4.2-4.083-1.682 0-3.13.964-3.8 2.352' +
+        'a4.206 4.206 0 0 0-3.8-2.352' + // Spaced arc command flags (0 0)
+        'C1.88 1.012 0 2.84 0 5.095c0 .066.007.13.01.194H.004c.001.047.01.096.014.143l.013.142c.07.8.321 1.663.824 2.573C2.073 10.354 4.232 12.018 8 15c3.767-2.982 5.926-4.647 7.144-6.854.501-.905.752-1.766.823-2.562.007-.055.012-.11.016-.164.003-.043.012-.088.013-.13h-.006c.003-.066.01-.13.01-.195z',
+      fill: 'red',
+    });
+    layer2.add(normalPath);
+    layer2.draw();
+
+    var trace1 = layer1.getContext().getTrace();
+    var trace2 = layer2.getContext().getTrace();
+
+    assert.equal(trace1, trace2);
+  });
 });

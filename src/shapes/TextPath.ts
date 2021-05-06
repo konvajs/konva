@@ -14,6 +14,7 @@ export interface TextPathConfig extends ShapeConfig {
   fontFamily?: string;
   fontSize?: number;
   fontStyle?: string;
+  letterSpacing?: number;
 }
 
 var EMPTY_STRING = '',
@@ -33,14 +34,13 @@ function _strokeFunc(context) {
  * @memberof Konva
  * @augments Konva.Shape
  * @param {Object} config
- * @param {String} [config.fontFamily] default is Calibri
+ * @param {String} [config.fontFamily] default is Arial
  * @param {Number} [config.fontSize] default is 12
  * @param {String} [config.fontStyle] can be normal, bold, or italic.  Default is normal
  * @param {String} [config.fontVariant] can be normal or small-caps.  Default is normal
  * @param {String} [config.textBaseline] Can be 'top', 'bottom', 'middle', 'alphabetic', 'hanging'. Default is middle
  * @param {String} config.text
  * @param {String} config.data SVG data string
- * @param {Function} config.getKerning a getter for kerning values for the specified characters
  * @param {Function} config.kerningFunc a getter for kerning values for the specified characters
  * @@shapeParams
  * @@nodeParams
@@ -101,13 +101,6 @@ export class TextPath extends Shape<TextPathConfig> {
       'textChange.konva alignChange.konva letterSpacingChange.konva kerningFuncChange.konva fontSizeChange.konva',
       this._setTextData
     );
-
-    if (config && config['getKerning']) {
-      Util.warn(
-        'getKerning TextPath API is deprecated. Please use "kerningFunc" instead.'
-      );
-      this.kerningFunc(config['getKerning']);
-    }
 
     this._setTextData();
   }
