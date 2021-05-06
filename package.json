@@ -53,6 +53,7 @@
       "path": "./lib/index.js"
     },
     {
+      "limit": "26 KB",
       "path": "./lib/Core.js"
     },
     {

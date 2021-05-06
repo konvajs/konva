@@ -5,10 +5,11 @@ import { getNumberValidator } from './Validators';
 import { GetSet, IRect } from './types';
 import { Shape } from './Shape';
 import { HitCanvas, SceneCanvas } from './Canvas';
+import { SceneContext } from './Context';
 
 export interface ContainerConfig extends NodeConfig {
   clearBeforeDraw?: boolean;
-  clipFunc?: (ctx: CanvasRenderingContext2D) => void;
+  clipFunc?: (ctx: SceneContext) => void;
   clipX?: number;
   clipY?: number;
   clipWidth?: number;

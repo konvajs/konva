@@ -390,9 +390,9 @@ export class Context {
     a7?: number,
     a8?: number
   ) {
+    // this._context.drawImage(...arguments);
     var a = arguments,
       _context = this._context;
-
     if (a.length === 3) {
       _context.drawImage(a0, a1, a2);
     } else if (a.length === 5) {
@@ -431,8 +431,12 @@ export class Context {
    * @method
    * @name Konva.Context#fill
    */
-  fill() {
-    this._context.fill();
+  fill(path2d?: Path2D) {
+    if (path2d) {
+      this._context.fill(path2d);
+    } else {
+      this._context.fill();
+    }
   }
   /**
    * fillRect function.
@@ -586,8 +590,12 @@ export class Context {
    * @method
    * @name Konva.Context#stroke
    */
-  stroke() {
-    this._context.stroke();
+  stroke(path2d?: Path2D) {
+    if (path2d) {
+      this._context.stroke(path2d);
+    } else {
+      this._context.stroke();
+    }
   }
   /**
    * strokeText function.
@@ -661,9 +669,10 @@ export class Context {
     };
   }
   _applyGlobalCompositeOperation(node) {
-    var globalCompositeOperation = node.getGlobalCompositeOperation();
-    if (globalCompositeOperation !== 'source-over') {
-      this.setAttr('globalCompositeOperation', globalCompositeOperation);
+    const op = node.attrs.globalCompositeOperation;
+    var def = !op || op === 'source-over';
+    if (!def) {
+      this.setAttr('globalCompositeOperation', op);
     }
   }
 }
@@ -680,7 +689,7 @@ CONTEXT_PROPERTIES.forEach(function (prop) {
 });
 
 export class SceneContext extends Context {
-  _fillColor(shape) {
+  _fillColor(shape: Shape) {
     var fill = shape.fill();
 
     this.setAttr('fillStyle', fill);

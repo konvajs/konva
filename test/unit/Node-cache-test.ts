@@ -1203,8 +1203,6 @@ describe('Caching', function () {
     layer.draw();
 
     cloneAndCompareLayer(layer, 10);
-
-    // throw 1;
   });
 
   it('check caching with global composite operation', function () {
