@@ -3774,4 +3774,30 @@ describe('Node', function () {
     assert.equal(text00.getClientRect().x, 90);
     assert.equal(text00.getClientRect().y, 90);
   });
+
+  // ======================================================
+  test('isClientRectOnScreen() method', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle({
+      x: stage.getWidth() / 2,
+      y: stage.getHeight() / 2,
+      radius: 30,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+    });
+
+    layer.add(circle);
+    stage.add(layer);
+
+    assert.equal(circle.isClientRectOnScreen(), true);
+    
+    circle.x(-circle.radius() - circle.strokeWidth()/2 - 1); // Move circle 1px outside of visible area
+    assert.equal(circle.isClientRectOnScreen(), false);
+    assert.equal(circle.isClientRectOnScreen(1), true);
+    assert.equal(circle.isClientRectOnScreen({x: 1, y: 0}), true);
+    assert.equal(circle.isClientRectOnScreen({x: 0, y: 1}), false);
+    
+  });
 });
