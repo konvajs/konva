@@ -56,7 +56,7 @@ export class Arrow extends Line<ArrowConfig> {
 
     var dx, dy;
     if (fromTension) {
-      const lastPoints = [
+      const lp = [
         tp[tp.length - 4],
         tp[tp.length - 3],
         tp[tp.length - 2],
@@ -68,11 +68,16 @@ export class Arrow extends Line<ArrowConfig> {
         tp[tp.length - 4],
         tp[tp.length - 3],
         'C',
-        lastPoints
+        lp
       );
       const previous = Path.getPointOnQuadraticBezier(
         Math.min(1, 1 - length / lastLength),
-        ...lastPoints
+        lp[0],
+        lp[1],
+        lp[2],
+        lp[3],
+        lp[4],
+        lp[5]
       );
 
       dx = points[n - 2] - previous.x;

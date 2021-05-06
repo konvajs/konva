@@ -1,4 +1,5 @@
-import { Util } from './Util';
+import { Konva } from './Global';
+import { Transform, Util } from './Util';
 import { Factory } from './Factory';
 import { Node, NodeConfig } from './Node';
 import {
@@ -256,13 +257,25 @@ export class Shape<
         this.fillPatternRepeat() || 'repeat'
       );
       if (pattern && pattern.setTransform) {
+        const tr = new Transform();
+
+        tr.translate(this.fillPatternX(), this.fillPatternX());
+        tr.rotate(Konva.getAngle(this.fillPatternRotation()));
+        tr.scale(this.fillPatternScaleX(), this.fillPatternScaleY());
+        tr.translate(
+          -1 * this.fillPatternOffsetX(),
+          -1 * this.fillPatternOffsetY()
+        );
+
+        const m = tr.getMatrix();
+
         pattern.setTransform({
-          a: this.fillPatternScaleX(), // Horizontal scaling. A value of 1 results in no scaling.
-          b: 0, // Vertical skewing.
-          c: 0, // Horizontal skewing.
-          d: this.fillPatternScaleY(), // Vertical scaling. A value of 1 results in no scaling.
-          e: 0, // Horizontal translation (moving).
-          f: 0, // Vertical translation (moving).
+          a: m[0], // Horizontal scaling. A value of 1 results in no scaling.
+          b: m[1], // Vertical skewing.
+          c: m[2], // Horizontal skewing.
+          d: m[3],
+          e: m[4], // Horizontal translation (moving).
+          f: m[5], // Vertical translation (moving).
         });
       }
       return pattern;
@@ -846,7 +859,7 @@ Shape.prototype.on.call(
 
 Shape.prototype.on.call(
   Shape.prototype,
-  'fillPriorityChange.konva fillPatternImageChange.konva fillPatternRepeatChange.konva fillPatternScaleXChange.konva fillPatternScaleYChange.konva',
+  'fillPriorityChange.konva fillPatternImageChange.konva fillPatternRepeatChange.konva fillPatternScaleXChange.konva fillPatternScaleYChange.konva fillPatternOffsetX.konva fillPatternOffsetY.konva fillPatternRotation.konva',
   _clearFillPatternCache
 );
 

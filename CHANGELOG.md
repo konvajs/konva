@@ -15,6 +15,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Removed `Konva.UA`, `Konva._parseUA` (it was used for old browser detection)
 - Fixed Arrow head position when an arrow has tension
 - `textPath.getKerning()` is removed
+- Fix `a` command parsing for `Konva.Path`
+- Fix fill pattern for `Konva.Text` when the pattern has an offset or rotation
 
 ## 7.2.5
 

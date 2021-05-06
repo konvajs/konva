@@ -704,21 +704,21 @@ export class SceneContext extends Context {
       fillPatternScaleX = shape.getFillPatternScaleX(),
       fillPatternScaleY = shape.getFillPatternScaleY();
 
-    if (fillPatternX || fillPatternY) {
-      this.translate(fillPatternX || 0, fillPatternY || 0);
-    }
+    // if (fillPatternX || fillPatternY) {
+    //   this.translate(fillPatternX || 0, fillPatternY || 0);
+    // }
 
-    if (fillPatternRotation) {
-      this.rotate(fillPatternRotation);
-    }
+    // if (fillPatternRotation) {
+    //   this.rotate(fillPatternRotation);
+    // }
 
     if (fillPatternScaleX || fillPatternScaleY) {
       // this.scale(fillPatternScaleX, fillPatternScaleY);
     }
 
-    if (fillPatternOffsetX || fillPatternOffsetY) {
-      this.translate(-1 * fillPatternOffsetX, -1 * fillPatternOffsetY);
-    }
+    // if (fillPatternOffsetX || fillPatternOffsetY) {
+    //   this.translate(-1 * fillPatternOffsetX, -1 * fillPatternOffsetY);
+    // }
 
     this.setAttr('fillStyle', shape._getFillPattern());
     shape._fillFunc(this);

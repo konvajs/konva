@@ -1294,6 +1294,53 @@ describe('Text', function () {
     });
   });
 
+  it('image gradient for text with offset', function (done) {
+    if (isNode) {
+      // skip in NodeJS because it has not transform API on gradients
+      return done();
+    }
+    const oldRatio = Konva.pixelRatio;
+    Konva.pixelRatio = 1;
+    loadImage('darth-vader.jpg', (imageObj) => {
+      var stage = addStage();
+      var layer = new Konva.Layer();
+
+      var text = new Konva.Text({
+        text: 'Hello, this is some good text',
+        fontSize: 30,
+        fillPatternImage: imageObj,
+        fillPatternOffsetX: 50,
+        fillPatternRotation: 0,
+      });
+      layer.add(text);
+      stage.add(layer);
+
+      var canvas = createCanvas();
+      var ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = 'green';
+      ctx.font = 'normal normal 30px Arial';
+      ctx.textBaseline = 'middle';
+
+      var grd = ctx.createPattern(imageObj, 'repeat');
+      grd.setTransform({
+        a: 1,
+        b: 0,
+        c: 0,
+        d: 1,
+        e: -50,
+        f: 0,
+      });
+      ctx.fillStyle = grd;
+
+      ctx.fillText(text.text(), 0, 15);
+
+      compareLayerAndCanvas(layer, canvas, 200);
+      Konva.pixelRatio = oldRatio;
+      done();
+    });
+  });
+
   it('image gradient for text with scale', function (done) {
     const oldRatio = Konva.pixelRatio;
     Konva.pixelRatio = 1;
