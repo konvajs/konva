@@ -19,6 +19,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Fix fill pattern for `Konva.Text` when the pattern has an offset or rotation
 - `Konva.names` and `Konva.ids` are removed
 - new `flipEnabled` property for `Konva.Transformer`.
+- new `node.isClientRectOnScreen()` method
 
 ## 7.2.5
 

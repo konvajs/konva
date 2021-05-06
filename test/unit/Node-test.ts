@@ -3776,28 +3776,35 @@ describe('Node', function () {
   });
 
   // ======================================================
-  test('isClientRectOnScreen() method', function () {
+  it('isClientRectOnScreen() method', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var circle = new Konva.Circle({
-      x: stage.getWidth() / 2,
-      y: stage.getHeight() / 2,
+      x: stage.width() / 2,
+      y: stage.height() / 2,
       radius: 30,
       fill: 'green',
       stroke: 'black',
       strokeWidth: 4,
     });
 
+    assert.equal(
+      circle.isClientRectOnScreen(),
+      false,
+      'not visible when not on stage'
+    );
+
     layer.add(circle);
     stage.add(layer);
 
     assert.equal(circle.isClientRectOnScreen(), true);
-    
-    circle.x(-circle.radius() - circle.strokeWidth()/2 - 1); // Move circle 1px outside of visible area
+
+    circle.x(-circle.radius() - circle.strokeWidth() / 2 - 1); // Move circle 1px outside of visible area
     assert.equal(circle.isClientRectOnScreen(), false);
-    assert.equal(circle.isClientRectOnScreen(1), true);
-    assert.equal(circle.isClientRectOnScreen({x: 1, y: 0}), true);
-    assert.equal(circle.isClientRectOnScreen({x: 0, y: 1}), false);
-    
+    assert.equal(circle.isClientRectOnScreen({ x: 10, y: 0 }), true);
+    assert.equal(circle.isClientRectOnScreen({ x: 0, y: 10 }), false);
+
+    stage.x(10);
+    assert.equal(circle.isClientRectOnScreen(), true);
   });
 });
