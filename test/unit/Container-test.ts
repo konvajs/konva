@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { Shape } from '../../src/Shape.js';
-import { addStage, Konva, compareLayers } from './test-utils';
+import { addStage, Konva, compareLayers, isNode } from './test-utils';
 
 describe('Container', function () {
   // ======================================================
@@ -71,6 +71,10 @@ describe('Container', function () {
 
   // ======================================================
   it('clip function', function () {
+    if (isNode) {
+      // how to use Path2D in nodejs env?
+      return;
+    }
     var stage = addStage();
 
     // cliped by circle is the same as draw circle

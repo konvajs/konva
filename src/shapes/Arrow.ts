@@ -3,6 +3,7 @@ import { Line, LineConfig } from './Line';
 import { GetSet } from '../types';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
+import { Path } from './Path';
 
 export interface ArrowConfig extends LineConfig {
   points: number[];
@@ -49,20 +50,40 @@ export class Arrow extends Line<ArrowConfig> {
     if (fromTension) {
       tp = this.getTensionPoints();
     }
+    var length = this.pointerLength();
 
     var n = points.length;
 
     var dx, dy;
     if (fromTension) {
-      dx = points[n - 2] - (tp[tp.length - 2] + tp[tp.length - 4]) / 2;
-      dy = points[n - 1] - (tp[tp.length - 1] + tp[tp.length - 3]) / 2;
+      const lastPoints = [
+        tp[tp.length - 4],
+        tp[tp.length - 3],
+        tp[tp.length - 2],
+        tp[tp.length - 1],
+        points[n - 2],
+        points[n - 1],
+      ];
+      const lastLength = Path.calcLength(
+        tp[tp.length - 4],
+        tp[tp.length - 3],
+        'C',
+        lastPoints
+      );
+      const previous = Path.getPointOnQuadraticBezier(
+        Math.min(1, 1 - length / lastLength),
+        ...lastPoints
+      );
+
+      dx = points[n - 2] - previous.x;
+      dy = points[n - 1] - previous.y;
     } else {
       dx = points[n - 2] - points[n - 4];
       dy = points[n - 1] - points[n - 3];
     }
 
     var radians = (Math.atan2(dy, dx) + PI2) % PI2;
-    var length = this.pointerLength();
+
     var width = this.pointerWidth();
 
     if (this.pointerAtEnding()) {

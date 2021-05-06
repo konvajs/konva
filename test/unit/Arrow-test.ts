@@ -81,11 +81,11 @@ describe('Arrow', function () {
     layer.add(arrow);
     stage.add(layer);
 
-    var trace = layer.getContext().getTrace();
+    var trace = layer.getContext().getTrace(false, true);
 
     assert.equal(
       trace,
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(50,50);quadraticCurveTo(75,25,100,50);quadraticCurveTo(125,75,100,100);lineWidth=2;strokeStyle=red;stroke();save();beginPath();translate(100,100);rotate(1.893);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();save();translate(50,50);rotate(2.82);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();setLineDash();fillStyle=red;fill();lineWidth=2;strokeStyle=red;stroke();restore();'
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(50,50);quadraticCurveTo(75,25,100,50);quadraticCurveTo(125,75,100,100);lineWidth=2;strokeStyle=red;stroke();save();beginPath();translate(100,100);rotate(2);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();save();translate(50,50);rotate(2);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();setLineDash();fillStyle=red;fill();lineWidth=2;strokeStyle=red;stroke();restore();'
     );
   });
 
@@ -94,7 +94,18 @@ describe('Arrow', function () {
     var layer = new Konva.Layer();
 
     var arrow = new Konva.Arrow({
-      points: [79, 63, 87, 80, 124, 82, 141, 107, 165, 104],
+      points: [
+        79.57486136783733,
+        63.27171903881701,
+        87.33826247689463,
+        80.73937153419593,
+        124.99075785582254,
+        82.29205175600738,
+        141.68207024029573,
+        107.52310536044362,
+        165.74861367837337,
+        104.80591497227356,
+      ],
       stroke: 'red',
       fill: 'red',
       tension: 1,
@@ -105,11 +116,11 @@ describe('Arrow', function () {
     layer.add(arrow);
     stage.add(layer);
 
-    var trace = layer.getContext().getTrace();
+    var trace = layer.getContext().getTrace(false, true);
 
     assert.equal(
       trace,
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(79,63);quadraticCurveTo(71.86,73.607,87,80);bezierCurveTo(116.86,92.607,94.263,67.131,124,82);bezierCurveTo(148.263,94.131,118.223,94.778,141,107);quadraticCurveTo(159.223,116.778,165,104);lineWidth=2;strokeStyle=red;stroke();save();beginPath();translate(165,104);rotate(5.796);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();save();translate(79,63);rotate(4.681);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();setLineDash();fillStyle=red;fill();lineWidth=2;strokeStyle=red;stroke();restore();'
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(79,63);quadraticCurveTo(72,74,87,80);bezierCurveTo(117,93,94,67,124,82);bezierCurveTo(149,94,119,95,141,107);quadraticCurveTo(159,117,165,104);lineWidth=2;strokeStyle=red;stroke();save();beginPath();translate(165,104);rotate(5);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();save();translate(79,63);rotate(4);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();setLineDash();fillStyle=red;fill();lineWidth=2;strokeStyle=red;stroke();restore();'
     );
   });
 
