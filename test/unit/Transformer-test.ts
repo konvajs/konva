@@ -3578,7 +3578,7 @@ describe('Transformer', function () {
       y: 15,
       text: 'Simple Text',
       fontSize: 60,
-      fontFamily: 'Calibri',
+      fontFamily: 'Arial',
       fill: 'green',
     });
     layer.add(shape);

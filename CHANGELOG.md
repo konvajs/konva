@@ -18,6 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Fix `a` command parsing for `Konva.Path`
 - Fix fill pattern for `Konva.Text` when the pattern has an offset or rotation
 - `Konva.names` and `Konva.ids` are removed
+- new `flipEnabled` property for `Konva.Transformer`.
 
 ## 7.2.5
 

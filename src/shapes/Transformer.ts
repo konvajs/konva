@@ -6,7 +6,7 @@ import { Rect } from './Rect';
 import { Group } from '../Group';
 import { ContainerConfig } from '../Container';
 import { Konva } from '../Global';
-import { getNumberValidator } from '../Validators';
+import { getBooleanValidator, getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
 import { GetSet, IRect, Vector2d } from '../types';
@@ -33,6 +33,7 @@ export interface TransformerConfig extends ContainerConfig {
   keepRatio?: boolean;
   centeredScaling?: boolean;
   enabledAnchors?: Array<string>;
+  flipEnabled?: boolean;
   node?: Rect;
   ignoreStroke?: boolean;
   boundBoxFunc?: (oldBox: Box, newBox: Box) => Box;
@@ -217,6 +218,7 @@ function getSnap(snaps: Array<number>, newRotationRad: number, tol: number) {
  * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
  * @param {Boolean} [config.centeredScaling] Should we resize relative to node's center? Default is false
  * @param {Array} [config.enabledAnchors] Array of names of enabled handles
+ * @param {Boolean} [config.flipEnabled] Can we flip/mirror shape on transform?. True by default
  * @param {Function} [config.boundBoxFunc] Bounding box function
  * @param {Function} [config.ignoreStroke] Should we ignore stroke size? Default is false
  *
@@ -909,7 +911,7 @@ export class Transformer extends Group {
       return;
     }
 
-    const allowNegativeScale = true;
+    const allowNegativeScale = this.flipEnabled();
     var t = new Transform();
     t.rotate(Konva.getAngle(this.rotation()));
     if (
@@ -1219,6 +1221,7 @@ export class Transformer extends Group {
   anchorStrokeWidth: GetSet<number, this>;
   keepRatio: GetSet<boolean, this>;
   centeredScaling: GetSet<boolean, this>;
+  flipEnabled: GetSet<boolean, this>;
   ignoreStroke: GetSet<boolean, this>;
   boundBoxFunc: GetSet<(oldBox: Box, newBox: Box) => Box, this>;
   shouldOverdrawWholeArea: GetSet<boolean, this>;
@@ -1264,6 +1267,26 @@ Factory.addGetterSetter(
   'enabledAnchors',
   ANCHORS_NAMES,
   validateAnchors
+);
+
+/**
+ * get/set flip enabled
+ * @name Konva.Transformer#flipEnabled
+ * @method
+ * @param {Boolean} flag
+ * @returns {Boolean}
+ * @example
+ * // get flip enabled property
+ * var flipEnabled = transformer.flipEnabled();
+ *
+ * // set handlers
+ * transformer.flipEnabled(false);
+ */
+Factory.addGetterSetter(
+  Transformer,
+  'flipEnabled',
+  true,
+  getBooleanValidator()
 );
 
 /**
