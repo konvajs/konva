@@ -709,49 +709,8 @@ describe('Stage', function () {
     layer.add(circle);
     stage.add(layer);
 
-    assert.equal(
-      Konva.ids.stageFalconId._id,
-      stage._id,
-      'stage id should be in global ids map'
-    );
-    assert.equal(
-      Konva.names.stageFalconName[0]._id,
-      stage._id,
-      'stage name should be in global names map'
-    );
-    assert.equal(
-      Konva.ids.circleFalconId._id,
-      circle._id,
-      'circle id should be in global ids map'
-    );
-    assert.equal(
-      Konva.names.circleFalconName[0]._id,
-      circle._id,
-      'circle name should be in global names map'
-    );
-
     stage.destroy();
 
-    assert.equal(
-      Konva.ids.stageFalconId,
-      undefined,
-      'stage should no longer be in ids map'
-    );
-    assert.equal(
-      Konva.names.stageFalconName,
-      undefined,
-      'stage should no longer be in names map'
-    );
-    assert.equal(
-      Konva.ids.circleFalconId,
-      undefined,
-      'circle should no longer be in ids map'
-    );
-    assert.equal(
-      Konva.names.circleFalconName,
-      undefined,
-      'circle should no longer be in names map'
-    );
     assert.equal(
       Konva.stages.indexOf(stage) === -1,
       true,

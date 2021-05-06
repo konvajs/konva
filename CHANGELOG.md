@@ -17,6 +17,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - `textPath.getKerning()` is removed
 - Fix `a` command parsing for `Konva.Path`
 - Fix fill pattern for `Konva.Text` when the pattern has an offset or rotation
+- `Konva.names` and `Konva.ids` are removed
 
 ## 7.2.5
 

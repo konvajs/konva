@@ -2746,32 +2746,6 @@ describe('Node', function () {
   });
 
   // ======================================================
-  it('memory leak test for destroy and a shape with several names', function () {
-    var stage = addStage();
-    var layer = new Konva.Layer();
-    var circle = new Konva.Circle({
-      x: stage.width() / 2,
-      y: stage.height() / 2,
-      radius: 70,
-      fill: 'green',
-      stroke: 'black',
-      strokeWidth: 4,
-      name: 'my-new-shape my-new-circle',
-    });
-
-    layer.add(circle);
-    stage.add(layer);
-
-    assert.equal(Konva.names['my-new-shape'].length, 1);
-    assert.equal(Konva.names['my-new-circle'].length, 1);
-
-    circle.destroy();
-
-    assert.equal(Konva.names['my-new-shape'], undefined);
-    assert.equal(Konva.names['my-new-circle'], undefined);
-  });
-
-  // ======================================================
   it('destroy shape without adding its parent to stage', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -3003,64 +2977,19 @@ describe('Node', function () {
     layer.add(rect);
     stage.add(layer);
 
-    assert.equal(Konva.ids.myCircle2._id, circle._id);
-    assert.equal(Konva.names.myRect2[0]._id, rect._id);
     assert.equal(Konva.shapes[circleColorKey]._id, circle._id);
     assert.equal(Konva.shapes[rectColorKey]._id, rect._id);
 
     circle.destroy();
 
-    assert.equal(Konva.ids.myCircle2, undefined);
-    assert.equal(Konva.names.myRect2[0]._id, rect._id);
     assert.equal(Konva.shapes[circleColorKey], undefined);
     assert.equal(Konva.shapes[rectColorKey]._id, rect._id);
 
     rect.destroy();
 
-    assert.equal(Konva.ids.myCircle2, undefined);
-    assert.equal(Konva.names.myRect2, undefined);
     assert.equal(Konva.shapes[circleColorKey], undefined);
     assert.equal(Konva.shapes[rectColorKey], undefined);
   });
-
-  // ======================================================
-  it('destroy should remove only required shape from ids regestry', function () {
-    var stage = addStage();
-    var layer = new Konva.Layer();
-    var circle = new Konva.Circle({
-      x: stage.width() / 2,
-      y: stage.height() / 2,
-      radius: 70,
-      fill: 'green',
-      stroke: 'black',
-      strokeWidth: 4,
-      id: 'shape',
-    });
-
-    var rect = new Konva.Rect({
-      x: 300,
-      y: 100,
-      width: 100,
-      height: 50,
-      fill: 'purple',
-      stroke: 'black',
-      strokeWidth: 4,
-      id: 'shape',
-    });
-
-    layer.add(circle);
-    layer.add(rect);
-    stage.add(layer);
-
-    // last shape is registered
-    assert.equal(Konva.ids.shape, rect);
-
-    // destroying circle should not remove rect from regiter
-    circle.destroy();
-
-    assert.equal(Konva.ids.shape, rect);
-  });
-
   // ======================================================
   it('hide stage', function () {
     var stage = addStage({

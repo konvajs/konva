@@ -2,7 +2,7 @@
 import { Konva as Global } from './Global';
 
 import { Util, Transform } from './Util';
-import { Node, ids, names } from './Node';
+import { Node } from './Node';
 import { Container } from './Container';
 
 import { Stage, stages } from './Stage';
@@ -26,8 +26,6 @@ export const Konva = Util._assign(Global, {
   Util,
   Transform,
   Node,
-  ids,
-  names,
   Container,
   Stage,
   stages,

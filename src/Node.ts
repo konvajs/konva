@@ -15,56 +15,6 @@ import { Context } from './Context';
 import { Shape } from './Shape';
 import { Layer } from './Layer';
 
-export const ids: any = {};
-export const names: any = {};
-
-const _addId = function (node: Node, id: string | undefined) {
-  if (!id) {
-    return;
-  }
-  ids[id] = node;
-};
-
-export const _removeId = function (id: string, node: any) {
-  // node has no id
-  if (!id) {
-    return;
-  }
-  // another node is registered (possible for duplicate ids)
-  if (ids[id] !== node) {
-    return;
-  }
-  delete ids[id];
-};
-
-export const _addName = function (node: any, name: string) {
-  if (name) {
-    if (!names[name]) {
-      names[name] = [];
-    }
-    names[name].push(node);
-  }
-};
-
-export const _removeName = function (name: string, _id: number) {
-  if (!name) {
-    return;
-  }
-  var nodes = names[name];
-  if (!nodes) {
-    return;
-  }
-  for (var n = 0; n < nodes.length; n++) {
-    var no = nodes[n];
-    if (no._id === _id) {
-      nodes.splice(n, 1);
-    }
-  }
-  if (nodes.length === 0) {
-    delete names[name];
-  }
-};
-
 export type Filter = (this: Node, imageData: ImageData) => void;
 
 type globalCompositeOperationType =
@@ -893,16 +843,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * node.destroy();
    */
   destroy() {
-    // remove from ids and names hashes
-    _removeId(this.id(), this);
-
-    // remove all names
-    var names = (this.name() || '').split(/\s/g);
-    for (var i = 0; i < names.length; i++) {
-      var subname = names[i];
-      _removeName(subname, this._id);
-    }
-
     this.remove();
     return this;
   }
@@ -1475,7 +1415,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // move node from current layer into layer2
    * node.moveTo(layer2);
    */
-  moveTo(newContainer: Container) {
+  moveTo(newContainer: any) {
     // do nothing if new container is already parent
     if (this.getParent() !== newContainer) {
       this._remove();
@@ -2111,37 +2051,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       newVal: newVal,
     });
   }
-  setId(id) {
-    var oldId = this.id();
-
-    _removeId(oldId, this);
-    _addId(this, id);
-    this._setAttr('id', id);
-    return this;
-  }
-  setName(name) {
-    var oldNames = (this.name() || '').split(/\s/g);
-    var newNames = (name || '').split(/\s/g);
-    var subname, i;
-    // remove all subnames
-    for (i = 0; i < oldNames.length; i++) {
-      subname = oldNames[i];
-      if (newNames.indexOf(subname) === -1 && subname) {
-        _removeName(subname, this._id);
-      }
-    }
-
-    // add new names
-    for (i = 0; i < newNames.length; i++) {
-      subname = newNames[i];
-      if (oldNames.indexOf(subname) === -1 && subname) {
-        _addName(this, subname);
-      }
-    }
-
-    this._setAttr(NAME, name);
-    return this;
-  }
   /**
    * add name to node
    * @method
@@ -2157,7 +2066,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (!this.hasName(name)) {
       var oldName = this.name();
       var newName = oldName ? oldName + ' ' + name : name;
-      this.setName(newName);
+      this.name(newName);
     }
     return this;
   }
@@ -2202,7 +2111,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     var index = names.indexOf(name);
     if (index !== -1) {
       names.splice(index, 1);
-      this.setName(names.join(' '));
+      this.name(names.join(' '));
     }
     return this;
   }

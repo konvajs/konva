@@ -73,31 +73,17 @@ describe('Text', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
-    var rect = new Konva.Rect({
-      x: stage.width() / 2,
-      y: stage.height() / 2,
-      stroke: '#555',
-      strokeWidth: 5,
-      fill: '#ddd',
-      width: 400,
-      height: 100,
-      shadowColor: 'black',
-      shadowBlur: 1,
-      shadowOffset: { x: 10, y: 10 },
-      shadowOpacity: 0.2,
-      cornerRadius: 10,
-    });
-
     var text = new Konva.Text({
-      x: stage.width() / 2,
-      y: stage.height() / 2,
+      x: 40,
+      y: 40,
       text: 'Hello World!',
       fontSize: 50,
-      fontFamily: 'Calibri',
+      fontFamily: 'Arial',
       fontStyle: 'normal',
       fill: '#888',
       stroke: '#333',
       align: 'right',
+      shadowForStrokeEnabled: false,
       lineHeight: 1.2,
       width: 400,
       height: 100,
@@ -112,13 +98,14 @@ describe('Text', function () {
       draggable: true,
     });
 
-    // center text box
-    rect.offsetX(text.getWidth() / 2);
-
-    group.add(rect);
     group.add(text);
     layer.add(group);
     stage.add(layer);
+
+    assert.equal(
+      layer.getContext().getTrace(false, true),
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,40,40);shadowColor=rgba(255,0,0,0.2);shadowBlur=1;shadowOffsetX=10;shadowOffsetY=10;font=normal normal 50px Arial;textBaseline=middle;textAlign=left;translate(10,10);save();fillStyle=#888;fillText(Hello World!,108,30);lineWidth=2;shadowColor=rgba(0,0,0,0);strokeStyle=#333;strokeText(Hello World!,108,30);restore();restore();'
+    );
 
     assert.equal(text.getClassName(), 'Text', 'getClassName should be Text');
   });
