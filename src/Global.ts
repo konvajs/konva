@@ -45,7 +45,7 @@ export const Konva = {
     return Konva.angleDeg ? angle * PI_OVER_180 : angle;
   },
   enableTrace: false,
-  _pointerEventsEnabled: false,
+  pointerEventsEnabled: false,
   /**
    * Should Konva automatically update canvas on any changes. Default is true.
    * @property autoDrawEnabled
@@ -72,16 +72,15 @@ export const Konva = {
    * The case: we touchstart on div1, then touchmove out of that element into another element div2.
    * DOM will continue trigger touchmove events on div1 (not div2). Because events are "captured" into initial target.
    * By default Konva do not do that and will trigger touchmove on another element, while pointer is moving.
-   * @property captureTouchEventsEnabled
+   * @property capturePointerEventsEnabled
    * @default false
-   * @name captureTouchEventsEnabled
+   * @name capturePointerEventsEnabled
    * @memberof Konva
    * @example
-   * Konva.captureTouchEventsEnabled = true;
+   * Konva.capturePointerEventsEnabled = true;
    */
-  captureTouchEventsEnabled: false,
+  capturePointerEventsEnabled: false,
 
-  // TODO: move that to stage?
   listenClickTap: false,
   inDblClickWindow: false,
 

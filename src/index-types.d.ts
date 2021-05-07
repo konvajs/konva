@@ -33,7 +33,7 @@ declare namespace Konva {
   export let dragDistance: number;
   export let angleDeg: boolean;
   export let showWarnings: boolean;
-  export let captureTouchEventsEnabled: boolean;
+  export let capturePointerEventsEnabled: boolean;
   export let dragButtons: Array<number>;
   export let hitOnDragEnabled: boolean;
   export const isDragging: () => boolean;

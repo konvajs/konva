@@ -95,7 +95,7 @@ export const DD = {
   // dragBefore and dragAfter allows us to set correct order of events
   // setup all in dragbefore, and stop dragging only after pointerup triggered.
   _endDragBefore(evt?) {
-    DD._dragElements.forEach((elem, key) => {
+    DD._dragElements.forEach((elem) => {
       const { node } = elem;
       // we need to find pointer relative to that node
       const stage = node.getStage();
@@ -113,7 +113,7 @@ export const DD = {
       }
 
       if (elem.dragStatus === 'dragging' || elem.dragStatus === 'stopped') {
-        // if a node is stopped manully we still need to reset events:
+        // if a node is stopped manually we still need to reset events:
         DD.justDragged = true;
         Konva.listenClickTap = false;
         elem.dragStatus = 'stopped';

@@ -8,9 +8,7 @@ import {
   simulatePointerUp,
 } from './test-utils';
 
-// TODO: restore it!
 describe.skip('PointerEvents', function () {
-  Konva._pointerEventsEnabled = true;
   // ======================================================
   it('pointerdown pointerup pointermove', function (done) {
     var stage = addStage();
@@ -51,8 +49,6 @@ describe.skip('PointerEvents', function () {
     simulatePointerDown(stage, {
       x: 289,
       y: 100,
-      pointerId: 1,
-      preventDefault: function () {},
     });
 
     assert(pointerdown, '1) pointerdown should be true');
@@ -61,8 +57,8 @@ describe.skip('PointerEvents', function () {
 
     // pointerup circle
     simulatePointerUp(stage, {
-      touches: [],
-      preventDefault: function () {},
+      x: 289,
+      y: 100,
     });
 
     assert(pointerdown, '2) pointerdown should be true');
@@ -71,13 +67,8 @@ describe.skip('PointerEvents', function () {
 
     // pointerdown circle
     simulatePointerDown(stage, {
-      touches: [
-        {
-          x: 289,
-          y: 100,
-        },
-      ],
-      preventDefault: function () {},
+      x: 289,
+      y: 100,
     });
 
     assert(pointerdown, '3) pointerdown should be true');
@@ -86,8 +77,8 @@ describe.skip('PointerEvents', function () {
 
     // pointerup circle to triger dbltap
     simulatePointerUp(stage, {
-      touches: [],
-      preventDefault: function () {},
+      x: 289,
+      y: 100,
     });
     // end drag is tied to document mouseup and pointerup event
     // which can't be simulated.  call _endDrag manually
@@ -100,13 +91,8 @@ describe.skip('PointerEvents', function () {
     setTimeout(function () {
       // pointermove circle
       simulatePointerMove(stage, {
-        touches: [
-          {
-            x: 290,
-            y: 100,
-          },
-        ],
-        preventDefault: function () {},
+        x: 290,
+        y: 100,
       });
 
       assert(pointerdown, '5) pointerdown should be true');
@@ -118,7 +104,7 @@ describe.skip('PointerEvents', function () {
   });
 
   // ======================================================
-  it('pointer capture', function (done) {
+  it.skip('pointer capture', function (done) {
     var stage = addStage();
     var layer = new Konva.Layer();
     var circle = new Konva.Circle({
@@ -172,17 +158,15 @@ describe.skip('PointerEvents', function () {
     layer.add(circle2);
     stage.add(layer);
 
-    var top = stage.content.getBoundingClientRect().top;
-
     // on circle 2 to confirm it works
     simulatePointerDown(stage, {
       x: 289,
-      y: 10 + top,
+      y: 10,
       pointerId: 0,
       preventDefault: function () {},
     });
 
-    assert(otherDownCount === 1, '6) otherDownCount should be 1');
+    assert.equal(otherDownCount, 1, '6) otherDownCount should be 1');
     assert(downCount === 0, '6) downCount should be 0');
     assert(!pointermove, '6) pointermove should be false');
     assert(!pointerup, '6) pointerup should be false');
@@ -190,12 +174,12 @@ describe.skip('PointerEvents', function () {
     // on circle with capture
     simulatePointerDown(stage, {
       x: 289,
-      y: 100 + top,
+      y: 100,
       pointerId: 1,
       preventDefault: function () {},
     });
 
-    assert(otherDownCount === 1, '7) otherDownCount should be 1');
+    assert.equal(otherDownCount, 1, '7) otherDownCount should be 1');
     assert(downCount === 1, '7) downCount should be 1');
     assert(!pointermove, '7) pointermove should be false');
     assert(!pointerup, '7) pointerup should be true');
@@ -203,12 +187,12 @@ describe.skip('PointerEvents', function () {
     // second pointerdown
     simulatePointerDown(stage, {
       x: 289,
-      y: 10 + top,
-      pointerId: 1,
+      y: 10,
+      pointerId: 2,
       preventDefault: function () {},
     });
 
-    assert(otherDownCount === 1, '8) otherDownCount should be 1');
+    assert.equal(otherDownCount, 1, '8) otherDownCount should be 1');
     assert(downCount === 2, '8) pointerdown should be 2');
     assert(!pointermove, '8) pointermove should be false');
     assert(!pointerup, '8) pointerup should be true');
@@ -217,9 +201,8 @@ describe.skip('PointerEvents', function () {
       // pointermove over circle 2
       simulatePointerMove(stage, {
         x: 290,
-        y: 10 + top,
+        y: 10,
         pointerId: 1,
-        preventDefault: function () {},
       });
 
       assert(otherDownCount === 1, '9) otherDownCount should be 1');
@@ -232,7 +215,7 @@ describe.skip('PointerEvents', function () {
 
       simulatePointerDown(stage, {
         x: 289,
-        y: 10 + top,
+        y: 10,
         pointerId: 1,
         preventDefault: function () {},
       });

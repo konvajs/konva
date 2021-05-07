@@ -10,77 +10,6 @@ import {
 
 describe('TouchEvents', function () {
   // ======================================================
-  it('stage content touch events', function () {
-    var stage = addStage();
-    var layer = new Konva.Layer();
-    var circle = new Konva.Circle({
-      x: 100,
-      y: 100,
-      radius: 70,
-      fill: 'green',
-      stroke: 'black',
-      strokeWidth: 4,
-      name: 'myCircle',
-    });
-
-    layer.add(circle);
-    stage.add(layer);
-
-    var circleTouchstart = 0;
-    var circleTouchend = 0;
-    var stageContentTouchstart = 0;
-    var stageContentTouchend = 0;
-    var stageContentTouchmove = 0;
-    var stageContentTap = 0;
-    var stageContentDbltap = 0;
-
-    circle.on('touchstart', function () {
-      circleTouchstart++;
-    });
-
-    circle.on('touchend', function () {
-      circleTouchend++;
-    });
-
-    stage.on('contentTouchstart', function () {
-      stageContentTouchstart++;
-    });
-
-    stage.on('contentTouchend', function () {
-      stageContentTouchend++;
-    });
-
-    stage.on('contentTouchmove', function () {
-      stageContentTouchmove++;
-    });
-
-    stage.on('contentTap', function () {
-      stageContentTap++;
-    });
-
-    stage.on('contentDbltap', function () {
-      stageContentDbltap++;
-    });
-
-    simulateTouchStart(stage, [{ x: 100, y: 100, id: 0 }]);
-
-    simulateTouchEnd(stage, [], [{ x: 100, y: 100, id: 0 }]);
-    assert.equal(circleTouchstart, 1, '1');
-    assert.equal(circleTouchend, 1, '2');
-    assert.equal(stageContentTouchstart, 1, '3');
-    assert.equal(stageContentTouchend, 1, '4');
-    assert.equal(stageContentDbltap, 0, '5');
-
-    simulateTouchStart(stage, [{ x: 1, y: 1, id: 0 }]);
-
-    simulateTouchEnd(stage, [], [{ x: 1, y: 1, id: 0 }]);
-
-    assert.equal(stageContentTouchstart, 2, '6');
-    assert.equal(stageContentTouchend, 2, '7');
-    assert.equal(stageContentDbltap, 1, '8');
-  });
-
-  // ======================================================
   it('touchstart touchend touchmove tap dbltap', function (done) {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -282,26 +211,14 @@ describe('TouchEvents', function () {
     stage.add(layer);
 
     var circleTouchend = 0;
-    var stageContentTouchstart = 0;
-    var stageContentTouchend = 0;
 
     circle.on('touchend', function () {
       circleTouchend++;
     });
 
-    stage.on('contentTouchstart', function () {
-      stageContentTouchstart++;
-    });
-
-    stage.on('contentTouchend', function () {
-      stageContentTouchend++;
-    });
-
     simulateTouchStart(stage, [{ x: 1, y: 1, id: 0 }]);
     simulateTouchEnd(stage, [], [{ x: 100, y: 100, id: 0 }]);
 
-    assert.equal(stageContentTouchstart, 1);
-    assert.equal(stageContentTouchend, 1);
     assert.equal(circleTouchend, 1);
   });
 
@@ -554,7 +471,7 @@ describe('TouchEvents', function () {
   });
 
   it('can capture touch events', function () {
-    Konva.captureTouchEventsEnabled = true;
+    Konva.capturePointerEventsEnabled = true;
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -641,7 +558,7 @@ describe('TouchEvents', function () {
     assert.equal(circle1.hasPointerCapture(0), false);
     assert.equal(circle1.hasPointerCapture(1), false);
 
-    Konva.captureTouchEventsEnabled = false;
+    Konva.capturePointerEventsEnabled = false;
   });
 
   it('tap and double tap should trigger just once on stage', function () {

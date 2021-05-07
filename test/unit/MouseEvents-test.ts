@@ -13,139 +13,6 @@ import {
 
 describe('MouseEvents', function () {
   // ======================================================
-  it('stage content mouse events', function (done) {
-    var stage = addStage();
-    var layer = new Konva.Layer();
-    var circle = new Konva.Circle({
-      x: 100,
-      y: 100,
-      radius: 70,
-      fill: 'green',
-      stroke: 'black',
-      strokeWidth: 4,
-      name: 'myCircle',
-    });
-
-    layer.add(circle);
-    stage.add(layer);
-
-    var circleMousedown = 0;
-    var circleMouseup = 0;
-    var stageContentMousedown = 0;
-    var stageContentMouseup = 0;
-    var stageContentMousemove = 0;
-    var stageContentMouseout = 0;
-    var stageContentMouseover = 0;
-    var stageContentClick = 0;
-    var stageContentDblClick = 0;
-
-    circle.on('mousedown', function () {
-      circleMousedown++;
-    });
-
-    circle.on('mouseup', function () {
-      circleMouseup++;
-    });
-
-    stage.on('contentMousedown', function () {
-      stageContentMousedown++;
-    });
-
-    stage.on('contentMouseup', function () {
-      stageContentMouseup++;
-    });
-
-    stage.on('contentMousemove', function () {
-      stageContentMousemove++;
-    });
-
-    stage.on('contentMouseout', function () {
-      stageContentMouseout++;
-    });
-
-    stage.on('contentMouseover', function () {
-      stageContentMouseover++;
-    });
-
-    stage.on('contentClick', function () {
-      //console.log('click');
-      stageContentClick++;
-    });
-
-    stage.on('contentDblclick', function () {
-      //console.log('dbl click');
-      stageContentDblClick++;
-    });
-
-    simulateMouseDown(stage, {
-      x: 100,
-      y: 100,
-    });
-
-    simulateMouseUp(stage, {
-      x: 100,
-      y: 100,
-    });
-
-    assert.equal(circleMousedown, 1);
-    assert.equal(circleMouseup, 1);
-    assert.equal(stageContentMousedown, 1);
-    assert.equal(stageContentMouseup, 1);
-    assert.equal(stageContentClick, 1);
-
-    simulateMouseDown(stage, {
-      x: 1,
-      y: 1,
-    });
-    simulateMouseUp(stage, {
-      x: 1,
-      y: 1,
-    });
-
-    assert.equal(stageContentMousedown, 2);
-    assert.equal(stageContentMouseup, 2);
-
-    // trigger double click
-    simulateMouseDown(stage, {
-      x: 1,
-      y: 1,
-    });
-    simulateMouseUp(stage, {
-      x: 1,
-      y: 1,
-    });
-
-    assert.equal(stageContentMousedown, 3);
-    assert.equal(stageContentMouseup, 3);
-    //assert.equal(stageContentDblClick, 1);
-
-    setTimeout(function () {
-      simulateMouseMove(stage, {
-        x: 200,
-        y: 1,
-      });
-
-      assert.equal(stageContentMousemove, 1);
-
-      stage._mouseleave({
-        offsetX: 0,
-        offsetY: 0,
-      });
-
-      assert.equal(stageContentMouseout, 1);
-
-      stage._mouseover({
-        offsetX: 0,
-        offsetY: 0,
-      });
-
-      assert.equal(stageContentMouseover, 1);
-
-      done();
-    }, 20);
-  });
-
-  // ======================================================
   it('remove shape with onclick', function () {
     var stage = addStage();
 
@@ -441,6 +308,54 @@ describe('MouseEvents', function () {
         done();
       }, 20);
     }, 20);
+  });
+
+  it.skip('mouseleave and mouseenter', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer({
+      throttle: 999,
+    });
+    var circle = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 70,
+      strokeWidth: 4,
+      fill: 'red',
+      stroke: 'black',
+    });
+    layer.add(circle);
+    stage.add(layer);
+
+    var mouseenter = 0;
+    circle.on('mouseenter', () => {
+      mouseenter += 1;
+    });
+
+    var mouseleave = 0;
+    circle.on('mouseleave', () => {
+      mouseleave += 1;
+    });
+
+    simulateMouseMove(stage, {
+      x: 10,
+      y: 10,
+    });
+    simulateMouseMove(stage, {
+      x: 100,
+      y: 100,
+    });
+    simulateMouseMove(stage, {
+      x: 100,
+      y: 100,
+    });
+    assert.equal(mouseenter, 1);
+    assert.equal(mouseleave, 0);
+    simulateMouseMove(stage, {
+      x: 10,
+      y: 10,
+    });
+    assert.equal(mouseenter, 1);
+    assert.equal(mouseleave, 1);
   });
 
   // ======================================================
@@ -2045,7 +1960,7 @@ describe('MouseEvents', function () {
       y: 15,
     });
 
-    assert.equal(bigClicks, 0, 'single click on big rect');
+    assert.equal(bigClicks, 0, 'single click on big rect (1)');
     assert.equal(smallClicks, 0, 'no  click on small rect');
     assert.equal(smallDblClicks, 0, 'no dblclick on small rect');
 
@@ -2059,7 +1974,7 @@ describe('MouseEvents', function () {
         y: 100,
       });
 
-      assert.equal(bigClicks, 0, 'single click on big rect');
+      assert.equal(bigClicks, 0, 'single click on big rect (2)');
       assert.equal(smallClicks, 1, 'single click on small rect');
       assert.equal(smallDblClicks, 0, 'no dblclick on small rect');
 
@@ -2073,7 +1988,7 @@ describe('MouseEvents', function () {
           y: 100,
         });
 
-        assert.equal(bigClicks, 0, 'single click on big rect');
+        assert.equal(bigClicks, 0, 'single click on big rect (3)');
         assert.equal(smallClicks, 2, 'second click on small rect');
         assert.equal(smallDblClicks, 1, 'single dblclick on small rect');
 
@@ -2097,9 +2012,10 @@ describe('MouseEvents', function () {
       clientX: 10,
       clientY: 10 + top,
       button: 0,
+      type: 'mouseenter',
     };
 
-    stage._mouseenter(evt);
+    stage._pointerenter(evt);
 
     assert.equal(mouseenterCount, 1, 'mouseenterCount should be 1');
   });
@@ -2119,9 +2035,10 @@ describe('MouseEvents', function () {
       clientX: 0,
       clientY: 0 + top,
       button: 0,
+      type: 'mouseleave',
     };
 
-    stage._mouseleave(evt);
+    stage._pointerleave(evt);
 
     assert.equal(mouseleave, 1, 'mouseleave should be 1');
   });
@@ -2178,9 +2095,10 @@ describe('MouseEvents', function () {
       clientX: 200,
       clientY: -5 + top,
       button: 0,
+      type: 'mouseleave',
     };
 
-    stage._mouseleave(evt);
+    stage._pointerleave(evt);
 
     assert.equal(circleMouseleave, 1, 'circleMouseleave should be 1');
     assert.equal(circleMouseout, 1, 'circleMouseout should be 1');
@@ -2294,16 +2212,20 @@ describe('MouseEvents', function () {
       clientX: 10,
       clientY: 10 + top,
       button: 0,
+      type: 'mouseenter',
     };
 
-    stage._mouseenter(evt);
+    stage._pointerenter(evt);
 
     simulateMouseMove(stage, {
       x: 10,
       y: 10,
     });
 
-    stage._mouseleave(evt);
+    stage._pointerleave({
+      ...evt,
+      type: 'mouseleave',
+    });
 
     assert.equal(mouseenter, 1, 'mouseenter should be 1');
   });

@@ -20,6 +20,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - `Konva.names` and `Konva.ids` are removed
 - new `flipEnabled` property for `Konva.Transformer`.
 - new `node.isClientRectOnScreen()` method
+- argument `selector` is removed from `node.getIntersection(pos)` API
+- `Konva.captureTouchEventsEnabled` is renamed to `Konva.capturePointerEventsEnabled`
 
 ## 7.2.5
 

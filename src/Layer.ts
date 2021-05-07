@@ -331,14 +331,11 @@ export class Layer extends Container<Group | Shape> {
    * @param {Object} pos
    * @param {Number} pos.x
    * @param {Number} pos.y
-   * @param {String} [selector]
    * @returns {Konva.Node}
    * @example
    * var shape = layer.getIntersection({x: 50, y: 50});
-   * // or if you interested in shape parent:
-   * var group = layer.getIntersection({x: 50, y: 50}, 'Group');
    */
-  getIntersection(pos: Vector2d, selector?: string): Node | null {
+  getIntersection(pos: Vector2d) {
     if (!this.isListening() || !this.isVisible()) {
       return null;
     }
@@ -354,9 +351,7 @@ export class Layer extends Container<Group | Shape> {
           y: pos.y + intersectionOffset.y * spiralSearchDistance,
         });
         const shape = obj.shape;
-        if (shape && selector) {
-          return shape.findAncestor(selector, true);
-        } else if (shape) {
+        if (shape) {
           return shape;
         }
         // we should continue search if we found antialiased pixel

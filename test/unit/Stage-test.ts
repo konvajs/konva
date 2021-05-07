@@ -310,56 +310,6 @@ describe('Stage', function () {
   });
 
   // ======================================================
-  it('layer getIntersection() with selector', function () {
-    var stage = addStage();
-    var layer = new Konva.Layer({
-      name: 'layer',
-    });
-
-    var group = new Konva.Group({
-      name: 'group',
-    });
-
-    var circle = new Konva.Circle({
-      x: stage.width() / 2,
-      y: stage.height() / 2,
-      radius: 70,
-      strokeWidth: 4,
-      fill: 'red',
-      stroke: 'black',
-    });
-
-    group.add(circle);
-    layer.add(group);
-    stage.add(layer);
-
-    assert.equal(
-      stage.getIntersection(
-        { x: stage.width() / 2, y: stage.height() / 2 },
-        'Circle'
-      ),
-      circle,
-      'intersection with shape selector'
-    );
-    assert.equal(
-      stage.getIntersection(
-        { x: stage.width() / 2, y: stage.height() / 2 },
-        '.group'
-      ),
-      group,
-      'intersection with group selector'
-    );
-    assert.equal(
-      stage.getIntersection(
-        { x: stage.width() / 2, y: stage.height() / 2 },
-        'Stage'
-      ),
-      stage,
-      'intersection with stage selector'
-    );
-  });
-
-  // ======================================================
   it('stage getIntersection() edge detection', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -1190,9 +1140,10 @@ describe('Stage', function () {
       }
     });
 
-    stage._mouseover({
+    stage._pointerover({
       clientX: 0,
       clientY: 0,
+      type: 'mouseover',
     });
 
     assert.equal(mouseover, 1, 'initial over');
@@ -1267,7 +1218,7 @@ describe('Stage', function () {
     stage.on('mouseout', function () {
       count += 1;
     });
-    stage._mouseleave({});
+    stage._pointerleave({ type: 'mouseleave' });
     assert.equal(count, 2);
   });
 

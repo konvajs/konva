@@ -24,7 +24,9 @@ afterEach(function () {
   var isManual = this.currentTest.parent.title === 'Manual';
 
   Konva.stages.forEach(function (stage) {
-    clearTimeout(stage.dblTimeout);
+    clearTimeout(stage._mouseDblTimeout);
+    clearTimeout(stage._touchDblTimeout);
+    clearTimeout(stage._pointerDblTimeout);
   });
 
   if (!isFailed && !isManual) {
@@ -177,37 +179,43 @@ export function showHit(layer) {
 }
 
 export function simulateMouseDown(stage, pos) {
+  // simulatePointerDown(stage, pos);
   var top = isNode ? 0 : stage.content.getBoundingClientRect().top;
 
-  stage._mousedown({
+  stage._pointerdown({
     clientX: pos.x,
     clientY: pos.y + top,
     button: pos.button || 0,
+    type: 'mousedown',
   });
 }
 
 export function simulateMouseMove(stage, pos) {
+  // simulatePointerMove(stage, pos);
   var top = isNode ? 0 : stage.content.getBoundingClientRect().top;
   var evt = {
     clientX: pos.x,
     clientY: pos.y + top,
     button: pos.button || 0,
+    type: 'mousemove',
   };
 
-  stage._mousemove(evt);
+  stage._pointermove(evt);
   Konva.DD._drag(evt);
 }
 
 export function simulateMouseUp(stage, pos) {
+  // simulatePointerUp(stage, pos);
   var top = isNode ? 0 : stage.content.getBoundingClientRect().top;
   var evt = {
     clientX: pos.x,
     clientY: pos.y + top,
     button: pos.button || 0,
+    type: 'mouseup',
   };
 
   Konva.DD._endDragBefore(evt);
-  stage._mouseup(evt);
+  stage._pointerup(evt);
   Konva.DD._endDragAfter(evt);
 }
 
@@ -242,9 +250,10 @@ export function simulateTouchStart(stage, pos, changed?) {
   var evt = {
     touches: touches,
     changedTouches: changedTouches,
+    type: 'touchstart',
   };
 
-  stage._touchstart(evt);
+  stage._pointerdown(evt);
 }
 
 export function simulateTouchMove(stage, pos, changed?) {
@@ -278,9 +287,10 @@ export function simulateTouchMove(stage, pos, changed?) {
   var evt = {
     touches: touches,
     changedTouches: changedTouches,
+    type: 'touchmove',
   };
 
-  stage._touchmove(evt);
+  stage._pointermove(evt);
   Konva.DD._drag(evt);
 }
 
@@ -315,10 +325,11 @@ export function simulateTouchEnd(stage, pos, changed?) {
   var evt = {
     touches: touches,
     changedTouches: changedTouches,
+    type: 'touchend',
   };
 
   Konva.DD._endDragBefore(evt);
-  stage._touchend(evt);
+  stage._pointerup(evt);
   Konva.DD._endDragAfter(evt);
 }
 
@@ -329,6 +340,7 @@ export function simulatePointerDown(stage: Stage, pos) {
     clientY: pos.y + top,
     button: pos.button || 0,
     pointerId: pos.pointerId || 1,
+    type: 'pointerdown',
   } as any);
 }
 
@@ -339,6 +351,7 @@ export function simulatePointerMove(stage: Stage, pos) {
     clientY: pos.y + top,
     button: pos.button || 0,
     pointerId: pos.pointerId || 1,
+    type: 'pointermove',
   };
 
   stage._pointermove(evt as any);
@@ -346,13 +359,13 @@ export function simulatePointerMove(stage: Stage, pos) {
 }
 
 export function simulatePointerUp(stage: Stage, pos) {
-  debugger;
   var top = isNode ? 0 : stage.content.getBoundingClientRect().top;
   var evt = {
     clientX: pos.x,
     clientY: pos.y + top,
     button: pos.button || 0,
     pointerId: pos.pointerId || 1,
+    type: 'pointerup',
   };
 
   Konva.DD._endDragBefore(evt);

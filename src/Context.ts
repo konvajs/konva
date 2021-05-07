@@ -459,8 +459,12 @@ export class Context {
    * @method
    * @name Konva.Context#fillText
    */
-  fillText(a0, a1, a2) {
-    this._context.fillText(a0, a1, a2);
+  fillText(text: string, x: number, y: number, maxWidth?: number) {
+    if (maxWidth) {
+      this._context.fillText(text, x, y, maxWidth);
+    } else {
+      this._context.fillText(text, x, y);
+    }
   }
   /**
    * measureText function.
@@ -696,30 +700,6 @@ export class SceneContext extends Context {
     shape._fillFunc(this);
   }
   _fillPattern(shape) {
-    var fillPatternX = shape.getFillPatternX(),
-      fillPatternY = shape.getFillPatternY(),
-      fillPatternRotation = Konva.getAngle(shape.getFillPatternRotation()),
-      fillPatternOffsetX = shape.getFillPatternOffsetX(),
-      fillPatternOffsetY = shape.getFillPatternOffsetY(),
-      fillPatternScaleX = shape.getFillPatternScaleX(),
-      fillPatternScaleY = shape.getFillPatternScaleY();
-
-    // if (fillPatternX || fillPatternY) {
-    //   this.translate(fillPatternX || 0, fillPatternY || 0);
-    // }
-
-    // if (fillPatternRotation) {
-    //   this.rotate(fillPatternRotation);
-    // }
-
-    if (fillPatternScaleX || fillPatternScaleY) {
-      // this.scale(fillPatternScaleX, fillPatternScaleY);
-    }
-
-    // if (fillPatternOffsetX || fillPatternOffsetY) {
-    //   this.translate(-1 * fillPatternOffsetX, -1 * fillPatternOffsetY);
-    // }
-
     this.setAttr('fillStyle', shape._getFillPattern());
     shape._fillFunc(this);
   }

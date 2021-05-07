@@ -244,56 +244,6 @@ describe('Layer', function () {
   });
 
   // ======================================================
-  it('layer getIntersection() with selector', function () {
-    var stage = addStage();
-    var layer = new Konva.Layer({
-      name: 'layer',
-    });
-
-    var group = new Konva.Group({
-      name: 'group',
-    });
-
-    var circle = new Konva.Circle({
-      x: stage.width() / 2,
-      y: stage.height() / 2,
-      radius: 70,
-      strokeWidth: 4,
-      fill: 'red',
-      stroke: 'black',
-    });
-
-    group.add(circle);
-    layer.add(group);
-    stage.add(layer);
-
-    assert.equal(
-      layer.getIntersection(
-        { x: stage.width() / 2, y: stage.height() / 2 },
-        'Circle'
-      ),
-      circle,
-      'intersection with shape selector'
-    );
-    assert.equal(
-      layer.getIntersection(
-        { x: stage.width() / 2, y: stage.height() / 2 },
-        '.group'
-      ),
-      group,
-      'intersection with group selector'
-    );
-    assert.equal(
-      layer.getIntersection(
-        { x: stage.width() / 2, y: stage.height() / 2 },
-        'Stage'
-      ),
-      stage,
-      'intersection with stage selector'
-    );
-  });
-
-  // ======================================================
   it('set layer visibility', function () {
     var stage = addStage();
     var layer = new Konva.Layer({
