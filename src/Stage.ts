@@ -282,9 +282,9 @@ export class Stage extends Container<Layer> {
     return this;
   }
   /**
-   * returns absolute pointer position which can be a touch position or mouse position
+   * returns ABSOLUTE pointer position which can be a touch position or mouse position
    * pointer position doesn't include any transforms (such as scale) of the stage
-   * it is just a plain position of pointer relative to top-left corner of the stage container
+   * it is just a plain position of pointer relative to top-left corner of the canvas
    * @method
    * @name Konva.Stage#getPointerPosition
    * @returns {Vector2d|null}

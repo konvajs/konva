@@ -12,6 +12,7 @@ import {
   loadImage,
   Konva,
   isBrowser,
+  simulateMouseMove,
 } from './test-utils';
 
 describe('Node', function () {
@@ -3806,5 +3807,31 @@ describe('Node', function () {
 
     stage.x(10);
     assert.equal(circle.isClientRectOnScreen(), true);
+  });
+
+  // ======================================================
+  it('getRelativePointerPosition() method', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer({
+      scaleX: 2,
+    });
+    stage.add(layer);
+    var circle = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 30,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+    });
+    layer.add(circle);
+
+    simulateMouseMove(stage, {
+      x: 100,
+      y: 100,
+    });
+
+    assert.equal(circle.getRelativePointerPosition().x, -50);
+    assert.equal(circle.getRelativePointerPosition().y, 0);
   });
 });

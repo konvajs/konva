@@ -1121,6 +1121,33 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     };
   }
   /**
+   * get position of first pointer (like mouse or first touch) relative to local coordinates of current node
+   * @method
+   * @name Konva.Node#getRelativePointerPosition
+   * @returns {Konva.Node}
+   * @example
+   *
+   * // let's think we have a rectangle at position x = 10, y = 10
+   * // now we clicked at x = 15, y = 15 of the stage
+   * // if you want to know position of the click, related to the rectangle you can use
+   * rect.getRelativePointerPosition();
+   */
+  getRelativePointerPosition() {
+    if (!this.getStage()) {
+      return null;
+    }
+    // get pointer (say mouse or touch) position
+    var pos = this.getStage().getPointerPosition();
+    if (!pos) {
+      return null;
+    }
+    var transform = this.getAbsoluteTransform().copy();
+    // to detect relative position we need to invert transform
+    transform.invert();
+    // now we can find relative point
+    return transform.point(pos);
+  }
+  /**
    * get absolute position of a node. That function can be used to calculate absolute position, but relative to any ancestor
    * @method
    * @name Konva.Node#getAbsolutePosition

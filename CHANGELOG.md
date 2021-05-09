@@ -25,6 +25,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Full event system rewrite. Much better `pointer` evens support.
 - `Konva.Util.extend` is removed
 - Added `Konva.Util.degToRad` and `Konva.Util.radToDeg`
+- Added `node.getRelativePointerPosition()`
 
 ## 7.2.5
 
