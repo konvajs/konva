@@ -15,7 +15,9 @@ import { Stage } from '../../src/Stage.js';
 
 // reset some data
 beforeEach(function () {
-  Konva['inDblClickWindow'] = false;
+  Konva._mouseInDblClickWindow = false;
+  Konva._touchInDblClickWindow = false;
+  Konva._pointerInDblClickWindow = false;
 });
 
 // clear after test
@@ -179,7 +181,7 @@ export function showHit(layer) {
 }
 
 export function simulateMouseDown(stage, pos) {
-  // simulatePointerDown(stage, pos);
+  simulatePointerDown(stage, pos);
   var top = isNode ? 0 : stage.content.getBoundingClientRect().top;
 
   stage._pointerdown({
@@ -191,7 +193,7 @@ export function simulateMouseDown(stage, pos) {
 }
 
 export function simulateMouseMove(stage, pos) {
-  // simulatePointerMove(stage, pos);
+  simulatePointerMove(stage, pos);
   var top = isNode ? 0 : stage.content.getBoundingClientRect().top;
   var evt = {
     clientX: pos.x,
@@ -205,7 +207,7 @@ export function simulateMouseMove(stage, pos) {
 }
 
 export function simulateMouseUp(stage, pos) {
-  // simulatePointerUp(stage, pos);
+  simulatePointerUp(stage, pos);
   var top = isNode ? 0 : stage.content.getBoundingClientRect().top;
   var evt = {
     clientX: pos.x,
@@ -355,7 +357,7 @@ export function simulatePointerMove(stage: Stage, pos) {
   };
 
   stage._pointermove(evt as any);
-  Konva.DD._drag(evt);
+  // Konva.DD._drag(evt);
 }
 
 export function simulatePointerUp(stage: Stage, pos) {
@@ -368,9 +370,9 @@ export function simulatePointerUp(stage: Stage, pos) {
     type: 'pointerup',
   };
 
-  Konva.DD._endDragBefore(evt);
+  // Konva.DD._endDragBefore(evt);
   stage._pointerup(evt as any);
-  Konva.DD._endDragAfter(evt);
+  // Konva.DD._endDragAfter(evt);
 }
 
 function isClose(a, b) {

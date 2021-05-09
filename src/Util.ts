@@ -444,6 +444,11 @@ var OBJECT_ARRAY = '[object Array]',
   RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/,
   animQueue: Array<Function> = [];
 
+const req =
+  (typeof requestAnimationFrame !== 'undefined' && requestAnimationFrame) ||
+  function (f) {
+    setTimeout(f, 60);
+  };
 /**
  * @namespace Util
  * @memberof Konva
@@ -507,11 +512,6 @@ export const Util = {
 
   requestAnimFrame(callback: Function) {
     animQueue.push(callback);
-    const req =
-      (typeof requestAnimationFrame !== 'undefined' && requestAnimationFrame) ||
-      function (f) {
-        setTimeout(f, 60);
-      };
     if (animQueue.length === 1) {
       req(function () {
         const queue = animQueue;
@@ -541,26 +541,7 @@ export const Util = {
     }
     return false;
   },
-  _simplifyArray(arr: Array<any>) {
-    var retArr = [],
-      len = arr.length,
-      util = Util,
-      n,
-      val;
 
-    for (n = 0; n < len; n++) {
-      val = arr[n];
-      if (util._isNumber(val)) {
-        val = Math.round(val * 1000) / 1000;
-      } else if (!util._isString(val)) {
-        val = val + '';
-      }
-
-      retArr.push(val);
-    }
-
-    return retArr;
-  },
   /*
    * arg can be an image object or image data
    */
@@ -599,13 +580,6 @@ export const Util = {
     return HASH + randColor;
   },
 
-  get(val: any, def: any) {
-    if (val === undefined) {
-      return def;
-    } else {
-      return val;
-    }
-  },
   /**
    * get RGB components of a color
    * @method
@@ -819,14 +793,26 @@ export const Util = {
   cloneArray(arr: Array<any>) {
     return arr.slice(0);
   },
-  _degToRad(deg: number) {
+  degToRad(deg: number) {
     return deg * PI_OVER_DEG180;
   },
-  _radToDeg(rad: number) {
+  radToDeg(rad: number) {
     return rad * DEG180_OVER_PI;
   },
+  _degToRad(deg: number) {
+    Util.warn(
+      'Util._degToRad is removed. Please use public Util.degToRad instead.'
+    );
+    return Util._degToRad(deg);
+  },
+  _radToDeg(rad: number) {
+    Util.warn(
+      'Util._radToDeg is removed. Please use public Util.radToDeg instead.'
+    );
+    return Util._radToDeg(rad);
+  },
   _getRotation(radians) {
-    return Konva.angleDeg ? Util._radToDeg(radians) : radians;
+    return Konva.angleDeg ? Util.radToDeg(radians) : radians;
   },
   _capitalize(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -842,64 +828,6 @@ export const Util = {
       return;
     }
     console.warn(KONVA_WARNING + str);
-  },
-  extend(child: any, parent: any) {
-    function Ctor() {
-      this.constructor = child;
-    }
-    Ctor.prototype = parent.prototype;
-    var oldProto = child.prototype;
-    child.prototype = new Ctor();
-    for (var key in oldProto) {
-      if (oldProto.hasOwnProperty(key)) {
-        child.prototype[key] = oldProto[key];
-      }
-    }
-    child.__super__ = parent.prototype;
-    // create reference to parent
-    child.super = parent;
-  },
-
-  _getControlPoints(x0, y0, x1, y1, x2, y2, t) {
-    var d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2)),
-      d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)),
-      fa = (t * d01) / (d01 + d12),
-      fb = (t * d12) / (d01 + d12),
-      p1x = x1 - fa * (x2 - x0),
-      p1y = y1 - fa * (y2 - y0),
-      p2x = x1 + fb * (x2 - x0),
-      p2y = y1 + fb * (y2 - y0);
-
-    return [p1x, p1y, p2x, p2y];
-  },
-  _expandPoints(p, tension) {
-    var len = p.length,
-      allPoints = [],
-      n,
-      cp;
-
-    for (n = 2; n < len - 2; n += 2) {
-      cp = Util._getControlPoints(
-        p[n - 2],
-        p[n - 1],
-        p[n],
-        p[n + 1],
-        p[n + 2],
-        p[n + 3],
-        tension
-      );
-      if (isNaN(cp[0])) {
-        continue;
-      }
-      allPoints.push(cp[0]);
-      allPoints.push(cp[1]);
-      allPoints.push(p[n]);
-      allPoints.push(p[n + 1]);
-      allPoints.push(cp[2]);
-      allPoints.push(cp[3]);
-    }
-
-    return allPoints;
   },
   each(obj, func) {
     for (var key in obj) {

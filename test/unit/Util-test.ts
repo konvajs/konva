@@ -2,12 +2,6 @@ import { assert } from 'chai';
 import { Konva } from './test-utils';
 
 describe('Util', function () {
-  it('get()', function () {
-    assert.equal(Konva.Util.get(1, 2), 1);
-    assert.equal(Konva.Util.get(undefined, 2), 2);
-    assert.equal(Konva.Util.get(undefined, { foo: 'bar' }).foo, 'bar');
-  });
-
   it('test _prepareToStringify', function () {
     var o: any = {
       a: 1,

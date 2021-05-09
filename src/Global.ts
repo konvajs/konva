@@ -45,7 +45,7 @@ export const Konva = {
     return Konva.angleDeg ? angle * PI_OVER_180 : angle;
   },
   enableTrace: false,
-  pointerEventsEnabled: false,
+  pointerEventsEnabled: true,
   /**
    * Should Konva automatically update canvas on any changes. Default is true.
    * @property autoDrawEnabled
@@ -81,8 +81,12 @@ export const Konva = {
    */
   capturePointerEventsEnabled: false,
 
-  listenClickTap: false,
-  inDblClickWindow: false,
+  _mouseListenClick: false,
+  _touchListenClick: false,
+  _pointerListenClick: false,
+  _mouseInDblClickWindow: false,
+  _touchInDblClickWindow: false,
+  _pointerInDblClickWindow: false,
 
   /**
    * Global pixel ratio configuration. KonvaJS automatically detect pixel ratio of current device.

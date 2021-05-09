@@ -31,36 +31,17 @@ var STAGE = 'Stage',
   POINTERUP = 'pointerup',
   POINTERCANCEL = 'pointercancel',
   LOSTPOINTERCAPTURE = 'lostpointercapture',
+  POINTEROUT = 'pointerout',
+  POINTERLEAVE = 'pointerleave',
+  POINTEROVER = 'pointerover',
+  POINTERENTER = 'pointerenter',
   CONTEXTMENU = 'contextmenu',
-  CLICK = 'click',
-  DBL_CLICK = 'dblclick',
   TOUCHSTART = 'touchstart',
   TOUCHEND = 'touchend',
-  TAP = 'tap',
-  DBL_TAP = 'dbltap',
   TOUCHMOVE = 'touchmove',
   TOUCHCANCEL = 'touchcancel',
   WHEEL = 'wheel',
-  CONTENT_MOUSEOUT = 'contentMouseout',
-  CONTENT_MOUSEOVER = 'contentMouseover',
-  CONTENT_MOUSEMOVE = 'contentMousemove',
-  CONTENT_MOUSEDOWN = 'contentMousedown',
-  CONTENT_MOUSEUP = 'contentMouseup',
-  CONTENT_CONTEXTMENU = 'contentContextmenu',
-  CONTENT_CLICK = 'contentClick',
-  CONTENT_DBL_CLICK = 'contentDblclick',
-  CONTENT_TOUCHSTART = 'contentTouchstart',
-  CONTENT_TOUCHEND = 'contentTouchend',
-  CONTENT_DBL_TAP = 'contentDbltap',
-  CONTENT_TAP = 'contentTap',
-  CONTENT_TOUCHMOVE = 'contentTouchmove',
-  CONTENT_WHEEL = 'contentWheel',
-  RELATIVE = 'relative',
-  KONVA_CONTENT = 'konvajs-content',
-  UNDERSCORE = '_',
-  CONTAINER = 'container',
   MAX_LAYERS_NUMBER = 5,
-  EMPTY_STRING = '',
   EVENTS = [
     [MOUSEENTER, '_pointerenter'],
     [MOUSEDOWN, '_pointerdown'],
@@ -81,42 +62,40 @@ var STAGE = 'Stage',
     [LOSTPOINTERCAPTURE, '_lostpointercapture'],
   ];
 
-const NO_POINTERS_MESSAGE = `Pointer position is missing and not registered by the stage. Looks like it is outside of the stage container. You can set it manually from event: stage.setPointersPositions(event);`;
-
-export const stages: Stage[] = [];
-
 const EVENTS_MAP = {
   mouse: {
-    pointerout: 'mouseout',
-    pointerleave: 'mouseleave',
-    pointerover: 'mouseover',
-    pointerenter: 'mouseenter',
-    pointermove: 'mousemove',
-    pointerdown: 'mousedown',
-    pointerup: 'mouseup',
-    pointercancel: 'mousecancel',
+    [POINTEROUT]: MOUSEOUT,
+    [POINTERLEAVE]: MOUSELEAVE,
+    [POINTEROVER]: MOUSEOVER,
+    [POINTERENTER]: MOUSEENTER,
+    [POINTERMOVE]: MOUSEMOVE,
+    [POINTERDOWN]: MOUSEDOWN,
+    [POINTERUP]: MOUSEUP,
+    [POINTERCANCEL]: 'mousecancel',
     pointerclick: 'click',
     pointerdblclick: 'dblclick',
   },
   touch: {
-    pointerout: 'touchout',
-    pointerleave: 'touchleave',
-    pointerover: 'touchover',
-    pointerenter: 'touchenter',
-    pointermove: 'touchmove',
-    pointerdown: 'touchstart',
-    pointerup: 'touchend',
+    [POINTEROUT]: 'touchout',
+    [POINTERLEAVE]: 'touchleave',
+    [POINTEROVER]: 'touchover',
+    [POINTERENTER]: 'touchenter',
+    [POINTERMOVE]: TOUCHMOVE,
+    [POINTERDOWN]: TOUCHSTART,
+    [POINTERUP]: TOUCHEND,
+    [POINTERCANCEL]: TOUCHCANCEL,
     pointerclick: 'tap',
     pointerdblclick: 'dbltap',
   },
   pointer: {
-    pointerout: 'pointerout',
-    pointerleave: 'pointerleave',
-    pointerover: 'pointerover',
-    pointerenter: 'pointerenter',
-    pointermove: 'pointermove',
-    pointerdown: 'pointerdown',
-    pointerup: 'pointerup',
+    [POINTEROUT]: POINTEROUT,
+    [POINTERLEAVE]: POINTERLEAVE,
+    [POINTEROVER]: POINTEROVER,
+    [POINTERENTER]: POINTERENTER,
+    [POINTERMOVE]: POINTERMOVE,
+    [POINTERDOWN]: POINTERDOWN,
+    [POINTERUP]: POINTERUP,
+    [POINTERCANCEL]: POINTERCANCEL,
     pointerclick: 'pointerclick',
     pointerdblclick: 'pointerdblclick',
   },
@@ -153,6 +132,10 @@ function checkNoClip(attrs: any = {}) {
   }
   return attrs;
 }
+
+const NO_POINTERS_MESSAGE = `Pointer position is missing and not registered by the stage. Looks like it is outside of the stage container. You can set it manually from event: stage.setPointersPositions(event);`;
+
+export const stages: Stage[] = [];
 
 /**
  * Stage constructor.  A stage is used to contain multiple layers
@@ -248,7 +231,7 @@ export class Stage extends Container<Layer> {
         throw 'Can not find container in document with id ' + id;
       }
     }
-    this._setAttr(CONTAINER, container);
+    this._setAttr('container', container);
     if (this.content) {
       if (this.content.parentElement) {
         this.content.parentElement.removeChild(this.content);
@@ -553,7 +536,7 @@ export class Stage extends Container<Layer> {
       var shape = this.getIntersection(pos);
       DD.justDragged = false;
       // probably we are staring a click
-      Konva.listenClickTap = true;
+      Konva['_' + eventType + 'ListenClick'] = true;
 
       // no shape detected? do nothing
       const hasShape = shape && shape.isListening();
@@ -660,9 +643,6 @@ export class Stage extends Container<Layer> {
         pointerId: this._changedPointerPositions[0].id,
       });
     }
-
-    // content event
-    this._fire(CONTENT_MOUSEMOVE, { evt: evt });
   }
   _pointerup(evt) {
     const events = getEventsMap(evt.type);
@@ -692,17 +672,17 @@ export class Stage extends Container<Layer> {
       const event = { evt: evt, pointerId };
 
       let fireDblClick = false;
-      if (Konva.inDblClickWindow) {
+      if (Konva['_' + eventType + 'InDblClickWindow']) {
         fireDblClick = true;
         clearTimeout(this[eventType + 'DblTimeout']);
       } else if (!DD.justDragged) {
         // don't set inDblClickWindow after dragging
-        Konva.inDblClickWindow = true;
+        Konva['_' + eventType + 'InDblClickWindow'] = true;
         clearTimeout(this[eventType + 'DblTimeout']);
       }
 
       this[eventType + 'DblTimeout'] = setTimeout(function () {
-        Konva.inDblClickWindow = false;
+        Konva['_' + eventType + 'InDblClickWindow'] = false;
       }, Konva.dblClickWindow);
 
       if (shape && shape.isListening()) {
@@ -712,7 +692,7 @@ export class Stage extends Container<Layer> {
 
         // detect if click or double click occurred
         if (
-          Konva.listenClickTap &&
+          Konva['_' + eventType + 'ListenClick'] &&
           clickStartShape &&
           clickStartShape === shape
         ) {
@@ -725,7 +705,7 @@ export class Stage extends Container<Layer> {
       } else {
         this[eventType + 'ClickEndShape'] = null;
 
-        if (Konva.listenClickTap) {
+        if (Konva['_' + eventType + 'ListenClick']) {
           this._fire(events.pointerclick, {
             evt: evt,
             target: this,
@@ -754,7 +734,7 @@ export class Stage extends Container<Layer> {
       });
     }
 
-    Konva.listenClickTap = false;
+    Konva['_' + eventType + 'ListenClick'] = false;
 
     // always call preventDefault for desktop events because some browsers
     // try to drag and drop the canvas element
@@ -913,13 +893,13 @@ export class Stage extends Container<Layer> {
       throw 'Stage has no container. A container is required.';
     }
     // clear content inside container
-    container.innerHTML = EMPTY_STRING;
+    container.innerHTML = '';
 
     // content
     this.content = document.createElement('div');
-    this.content.style.position = RELATIVE;
+    this.content.style.position = 'relative';
     this.content.style.userSelect = 'none';
-    this.content.className = KONVA_CONTENT;
+    this.content.className = 'konvajs-content';
 
     this.content.setAttribute('role', 'presentation');
 

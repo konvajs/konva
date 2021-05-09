@@ -3,6 +3,27 @@ import { Konva } from './Global';
 import { Canvas } from './Canvas';
 import { Shape } from './Shape';
 
+function simplifyArray(arr: Array<any>) {
+  var retArr = [],
+    len = arr.length,
+    util = Util,
+    n,
+    val;
+
+  for (n = 0; n < len; n++) {
+    val = arr[n];
+    if (util._isNumber(val)) {
+      val = Math.round(val * 1000) / 1000;
+    } else if (!util._isString(val)) {
+      val = val + '';
+    }
+
+    retArr.push(val);
+  }
+
+  return retArr;
+}
+
 var COMMA = ',',
   OPEN_PAREN = '(',
   CLOSE_PAREN = ')',
@@ -638,7 +659,7 @@ export class Context {
         ret;
 
       that[methodName] = function () {
-        args = Util._simplifyArray(Array.prototype.slice.call(arguments, 0));
+        args = simplifyArray(Array.prototype.slice.call(arguments, 0));
         ret = origMethod.apply(that, arguments);
 
         that._trace({
@@ -810,13 +831,12 @@ export class SceneContext extends Context {
     }
   }
   _applyShadow(shape) {
-    var util = Util,
-      color = util.get(shape.getShadowRGBA(), 'black'),
-      blur = util.get(shape.getShadowBlur(), 5),
-      offset = util.get(shape.getShadowOffset(), {
+    var color = shape.getShadowRGBA() ?? 'black',
+      blur = shape.getShadowBlur() ?? 5,
+      offset = shape.getShadowOffset() ?? {
         x: 0,
         y: 0,
-      }),
+      },
       scale = shape.getAbsoluteScale(),
       ratio = this.canvas.getPixelRatio(),
       scaleX = scale.x * ratio,

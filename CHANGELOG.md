@@ -22,6 +22,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - new `node.isClientRectOnScreen()` method
 - argument `selector` is removed from `node.getIntersection(pos)` API
 - `Konva.captureTouchEventsEnabled` is renamed to `Konva.capturePointerEventsEnabled`
+- Full event system rewrite. Much better `pointer` evens support.
+- `Konva.Util.extend` is removed
+- Added `Konva.Util.degToRad` and `Konva.Util.radToDeg`
 
 ## 7.2.5
 

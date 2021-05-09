@@ -115,7 +115,9 @@ export const DD = {
       if (elem.dragStatus === 'dragging' || elem.dragStatus === 'stopped') {
         // if a node is stopped manually we still need to reset events:
         DD.justDragged = true;
-        Konva.listenClickTap = false;
+        Konva._mouseListenClick = false;
+        Konva._touchListenClick = false;
+        Konva._pointerListenClick = false;
         elem.dragStatus = 'stopped';
       }
 

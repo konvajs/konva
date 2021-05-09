@@ -96,8 +96,8 @@ function getCursor(anchorName, rad) {
     return 'crosshair';
   }
 
-  rad += Util._degToRad(ANGLES[anchorName] || 0);
-  var angle = ((Util._radToDeg(rad) % 360) + 360) % 360;
+  rad += Util.degToRad(ANGLES[anchorName] || 0);
+  var angle = ((Util.radToDeg(rad) % 360) + 360) % 360;
 
   if (Util._inRange(angle, 315 + 22.5, 360) || Util._inRange(angle, 0, 22.5)) {
     // TOP

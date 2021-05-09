@@ -2142,7 +2142,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       drawNode?.batchDraw();
     }
   }
-  _setAttr(key, val, skipFire = false) {
+  _setAttr(key, val) {
     var oldVal = this.attrs[key];
     if (oldVal === val && !Util.isObject(val)) {
       return;

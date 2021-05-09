@@ -63,7 +63,7 @@ describe('TouchEvents', function () {
     stage.add(layer);
 
     // reset inDoubleClickWindow
-    Konva.inDblClickWindow = false;
+    Konva._touchInDblClickWindow = false;
 
     // touchstart circle
     simulateTouchStart(stage, [{ x: 289, y: 100, id: 0 }]);
