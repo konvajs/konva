@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v7.2.5
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Wed May 05 2021
+   * Date: Sun May 09 2021
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -43,7 +43,7 @@
           return Konva$2.angleDeg ? angle * PI_OVER_180 : angle;
       },
       enableTrace: false,
-      _pointerEventsEnabled: false,
+      pointerEventsEnabled: true,
       /**
        * Should Konva automatically update canvas on any changes. Default is true.
        * @property autoDrawEnabled
@@ -70,17 +70,20 @@
        * The case: we touchstart on div1, then touchmove out of that element into another element div2.
        * DOM will continue trigger touchmove events on div1 (not div2). Because events are "captured" into initial target.
        * By default Konva do not do that and will trigger touchmove on another element, while pointer is moving.
-       * @property captureTouchEventsEnabled
+       * @property capturePointerEventsEnabled
        * @default false
-       * @name captureTouchEventsEnabled
+       * @name capturePointerEventsEnabled
        * @memberof Konva
        * @example
-       * Konva.captureTouchEventsEnabled = true;
+       * Konva.capturePointerEventsEnabled = true;
        */
-      captureTouchEventsEnabled: false,
-      // TODO: move that to stage?
-      listenClickTap: false,
-      inDblClickWindow: false,
+      capturePointerEventsEnabled: false,
+      _mouseListenClick: false,
+      _touchListenClick: false,
+      _pointerListenClick: false,
+      _mouseInDblClickWindow: false,
+      _touchInDblClickWindow: false,
+      _pointerInDblClickWindow: false,
       /**
        * Global pixel ratio configuration. KonvaJS automatically detect pixel ratio of current device.
        * But you may override such property, if you want to use your value. Set this value before any components initializations.
@@ -422,7 +425,7 @@
       }
   }
   // CONSTANTS
-  var OBJECT_ARRAY = '[object Array]', OBJECT_NUMBER = '[object Number]', OBJECT_STRING = '[object String]', OBJECT_BOOLEAN = '[object Boolean]', PI_OVER_DEG180 = Math.PI / 180, DEG180_OVER_PI = 180 / Math.PI, HASH$1 = '#', EMPTY_STRING$2 = '', ZERO = '0', KONVA_WARNING = 'Konva warning: ', KONVA_ERROR = 'Konva error: ', RGB_PAREN = 'rgb(', COLORS = {
+  var OBJECT_ARRAY = '[object Array]', OBJECT_NUMBER = '[object Number]', OBJECT_STRING = '[object String]', OBJECT_BOOLEAN = '[object Boolean]', PI_OVER_DEG180 = Math.PI / 180, DEG180_OVER_PI = 180 / Math.PI, HASH$1 = '#', EMPTY_STRING$1 = '', ZERO = '0', KONVA_WARNING = 'Konva warning: ', KONVA_ERROR = 'Konva error: ', RGB_PAREN = 'rgb(', COLORS = {
       aliceblue: [240, 248, 255],
       antiquewhite: [250, 235, 215],
       aqua: [0, 255, 255],
@@ -573,6 +576,10 @@
       yellow: [255, 255, 0],
       yellowgreen: [154, 205, 5],
   }, RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/, animQueue = [];
+  const req = (typeof requestAnimationFrame !== 'undefined' && requestAnimationFrame) ||
+      function (f) {
+          setTimeout(f, 60);
+      };
   /**
    * @namespace Util
    * @memberof Konva
@@ -632,10 +639,6 @@
       },
       requestAnimFrame(callback) {
           animQueue.push(callback);
-          const req = (typeof requestAnimationFrame !== 'undefined' && requestAnimationFrame) ||
-              function (f) {
-                  setTimeout(f, 60);
-              };
           if (animQueue.length === 1) {
               req(function () {
                   const queue = animQueue;
@@ -666,20 +669,6 @@
           }
           return false;
       },
-      _simplifyArray(arr) {
-          var retArr = [], len = arr.length, util = Util, n, val;
-          for (n = 0; n < len; n++) {
-              val = arr[n];
-              if (util._isNumber(val)) {
-                  val = Math.round(val * 1000) / 1000;
-              }
-              else if (!util._isString(val)) {
-                  val = val + '';
-              }
-              retArr.push(val);
-          }
-          return retArr;
-      },
       /*
        * arg can be an image object or image data
        */
@@ -695,7 +684,7 @@
           return ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
       },
       _hexToRgb(hex) {
-          hex = hex.replace(HASH$1, EMPTY_STRING$2);
+          hex = hex.replace(HASH$1, EMPTY_STRING$1);
           var bigint = parseInt(hex, 16);
           return {
               r: (bigint >> 16) & 255,
@@ -716,14 +705,6 @@
               randColor = ZERO + randColor;
           }
           return HASH$1 + randColor;
-      },
-      get(val, def) {
-          if (val === undefined) {
-              return def;
-          }
-          else {
-              return val;
-          }
       },
       /**
        * get RGB components of a color
@@ -933,14 +914,22 @@
       cloneArray(arr) {
           return arr.slice(0);
       },
-      _degToRad(deg) {
+      degToRad(deg) {
           return deg * PI_OVER_DEG180;
       },
-      _radToDeg(rad) {
+      radToDeg(rad) {
           return rad * DEG180_OVER_PI;
       },
+      _degToRad(deg) {
+          Util.warn('Util._degToRad is removed. Please use public Util.degToRad instead.');
+          return Util._degToRad(deg);
+      },
+      _radToDeg(rad) {
+          Util.warn('Util._radToDeg is removed. Please use public Util.radToDeg instead.');
+          return Util._radToDeg(rad);
+      },
       _getRotation(radians) {
-          return Konva$2.angleDeg ? Util._radToDeg(radians) : radians;
+          return Konva$2.angleDeg ? Util.radToDeg(radians) : radians;
       },
       _capitalize(str) {
           return str.charAt(0).toUpperCase() + str.slice(1);
@@ -956,42 +945,6 @@
               return;
           }
           console.warn(KONVA_WARNING + str);
-      },
-      extend(child, parent) {
-          function Ctor() {
-              this.constructor = child;
-          }
-          Ctor.prototype = parent.prototype;
-          var oldProto = child.prototype;
-          child.prototype = new Ctor();
-          for (var key in oldProto) {
-              if (oldProto.hasOwnProperty(key)) {
-                  child.prototype[key] = oldProto[key];
-              }
-          }
-          child.__super__ = parent.prototype;
-          // create reference to parent
-          child.super = parent;
-      },
-      _getControlPoints(x0, y0, x1, y1, x2, y2, t) {
-          var d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2)), d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)), fa = (t * d01) / (d01 + d12), fb = (t * d12) / (d01 + d12), p1x = x1 - fa * (x2 - x0), p1y = y1 - fa * (y2 - y0), p2x = x1 + fb * (x2 - x0), p2y = y1 + fb * (y2 - y0);
-          return [p1x, p1y, p2x, p2y];
-      },
-      _expandPoints(p, tension) {
-          var len = p.length, allPoints = [], n, cp;
-          for (n = 2; n < len - 2; n += 2) {
-              cp = Util._getControlPoints(p[n - 2], p[n - 1], p[n], p[n + 1], p[n + 2], p[n + 3], tension);
-              if (isNaN(cp[0])) {
-                  continue;
-              }
-              allPoints.push(cp[0]);
-              allPoints.push(cp[1]);
-              allPoints.push(p[n]);
-              allPoints.push(p[n + 1]);
-              allPoints.push(cp[2]);
-              allPoints.push(cp[3]);
-          }
-          return allPoints;
       },
       each(obj, func) {
           for (var key in obj) {
@@ -1391,6 +1344,20 @@
       },
   };
 
+  function simplifyArray(arr) {
+      var retArr = [], len = arr.length, util = Util, n, val;
+      for (n = 0; n < len; n++) {
+          val = arr[n];
+          if (util._isNumber(val)) {
+              val = Math.round(val * 1000) / 1000;
+          }
+          else if (!util._isString(val)) {
+              val = val + '';
+          }
+          retArr.push(val);
+      }
+      return retArr;
+  }
   var COMMA = ',', OPEN_PAREN = '(', CLOSE_PAREN = ')', OPEN_PAREN_BRACKET = '([', CLOSE_BRACKET_PAREN = '])', SEMICOLON = ';', DOUBLE_PAREN = '()', 
   // EMPTY_STRING = '',
   EQUALS = '=', 
@@ -1727,6 +1694,7 @@
        * @name Konva.Context#drawImage
        */
       drawImage(a0, a1, a2, a3, a4, a5, a6, a7, a8) {
+          // this._context.drawImage(...arguments);
           var a = arguments, _context = this._context;
           if (a.length === 3) {
               _context.drawImage(a0, a1, a2);
@@ -1759,8 +1727,13 @@
        * @method
        * @name Konva.Context#fill
        */
-      fill() {
-          this._context.fill();
+      fill(path2d) {
+          if (path2d) {
+              this._context.fill(path2d);
+          }
+          else {
+              this._context.fill();
+          }
       }
       /**
        * fillRect function.
@@ -1783,8 +1756,13 @@
        * @method
        * @name Konva.Context#fillText
        */
-      fillText(a0, a1, a2) {
-          this._context.fillText(a0, a1, a2);
+      fillText(text, x, y, maxWidth) {
+          if (maxWidth) {
+              this._context.fillText(text, x, y, maxWidth);
+          }
+          else {
+              this._context.fillText(text, x, y);
+          }
       }
       /**
        * measureText function.
@@ -1915,8 +1893,13 @@
        * @method
        * @name Konva.Context#stroke
        */
-      stroke() {
-          this._context.stroke();
+      stroke(path2d) {
+          if (path2d) {
+              this._context.stroke(path2d);
+          }
+          else {
+              this._context.stroke();
+          }
       }
       /**
        * strokeText function.
@@ -1948,7 +1931,7 @@
           var func = function (methodName) {
               var origMethod = that[methodName], ret;
               that[methodName] = function () {
-                  args = Util._simplifyArray(Array.prototype.slice.call(arguments, 0));
+                  args = simplifyArray(Array.prototype.slice.call(arguments, 0));
                   ret = origMethod.apply(that, arguments);
                   that._trace({
                       method: methodName,
@@ -1978,9 +1961,10 @@
           };
       }
       _applyGlobalCompositeOperation(node) {
-          var globalCompositeOperation = node.getGlobalCompositeOperation();
-          if (globalCompositeOperation !== 'source-over') {
-              this.setAttr('globalCompositeOperation', globalCompositeOperation);
+          const op = node.attrs.globalCompositeOperation;
+          var def = !op || op === 'source-over';
+          if (!def) {
+              this.setAttr('globalCompositeOperation', op);
           }
       }
   }
@@ -2001,16 +1985,6 @@
           shape._fillFunc(this);
       }
       _fillPattern(shape) {
-          var fillPatternX = shape.getFillPatternX(), fillPatternY = shape.getFillPatternY(), fillPatternRotation = Konva$2.getAngle(shape.getFillPatternRotation()), fillPatternOffsetX = shape.getFillPatternOffsetX(), fillPatternOffsetY = shape.getFillPatternOffsetY(); shape.getFillPatternScaleX(); shape.getFillPatternScaleY();
-          if (fillPatternX || fillPatternY) {
-              this.translate(fillPatternX || 0, fillPatternY || 0);
-          }
-          if (fillPatternRotation) {
-              this.rotate(fillPatternRotation);
-          }
-          if (fillPatternOffsetX || fillPatternOffsetY) {
-              this.translate(-1 * fillPatternOffsetX, -1 * fillPatternOffsetY);
-          }
           this.setAttr('fillStyle', shape._getFillPattern());
           shape._fillFunc(this);
       }
@@ -2107,10 +2081,11 @@
           }
       }
       _applyShadow(shape) {
-          var util = Util, color = util.get(shape.getShadowRGBA(), 'black'), blur = util.get(shape.getShadowBlur(), 5), offset = util.get(shape.getShadowOffset(), {
+          var _a, _b, _c;
+          var color = (_a = shape.getShadowRGBA()) !== null && _a !== void 0 ? _a : 'black', blur = (_b = shape.getShadowBlur()) !== null && _b !== void 0 ? _b : 5, offset = (_c = shape.getShadowOffset()) !== null && _c !== void 0 ? _c : {
               x: 0,
               y: 0,
-          }), scale = shape.getAbsoluteScale(), ratio = this.canvas.getPixelRatio(), scaleX = scale.x * ratio, scaleY = scale.y * ratio;
+          }, scale = shape.getAbsoluteScale(), ratio = this.canvas.getPixelRatio(), scaleX = scale.x * ratio, scaleY = scale.y * ratio;
           this.setAttr('shadowColor', color);
           this.setAttr('shadowBlur', blur * Math.min(Math.abs(scaleX), Math.abs(scaleY)));
           this.setAttr('shadowOffsetX', offset.x * scaleX);
@@ -2370,7 +2345,7 @@
       // dragBefore and dragAfter allows us to set correct order of events
       // setup all in dragbefore, and stop dragging only after pointerup triggered.
       _endDragBefore(evt) {
-          DD._dragElements.forEach((elem, key) => {
+          DD._dragElements.forEach((elem) => {
               const { node } = elem;
               // we need to find pointer relative to that node
               const stage = node.getStage();
@@ -2383,9 +2358,11 @@
                   return;
               }
               if (elem.dragStatus === 'dragging' || elem.dragStatus === 'stopped') {
-                  // if a node is stopped manully we still need to reset events:
+                  // if a node is stopped manually we still need to reset events:
                   DD.justDragged = true;
-                  Konva$2.listenClickTap = false;
+                  Konva$2._mouseListenClick = false;
+                  Konva$2._touchListenClick = false;
+                  Konva$2._pointerListenClick = false;
                   elem.dragStatus = 'stopped';
               }
               const drawNode = elem.node.getLayer() ||
@@ -2419,53 +2396,8 @@
       window.addEventListener('touchend', DD._endDragAfter, false);
   }
 
-  const ids = {};
-  const names = {};
-  const _addId = function (node, id) {
-      if (!id) {
-          return;
-      }
-      ids[id] = node;
-  };
-  const _removeId = function (id, node) {
-      // node has no id
-      if (!id) {
-          return;
-      }
-      // another node is registered (possible for duplicate ids)
-      if (ids[id] !== node) {
-          return;
-      }
-      delete ids[id];
-  };
-  const _addName = function (node, name) {
-      if (name) {
-          if (!names[name]) {
-              names[name] = [];
-          }
-          names[name].push(node);
-      }
-  };
-  const _removeName = function (name, _id) {
-      if (!name) {
-          return;
-      }
-      var nodes = names[name];
-      if (!nodes) {
-          return;
-      }
-      for (var n = 0; n < nodes.length; n++) {
-          var no = nodes[n];
-          if (no._id === _id) {
-              nodes.splice(n, 1);
-          }
-      }
-      if (nodes.length === 0) {
-          delete names[name];
-      }
-  };
   // CONSTANTS
-  var ABSOLUTE_OPACITY = 'absoluteOpacity', ALL_LISTENERS = 'allEventListeners', ABSOLUTE_TRANSFORM = 'absoluteTransform', ABSOLUTE_SCALE = 'absoluteScale', CANVAS = 'canvas', CHANGE = 'Change', CHILDREN = 'children', KONVA = 'konva', LISTENING = 'listening', MOUSEENTER$1 = 'mouseenter', MOUSELEAVE$1 = 'mouseleave', NAME = 'name', SET = 'set', SHAPE = 'Shape', SPACE$1 = ' ', STAGE$1 = 'stage', TRANSFORM = 'transform', UPPER_STAGE = 'Stage', VISIBLE = 'visible', TRANSFORM_CHANGE_STR$1 = [
+  var ABSOLUTE_OPACITY = 'absoluteOpacity', ALL_LISTENERS = 'allEventListeners', ABSOLUTE_TRANSFORM = 'absoluteTransform', ABSOLUTE_SCALE = 'absoluteScale', CANVAS = 'canvas', CHANGE = 'Change', CHILDREN = 'children', KONVA = 'konva', LISTENING = 'listening', MOUSEENTER$1 = 'mouseenter', MOUSELEAVE$1 = 'mouseleave', SET = 'set', SHAPE = 'Shape', SPACE$1 = ' ', STAGE$1 = 'stage', TRANSFORM = 'transform', UPPER_STAGE = 'Stage', VISIBLE = 'visible', TRANSFORM_CHANGE_STR$1 = [
       'xChange.konva',
       'yChange.konva',
       'scaleXChange.konva',
@@ -3070,14 +3002,6 @@
        * node.destroy();
        */
       destroy() {
-          // remove from ids and names hashes
-          _removeId(this.id(), this);
-          // remove all names
-          var names = (this.name() || '').split(/\s/g);
-          for (var i = 0; i < names.length; i++) {
-              var subname = names[i];
-              _removeName(subname, this._id);
-          }
           this.remove();
           return this;
       }
@@ -3337,6 +3261,33 @@
               x: this.x(),
               y: this.y(),
           };
+      }
+      /**
+       * get position of first pointer (like mouse or first touch) relative to local coordinates of current node
+       * @method
+       * @name Konva.Node#getRelativePointerPosition
+       * @returns {Konva.Node}
+       * @example
+       *
+       * // let's think we have a rectangle at position x = 10, y = 10
+       * // now we clicked at x = 15, y = 15 of the stage
+       * // if you want to know position of the click, related to the rectangle you can use
+       * rect.getRelativePointerPosition();
+       */
+      getRelativePointerPosition() {
+          if (!this.getStage()) {
+              return null;
+          }
+          // get pointer (say mouse or touch) position
+          var pos = this.getStage().getPointerPosition();
+          if (!pos) {
+              return null;
+          }
+          var transform = this.getAbsoluteTransform().copy();
+          // to detect relative position we need to invert transform
+          transform.invert();
+          // now we can find relative point
+          return transform.point(pos);
       }
       /**
        * get absolute position of a node. That function can be used to calculate absolute position, but relative to any ancestor
@@ -4172,34 +4123,6 @@
               newVal: newVal,
           });
       }
-      setId(id) {
-          var oldId = this.id();
-          _removeId(oldId, this);
-          _addId(this, id);
-          this._setAttr('id', id);
-          return this;
-      }
-      setName(name) {
-          var oldNames = (this.name() || '').split(/\s/g);
-          var newNames = (name || '').split(/\s/g);
-          var subname, i;
-          // remove all subnames
-          for (i = 0; i < oldNames.length; i++) {
-              subname = oldNames[i];
-              if (newNames.indexOf(subname) === -1 && subname) {
-                  _removeName(subname, this._id);
-              }
-          }
-          // add new names
-          for (i = 0; i < newNames.length; i++) {
-              subname = newNames[i];
-              if (oldNames.indexOf(subname) === -1 && subname) {
-                  _addName(this, subname);
-              }
-          }
-          this._setAttr(NAME, name);
-          return this;
-      }
       /**
        * add name to node
        * @method
@@ -4215,7 +4138,7 @@
           if (!this.hasName(name)) {
               var oldName = this.name();
               var newName = oldName ? oldName + ' ' + name : name;
-              this.setName(newName);
+              this.name(newName);
           }
           return this;
       }
@@ -4260,7 +4183,7 @@
           var index = names.indexOf(name);
           if (index !== -1) {
               names.splice(index, 1);
-              this.setName(names.join(' '));
+              this.name(names.join(' '));
           }
           return this;
       }
@@ -4291,7 +4214,7 @@
               drawNode === null || drawNode === void 0 ? void 0 : drawNode.batchDraw();
           }
       }
-      _setAttr(key, val, skipFire = false) {
+      _setAttr(key, val) {
           var oldVal = this.attrs[key];
           if (oldVal === val && !Util.isObject(val)) {
               return;
@@ -4546,6 +4469,34 @@
       _dragCleanup() {
           this.off('mousedown.konva');
           this.off('touchstart.konva');
+      }
+      /**
+       * determine if node (at least partially) is currently in user-visible area
+       * @method
+       * @param {(Number | Object)} margin optional margin in pixels
+       * @param {Number} margin.x
+       * @param {Number} margin.y
+       * @returns {Boolean}
+       * @name Konva.Node#isClientRectOnScreen
+       * @example
+       * // get index
+       * // default calculations
+       * var isOnScreen = node.isClientRectOnScreen()
+       * // increase object size (or screen size) for cases when objects close to the screen still need to be marked as "visible"
+       * var isOnScreen = node.isClientRectOnScreen({ x: stage.width(), y: stage.height() })
+       */
+      isClientRectOnScreen(margin = { x: 0, y: 0 }) {
+          const stage = this.getStage();
+          if (!stage) {
+              return false;
+          }
+          const screenRect = {
+              x: -margin.x,
+              y: -margin.y,
+              width: stage.width() + margin.x,
+              height: stage.height() + margin.y,
+          };
+          return Util.haveIntersection(screenRect, this.getClientRect());
       }
       /**
        * create node with JSON string or an Object.  De-serializtion does not generate custom
@@ -5731,39 +5682,92 @@
   // CONSTANTS
   var STAGE = 'Stage', STRING = 'string', PX = 'px', MOUSEOUT = 'mouseout', MOUSELEAVE = 'mouseleave', MOUSEOVER = 'mouseover', MOUSEENTER = 'mouseenter', MOUSEMOVE = 'mousemove', MOUSEDOWN = 'mousedown', MOUSEUP = 'mouseup', 
   // TODO: add them into "on" method docs and into site docs
-  POINTERMOVE = 'pointermove', POINTERDOWN = 'pointerdown', POINTERUP = 'pointerup', POINTERCANCEL = 'pointercancel', LOSTPOINTERCAPTURE = 'lostpointercapture', CONTEXTMENU = 'contextmenu', CLICK = 'click', DBL_CLICK = 'dblclick', TOUCHSTART = 'touchstart', TOUCHEND = 'touchend', TAP = 'tap', DBL_TAP = 'dbltap', TOUCHMOVE = 'touchmove', WHEEL = 'wheel', CONTENT_MOUSEOUT = 'contentMouseout', CONTENT_MOUSEOVER = 'contentMouseover', CONTENT_MOUSEMOVE = 'contentMousemove', CONTENT_MOUSEDOWN = 'contentMousedown', CONTENT_MOUSEUP = 'contentMouseup', CONTENT_CONTEXTMENU = 'contentContextmenu', CONTENT_CLICK = 'contentClick', CONTENT_DBL_CLICK = 'contentDblclick', CONTENT_TOUCHSTART = 'contentTouchstart', CONTENT_TOUCHEND = 'contentTouchend', CONTENT_DBL_TAP = 'contentDbltap', CONTENT_TAP = 'contentTap', CONTENT_TOUCHMOVE = 'contentTouchmove', CONTENT_WHEEL = 'contentWheel', RELATIVE = 'relative', KONVA_CONTENT = 'konvajs-content', UNDERSCORE = '_', CONTAINER = 'container', MAX_LAYERS_NUMBER = 5, EMPTY_STRING$1 = '', EVENTS = [
-      MOUSEENTER,
-      MOUSEDOWN,
-      MOUSEMOVE,
-      MOUSEUP,
-      MOUSELEAVE,
-      TOUCHSTART,
-      TOUCHMOVE,
-      TOUCHEND,
-      MOUSEOVER,
-      WHEEL,
-      CONTEXTMENU,
-      POINTERDOWN,
-      POINTERMOVE,
-      POINTERUP,
-      POINTERCANCEL,
-      LOSTPOINTERCAPTURE,
-  ], 
-  // cached variables
-  eventsLength = EVENTS.length;
-  function addEvent(ctx, eventName) {
-      ctx.content.addEventListener(eventName, function (evt) {
-          ctx[UNDERSCORE + eventName](evt);
-      }, false);
-  }
-  const NO_POINTERS_MESSAGE = `Pointer position is missing and not registered by the stage. Looks like it is outside of the stage container. You can set it manually from event: stage.setPointersPositions(event);`;
-  const stages = [];
+  POINTERMOVE = 'pointermove', POINTERDOWN = 'pointerdown', POINTERUP = 'pointerup', POINTERCANCEL = 'pointercancel', LOSTPOINTERCAPTURE = 'lostpointercapture', POINTEROUT = 'pointerout', POINTERLEAVE = 'pointerleave', POINTEROVER = 'pointerover', POINTERENTER = 'pointerenter', CONTEXTMENU = 'contextmenu', TOUCHSTART = 'touchstart', TOUCHEND = 'touchend', TOUCHMOVE = 'touchmove', TOUCHCANCEL = 'touchcancel', WHEEL = 'wheel', MAX_LAYERS_NUMBER = 5, EVENTS = [
+      [MOUSEENTER, '_pointerenter'],
+      [MOUSEDOWN, '_pointerdown'],
+      [MOUSEMOVE, '_pointermove'],
+      [MOUSEUP, '_pointerup'],
+      [MOUSELEAVE, '_pointerleave'],
+      [TOUCHSTART, '_pointerdown'],
+      [TOUCHMOVE, '_pointermove'],
+      [TOUCHEND, '_pointerup'],
+      [TOUCHCANCEL, '_pointercancel'],
+      [MOUSEOVER, '_pointerover'],
+      [WHEEL, '_wheel'],
+      [CONTEXTMENU, '_contextmenu'],
+      [POINTERDOWN, '_pointerdown'],
+      [POINTERMOVE, '_pointermove'],
+      [POINTERUP, '_pointerup'],
+      [POINTERCANCEL, '_pointercancel'],
+      [LOSTPOINTERCAPTURE, '_lostpointercapture'],
+  ];
+  const EVENTS_MAP = {
+      mouse: {
+          [POINTEROUT]: MOUSEOUT,
+          [POINTERLEAVE]: MOUSELEAVE,
+          [POINTEROVER]: MOUSEOVER,
+          [POINTERENTER]: MOUSEENTER,
+          [POINTERMOVE]: MOUSEMOVE,
+          [POINTERDOWN]: MOUSEDOWN,
+          [POINTERUP]: MOUSEUP,
+          [POINTERCANCEL]: 'mousecancel',
+          pointerclick: 'click',
+          pointerdblclick: 'dblclick',
+      },
+      touch: {
+          [POINTEROUT]: 'touchout',
+          [POINTERLEAVE]: 'touchleave',
+          [POINTEROVER]: 'touchover',
+          [POINTERENTER]: 'touchenter',
+          [POINTERMOVE]: TOUCHMOVE,
+          [POINTERDOWN]: TOUCHSTART,
+          [POINTERUP]: TOUCHEND,
+          [POINTERCANCEL]: TOUCHCANCEL,
+          pointerclick: 'tap',
+          pointerdblclick: 'dbltap',
+      },
+      pointer: {
+          [POINTEROUT]: POINTEROUT,
+          [POINTERLEAVE]: POINTERLEAVE,
+          [POINTEROVER]: POINTEROVER,
+          [POINTERENTER]: POINTERENTER,
+          [POINTERMOVE]: POINTERMOVE,
+          [POINTERDOWN]: POINTERDOWN,
+          [POINTERUP]: POINTERUP,
+          [POINTERCANCEL]: POINTERCANCEL,
+          pointerclick: 'pointerclick',
+          pointerdblclick: 'pointerdblclick',
+      },
+  };
+  const getEventType = (type) => {
+      if (type.indexOf('pointer') >= 0) {
+          return 'pointer';
+      }
+      if (type.indexOf('touch') >= 0) {
+          return 'touch';
+      }
+      return 'mouse';
+  };
+  const getEventsMap = (eventType) => {
+      const type = getEventType(eventType);
+      if (type === 'pointer') {
+          return Konva$2.pointerEventsEnabled && EVENTS_MAP.pointer;
+      }
+      if (type === 'touch') {
+          return EVENTS_MAP.touch;
+      }
+      if (type === 'mouse') {
+          return EVENTS_MAP.mouse;
+      }
+  };
   function checkNoClip(attrs = {}) {
       if (attrs.clipFunc || attrs.clipWidth || attrs.clipHeight) {
           Util.warn('Stage does not support clipping. Please use clip for Layers or Groups.');
       }
       return attrs;
   }
+  const NO_POINTERS_MESSAGE = `Pointer position is missing and not registered by the stage. Looks like it is outside of the stage container. You can set it manually from event: stage.setPointersPositions(event);`;
+  const stages = [];
   /**
    * Stage constructor.  A stage is used to contain multiple layers
    * @constructor
@@ -5854,7 +5858,7 @@
                   throw 'Can not find container in document with id ' + id;
               }
           }
-          this._setAttr(CONTAINER, container);
+          this._setAttr('container', container);
           if (this.content) {
               if (this.content.parentElement) {
                   this.content.parentElement.removeChild(this.content);
@@ -5899,9 +5903,9 @@
           return this;
       }
       /**
-       * returns absolute pointer position which can be a touch position or mouse position
+       * returns ABSOLUTE pointer position which can be a touch position or mouse position
        * pointer position doesn't include any transforms (such as scale) of the stage
-       * it is just a plain position of pointer relative to top-left corner of the stage container
+       * it is just a plain position of pointer relative to top-left corner of the canvas
        * @method
        * @name Konva.Stage#getPointerPosition
        * @returns {Vector2d|null}
@@ -5962,20 +5966,17 @@
        * @param {Object} pos
        * @param {Number} pos.x
        * @param {Number} pos.y
-       * @param {String} [selector]
        * @returns {Konva.Node}
        * @example
        * var shape = stage.getIntersection({x: 50, y: 50});
-       * // or if you interested in shape parent:
-       * var group = stage.getIntersection({x: 50, y: 50}, 'Group');
        */
-      getIntersection(pos, selector) {
+      getIntersection(pos) {
           if (!pos) {
               return null;
           }
           var layers = this.children, len = layers.length, end = len - 1, n;
           for (n = end; n >= 0; n--) {
-              const shape = layers[n].getIntersection(pos, selector);
+              const shape = layers[n].getIntersection(pos);
               if (shape) {
                   return shape;
               }
@@ -6048,37 +6049,63 @@
           if (!Konva$2.isBrowser) {
               return;
           }
-          for (var n = 0; n < eventsLength; n++) {
-              addEvent(this, EVENTS[n]);
+          EVENTS.forEach(([event, methodName]) => {
+              this.content.addEventListener(event, (evt) => {
+                  this[methodName](evt);
+              });
+          });
+      }
+      _pointerenter(evt) {
+          this.setPointersPositions(evt);
+          const events = getEventsMap(evt.type);
+          this._fire(events.pointerenter, {
+              evt: evt,
+              target: this,
+              currentTarget: this,
+          });
+      }
+      _pointerover(evt) {
+          this.setPointersPositions(evt);
+          const events = getEventsMap(evt.type);
+          this._fire(events.pointerover, {
+              evt: evt,
+              target: this,
+              currentTarget: this,
+          });
+      }
+      _getTargetShape(evenType) {
+          let shape = this[evenType + 'targetShape'];
+          if (shape && !shape.getStage()) {
+              shape = null;
           }
+          return shape;
       }
-      _mouseenter(evt) {
+      _pointerleave(evt) {
+          const events = getEventsMap(evt.type);
+          const eventType = getEventType(evt.type);
+          if (!events) {
+              return;
+          }
           this.setPointersPositions(evt);
-          this._fire(MOUSEENTER, { evt: evt, target: this, currentTarget: this });
-      }
-      _mouseover(evt) {
-          this.setPointersPositions(evt);
-          this._fire(CONTENT_MOUSEOVER, { evt: evt });
-          this._fire(MOUSEOVER, { evt: evt, target: this, currentTarget: this });
-      }
-      _mouseleave(evt) {
-          var _a;
-          this.setPointersPositions(evt);
-          var targetShape = ((_a = this.targetShape) === null || _a === void 0 ? void 0 : _a.getStage()) ? this.targetShape : null;
+          var targetShape = this._getTargetShape(eventType);
           var eventsEnabled = !DD.isDragging || Konva$2.hitOnDragEnabled;
           if (targetShape && eventsEnabled) {
-              targetShape._fireAndBubble(MOUSEOUT, { evt: evt });
-              targetShape._fireAndBubble(MOUSELEAVE, { evt: evt });
-              this._fire(MOUSELEAVE, { evt: evt, target: this, currentTarget: this });
-              this.targetShape = null;
-          }
-          else if (eventsEnabled) {
-              this._fire(MOUSELEAVE, {
+              targetShape._fireAndBubble(events.pointerout, { evt: evt });
+              targetShape._fireAndBubble(events.pointerleave, { evt: evt });
+              this._fire(events.pointerleave, {
                   evt: evt,
                   target: this,
                   currentTarget: this,
               });
-              this._fire(MOUSEOUT, {
+              this[eventType + 'targetShape'] = null;
+          }
+          else if (eventsEnabled) {
+              this._fire(events.pointerleave, {
+                  evt: evt,
+                  target: this,
+                  currentTarget: this,
+              });
+              this._fire(events.pointerout, {
                   evt: evt,
                   target: this,
                   currentTarget: this,
@@ -6086,155 +6113,194 @@
           }
           this.pointerPos = undefined;
           this._pointerPositions = [];
-          this._fire(CONTENT_MOUSEOUT, { evt: evt });
       }
-      _mousemove(evt) {
-          var _a;
+      _pointerdown(evt) {
+          const events = getEventsMap(evt.type);
+          const eventType = getEventType(evt.type);
+          if (!events) {
+              return;
+          }
           this.setPointersPositions(evt);
-          var pointerId = Util._getFirstPointerId(evt);
-          var targetShape = ((_a = this.targetShape) === null || _a === void 0 ? void 0 : _a.getStage()) ? this.targetShape : null;
+          var triggeredOnShape = false;
+          this._changedPointerPositions.forEach((pos) => {
+              var shape = this.getIntersection(pos);
+              DD.justDragged = false;
+              // probably we are staring a click
+              Konva$2['_' + eventType + 'ListenClick'] = true;
+              // no shape detected? do nothing
+              const hasShape = shape && shape.isListening();
+              if (!hasShape) {
+                  return;
+              }
+              if (Konva$2.capturePointerEventsEnabled) {
+                  shape.setPointerCapture(pos.id);
+              }
+              // save where we started the click
+              this[eventType + 'ClickStartShape'] = shape;
+              shape._fireAndBubble(events.pointerdown, {
+                  evt: evt,
+                  pointerId: pos.id,
+              });
+              triggeredOnShape = true;
+              // TODO: test in iframe
+              // only call preventDefault if the shape is listening for events
+              const isTouch = evt.type.indexOf('touch') >= 0;
+              if (shape.preventDefault() && evt.cancelable && isTouch) {
+                  evt.preventDefault();
+              }
+          });
+          // trigger down on stage if not already
+          if (!triggeredOnShape) {
+              this._fire(events.pointerdown, {
+                  evt: evt,
+                  target: this,
+                  currentTarget: this,
+                  pointerId: this._pointerPositions[0].id,
+              });
+          }
+      }
+      _pointermove(evt) {
+          const events = getEventsMap(evt.type);
+          const eventType = getEventType(evt.type);
+          if (!events) {
+              return;
+          }
+          if (DD.isDragging && DD.node.preventDefault() && evt.cancelable) {
+              evt.preventDefault();
+          }
+          this.setPointersPositions(evt);
           var eventsEnabled = !DD.isDragging || Konva$2.hitOnDragEnabled;
-          if (eventsEnabled) {
-              const shape = this.getIntersection(this.getPointerPosition());
+          if (!eventsEnabled) {
+              return;
+          }
+          var processedShapesIds = {};
+          let triggeredOnShape = false;
+          var targetShape = this._getTargetShape(eventType);
+          this._changedPointerPositions.forEach((pos) => {
+              const shape = (getCapturedShape(pos.id) ||
+                  this.getIntersection(pos));
+              const pointerId = pos.id;
+              const event = { evt: evt, pointerId };
+              var differentTarget = targetShape !== shape;
+              if (differentTarget && targetShape) {
+                  targetShape._fireAndBubble(events.pointerout, event, shape);
+                  targetShape._fireAndBubble(events.pointerleave, event, shape);
+              }
+              if (shape) {
+                  if (processedShapesIds[shape._id]) {
+                      return;
+                  }
+                  processedShapesIds[shape._id] = true;
+              }
               if (shape && shape.isListening()) {
-                  var differentTarget = targetShape !== shape;
-                  if (eventsEnabled && differentTarget) {
-                      if (targetShape) {
-                          targetShape._fireAndBubble(MOUSEOUT, { evt: evt, pointerId }, shape);
-                          targetShape._fireAndBubble(MOUSELEAVE, { evt: evt, pointerId }, shape);
-                      }
-                      shape._fireAndBubble(MOUSEOVER, { evt: evt, pointerId }, targetShape);
-                      shape._fireAndBubble(MOUSEENTER, { evt: evt, pointerId }, targetShape);
-                      shape._fireAndBubble(MOUSEMOVE, { evt: evt, pointerId });
-                      this.targetShape = shape;
+                  triggeredOnShape = true;
+                  if (differentTarget) {
+                      shape._fireAndBubble(events.pointerover, event, targetShape);
+                      shape._fireAndBubble(events.pointerenter, event, targetShape);
+                      this[eventType + 'targetShape'] = shape;
                   }
-                  else {
-                      shape._fireAndBubble(MOUSEMOVE, { evt: evt, pointerId });
-                  }
+                  shape._fireAndBubble(events.pointermove, event);
               }
               else {
-                  /*
-                   * if no shape was detected, clear target shape and try
-                   * to run mouseout from previous target shape
-                   */
-                  if (targetShape && eventsEnabled) {
-                      targetShape._fireAndBubble(MOUSEOUT, { evt: evt, pointerId });
-                      targetShape._fireAndBubble(MOUSELEAVE, { evt: evt, pointerId });
-                      this._fire(MOUSEOVER, {
+                  if (targetShape) {
+                      this._fire(events.pointerover, {
                           evt: evt,
                           target: this,
                           currentTarget: this,
                           pointerId,
                       });
-                      this.targetShape = null;
+                      this[eventType + 'targetShape'] = null;
                   }
-                  this._fire(MOUSEMOVE, {
-                      evt: evt,
-                      target: this,
-                      currentTarget: this,
-                      pointerId,
-                  });
               }
-              // content event
-              this._fire(CONTENT_MOUSEMOVE, { evt: evt });
-          }
-          // always call preventDefault for desktop events because some browsers
-          // try to drag and drop the canvas element
-          if (evt.cancelable) {
-              evt.preventDefault();
-          }
-      }
-      _mousedown(evt) {
-          this.setPointersPositions(evt);
-          var pointerId = Util._getFirstPointerId(evt);
-          var shape = this.getIntersection(this.getPointerPosition());
-          DD.justDragged = false;
-          Konva$2.listenClickTap = true;
-          if (shape && shape.isListening()) {
-              this.clickStartShape = shape;
-              shape._fireAndBubble(MOUSEDOWN, { evt: evt, pointerId });
-          }
-          else {
-              this._fire(MOUSEDOWN, {
+          });
+          if (!triggeredOnShape) {
+              this._fire(events.pointermove, {
                   evt: evt,
                   target: this,
                   currentTarget: this,
-                  pointerId,
+                  pointerId: this._changedPointerPositions[0].id,
               });
           }
-          // content event
-          this._fire(CONTENT_MOUSEDOWN, { evt: evt });
-          // Do not prevent default behavior, because it will prevent listening events outside of window iframe
-          // we used preventDefault for disabling native drag&drop
-          // but userSelect = none style will do the trick
-          // if (evt.cancelable) {
-          //   evt.preventDefault();
-          // }
       }
-      _mouseup(evt) {
+      _pointerup(evt) {
+          const events = getEventsMap(evt.type);
+          const eventType = getEventType(evt.type);
+          if (!events) {
+              return;
+          }
           this.setPointersPositions(evt);
-          var pointerId = Util._getFirstPointerId(evt);
-          var shape = this.getIntersection(this.getPointerPosition()), clickStartShape = this.clickStartShape, clickEndShape = this.clickEndShape, fireDblClick = false;
-          if (Konva$2.inDblClickWindow) {
-              fireDblClick = true;
-              clearTimeout(this.dblTimeout);
-              // Konva.inDblClickWindow = false;
-          }
-          else if (!DD.justDragged) {
-              // don't set inDblClickWindow after dragging
-              Konva$2.inDblClickWindow = true;
-              clearTimeout(this.dblTimeout);
-          }
-          this.dblTimeout = setTimeout(function () {
-              Konva$2.inDblClickWindow = false;
-          }, Konva$2.dblClickWindow);
-          if (shape && shape.isListening()) {
-              this.clickEndShape = shape;
-              shape._fireAndBubble(MOUSEUP, { evt: evt, pointerId });
-              // detect if click or double click occurred
-              if (Konva$2.listenClickTap &&
-                  clickStartShape &&
-                  clickStartShape._id === shape._id) {
-                  shape._fireAndBubble(CLICK, { evt: evt, pointerId });
-                  if (fireDblClick && clickEndShape && clickEndShape === shape) {
-                      shape._fireAndBubble(DBL_CLICK, { evt: evt, pointerId });
+          const clickStartShape = this[eventType + 'ClickStartShape'];
+          const clickEndShape = this[eventType + 'ClickEndShape'];
+          var processedShapesIds = {};
+          let triggeredOnShape = false;
+          this._changedPointerPositions.forEach((pos) => {
+              const shape = (getCapturedShape(pos.id) ||
+                  this.getIntersection(pos));
+              if (shape) {
+                  shape.releaseCapture(pos.id);
+                  if (processedShapesIds[shape._id]) {
+                      return;
+                  }
+                  processedShapesIds[shape._id] = true;
+              }
+              const pointerId = pos.id;
+              const event = { evt: evt, pointerId };
+              let fireDblClick = false;
+              if (Konva$2['_' + eventType + 'InDblClickWindow']) {
+                  fireDblClick = true;
+                  clearTimeout(this[eventType + 'DblTimeout']);
+              }
+              else if (!DD.justDragged) {
+                  // don't set inDblClickWindow after dragging
+                  Konva$2['_' + eventType + 'InDblClickWindow'] = true;
+                  clearTimeout(this[eventType + 'DblTimeout']);
+              }
+              this[eventType + 'DblTimeout'] = setTimeout(function () {
+                  Konva$2['_' + eventType + 'InDblClickWindow'] = false;
+              }, Konva$2.dblClickWindow);
+              if (shape && shape.isListening()) {
+                  triggeredOnShape = true;
+                  this[eventType + 'ClickEndShape'] = shape;
+                  shape._fireAndBubble(events.pointerup, event);
+                  // detect if click or double click occurred
+                  if (Konva$2['_' + eventType + 'ListenClick'] &&
+                      clickStartShape &&
+                      clickStartShape === shape) {
+                      shape._fireAndBubble(events.pointerclick, event);
+                      if (fireDblClick && clickEndShape && clickEndShape === shape) {
+                          shape._fireAndBubble(events.pointerdblclick, event);
+                      }
                   }
               }
-          }
-          else {
-              this.clickEndShape = null;
-              this._fire(MOUSEUP, {
+              else {
+                  this[eventType + 'ClickEndShape'] = null;
+                  if (Konva$2['_' + eventType + 'ListenClick']) {
+                      this._fire(events.pointerclick, {
+                          evt: evt,
+                          target: this,
+                          currentTarget: this,
+                          pointerId,
+                      });
+                  }
+                  if (fireDblClick) {
+                      this._fire(events.pointerdblclick, {
+                          evt: evt,
+                          target: this,
+                          currentTarget: this,
+                          pointerId,
+                      });
+                  }
+              }
+          });
+          if (!triggeredOnShape) {
+              this._fire(events.pointerup, {
                   evt: evt,
                   target: this,
                   currentTarget: this,
-                  pointerId,
+                  pointerId: this._changedPointerPositions[0].id,
               });
-              if (Konva$2.listenClickTap) {
-                  this._fire(CLICK, {
-                      evt: evt,
-                      target: this,
-                      currentTarget: this,
-                      pointerId,
-                  });
-              }
-              if (fireDblClick) {
-                  this._fire(DBL_CLICK, {
-                      evt: evt,
-                      target: this,
-                      currentTarget: this,
-                      pointerId,
-                  });
-              }
           }
-          // content events
-          this._fire(CONTENT_MOUSEUP, { evt: evt });
-          if (Konva$2.listenClickTap) {
-              this._fire(CONTENT_CLICK, { evt: evt });
-              if (fireDblClick) {
-                  this._fire(CONTENT_DBL_CLICK, { evt: evt });
-              }
-          }
-          Konva$2.listenClickTap = false;
+          Konva$2['_' + eventType + 'ListenClick'] = false;
           // always call preventDefault for desktop events because some browsers
           // try to drag and drop the canvas element
           if (evt.cancelable) {
@@ -6254,165 +6320,6 @@
                   currentTarget: this,
               });
           }
-          this._fire(CONTENT_CONTEXTMENU, { evt: evt });
-      }
-      _touchstart(evt) {
-          this.setPointersPositions(evt);
-          var triggeredOnShape = false;
-          this._changedPointerPositions.forEach((pos) => {
-              var shape = this.getIntersection(pos);
-              Konva$2.listenClickTap = true;
-              DD.justDragged = false;
-              const hasShape = shape && shape.isListening();
-              if (!hasShape) {
-                  return;
-              }
-              if (Konva$2.captureTouchEventsEnabled) {
-                  shape.setPointerCapture(pos.id);
-              }
-              this.tapStartShape = shape;
-              shape._fireAndBubble(TOUCHSTART, { evt: evt, pointerId: pos.id }, this);
-              triggeredOnShape = true;
-              // only call preventDefault if the shape is listening for events
-              if (shape.isListening() && shape.preventDefault() && evt.cancelable) {
-                  evt.preventDefault();
-              }
-          });
-          if (!triggeredOnShape) {
-              this._fire(TOUCHSTART, {
-                  evt: evt,
-                  target: this,
-                  currentTarget: this,
-                  pointerId: this._changedPointerPositions[0].id,
-              });
-          }
-          // content event
-          this._fire(CONTENT_TOUCHSTART, { evt: evt });
-      }
-      _touchmove(evt) {
-          this.setPointersPositions(evt);
-          var eventsEnabled = !DD.isDragging || Konva$2.hitOnDragEnabled;
-          if (eventsEnabled) {
-              var triggeredOnShape = false;
-              var processedShapesIds = {};
-              this._changedPointerPositions.forEach((pos) => {
-                  const shape = getCapturedShape(pos.id) || this.getIntersection(pos);
-                  const hasShape = shape && shape.isListening();
-                  if (!hasShape) {
-                      return;
-                  }
-                  if (processedShapesIds[shape._id]) {
-                      return;
-                  }
-                  processedShapesIds[shape._id] = true;
-                  shape._fireAndBubble(TOUCHMOVE, { evt: evt, pointerId: pos.id });
-                  triggeredOnShape = true;
-                  // only call preventDefault if the shape is listening for events
-                  if (shape.isListening() && shape.preventDefault() && evt.cancelable) {
-                      evt.preventDefault();
-                  }
-              });
-              if (!triggeredOnShape) {
-                  this._fire(TOUCHMOVE, {
-                      evt: evt,
-                      target: this,
-                      currentTarget: this,
-                      pointerId: this._changedPointerPositions[0].id,
-                  });
-              }
-              this._fire(CONTENT_TOUCHMOVE, { evt: evt });
-          }
-          if (DD.isDragging && DD.node.preventDefault() && evt.cancelable) {
-              evt.preventDefault();
-          }
-      }
-      _touchend(evt) {
-          this.setPointersPositions(evt);
-          var tapEndShape = this.tapEndShape, fireDblClick = false;
-          if (Konva$2.inDblClickWindow) {
-              fireDblClick = true;
-              clearTimeout(this.dblTimeout);
-              // Konva.inDblClickWindow = false;
-          }
-          else if (!DD.justDragged) {
-              Konva$2.inDblClickWindow = true;
-              clearTimeout(this.dblTimeout);
-          }
-          this.dblTimeout = setTimeout(function () {
-              Konva$2.inDblClickWindow = false;
-          }, Konva$2.dblClickWindow);
-          var triggeredOnShape = false;
-          var processedShapesIds = {};
-          var tapTriggered = false;
-          var dblTapTriggered = false;
-          this._changedPointerPositions.forEach((pos) => {
-              var shape = getCapturedShape(pos.id) ||
-                  this.getIntersection(pos);
-              if (shape) {
-                  shape.releaseCapture(pos.id);
-              }
-              const hasShape = shape && shape.isListening();
-              if (!hasShape) {
-                  return;
-              }
-              if (processedShapesIds[shape._id]) {
-                  return;
-              }
-              processedShapesIds[shape._id] = true;
-              this.tapEndShape = shape;
-              shape._fireAndBubble(TOUCHEND, { evt: evt, pointerId: pos.id });
-              triggeredOnShape = true;
-              // detect if tap or double tap occurred
-              if (Konva$2.listenClickTap && shape === this.tapStartShape) {
-                  tapTriggered = true;
-                  shape._fireAndBubble(TAP, { evt: evt, pointerId: pos.id });
-                  if (fireDblClick && tapEndShape && tapEndShape === shape) {
-                      dblTapTriggered = true;
-                      shape._fireAndBubble(DBL_TAP, { evt: evt, pointerId: pos.id });
-                  }
-              }
-              // only call preventDefault if the shape is listening for events
-              if (shape.isListening() && shape.preventDefault() && evt.cancelable) {
-                  evt.preventDefault();
-              }
-          });
-          if (!triggeredOnShape) {
-              this._fire(TOUCHEND, {
-                  evt: evt,
-                  target: this,
-                  currentTarget: this,
-                  pointerId: this._changedPointerPositions[0].id,
-              });
-          }
-          if (Konva$2.listenClickTap && !tapTriggered) {
-              this.tapEndShape = null;
-              this._fire(TAP, {
-                  evt: evt,
-                  target: this,
-                  currentTarget: this,
-                  pointerId: this._changedPointerPositions[0].id,
-              });
-          }
-          if (fireDblClick && !dblTapTriggered) {
-              this._fire(DBL_TAP, {
-                  evt: evt,
-                  target: this,
-                  currentTarget: this,
-                  pointerId: this._changedPointerPositions[0].id,
-              });
-          }
-          // content events
-          this._fire(CONTENT_TOUCHEND, { evt: evt });
-          if (Konva$2.listenClickTap) {
-              this._fire(CONTENT_TAP, { evt: evt });
-              if (fireDblClick) {
-                  this._fire(CONTENT_DBL_TAP, { evt: evt });
-              }
-          }
-          if (this.preventDefault() && evt.cancelable) {
-              evt.preventDefault();
-          }
-          Konva$2.listenClickTap = false;
       }
       _wheel(evt) {
           this.setPointersPositions(evt);
@@ -6427,46 +6334,8 @@
                   currentTarget: this,
               });
           }
-          this._fire(CONTENT_WHEEL, { evt: evt });
-      }
-      _pointerdown(evt) {
-          if (!Konva$2._pointerEventsEnabled) {
-              return;
-          }
-          this.setPointersPositions(evt);
-          const shape = getCapturedShape(evt.pointerId) ||
-              this.getIntersection(this.getPointerPosition());
-          if (shape) {
-              shape._fireAndBubble(POINTERDOWN, createEvent(evt));
-          }
-      }
-      _pointermove(evt) {
-          if (!Konva$2._pointerEventsEnabled) {
-              return;
-          }
-          this.setPointersPositions(evt);
-          const shape = getCapturedShape(evt.pointerId) ||
-              this.getIntersection(this.getPointerPosition());
-          if (shape) {
-              shape._fireAndBubble(POINTERMOVE, createEvent(evt));
-          }
-      }
-      _pointerup(evt) {
-          if (!Konva$2._pointerEventsEnabled) {
-              return;
-          }
-          this.setPointersPositions(evt);
-          const shape = getCapturedShape(evt.pointerId) ||
-              this.getIntersection(this.getPointerPosition());
-          if (shape) {
-              shape._fireAndBubble(POINTERUP, createEvent(evt));
-          }
-          releaseCapture(evt.pointerId);
       }
       _pointercancel(evt) {
-          if (!Konva$2._pointerEventsEnabled) {
-              return;
-          }
           this.setPointersPositions(evt);
           const shape = getCapturedShape(evt.pointerId) ||
               this.getIntersection(this.getPointerPosition());
@@ -6571,12 +6440,12 @@
               throw 'Stage has no container. A container is required.';
           }
           // clear content inside container
-          container.innerHTML = EMPTY_STRING$1;
+          container.innerHTML = '';
           // content
           this.content = document.createElement('div');
-          this.content.style.position = RELATIVE;
+          this.content.style.position = 'relative';
           this.content.style.userSelect = 'none';
-          this.content.className = KONVA_CONTENT;
+          this.content.className = 'konvajs-content';
           this.content.setAttribute('role', 'presentation');
           container.appendChild(this.content);
           this._resizeDOM();
@@ -6828,13 +6697,19 @@
               var ctx = getDummyContext$1();
               const pattern = ctx.createPattern(this.fillPatternImage(), this.fillPatternRepeat() || 'repeat');
               if (pattern && pattern.setTransform) {
+                  const tr = new Transform();
+                  tr.translate(this.fillPatternX(), this.fillPatternX());
+                  tr.rotate(Konva$2.getAngle(this.fillPatternRotation()));
+                  tr.scale(this.fillPatternScaleX(), this.fillPatternScaleY());
+                  tr.translate(-1 * this.fillPatternOffsetX(), -1 * this.fillPatternOffsetY());
+                  const m = tr.getMatrix();
                   pattern.setTransform({
-                      a: this.fillPatternScaleX(),
-                      b: 0,
-                      c: 0,
-                      d: this.fillPatternScaleY(),
-                      e: 0,
-                      f: 0, // Vertical translation (moving).
+                      a: m[0],
+                      b: m[1],
+                      c: m[2],
+                      d: m[3],
+                      e: m[4],
+                      f: m[5], // Vertical translation (moving).
                   });
               }
               return pattern;
@@ -7232,7 +7107,7 @@
   Shape.prototype.eventListeners = {};
   Shape.prototype.on.call(Shape.prototype, 'shadowColorChange.konva shadowBlurChange.konva shadowOffsetChange.konva shadowOpacityChange.konva shadowEnabledChange.konva', _clearHasShadowCache);
   Shape.prototype.on.call(Shape.prototype, 'shadowColorChange.konva shadowOpacityChange.konva shadowEnabledChange.konva', _clearGetShadowRGBACache);
-  Shape.prototype.on.call(Shape.prototype, 'fillPriorityChange.konva fillPatternImageChange.konva fillPatternRepeatChange.konva fillPatternScaleXChange.konva fillPatternScaleYChange.konva', _clearFillPatternCache);
+  Shape.prototype.on.call(Shape.prototype, 'fillPriorityChange.konva fillPatternImageChange.konva fillPatternRepeatChange.konva fillPatternScaleXChange.konva fillPatternScaleYChange.konva fillPatternOffsetX.konva fillPatternOffsetY.konva fillPatternRotation.konva', _clearFillPatternCache);
   Shape.prototype.on.call(Shape.prototype, 'fillPriorityChange.konva fillLinearGradientColorStopsChange.konva fillLinearGradientStartPointXChange.konva fillLinearGradientStartPointYChange.konva fillLinearGradientEndPointXChange.konva fillLinearGradientEndPointYChange.konva', _clearLinearGradientCache);
   Shape.prototype.on.call(Shape.prototype, 'fillPriorityChange.konva fillRadialGradientColorStopsChange.konva fillRadialGradientStartPointXChange.konva fillRadialGradientStartPointYChange.konva fillRadialGradientEndPointXChange.konva fillRadialGradientEndPointYChange.konva fillRadialGradientStartRadiusChange.konva fillRadialGradientEndRadiusChange.konva', _clearRadialGradientCache);
   // add getters and setters
@@ -8542,14 +8417,11 @@
        * @param {Object} pos
        * @param {Number} pos.x
        * @param {Number} pos.y
-       * @param {String} [selector]
        * @returns {Konva.Node}
        * @example
        * var shape = layer.getIntersection({x: 50, y: 50});
-       * // or if you interested in shape parent:
-       * var group = layer.getIntersection({x: 50, y: 50}, 'Group');
        */
-      getIntersection(pos, selector) {
+      getIntersection(pos) {
           if (!this.isListening() || !this.isVisible()) {
               return null;
           }
@@ -8565,10 +8437,7 @@
                       y: pos.y + intersectionOffset.y * spiralSearchDistance,
                   });
                   const shape = obj.shape;
-                  if (shape && selector) {
-                      return shape.findAncestor(selector, true);
-                  }
-                  else if (shape) {
+                  if (shape) {
                       return shape;
                   }
                   // we should continue search if we found antialiased pixel
@@ -9740,8 +9609,6 @@
       Util,
       Transform,
       Node,
-      ids,
-      names,
       Container,
       Stage,
       stages,
@@ -9941,6 +9808,26 @@
    * arc.clockwise(true);
    */
 
+  function getControlPoints(x0, y0, x1, y1, x2, y2, t) {
+      var d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2)), d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)), fa = (t * d01) / (d01 + d12), fb = (t * d12) / (d01 + d12), p1x = x1 - fa * (x2 - x0), p1y = y1 - fa * (y2 - y0), p2x = x1 + fb * (x2 - x0), p2y = y1 + fb * (y2 - y0);
+      return [p1x, p1y, p2x, p2y];
+  }
+  function expandPoints(p, tension) {
+      var len = p.length, allPoints = [], n, cp;
+      for (n = 2; n < len - 2; n += 2) {
+          cp = getControlPoints(p[n - 2], p[n - 1], p[n], p[n + 1], p[n + 2], p[n + 3], tension);
+          if (isNaN(cp[0])) {
+              continue;
+          }
+          allPoints.push(cp[0]);
+          allPoints.push(cp[1]);
+          allPoints.push(p[n]);
+          allPoints.push(p[n + 1]);
+          allPoints.push(cp[2]);
+          allPoints.push(cp[3]);
+      }
+      return allPoints;
+  }
   /**
    * Line constructor.&nbsp; Lines are defined by an array of points and
    *  a tension
@@ -10096,11 +9983,11 @@
               return this._getTensionPointsClosed();
           }
           else {
-              return Util._expandPoints(this.points(), this.tension());
+              return expandPoints(this.points(), this.tension());
           }
       }
       _getTensionPointsClosed() {
-          var p = this.points(), len = p.length, tension = this.tension(), firstControlPoints = Util._getControlPoints(p[len - 2], p[len - 1], p[0], p[1], p[2], p[3], tension), lastControlPoints = Util._getControlPoints(p[len - 4], p[len - 3], p[len - 2], p[len - 1], p[0], p[1], tension), middle = Util._expandPoints(p, tension), tp = [firstControlPoints[2], firstControlPoints[3]]
+          var p = this.points(), len = p.length, tension = this.tension(), firstControlPoints = getControlPoints(p[len - 2], p[len - 1], p[0], p[1], p[2], p[3], tension), lastControlPoints = getControlPoints(p[len - 4], p[len - 3], p[len - 2], p[len - 1], p[0], p[1], tension), middle = expandPoints(p, tension), tp = [firstControlPoints[2], firstControlPoints[3]]
               .concat(middle)
               .concat([
               lastControlPoints[0],
@@ -10234,6 +10121,830 @@
    */
 
   /**
+   * Path constructor.
+   * @author Jason Follas
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {String} config.data SVG data string
+   * @param {String} [config.fill] fill color
+     * @param {Image} [config.fillPatternImage] fill pattern image
+     * @param {Number} [config.fillPatternX]
+     * @param {Number} [config.fillPatternY]
+     * @param {Object} [config.fillPatternOffset] object with x and y component
+     * @param {Number} [config.fillPatternOffsetX] 
+     * @param {Number} [config.fillPatternOffsetY] 
+     * @param {Object} [config.fillPatternScale] object with x and y component
+     * @param {Number} [config.fillPatternScaleX]
+     * @param {Number} [config.fillPatternScaleY]
+     * @param {Number} [config.fillPatternRotation]
+     * @param {String} [config.fillPatternRepeat] can be "repeat", "repeat-x", "repeat-y", or "no-repeat".  The default is "no-repeat"
+     * @param {Object} [config.fillLinearGradientStartPoint] object with x and y component
+     * @param {Number} [config.fillLinearGradientStartPointX]
+     * @param {Number} [config.fillLinearGradientStartPointY]
+     * @param {Object} [config.fillLinearGradientEndPoint] object with x and y component
+     * @param {Number} [config.fillLinearGradientEndPointX]
+     * @param {Number} [config.fillLinearGradientEndPointY]
+     * @param {Array} [config.fillLinearGradientColorStops] array of color stops
+     * @param {Object} [config.fillRadialGradientStartPoint] object with x and y component
+     * @param {Number} [config.fillRadialGradientStartPointX]
+     * @param {Number} [config.fillRadialGradientStartPointY]
+     * @param {Object} [config.fillRadialGradientEndPoint] object with x and y component
+     * @param {Number} [config.fillRadialGradientEndPointX] 
+     * @param {Number} [config.fillRadialGradientEndPointY] 
+     * @param {Number} [config.fillRadialGradientStartRadius]
+     * @param {Number} [config.fillRadialGradientEndRadius]
+     * @param {Array} [config.fillRadialGradientColorStops] array of color stops
+     * @param {Boolean} [config.fillEnabled] flag which enables or disables the fill.  The default value is true
+     * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
+     * @param {String} [config.stroke] stroke color
+     * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
+     * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
+     * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
+     * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
+     * @param {Boolean} [config.shadowForStrokeEnabled] flag which enables or disables shadow for stroke.  The default is true
+     * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
+     * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
+     * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
+     *  is miter
+     * @param {String} [config.lineCap] can be butt, round, or square.  The default
+     *  is butt
+     * @param {String} [config.shadowColor]
+     * @param {Number} [config.shadowBlur]
+     * @param {Object} [config.shadowOffset] object with x and y component
+     * @param {Number} [config.shadowOffsetX]
+     * @param {Number} [config.shadowOffsetY]
+     * @param {Number} [config.shadowOpacity] shadow opacity.  Can be any real number
+     *  between 0 and 1
+     * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
+     * @param {Array} [config.dash]
+     * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
+
+   * @param {Number} [config.x]
+     * @param {Number} [config.y]
+     * @param {Number} [config.width]
+     * @param {Number} [config.height]
+     * @param {Boolean} [config.visible]
+     * @param {Boolean} [config.listening] whether or not the node is listening for events
+     * @param {String} [config.id] unique id
+     * @param {String} [config.name] non-unique name
+     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
+     * @param {Object} [config.scale] set scale
+     * @param {Number} [config.scaleX] set scale x
+     * @param {Number} [config.scaleY] set scale y
+     * @param {Number} [config.rotation] rotation in degrees
+     * @param {Object} [config.offset] offset from center point and rotation point
+     * @param {Number} [config.offsetX] set offset x
+     * @param {Number} [config.offsetY] set offset y
+     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
+     *  the entire stage by dragging any portion of the stage
+     * @param {Number} [config.dragDistance]
+     * @param {Function} [config.dragBoundFunc]
+   * @example
+   * var path = new Konva.Path({
+   *   x: 240,
+   *   y: 40,
+   *   data: 'M12.582,9.551C3.251,16.237,0.921,29.021,7.08,38.564l-2.36,1.689l4.893,2.262l4.893,2.262l-0.568-5.36l-0.567-5.359l-2.365,1.694c-4.657-7.375-2.83-17.185,4.352-22.33c7.451-5.338,17.817-3.625,23.156,3.824c5.337,7.449,3.625,17.813-3.821,23.152l2.857,3.988c9.617-6.893,11.827-20.277,4.935-29.896C35.591,4.87,22.204,2.658,12.582,9.551z',
+   *   fill: 'green',
+   *   scaleX: 2,
+   *   scaleY: 2
+   * });
+   */
+  class Path extends Shape {
+      constructor(config) {
+          super(config);
+          this.dataArray = [];
+          this.pathLength = 0;
+          this.dataArray = Path.parsePathData(this.data());
+          this.pathLength = 0;
+          for (var i = 0; i < this.dataArray.length; ++i) {
+              this.pathLength += this.dataArray[i].pathLength;
+          }
+          this.on('dataChange.konva', function () {
+              this.dataArray = Path.parsePathData(this.data());
+              this.pathLength = 0;
+              for (var i = 0; i < this.dataArray.length; ++i) {
+                  this.pathLength += this.dataArray[i].pathLength;
+              }
+          });
+      }
+      _sceneFunc(context) {
+          var ca = this.dataArray;
+          // context position
+          context.beginPath();
+          var isClosed = false;
+          for (var n = 0; n < ca.length; n++) {
+              var c = ca[n].command;
+              var p = ca[n].points;
+              switch (c) {
+                  case 'L':
+                      context.lineTo(p[0], p[1]);
+                      break;
+                  case 'M':
+                      context.moveTo(p[0], p[1]);
+                      break;
+                  case 'C':
+                      context.bezierCurveTo(p[0], p[1], p[2], p[3], p[4], p[5]);
+                      break;
+                  case 'Q':
+                      context.quadraticCurveTo(p[0], p[1], p[2], p[3]);
+                      break;
+                  case 'A':
+                      var cx = p[0], cy = p[1], rx = p[2], ry = p[3], theta = p[4], dTheta = p[5], psi = p[6], fs = p[7];
+                      var r = rx > ry ? rx : ry;
+                      var scaleX = rx > ry ? 1 : rx / ry;
+                      var scaleY = rx > ry ? ry / rx : 1;
+                      context.translate(cx, cy);
+                      context.rotate(psi);
+                      context.scale(scaleX, scaleY);
+                      context.arc(0, 0, r, theta, theta + dTheta, 1 - fs);
+                      context.scale(1 / scaleX, 1 / scaleY);
+                      context.rotate(-psi);
+                      context.translate(-cx, -cy);
+                      break;
+                  case 'z':
+                      isClosed = true;
+                      context.closePath();
+                      break;
+              }
+          }
+          if (!isClosed && !this.hasFill()) {
+              context.strokeShape(this);
+          }
+          else {
+              context.fillStrokeShape(this);
+          }
+      }
+      getSelfRect() {
+          var points = [];
+          this.dataArray.forEach(function (data) {
+              if (data.command === 'A') {
+                  // Approximates by breaking curve into line segments
+                  var start = data.points[4];
+                  // 4 = theta
+                  var dTheta = data.points[5];
+                  // 5 = dTheta
+                  var end = data.points[4] + dTheta;
+                  var inc = Math.PI / 180.0;
+                  // 1 degree resolution
+                  if (Math.abs(start - end) < inc) {
+                      inc = Math.abs(start - end);
+                  }
+                  if (dTheta < 0) {
+                      // clockwise
+                      for (let t = start - inc; t > end; t -= inc) {
+                          const point = Path.getPointOnEllipticalArc(data.points[0], data.points[1], data.points[2], data.points[3], t, 0);
+                          points.push(point.x, point.y);
+                      }
+                  }
+                  else {
+                      // counter-clockwise
+                      for (let t = start + inc; t < end; t += inc) {
+                          const point = Path.getPointOnEllipticalArc(data.points[0], data.points[1], data.points[2], data.points[3], t, 0);
+                          points.push(point.x, point.y);
+                      }
+                  }
+              }
+              else if (data.command === 'C') {
+                  // Approximates by breaking curve into 100 line segments
+                  for (let t = 0.0; t <= 1; t += 0.01) {
+                      const point = Path.getPointOnCubicBezier(t, data.start.x, data.start.y, data.points[0], data.points[1], data.points[2], data.points[3], data.points[4], data.points[5]);
+                      points.push(point.x, point.y);
+                  }
+              }
+              else {
+                  // TODO: how can we calculate bezier curves better?
+                  points = points.concat(data.points);
+              }
+          });
+          var minX = points[0];
+          var maxX = points[0];
+          var minY = points[1];
+          var maxY = points[1];
+          var x, y;
+          for (var i = 0; i < points.length / 2; i++) {
+              x = points[i * 2];
+              y = points[i * 2 + 1];
+              // skip bad values
+              if (!isNaN(x)) {
+                  minX = Math.min(minX, x);
+                  maxX = Math.max(maxX, x);
+              }
+              if (!isNaN(y)) {
+                  minY = Math.min(minY, y);
+                  maxY = Math.max(maxY, y);
+              }
+          }
+          return {
+              x: Math.round(minX),
+              y: Math.round(minY),
+              width: Math.round(maxX - minX),
+              height: Math.round(maxY - minY),
+          };
+      }
+      /**
+       * Return length of the path.
+       * @method
+       * @name Konva.Path#getLength
+       * @returns {Number} length
+       * @example
+       * var length = path.getLength();
+       */
+      getLength() {
+          return this.pathLength;
+      }
+      /**
+       * Get point on path at specific length of the path
+       * @method
+       * @name Konva.Path#getPointAtLength
+       * @param {Number} length length
+       * @returns {Object} point {x,y} point
+       * @example
+       * var point = path.getPointAtLength(10);
+       */
+      getPointAtLength(length) {
+          var point, i = 0, ii = this.dataArray.length;
+          if (!ii) {
+              return null;
+          }
+          while (i < ii && length > this.dataArray[i].pathLength) {
+              length -= this.dataArray[i].pathLength;
+              ++i;
+          }
+          if (i === ii) {
+              point = this.dataArray[i - 1].points.slice(-2);
+              return {
+                  x: point[0],
+                  y: point[1],
+              };
+          }
+          if (length < 0.01) {
+              point = this.dataArray[i].points.slice(0, 2);
+              return {
+                  x: point[0],
+                  y: point[1],
+              };
+          }
+          var cp = this.dataArray[i];
+          var p = cp.points;
+          switch (cp.command) {
+              case 'L':
+                  return Path.getPointOnLine(length, cp.start.x, cp.start.y, p[0], p[1]);
+              case 'C':
+                  return Path.getPointOnCubicBezier(length / cp.pathLength, cp.start.x, cp.start.y, p[0], p[1], p[2], p[3], p[4], p[5]);
+              case 'Q':
+                  return Path.getPointOnQuadraticBezier(length / cp.pathLength, cp.start.x, cp.start.y, p[0], p[1], p[2], p[3]);
+              case 'A':
+                  var cx = p[0], cy = p[1], rx = p[2], ry = p[3], theta = p[4], dTheta = p[5], psi = p[6];
+                  theta += (dTheta * length) / cp.pathLength;
+                  return Path.getPointOnEllipticalArc(cx, cy, rx, ry, theta, psi);
+          }
+          return null;
+      }
+      static getLineLength(x1, y1, x2, y2) {
+          return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+      }
+      static getPointOnLine(dist, P1x, P1y, P2x, P2y, fromX, fromY) {
+          if (fromX === undefined) {
+              fromX = P1x;
+          }
+          if (fromY === undefined) {
+              fromY = P1y;
+          }
+          var m = (P2y - P1y) / (P2x - P1x + 0.00000001);
+          var run = Math.sqrt((dist * dist) / (1 + m * m));
+          if (P2x < P1x) {
+              run *= -1;
+          }
+          var rise = m * run;
+          var pt;
+          if (P2x === P1x) {
+              // vertical line
+              pt = {
+                  x: fromX,
+                  y: fromY + rise,
+              };
+          }
+          else if ((fromY - P1y) / (fromX - P1x + 0.00000001) === m) {
+              pt = {
+                  x: fromX + run,
+                  y: fromY + rise,
+              };
+          }
+          else {
+              var ix, iy;
+              var len = this.getLineLength(P1x, P1y, P2x, P2y);
+              // if (len < 0.00000001) {
+              //   return {
+              //     x: P1x,
+              //     y: P1y,
+              //   };
+              // }
+              var u = (fromX - P1x) * (P2x - P1x) + (fromY - P1y) * (P2y - P1y);
+              u = u / (len * len);
+              ix = P1x + u * (P2x - P1x);
+              iy = P1y + u * (P2y - P1y);
+              var pRise = this.getLineLength(fromX, fromY, ix, iy);
+              var pRun = Math.sqrt(dist * dist - pRise * pRise);
+              run = Math.sqrt((pRun * pRun) / (1 + m * m));
+              if (P2x < P1x) {
+                  run *= -1;
+              }
+              rise = m * run;
+              pt = {
+                  x: ix + run,
+                  y: iy + rise,
+              };
+          }
+          return pt;
+      }
+      static getPointOnCubicBezier(pct, P1x, P1y, P2x, P2y, P3x, P3y, P4x, P4y) {
+          function CB1(t) {
+              return t * t * t;
+          }
+          function CB2(t) {
+              return 3 * t * t * (1 - t);
+          }
+          function CB3(t) {
+              return 3 * t * (1 - t) * (1 - t);
+          }
+          function CB4(t) {
+              return (1 - t) * (1 - t) * (1 - t);
+          }
+          var x = P4x * CB1(pct) + P3x * CB2(pct) + P2x * CB3(pct) + P1x * CB4(pct);
+          var y = P4y * CB1(pct) + P3y * CB2(pct) + P2y * CB3(pct) + P1y * CB4(pct);
+          return {
+              x: x,
+              y: y,
+          };
+      }
+      static getPointOnQuadraticBezier(pct, P1x, P1y, P2x, P2y, P3x, P3y) {
+          function QB1(t) {
+              return t * t;
+          }
+          function QB2(t) {
+              return 2 * t * (1 - t);
+          }
+          function QB3(t) {
+              return (1 - t) * (1 - t);
+          }
+          var x = P3x * QB1(pct) + P2x * QB2(pct) + P1x * QB3(pct);
+          var y = P3y * QB1(pct) + P2y * QB2(pct) + P1y * QB3(pct);
+          return {
+              x: x,
+              y: y,
+          };
+      }
+      static getPointOnEllipticalArc(cx, cy, rx, ry, theta, psi) {
+          var cosPsi = Math.cos(psi), sinPsi = Math.sin(psi);
+          var pt = {
+              x: rx * Math.cos(theta),
+              y: ry * Math.sin(theta),
+          };
+          return {
+              x: cx + (pt.x * cosPsi - pt.y * sinPsi),
+              y: cy + (pt.x * sinPsi + pt.y * cosPsi),
+          };
+      }
+      /*
+       * get parsed data array from the data
+       *  string.  V, v, H, h, and l data are converted to
+       *  L data for the purpose of high performance Path
+       *  rendering
+       */
+      static parsePathData(data) {
+          // Path Data Segment must begin with a moveTo
+          //m (x y)+  Relative moveTo (subsequent points are treated as lineTo)
+          //M (x y)+  Absolute moveTo (subsequent points are treated as lineTo)
+          //l (x y)+  Relative lineTo
+          //L (x y)+  Absolute LineTo
+          //h (x)+    Relative horizontal lineTo
+          //H (x)+    Absolute horizontal lineTo
+          //v (y)+    Relative vertical lineTo
+          //V (y)+    Absolute vertical lineTo
+          //z (closepath)
+          //Z (closepath)
+          //c (x1 y1 x2 y2 x y)+ Relative Bezier curve
+          //C (x1 y1 x2 y2 x y)+ Absolute Bezier curve
+          //q (x1 y1 x y)+       Relative Quadratic Bezier
+          //Q (x1 y1 x y)+       Absolute Quadratic Bezier
+          //t (x y)+    Shorthand/Smooth Relative Quadratic Bezier
+          //T (x y)+    Shorthand/Smooth Absolute Quadratic Bezier
+          //s (x2 y2 x y)+       Shorthand/Smooth Relative Bezier curve
+          //S (x2 y2 x y)+       Shorthand/Smooth Absolute Bezier curve
+          //a (rx ry x-axis-rotation large-arc-flag sweep-flag x y)+     Relative Elliptical Arc
+          //A (rx ry x-axis-rotation large-arc-flag sweep-flag x y)+  Absolute Elliptical Arc
+          // return early if data is not defined
+          if (!data) {
+              return [];
+          }
+          // command string
+          var cs = data;
+          // command chars
+          var cc = [
+              'm',
+              'M',
+              'l',
+              'L',
+              'v',
+              'V',
+              'h',
+              'H',
+              'z',
+              'Z',
+              'c',
+              'C',
+              'q',
+              'Q',
+              't',
+              'T',
+              's',
+              'S',
+              'a',
+              'A',
+          ];
+          // convert white spaces to commas
+          cs = cs.replace(new RegExp(' ', 'g'), ',');
+          // create pipes so that we can split the data
+          for (var n = 0; n < cc.length; n++) {
+              cs = cs.replace(new RegExp(cc[n], 'g'), '|' + cc[n]);
+          }
+          // create array
+          var arr = cs.split('|');
+          var ca = [];
+          var coords = [];
+          // init context point
+          var cpx = 0;
+          var cpy = 0;
+          var re = /([-+]?((\d+\.\d+)|((\d+)|(\.\d+)))(?:e[-+]?\d+)?)/gi;
+          var match;
+          for (n = 1; n < arr.length; n++) {
+              var str = arr[n];
+              var c = str.charAt(0);
+              str = str.slice(1);
+              coords.length = 0;
+              while ((match = re.exec(str))) {
+                  coords.push(match[0]);
+              }
+              // while ((match = re.exec(str))) {
+              //   coords.push(match[0]);
+              // }
+              var p = [];
+              for (var j = 0, jlen = coords.length; j < jlen; j++) {
+                  // extra case for merged flags
+                  if (coords[j] === '00') {
+                      p.push(0, 0);
+                      continue;
+                  }
+                  var parsed = parseFloat(coords[j]);
+                  if (!isNaN(parsed)) {
+                      p.push(parsed);
+                  }
+                  else {
+                      p.push(0);
+                  }
+              }
+              while (p.length > 0) {
+                  if (isNaN(p[0])) {
+                      // case for a trailing comma before next command
+                      break;
+                  }
+                  var cmd = null;
+                  var points = [];
+                  var startX = cpx, startY = cpy;
+                  // Move var from within the switch to up here (jshint)
+                  var prevCmd, ctlPtx, ctlPty; // Ss, Tt
+                  var rx, ry, psi, fa, fs, x1, y1; // Aa
+                  // convert l, H, h, V, and v to L
+                  switch (c) {
+                      // Note: Keep the lineTo's above the moveTo's in this switch
+                      case 'l':
+                          cpx += p.shift();
+                          cpy += p.shift();
+                          cmd = 'L';
+                          points.push(cpx, cpy);
+                          break;
+                      case 'L':
+                          cpx = p.shift();
+                          cpy = p.shift();
+                          points.push(cpx, cpy);
+                          break;
+                      // Note: lineTo handlers need to be above this point
+                      case 'm':
+                          var dx = p.shift();
+                          var dy = p.shift();
+                          cpx += dx;
+                          cpy += dy;
+                          cmd = 'M';
+                          // After closing the path move the current position
+                          // to the the first point of the path (if any).
+                          if (ca.length > 2 && ca[ca.length - 1].command === 'z') {
+                              for (var idx = ca.length - 2; idx >= 0; idx--) {
+                                  if (ca[idx].command === 'M') {
+                                      cpx = ca[idx].points[0] + dx;
+                                      cpy = ca[idx].points[1] + dy;
+                                      break;
+                                  }
+                              }
+                          }
+                          points.push(cpx, cpy);
+                          c = 'l';
+                          // subsequent points are treated as relative lineTo
+                          break;
+                      case 'M':
+                          cpx = p.shift();
+                          cpy = p.shift();
+                          cmd = 'M';
+                          points.push(cpx, cpy);
+                          c = 'L';
+                          // subsequent points are treated as absolute lineTo
+                          break;
+                      case 'h':
+                          cpx += p.shift();
+                          cmd = 'L';
+                          points.push(cpx, cpy);
+                          break;
+                      case 'H':
+                          cpx = p.shift();
+                          cmd = 'L';
+                          points.push(cpx, cpy);
+                          break;
+                      case 'v':
+                          cpy += p.shift();
+                          cmd = 'L';
+                          points.push(cpx, cpy);
+                          break;
+                      case 'V':
+                          cpy = p.shift();
+                          cmd = 'L';
+                          points.push(cpx, cpy);
+                          break;
+                      case 'C':
+                          points.push(p.shift(), p.shift(), p.shift(), p.shift());
+                          cpx = p.shift();
+                          cpy = p.shift();
+                          points.push(cpx, cpy);
+                          break;
+                      case 'c':
+                          points.push(cpx + p.shift(), cpy + p.shift(), cpx + p.shift(), cpy + p.shift());
+                          cpx += p.shift();
+                          cpy += p.shift();
+                          cmd = 'C';
+                          points.push(cpx, cpy);
+                          break;
+                      case 'S':
+                          ctlPtx = cpx;
+                          ctlPty = cpy;
+                          prevCmd = ca[ca.length - 1];
+                          if (prevCmd.command === 'C') {
+                              ctlPtx = cpx + (cpx - prevCmd.points[2]);
+                              ctlPty = cpy + (cpy - prevCmd.points[3]);
+                          }
+                          points.push(ctlPtx, ctlPty, p.shift(), p.shift());
+                          cpx = p.shift();
+                          cpy = p.shift();
+                          cmd = 'C';
+                          points.push(cpx, cpy);
+                          break;
+                      case 's':
+                          ctlPtx = cpx;
+                          ctlPty = cpy;
+                          prevCmd = ca[ca.length - 1];
+                          if (prevCmd.command === 'C') {
+                              ctlPtx = cpx + (cpx - prevCmd.points[2]);
+                              ctlPty = cpy + (cpy - prevCmd.points[3]);
+                          }
+                          points.push(ctlPtx, ctlPty, cpx + p.shift(), cpy + p.shift());
+                          cpx += p.shift();
+                          cpy += p.shift();
+                          cmd = 'C';
+                          points.push(cpx, cpy);
+                          break;
+                      case 'Q':
+                          points.push(p.shift(), p.shift());
+                          cpx = p.shift();
+                          cpy = p.shift();
+                          points.push(cpx, cpy);
+                          break;
+                      case 'q':
+                          points.push(cpx + p.shift(), cpy + p.shift());
+                          cpx += p.shift();
+                          cpy += p.shift();
+                          cmd = 'Q';
+                          points.push(cpx, cpy);
+                          break;
+                      case 'T':
+                          ctlPtx = cpx;
+                          ctlPty = cpy;
+                          prevCmd = ca[ca.length - 1];
+                          if (prevCmd.command === 'Q') {
+                              ctlPtx = cpx + (cpx - prevCmd.points[0]);
+                              ctlPty = cpy + (cpy - prevCmd.points[1]);
+                          }
+                          cpx = p.shift();
+                          cpy = p.shift();
+                          cmd = 'Q';
+                          points.push(ctlPtx, ctlPty, cpx, cpy);
+                          break;
+                      case 't':
+                          ctlPtx = cpx;
+                          ctlPty = cpy;
+                          prevCmd = ca[ca.length - 1];
+                          if (prevCmd.command === 'Q') {
+                              ctlPtx = cpx + (cpx - prevCmd.points[0]);
+                              ctlPty = cpy + (cpy - prevCmd.points[1]);
+                          }
+                          cpx += p.shift();
+                          cpy += p.shift();
+                          cmd = 'Q';
+                          points.push(ctlPtx, ctlPty, cpx, cpy);
+                          break;
+                      case 'A':
+                          rx = p.shift();
+                          ry = p.shift();
+                          psi = p.shift();
+                          fa = p.shift();
+                          fs = p.shift();
+                          x1 = cpx;
+                          y1 = cpy;
+                          cpx = p.shift();
+                          cpy = p.shift();
+                          cmd = 'A';
+                          points = this.convertEndpointToCenterParameterization(x1, y1, cpx, cpy, fa, fs, rx, ry, psi);
+                          break;
+                      case 'a':
+                          rx = p.shift();
+                          ry = p.shift();
+                          psi = p.shift();
+                          fa = p.shift();
+                          fs = p.shift();
+                          x1 = cpx;
+                          y1 = cpy;
+                          cpx += p.shift();
+                          cpy += p.shift();
+                          cmd = 'A';
+                          points = this.convertEndpointToCenterParameterization(x1, y1, cpx, cpy, fa, fs, rx, ry, psi);
+                          break;
+                  }
+                  ca.push({
+                      command: cmd || c,
+                      points: points,
+                      start: {
+                          x: startX,
+                          y: startY,
+                      },
+                      pathLength: this.calcLength(startX, startY, cmd || c, points),
+                  });
+              }
+              if (c === 'z' || c === 'Z') {
+                  ca.push({
+                      command: 'z',
+                      points: [],
+                      start: undefined,
+                      pathLength: 0,
+                  });
+              }
+          }
+          return ca;
+      }
+      static calcLength(x, y, cmd, points) {
+          var len, p1, p2, t;
+          var path = Path;
+          switch (cmd) {
+              case 'L':
+                  return path.getLineLength(x, y, points[0], points[1]);
+              case 'C':
+                  // Approximates by breaking curve into 100 line segments
+                  len = 0.0;
+                  p1 = path.getPointOnCubicBezier(0, x, y, points[0], points[1], points[2], points[3], points[4], points[5]);
+                  for (t = 0.01; t <= 1; t += 0.01) {
+                      p2 = path.getPointOnCubicBezier(t, x, y, points[0], points[1], points[2], points[3], points[4], points[5]);
+                      len += path.getLineLength(p1.x, p1.y, p2.x, p2.y);
+                      p1 = p2;
+                  }
+                  return len;
+              case 'Q':
+                  // Approximates by breaking curve into 100 line segments
+                  len = 0.0;
+                  p1 = path.getPointOnQuadraticBezier(0, x, y, points[0], points[1], points[2], points[3]);
+                  for (t = 0.01; t <= 1; t += 0.01) {
+                      p2 = path.getPointOnQuadraticBezier(t, x, y, points[0], points[1], points[2], points[3]);
+                      len += path.getLineLength(p1.x, p1.y, p2.x, p2.y);
+                      p1 = p2;
+                  }
+                  return len;
+              case 'A':
+                  // Approximates by breaking curve into line segments
+                  len = 0.0;
+                  var start = points[4];
+                  // 4 = theta
+                  var dTheta = points[5];
+                  // 5 = dTheta
+                  var end = points[4] + dTheta;
+                  var inc = Math.PI / 180.0;
+                  // 1 degree resolution
+                  if (Math.abs(start - end) < inc) {
+                      inc = Math.abs(start - end);
+                  }
+                  // Note: for purpose of calculating arc length, not going to worry about rotating X-axis by angle psi
+                  p1 = path.getPointOnEllipticalArc(points[0], points[1], points[2], points[3], start, 0);
+                  if (dTheta < 0) {
+                      // clockwise
+                      for (t = start - inc; t > end; t -= inc) {
+                          p2 = path.getPointOnEllipticalArc(points[0], points[1], points[2], points[3], t, 0);
+                          len += path.getLineLength(p1.x, p1.y, p2.x, p2.y);
+                          p1 = p2;
+                      }
+                  }
+                  else {
+                      // counter-clockwise
+                      for (t = start + inc; t < end; t += inc) {
+                          p2 = path.getPointOnEllipticalArc(points[0], points[1], points[2], points[3], t, 0);
+                          len += path.getLineLength(p1.x, p1.y, p2.x, p2.y);
+                          p1 = p2;
+                      }
+                  }
+                  p2 = path.getPointOnEllipticalArc(points[0], points[1], points[2], points[3], end, 0);
+                  len += path.getLineLength(p1.x, p1.y, p2.x, p2.y);
+                  return len;
+          }
+          return 0;
+      }
+      static convertEndpointToCenterParameterization(x1, y1, x2, y2, fa, fs, rx, ry, psiDeg) {
+          // Derived from: http://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
+          var psi = psiDeg * (Math.PI / 180.0);
+          var xp = (Math.cos(psi) * (x1 - x2)) / 2.0 + (Math.sin(psi) * (y1 - y2)) / 2.0;
+          var yp = (-1 * Math.sin(psi) * (x1 - x2)) / 2.0 +
+              (Math.cos(psi) * (y1 - y2)) / 2.0;
+          var lambda = (xp * xp) / (rx * rx) + (yp * yp) / (ry * ry);
+          if (lambda > 1) {
+              rx *= Math.sqrt(lambda);
+              ry *= Math.sqrt(lambda);
+          }
+          var f = Math.sqrt((rx * rx * (ry * ry) - rx * rx * (yp * yp) - ry * ry * (xp * xp)) /
+              (rx * rx * (yp * yp) + ry * ry * (xp * xp)));
+          if (fa === fs) {
+              f *= -1;
+          }
+          if (isNaN(f)) {
+              f = 0;
+          }
+          var cxp = (f * rx * yp) / ry;
+          var cyp = (f * -ry * xp) / rx;
+          var cx = (x1 + x2) / 2.0 + Math.cos(psi) * cxp - Math.sin(psi) * cyp;
+          var cy = (y1 + y2) / 2.0 + Math.sin(psi) * cxp + Math.cos(psi) * cyp;
+          var vMag = function (v) {
+              return Math.sqrt(v[0] * v[0] + v[1] * v[1]);
+          };
+          var vRatio = function (u, v) {
+              return (u[0] * v[0] + u[1] * v[1]) / (vMag(u) * vMag(v));
+          };
+          var vAngle = function (u, v) {
+              return (u[0] * v[1] < u[1] * v[0] ? -1 : 1) * Math.acos(vRatio(u, v));
+          };
+          var theta = vAngle([1, 0], [(xp - cxp) / rx, (yp - cyp) / ry]);
+          var u = [(xp - cxp) / rx, (yp - cyp) / ry];
+          var v = [(-1 * xp - cxp) / rx, (-1 * yp - cyp) / ry];
+          var dTheta = vAngle(u, v);
+          if (vRatio(u, v) <= -1) {
+              dTheta = Math.PI;
+          }
+          if (vRatio(u, v) >= 1) {
+              dTheta = 0;
+          }
+          if (fs === 0 && dTheta > 0) {
+              dTheta = dTheta - 2 * Math.PI;
+          }
+          if (fs === 1 && dTheta < 0) {
+              dTheta = dTheta + 2 * Math.PI;
+          }
+          return [cx, cy, rx, ry, theta, dTheta, psi, fs];
+      }
+  }
+  Path.prototype.className = 'Path';
+  Path.prototype._attrsAffectingSize = ['data'];
+  _registerNode(Path);
+  /**
+   * get/set SVG path data string.  This method
+   *  also automatically parses the data string
+   *  into a data array.  Currently supported SVG data:
+   *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
+   * @name Konva.Path#data
+   * @method
+   * @param {String} data svg path string
+   * @returns {String}
+   * @example
+   * // get data
+   * var data = path.data();
+   *
+   * // set data
+   * path.data('M200,100h100v50z');
+   */
+  Factory.addGetterSetter(Path, 'data');
+
+  /**
    * Arrow constructor
    * @constructor
    * @memberof Konva
@@ -10339,18 +11050,28 @@
           if (fromTension) {
               tp = this.getTensionPoints();
           }
+          var length = this.pointerLength();
           var n = points.length;
           var dx, dy;
           if (fromTension) {
-              dx = points[n - 2] - (tp[tp.length - 2] + tp[tp.length - 4]) / 2;
-              dy = points[n - 1] - (tp[tp.length - 1] + tp[tp.length - 3]) / 2;
+              const lp = [
+                  tp[tp.length - 4],
+                  tp[tp.length - 3],
+                  tp[tp.length - 2],
+                  tp[tp.length - 1],
+                  points[n - 2],
+                  points[n - 1],
+              ];
+              const lastLength = Path.calcLength(tp[tp.length - 4], tp[tp.length - 3], 'C', lp);
+              const previous = Path.getPointOnQuadraticBezier(Math.min(1, 1 - length / lastLength), lp[0], lp[1], lp[2], lp[3], lp[4], lp[5]);
+              dx = points[n - 2] - previous.x;
+              dy = points[n - 1] - previous.y;
           }
           else {
               dx = points[n - 2] - points[n - 4];
               dy = points[n - 1] - points[n - 3];
           }
           var radians = (Math.atan2(dy, dx) + PI2) % PI2;
-          var length = this.pointerLength();
           var width = this.pointerWidth();
           if (this.pointerAtEnding()) {
               ctx.save();
@@ -11344,825 +12065,6 @@
    * tag.cornerRadius([0, 10, 20, 30]);
    */
   Factory.addGetterSetter(Tag, 'cornerRadius', 0, getNumberOrArrayOfNumbersValidator(4));
-
-  /**
-   * Path constructor.
-   * @author Jason Follas
-   * @constructor
-   * @memberof Konva
-   * @augments Konva.Shape
-   * @param {Object} config
-   * @param {String} config.data SVG data string
-   * @param {String} [config.fill] fill color
-     * @param {Image} [config.fillPatternImage] fill pattern image
-     * @param {Number} [config.fillPatternX]
-     * @param {Number} [config.fillPatternY]
-     * @param {Object} [config.fillPatternOffset] object with x and y component
-     * @param {Number} [config.fillPatternOffsetX] 
-     * @param {Number} [config.fillPatternOffsetY] 
-     * @param {Object} [config.fillPatternScale] object with x and y component
-     * @param {Number} [config.fillPatternScaleX]
-     * @param {Number} [config.fillPatternScaleY]
-     * @param {Number} [config.fillPatternRotation]
-     * @param {String} [config.fillPatternRepeat] can be "repeat", "repeat-x", "repeat-y", or "no-repeat".  The default is "no-repeat"
-     * @param {Object} [config.fillLinearGradientStartPoint] object with x and y component
-     * @param {Number} [config.fillLinearGradientStartPointX]
-     * @param {Number} [config.fillLinearGradientStartPointY]
-     * @param {Object} [config.fillLinearGradientEndPoint] object with x and y component
-     * @param {Number} [config.fillLinearGradientEndPointX]
-     * @param {Number} [config.fillLinearGradientEndPointY]
-     * @param {Array} [config.fillLinearGradientColorStops] array of color stops
-     * @param {Object} [config.fillRadialGradientStartPoint] object with x and y component
-     * @param {Number} [config.fillRadialGradientStartPointX]
-     * @param {Number} [config.fillRadialGradientStartPointY]
-     * @param {Object} [config.fillRadialGradientEndPoint] object with x and y component
-     * @param {Number} [config.fillRadialGradientEndPointX] 
-     * @param {Number} [config.fillRadialGradientEndPointY] 
-     * @param {Number} [config.fillRadialGradientStartRadius]
-     * @param {Number} [config.fillRadialGradientEndRadius]
-     * @param {Array} [config.fillRadialGradientColorStops] array of color stops
-     * @param {Boolean} [config.fillEnabled] flag which enables or disables the fill.  The default value is true
-     * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
-     * @param {String} [config.stroke] stroke color
-     * @param {Number} [config.strokeWidth] stroke width
-     * @param {Boolean} [config.fillAfterStrokeEnabled]. Should we draw fill AFTER stroke? Default is false.
-     * @param {Number} [config.hitStrokeWidth] size of the stroke on hit canvas.  The default is "auto" - equals to strokeWidth
-     * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
-     * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
-     * @param {Boolean} [config.shadowForStrokeEnabled] flag which enables or disables shadow for stroke.  The default is true
-     * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
-     * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
-     * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
-     *  is miter
-     * @param {String} [config.lineCap] can be butt, round, or square.  The default
-     *  is butt
-     * @param {String} [config.shadowColor]
-     * @param {Number} [config.shadowBlur]
-     * @param {Object} [config.shadowOffset] object with x and y component
-     * @param {Number} [config.shadowOffsetX]
-     * @param {Number} [config.shadowOffsetY]
-     * @param {Number} [config.shadowOpacity] shadow opacity.  Can be any real number
-     *  between 0 and 1
-     * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
-     * @param {Array} [config.dash]
-     * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
-
-   * @param {Number} [config.x]
-     * @param {Number} [config.y]
-     * @param {Number} [config.width]
-     * @param {Number} [config.height]
-     * @param {Boolean} [config.visible]
-     * @param {Boolean} [config.listening] whether or not the node is listening for events
-     * @param {String} [config.id] unique id
-     * @param {String} [config.name] non-unique name
-     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
-     * @param {Object} [config.scale] set scale
-     * @param {Number} [config.scaleX] set scale x
-     * @param {Number} [config.scaleY] set scale y
-     * @param {Number} [config.rotation] rotation in degrees
-     * @param {Object} [config.offset] offset from center point and rotation point
-     * @param {Number} [config.offsetX] set offset x
-     * @param {Number} [config.offsetY] set offset y
-     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
-     *  the entire stage by dragging any portion of the stage
-     * @param {Number} [config.dragDistance]
-     * @param {Function} [config.dragBoundFunc]
-   * @example
-   * var path = new Konva.Path({
-   *   x: 240,
-   *   y: 40,
-   *   data: 'M12.582,9.551C3.251,16.237,0.921,29.021,7.08,38.564l-2.36,1.689l4.893,2.262l4.893,2.262l-0.568-5.36l-0.567-5.359l-2.365,1.694c-4.657-7.375-2.83-17.185,4.352-22.33c7.451-5.338,17.817-3.625,23.156,3.824c5.337,7.449,3.625,17.813-3.821,23.152l2.857,3.988c9.617-6.893,11.827-20.277,4.935-29.896C35.591,4.87,22.204,2.658,12.582,9.551z',
-   *   fill: 'green',
-   *   scaleX: 2,
-   *   scaleY: 2
-   * });
-   */
-  class Path extends Shape {
-      constructor(config) {
-          super(config);
-          this.dataArray = [];
-          this.pathLength = 0;
-          this.dataArray = Path.parsePathData(this.data());
-          this.pathLength = 0;
-          for (var i = 0; i < this.dataArray.length; ++i) {
-              this.pathLength += this.dataArray[i].pathLength;
-          }
-          this.on('dataChange.konva', function () {
-              this.dataArray = Path.parsePathData(this.data());
-              this.pathLength = 0;
-              for (var i = 0; i < this.dataArray.length; ++i) {
-                  this.pathLength += this.dataArray[i].pathLength;
-              }
-          });
-      }
-      _sceneFunc(context) {
-          var ca = this.dataArray;
-          // context position
-          context.beginPath();
-          var isClosed = false;
-          for (var n = 0; n < ca.length; n++) {
-              var c = ca[n].command;
-              var p = ca[n].points;
-              switch (c) {
-                  case 'L':
-                      context.lineTo(p[0], p[1]);
-                      break;
-                  case 'M':
-                      context.moveTo(p[0], p[1]);
-                      break;
-                  case 'C':
-                      context.bezierCurveTo(p[0], p[1], p[2], p[3], p[4], p[5]);
-                      break;
-                  case 'Q':
-                      context.quadraticCurveTo(p[0], p[1], p[2], p[3]);
-                      break;
-                  case 'A':
-                      var cx = p[0], cy = p[1], rx = p[2], ry = p[3], theta = p[4], dTheta = p[5], psi = p[6], fs = p[7];
-                      var r = rx > ry ? rx : ry;
-                      var scaleX = rx > ry ? 1 : rx / ry;
-                      var scaleY = rx > ry ? ry / rx : 1;
-                      context.translate(cx, cy);
-                      context.rotate(psi);
-                      context.scale(scaleX, scaleY);
-                      context.arc(0, 0, r, theta, theta + dTheta, 1 - fs);
-                      context.scale(1 / scaleX, 1 / scaleY);
-                      context.rotate(-psi);
-                      context.translate(-cx, -cy);
-                      break;
-                  case 'z':
-                      isClosed = true;
-                      context.closePath();
-                      break;
-              }
-          }
-          if (!isClosed && !this.hasFill()) {
-              context.strokeShape(this);
-          }
-          else {
-              context.fillStrokeShape(this);
-          }
-      }
-      getSelfRect() {
-          var points = [];
-          this.dataArray.forEach(function (data) {
-              if (data.command === 'A') {
-                  // Approximates by breaking curve into line segments
-                  var start = data.points[4];
-                  // 4 = theta
-                  var dTheta = data.points[5];
-                  // 5 = dTheta
-                  var end = data.points[4] + dTheta;
-                  var inc = Math.PI / 180.0;
-                  // 1 degree resolution
-                  if (Math.abs(start - end) < inc) {
-                      inc = Math.abs(start - end);
-                  }
-                  if (dTheta < 0) {
-                      // clockwise
-                      for (let t = start - inc; t > end; t -= inc) {
-                          const point = Path.getPointOnEllipticalArc(data.points[0], data.points[1], data.points[2], data.points[3], t, 0);
-                          points.push(point.x, point.y);
-                      }
-                  }
-                  else {
-                      // counter-clockwise
-                      for (let t = start + inc; t < end; t += inc) {
-                          const point = Path.getPointOnEllipticalArc(data.points[0], data.points[1], data.points[2], data.points[3], t, 0);
-                          points.push(point.x, point.y);
-                      }
-                  }
-              }
-              else if (data.command === 'C') {
-                  // Approximates by breaking curve into 100 line segments
-                  for (let t = 0.0; t <= 1; t += 0.01) {
-                      const point = Path.getPointOnCubicBezier(t, data.start.x, data.start.y, data.points[0], data.points[1], data.points[2], data.points[3], data.points[4], data.points[5]);
-                      points.push(point.x, point.y);
-                  }
-              }
-              else {
-                  // TODO: how can we calculate bezier curves better?
-                  points = points.concat(data.points);
-              }
-          });
-          var minX = points[0];
-          var maxX = points[0];
-          var minY = points[1];
-          var maxY = points[1];
-          var x, y;
-          for (var i = 0; i < points.length / 2; i++) {
-              x = points[i * 2];
-              y = points[i * 2 + 1];
-              // skip bad values
-              if (!isNaN(x)) {
-                  minX = Math.min(minX, x);
-                  maxX = Math.max(maxX, x);
-              }
-              if (!isNaN(y)) {
-                  minY = Math.min(minY, y);
-                  maxY = Math.max(maxY, y);
-              }
-          }
-          return {
-              x: Math.round(minX),
-              y: Math.round(minY),
-              width: Math.round(maxX - minX),
-              height: Math.round(maxY - minY),
-          };
-      }
-      /**
-       * Return length of the path.
-       * @method
-       * @name Konva.Path#getLength
-       * @returns {Number} length
-       * @example
-       * var length = path.getLength();
-       */
-      getLength() {
-          return this.pathLength;
-      }
-      /**
-       * Get point on path at specific length of the path
-       * @method
-       * @name Konva.Path#getPointAtLength
-       * @param {Number} length length
-       * @returns {Object} point {x,y} point
-       * @example
-       * var point = path.getPointAtLength(10);
-       */
-      getPointAtLength(length) {
-          var point, i = 0, ii = this.dataArray.length;
-          if (!ii) {
-              return null;
-          }
-          while (i < ii && length > this.dataArray[i].pathLength) {
-              length -= this.dataArray[i].pathLength;
-              ++i;
-          }
-          if (i === ii) {
-              point = this.dataArray[i - 1].points.slice(-2);
-              return {
-                  x: point[0],
-                  y: point[1],
-              };
-          }
-          if (length < 0.01) {
-              point = this.dataArray[i].points.slice(0, 2);
-              return {
-                  x: point[0],
-                  y: point[1],
-              };
-          }
-          var cp = this.dataArray[i];
-          var p = cp.points;
-          switch (cp.command) {
-              case 'L':
-                  return Path.getPointOnLine(length, cp.start.x, cp.start.y, p[0], p[1]);
-              case 'C':
-                  return Path.getPointOnCubicBezier(length / cp.pathLength, cp.start.x, cp.start.y, p[0], p[1], p[2], p[3], p[4], p[5]);
-              case 'Q':
-                  return Path.getPointOnQuadraticBezier(length / cp.pathLength, cp.start.x, cp.start.y, p[0], p[1], p[2], p[3]);
-              case 'A':
-                  var cx = p[0], cy = p[1], rx = p[2], ry = p[3], theta = p[4], dTheta = p[5], psi = p[6];
-                  theta += (dTheta * length) / cp.pathLength;
-                  return Path.getPointOnEllipticalArc(cx, cy, rx, ry, theta, psi);
-          }
-          return null;
-      }
-      static getLineLength(x1, y1, x2, y2) {
-          return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-      }
-      static getPointOnLine(dist, P1x, P1y, P2x, P2y, fromX, fromY) {
-          if (fromX === undefined) {
-              fromX = P1x;
-          }
-          if (fromY === undefined) {
-              fromY = P1y;
-          }
-          var m = (P2y - P1y) / (P2x - P1x + 0.00000001);
-          var run = Math.sqrt((dist * dist) / (1 + m * m));
-          if (P2x < P1x) {
-              run *= -1;
-          }
-          var rise = m * run;
-          var pt;
-          if (P2x === P1x) {
-              // vertical line
-              pt = {
-                  x: fromX,
-                  y: fromY + rise,
-              };
-          }
-          else if ((fromY - P1y) / (fromX - P1x + 0.00000001) === m) {
-              pt = {
-                  x: fromX + run,
-                  y: fromY + rise,
-              };
-          }
-          else {
-              var ix, iy;
-              var len = this.getLineLength(P1x, P1y, P2x, P2y);
-              // if (len < 0.00000001) {
-              //   return {
-              //     x: P1x,
-              //     y: P1y,
-              //   };
-              // }
-              var u = (fromX - P1x) * (P2x - P1x) + (fromY - P1y) * (P2y - P1y);
-              u = u / (len * len);
-              ix = P1x + u * (P2x - P1x);
-              iy = P1y + u * (P2y - P1y);
-              var pRise = this.getLineLength(fromX, fromY, ix, iy);
-              var pRun = Math.sqrt(dist * dist - pRise * pRise);
-              run = Math.sqrt((pRun * pRun) / (1 + m * m));
-              if (P2x < P1x) {
-                  run *= -1;
-              }
-              rise = m * run;
-              pt = {
-                  x: ix + run,
-                  y: iy + rise,
-              };
-          }
-          return pt;
-      }
-      static getPointOnCubicBezier(pct, P1x, P1y, P2x, P2y, P3x, P3y, P4x, P4y) {
-          function CB1(t) {
-              return t * t * t;
-          }
-          function CB2(t) {
-              return 3 * t * t * (1 - t);
-          }
-          function CB3(t) {
-              return 3 * t * (1 - t) * (1 - t);
-          }
-          function CB4(t) {
-              return (1 - t) * (1 - t) * (1 - t);
-          }
-          var x = P4x * CB1(pct) + P3x * CB2(pct) + P2x * CB3(pct) + P1x * CB4(pct);
-          var y = P4y * CB1(pct) + P3y * CB2(pct) + P2y * CB3(pct) + P1y * CB4(pct);
-          return {
-              x: x,
-              y: y,
-          };
-      }
-      static getPointOnQuadraticBezier(pct, P1x, P1y, P2x, P2y, P3x, P3y) {
-          function QB1(t) {
-              return t * t;
-          }
-          function QB2(t) {
-              return 2 * t * (1 - t);
-          }
-          function QB3(t) {
-              return (1 - t) * (1 - t);
-          }
-          var x = P3x * QB1(pct) + P2x * QB2(pct) + P1x * QB3(pct);
-          var y = P3y * QB1(pct) + P2y * QB2(pct) + P1y * QB3(pct);
-          return {
-              x: x,
-              y: y,
-          };
-      }
-      static getPointOnEllipticalArc(cx, cy, rx, ry, theta, psi) {
-          var cosPsi = Math.cos(psi), sinPsi = Math.sin(psi);
-          var pt = {
-              x: rx * Math.cos(theta),
-              y: ry * Math.sin(theta),
-          };
-          return {
-              x: cx + (pt.x * cosPsi - pt.y * sinPsi),
-              y: cy + (pt.x * sinPsi + pt.y * cosPsi),
-          };
-      }
-      /*
-       * get parsed data array from the data
-       *  string.  V, v, H, h, and l data are converted to
-       *  L data for the purpose of high performance Path
-       *  rendering
-       */
-      static parsePathData(data) {
-          // Path Data Segment must begin with a moveTo
-          //m (x y)+  Relative moveTo (subsequent points are treated as lineTo)
-          //M (x y)+  Absolute moveTo (subsequent points are treated as lineTo)
-          //l (x y)+  Relative lineTo
-          //L (x y)+  Absolute LineTo
-          //h (x)+    Relative horizontal lineTo
-          //H (x)+    Absolute horizontal lineTo
-          //v (y)+    Relative vertical lineTo
-          //V (y)+    Absolute vertical lineTo
-          //z (closepath)
-          //Z (closepath)
-          //c (x1 y1 x2 y2 x y)+ Relative Bezier curve
-          //C (x1 y1 x2 y2 x y)+ Absolute Bezier curve
-          //q (x1 y1 x y)+       Relative Quadratic Bezier
-          //Q (x1 y1 x y)+       Absolute Quadratic Bezier
-          //t (x y)+    Shorthand/Smooth Relative Quadratic Bezier
-          //T (x y)+    Shorthand/Smooth Absolute Quadratic Bezier
-          //s (x2 y2 x y)+       Shorthand/Smooth Relative Bezier curve
-          //S (x2 y2 x y)+       Shorthand/Smooth Absolute Bezier curve
-          //a (rx ry x-axis-rotation large-arc-flag sweep-flag x y)+     Relative Elliptical Arc
-          //A (rx ry x-axis-rotation large-arc-flag sweep-flag x y)+  Absolute Elliptical Arc
-          // return early if data is not defined
-          if (!data) {
-              return [];
-          }
-          // command string
-          var cs = data;
-          // command chars
-          var cc = [
-              'm',
-              'M',
-              'l',
-              'L',
-              'v',
-              'V',
-              'h',
-              'H',
-              'z',
-              'Z',
-              'c',
-              'C',
-              'q',
-              'Q',
-              't',
-              'T',
-              's',
-              'S',
-              'a',
-              'A',
-          ];
-          // convert white spaces to commas
-          cs = cs.replace(new RegExp(' ', 'g'), ',');
-          // create pipes so that we can split the data
-          for (var n = 0; n < cc.length; n++) {
-              cs = cs.replace(new RegExp(cc[n], 'g'), '|' + cc[n]);
-          }
-          // create array
-          var arr = cs.split('|');
-          var ca = [];
-          var coords = [];
-          // init context point
-          var cpx = 0;
-          var cpy = 0;
-          var re = /([-+]?((\d+\.\d+)|((\d+)|(\.\d+)))(?:e[-+]?\d+)?)/gi;
-          var match;
-          for (n = 1; n < arr.length; n++) {
-              var str = arr[n];
-              var c = str.charAt(0);
-              str = str.slice(1);
-              coords.length = 0;
-              while ((match = re.exec(str))) {
-                  coords.push(match[0]);
-              }
-              // while ((match = re.exec(str))) {
-              //   coords.push(match[0]);
-              // }
-              var p = [];
-              for (var j = 0, jlen = coords.length; j < jlen; j++) {
-                  var parsed = parseFloat(coords[j]);
-                  if (!isNaN(parsed)) {
-                      p.push(parsed);
-                  }
-                  else {
-                      p.push(0);
-                  }
-              }
-              while (p.length > 0) {
-                  if (isNaN(p[0])) {
-                      // case for a trailing comma before next command
-                      break;
-                  }
-                  var cmd = null;
-                  var points = [];
-                  var startX = cpx, startY = cpy;
-                  // Move var from within the switch to up here (jshint)
-                  var prevCmd, ctlPtx, ctlPty; // Ss, Tt
-                  var rx, ry, psi, fa, fs, x1, y1; // Aa
-                  // convert l, H, h, V, and v to L
-                  switch (c) {
-                      // Note: Keep the lineTo's above the moveTo's in this switch
-                      case 'l':
-                          cpx += p.shift();
-                          cpy += p.shift();
-                          cmd = 'L';
-                          points.push(cpx, cpy);
-                          break;
-                      case 'L':
-                          cpx = p.shift();
-                          cpy = p.shift();
-                          points.push(cpx, cpy);
-                          break;
-                      // Note: lineTo handlers need to be above this point
-                      case 'm':
-                          var dx = p.shift();
-                          var dy = p.shift();
-                          cpx += dx;
-                          cpy += dy;
-                          cmd = 'M';
-                          // After closing the path move the current position
-                          // to the the first point of the path (if any).
-                          if (ca.length > 2 && ca[ca.length - 1].command === 'z') {
-                              for (var idx = ca.length - 2; idx >= 0; idx--) {
-                                  if (ca[idx].command === 'M') {
-                                      cpx = ca[idx].points[0] + dx;
-                                      cpy = ca[idx].points[1] + dy;
-                                      break;
-                                  }
-                              }
-                          }
-                          points.push(cpx, cpy);
-                          c = 'l';
-                          // subsequent points are treated as relative lineTo
-                          break;
-                      case 'M':
-                          cpx = p.shift();
-                          cpy = p.shift();
-                          cmd = 'M';
-                          points.push(cpx, cpy);
-                          c = 'L';
-                          // subsequent points are treated as absolute lineTo
-                          break;
-                      case 'h':
-                          cpx += p.shift();
-                          cmd = 'L';
-                          points.push(cpx, cpy);
-                          break;
-                      case 'H':
-                          cpx = p.shift();
-                          cmd = 'L';
-                          points.push(cpx, cpy);
-                          break;
-                      case 'v':
-                          cpy += p.shift();
-                          cmd = 'L';
-                          points.push(cpx, cpy);
-                          break;
-                      case 'V':
-                          cpy = p.shift();
-                          cmd = 'L';
-                          points.push(cpx, cpy);
-                          break;
-                      case 'C':
-                          points.push(p.shift(), p.shift(), p.shift(), p.shift());
-                          cpx = p.shift();
-                          cpy = p.shift();
-                          points.push(cpx, cpy);
-                          break;
-                      case 'c':
-                          points.push(cpx + p.shift(), cpy + p.shift(), cpx + p.shift(), cpy + p.shift());
-                          cpx += p.shift();
-                          cpy += p.shift();
-                          cmd = 'C';
-                          points.push(cpx, cpy);
-                          break;
-                      case 'S':
-                          ctlPtx = cpx;
-                          ctlPty = cpy;
-                          prevCmd = ca[ca.length - 1];
-                          if (prevCmd.command === 'C') {
-                              ctlPtx = cpx + (cpx - prevCmd.points[2]);
-                              ctlPty = cpy + (cpy - prevCmd.points[3]);
-                          }
-                          points.push(ctlPtx, ctlPty, p.shift(), p.shift());
-                          cpx = p.shift();
-                          cpy = p.shift();
-                          cmd = 'C';
-                          points.push(cpx, cpy);
-                          break;
-                      case 's':
-                          ctlPtx = cpx;
-                          ctlPty = cpy;
-                          prevCmd = ca[ca.length - 1];
-                          if (prevCmd.command === 'C') {
-                              ctlPtx = cpx + (cpx - prevCmd.points[2]);
-                              ctlPty = cpy + (cpy - prevCmd.points[3]);
-                          }
-                          points.push(ctlPtx, ctlPty, cpx + p.shift(), cpy + p.shift());
-                          cpx += p.shift();
-                          cpy += p.shift();
-                          cmd = 'C';
-                          points.push(cpx, cpy);
-                          break;
-                      case 'Q':
-                          points.push(p.shift(), p.shift());
-                          cpx = p.shift();
-                          cpy = p.shift();
-                          points.push(cpx, cpy);
-                          break;
-                      case 'q':
-                          points.push(cpx + p.shift(), cpy + p.shift());
-                          cpx += p.shift();
-                          cpy += p.shift();
-                          cmd = 'Q';
-                          points.push(cpx, cpy);
-                          break;
-                      case 'T':
-                          ctlPtx = cpx;
-                          ctlPty = cpy;
-                          prevCmd = ca[ca.length - 1];
-                          if (prevCmd.command === 'Q') {
-                              ctlPtx = cpx + (cpx - prevCmd.points[0]);
-                              ctlPty = cpy + (cpy - prevCmd.points[1]);
-                          }
-                          cpx = p.shift();
-                          cpy = p.shift();
-                          cmd = 'Q';
-                          points.push(ctlPtx, ctlPty, cpx, cpy);
-                          break;
-                      case 't':
-                          ctlPtx = cpx;
-                          ctlPty = cpy;
-                          prevCmd = ca[ca.length - 1];
-                          if (prevCmd.command === 'Q') {
-                              ctlPtx = cpx + (cpx - prevCmd.points[0]);
-                              ctlPty = cpy + (cpy - prevCmd.points[1]);
-                          }
-                          cpx += p.shift();
-                          cpy += p.shift();
-                          cmd = 'Q';
-                          points.push(ctlPtx, ctlPty, cpx, cpy);
-                          break;
-                      case 'A':
-                          rx = p.shift();
-                          ry = p.shift();
-                          psi = p.shift();
-                          fa = p.shift();
-                          fs = p.shift();
-                          x1 = cpx;
-                          y1 = cpy;
-                          cpx = p.shift();
-                          cpy = p.shift();
-                          cmd = 'A';
-                          points = this.convertEndpointToCenterParameterization(x1, y1, cpx, cpy, fa, fs, rx, ry, psi);
-                          break;
-                      case 'a':
-                          rx = p.shift();
-                          ry = p.shift();
-                          psi = p.shift();
-                          fa = p.shift();
-                          fs = p.shift();
-                          x1 = cpx;
-                          y1 = cpy;
-                          cpx += p.shift();
-                          cpy += p.shift();
-                          cmd = 'A';
-                          points = this.convertEndpointToCenterParameterization(x1, y1, cpx, cpy, fa, fs, rx, ry, psi);
-                          break;
-                  }
-                  ca.push({
-                      command: cmd || c,
-                      points: points,
-                      start: {
-                          x: startX,
-                          y: startY,
-                      },
-                      pathLength: this.calcLength(startX, startY, cmd || c, points),
-                  });
-              }
-              if (c === 'z' || c === 'Z') {
-                  ca.push({
-                      command: 'z',
-                      points: [],
-                      start: undefined,
-                      pathLength: 0,
-                  });
-              }
-          }
-          return ca;
-      }
-      static calcLength(x, y, cmd, points) {
-          var len, p1, p2, t;
-          var path = Path;
-          switch (cmd) {
-              case 'L':
-                  return path.getLineLength(x, y, points[0], points[1]);
-              case 'C':
-                  // Approximates by breaking curve into 100 line segments
-                  len = 0.0;
-                  p1 = path.getPointOnCubicBezier(0, x, y, points[0], points[1], points[2], points[3], points[4], points[5]);
-                  for (t = 0.01; t <= 1; t += 0.01) {
-                      p2 = path.getPointOnCubicBezier(t, x, y, points[0], points[1], points[2], points[3], points[4], points[5]);
-                      len += path.getLineLength(p1.x, p1.y, p2.x, p2.y);
-                      p1 = p2;
-                  }
-                  return len;
-              case 'Q':
-                  // Approximates by breaking curve into 100 line segments
-                  len = 0.0;
-                  p1 = path.getPointOnQuadraticBezier(0, x, y, points[0], points[1], points[2], points[3]);
-                  for (t = 0.01; t <= 1; t += 0.01) {
-                      p2 = path.getPointOnQuadraticBezier(t, x, y, points[0], points[1], points[2], points[3]);
-                      len += path.getLineLength(p1.x, p1.y, p2.x, p2.y);
-                      p1 = p2;
-                  }
-                  return len;
-              case 'A':
-                  // Approximates by breaking curve into line segments
-                  len = 0.0;
-                  var start = points[4];
-                  // 4 = theta
-                  var dTheta = points[5];
-                  // 5 = dTheta
-                  var end = points[4] + dTheta;
-                  var inc = Math.PI / 180.0;
-                  // 1 degree resolution
-                  if (Math.abs(start - end) < inc) {
-                      inc = Math.abs(start - end);
-                  }
-                  // Note: for purpose of calculating arc length, not going to worry about rotating X-axis by angle psi
-                  p1 = path.getPointOnEllipticalArc(points[0], points[1], points[2], points[3], start, 0);
-                  if (dTheta < 0) {
-                      // clockwise
-                      for (t = start - inc; t > end; t -= inc) {
-                          p2 = path.getPointOnEllipticalArc(points[0], points[1], points[2], points[3], t, 0);
-                          len += path.getLineLength(p1.x, p1.y, p2.x, p2.y);
-                          p1 = p2;
-                      }
-                  }
-                  else {
-                      // counter-clockwise
-                      for (t = start + inc; t < end; t += inc) {
-                          p2 = path.getPointOnEllipticalArc(points[0], points[1], points[2], points[3], t, 0);
-                          len += path.getLineLength(p1.x, p1.y, p2.x, p2.y);
-                          p1 = p2;
-                      }
-                  }
-                  p2 = path.getPointOnEllipticalArc(points[0], points[1], points[2], points[3], end, 0);
-                  len += path.getLineLength(p1.x, p1.y, p2.x, p2.y);
-                  return len;
-          }
-          return 0;
-      }
-      static convertEndpointToCenterParameterization(x1, y1, x2, y2, fa, fs, rx, ry, psiDeg) {
-          // Derived from: http://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
-          var psi = psiDeg * (Math.PI / 180.0);
-          var xp = (Math.cos(psi) * (x1 - x2)) / 2.0 + (Math.sin(psi) * (y1 - y2)) / 2.0;
-          var yp = (-1 * Math.sin(psi) * (x1 - x2)) / 2.0 +
-              (Math.cos(psi) * (y1 - y2)) / 2.0;
-          var lambda = (xp * xp) / (rx * rx) + (yp * yp) / (ry * ry);
-          if (lambda > 1) {
-              rx *= Math.sqrt(lambda);
-              ry *= Math.sqrt(lambda);
-          }
-          var f = Math.sqrt((rx * rx * (ry * ry) - rx * rx * (yp * yp) - ry * ry * (xp * xp)) /
-              (rx * rx * (yp * yp) + ry * ry * (xp * xp)));
-          if (fa === fs) {
-              f *= -1;
-          }
-          if (isNaN(f)) {
-              f = 0;
-          }
-          var cxp = (f * rx * yp) / ry;
-          var cyp = (f * -ry * xp) / rx;
-          var cx = (x1 + x2) / 2.0 + Math.cos(psi) * cxp - Math.sin(psi) * cyp;
-          var cy = (y1 + y2) / 2.0 + Math.sin(psi) * cxp + Math.cos(psi) * cyp;
-          var vMag = function (v) {
-              return Math.sqrt(v[0] * v[0] + v[1] * v[1]);
-          };
-          var vRatio = function (u, v) {
-              return (u[0] * v[0] + u[1] * v[1]) / (vMag(u) * vMag(v));
-          };
-          var vAngle = function (u, v) {
-              return (u[0] * v[1] < u[1] * v[0] ? -1 : 1) * Math.acos(vRatio(u, v));
-          };
-          var theta = vAngle([1, 0], [(xp - cxp) / rx, (yp - cyp) / ry]);
-          var u = [(xp - cxp) / rx, (yp - cyp) / ry];
-          var v = [(-1 * xp - cxp) / rx, (-1 * yp - cyp) / ry];
-          var dTheta = vAngle(u, v);
-          if (vRatio(u, v) <= -1) {
-              dTheta = Math.PI;
-          }
-          if (vRatio(u, v) >= 1) {
-              dTheta = 0;
-          }
-          if (fs === 0 && dTheta > 0) {
-              dTheta = dTheta - 2 * Math.PI;
-          }
-          if (fs === 1 && dTheta < 0) {
-              dTheta = dTheta + 2 * Math.PI;
-          }
-          return [cx, cy, rx, ry, theta, dTheta, psi, fs];
-      }
-  }
-  Path.prototype.className = 'Path';
-  Path.prototype._attrsAffectingSize = ['data'];
-  _registerNode(Path);
-  /**
-   * get/set SVG path data string.  This method
-   *  also automatically parses the data string
-   *  into a data array.  Currently supported SVG data:
-   *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
-   * @name Konva.Path#data
-   * @method
-   * @param {String} data svg path string
-   * @returns {String}
-   * @example
-   * // get data
-   * var data = path.data();
-   *
-   * // set data
-   * path.data('M200,100h100v50z');
-   */
-  Factory.addGetterSetter(Path, 'data');
 
   /**
    * Rect constructor
@@ -13916,14 +13818,13 @@
    * @memberof Konva
    * @augments Konva.Shape
    * @param {Object} config
-   * @param {String} [config.fontFamily] default is Calibri
+   * @param {String} [config.fontFamily] default is Arial
    * @param {Number} [config.fontSize] default is 12
    * @param {String} [config.fontStyle] can be normal, bold, or italic.  Default is normal
    * @param {String} [config.fontVariant] can be normal or small-caps.  Default is normal
    * @param {String} [config.textBaseline] Can be 'top', 'bottom', 'middle', 'alphabetic', 'hanging'. Default is middle
    * @param {String} config.text
    * @param {String} config.data SVG data string
-   * @param {Function} config.getKerning a getter for kerning values for the specified characters
    * @param {Function} config.kerningFunc a getter for kerning values for the specified characters
    * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
@@ -14039,10 +13940,6 @@
           });
           // update text data for certain attr changes
           this.on('textChange.konva alignChange.konva letterSpacingChange.konva kerningFuncChange.konva fontSizeChange.konva', this._setTextData);
-          if (config && config['getKerning']) {
-              Util.warn('getKerning TextPath API is deprecated. Please use "kerningFunc" instead.');
-              this.kerningFunc(config['getKerning']);
-          }
           this._setTextData();
       }
       _sceneFunc(context) {
@@ -14594,8 +14491,8 @@
       if (anchorName === 'rotater') {
           return 'crosshair';
       }
-      rad += Util._degToRad(ANGLES[anchorName] || 0);
-      var angle = ((Util._radToDeg(rad) % 360) + 360) % 360;
+      rad += Util.degToRad(ANGLES[anchorName] || 0);
+      var angle = ((Util.radToDeg(rad) % 360) + 360) % 360;
       if (Util._inRange(angle, 315 + 22.5, 360) || Util._inRange(angle, 0, 22.5)) {
           // TOP
           return 'ns-resize';
@@ -14706,6 +14603,7 @@
    * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
    * @param {Boolean} [config.centeredScaling] Should we resize relative to node's center? Default is false
    * @param {Array} [config.enabledAnchors] Array of names of enabled handles
+   * @param {Boolean} [config.flipEnabled] Can we flip/mirror shape on transform?. True by default
    * @param {Function} [config.boundBoxFunc] Bounding box function
    * @param {Function} [config.ignoreStroke] Should we ignore stroke size? Default is false
    *
@@ -15288,6 +15186,7 @@
               this.update();
               return;
           }
+          const allowNegativeScale = this.flipEnabled();
           var t = new Transform();
           t.rotate(Konva$2.getAngle(this.rotation()));
           if (this._movingAnchorName &&
@@ -15303,6 +15202,10 @@
               this._movingAnchorName = this._movingAnchorName.replace('left', 'right');
               this._anchorDragOffset.x -= offset.x;
               this._anchorDragOffset.y -= offset.y;
+              if (!allowNegativeScale) {
+                  this.update();
+                  return;
+              }
           }
           else if (this._movingAnchorName &&
               newAttrs.width < 0 &&
@@ -15315,6 +15218,10 @@
               this._anchorDragOffset.x -= offset.x;
               this._anchorDragOffset.y -= offset.y;
               newAttrs.width += this.padding() * 2;
+              if (!allowNegativeScale) {
+                  this.update();
+                  return;
+              }
           }
           if (this._movingAnchorName &&
               newAttrs.height < 0 &&
@@ -15329,6 +15236,10 @@
               this._anchorDragOffset.x -= offset.x;
               this._anchorDragOffset.y -= offset.y;
               newAttrs.height += this.padding() * 2;
+              if (!allowNegativeScale) {
+                  this.update();
+                  return;
+              }
           }
           else if (this._movingAnchorName &&
               newAttrs.height < 0 &&
@@ -15341,6 +15252,10 @@
               this._anchorDragOffset.x -= offset.x;
               this._anchorDragOffset.y -= offset.y;
               newAttrs.height += this.padding() * 2;
+              if (!allowNegativeScale) {
+                  this.update();
+                  return;
+              }
           }
           if (this.boundBoxFunc()) {
               const bounded = this.boundBoxFunc()(oldAttrs, newAttrs);
@@ -15575,6 +15490,20 @@
    * transformer.enabledAnchors(['top-left', 'top-center', 'top-right', 'middle-right', 'middle-left', 'bottom-left', 'bottom-center', 'bottom-right']);
    */
   Factory.addGetterSetter(Transformer, 'enabledAnchors', ANCHORS_NAMES, validateAnchors);
+  /**
+   * get/set flip enabled
+   * @name Konva.Transformer#flipEnabled
+   * @method
+   * @param {Boolean} flag
+   * @returns {Boolean}
+   * @example
+   * // get flip enabled property
+   * var flipEnabled = transformer.flipEnabled();
+   *
+   * // set handlers
+   * transformer.flipEnabled(false);
+   */
+  Factory.addGetterSetter(Transformer, 'flipEnabled', true, getBooleanValidator());
   /**
    * get/set resize ability. If false it will automatically hide resizing handlers
    * @name Konva.Transformer#resizeEnabled
