@@ -18,11 +18,10 @@ files.then((filePaths) => {
 
       // stupid replacement back
       text = text.replace(
-        "import * as canvas from 'canvas.js';",
-        "import * as canvas from 'canvas';"
+        "import * as Canvas from 'canvas.js';",
+        "import * as Canvas from 'canvas';"
       );
 
-      console.log(`writing to ${filepath}`);
       fs.writeFile(filepath, text, function (err) {
         if (err) {
           throw err;

@@ -22,4 +22,6 @@ equal(Konva2.Rect, Rect, 'Rect is injected');
 
 equal(Konva2, Konva, 'Same Konva');
 
-console.log('Import tests are passed.');
+// just do a simple action
+const stage = new Konva.Stage();
+stage.toDataURL();

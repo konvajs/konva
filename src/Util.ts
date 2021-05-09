@@ -803,13 +803,13 @@ export const Util = {
     Util.warn(
       'Util._degToRad is removed. Please use public Util.degToRad instead.'
     );
-    return Util._degToRad(deg);
+    return Util.degToRad(deg);
   },
   _radToDeg(rad: number) {
     Util.warn(
       'Util._radToDeg is removed. Please use public Util.radToDeg instead.'
     );
-    return Util._radToDeg(rad);
+    return Util.radToDeg(rad);
   },
   _getRotation(radians) {
     return Konva.angleDeg ? Util.radToDeg(radians) : radians;

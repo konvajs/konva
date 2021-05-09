@@ -1,8 +1,8 @@
-var fs = require('fs');
+import fs from 'fs';
 
 // relative path here
 // but you will need just require('konva-node');
-var Konva = require('./');
+import Konva from '../';
 
 // Create stage. Container parameter is not required in NodeJS.
 var stage = new Konva.Stage({

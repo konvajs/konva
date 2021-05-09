@@ -1279,7 +1279,7 @@ Factory.addGetterSetter(
  * // get flip enabled property
  * var flipEnabled = transformer.flipEnabled();
  *
- * // set handlers
+ * // set flip enabled property
  * transformer.flipEnabled(false);
  */
 Factory.addGetterSetter(

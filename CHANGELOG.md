@@ -5,15 +5,27 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## **NOT RELEASED V8**
 
+This is going to be a very large release.
+
 **BREAKING:**
 
-- `Konva.Collection` is removed. `container.children` is a simple array now. `container.find()` will return also a simple array instead of `Konva.Collection()`.
-- argument `selector` is removed from `node.getIntersection(pos)` API
-- `Konva.Util.extend` is removed
+- `Konva.Collection` is removed. `container.children` is a simple array now. `container.find()` will returns an array instead of `Konva.Collection()` instance.
+  `Konva.Collection` was confusing for many users. Also it was slow and worked with a bit of magic. So I decided to get rif of it. Now we are going to use good old arrays.
+
+```js
+// old code:
+group.find('Shape').visible(false);
+
+// new code:
+group.find('Shape').forEach((shape) => shape.visible(false));
+```
+
+- argument `selector` is removed from `node.getIntersection(pos)` API. I don't think you knew about it.
+- `Konva.Util.extend` is removed.
 
 **New features:**
 
-- All updates on canvas will do automatic redraw with `layer.batchDraw()`. This features is configurable with `Konva.autoDrawEnbaled` property
+- All updates on canvas will do automatic redraw with `layer.batchDraw()`. This features is configurable with `Konva.autoDrawEnbaled` property.
 - New method `layer.getNativeCanvasElement()`
 - new `flipEnabled` property for `Konva.Transformer`
 - new `node.isClientRectOnScreen()` method

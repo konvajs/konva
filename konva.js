@@ -5,7 +5,7 @@
 }(this, (function () { 'use strict';
 
   /*
-   * Konva JavaScript Framework v7.2.5
+   * Konva JavaScript Framework v8.0.0-0
    * http://konvajs.org/
    * Licensed under the MIT
    * Date: Sun May 09 2021
@@ -35,7 +35,7 @@
               : {};
   const Konva$2 = {
       _global: glob,
-      version: '7.2.5',
+      version: '8.0.0-0',
       isBrowser: detectBrowser(),
       isUnminified: /param/.test(function (param) { }.toString()),
       dblClickWindow: 400,
@@ -15500,7 +15500,7 @@
    * // get flip enabled property
    * var flipEnabled = transformer.flipEnabled();
    *
-   * // set handlers
+   * // set flip enabled property
    * transformer.flipEnabled(false);
    */
   Factory.addGetterSetter(Transformer, 'flipEnabled', true, getBooleanValidator());

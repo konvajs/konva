@@ -6,6 +6,7 @@
   "files": [
     "index.js"
   ],
+  "type": "module",
   "typings": "./node_modules/konva/konva.d.ts",
   "scripts": {},
   "keywords": [
