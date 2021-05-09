@@ -5,27 +5,35 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## **NOT RELEASED V8**
 
-- All updates on canvas will do automatic redraw with `layer.batchDraw()`. This features is configurable with `Konva.autoDrawEnbaled` property.
-- Full migration to ES modules package, commonjs code is removed
+**BREAKING:**
+
+- `Konva.Collection` is removed. `container.children` is a simple array now. `container.find()` will return also a simple array instead of `Konva.Collection()`.
+- argument `selector` is removed from `node.getIntersection(pos)` API
+- `Konva.Util.extend` is removed
+
+**New features:**
+
+- All updates on canvas will do automatic redraw with `layer.batchDraw()`. This features is configurable with `Konva.autoDrawEnbaled` property
+- New method `layer.getNativeCanvasElement()`
+- new `flipEnabled` property for `Konva.Transformer`
+- new `node.isClientRectOnScreen()` method
+- Added `Konva.Util.degToRad` and `Konva.Util.radToDeg`
+- Added `node.getRelativePointerPosition()`
+
+**Changes and fixes:**
+
+- Full migration to ES modules package (!), commonjs code is removed.
+- Full event system rewrite. Much better `pointer` evens support.
 - `konva-node` is merged into `konva` npm package. One package works for both environments.
 - Fix `TextPath` recalculations on `fontSize` change
-- `Konva.Collection` is removed. `container.children` is a simple array now. `container.find()` will return also a simple array instead of `Konva.Collection()`.
 - Better typescript support. Now every module has its own `*.d.ts` file.
-- New method `layer.getNativeCanvasElement()`
 - Removed `Konva.UA`, `Konva._parseUA` (it was used for old browser detection)
 - Fixed Arrow head position when an arrow has tension
 - `textPath.getKerning()` is removed
 - Fix `a` command parsing for `Konva.Path`
 - Fix fill pattern for `Konva.Text` when the pattern has an offset or rotation
 - `Konva.names` and `Konva.ids` are removed
-- new `flipEnabled` property for `Konva.Transformer`.
-- new `node.isClientRectOnScreen()` method
-- argument `selector` is removed from `node.getIntersection(pos)` API
 - `Konva.captureTouchEventsEnabled` is renamed to `Konva.capturePointerEventsEnabled`
-- Full event system rewrite. Much better `pointer` evens support.
-- `Konva.Util.extend` is removed
-- Added `Konva.Util.degToRad` and `Konva.Util.radToDeg`
-- Added `node.getRelativePointerPosition()`
 
 ## 7.2.5
 
