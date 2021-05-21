@@ -25,7 +25,7 @@ group.find('Shape').forEach((shape) => shape.visible(false));
 
 **New features:**
 
-- All updates on canvas will do automatic redraw with `layer.batchDraw()`. This features is configurable with `Konva.autoDrawEnbaled` property.
+- All updates on canvas will do automatic redraw with `layer.batchDraw()`. This features is configurable with `Konva.autoDrawEnabled` property. Konva will automatically redraw layer when you change any property, remove or add nodes, do caching. So you don't need to call `layer.draw()` or `layer.batchDraw()` in most of the cases.
 - New method `layer.getNativeCanvasElement()`
 - new `flipEnabled` property for `Konva.Transformer`
 - new `node.isClientRectOnScreen()` method

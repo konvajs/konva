@@ -6,14 +6,12 @@
     "README.md",
     "konva.js",
     "konva.min.js",
-    "konva.d.ts",
-    "types",
     "lib"
   ],
   "type": "module",
   "main": "./lib/index-node.js",
   "browser": "./lib/index.js",
-  "typings": "./types/index-types.d.ts",
+  "typings": "./lib/index-types.d.ts",
   "scripts": {
     "start": "npm run test:watch",
     "compile": "npm run clean && npm run tsc && cp ./src/index-types.d.ts ./lib/index-types.d.ts && npm run rollup",

@@ -21,7 +21,7 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
 # Quick Look
 
 ```html
-<script src="https://unpkg.com/konva@7.2.5/konva.min.js"></script>
+<script src="https://unpkg.com/konva@8/konva.min.js"></script>
 <div id="container"></div>
 <script>
   var stage = new Konva.Stage({
@@ -47,8 +47,6 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
   });
   layer.add(box);
 
-  layer.draw();
-
   // add cursor styling
   box.on('mouseover', function () {
     document.body.style.cursor = 'pointer';
@@ -72,10 +70,10 @@ Konva supports UMD loading. So you can use all possible variants to load the fra
 ### 1 Load Konva via classical `<script>` tag:
 
 ```html
-<script src="https://unpkg.com/konva@7.2.5/konva.min.js"></script>
+<script src="https://unpkg.com/konva@8/konva.min.js"></script>
 ```
 
-You can also use a CDN: [https://unpkg.com/konva@7.2.5/konva.min.js](https://unpkg.com/konva@7.2.5/konva.min.js)
+You can also use a CDN: [https://unpkg.com/konva@8/konva.min.js](https://unpkg.com/konva@8/konva.min.js)
 
 ### 2 Install with npm:
 
@@ -84,33 +82,23 @@ npm install konva --save
 ```
 
 ```javascript
-// The old way (e.g. a CommonJS-style import)
-var Konva = require('konva');
-
 // The modern way (e.g. an ES6-style import for webpack, parcel)
 import Konva from 'konva';
 ```
 
 #### Typescript usage
 
-Add DOM definitions into your `tsconfig.json` and set `esModuleInterop` to `true`:
+Add DOM definitions into your `tsconfig.json`:
 
 ```
 {
   "compilerOptions": {
-    "esModuleInterop": true,
     "lib": [
         "es6",
         "dom"
     ]
   }
 }
-```
-
-Then use it:
-
-```javascript
-import Konva from 'konva';
 ```
 
 ### 3 Minimal bundle

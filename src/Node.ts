@@ -105,8 +105,7 @@ var ABSOLUTE_OPACITY = 'absoluteOpacity',
     'offsetXChange.konva',
     'offsetYChange.konva',
     'transformsEnabledChange.konva',
-  ].join(SPACE),
-  SCALE_CHANGE_STR = ['scaleXChange.konva', 'scaleYChange.konva'].join(SPACE);
+  ].join(SPACE);
 
 let idCounter = 1;
 
