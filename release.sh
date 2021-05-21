@@ -34,9 +34,9 @@ echo "New version: ${new_version}"
 echo "Pulling"
 git pull >/dev/null
 
-echo "Lint, build and test"
-npm run lint >/dev/null
-npm run full-build >/dev/null
+echo "build and test"
+npm run build >/dev/null
+npm run test
 
 
 echo "commit change log updates"
