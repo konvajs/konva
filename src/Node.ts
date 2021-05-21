@@ -108,9 +108,6 @@ var ABSOLUTE_OPACITY = 'absoluteOpacity',
   ].join(SPACE),
   SCALE_CHANGE_STR = ['scaleXChange.konva', 'scaleYChange.konva'].join(SPACE);
 
-// TODO: can we remove children from node?
-const emptyChildren = [];
-
 let idCounter = 1;
 
 // create all the events here

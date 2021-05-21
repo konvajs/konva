@@ -5,7 +5,7 @@
 }(this, (function () { 'use strict';
 
   /*
-   * Konva JavaScript Framework v8.0.0-0
+   * Konva JavaScript Framework v8.0.0-1
    * http://konvajs.org/
    * Licensed under the MIT
    * Date: Sun May 09 2021
@@ -35,7 +35,7 @@
               : {};
   const Konva$2 = {
       _global: glob,
-      version: '8.0.0-0',
+      version: '8.0.0-1',
       isBrowser: detectBrowser(),
       isUnminified: /param/.test(function (param) { }.toString()),
       dblClickWindow: 400,
@@ -922,11 +922,11 @@
       },
       _degToRad(deg) {
           Util.warn('Util._degToRad is removed. Please use public Util.degToRad instead.');
-          return Util._degToRad(deg);
+          return Util.degToRad(deg);
       },
       _radToDeg(rad) {
           Util.warn('Util._radToDeg is removed. Please use public Util.radToDeg instead.');
-          return Util._radToDeg(rad);
+          return Util.radToDeg(rad);
       },
       _getRotation(radians) {
           return Konva$2.angleDeg ? Util.radToDeg(radians) : radians;
@@ -6652,7 +6652,6 @@
        * @name Konva.Shape#getContext
        * @returns {Konva.Context}
        */
-      // TODO: remove method
       getContext() {
           return this.getLayer().getContext();
       }
@@ -6662,7 +6661,6 @@
        * @name Konva.Shape#getCanvas
        * @returns {Konva.Canvas}
        */
-      // TODO: remove method
       getCanvas() {
           return this.getLayer().getCanvas();
       }

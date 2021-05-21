@@ -909,7 +909,6 @@ describe('DragAndDrop', function () {
       ]
     );
   });
-  // TODO: try to move two shapes on different stages
 
   it('can stop drag on dragstart without changing position later', function () {
     var stage = addStage();

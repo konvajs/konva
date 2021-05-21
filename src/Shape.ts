@@ -197,24 +197,12 @@ export class Shape<
     shapes[key] = this;
   }
 
-  /**
-   * get canvas context tied to the layer
-   * @method
-   * @name Konva.Shape#getContext
-   * @returns {Konva.Context}
-   */
-  // TODO: remove method
   getContext() {
+    Util.warn('shape.getContext() method is deprecated. Please don not use it.');
     return this.getLayer().getContext();
   }
-  /**
-   * get canvas renderer tied to the layer.  Note that this returns a canvas renderer, not a canvas element
-   * @method
-   * @name Konva.Shape#getCanvas
-   * @returns {Konva.Canvas}
-   */
-  // TODO: remove method
   getCanvas() {
+    Util.warn('shape.getCanvas() method is deprecated. Please don not use it.');
     return this.getLayer().getCanvas();
   }
 

@@ -385,7 +385,6 @@ describe('TouchEvents', function () {
     );
 
     // now try to make two touches at the same time
-    // TODO: should we trigger touch end first?
     simulateTouchStart(
       stage,
       [

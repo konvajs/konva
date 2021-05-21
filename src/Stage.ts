@@ -25,7 +25,7 @@ var STAGE = 'Stage',
   MOUSEMOVE = 'mousemove',
   MOUSEDOWN = 'mousedown',
   MOUSEUP = 'mouseup',
-  // TODO: add them into "on" method docs and into site docs
+
   POINTERMOVE = 'pointermove',
   POINTERDOWN = 'pointerdown',
   POINTERUP = 'pointerup',

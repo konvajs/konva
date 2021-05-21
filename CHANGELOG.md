@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## **NOT RELEASED V8**
 
-This is going to be a very large release.
+This is going to be a very large release. The long term of Konva API is to make it simpler and faster. So when possible I am trying to optimize the code and remove unpopular/confusing API methods.
 
 **BREAKING:**
 

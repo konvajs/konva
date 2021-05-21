@@ -30,8 +30,6 @@ describe('Text', function () {
     assert.equal(layer.getContext().getTrace(), trace);
   });
 
-  // ======================================================
-  // TODO: what is the best UX here?
   it('check text with FALSY values', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
