@@ -5,10 +5,10 @@
 }(this, (function () { 'use strict';
 
   /*
-   * Konva JavaScript Framework v8.0.0-1
+   * Konva JavaScript Framework v8.0.0-2
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Sun May 09 2021
+   * Date: Fri May 21 2021
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -35,7 +35,7 @@
               : {};
   const Konva$2 = {
       _global: glob,
-      version: '8.0.0-1',
+      version: '8.0.0-2',
       isBrowser: detectBrowser(),
       isUnminified: /param/.test(function (param) { }.toString()),
       dblClickWindow: 400,
@@ -5680,9 +5680,7 @@
   }
 
   // CONSTANTS
-  var STAGE = 'Stage', STRING = 'string', PX = 'px', MOUSEOUT = 'mouseout', MOUSELEAVE = 'mouseleave', MOUSEOVER = 'mouseover', MOUSEENTER = 'mouseenter', MOUSEMOVE = 'mousemove', MOUSEDOWN = 'mousedown', MOUSEUP = 'mouseup', 
-  // TODO: add them into "on" method docs and into site docs
-  POINTERMOVE = 'pointermove', POINTERDOWN = 'pointerdown', POINTERUP = 'pointerup', POINTERCANCEL = 'pointercancel', LOSTPOINTERCAPTURE = 'lostpointercapture', POINTEROUT = 'pointerout', POINTERLEAVE = 'pointerleave', POINTEROVER = 'pointerover', POINTERENTER = 'pointerenter', CONTEXTMENU = 'contextmenu', TOUCHSTART = 'touchstart', TOUCHEND = 'touchend', TOUCHMOVE = 'touchmove', TOUCHCANCEL = 'touchcancel', WHEEL = 'wheel', MAX_LAYERS_NUMBER = 5, EVENTS = [
+  var STAGE = 'Stage', STRING = 'string', PX = 'px', MOUSEOUT = 'mouseout', MOUSELEAVE = 'mouseleave', MOUSEOVER = 'mouseover', MOUSEENTER = 'mouseenter', MOUSEMOVE = 'mousemove', MOUSEDOWN = 'mousedown', MOUSEUP = 'mouseup', POINTERMOVE = 'pointermove', POINTERDOWN = 'pointerdown', POINTERUP = 'pointerup', POINTERCANCEL = 'pointercancel', LOSTPOINTERCAPTURE = 'lostpointercapture', POINTEROUT = 'pointerout', POINTERLEAVE = 'pointerleave', POINTEROVER = 'pointerover', POINTERENTER = 'pointerenter', CONTEXTMENU = 'contextmenu', TOUCHSTART = 'touchstart', TOUCHEND = 'touchend', TOUCHMOVE = 'touchmove', TOUCHCANCEL = 'touchcancel', WHEEL = 'wheel', MAX_LAYERS_NUMBER = 5, EVENTS = [
       [MOUSEENTER, '_pointerenter'],
       [MOUSEDOWN, '_pointerdown'],
       [MOUSEMOVE, '_pointermove'],
@@ -6646,22 +6644,12 @@
           this.colorKey = key;
           shapes[key] = this;
       }
-      /**
-       * get canvas context tied to the layer
-       * @method
-       * @name Konva.Shape#getContext
-       * @returns {Konva.Context}
-       */
       getContext() {
+          Util.warn('shape.getContext() method is deprecated. Please don not use it.');
           return this.getLayer().getContext();
       }
-      /**
-       * get canvas renderer tied to the layer.  Note that this returns a canvas renderer, not a canvas element
-       * @method
-       * @name Konva.Shape#getCanvas
-       * @returns {Konva.Canvas}
-       */
       getCanvas() {
+          Util.warn('shape.getCanvas() method is deprecated. Please don not use it.');
           return this.getLayer().getCanvas();
       }
       getSceneFunc() {
