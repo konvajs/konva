@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## **NOT RELEASED V8**
 
-This is going to be a very large release. The long term of Konva API is to make it simpler and faster. So when possible I am trying to optimize the code and remove unpopular/confusing API methods.
+This is a very large release! The long term of `Konva` API is to make it simpler and faster. So when possible I am trying to optimize the code and remove unpopular/confusing API methods.
 
 **BREAKING:**
 
@@ -20,7 +20,7 @@ group.find('Shape').visible(false);
 group.find('Shape').forEach((shape) => shape.visible(false));
 ```
 
-- argument `selector` is removed from `node.getIntersection(pos)` API. I don't think you knew about it.
+- argument `selector` is removed from `node.getIntersection(pos)` API. I don't think you even knew about it.
 - `Konva.Util.extend` is removed.
 
 **New features:**
@@ -34,9 +34,9 @@ group.find('Shape').forEach((shape) => shape.visible(false));
 
 **Changes and fixes:**
 
-- Full migration to ES modules package (!), commonjs code is removed.
+- **Full migration to ES modules package (!), commonjs code is removed.**
+- **`konva-node` is merged into `konva` npm package. One package works for both environments.**
 - Full event system rewrite. Much better `pointer` evens support.
-- `konva-node` is merged into `konva` npm package. One package works for both environments.
 - Fix `TextPath` recalculations on `fontSize` change
 - Better typescript support. Now every module has its own `*.d.ts` file.
 - Removed `Konva.UA`, `Konva._parseUA` (it was used for old browser detection)
