@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+- Fix some transform caches
+
+## 8.0.1
+
+- Some typescript fixes
+
 ## 8.0.0
 
 This is a very large release! The long term of `Konva` API is to make it simpler and faster. So when possible I am trying to optimize the code and remove unpopular/confusing API methods.
