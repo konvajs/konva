@@ -123,20 +123,13 @@ import { Blur } from 'konva/lib/filters/Blur';
 
 ### 4 NodeJS env
 
-We are using [node-canvas](https://github.com/Automattic/node-canvas) to create canvas element.
-Please check installation instructions for it. Then just run
+In order to run `konva` in nodejs environment you also need to install `canvas` package manually. Konva will use it for 2d canvas API.
 
 ```bash
-npm install konva-node
+npm install konva canvas
 ```
 
 Then in you javascript file you will need to use
-
-```javascript
-const Konva = require('konva-node');
-```
-
-See file `konva-node/demo.js` file in this repo as a sample.
 
 # Backers
 

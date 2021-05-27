@@ -86,7 +86,7 @@ export class Layer extends Container<Group | Shape> {
   /**
    * get native canvas element
    * @method
-   * @name Konva.Layer#getCanvas
+   * @name Konva.Layer#getNativeCanvasElement
    */
   getNativeCanvasElement() {
     return this.canvas._canvas;
@@ -263,7 +263,8 @@ export class Layer extends Container<Group | Shape> {
   }
 
   _setSmoothEnabled() {
-    this.getContext()._context.imageSmoothingEnabled = this.imageSmoothingEnabled();
+    this.getContext()._context.imageSmoothingEnabled =
+      this.imageSmoothingEnabled();
   }
   /**
    * get/set width of layer. getter return width of stage. setter doing nothing.
