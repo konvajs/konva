@@ -126,9 +126,9 @@ export abstract class Container<
       return this;
     }
     this._validateAdd(child);
-    child._clearCaches();
     child.index = this.getChildren().length;
     child.parent = this;
+    child._clearCaches();
     this.getChildren().push(child);
     this._fire('add', {
       child: child,

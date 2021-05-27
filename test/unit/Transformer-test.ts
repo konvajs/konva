@@ -3419,8 +3419,7 @@ describe('Transformer', function () {
     var shape = new Konva.Path({
       x: 50,
       y: 40,
-      data:
-        'M12.582,9.551C3.251,16.237,0.921,29.021,7.08,38.564l-2.36,1.689l4.893,2.262l4.893,2.262l-0.568-5.36l-0.567-5.359l-2.365,1.694c-4.657-7.375-2.83-17.185,4.352-22.33c7.451-5.338,17.817-3.625,23.156,3.824c5.337,7.449,3.625,17.813-3.821,23.152l2.857,3.988c9.617-6.893,11.827-20.277,4.935-29.896C35.591,4.87,22.204,2.658,12.582,9.551z',
+      data: 'M12.582,9.551C3.251,16.237,0.921,29.021,7.08,38.564l-2.36,1.689l4.893,2.262l4.893,2.262l-0.568-5.36l-0.567-5.359l-2.365,1.694c-4.657-7.375-2.83-17.185,4.352-22.33c7.451-5.338,17.817-3.625,23.156,3.824c5.337,7.449,3.625,17.813-3.821,23.152l2.857,3.988c9.617-6.893,11.827-20.277,4.935-29.896C35.591,4.87,22.204,2.658,12.582,9.551z',
       fill: 'green',
     });
     layer.add(shape);
@@ -3636,8 +3635,7 @@ describe('Transformer', function () {
       fill: '#333',
       fontSize: 16,
       fontFamily: 'Arial',
-      text:
-        "All the world's a stage, and all the men and women merely players.",
+      text: "All the world's a stage, and all the men and women merely players.",
       data: 'M10,10 C0,0 10,150 100,100 S300,150 400,50',
     });
     layer.add(shape);
@@ -4583,5 +4581,43 @@ describe('Transformer', function () {
     });
     simulateMouseUp(tr);
     assert.equal(shape.scaleX(), 0.5);
+  });
+
+  it('check transform cache', function () {
+    var stage = addStage({ scaleX: 0.5, scaleY: 0.5 });
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var textNode = new Konva.Text({
+      text: 'Some text here',
+      x: 300,
+      y: 100,
+      fontSize: 20,
+      draggable: true,
+      width: 200,
+    });
+
+    var tr = new Konva.Transformer({
+      nodes: [textNode],
+      enabledAnchors: [
+        'top-left',
+        'top-right',
+        'bottom-left',
+        'bottom-right',
+        'middle-left',
+        'middle-right',
+      ],
+      boundBoxFunc: function (oldBox, newBox) {
+        if (newBox.width < 5 || newBox.height < 5 || newBox.width > 1000) {
+          return oldBox;
+        }
+        return newBox;
+      },
+    });
+
+    layer.add(tr);
+    layer.add(textNode);
+
+    assert.equal(textNode.getClientRect().width, 100);
   });
 });
