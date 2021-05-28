@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.0.1
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Fri May 21 2021
+   * Date: Thu May 27 2021
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -5201,9 +5201,9 @@
               return this;
           }
           this._validateAdd(child);
-          child._clearCaches();
           child.index = this.getChildren().length;
           child.parent = this;
+          child._clearCaches();
           this.getChildren().push(child);
           this._fire('add', {
               child: child,
@@ -6946,10 +6946,9 @@
           // 2 - when we are caching current
           // 3 - when node is cached and we need to draw it into layer
           var layer = this.getLayer(), canvas = can || layer.getCanvas(), context = canvas.getContext(), cachedCanvas = this._getCanvasCache(), drawFunc = this.getSceneFunc(), hasShadow = this.hasShadow(), stage, bufferCanvas, bufferContext;
-          var caching = canvas.isCache;
           var skipBuffer = canvas.isCache;
           var cachingSelf = top === this;
-          if (!this.isVisible() && !caching) {
+          if (!this.isVisible() && !cachingSelf) {
               return this;
           }
           // if node is cached we just need to draw from cache
@@ -8180,7 +8179,7 @@
       /**
        * get native canvas element
        * @method
-       * @name Konva.Layer#getCanvas
+       * @name Konva.Layer#getNativeCanvasElement
        */
       getNativeCanvasElement() {
           return this.canvas._canvas;
@@ -8341,7 +8340,8 @@
           }
       }
       _setSmoothEnabled() {
-          this.getContext()._context.imageSmoothingEnabled = this.imageSmoothingEnabled();
+          this.getContext()._context.imageSmoothingEnabled =
+              this.imageSmoothingEnabled();
       }
       /**
        * get/set width of layer. getter return width of stage. setter doing nothing.
