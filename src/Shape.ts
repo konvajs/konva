@@ -198,7 +198,9 @@ export class Shape<
   }
 
   getContext() {
-    Util.warn('shape.getContext() method is deprecated. Please don not use it.');
+    Util.warn(
+      'shape.getContext() method is deprecated. Please don not use it.'
+    );
     return this.getLayer().getContext();
   }
   getCanvas() {
@@ -575,11 +577,10 @@ export class Shape<
       bufferCanvas,
       bufferContext;
 
-    var caching = canvas.isCache;
     var skipBuffer = canvas.isCache;
     var cachingSelf = top === this;
 
-    if (!this.isVisible() && !caching) {
+    if (!this.isVisible() && !cachingSelf) {
       return this;
     }
     // if node is cached we just need to draw from cache

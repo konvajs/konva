@@ -902,6 +902,42 @@ describe('Caching', function () {
     assert.equal(stage.getIntersection({ x: 150, y: 100 }), rect);
   });
 
+  it('check cache for invisible shape', function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer({
+      // visible: false,
+    });
+
+    var group = new Konva.Group();
+    layer.add(group);
+
+    group.add(
+      new Konva.Rect({
+        x: 50,
+        y: 50,
+        width: 100,
+        height: 100,
+        fill: 'red',
+      })
+    );
+    var rect = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100,
+      fill: 'green',
+      visible: false,
+    });
+    group.add(rect);
+
+    stage.add(layer);
+
+    group.cache();
+    layer.draw();
+    cloneAndCompareLayer(layer);
+  });
+
   it('even if parent is not listening cache and hit should be created', function () {
     var stage = addStage();
 
