@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/konvajs/konvajs.github.io/master/apple-touch-icon-180x180.png" alt="Konva logo" height="180" />
+  <img src="https://konvajs.org/android-chrome-192x192.png" alt="Konva logo" height="180" />
 </p>
 
 <h1 align="center">Konva</h1>
