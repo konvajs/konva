@@ -13,7 +13,7 @@ export interface TextPathConfig extends ShapeConfig {
   data?: string;
   fontFamily?: string;
   fontSize?: number;
-  fontStyle?: string;
+  fontStyle?: "normal" | "bold" | "italic" | "italic bold" | "bold italic";
   letterSpacing?: number;
 }
 

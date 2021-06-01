@@ -5,7 +5,7 @@ import { _registerNode } from '../Global';
 import { GetSet } from '../types';
 import { getNumberOrArrayOfNumbersValidator } from '../Validators';
 export interface RectConfig extends ShapeConfig {
-  cornerRadius?: number | number[];
+  cornerRadius?: number | [number] | [number, number] | [number, number, number] | [number, number, number, number];
 }
 
 /**

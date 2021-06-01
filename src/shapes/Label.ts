@@ -176,10 +176,10 @@ Label.prototype.className = 'Label';
 _registerNode(Label);
 
 export interface TagConfig extends ShapeConfig {
-  pointerDirection?: string;
+  pointerDirection?: "up" | "right" | "left" | "down" | "none";
   pointerWidth?: number;
   pointerHeight?: number;
-  cornerRadius?: number | Array<number>;
+  cornerRadius?: number | [number] | [number, number] | [number, number, number] | [number, number, number, number];
 }
 
 /**

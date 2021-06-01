@@ -6,7 +6,7 @@ import { _registerNode } from '../Global';
 import { Path } from './Path';
 
 export interface ArrowConfig extends LineConfig {
-  points: number[];
+  points: [number, number, number, number, number, number];
   tension?: number;
   closed?: boolean;
   pointerLength?: number;
