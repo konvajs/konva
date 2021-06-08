@@ -6684,7 +6684,7 @@
               const pattern = ctx.createPattern(this.fillPatternImage(), this.fillPatternRepeat() || 'repeat');
               if (pattern && pattern.setTransform) {
                   const tr = new Transform();
-                  tr.translate(this.fillPatternX(), this.fillPatternX());
+                  tr.translate(this.fillPatternX(), this.fillPatternY());
                   tr.rotate(Konva$2.getAngle(this.fillPatternRotation()));
                   tr.scale(this.fillPatternScaleX(), this.fillPatternScaleY());
                   tr.translate(-1 * this.fillPatternOffsetX(), -1 * this.fillPatternOffsetY());

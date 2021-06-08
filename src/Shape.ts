@@ -249,7 +249,7 @@ export class Shape<
       if (pattern && pattern.setTransform) {
         const tr = new Transform();
 
-        tr.translate(this.fillPatternX(), this.fillPatternX());
+        tr.translate(this.fillPatternX(), this.fillPatternY());
         tr.rotate(Konva.getAngle(this.fillPatternRotation()));
         tr.scale(this.fillPatternScaleX(), this.fillPatternScaleY());
         tr.translate(
