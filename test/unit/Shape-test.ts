@@ -1852,6 +1852,13 @@ describe('Shape', function () {
       var pattern3 = star._getFillPattern();
 
       assert.notEqual(pattern2, pattern3);
+      
+
+      star.fillPatternX(10);
+
+      var pattern4 = star._getFillPattern();
+
+      assert.notEqual(pattern4, pattern3);
 
       done();
     });
