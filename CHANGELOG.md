@@ -3,11 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 8.0.2
+## 8.0.3
 
 - Fix fill pattern updates on `fillPatternX` and `fillPatternY` changes.
 
-## 8.0.1
+## 8.0.2
 
 - Fix some transform caches
 - Fix cache with hidden shapes
