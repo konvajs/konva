@@ -49,7 +49,7 @@ group.find('Shape').forEach((shape) => shape.visible(false));
 
 - **Full migration to ES modules package (!), commonjs code is removed.**
 - **`konva-node` is merged into `konva` npm package. One package works for both environments.**
-- Full event system rewrite. Much better `pointer` evens support.
+- Full event system rewrite. Much better `pointer` events support.
 - Fix `TextPath` recalculations on `fontSize` change
 - Better typescript support. Now every module has its own `*.d.ts` file.
 - Removed `Konva.UA`, `Konva._parseUA` (it was used for old browser detection)
