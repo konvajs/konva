@@ -30,6 +30,7 @@ import { Threshold } from './filters/Threshold';
 declare namespace Konva {
   export let enableTrace: number;
   export let pixelRatio: number;
+  export let autoDrawEnabled: boolean;
   export let dragDistance: number;
   export let angleDeg: boolean;
   export let showWarnings: boolean;
