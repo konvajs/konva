@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.0.4
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Jun 08 2021
+   * Date: Thu Jun 24 2021
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -13393,14 +13393,14 @@
        * @returns {Object} { width , height} of measured text
        */
       measureSize(text) {
-          var _context = getDummyContext(), fontSize = this.fontSize(), metrics;
-          _context.save();
-          _context.font = this._getContextFont();
-          metrics = _context.measureText(text);
-          _context.restore();
+          const context = getDummyContext();
+          context.save();
+          context.font = this._getContextFont();
+          const metrics = context.measureText(text);
+          context.restore();
           return {
-              width: metrics.width,
-              height: fontSize,
+              width: Math.abs(metrics.actualBoundingBoxLeft) + Math.abs(metrics.actualBoundingBoxRight),
+              height: Math.abs(metrics.actualBoundingBoxAscent) + Math.abs(metrics.actualBoundingBoxDescent),
           };
       }
       _getContextFont() {
