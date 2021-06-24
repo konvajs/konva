@@ -662,7 +662,7 @@ describe('Text', function () {
     if (isBrowser) {
       assert.equal(
         layer.getContext().getTrace(false, true),
-        "clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);shadowColor=rgba(255,0,0,0.5);shadowBlur=1;shadowOffsetX=10;shadowOffsetY=10;font=normal normal 16px Calibri;textBaseline=middle;textAlign=left;translate(20,20);save();fillStyle=#555;fillText(HEADING,133,8);restore();save();fillStyle=#555;fillText(,170,24);restore();save();fillStyle=#555;fillText(All the world's a stage, and all the men and women,6,40);restore();save();fillStyle=#555;fillText(merely players. They have their exits and their,21,56);restore();save();fillStyle=#555;fillText(entrances; And one man in his time plays many,18,72);restore();save();fillStyle=#555;fillText(parts.,152,88);restore();restore();"
+        "clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);shadowColor=rgba(255,0,0,0.5);shadowBlur=1;shadowOffsetX=10;shadowOffsetY=10;font=normal normal 16px Calibri;textBaseline=middle;textAlign=left;translate(20,20);save();fillStyle=#555;fillText(HEADING,139,8);restore();save();fillStyle=#555;fillText(,170,24);restore();save();fillStyle=#555;fillText(All the world's a stage, and all the men and women,4,40);restore();save();fillStyle=#555;fillText(merely players. They have their exits and their,20,56);restore();save();fillStyle=#555;fillText(entrances; And one man in his time plays many,17,72);restore();save();fillStyle=#555;fillText(parts.,151,88);restore();restore();"
       );
     } else {
       // use relax, because in GitHub Actions calculations are too different

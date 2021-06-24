@@ -92,12 +92,12 @@ function normalizeFontFamily(fontFamily: string) {
     .join(', ');
 }
 
-var dummyContext;
+var dummyContext: CanvasRenderingContext2D;
 function getDummyContext() {
   if (dummyContext) {
     return dummyContext;
   }
-  dummyContext = Util.createCanvasElement().getContext(CONTEXT_2D);
+  dummyContext = Util.createCanvasElement().getContext(CONTEXT_2D) as CanvasRenderingContext2D;
   return dummyContext;
 }
 
@@ -363,21 +363,21 @@ export class Text extends Shape<TextConfig> {
    * @param {String} [text] text to measure
    * @returns {Object} { width , height} of measured text
    */
-  measureSize(text) {
-    var _context = getDummyContext(),
-      fontSize = this.fontSize(),
-      metrics;
+  measureSize(text: string) {
+    const context = getDummyContext();
 
-    _context.save();
-    _context.font = this._getContextFont();
+    context.save();
+    context.font = this._getContextFont();
 
-    metrics = _context.measureText(text);
-    _context.restore();
+    const metrics = context.measureText(text);
+    context.restore();
+
     return {
-      width: metrics.width,
-      height: fontSize,
+      width: Math.abs(metrics.actualBoundingBoxLeft) + Math.abs(metrics.actualBoundingBoxRight),
+      height: Math.abs(metrics.actualBoundingBoxAscent) + Math.abs(metrics.actualBoundingBoxDescent),
     };
   }
+
   _getContextFont() {
     return (
       this.fontStyle() +
