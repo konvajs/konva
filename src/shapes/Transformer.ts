@@ -37,6 +37,8 @@ export interface TransformerConfig extends ContainerConfig {
   node?: Rect;
   ignoreStroke?: boolean;
   boundBoxFunc?: (oldBox: Box, newBox: Box) => Box;
+  useSingleNodeRotation?: boolean;
+  shouldOverdrawWholeArea?: boolean;
 }
 
 var EVENTS_NAME = 'tr-konva';
@@ -221,7 +223,8 @@ function getSnap(snaps: Array<number>, newRotationRad: number, tol: number) {
  * @param {Boolean} [config.flipEnabled] Can we flip/mirror shape on transform?. True by default
  * @param {Function} [config.boundBoxFunc] Bounding box function
  * @param {Function} [config.ignoreStroke] Should we ignore stroke size? Default is false
- *
+ * @param {Boolean} [config.useSingleNodeRotation] When just one node attached, should we use its rotation for transformer?
+ * @param {Boolean} [config.shouldOverdrawWholeArea] Should we fill whole transformer area with fake transparent shape to enable dragging from empty spaces?
  * @example
  * var transformer = new Konva.Transformer({
  *   nodes: [rectangle],
@@ -284,7 +287,7 @@ export class Transformer extends Group {
       this.detach();
     }
     this._nodes = nodes;
-    if (nodes.length === 1) {
+    if (nodes.length === 1 && this.useSingleNodeRotation()) {
       this.rotation(nodes[0].getAbsoluteRotation());
     } else {
       this.rotation(0);
@@ -295,8 +298,7 @@ export class Transformer extends Group {
         .join(' ');
 
       const onChange = () => {
-        //
-        if (this.nodes().length === 1) {
+        if (this.nodes().length === 1 && this.useSingleNodeRotation()) {
           this.rotation(this.nodes()[0].getAbsoluteRotation());
         }
 
@@ -1225,6 +1227,7 @@ export class Transformer extends Group {
   ignoreStroke: GetSet<boolean, this>;
   boundBoxFunc: GetSet<(oldBox: Box, newBox: Box) => Box, this>;
   shouldOverdrawWholeArea: GetSet<boolean, this>;
+  useSingleNodeRotation: GetSet<boolean, this>;
 }
 
 function validateAnchors(val) {
@@ -1629,7 +1632,38 @@ Factory.addGetterSetter(Transformer, 'nodes');
  */
 Factory.addGetterSetter(Transformer, 'boundBoxFunc');
 
+/**
+ * using this setting you can drag transformer group by dragging empty space between attached nodes
+ * shouldOverdrawWholeArea = true may temporary disable all events on attached nodes
+ * @name Konva.Transformer#shouldOverdrawWholeArea
+ * @method
+ * @param {Boolean} shouldOverdrawWholeArea
+ * @returns {Boolean}
+ * @example
+ * // get
+ * var shouldOverdrawWholeArea = transformer.shouldOverdrawWholeArea();
+ *
+ * // set
+ * transformer.shouldOverdrawWholeArea(true);
+ */
 Factory.addGetterSetter(Transformer, 'shouldOverdrawWholeArea', false);
+
+/**
+ * If you have just one attached node to Transformer it will set its initial rotation to the rotation of that node.
+ * In some cases you may need to set a different rotation.
+ * @name Konva.Transformer#useSingleNodeRotation
+ * @method
+ * @param {Boolean} useSingleNodeRotation
+ * @returns {Boolean}
+ * @example
+ * // set flag to false
+ * transformer.useSingleNodeRotation(false);
+ * // attach a shape
+ * transformer.nodes([shape]);
+ * transformer.rotation(45);
+ * transformer.update();
+ */
+ Factory.addGetterSetter(Transformer, 'useSingleNodeRotation', true);
 
 Factory.backCompat(Transformer, {
   lineEnabled: 'borderEnabled',

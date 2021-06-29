@@ -36,7 +36,7 @@ function simulateMouseUp(tr: Transformer, pos = { x: 0, y: 0 }) {
   su(tr.getStage(), pos || { x: 1, y: 1 });
 }
 
-describe('Transformer', function () {
+describe.only('Transformer', function () {
   // ======================================================
   it('init transformer on simple rectangle', function () {
     var stage = addStage();
@@ -4619,5 +4619,36 @@ describe('Transformer', function () {
     layer.add(textNode);
 
     assert.equal(textNode.getClientRect().width, 100);
+  });
+
+  // ======================================================
+  it('init transformer on simple rectangle', function () {
+    var stage = addStage();
+    stage.rotation(45);
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 60,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+      rotation: 45
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      useSingleNodeRotation: false,
+      nodes: [rect],
+    });
+    layer.add(tr);
+
+    layer.draw();
+    assert.equal(tr.getClassName(), 'Transformer');
+
+    assert.equal(tr.rotation(), 0);
   });
 });
