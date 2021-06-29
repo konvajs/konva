@@ -36,7 +36,7 @@ function simulateMouseUp(tr: Transformer, pos = { x: 0, y: 0 }) {
   su(tr.getStage(), pos || { x: 1, y: 1 });
 }
 
-describe.only('Transformer', function () {
+describe('Transformer', function () {
   // ======================================================
   it('init transformer on simple rectangle', function () {
     var stage = addStage();
