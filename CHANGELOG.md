@@ -39,6 +39,7 @@ group.find('Shape').forEach((shape) => shape.visible(false));
 
 - argument `selector` is removed from `node.getIntersection(pos)` API. I don't think you even knew about it.
 - `Konva.Util.extend` is removed.
+- All "content" events from `Konva.Stage` are removed. E.g. instead of `contentMousemove` just use `mousemove` event.
 
 **New features:**
 
