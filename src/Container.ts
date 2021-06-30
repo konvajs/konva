@@ -83,6 +83,8 @@ export abstract class Container<
       child.remove();
     });
     this.children = [];
+    // because all children were detached from parent, request draw via container
+    this._requestDraw();
     return this;
   }
   /**
@@ -98,6 +100,8 @@ export abstract class Container<
       child.destroy();
     });
     this.children = [];
+    // because all children were detached from parent, request draw via container
+    this._requestDraw();
     return this;
   }
   abstract _validateAdd(node: Node): void;

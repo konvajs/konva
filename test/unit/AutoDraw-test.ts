@@ -71,6 +71,32 @@ describe('AutoDraw', function () {
   });
 
   // ======================================================
+  it('schedules draw when calling removeChildren/destroyChildren', () => {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var group1 = new Konva.Group();
+    var group2 = new Konva.Group();
+
+    stage.add(layer);
+    layer.add(group1);
+    group1.add(new Konva.Circle());
+    layer.add(group2);
+    group2.add(new Konva.Circle());
+
+    let callCount = 0;
+    layer.batchDraw = function () {
+      callCount += 1;
+      Konva.Layer.prototype.batchDraw.call(this);
+      return layer;
+    };
+
+    group1.destroyChildren();
+    assert.equal(callCount, 1);
+    group2.removeChildren();
+    assert.equal(callCount, 2);
+  });
+
+  // ======================================================
   it('schedule draw on cache', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
