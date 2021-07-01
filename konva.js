@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.1.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Jun 29 2021
+   * Date: Thu Jul 01 2021
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -5159,6 +5159,8 @@
               child.remove();
           });
           this.children = [];
+          // because all children were detached from parent, request draw via container
+          this._requestDraw();
           return this;
       }
       /**
@@ -5174,6 +5176,8 @@
               child.destroy();
           });
           this.children = [];
+          // because all children were detached from parent, request draw via container
+          this._requestDraw();
           return this;
       }
       /**
@@ -14681,7 +14685,7 @@
           node.on(`dragstart.${EVENTS_NAME}`, (e) => {
               lastPos = node.getAbsolutePosition();
               // actual dragging of Transformer doesn't make sense
-              // but we need to proxy drag events
+              // but we need to make sure it also has all drag events
               if (!this.isDragging() && node !== this.findOne('.back')) {
                   this.startDrag(e, false);
               }
@@ -14935,6 +14939,10 @@
           });
           back.on('dragend', (e) => {
               e.cancelBubble = true;
+          });
+          // force self update when we drag with shouldOverDrawWholeArea setting
+          this.on('dragmove', (e) => {
+              this.update();
           });
       }
       _handleMouseDown(e) {

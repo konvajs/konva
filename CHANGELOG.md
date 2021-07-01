@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 8.1.1
+
+- Fix `Konva.Transformer` dragging draw when `shouldOverdrawWholeArea = true`.
+- Fix auto redraw when `container.removeChildren()` or `container.destroyChildren()` are used
+
 ## 8.1.0
 
 - New property `useSingleNodeRotation` for `Konva.Transformer`.
