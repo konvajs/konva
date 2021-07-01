@@ -328,7 +328,7 @@ export class Transformer extends Group {
     node.on(`dragstart.${EVENTS_NAME}`, (e) => {
       lastPos = node.getAbsolutePosition();
       // actual dragging of Transformer doesn't make sense
-      // but we need to proxy drag events
+      // but we need to make sure it also has all drag events
       if (!this.isDragging() && node !== this.findOne('.back')) {
         this.startDrag(e, false);
       }
@@ -613,6 +613,10 @@ export class Transformer extends Group {
     });
     back.on('dragend', (e) => {
       e.cancelBubble = true;
+    });
+    // force self update when we drag with shouldOverDrawWholeArea setting
+    this.on('dragmove', (e) => {
+      this.update();
     });
   }
   _handleMouseDown(e) {

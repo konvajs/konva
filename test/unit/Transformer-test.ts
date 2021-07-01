@@ -36,7 +36,7 @@ function simulateMouseUp(tr: Transformer, pos = { x: 0, y: 0 }) {
   su(tr.getStage(), pos || { x: 1, y: 1 });
 }
 
-describe('Transformer', function () {
+describe.only('Transformer', function () {
   // ======================================================
   it('init transformer on simple rectangle', function () {
     var stage = addStage();
@@ -4025,6 +4025,7 @@ describe('Transformer', function () {
     // make sure drag also triggers on the transformer.
     tr.on('dragstart', (e) => {
       assert.equal(!!e.evt, true);
+      console.log('transfomer');
       dragstart += 1;
     });
     tr.on('dragmove', () => {
@@ -4039,6 +4040,7 @@ describe('Transformer', function () {
     stage.on('dragstart', (e) => {
       assert.equal(!!e.evt, true);
       dragstart += 1;
+      console.log('stage', e.target);
     });
 
     layer.add(tr);
@@ -4066,9 +4068,9 @@ describe('Transformer', function () {
     // proxy drag to other nodes
     assert.equal(rect2.x(), 110);
     assert.equal(rect2.y(), 110);
-    assert.equal(dragstart, 4);
-    assert.equal(dragmove, 3);
-    assert.equal(dragend, 2);
+    assert.equal(dragstart, 4, 'dragstart');
+    assert.equal(dragmove, 3, 'dragmove');
+    assert.equal(dragend, 2, 'dragend');
   });
 
   it('reattach from several and drag one', function () {
@@ -4262,9 +4264,9 @@ describe('Transformer', function () {
     assert.equal(rect1.y(), 50);
     assert.equal(rect2.x(), 110);
     assert.equal(rect2.y(), 100);
-    assert.equal(dragstart, 3);
-    assert.equal(dragmove, 3);
-    assert.equal(dragend, 3);
+    assert.equal(dragstart, 3, 'dragstart');
+    assert.equal(dragmove, 3, 'dragmove');
+    assert.equal(dragend, 3, 'dragend');
   });
 
   it('reattach to several nodes', function () {
