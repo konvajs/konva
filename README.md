@@ -130,7 +130,6 @@ In order to run `konva` in nodejs environment you also need to install `canvas` 
 npm install konva canvas
 ```
 
-Then in you javascript file you will need to use
 
 # Backers
 
