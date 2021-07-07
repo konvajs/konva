@@ -24,15 +24,15 @@ export interface TextConfig extends ShapeConfig {
   text?: string;
   fontFamily?: string;
   fontSize?: number;
-  fontStyle?: string;
-  fontVariant?: string;
-  textDecoration?: string;
-  align?: string;
-  verticalAlign?: string;
+  fontStyle?: "normal" | "bold" | "italic" | "italic bold" | "bold italic";
+  fontVariant?: "normal" | "small-caps";
+  textDecoration?: "line-through" | "underline" | "line-through underline" | "underline line-through";
+  align?: "left" | "center" | "right";
+  verticalAlign?: "top" | "middle" | "bottom";
   padding?: number;
   lineHeight?: number;
   letterSpacing?: number;
-  wrap?: string;
+  wrap?: "word" | "char" | "none";
   ellipsis?: boolean;
 }
 
