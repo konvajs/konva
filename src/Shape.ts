@@ -848,7 +848,7 @@ Shape.prototype.on.call(
 
 Shape.prototype.on.call(
   Shape.prototype,
-  'fillPriorityChange.konva fillPatternImageChange.konva fillPatternRepeatChange.konva fillPatternScaleXChange.konva fillPatternScaleYChange.konva fillPatternOffsetX.konva fillPatternOffsetY.konva fillPatternXChange.konva fillPatternYChange.konva fillPatternRotation.konva',
+  'fillPriorityChange.konva fillPatternImageChange.konva fillPatternRepeatChange.konva fillPatternScaleXChange.konva fillPatternScaleYChange.konva fillPatternOffsetXChange.konva fillPatternOffsetYChange.konva fillPatternXChange.konva fillPatternYChange.konva fillPatternRotationChange.konva',
   _clearFillPatternCache
 );
 

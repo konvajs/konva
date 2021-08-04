@@ -142,7 +142,7 @@ describe('AutoDraw', function () {
     ) as HTMLImageElement;
 
     const img = new Image();
-    img.src = src;
+    img.src = src + '?'; // change url to reset cache
     const image = new Konva.Image({
       image: img,
     });

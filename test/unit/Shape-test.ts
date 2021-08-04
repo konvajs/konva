@@ -1860,6 +1860,12 @@ describe('Shape', function () {
 
       assert.notEqual(pattern4, pattern3);
 
+      star.fillPatternOffsetX(10);
+
+      var pattern5 = star._getFillPattern();
+
+      assert.notEqual(pattern4, pattern5);
+
       done();
     });
   });

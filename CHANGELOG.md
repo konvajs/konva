@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 8.1.3
+
+- Fix `fillPattern` cache invalidation on shapes
+
 ## 8.1.2
 
 - Fix memory leak for `Konva.Image`

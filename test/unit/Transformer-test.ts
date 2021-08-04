@@ -36,7 +36,7 @@ function simulateMouseUp(tr: Transformer, pos = { x: 0, y: 0 }) {
   su(tr.getStage(), pos || { x: 1, y: 1 });
 }
 
-describe.only('Transformer', function () {
+describe('Transformer', function () {
   // ======================================================
   it('init transformer on simple rectangle', function () {
     var stage = addStage();
@@ -4025,7 +4025,6 @@ describe.only('Transformer', function () {
     // make sure drag also triggers on the transformer.
     tr.on('dragstart', (e) => {
       assert.equal(!!e.evt, true);
-      console.log('transfomer');
       dragstart += 1;
     });
     tr.on('dragmove', () => {
@@ -4040,7 +4039,6 @@ describe.only('Transformer', function () {
     stage.on('dragstart', (e) => {
       assert.equal(!!e.evt, true);
       dragstart += 1;
-      console.log('stage', e.target);
     });
 
     layer.add(tr);
