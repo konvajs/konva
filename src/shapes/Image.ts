@@ -46,6 +46,14 @@ export class Image extends Shape<ImageConfig> {
   }
   _setImageLoad() {
     const image = this.image();
+    // check is image is already loaded
+    if (image && image.complete) {
+      return;
+    }
+    // check is video is already loaded
+    if (image && image.readyState === 4) {
+      return;
+    }
     if (image && image['addEventListener']) {
       image['addEventListener']('load', () => {
         this._requestDraw();
