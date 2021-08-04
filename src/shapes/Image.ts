@@ -45,7 +45,7 @@ export class Image extends Shape<ImageConfig> {
     this._setImageLoad();
   }
   _setImageLoad() {
-    const image = this.image();
+    const image = this.image() as any;
     // check is image is already loaded
     if (image && image.complete) {
       return;
