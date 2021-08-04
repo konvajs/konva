@@ -11586,8 +11586,6 @@
       }
       _setImageLoad() {
           const image = this.image();
-          console.log(image && image.complete);
-          console.log(image && image.readyState === 4);
           // check is image is already loaded
           if (image && image.complete) {
               return;
@@ -11598,7 +11596,6 @@
           }
           if (image && image['addEventListener']) {
               image['addEventListener']('load', () => {
-                  console.log('onload');
                   this._requestDraw();
               });
           }
