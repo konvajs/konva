@@ -107,25 +107,7 @@ export class Layer extends Container<Group | Shape> {
   getContext() {
     return this.getCanvas().getContext();
   }
-  /**
-   * clear scene and hit canvas contexts tied to the layer.
-   * This function doesn't remove any nodes. It just clear canvas element.
-   * @method
-   * @name Konva.Layer#clear
-   * @param {Object} [bounds]
-   * @param {Number} [bounds.x]
-   * @param {Number} [bounds.y]
-   * @param {Number} [bounds.width]
-   * @param {Number} [bounds.height]
-   * @example
-   * layer.clear();
-   * layer.clear({
-   *   x : 0,
-   *   y : 0,
-   *   width : 100,
-   *   height : 100
-   * });
-   */
+  // TODO: deprecate this method
   clear(bounds?) {
     this.getContext().clear(bounds);
     this.getHitCanvas().getContext().clear(bounds);

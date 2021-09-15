@@ -1907,6 +1907,59 @@ describe('MouseEvents', function () {
     done();
   });
 
+  it('click and dblclick with cancel bubble on container', function (done) {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var bigRect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      width: 200,
+      height: 200,
+      fill: 'yellow',
+    });
+    layer.add(bigRect);
+
+    layer.draw();
+
+    var clicks = 0;
+    var dblclicks = 0;
+
+    layer.on('click', (e) => {
+      e.cancelBubble = true;
+      clicks += 1;
+    });
+
+    layer.on('dblclick', (e) => {
+      e.cancelBubble = true;
+      dblclicks += 1;
+    });
+
+    // make dblclick
+    simulateMouseDown(stage, {
+      x: 100,
+      y: 100,
+    });
+    simulateMouseUp(stage, {
+      x: 100,
+      y: 100,
+    });
+    simulateMouseDown(stage, {
+      x: 100,
+      y: 100,
+    });
+    simulateMouseUp(stage, {
+      x: 100,
+      y: 100,
+    });
+
+    assert.equal(clicks, 2);
+    assert.equal(dblclicks, 1);
+
+    done();
+  });
+
   it('double click after drag should trigger event', function (done) {
     var stage = addStage();
     var layer = new Konva.Layer();

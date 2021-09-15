@@ -25,7 +25,6 @@ var STAGE = 'Stage',
   MOUSEMOVE = 'mousemove',
   MOUSEDOWN = 'mousedown',
   MOUSEUP = 'mouseup',
-
   POINTERMOVE = 'pointermove',
   POINTERDOWN = 'pointerdown',
   POINTERUP = 'pointerup',
@@ -603,8 +602,8 @@ export class Stage extends Container<Layer> {
       var differentTarget = targetShape !== shape;
 
       if (differentTarget && targetShape) {
-        targetShape._fireAndBubble(events.pointerout, event, shape);
-        targetShape._fireAndBubble(events.pointerleave, event, shape);
+        targetShape._fireAndBubble(events.pointerout, { ...event }, shape);
+        targetShape._fireAndBubble(events.pointerleave, { ...event }, shape);
       }
 
       if (shape) {
@@ -617,11 +616,11 @@ export class Stage extends Container<Layer> {
       if (shape && shape.isListening()) {
         triggeredOnShape = true;
         if (differentTarget) {
-          shape._fireAndBubble(events.pointerover, event, targetShape);
-          shape._fireAndBubble(events.pointerenter, event, targetShape);
+          shape._fireAndBubble(events.pointerover, { ...event }, targetShape);
+          shape._fireAndBubble(events.pointerenter, { ...event }, targetShape);
           this[eventType + 'targetShape'] = shape;
         }
-        shape._fireAndBubble(events.pointermove, event);
+        shape._fireAndBubble(events.pointermove, { ...event });
       } else {
         if (targetShape) {
           this._fire(events.pointerover, {
@@ -688,7 +687,7 @@ export class Stage extends Container<Layer> {
       if (shape && shape.isListening()) {
         triggeredOnShape = true;
         this[eventType + 'ClickEndShape'] = shape;
-        shape._fireAndBubble(events.pointerup, event);
+        shape._fireAndBubble(events.pointerup, { ...event });
 
         // detect if click or double click occurred
         if (
@@ -696,10 +695,10 @@ export class Stage extends Container<Layer> {
           clickStartShape &&
           clickStartShape === shape
         ) {
-          shape._fireAndBubble(events.pointerclick, event);
+          shape._fireAndBubble(events.pointerclick, { ...event });
 
           if (fireDblClick && clickEndShape && clickEndShape === shape) {
-            shape._fireAndBubble(events.pointerdblclick, event);
+            shape._fireAndBubble(events.pointerdblclick, { ...event });
           }
         }
       } else {

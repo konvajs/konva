@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.1.3
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Wed Aug 04 2021
+   * Date: Wed Sep 15 2021
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -6185,8 +6185,8 @@
               const event = { evt: evt, pointerId };
               var differentTarget = targetShape !== shape;
               if (differentTarget && targetShape) {
-                  targetShape._fireAndBubble(events.pointerout, event, shape);
-                  targetShape._fireAndBubble(events.pointerleave, event, shape);
+                  targetShape._fireAndBubble(events.pointerout, Object.assign({}, event), shape);
+                  targetShape._fireAndBubble(events.pointerleave, Object.assign({}, event), shape);
               }
               if (shape) {
                   if (processedShapesIds[shape._id]) {
@@ -6197,11 +6197,11 @@
               if (shape && shape.isListening()) {
                   triggeredOnShape = true;
                   if (differentTarget) {
-                      shape._fireAndBubble(events.pointerover, event, targetShape);
-                      shape._fireAndBubble(events.pointerenter, event, targetShape);
+                      shape._fireAndBubble(events.pointerover, Object.assign({}, event), targetShape);
+                      shape._fireAndBubble(events.pointerenter, Object.assign({}, event), targetShape);
                       this[eventType + 'targetShape'] = shape;
                   }
-                  shape._fireAndBubble(events.pointermove, event);
+                  shape._fireAndBubble(events.pointermove, Object.assign({}, event));
               }
               else {
                   if (targetShape) {
@@ -6263,14 +6263,14 @@
               if (shape && shape.isListening()) {
                   triggeredOnShape = true;
                   this[eventType + 'ClickEndShape'] = shape;
-                  shape._fireAndBubble(events.pointerup, event);
+                  shape._fireAndBubble(events.pointerup, Object.assign({}, event));
                   // detect if click or double click occurred
                   if (Konva$2['_' + eventType + 'ListenClick'] &&
                       clickStartShape &&
                       clickStartShape === shape) {
-                      shape._fireAndBubble(events.pointerclick, event);
+                      shape._fireAndBubble(events.pointerclick, Object.assign({}, event));
                       if (fireDblClick && clickEndShape && clickEndShape === shape) {
-                          shape._fireAndBubble(events.pointerdblclick, event);
+                          shape._fireAndBubble(events.pointerdblclick, Object.assign({}, event));
                       }
                   }
               }
@@ -8204,25 +8204,7 @@
       getContext() {
           return this.getCanvas().getContext();
       }
-      /**
-       * clear scene and hit canvas contexts tied to the layer.
-       * This function doesn't remove any nodes. It just clear canvas element.
-       * @method
-       * @name Konva.Layer#clear
-       * @param {Object} [bounds]
-       * @param {Number} [bounds.x]
-       * @param {Number} [bounds.y]
-       * @param {Number} [bounds.width]
-       * @param {Number} [bounds.height]
-       * @example
-       * layer.clear();
-       * layer.clear({
-       *   x : 0,
-       *   y : 0,
-       *   width : 100,
-       *   height : 100
-       * });
-       */
+      // TODO: deprecate this method
       clear(bounds) {
           this.getContext().clear(bounds);
           this.getHitCanvas().getContext().clear(bounds);
