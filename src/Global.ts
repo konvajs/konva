@@ -87,6 +87,9 @@ export const Konva = {
   _mouseInDblClickWindow: false,
   _touchInDblClickWindow: false,
   _pointerInDblClickWindow: false,
+  _mouseDblClickPointerId: null,
+  _touchDblClickPointerId: null,
+  _pointerDblClickPointerId: null,
 
   /**
    * Global pixel ratio configuration. KonvaJS automatically detect pixel ratio of current device.

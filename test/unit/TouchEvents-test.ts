@@ -469,6 +469,60 @@ describe('TouchEvents', function () {
     assert.equal(stageTouchEnd, 3);
   });
 
+  it('letting go of two fingers quickly should not fire dbltap', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var touchend = 0;
+    var dbltap = 0;
+
+    stage.on('dbltap', function (e) {
+      dbltap += 1;
+    });
+
+    stage.on('touchend', function (e) {
+      touchend += 1;
+    });
+
+    simulateTouchStart(
+      stage,
+      [{ x: 100, y: 100, id: 0 }],
+      [{ x: 100, y: 100, id: 0 }]
+    );
+
+    simulateTouchStart(
+      stage,
+      [{ x: 110, y: 110, id: 1 }],
+      [{ x: 110, y: 110, id: 1 }]
+    );
+
+    assert.equal(
+      touchend,
+      0,
+      '1) no touchend triggered after holding down two fingers'
+    );
+    assert.equal(
+      dbltap,
+      0,
+      '1) no dbltap triggered after holding down two fingers'
+    );
+
+    simulateTouchEnd(stage, [], [{ x: 100, y: 100, id: 0 }]);
+    simulateTouchEnd(stage, [], [{ x: 110, y: 110, id: 1 }]);
+
+    assert.equal(
+      touchend,
+      2,
+      '2) touchend triggered twice after letting go two fingers'
+    );
+    assert.equal(
+      dbltap,
+      0,
+      '2) no dbltap triggered after letting go two fingers'
+    );
+  });
+
   it('can capture touch events', function () {
     Konva.capturePointerEventsEnabled = true;
     var stage = addStage();

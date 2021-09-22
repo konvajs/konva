@@ -105,6 +105,7 @@ export class Arrow extends Line<ArrowConfig> {
 
     if (this.pointerAtBeginning()) {
       ctx.save();
+      ctx.beginPath();
       ctx.translate(points[0], points[1]);
       if (fromTension) {
         dx = (tp[0] + tp[2]) / 2 - points[0];
@@ -120,6 +121,11 @@ export class Arrow extends Line<ArrowConfig> {
       ctx.lineTo(-length, -width / 2);
       ctx.closePath();
       ctx.restore();
+    }
+
+    const hasPointer = this.pointerAtEnding() || this.pointerAtBeginning();
+    if (!hasPointer) {
+      return;
     }
 
     // here is a tricky part
