@@ -19,7 +19,7 @@
               : {};
   const Konva$2 = {
       _global: glob,
-      version: '8.1.4',
+      version: '8.2.0',
       isBrowser: detectBrowser(),
       isUnminified: /param/.test(function (param) { }.toString()),
       dblClickWindow: 400,
