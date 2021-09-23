@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+- Return
+- Fix arrow rendering when dash is used
+- Fix `dbltap` trigger when multi-touch is used
+
 ## 8.1.4
 
 - Fix `dblclick` event when `cancelBubble` is used.
