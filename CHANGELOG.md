@@ -3,7 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-- Return
+## 8.2.0
+
+- Restore build in CommonJS. `const Konva = require('konva/cmj').default;`
 - Fix arrow rendering when dash is used
 - Fix `dbltap` trigger when multi-touch is used
 
