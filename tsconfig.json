@@ -7,7 +7,7 @@
     "lib": ["ES2015", "dom"],
     "moduleResolution": "node",
     "declaration": true,
-    "removeComments": true
+    "removeComments": false
     // "noImplicitAny": true,
     // "strict": true
   },

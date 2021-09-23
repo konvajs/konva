@@ -130,7 +130,7 @@ npm install konva canvas
 
 ### CommonJS modules
 
-By default `Konva` is delivered as ES modules. If you need to use CommonJS modules you should use `cmj` bundled version:
+By default `Konva` is delivered as ES modules. Some environments may automatically take CommonJS version of `Konva`. If it doesn't work for you, try to use `cmj` version explicitly:
 
 ```js
 const Konva = require('konva/cmj').default;
