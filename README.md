@@ -68,15 +68,13 @@ At the current moment `Konva` doesn't work in IE11 directly. To make it work you
 
 Konva supports UMD loading. So you can use all possible variants to load the framework into your project:
 
-### 1 Load Konva via classical `<script>` tag:
+### Load Konva via classical `<script>` tag from CDN:
 
 ```html
 <script src="https://unpkg.com/konva@8/konva.min.js"></script>
 ```
 
-You can also use a CDN: [https://unpkg.com/konva@8/konva.min.js](https://unpkg.com/konva@8/konva.min.js)
-
-### 2 Install with npm:
+### Install with npm:
 
 ```bash
 npm install konva --save
@@ -130,6 +128,13 @@ In order to run `konva` in nodejs environment you also need to install `canvas` 
 npm install konva canvas
 ```
 
+### CommonJS modules
+
+By default `Konva` is delivered as ES modules. If you need to use CommonJS modules you should use `cmj` bundled version:
+
+```js
+const Konva = require('konva/cmj').default;
+```
 
 # Backers
 
