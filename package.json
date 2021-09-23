@@ -60,7 +60,7 @@
     }
   ],
   "devDependencies": {
-    "@parcel/transformer-image": "^2.0.0-beta.2",
+    "@parcel/transformer-image": "2.0.0-beta.2",
     "@size-limit/preset-big-lib": "^5.0.4",
     "@types/mocha": "^9.0.0",
     "canvas": "^2.8.0",
