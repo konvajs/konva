@@ -24,35 +24,7 @@
   <body>
     Some text
     <div id="container"></div>
-    <script src="../src/index.ts"></script>
-    <script>
-      // noprotect
-      class Ktest {
-        constructor() {
-          this.testLayer = new Konva.Group();
-          this.image = (() => {
-            const img = new Image();
-            img.onerror = () => console.error(`Failed to load image`);
-            img.src = 'https://www.webkit.org/blog-files/acid3-100.png';
-            return img;
-          })();
-        }
-
-        redraw() {
-          console.log('redraw()');
-          for (let n = 0; n < 20; ++n) {
-            const g = this.testLayer;
-            g.destroyChildren();
-            for (let i = 0; i < 10; ++i) {
-              const icon = new Konva.Image({ image: this.image });
-              g.add(icon);
-            }
-          }
-        }
-      }
-
-      const ktest = new Ktest();
-      setInterval(() => ktest.redraw(), 500);
-    </script>
+    <script src="../src/index.ts" type="module"></script>
+    <script></script>
   </body>
 </html>

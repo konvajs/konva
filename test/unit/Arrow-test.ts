@@ -2,7 +2,7 @@ import { assert } from 'chai';
 
 import { addStage, Konva, cloneAndCompareLayer } from './test-utils';
 
-describe.only('Arrow', function () {
+describe('Arrow', function () {
   // ======================================================
   it('add arrow', function () {
     var stage = addStage();

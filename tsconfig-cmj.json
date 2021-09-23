@@ -1,15 +1,13 @@
 {
   "compilerOptions": {
-    "outDir": "lib",
-    "module": "ES2015",
+    "outDir": "cmj",
+    "module": "CommonJS",
     "target": "ES2015",
     "noEmitOnError": true,
     "lib": ["ES2015", "dom"],
     "moduleResolution": "node",
     "declaration": true,
     "removeComments": true
-    // "noImplicitAny": true,
-    // "strict": true
   },
-  "include": ["./src/*.ts"]
+  "include": ["./src/*.ts"],
 }

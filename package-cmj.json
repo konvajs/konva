@@ -1,0 +1,6 @@
+{
+  "type": "commonjs",
+  "main": "./index-node.js",
+  "browser": "./index.js",
+  "typings": "./index-types.d.ts"
+}
