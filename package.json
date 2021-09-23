@@ -79,7 +79,7 @@
     "gulp-util": "^3.0.8",
     "mocha": "8.4.0",
     "mocha-headless-chrome": "^3.1.0",
-    "parcel": "^2.0.0-beta.2",
+    "parcel": "2.0.0-beta.2",
     "rollup": "^2.57.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
