@@ -13,16 +13,6 @@
   "browser": "./lib/index.js",
   "typings": "./lib/index-types.d.ts",
   "type": "module",
-  "exports": {
-    "node": {
-      "import": "./lib/index-node.js",
-      "require": "./cmj/index-node.js"
-    },
-    "browser": {
-      "import": "./lib/index.js",
-      "require": "./cmj/index.js"
-    }
-  },
   "scripts": {
     "start": "npm run test:watch",
     "compile": "npm run clean && npm run tsc && cp ./src/index-types.d.ts ./lib/index-types.d.ts && npm run rollup && cp ./package-cmj.json ./cmj/package.json && cp ./src/index-types.d.ts ./cmj/index-types.d.ts",
