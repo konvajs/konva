@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 8.2.2
+
+- Fix `Konva.Arrow` rendering when it has two pointers
+
 ## 8.2.1
 
 - Fix `package.json` exports.

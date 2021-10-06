@@ -66,6 +66,34 @@ describe('Arrow', function () {
     );
   });
 
+  it('pointer on both directions', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var arrow = new Konva.Arrow({
+      points: [50, 50, 100, 100],
+      stroke: 'red',
+      strokeWidth: 5,
+      pointerWidth: 20,
+      pointerLength: 20,
+      pointerAtBeginning: true,
+      pointerAtEnding: true,
+      opacity: 0.5,
+    });
+
+    layer.add(arrow);
+    stage.add(layer);
+
+    var trace = layer.getContext().getTrace();
+
+    // console.log(trace);
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);globalAlpha=0.5;beginPath();moveTo(50,50);lineTo(100,100);lineWidth=5;strokeStyle=red;stroke();save();beginPath();translate(100,100);rotate(0.785);moveTo(0,0);lineTo(-20,10);lineTo(-20,-10);closePath();restore();setLineDash();lineWidth=5;strokeStyle=red;stroke();save();beginPath();translate(50,50);rotate(3.927);moveTo(0,0);lineTo(-20,10);lineTo(-20,-10);closePath();restore();setLineDash();lineWidth=5;strokeStyle=red;stroke();restore();'
+    );
+  });
+
   it('dash checks', function () {
     var stage = addStage();
 
@@ -147,7 +175,7 @@ describe('Arrow', function () {
 
     assert.equal(
       trace,
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(50,50);quadraticCurveTo(75,25,100,50);quadraticCurveTo(125,75,100,100);lineWidth=2;strokeStyle=red;stroke();save();beginPath();translate(100,100);rotate(2);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();save();beginPath();translate(50,50);rotate(2);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();setLineDash();fillStyle=red;fill();lineWidth=2;strokeStyle=red;stroke();restore();'
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(50,50);quadraticCurveTo(75,25,100,50);quadraticCurveTo(125,75,100,100);lineWidth=2;strokeStyle=red;stroke();save();beginPath();translate(100,100);rotate(2);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();setLineDash();fillStyle=red;fill();lineWidth=2;strokeStyle=red;stroke();save();beginPath();translate(50,50);rotate(2);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();setLineDash();fillStyle=red;fill();lineWidth=2;strokeStyle=red;stroke();restore();'
     );
   });
 
@@ -176,7 +204,7 @@ describe('Arrow', function () {
 
     assert.equal(
       trace,
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(79,63);quadraticCurveTo(72,74,87,80);bezierCurveTo(117,93,94,67,124,82);bezierCurveTo(149,94,119,95,141,107);quadraticCurveTo(159,117,165,104);lineWidth=2;strokeStyle=red;stroke();save();beginPath();translate(165,104);rotate(5);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();save();beginPath();translate(79,63);rotate(4);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();setLineDash();fillStyle=red;fill();lineWidth=2;strokeStyle=red;stroke();restore();'
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(79,63);quadraticCurveTo(72,74,87,80);bezierCurveTo(117,93,94,67,124,82);bezierCurveTo(149,94,119,95,141,107);quadraticCurveTo(159,117,165,104);lineWidth=2;strokeStyle=red;stroke();save();beginPath();translate(165,104);rotate(5);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();setLineDash();fillStyle=red;fill();lineWidth=2;strokeStyle=red;stroke();save();beginPath();translate(79,63);rotate(4);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();setLineDash();fillStyle=red;fill();lineWidth=2;strokeStyle=red;stroke();restore();'
     );
   });
 

@@ -101,6 +101,7 @@ export class Arrow extends Line<ArrowConfig> {
       ctx.lineTo(-length, -width / 2);
       ctx.closePath();
       ctx.restore();
+      this.__fillStroke(ctx);
     }
 
     if (this.pointerAtBeginning()) {
@@ -121,13 +122,11 @@ export class Arrow extends Line<ArrowConfig> {
       ctx.lineTo(-length, -width / 2);
       ctx.closePath();
       ctx.restore();
+      this.__fillStroke(ctx);
     }
+  }
 
-    const hasPointer = this.pointerAtEnding() || this.pointerAtBeginning();
-    if (!hasPointer) {
-      return;
-    }
-
+  __fillStroke(ctx) {
     // here is a tricky part
     // we need to disable dash for arrow pointers
     var isDashEnabled = this.dashEnabled();
