@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.2.1
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Fri Sep 24 2021
+   * Date: Wed Oct 06 2021
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -11060,6 +11060,7 @@
               ctx.lineTo(-length, -width / 2);
               ctx.closePath();
               ctx.restore();
+              this.__fillStroke(ctx);
           }
           if (this.pointerAtBeginning()) {
               ctx.save();
@@ -11079,11 +11080,10 @@
               ctx.lineTo(-length, -width / 2);
               ctx.closePath();
               ctx.restore();
+              this.__fillStroke(ctx);
           }
-          const hasPointer = this.pointerAtEnding() || this.pointerAtBeginning();
-          if (!hasPointer) {
-              return;
-          }
+      }
+      __fillStroke(ctx) {
           // here is a tricky part
           // we need to disable dash for arrow pointers
           var isDashEnabled = this.dashEnabled();
