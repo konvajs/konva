@@ -132,7 +132,7 @@ function checkDefaultFill(config) {
  * @param {Number} [config.fontSize] in pixels.  Default is 12
  * @param {String} [config.fontStyle] can be 'normal', 'bold', 'italic' or even 'italic bold'.  Default is 'normal'
  * @param {String} [config.fontVariant] can be normal or small-caps.  Default is normal
- * @param {String} [config.textDecoration] can be line-through, underline or empty string. Default is empty string.
+ * @param {String} [config.textDecoration] can be line-through, underline, overline or empty string. Default is empty string.
  * @param {String} config.text
  * @param {String} [config.align] can be left, center, or right
  * @param {String} [config.verticalAlign] can be top, middle or bottom
@@ -189,6 +189,7 @@ export class Text extends Shape<TextConfig> {
       textDecoration = this.textDecoration(),
       shouldUnderline = textDecoration.indexOf('underline') !== -1,
       shouldLineThrough = textDecoration.indexOf('line-through') !== -1,
+      shouldOverline = textDecoration.indexOf('overline') !== -1,
       n;
 
     var translateY = 0;
@@ -277,6 +278,31 @@ export class Text extends Shape<TextConfig> {
         context.stroke();
         context.restore();
       }
+      if (shouldOverline) {
+        context.save();
+        context.beginPath();
+
+        context.moveTo(
+          lineTranslateX,
+          translateY + lineTranslateY - Math.round(fontSize / 2)
+        );
+        spacesNumber = text.split(' ').length - 1;
+        oneWord = spacesNumber === 0;
+        lineWidth =
+          align === JUSTIFY && lastLine && !oneWord
+            ? totalWidth - padding * 2
+            : width;
+        context.lineTo(
+          lineTranslateX + Math.round(lineWidth),
+          translateY + lineTranslateY - Math.round(fontSize / 2)
+        );
+
+        context.lineWidth = fontSize / 15;
+        context.strokeStyle = fill;
+        context.stroke();
+        context.restore();
+      }
+
       if (letterSpacing !== 0 || align === JUSTIFY) {
         //   var words = text.split(' ');
         spacesNumber = text.split(' ').length - 1;
@@ -816,7 +842,7 @@ Factory.addGetterSetter(Text, 'letterSpacing', 0, getNumberValidator());
 Factory.addGetterSetter(Text, 'text', '', getStringValidator());
 
 /**
- * get/set text decoration of a text.  Possible values are 'underline', 'line-through' or combination of these values separated by space
+ * get/set text decoration of a text.  Possible values are 'underline', 'line-through', 'overline' or combination of these values separated by space
  * @name Konva.Text#textDecoration
  * @method
  * @param {String} textDecoration
