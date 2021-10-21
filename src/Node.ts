@@ -1560,7 +1560,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (typeof selector === 'function') {
       return selector(this);
     }
-    var selectorArr = selector.replace(/ /g, '').split(','),
+    var selectorArr = selector.split(' ').join('').split(','),
       len = selectorArr.length,
       n,
       sel;

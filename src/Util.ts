@@ -606,7 +606,7 @@ export const Util = {
       return this._hexToRgb(color.substring(1));
     } else if (color.substr(0, 4) === RGB_PAREN) {
       // rgb string
-      rgb = RGB_REGEX.exec(color.replace(/ /g, ''));
+      rgb = RGB_REGEX.exec(color.replace(' ', ''));
       return {
         r: parseInt(rgb[1], 10),
         g: parseInt(rgb[2], 10),
