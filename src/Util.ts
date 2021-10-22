@@ -965,8 +965,8 @@ export const Util = {
   },
   _getFirstPointerId(evt) {
     if (!evt.touches) {
-      // fake id for mouse
-      return 999;
+      // try to use pointer id or fake id
+      return evt.pointerId || 999;
     } else {
       return evt.changedTouches[0].identifier;
     }

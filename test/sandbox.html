@@ -22,9 +22,53 @@
   </head>
 
   <body>
-    Some text
     <div id="container"></div>
-    <script src="../src/index.ts" type="module"></script>
-    <script></script>
+    <script type="module">
+      import Konva from '../src/index.ts';
+      const stage = new Konva.Stage({
+        container: 'container',
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+
+      const layer = new Konva.Layer();
+      stage.add(layer);
+
+      for (var i = 0; i < 1; i++) {
+        const group = new Konva.Group();
+        layer.add(group);
+        for (var j = 0; j < 1; j++) {
+          const shape = new Konva.Circle({
+            x: stage.width() / 2,
+            y: stage.height() / 2,
+            radius: 50,
+            fill: 'green',
+          });
+          group.add(shape);
+        }
+      }
+
+      stage.on('click', () => {
+        console.time('rect');
+        for (var i = 0; i < 50; i++) {
+          stage.getClientRect();
+        }
+        console.timeEnd('rect');
+        console.log('click');
+      });
+
+      // document.querySelector('canvas').addEventListener('pointerdown', (e) => {
+      //   e.target.setPointerCapture(e.pointerId);
+      // });
+
+      stage.on('pointerup', () => {
+        console.log('stage pointer up');
+      });
+      window.onpointerup = () => {
+        console.log('window pointer up');
+      };
+
+      window.stage = stage;
+    </script>
   </body>
 </html>
