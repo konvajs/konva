@@ -4636,7 +4636,7 @@ describe('Transformer', function () {
       width: 100,
       height: 100,
       fill: 'yellow',
-      rotation: 45
+      rotation: 45,
     });
     layer.add(rect);
 
@@ -4650,5 +4650,43 @@ describe('Transformer', function () {
     assert.equal(tr.getClassName(), 'Transformer');
 
     assert.equal(tr.rotation(), 0);
+  });
+
+  it('use several transformers on a single node', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 60,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr1 = new Konva.Transformer({
+      nodes: [rect],
+    });
+    layer.add(tr1);
+
+    var tr2 = new Konva.Transformer({
+      nodes: [rect],
+    });
+    layer.add(tr2);
+
+    // detach tr1
+    tr1.nodes([]);
+
+    // update rect
+    rect.setAttrs({ x: 0, y: 0, width: 50, height: 50 });
+
+    // it should update second transformer
+    assert.equal(tr2.x(), rect.x());
+    assert.equal(tr2.y(), rect.y());
+    assert.equal(tr2.width(), rect.width());
+    assert.equal(tr2.height(), rect.height());
   });
 });

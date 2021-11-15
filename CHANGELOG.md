@@ -3,7 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-###
+## 8.2.4 (2021-12-15)
+
+- Fix not working `Konva.Transformer` when several transformers were used
 
 ## 8.2.2
 

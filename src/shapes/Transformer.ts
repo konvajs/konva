@@ -76,9 +76,7 @@ var TRANSFORM_CHANGE_STR = [
   'offsetYChange',
   'transformsEnabledChange',
   'strokeWidthChange',
-]
-  .map((e) => e + `.${EVENTS_NAME}`)
-  .join(' ');
+];
 
 var ANGLES = {
   'top-left': -45,
@@ -282,6 +280,10 @@ export class Transformer extends Group {
     return this._nodes && this._nodes[0];
   }
 
+  _getEventNamespace() {
+    return EVENTS_NAME + this._id;
+  }
+
   setNodes(nodes: Array<Node> = []) {
     if (this._nodes && this._nodes.length) {
       this.detach();
@@ -293,10 +295,6 @@ export class Transformer extends Group {
       this.rotation(0);
     }
     this._nodes.forEach((node) => {
-      const additionalEvents = node._attrsAffectingSize
-        .map((prop) => prop + 'Change.' + EVENTS_NAME)
-        .join(' ');
-
       const onChange = () => {
         if (this.nodes().length === 1 && this.useSingleNodeRotation()) {
           this.rotation(this.nodes()[0].getAbsoluteRotation());
@@ -307,10 +305,17 @@ export class Transformer extends Group {
           this.update();
         }
       };
+      const additionalEvents = node._attrsAffectingSize
+        .map((prop) => prop + 'Change.' + this._getEventNamespace())
+        .join(' ');
       node.on(additionalEvents, onChange);
-      node.on(TRANSFORM_CHANGE_STR, onChange);
-      node.on(`absoluteTransformChange.${EVENTS_NAME}`, onChange);
-      node.on(`xChange.${EVENTS_NAME} yChange.${EVENTS_NAME}`, onChange);
+      node.on(
+        TRANSFORM_CHANGE_STR.map(
+          (e) => e + `.${this._getEventNamespace()}`
+        ).join(' '),
+        onChange
+      );
+      node.on(`absoluteTransformChange.${this._getEventNamespace()}`, onChange);
       this._proxyDrag(node);
     });
     this._resetTransformCache();
@@ -325,7 +330,7 @@ export class Transformer extends Group {
 
   _proxyDrag(node: Node) {
     let lastPos;
-    node.on(`dragstart.${EVENTS_NAME}`, (e) => {
+    node.on(`dragstart.${this._getEventNamespace()}`, (e) => {
       lastPos = node.getAbsolutePosition();
       // actual dragging of Transformer doesn't make sense
       // but we need to make sure it also has all drag events
@@ -333,7 +338,7 @@ export class Transformer extends Group {
         this.startDrag(e, false);
       }
     });
-    node.on(`dragmove.${EVENTS_NAME}`, (e) => {
+    node.on(`dragmove.${this._getEventNamespace()}`, (e) => {
       if (!lastPos) {
         return;
       }
@@ -384,7 +389,7 @@ export class Transformer extends Group {
     // remove events
     if (this._nodes) {
       this._nodes.forEach((node) => {
-        node.off('.' + EVENTS_NAME);
+        node.off('.' + this._getEventNamespace());
       });
     }
     this._nodes = [];
@@ -1667,7 +1672,7 @@ Factory.addGetterSetter(Transformer, 'shouldOverdrawWholeArea', false);
  * transformer.rotation(45);
  * transformer.update();
  */
- Factory.addGetterSetter(Transformer, 'useSingleNodeRotation', true);
+Factory.addGetterSetter(Transformer, 'useSingleNodeRotation', true);
 
 Factory.backCompat(Transformer, {
   lineEnabled: 'borderEnabled',

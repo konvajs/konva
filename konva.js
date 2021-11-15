@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.2.3
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Fri Oct 22 2021
+   * Date: Mon Nov 15 2021
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -14463,9 +14463,7 @@
       'offsetYChange',
       'transformsEnabledChange',
       'strokeWidthChange',
-  ]
-      .map((e) => e + `.${EVENTS_NAME}`)
-      .join(' ');
+  ];
   var ANGLES = {
       'top-left': -45,
       'top-center': 0,
@@ -14641,6 +14639,9 @@
       getNode() {
           return this._nodes && this._nodes[0];
       }
+      _getEventNamespace() {
+          return EVENTS_NAME + this._id;
+      }
       setNodes(nodes = []) {
           if (this._nodes && this._nodes.length) {
               this.detach();
@@ -14653,9 +14654,6 @@
               this.rotation(0);
           }
           this._nodes.forEach((node) => {
-              const additionalEvents = node._attrsAffectingSize
-                  .map((prop) => prop + 'Change.' + EVENTS_NAME)
-                  .join(' ');
               const onChange = () => {
                   if (this.nodes().length === 1 && this.useSingleNodeRotation()) {
                       this.rotation(this.nodes()[0].getAbsoluteRotation());
@@ -14665,10 +14663,12 @@
                       this.update();
                   }
               };
+              const additionalEvents = node._attrsAffectingSize
+                  .map((prop) => prop + 'Change.' + this._getEventNamespace())
+                  .join(' ');
               node.on(additionalEvents, onChange);
-              node.on(TRANSFORM_CHANGE_STR, onChange);
-              node.on(`absoluteTransformChange.${EVENTS_NAME}`, onChange);
-              node.on(`xChange.${EVENTS_NAME} yChange.${EVENTS_NAME}`, onChange);
+              node.on(TRANSFORM_CHANGE_STR.map((e) => e + `.${this._getEventNamespace()}`).join(' '), onChange);
+              node.on(`absoluteTransformChange.${this._getEventNamespace()}`, onChange);
               this._proxyDrag(node);
           });
           this._resetTransformCache();
@@ -14682,7 +14682,7 @@
       }
       _proxyDrag(node) {
           let lastPos;
-          node.on(`dragstart.${EVENTS_NAME}`, (e) => {
+          node.on(`dragstart.${this._getEventNamespace()}`, (e) => {
               lastPos = node.getAbsolutePosition();
               // actual dragging of Transformer doesn't make sense
               // but we need to make sure it also has all drag events
@@ -14690,7 +14690,7 @@
                   this.startDrag(e, false);
               }
           });
-          node.on(`dragmove.${EVENTS_NAME}`, (e) => {
+          node.on(`dragmove.${this._getEventNamespace()}`, (e) => {
               if (!lastPos) {
                   return;
               }
@@ -14740,7 +14740,7 @@
           // remove events
           if (this._nodes) {
               this._nodes.forEach((node) => {
-                  node.off('.' + EVENTS_NAME);
+                  node.off('.' + this._getEventNamespace());
               });
           }
           this._nodes = [];
