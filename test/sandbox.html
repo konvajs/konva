@@ -34,41 +34,77 @@
       const layer = new Konva.Layer();
       stage.add(layer);
 
-      for (var i = 0; i < 1; i++) {
-        const group = new Konva.Group();
-        layer.add(group);
-        for (var j = 0; j < 1; j++) {
-          const shape = new Konva.Circle({
-            x: stage.width() / 2,
-            y: stage.height() / 2,
-            radius: 50,
-            fill: 'green',
-          });
-          group.add(shape);
-        }
+      const cellWidth = stage.width() / 10;
+      const cellHeight = stage.width() / 10;
+
+      for (var i = 0; i < 10; i++) {
+        layer.add(
+          new Konva.Line({
+            x: i * cellWidth,
+            points: [0, 0, 0, stage.height()],
+            stroke: 'black',
+            strokeWidth: 1,
+          })
+        );
       }
 
-      stage.on('click', () => {
-        console.time('rect');
-        for (var i = 0; i < 50; i++) {
-          stage.getClientRect();
-        }
-        console.timeEnd('rect');
-        console.log('click');
+      for (var i = 0; i < 10; i++) {
+        layer.add(
+          new Konva.Line({
+            y: i * cellHeight,
+            points: [0, 0, stage.width(), 0],
+            stroke: 'black',
+            strokeWidth: 1,
+          })
+        );
+      }
+
+      const rect = new Konva.Rect({
+        x: 90,
+        y: 90,
+        width: 100,
+        height: 100,
+        fill: 'red',
+        draggable: true,
       });
+      layer.add(rect);
 
-      // document.querySelector('canvas').addEventListener('pointerdown', (e) => {
-      //   e.target.setPointerCapture(e.pointerId);
-      // });
+      const tr = new Konva.Transformer({
+        nodes: [rect],
+        anchorDragBoundFunc: function (oldPos, pos, event) {
+          const closestX = Math.round(pos.x / cellWidth) * cellWidth;
+          const diffX = Math.abs(pos.x - closestX);
 
-      stage.on('pointerup', () => {
-        console.log('stage pointer up');
+          const closestY = Math.round(pos.y / cellHeight) * cellHeight;
+          const diffY = Math.abs(pos.y - closestY);
+
+          const snappedX = diffX < 10;
+          const snappedY = diffY < 10;
+
+          if (snappedX && !snappedY) {
+            return {
+              x: closestX,
+              y: oldPos.y,
+            };
+          } else if (snappedY && !snappedX) {
+            return {
+              x: oldPos.x,
+              y: closestY,
+            };
+          } else if (snappedX && snappedY) {
+            return {
+              x: closestX,
+              y: closestY,
+            };
+          } else {
+            return {
+              x: pos.x,
+              y: pos.y,
+            };
+          }
+        },
       });
-      window.onpointerup = () => {
-        console.log('window pointer up');
-      };
-
-      window.stage = stage;
+      layer.add(tr);
     </script>
   </body>
 </html>
