@@ -128,6 +128,18 @@ In order to run `konva` in nodejs environment you also need to install `canvas` 
 npm install konva canvas
 ```
 
+Then you can use the same Konva API and all Konva demos will work just fine. You just don't need to use `container` attribute in your stage.
+
+```js
+import Konva from 'konva';
+
+const stage = new Konva.Stage({
+  width: 500,
+  height: 500,
+});
+// then all regular Konva code will work
+```
+
 ### CommonJS modules
 
 By default `Konva` is delivered as ES modules. Some environments may automatically take CommonJS version of `Konva`. If it doesn't work for you, try to use `cmj` version explicitly:
