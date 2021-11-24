@@ -71,6 +71,7 @@ declare namespace Konva {
 
   export const Stage: typeof import('./Stage').Stage;
   export type Stage = import('./Stage').Stage;
+  export type StageConfig = import('./Stage').StageConfig;
   export const stages: typeof import('./Stage').stages;
 
   export const Layer: typeof import('./Layer').Layer;
