@@ -89,10 +89,10 @@ describe('Arc', function () {
     stage.add(layer);
 
     assert.deepEqual(arc.getSelfRect(), {
-      x: -80,
-      y: -80,
-      width: 160,
-      height: 160,
+      x: 0,
+      y: 0,
+      width: 80,
+      height: 80,
     });
   });
 
