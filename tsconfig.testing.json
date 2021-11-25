@@ -6,5 +6,5 @@
     "moduleResolution": "node",
     "lib": ["ES2015", "dom"]
   },
-  "include": ["./src/*.ts"]
+  "include": ["./src/**/*.ts"]
 }
