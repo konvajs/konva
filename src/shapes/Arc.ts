@@ -66,10 +66,17 @@ export class Arc extends Shape<ArcConfig> {
     const DEG_TO_RAD = Math.PI / 180;
     const angle = this.angle() * DEG_TO_RAD;
     const inc = 1 * DEG_TO_RAD;
+    let start = 0
+    let end = angle + inc
+
+    if (this.clockwise()) {
+      start = end
+      end = 360
+    }
 
     const xs = [];
     const ys = [];
-    for (let i = 0; i < angle + inc; i += inc ) {
+    for (let i = 0; i < end; i += inc ) {
       xs.push(Math.cos(i));
       ys.push(Math.sin(i));
     }
