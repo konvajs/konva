@@ -1324,11 +1324,15 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       Util.warn('Node has no parent. moveToTop function is ignored.');
       return false;
     }
-    var index = this.index;
-    this.parent.children.splice(index, 1);
-    this.parent.children.push(this);
-    this.parent._setChildrenIndices();
-    return true;
+    var index = this.index,
+      len = this.parent.getChildren().length;
+    if (index < len - 1) {
+      this.parent.children.splice(index, 1);
+      this.parent.children.push(this);
+      this.parent._setChildrenIndices();
+      return true;
+    }
+    return false;
   }
   /**
    * move node up
