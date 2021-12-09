@@ -4,6 +4,7 @@ import { Konva } from '../Global';
 import { GetSet } from '../types';
 import { getNumberValidator, getBooleanValidator } from '../Validators';
 import { _registerNode } from '../Global';
+import { Transform, Util } from '../Util';
 
 export interface ArcConfig extends ShapeConfig {
   angle: number;
@@ -58,6 +59,39 @@ export class Arc extends Shape<ArcConfig> {
   }
   setHeight(height) {
     this.outerRadius(height / 2);
+  }
+
+  getSelfRect() {
+    const radius = this.outerRadius()
+    const DEG_TO_RAD = Math.PI / 180;
+    const angle = this.angle() * DEG_TO_RAD;
+    const inc = 1 * DEG_TO_RAD;
+    let start = 0
+    let end = angle + inc
+
+    if (this.clockwise()) {
+      start = end
+      end = 360
+    }
+
+    const xs = [];
+    const ys = [];
+    for (let i = 0; i < end; i += inc ) {
+      xs.push(Math.cos(i));
+      ys.push(Math.sin(i));
+    }
+
+    const minX = Math.round(radius * Math.min(...xs));
+    const maxX = Math.round(radius * Math.max(...xs));
+    const minY = Math.round(radius * Math.min(...ys));
+    const maxY = Math.round(radius * Math.max(...ys));
+
+    return {
+      x: minX || 0,
+      y: minY || 0,
+      width: maxX - minX,
+      height: maxY - minY
+    }
   }
 
   innerRadius: GetSet<number, this>;

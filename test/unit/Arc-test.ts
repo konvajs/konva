@@ -89,6 +89,34 @@ describe('Arc', function () {
     stage.add(layer);
 
     assert.deepEqual(arc.getSelfRect(), {
+      x: 0,
+      y: 0,
+      width: 80,
+      height: 80,
+    });
+  });
+
+  it('getSelfRect on clockwise', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var arc = new Konva.Arc({
+      x: 100,
+      y: 100,
+      innerRadius: 50,
+      outerRadius: 80,
+      angle: 90,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myArc',
+      draggable: true,
+      clockwise: true,
+    });
+
+    layer.add(arc);
+    stage.add(layer);
+
+    assert.deepEqual(arc.getSelfRect(), {
       x: -80,
       y: -80,
       width: 160,

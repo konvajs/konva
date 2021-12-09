@@ -6,5 +6,5 @@
     "lib": ["ES2015", "dom"],
     "module": "CommonJS"
   },
-  "include": ["../src/*.ts"]
+  "include": ["../src/**/*.ts"]
 }
