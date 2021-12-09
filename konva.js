@@ -8,11 +8,7 @@
    * Konva JavaScript Framework v8.3.0
    * http://konvajs.org/
    * Licensed under the MIT
-<<<<<<< HEAD
    * Date: Thu Dec 09 2021
-=======
-   * Date: Thu Nov 25 2021
->>>>>>> d84e5a7d8bcd7705b142654ab6b05dbae64addfe
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -3453,11 +3449,14 @@
               Util.warn('Node has no parent. moveToTop function is ignored.');
               return false;
           }
-          var index = this.index;
-          this.parent.children.splice(index, 1);
-          this.parent.children.push(this);
-          this.parent._setChildrenIndices();
-          return true;
+          var index = this.index, len = this.parent.getChildren().length;
+          if (index < len - 1) {
+              this.parent.children.splice(index, 1);
+              this.parent.children.push(this);
+              this.parent._setChildrenIndices();
+              return true;
+          }
+          return false;
       }
       /**
        * move node up
@@ -9726,9 +9725,13 @@
           const DEG_TO_RAD = Math.PI / 180;
           const angle = this.angle() * DEG_TO_RAD;
           const inc = 1 * DEG_TO_RAD;
+          let end = angle + inc;
+          if (this.clockwise()) {
+              end = 360;
+          }
           const xs = [];
           const ys = [];
-          for (let i = 0; i < angle + inc; i += inc) {
+          for (let i = 0; i < end; i += inc) {
               xs.push(Math.cos(i));
               ys.push(Math.sin(i));
           }

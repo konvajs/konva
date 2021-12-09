@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## 8.3.1 (2021-12-09)
 
 - Fix `dbltap` event in Safari
+- A bit faster `node.moveToTop()` when node is already on top
+- Better client rect calculations for `Konva.Arc` shape.
 
 ## 8.3.0 (2021-11-15)
 
