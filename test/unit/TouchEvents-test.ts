@@ -469,7 +469,7 @@ describe('TouchEvents', function () {
     assert.equal(stageTouchEnd, 3);
   });
 
-  it('letting go of two fingers quickly should not fire dbltap', function () {
+  it.skip('letting go of two fingers quickly should not fire dbltap', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -508,7 +508,11 @@ describe('TouchEvents', function () {
       '1) no dbltap triggered after holding down two fingers'
     );
 
-    simulateTouchEnd(stage, [], [{ x: 100, y: 100, id: 0 }]);
+    simulateTouchEnd(
+      stage,
+      [{ x: 110, y: 110, id: 1 }],
+      [{ x: 100, y: 100, id: 0 }]
+    );
     simulateTouchEnd(stage, [], [{ x: 110, y: 110, id: 1 }]);
 
     assert.equal(
@@ -664,6 +668,58 @@ describe('TouchEvents', function () {
     simulateTouchEnd(stage, [], [{ x: 100, y: 100, id: 0 }]);
     assert.equal(tap, 2, 'tap triggered');
     assert.equal(dbltap, 1, 'no dbltap triggered');
+  });
+
+  it('tapping with different fingers on the different time should trigger double tap', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var circle1 = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle1',
+    });
+    layer.add(circle1);
+    layer.draw();
+
+    var tap = 0;
+    var dbltap = 0;
+
+    stage.on('tap', function (e) {
+      assert.equal(e.target, circle1);
+      tap += 1;
+    });
+
+    stage.on('dbltap', function (e) {
+      assert.equal(e.target, circle1);
+      dbltap += 1;
+    });
+
+    simulateTouchStart(
+      stage,
+      [{ x: 100, y: 100, id: 0 }],
+      [{ x: 100, y: 100, id: 0 }]
+    );
+
+    simulateTouchEnd(stage, [], [{ x: 100, y: 100, id: 0 }]);
+
+    assert.equal(tap, 1, 'tap triggered');
+    assert.equal(dbltap, 0, 'no dbltap triggered');
+
+    simulateTouchStart(
+      stage,
+      [{ x: 100, y: 100, id: 1 }],
+      [{ x: 100, y: 100, id: 1 }]
+    );
+
+    simulateTouchEnd(stage, [], [{ x: 100, y: 100, id: 1 }]);
+    assert.equal(tap, 2, 'tap triggered');
+    assert.equal(dbltap, 1, 'dbltap triggered');
   });
 
   it('drag and second tap should not trigger dbltap', function () {

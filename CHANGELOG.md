@@ -3,11 +3,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 8.3.0 (2021-12-15)
+## 8.3.1 (2021-12-09)
+
+- Fix `dbltap` event in Safari
+
+## 8.3.0 (2021-11-15)
 
 - new `transformer.anchorDragBoundFunc` method.
 
-## 8.2.4 (2021-12-15)
+## 8.2.4 (2021-11-15)
 
 - Fix not working `Konva.Transformer` when several transformers were used
 

@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.3.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Mon Nov 15 2021
+   * Date: Thu Dec 09 2021
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -6251,15 +6251,13 @@
               const pointerId = pos.id;
               const event = { evt: evt, pointerId };
               let fireDblClick = false;
-              if (Konva$2['_' + eventType + 'InDblClickWindow'] &&
-                  Konva$2['_' + eventType + 'InDblClickWindowId'] === pointerId) {
+              if (Konva$2['_' + eventType + 'InDblClickWindow']) {
                   fireDblClick = true;
                   clearTimeout(this[eventType + 'DblTimeout']);
               }
               else if (!DD.justDragged) {
                   // don't set inDblClickWindow after dragging
                   Konva$2['_' + eventType + 'InDblClickWindow'] = true;
-                  Konva$2['_' + eventType + 'InDblClickWindowId'] = pointerId;
                   clearTimeout(this[eventType + 'DblTimeout']);
               }
               this[eventType + 'DblTimeout'] = setTimeout(function () {

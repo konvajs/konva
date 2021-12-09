@@ -671,16 +671,12 @@ export class Stage extends Container<Layer> {
       const event = { evt: evt, pointerId };
 
       let fireDblClick = false;
-      if (
-        Konva['_' + eventType + 'InDblClickWindow'] &&
-        Konva['_' + eventType + 'InDblClickWindowId'] === pointerId
-      ) {
+      if (Konva['_' + eventType + 'InDblClickWindow']) {
         fireDblClick = true;
         clearTimeout(this[eventType + 'DblTimeout']);
       } else if (!DD.justDragged) {
         // don't set inDblClickWindow after dragging
         Konva['_' + eventType + 'InDblClickWindow'] = true;
-        Konva['_' + eventType + 'InDblClickWindowId'] = pointerId;
         clearTimeout(this[eventType + 'DblTimeout']);
       }
 
