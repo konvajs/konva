@@ -356,6 +356,16 @@ describe('Image', function () {
     });
   });
 
+  it('check loading failure', function (done) {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    var src = 'non-existent.jpg';
+    Konva.Image.fromURL(src, null, function (e) {
+      done();
+    });
+  });
+
   it('check zero values', function (done) {
     loadImage('darth-vader.jpg', (imageObj) => {
       var stage = addStage();
