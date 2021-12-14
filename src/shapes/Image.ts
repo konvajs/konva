@@ -122,6 +122,7 @@ export class Image extends Shape<ImageConfig> {
    * @memberof Konva.Image
    * @param {String} url image source
    * @param {Function} callback with Konva.Image instance as first argument
+   * @param {Function} onError optional error handler
    * @example
    *  Konva.Image.fromURL(imageURL, function(image){
    *    // image is Konva.Image instance
@@ -129,7 +130,7 @@ export class Image extends Shape<ImageConfig> {
    *    layer.draw();
    *  });
    */
-  static fromURL(url, callback) {
+  static fromURL(url, callback, onError = null) {
     var img = Util.createImageElement();
     img.onload = function () {
       var image = new Image({
@@ -137,6 +138,7 @@ export class Image extends Shape<ImageConfig> {
       });
       callback(image);
     };
+    img.onerror = onError;
     img.crossOrigin = 'Anonymous';
     img.src = url;
   }
