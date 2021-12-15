@@ -46,6 +46,36 @@ describe('Util', function () {
     });
   });
 
+  it('colorToRGBA() - from color string with percentage to RGBA conversion!', function () {
+    assert.deepEqual(Konva.Util.colorToRGBA('rgba(50, 100, 150, 0.5)'), {
+      r: 50,
+      g: 100,
+      b: 150,
+      a: 0.5,
+    });
+
+    assert.deepEqual(Konva.Util.colorToRGBA('rgba(50, 100, 150, 50%)'), {
+      r: 50,
+      g: 100,
+      b: 150,
+      a: 0.5,
+    });
+
+    assert.deepEqual(Konva.Util.colorToRGBA('rgba(25%, 50%, 100%, 0.5)'), {
+      r: 63.75,
+      g: 127.5,
+      b: 255,
+      a: 0.5,
+    });
+
+    assert.deepEqual(Konva.Util.colorToRGBA('rgba(0%, 50%, 100%, 100%)'), {
+      r: 0,
+      g: 127.5,
+      b: 255,
+      a: 1,
+    });
+  });
+
   it('make sure Transform is exported', () => {
     assert.equal(!!Konva.Transform, true);
   });
