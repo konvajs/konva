@@ -664,7 +664,12 @@ export const Util = {
   _rgbaColorToRGBA(str: string): RGBA {
     if (str.indexOf('rgba(') === 0) {
       str = str.match(/rgba\(([^)]+)\)/)[1];
-      var parts = str.split(/ *, */).map(Number);
+      var parts = str.split(/ *, */).map((n, index) => {
+        if (n.slice(-1) === '%') {
+          return index === 3 ? parseInt(n) / 100 : (parseInt(n) / 100) * 255;
+        }
+        return Number(n);
+      });
       return {
         r: parts[0],
         g: parts[1],
