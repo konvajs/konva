@@ -124,6 +124,53 @@ describe('Arc', function () {
     });
   });
 
+  it('getSelfRect on quarter clockwise arc bounds to the visible part', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var arc = new Konva.Arc({
+      x: 100,
+      y: 100,
+      innerRadius: 50,
+      outerRadius: 80,
+      angle: 270,
+      strokeWidth: 4,
+      clockwise: true,
+    });
+
+    layer.add(arc);
+    stage.add(layer);
+
+    assert.deepEqual(arc.getSelfRect(), {
+      x: 0,
+      y: -80,
+      width: 80,
+      height: 80,
+    });
+  });
+
+  it('getSelfRect on small angle arc should bounds to inner radius', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var arc = new Konva.Arc({
+      x: 100,
+      y: 100,
+      innerRadius: 50,
+      outerRadius: 80,
+      angle: 60,
+      strokeWidth: 4,
+    });
+
+    layer.add(arc);
+    stage.add(layer);
+
+    assert.deepEqual(arc.getSelfRect(), {
+      x: 25,
+      y: 0,
+      width: 55,
+      height: 69,
+    });
+  });
+  
   it('cache', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

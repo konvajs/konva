@@ -62,35 +62,25 @@ export class Arc extends Shape<ArcConfig> {
   }
 
   getSelfRect() {
-    const radius = this.outerRadius()
-    const DEG_TO_RAD = Math.PI / 180;
-    const angle = this.angle() * DEG_TO_RAD;
-    const inc = 1 * DEG_TO_RAD;
-    let start = 0
-    let end = angle + inc
+    const innerRadius = this.innerRadius()
+    const outerRadius = this.outerRadius()
+    const clockwise = this.clockwise()
+    const angle = Konva.getAngle(clockwise ? 360 - this.angle() : this.angle());
 
-    if (this.clockwise()) {
-      start = end
-      end = 360
-    }
-
-    const xs = [];
-    const ys = [];
-    for (let i = 0; i < end; i += inc ) {
-      xs.push(Math.cos(i));
-      ys.push(Math.sin(i));
-    }
-
-    const minX = Math.round(radius * Math.min(...xs));
-    const maxX = Math.round(radius * Math.max(...xs));
-    const minY = Math.round(radius * Math.min(...ys));
-    const maxY = Math.round(radius * Math.max(...ys));
-
+    const boundLeftRatio = Math.cos(Math.min(angle, Math.PI))
+    const boundRightRatio = 1
+    const boundTopRatio = Math.sin(Math.min(Math.max(Math.PI, angle),  3 * Math.PI / 2))
+    const boundBottomRatio = Math.sin(Math.min(angle,  Math.PI / 2))
+    const boundLeft = boundLeftRatio * (boundLeftRatio > 0 ? innerRadius : outerRadius)
+    const boundRight = boundRightRatio * (boundRightRatio > 0 ? outerRadius : innerRadius)
+    const boundTop = boundTopRatio * (boundTopRatio > 0 ? innerRadius : outerRadius)
+    const boundBottom = boundBottomRatio * (boundBottomRatio > 0 ? outerRadius : innerRadius)
+    
     return {
-      x: minX || 0,
-      y: minY || 0,
-      width: maxX - minX,
-      height: maxY - minY
+      x: Math.round(boundLeft),
+      y: Math.round(clockwise ? -1 * boundBottom : boundTop),
+      width: Math.round(boundRight - boundLeft),
+      height: Math.round(boundBottom - boundTop)
     }
   }
 
