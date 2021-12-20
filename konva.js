@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.3.1
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Thu Dec 09 2021
+   * Date: Fri Dec 17 2021
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -794,7 +794,12 @@
       _rgbaColorToRGBA(str) {
           if (str.indexOf('rgba(') === 0) {
               str = str.match(/rgba\(([^)]+)\)/)[1];
-              var parts = str.split(/ *, */).map(Number);
+              var parts = str.split(/ *, */).map((n, index) => {
+                  if (n.slice(-1) === '%') {
+                      return index === 3 ? parseInt(n) / 100 : (parseInt(n) / 100) * 255;
+                  }
+                  return Number(n);
+              });
               return {
                   r: parts[0],
                   g: parts[1],
@@ -9721,29 +9726,23 @@
           this.outerRadius(height / 2);
       }
       getSelfRect() {
-          const radius = this.outerRadius();
-          const DEG_TO_RAD = Math.PI / 180;
-          const angle = this.angle() * DEG_TO_RAD;
-          const inc = 1 * DEG_TO_RAD;
-          let end = angle + inc;
-          if (this.clockwise()) {
-              end = 360;
-          }
-          const xs = [];
-          const ys = [];
-          for (let i = 0; i < end; i += inc) {
-              xs.push(Math.cos(i));
-              ys.push(Math.sin(i));
-          }
-          const minX = Math.round(radius * Math.min(...xs));
-          const maxX = Math.round(radius * Math.max(...xs));
-          const minY = Math.round(radius * Math.min(...ys));
-          const maxY = Math.round(radius * Math.max(...ys));
+          const innerRadius = this.innerRadius();
+          const outerRadius = this.outerRadius();
+          const clockwise = this.clockwise();
+          const angle = Konva$2.getAngle(clockwise ? 360 - this.angle() : this.angle());
+          const boundLeftRatio = Math.cos(Math.min(angle, Math.PI));
+          const boundRightRatio = 1;
+          const boundTopRatio = Math.sin(Math.min(Math.max(Math.PI, angle), 3 * Math.PI / 2));
+          const boundBottomRatio = Math.sin(Math.min(angle, Math.PI / 2));
+          const boundLeft = boundLeftRatio * (boundLeftRatio > 0 ? innerRadius : outerRadius);
+          const boundRight = boundRightRatio * (outerRadius );
+          const boundTop = boundTopRatio * (boundTopRatio > 0 ? innerRadius : outerRadius);
+          const boundBottom = boundBottomRatio * (boundBottomRatio > 0 ? outerRadius : innerRadius);
           return {
-              x: minX || 0,
-              y: minY || 0,
-              width: maxX - minX,
-              height: maxY - minY
+              x: Math.round(boundLeft),
+              y: Math.round(clockwise ? -1 * boundBottom : boundTop),
+              width: Math.round(boundRight - boundLeft),
+              height: Math.round(boundBottom - boundTop)
           };
       }
   }
@@ -11678,6 +11677,7 @@
        * @memberof Konva.Image
        * @param {String} url image source
        * @param {Function} callback with Konva.Image instance as first argument
+       * @param {Function} onError optional error handler
        * @example
        *  Konva.Image.fromURL(imageURL, function(image){
        *    // image is Konva.Image instance
@@ -11685,7 +11685,7 @@
        *    layer.draw();
        *  });
        */
-      static fromURL(url, callback) {
+      static fromURL(url, callback, onError = null) {
           var img = Util.createImageElement();
           img.onload = function () {
               var image = new Image({
@@ -11693,6 +11693,7 @@
               });
               callback(image);
           };
+          img.onerror = onError;
           img.crossOrigin = 'Anonymous';
           img.src = url;
       }
