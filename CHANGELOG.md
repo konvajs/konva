@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 8.3.2
+
+- Remove source maps for webpack builds
+
 ## 8.3.1 (2021-12-09)
 
 - Fix `dbltap` event in Safari
