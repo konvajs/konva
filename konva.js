@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.3.2
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Jan 04 2022
+   * Date: Sun Jan 09 2022
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -8315,8 +8315,8 @@
       }
       _validateAdd(child) {
           var type = child.getType();
-          if (type !== 'Group' && type !== 'Shape') {
-              Util.throw('You may only add groups and shapes to a layer.');
+          if (type !== 'Group' && type !== 'Shape' && type !== 'LayoutGroup') {
+              Util.throw('You may only add groups, layoutgroups and shapes to a layer.');
           }
       }
       _toKonvaCanvas(config) {
@@ -8660,13 +8660,75 @@
   class Group extends Container {
       _validateAdd(child) {
           var type = child.getType();
-          if (type !== 'Group' && type !== 'Shape') {
-              Util.throw('You may only add groups and shapes to groups.');
+          if (type !== 'Group' && type !== 'Shape' && type !== 'LayoutGroup') {
+              Util.throw('You may only add layoutgroups, groups and shapes to groups.');
           }
       }
   }
   Group.prototype.nodeType = 'Group';
   _registerNode(Group);
+
+  /**
+   * LayoutGroup constructor. LayoutGroups are used to contain shapes or other groups and lay them out.
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Container
+   * @param {Object} config
+   * @param {Number} [config.x]
+     * @param {Number} [config.y]
+     * @param {Number} [config.width]
+     * @param {Number} [config.height]
+     * @param {Boolean} [config.visible]
+     * @param {Boolean} [config.listening] whether or not the node is listening for events
+     * @param {String} [config.id] unique id
+     * @param {String} [config.name] non-unique name
+     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
+     * @param {Object} [config.scale] set scale
+     * @param {Number} [config.scaleX] set scale x
+     * @param {Number} [config.scaleY] set scale y
+     * @param {Number} [config.rotation] rotation in degrees
+     * @param {Object} [config.offset] offset from center point and rotation point
+     * @param {Number} [config.offsetX] set offset x
+     * @param {Number} [config.offsetY] set offset y
+     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
+     *  the entire stage by dragging any portion of the stage
+     * @param {Number} [config.dragDistance]
+     * @param {Function} [config.dragBoundFunc]
+   * * @param {Object} [config.clip] set clip
+     * @param {Number} [config.clipX] set clip x
+     * @param {Number} [config.clipY] set clip y
+     * @param {Number} [config.clipWidth] set clip width
+     * @param {Number} [config.clipHeight] set clip height
+     * @param {Function} [config.clipFunc] set clip func
+
+   * @example
+   * var group = new Konva.LayoutGroup();
+   */
+  class LayoutGroup extends Container {
+      _validateAdd(child) {
+          var type = child.getType();
+          if (type !== 'Group' && type !== 'Shape' && type !== 'LayoutGroup') {
+              Util.throw('You may only add layoutgroups, groups and shapes to groups.');
+          }
+      }
+      add(...children) {
+          const allChildren = this.getChildren().concat(children);
+          let step = this.height();
+          if (allChildren.length > 0) {
+              step = (this.height() - this.y()) / allChildren.length;
+          }
+          for (let i = 0; i < allChildren.length; i++) {
+              const c = allChildren[i];
+              c.x(0);
+              c.y(i * step + 4);
+              c.height(step);
+              c.width(this.width());
+          }
+          return super.add(...children);
+      }
+  }
+  LayoutGroup.prototype.nodeType = 'LayoutGroup';
+  _registerNode(LayoutGroup);
 
   var now = (function () {
       if (glob.performance && glob.performance.now) {
@@ -9598,6 +9660,7 @@
       Layer,
       FastLayer,
       Group,
+      LayoutGroup,
       DD,
       Shape,
       shapes,

@@ -221,8 +221,8 @@ export class Layer extends Container<Group | Shape> {
   }
   _validateAdd(child) {
     var type = child.getType();
-    if (type !== 'Group' && type !== 'Shape') {
-      Util.throw('You may only add groups and shapes to a layer.');
+    if (type !== 'Group' && type !== 'Shape' && type !== 'LayoutGroup') {
+      Util.throw('You may only add groups, layoutgroups and shapes to a layer.');
     }
   }
   _toKonvaCanvas(config) {

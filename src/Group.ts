@@ -18,8 +18,8 @@ import { Shape } from './Shape';
 export class Group extends Container<Group | Shape> {
   _validateAdd(child: Node) {
     var type = child.getType();
-    if (type !== 'Group' && type !== 'Shape') {
-      Util.throw('You may only add groups and shapes to groups.');
+    if (type !== 'Group' && type !== 'Shape' && type !== 'LayoutGroup') {
+      Util.throw('You may only add layoutgroups, groups and shapes to groups.');
     }
   }
 }
