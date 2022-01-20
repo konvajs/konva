@@ -2488,8 +2488,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     const screenRect = {
       x: -margin.x,
       y: -margin.y,
-      width: stage.width() + margin.x,
-      height: stage.height() + margin.y,
+      width: stage.width() + 2 * margin.x,
+      height: stage.height() + 2 * margin.y,
     };
     return Util.haveIntersection(screenRect, this.getClientRect());
   }
