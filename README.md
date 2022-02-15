@@ -150,6 +150,9 @@ const Konva = require('konva/cmj').default;
 
 # Backers
 
+![https://simpleshow.com](https://avatars.githubusercontent.com/u/99720652?s=200&v=4 'https://simpleshow.com')
+![https://www.notably.ai/](https://avatars.githubusercontent.com/u/80046841?s=200&v=4 'https://www.notably.ai/')
+
 - [myposter GmbH](https://www.myposter.de/)
 - [queue.gg](https://queue.gg/)
 
