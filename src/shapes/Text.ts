@@ -153,7 +153,7 @@ function checkDefaultFill(config) {
  * });
  */
 export class Text extends Shape<TextConfig> {
-  textArr: Array<{ text: string; width: number }>;
+  textArr: Array<{ text: string; width: number; lastInParagraph: boolean }>;
   _partialText: string;
   _partialTextX = 0;
   _partialTextY = 0;
@@ -219,7 +219,7 @@ export class Text extends Shape<TextConfig> {
       var obj = textArr[n],
         text = obj.text,
         width = obj.width,
-        lastLine = n !== textArrLen - 1,
+        lastLine = obj.lastInParagraph,
         spacesNumber,
         oneWord,
         lineWidth;
@@ -284,7 +284,7 @@ export class Text extends Shape<TextConfig> {
         for (var li = 0; li < array.length; li++) {
           var letter = array[li];
           // skip justify for the last line
-          if (letter === ' ' && n !== textArrLen - 1 && align === JUSTIFY) {
+          if (letter === ' ' && !lastLine && align === JUSTIFY) {
             lineTranslateX += (totalWidth - padding * 2 - width) / spacesNumber;
             // context.translate(
             //   Math.floor((totalWidth - padding * 2 - width) / spacesNumber),
@@ -394,7 +394,11 @@ export class Text extends Shape<TextConfig> {
       line = line.trim();
     }
     var width = this._getTextWidth(line);
-    return this.textArr.push({ text: line, width: width });
+    return this.textArr.push({
+      text: line,
+      width: width,
+      lastInParagraph: false,
+    });
   }
   _getTextWidth(text) {
     var letterSpacing = this.letterSpacing();
@@ -542,6 +546,9 @@ export class Text extends Shape<TextConfig> {
       // if element height is fixed, abort if adding one more line would overflow
       if (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx) {
         break;
+      }
+      if (this.textArr[this.textArr.length - 1]) {
+        this.textArr[this.textArr.length - 1].lastInParagraph = true;
       }
     }
     this.textHeight = fontSize;

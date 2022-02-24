@@ -392,8 +392,7 @@ describe('Text', function () {
     var text = new Konva.Text({
       x: 10,
       y: 10,
-      text:
-        "HEADING\n\nAll the world's a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.",
+      text: "HEADING\n\nAll the world's a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.",
       //text: 'HEADING\n\nThis is a really cool paragraph. \n And this is a footer.',
       fontSize: 14,
       fontFamily: 'Calibri',
@@ -435,8 +434,7 @@ describe('Text', function () {
     var text = new Konva.Text({
       x: 10,
       y: 10,
-      text:
-        "HEADING\n\nAll the world's a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.",
+      text: "HEADING\n\nAll the world's a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.",
       fontSize: 14,
       fontFamily: 'Calibri',
       fontStyle: 'normal',
@@ -464,8 +462,7 @@ describe('Text', function () {
     var text = new Konva.Text({
       x: 10,
       y: 10,
-      text:
-        "HEADING\n\nAll the world's a stage, merely players. They have theirrrrrrr exits and theirrrrr entrances; And one man in his time plays many parts.",
+      text: "HEADING\n\nAll the world's a stage, merely players. They have theirrrrrrr exits and theirrrrr entrances; And one man in his time plays many parts.",
       fontSize: 14,
       fontFamily: 'Arial',
       fontStyle: 'normal',
@@ -562,8 +559,7 @@ describe('Text', function () {
     var text = new Konva.Text({
       x: 10,
       y: 10,
-      text:
-        "HEADING\n\n    All the world's a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.",
+      text: "HEADING\n\n    All the world's a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.",
       fontSize: 14,
       fontFamily: 'Arial',
       fontStyle: 'normal',
@@ -585,6 +581,43 @@ describe('Text', function () {
     assert.equal(layer.getContext().getTrace(true), trace);
   });
 
+  it('text multi line with justify align and several paragraphs', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var rect = new Konva.Rect({
+      x: 10,
+      y: 10,
+      width: 380,
+      height: 300,
+      fill: 'yellow',
+    });
+
+    var text = new Konva.Text({
+      x: 10,
+      y: 10,
+      text: "HEADING\n\n    All the world's a stage, merely players. They have their exits and their entrances;\nAnd one man in his time plays many parts.",
+      fontSize: 14,
+      fontFamily: 'Arial',
+      fontStyle: 'normal',
+      fill: '#555',
+      width: 380,
+      align: 'justify',
+      letterSpacing: 5,
+      draggable: true,
+    });
+
+    rect.height(text.height());
+    layer.add(rect).add(text);
+
+    stage.add(layer);
+
+    var trace =
+      'fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();restore();save();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();restore();save();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();fillStyle;fillText();restore();restore();';
+
+    assert.equal(layer.getContext().getTrace(true), trace);
+  });
+
   // ======================================================
   it('text multi line with justify align and decoration', function () {
     var stage = addStage();
@@ -601,8 +634,7 @@ describe('Text', function () {
     var text = new Konva.Text({
       x: 10,
       y: 10,
-      text:
-        "HEADING\n\n    All the world's a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.",
+      text: "HEADING\n\n    All the world's a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.",
       fontSize: 14,
       fontFamily: 'Arial',
       fontStyle: 'normal',
@@ -637,8 +669,7 @@ describe('Text', function () {
       y: 10,
       //stroke: '#555',
       //strokeWidth: 5,
-      text:
-        "HEADING\n\nAll the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.",
+      text: "HEADING\n\nAll the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.",
       //text: 'HEADING\n\nThis is a really cool paragraph. \n And this is a footer.',
       fontSize: 16,
       fontFamily: 'Calibri',
@@ -900,8 +931,7 @@ describe('Text', function () {
       x: 10,
       y: 10,
       fontSize: 19,
-      text:
-        'very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text.',
+      text: 'very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text, very long text.',
       draggable: true,
     };
 
@@ -926,8 +956,7 @@ describe('Text', function () {
 
     var text3 = new Konva.Text(
       Object.assign(textProps, {
-        text:
-          'gregrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg4g4g4',
+        text: 'gregrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg4g4g4',
         letterSpacing: 4,
         fontSize: 20,
         y: 100,
@@ -942,8 +971,7 @@ describe('Text', function () {
     // demo4
     var text4 = new Konva.Text(
       Object.assign(textProps, {
-        text:
-          'gregrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg4g4g4',
+        text: 'gregrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg44g4g4g4g4g4g4g4regrg4g4g4',
         letterSpacing: 4,
         fontSize: 19,
         y: 150,

@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.3.2
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Jan 04 2022
+   * Date: Wed Feb 23 2022
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -4504,8 +4504,8 @@
           const screenRect = {
               x: -margin.x,
               y: -margin.y,
-              width: stage.width() + margin.x,
-              height: stage.height() + margin.y,
+              width: stage.width() + 2 * margin.x,
+              height: stage.height() + 2 * margin.y,
           };
           return Util.haveIntersection(screenRect, this.getClientRect());
       }
@@ -13300,7 +13300,7 @@
           for (n = 0; n < textArrLen; n++) {
               var lineTranslateX = 0;
               var lineTranslateY = 0;
-              var obj = textArr[n], text = obj.text, width = obj.width, lastLine = n !== textArrLen - 1, spacesNumber, oneWord, lineWidth;
+              var obj = textArr[n], text = obj.text, width = obj.width, lastLine = obj.lastInParagraph, spacesNumber, oneWord, lineWidth;
               // horizontal alignment
               context.save();
               if (align === RIGHT) {
@@ -13350,7 +13350,7 @@
                   for (var li = 0; li < array.length; li++) {
                       var letter = array[li];
                       // skip justify for the last line
-                      if (letter === ' ' && n !== textArrLen - 1 && align === JUSTIFY) {
+                      if (letter === ' ' && !lastLine && align === JUSTIFY) {
                           lineTranslateX += (totalWidth - padding * 2 - width) / spacesNumber;
                           // context.translate(
                           //   Math.floor((totalWidth - padding * 2 - width) / spacesNumber),
@@ -13449,7 +13449,11 @@
               line = line.trim();
           }
           var width = this._getTextWidth(line);
-          return this.textArr.push({ text: line, width: width });
+          return this.textArr.push({
+              text: line,
+              width: width,
+              lastInParagraph: false,
+          });
       }
       _getTextWidth(text) {
           var letterSpacing = this.letterSpacing();
@@ -13570,6 +13574,9 @@
               // if element height is fixed, abort if adding one more line would overflow
               if (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx) {
                   break;
+              }
+              if (this.textArr[this.textArr.length - 1]) {
+                  this.textArr[this.textArr.length - 1].lastInParagraph = true;
               }
           }
           this.textHeight = fontSize;

@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 8.3.4 (2022-03-23)
+
+- Fix `justify` align for text with several paragraphs.
+
 ## 8.3.2
 
 - Remove source maps for webpack builds
