@@ -198,9 +198,7 @@ export class Shape<
   }
 
   getContext() {
-    Util.warn(
-      'shape.getContext() method is deprecated. Please do not use it.'
-    );
+    Util.warn('shape.getContext() method is deprecated. Please do not use it.');
     return this.getLayer().getContext();
   }
   getCanvas() {

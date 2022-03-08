@@ -649,9 +649,9 @@ export class Transformer extends Group {
       x: pos.x - ap.x,
       y: pos.y - ap.y,
     };
-    this._fire('transformstart', { evt: e, target: this.getNode() });
+    this._fire('transformstart', { evt: e.evt, target: this.getNode() });
     this._nodes.forEach((target) => {
-      target._fire('transformstart', { evt: e, target });
+      target._fire('transformstart', { evt: e.evt, target });
     });
   }
   _handleMouseMove(e) {

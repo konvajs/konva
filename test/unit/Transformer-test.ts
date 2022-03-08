@@ -2509,7 +2509,7 @@ describe('Transformer', function () {
     });
   });
 
-  it('transform events check', function () {
+  it.only('transform events check', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -2535,6 +2535,7 @@ describe('Transformer', function () {
       callCount += 1;
       assert.equal(e.target, rect);
       assert.equal(tr.getActiveAnchor(), 'top-left');
+      assert.equal(typeof e.evt.clientX === 'number', true);
     });
 
     rect.on('transform', function (e) {
