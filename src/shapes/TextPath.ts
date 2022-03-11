@@ -98,7 +98,7 @@ export class TextPath extends Shape<TextPathConfig> {
 
     // update text data for certain attr changes
     this.on(
-      'textChange.konva alignChange.konva letterSpacingChange.konva kerningFuncChange.konva fontSizeChange.konva',
+      'textChange.konva alignChange.konva letterSpacingChange.konva kerningFuncChange.konva fontSizeChange.konva fontFamilyChange .konva',
       this._setTextData
     );
 
