@@ -70,8 +70,8 @@ describe('Caching', function () {
     context.fillStyle = 'green';
     context.fill();
 
-    compareLayerAndCanvas(layer, canvas, 200);
-    cloneAndCompareLayer(layer, 150);
+    compareLayerAndCanvas(layer, canvas, 200, 100);
+    cloneAndCompareLayer(layer, 150, 100);
   });
 
   it('cache rectangle with fill and stroke', function () {
@@ -831,7 +831,8 @@ describe('Caching', function () {
     group.cache();
 
     const canvas = group._cache.get('canvas').scene;
-    assert.equal(canvas.width, 105 * canvas.pixelRatio);
+    console.log(canvas.width / 2);
+    assert.equal(canvas.width, 106 * canvas.pixelRatio);
   });
 
   it('cache group with rectangle with fill and opacity', function () {
@@ -1468,7 +1469,7 @@ describe('Caching', function () {
     layer.draw();
     assert.equal(
       circle._cache.get('canvas').filter.width,
-      20 * circle._cache.get('canvas').filter.pixelRatio
+      21 * circle._cache.get('canvas').filter.pixelRatio
     );
     circle.filters([]);
     // TODO: should we clear cache canvas?

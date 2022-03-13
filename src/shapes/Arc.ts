@@ -62,26 +62,32 @@ export class Arc extends Shape<ArcConfig> {
   }
 
   getSelfRect() {
-    const innerRadius = this.innerRadius()
-    const outerRadius = this.outerRadius()
-    const clockwise = this.clockwise()
+    const innerRadius = this.innerRadius();
+    const outerRadius = this.outerRadius();
+    const clockwise = this.clockwise();
     const angle = Konva.getAngle(clockwise ? 360 - this.angle() : this.angle());
 
-    const boundLeftRatio = Math.cos(Math.min(angle, Math.PI))
-    const boundRightRatio = 1
-    const boundTopRatio = Math.sin(Math.min(Math.max(Math.PI, angle),  3 * Math.PI / 2))
-    const boundBottomRatio = Math.sin(Math.min(angle,  Math.PI / 2))
-    const boundLeft = boundLeftRatio * (boundLeftRatio > 0 ? innerRadius : outerRadius)
-    const boundRight = boundRightRatio * (boundRightRatio > 0 ? outerRadius : innerRadius)
-    const boundTop = boundTopRatio * (boundTopRatio > 0 ? innerRadius : outerRadius)
-    const boundBottom = boundBottomRatio * (boundBottomRatio > 0 ? outerRadius : innerRadius)
-    
+    const boundLeftRatio = Math.cos(Math.min(angle, Math.PI));
+    const boundRightRatio = 1;
+    const boundTopRatio = Math.sin(
+      Math.min(Math.max(Math.PI, angle), (3 * Math.PI) / 2)
+    );
+    const boundBottomRatio = Math.sin(Math.min(angle, Math.PI / 2));
+    const boundLeft =
+      boundLeftRatio * (boundLeftRatio > 0 ? innerRadius : outerRadius);
+    const boundRight =
+      boundRightRatio * (boundRightRatio > 0 ? outerRadius : innerRadius);
+    const boundTop =
+      boundTopRatio * (boundTopRatio > 0 ? innerRadius : outerRadius);
+    const boundBottom =
+      boundBottomRatio * (boundBottomRatio > 0 ? outerRadius : innerRadius);
+
     return {
-      x: Math.round(boundLeft),
-      y: Math.round(clockwise ? -1 * boundBottom : boundTop),
-      width: Math.round(boundRight - boundLeft),
-      height: Math.round(boundBottom - boundTop)
-    }
+      x: boundLeft,
+      y: clockwise ? -1 * boundBottom : boundTop,
+      width: boundRight - boundLeft,
+      height: boundBottom - boundTop,
+    };
   }
 
   innerRadius: GetSet<number, this>;

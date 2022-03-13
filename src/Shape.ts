@@ -535,9 +535,10 @@ export class Shape<
     const width = preWidth + blurRadius * 2;
     const height = preHeight + blurRadius * 2;
 
+
     const rect = {
-      width,
-      height,
+      width: width,
+      height: height,
       x:
         -(strokeWidth / 2 + blurRadius) +
         Math.min(shadowOffsetX, 0) +

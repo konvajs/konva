@@ -322,8 +322,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     var width = Math.ceil(conf.width || rect.width),
       height = Math.ceil(conf.height || rect.height),
       pixelRatio = conf.pixelRatio,
-      x = conf.x === undefined ? rect.x : conf.x,
-      y = conf.y === undefined ? rect.y : conf.y,
+      x = conf.x === undefined ? Math.floor(rect.x) : conf.x,
+      y = conf.y === undefined ? Math.floor(rect.y) : conf.y,
       offset = conf.offset || 0,
       drawBorder = conf.drawBorder || false,
       hitCanvasPixelRatio = conf.hitCanvasPixelRatio || 1;
@@ -335,11 +335,24 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       return;
     }
 
-    width += offset * 2;
-    height += offset * 2;
+    // let's just add 1 pixel extra,
+    // because using Math.floor on x, y position may shift drawing
+    width += offset * 2 + 1;
+    height += offset * 2 + 1;
 
     x -= offset;
     y -= offset;
+
+    // if (Math.floor(x) < x) {
+    //   x = Math.floor(x);
+    //   // width += 1;
+    // }
+    // if (Math.floor(y) < y) {
+    //   y = Math.floor(y);
+    //   // height += 1;
+    // }
+
+    // console.log({ x, y, width, height }, rect);
 
     var cachedSceneCanvas = new SceneCanvas({
         pixelRatio: pixelRatio,

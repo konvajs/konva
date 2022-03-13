@@ -5,6 +5,7 @@ import {
   Konva,
   createCanvas,
   compareLayerAndCanvas,
+  assertAlmostDeepEqual,
 } from './test-utils';
 
 describe('Arc', function () {
@@ -88,7 +89,7 @@ describe('Arc', function () {
     layer.add(arc);
     stage.add(layer);
 
-    assert.deepEqual(arc.getSelfRect(), {
+    assertAlmostDeepEqual(arc.getSelfRect(), {
       x: 0,
       y: 0,
       width: 80,
@@ -116,7 +117,7 @@ describe('Arc', function () {
     layer.add(arc);
     stage.add(layer);
 
-    assert.deepEqual(arc.getSelfRect(), {
+    assertAlmostDeepEqual(arc.getSelfRect(), {
       x: -80,
       y: -80,
       width: 160,
@@ -140,7 +141,7 @@ describe('Arc', function () {
     layer.add(arc);
     stage.add(layer);
 
-    assert.deepEqual(arc.getSelfRect(), {
+    assertAlmostDeepEqual(arc.getSelfRect(), {
       x: 0,
       y: -80,
       width: 80,
@@ -163,14 +164,14 @@ describe('Arc', function () {
     layer.add(arc);
     stage.add(layer);
 
-    assert.deepEqual(arc.getSelfRect(), {
+    assertAlmostDeepEqual(arc.getSelfRect(), {
       x: 25,
       y: 0,
       width: 55,
-      height: 69,
+      height: 69.282032302755,
     });
   });
-  
+
   it('cache', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
