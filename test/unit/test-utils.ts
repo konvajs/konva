@@ -384,3 +384,9 @@ export const assertAlmostEqual = function (val1, val2) {
     throw new Error('Expected ' + val1 + ' to be almost equal to ' + val2);
   }
 };
+
+export const assertAlmostDeepEqual = function (obj1, obj2) {
+  for (var key1 in obj1) {
+    assertAlmostEqual(obj1[key1], obj2[key1]);
+  }
+};

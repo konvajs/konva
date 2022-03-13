@@ -2509,7 +2509,7 @@ describe('Transformer', function () {
     });
   });
 
-  it.only('transform events check', function () {
+  it('transform events check', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);

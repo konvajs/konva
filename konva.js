@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.3.3
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Wed Feb 23 2022
+   * Date: Tue Mar 08 2022
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -15001,9 +15001,9 @@
               x: pos.x - ap.x,
               y: pos.y - ap.y,
           };
-          this._fire('transformstart', { evt: e, target: this.getNode() });
+          this._fire('transformstart', { evt: e.evt, target: this.getNode() });
           this._nodes.forEach((target) => {
-              target._fire('transformstart', { evt: e, target });
+              target._fire('transformstart', { evt: e.evt, target });
           });
       }
       _handleMouseMove(e) {

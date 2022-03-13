@@ -203,7 +203,7 @@ describe('RegularPolygon', function () {
 
     var box = poly.getClientRect();
 
-    assertAlmostEqual(box.width, 92.60254037844388);
-    assertAlmostEqual(box.height, 81.00000000000003);
+    assertAlmostEqual(box.width, 91.60254037844388);
+    assertAlmostEqual(box.height, 80.00000000000003);
   });
 });

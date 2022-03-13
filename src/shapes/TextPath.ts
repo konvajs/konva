@@ -646,10 +646,10 @@ Factory.addGetterSetter(TextPath, 'align', 'left');
  * @param {Number} letterSpacing
  * @returns {Number}
  * @example
- * // get line height
+ * // get letter spacing value
  * var letterSpacing = shape.letterSpacing();
  *
- * // set the line height
+ * // set the letter spacing value
  * shape.letterSpacing(2);
  */
 
@@ -662,10 +662,10 @@ Factory.addGetterSetter(TextPath, 'letterSpacing', 0, getNumberValidator());
  * @param {String} textBaseline
  * @returns {String}
  * @example
- * // get line height
+ * // get current text baseline
  * var textBaseline = shape.textBaseline();
  *
- * // set the line height
+ * // set new text baseline
  * shape.textBaseline('top');
  */
 Factory.addGetterSetter(TextPath, 'textBaseline', 'middle');

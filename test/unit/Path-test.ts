@@ -10,6 +10,7 @@ import {
   compareLayerAndCanvas,
   cloneAndCompareLayer,
   isNode,
+  assertAlmostDeepEqual,
 } from './test-utils';
 
 describe('Path', function () {
@@ -1280,7 +1281,12 @@ describe('Path', function () {
     });
     layer.add(path);
     var rect = path.getClientRect();
-    assert.deepEqual(rect, { x: 60, y: 184, width: 106, height: 102 });
+    assertAlmostDeepEqual(rect, {
+      x: 59.55,
+      y: 183.55,
+      width: 106,
+      height: 102,
+    });
   });
 
   it('getClientRect of complex path', function () {
@@ -1310,7 +1316,12 @@ describe('Path', function () {
     layer.add(back);
     layer.draw();
 
-    assert.deepEqual(rect, { x: 9, y: 66, width: 95, height: 55 });
+    assertAlmostDeepEqual(rect, {
+      x: 8.6440882161882,
+      y: 65.75902834,
+      width: 94.74182356762,
+      height: 55.4919433,
+    });
   });
 
   it('getClientRect of another complex path', function () {
@@ -1339,11 +1350,11 @@ describe('Path', function () {
     layer.add(back);
     layer.draw();
 
-    assert.deepEqual(rect, {
+    assertAlmostDeepEqual(rect, {
       x: 49,
-      y: 49.7,
+      y: 49.7086649,
       width: 215,
-      height: 71.39999999999999,
+      height: 71.3826701999,
     });
   });
 
@@ -1372,7 +1383,12 @@ describe('Path', function () {
     layer.add(back);
     layer.draw();
 
-    assert.deepEqual(rect, { x: 49, y: 49, width: 43, height: 48 });
+    assertAlmostDeepEqual(rect, {
+      x: 48.981379,
+      y: 48.996825,
+      width: 42.84717526,
+      height: 48.057550000000006,
+    });
   });
 
   it('getClientRect for arc', function () {
@@ -1408,15 +1424,15 @@ describe('Path', function () {
     layer.add(back);
     layer.draw();
 
-    assert.deepEqual(rect, {
+    assertAlmostDeepEqual(rect, {
       x: 0,
       y: 0,
-      width: 132.53012048192795,
+      width: 132.4001878816343,
       height: 100,
     });
   });
 
-  it.skip('getClientRect on scaled', function () {
+  it('getClientRect on scaled', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -1444,7 +1460,7 @@ describe('Path', function () {
     layer.add(back);
     layer.draw();
 
-    assert.deepEqual(rect, {
+    assertAlmostDeepEqual(rect, {
       height: 201.99999999999994,
       width: 201.99999999999994,
       x: 99,

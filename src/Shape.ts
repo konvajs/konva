@@ -538,19 +538,19 @@ export class Shape<
     // if stroke, for example = 3
     // we need to set x to 1.5, but after Math.round it will be 2
     // as we have additional offset we need to increase width and height by 1 pixel
-    let roundingOffset = 0;
-    if (Math.round(strokeWidth / 2) !== strokeWidth / 2) {
-      roundingOffset = 1;
-    }
+    // let roundingOffset = 0;
+    // if (Math.round(strokeWidth / 2) !== strokeWidth / 2) {
+    //   roundingOffset = 1;
+    // }
     const rect = {
-      width: width + roundingOffset,
-      height: height + roundingOffset,
+      width: width,
+      height: height,
       x:
-        -Math.round(strokeWidth / 2 + blurRadius) +
+        -(strokeWidth / 2 + blurRadius) +
         Math.min(shadowOffsetX, 0) +
         fillRect.x,
       y:
-        -Math.round(strokeWidth / 2 + blurRadius) +
+        -(strokeWidth / 2 + blurRadius) +
         Math.min(shadowOffsetY, 0) +
         fillRect.y,
     };
