@@ -70,8 +70,8 @@ describe('Caching', function () {
     context.fillStyle = 'green';
     context.fill();
 
-    compareLayerAndCanvas(layer, canvas, 200);
-    cloneAndCompareLayer(layer, 150);
+    compareLayerAndCanvas(layer, canvas, 200, 100);
+    cloneAndCompareLayer(layer, 150, 100);
   });
 
   it('cache rectangle with fill and stroke', function () {
