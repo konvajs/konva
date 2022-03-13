@@ -4,6 +4,8 @@ import * as Canvas from 'canvas';
 
 const canvas = Canvas['default'] || Canvas;
 
+global.DOMMatrix = canvas.DOMMatrix;
+
 const isNode = typeof global.document === 'undefined';
 
 if (isNode) {

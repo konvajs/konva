@@ -257,14 +257,19 @@ export class Shape<
 
         const m = tr.getMatrix();
 
-        pattern.setTransform({
-          a: m[0], // Horizontal scaling. A value of 1 results in no scaling.
-          b: m[1], // Vertical skewing.
-          c: m[2], // Horizontal skewing.
-          d: m[3],
-          e: m[4], // Horizontal translation (moving).
-          f: m[5], // Vertical translation (moving).
-        });
+        const matrix =
+          typeof DOMMatrix === 'undefined'
+            ? {
+                a: m[0], // Horizontal scaling. A value of 1 results in no scaling.
+                b: m[1], // Vertical skewing.
+                c: m[2], // Horizontal skewing.
+                d: m[3],
+                e: m[4], // Horizontal translation (moving).
+                f: m[5], // Vertical translation (moving).
+              }
+            : new DOMMatrix(m);
+
+        pattern.setTransform(matrix);
       }
       return pattern;
     }
@@ -534,7 +539,6 @@ export class Shape<
 
     const width = preWidth + blurRadius * 2;
     const height = preHeight + blurRadius * 2;
-
 
     const rect = {
       width: width,

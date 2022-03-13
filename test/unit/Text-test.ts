@@ -1379,16 +1379,19 @@ describe('Text', function () {
       ctx.textBaseline = 'middle';
 
       var grd = ctx.createPattern(imageObj, 'repeat');
-      if (isBrowser) {
-        grd.setTransform({
-          a: 0.5, // Horizontal scaling. A value of 1 results in no scaling.
-          b: 0, // Vertical skewing.
-          c: 0, // Horizontal skewing.
-          d: 0.5, // Vertical scaling. A value of 1 results in no scaling.
-          e: 0, // Horizontal translation (moving).
-          f: 0, // Vertical translation (moving).
-        });
-      }
+      const matrix =
+        typeof DOMMatrix === 'undefined'
+          ? {
+              a: 0.5, // Horizontal scaling. A value of 1 results in no scaling.
+              b: 0, // Vertical skewing.
+              c: 0, // Horizontal skewing.
+              d: 0.5,
+              e: 0, // Horizontal translation (moving).
+              f: 0, // Vertical translation (moving).
+            }
+          : new DOMMatrix([0.5, 0, 0, 0.5, 0, 0]);
+
+      grd.setTransform(matrix);
 
       ctx.fillStyle = grd;
 

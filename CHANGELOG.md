@@ -3,11 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 8.3.4 (2022-03-13)
+
 - Fix characters positions calculations on `fontFamily` changes in `TextPath`.
 - Remove rounding in `node.getClientRect()` results
 - Fix event object on `transformstart` event.
 
-## 8.3.3 (2022-03-23)
+## 8.3.3 (2022-02-23)
 
 - Fix `justify` align for text with several paragraphs.
 

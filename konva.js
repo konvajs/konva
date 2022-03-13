@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.3.3
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Mar 08 2022
+   * Date: Sun Mar 13 2022
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2599,15 +2599,26 @@
                   relativeTo: this.getParent(),
               });
           }
-          var width = Math.ceil(conf.width || rect.width), height = Math.ceil(conf.height || rect.height), pixelRatio = conf.pixelRatio, x = conf.x === undefined ? rect.x : conf.x, y = conf.y === undefined ? rect.y : conf.y, offset = conf.offset || 0, drawBorder = conf.drawBorder || false, hitCanvasPixelRatio = conf.hitCanvasPixelRatio || 1;
+          var width = Math.ceil(conf.width || rect.width), height = Math.ceil(conf.height || rect.height), pixelRatio = conf.pixelRatio, x = conf.x === undefined ? Math.floor(rect.x) : conf.x, y = conf.y === undefined ? Math.floor(rect.y) : conf.y, offset = conf.offset || 0, drawBorder = conf.drawBorder || false, hitCanvasPixelRatio = conf.hitCanvasPixelRatio || 1;
           if (!width || !height) {
               Util.error('Can not cache the node. Width or height of the node equals 0. Caching is skipped.');
               return;
           }
-          width += offset * 2;
-          height += offset * 2;
+          // let's just add 1 pixel extra,
+          // because using Math.floor on x, y position may shift drawing
+          width += offset * 2 + 1;
+          height += offset * 2 + 1;
           x -= offset;
           y -= offset;
+          // if (Math.floor(x) < x) {
+          //   x = Math.floor(x);
+          //   // width += 1;
+          // }
+          // if (Math.floor(y) < y) {
+          //   y = Math.floor(y);
+          //   // height += 1;
+          // }
+          // console.log({ x, y, width, height }, rect);
           var cachedSceneCanvas = new SceneCanvas({
               pixelRatio: pixelRatio,
               width: width,
@@ -6704,14 +6715,17 @@
                   tr.scale(this.fillPatternScaleX(), this.fillPatternScaleY());
                   tr.translate(-1 * this.fillPatternOffsetX(), -1 * this.fillPatternOffsetY());
                   const m = tr.getMatrix();
-                  pattern.setTransform({
-                      a: m[0],
-                      b: m[1],
-                      c: m[2],
-                      d: m[3],
-                      e: m[4],
-                      f: m[5], // Vertical translation (moving).
-                  });
+                  const matrix = typeof DOMMatrix === 'undefined'
+                      ? {
+                          a: m[0],
+                          b: m[1],
+                          c: m[2],
+                          d: m[3],
+                          e: m[4],
+                          f: m[5], // Vertical translation (moving).
+                      }
+                      : new DOMMatrix(m);
+                  pattern.setTransform(matrix);
               }
               return pattern;
           }
@@ -6933,20 +6947,13 @@
           const blurRadius = (applyShadow && this.shadowBlur()) || 0;
           const width = preWidth + blurRadius * 2;
           const height = preHeight + blurRadius * 2;
-          // if stroke, for example = 3
-          // we need to set x to 1.5, but after Math.round it will be 2
-          // as we have additional offset we need to increase width and height by 1 pixel
-          let roundingOffset = 0;
-          if (Math.round(strokeWidth / 2) !== strokeWidth / 2) {
-              roundingOffset = 1;
-          }
           const rect = {
-              width: width + roundingOffset,
-              height: height + roundingOffset,
-              x: -Math.round(strokeWidth / 2 + blurRadius) +
+              width: width,
+              height: height,
+              x: -(strokeWidth / 2 + blurRadius) +
                   Math.min(shadowOffsetX, 0) +
                   fillRect.x,
-              y: -Math.round(strokeWidth / 2 + blurRadius) +
+              y: -(strokeWidth / 2 + blurRadius) +
                   Math.min(shadowOffsetY, 0) +
                   fillRect.y,
           };
@@ -9732,17 +9739,17 @@
           const angle = Konva$2.getAngle(clockwise ? 360 - this.angle() : this.angle());
           const boundLeftRatio = Math.cos(Math.min(angle, Math.PI));
           const boundRightRatio = 1;
-          const boundTopRatio = Math.sin(Math.min(Math.max(Math.PI, angle), 3 * Math.PI / 2));
+          const boundTopRatio = Math.sin(Math.min(Math.max(Math.PI, angle), (3 * Math.PI) / 2));
           const boundBottomRatio = Math.sin(Math.min(angle, Math.PI / 2));
           const boundLeft = boundLeftRatio * (boundLeftRatio > 0 ? innerRadius : outerRadius);
           const boundRight = boundRightRatio * (outerRadius );
           const boundTop = boundTopRatio * (boundTopRatio > 0 ? innerRadius : outerRadius);
           const boundBottom = boundBottomRatio * (boundBottomRatio > 0 ? outerRadius : innerRadius);
           return {
-              x: Math.round(boundLeft),
-              y: Math.round(clockwise ? -1 * boundBottom : boundTop),
-              width: Math.round(boundRight - boundLeft),
-              height: Math.round(boundBottom - boundTop)
+              x: boundLeft,
+              y: clockwise ? -1 * boundBottom : boundTop,
+              width: boundRight - boundLeft,
+              height: boundBottom - boundTop,
           };
       }
   }
@@ -10341,10 +10348,10 @@
               }
           }
           return {
-              x: Math.round(minX),
-              y: Math.round(minY),
-              width: Math.round(maxX - minX),
-              height: Math.round(maxY - minY),
+              x: minX,
+              y: minY,
+              width: maxX - minX,
+              height: maxY - minY,
           };
       }
       /**
@@ -13964,7 +13971,7 @@
               this._setTextData();
           });
           // update text data for certain attr changes
-          this.on('textChange.konva alignChange.konva letterSpacingChange.konva kerningFuncChange.konva fontSizeChange.konva', this._setTextData);
+          this.on('textChange.konva alignChange.konva letterSpacingChange.konva kerningFuncChange.konva fontSizeChange.konva fontFamilyChange.konva', this._setTextData);
           this._setTextData();
       }
       _sceneFunc(context) {
@@ -14386,10 +14393,10 @@
    * @param {Number} letterSpacing
    * @returns {Number}
    * @example
-   * // get line height
+   * // get letter spacing value
    * var letterSpacing = shape.letterSpacing();
    *
-   * // set the line height
+   * // set the letter spacing value
    * shape.letterSpacing(2);
    */
   Factory.addGetterSetter(TextPath, 'letterSpacing', 0, getNumberValidator());
@@ -14400,10 +14407,10 @@
    * @param {String} textBaseline
    * @returns {String}
    * @example
-   * // get line height
+   * // get current text baseline
    * var textBaseline = shape.textBaseline();
    *
-   * // set the line height
+   * // set new text baseline
    * shape.textBaseline('top');
    */
   Factory.addGetterSetter(TextPath, 'textBaseline', 'middle');
