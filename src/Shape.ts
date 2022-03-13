@@ -535,13 +535,7 @@ export class Shape<
     const width = preWidth + blurRadius * 2;
     const height = preHeight + blurRadius * 2;
 
-    // if stroke, for example = 3
-    // we need to set x to 1.5, but after Math.round it will be 2
-    // as we have additional offset we need to increase width and height by 1 pixel
-    // let roundingOffset = 0;
-    // if (Math.round(strokeWidth / 2) !== strokeWidth / 2) {
-    //   roundingOffset = 1;
-    // }
+
     const rect = {
       width: width,
       height: height,
