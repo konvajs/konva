@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+- Fix characters positions calculations on `fontFamily` changes in `TextPath`.
+- Remove rounding in `node.getClientRect()` results
 - Fix event object on `transformstart` event.
 
 ## 8.3.3 (2022-03-23)
