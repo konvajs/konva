@@ -1889,12 +1889,16 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     var box = this.getClientRect();
 
     var stage = this.getStage(),
-      x = config.x !== undefined ? config.x : box.x,
-      y = config.y !== undefined ? config.y : box.y,
+      x = config.x !== undefined ? config.x : Math.floor(box.x),
+      y = config.y !== undefined ? config.y : Math.floor(box.y),
       pixelRatio = config.pixelRatio || 1,
       canvas = new SceneCanvas({
-        width: config.width || box.width || (stage ? stage.width() : 0),
-        height: config.height || box.height || (stage ? stage.height() : 0),
+        width:
+          config.width || Math.ceil(box.width) || (stage ? stage.width() : 0),
+        height:
+          config.height ||
+          Math.ceil(box.height) ||
+          (stage ? stage.height() : 0),
         pixelRatio: pixelRatio,
       }),
       context = canvas.getContext();

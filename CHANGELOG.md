@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 8.3.5 (2022-03-21)
+
+- Quick fix for `toCanvas()` and `toDataURL()` size calculation.
+
 ## 8.3.4 (2022-03-13)
 
 - Fix characters positions calculations on `fontFamily` changes in `TextPath`.
