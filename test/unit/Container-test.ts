@@ -94,7 +94,7 @@ describe('Container', function () {
       clipFunc: function (ctx) {
         const path2D = new Path2D();
         path2D.arc(50, 50, 40, 0, Math.PI * 2, false);
-        ctx.fill(path2D);
+        return path2D;
       },
     });
     stage.add(clipedLayer);

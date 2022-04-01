@@ -28,7 +28,7 @@ export interface ContainerConfig extends NodeConfig {
  */
 export abstract class Container<
   ChildType extends Node = Node
-> extends Node<ContainerConfig> {
+  > extends Node<ContainerConfig> {
   children: Array<ChildType> | undefined = [];
 
   /**
@@ -391,14 +391,20 @@ export abstract class Container<
       var m = transform.getMatrix();
       context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
       context.beginPath();
+
       if (clipFunc) {
-        clipFunc.call(this, context, this);
+        let path2d = clipFunc.call(this, context, this);
+        if (path2d instanceof Path2D === false)
+          context.clip(path2d)
+        else
+          context.clip();
       } else {
         var clipX = this.clipX();
         var clipY = this.clipY();
         context.rect(clipX, clipY, clipWidth, clipHeight);
+        context.clip();
       }
-      context.clip();
+      
       m = transform.copy().invert().getMatrix();
       context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
     }
