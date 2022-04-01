@@ -78,7 +78,7 @@ class TweenEngine {
       } else {
         if (this.state === REVERSING) {
           this.reset();
-          this.finish();
+          this.fire('onFinish');
         }
         else
           this.reset();
