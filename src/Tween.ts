@@ -5,12 +5,12 @@ import { Konva } from './Global';
 import { Line } from './shapes/Line';
 
 var blacklist = {
-  node: 1,
-  duration: 1,
-  easing: 1,
-  onFinish: 1,
-  yoyo: 1,
-},
+    node: 1,
+    duration: 1,
+    easing: 1,
+    onFinish: 1,
+    yoyo: 1,
+  },
   PAUSED = 1,
   PLAYING = 2,
   REVERSING = 3,
@@ -385,14 +385,14 @@ export class Tween {
             } else {
               newVal.push(
                 'rgba(' +
-                Math.round(start[n].r + diff[n].r * i) +
-                ',' +
-                Math.round(start[n].g + diff[n].g * i) +
-                ',' +
-                Math.round(start[n].b + diff[n].b * i) +
-                ',' +
-                (start[n].a + diff[n].a * i) +
-                ')'
+                  Math.round(start[n].r + diff[n].r * i) +
+                  ',' +
+                  Math.round(start[n].g + diff[n].g * i) +
+                  ',' +
+                  Math.round(start[n].b + diff[n].b * i) +
+                  ',' +
+                  (start[n].a + diff[n].a * i) +
+                  ')'
               );
             }
           }
@@ -698,17 +698,17 @@ export const Easings = {
     if (t < 1) {
       return (
         -0.5 *
-        (a *
-          Math.pow(2, 10 * (t -= 1)) *
-          Math.sin(((t * d - s) * (2 * Math.PI)) / p)) +
+          (a *
+            Math.pow(2, 10 * (t -= 1)) *
+            Math.sin(((t * d - s) * (2 * Math.PI)) / p)) +
         b
       );
     }
     return (
       a *
-      Math.pow(2, -10 * (t -= 1)) *
-      Math.sin(((t * d - s) * (2 * Math.PI)) / p) *
-      0.5 +
+        Math.pow(2, -10 * (t -= 1)) *
+        Math.sin(((t * d - s) * (2 * Math.PI)) / p) *
+        0.5 +
       c +
       b
     );
