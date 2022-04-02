@@ -76,7 +76,12 @@ class TweenEngine {
         this._time = 0;
         this.play();
       } else {
-        this.reset();
+        if (this.state === REVERSING) {
+          this.reset();
+          this.fire('onFinish');
+        }
+        else
+          this.reset();
       }
     } else {
       this._time = t;
