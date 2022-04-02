@@ -347,8 +347,11 @@ export class Context {
    * @method
    * @name Konva.Context#clip
    */
-  clip() {
-    this._context.clip();
+  clip(path2d) {
+    if (path2d)
+      this._context.clip(path2d);
+    else
+      this._context.clip();
   }
   /**
    * closePath function.
