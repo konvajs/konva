@@ -2,6 +2,7 @@ import { Util } from '../Util';
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { Path } from './Path';
+import { PathUtil } from './PathUtil';
 import { Text, stringToArray } from './Text';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
@@ -15,15 +16,18 @@ export interface TextPathConfig extends ShapeConfig {
   fontSize?: number;
   fontStyle?: string;
   letterSpacing?: number;
+  pathStartOffset?: number;
 }
 
 var EMPTY_STRING = '',
   NORMAL = 'normal';
 
 function _fillFunc(context) {
-  context.fillText(this.partialText, 0, 0);
+  context.fillText(this.partialText, this.pl, 0);
+  //context.fillText(this.partialText, 0, 0);
 }
 function _strokeFunc(context) {
+  // context.strokeText(this.partialText, this.pl, 0);
   context.strokeText(this.partialText, 0, 0);
 }
 
@@ -41,7 +45,6 @@ function _strokeFunc(context) {
  * @param {String} [config.textBaseline] Can be 'top', 'bottom', 'middle', 'alphabetic', 'hanging'. Default is middle
  * @param {String} config.text
  * @param {String} config.data SVG data string
- * @param {Function} config.kerningFunc a getter for kerning values for the specified characters
  * @@shapeParams
  * @@nodeParams
  * @example
@@ -65,20 +68,13 @@ function _strokeFunc(context) {
  *   fontSize: '24',
  *   fontFamily: 'Arial',
  *   text: 'All the world\'s a stage, and all the men and women merely players.',
- *   data: 'M10,10 C0,0 10,150 100,100 S300,150 400,50',
- *   kerningFunc(leftChar, rightChar) {
- *     return kerningPairs.hasOwnProperty(leftChar) ? pairs[leftChar][rightChar] || 0 : 0
- *   }
+ *   data: 'M10,10 C0,0 10,150 100,100 S300,150 400,50'
  * });
  */
 export class TextPath extends Shape<TextPathConfig> {
   dummyCanvas = Util.createCanvasElement();
   dataArray = [];
   glyphInfo: Array<{
-    transposeX: number;
-    transposeY: number;
-    text: string;
-    rotation: number;
     p0: Vector2d;
     p1: Vector2d;
   }>;
@@ -86,19 +82,30 @@ export class TextPath extends Shape<TextPathConfig> {
   textWidth: number;
   textHeight: number;
 
+  pl: number;
+  path: any;
+  segmentsInfo: any;
+  charBounds: any;
+  chars: Array<string>;
+
   constructor(config?: TextPathConfig) {
     // call super constructor
     super(config);
 
     this.dataArray = Path.parsePathData(this.attrs.data);
+    this.path = PathUtil.makePathSimpler(this.attrs.data);
+    this.segmentsInfo = PathUtil.getPathSegmentsInfo(this.path);
+
     this.on('dataChange.konva', function () {
       this.dataArray = Path.parsePathData(this.attrs.data);
+      this.path = PathUtil.makePathSimpler(this.attrs.data);
+      this.segmentsInfo = PathUtil.getPathSegmentsInfo(this.path);
       this._setTextData();
     });
 
     // update text data for certain attr changes
     this.on(
-      'textChange.konva alignChange.konva letterSpacingChange.konva kerningFuncChange.konva fontSizeChange.konva fontFamilyChange.konva',
+      'textChange.konva alignChange.konva letterSpacingChange.konva fontSizeChange.konva fontFamilyChange.konva',
       this._setTextData
     );
 
@@ -115,37 +122,31 @@ export class TextPath extends Shape<TextPathConfig> {
     var fill = this.fill();
     var fontSize = this.fontSize();
 
-    var glyphInfo = this.glyphInfo;
     if (textDecoration === 'underline') {
       context.beginPath();
     }
-    for (var i = 0; i < glyphInfo.length; i++) {
+
+
+    for (var i = 0, len = this.chars.length - 1; i <= len; i++) {
       context.save();
 
-      var p0 = glyphInfo[i].p0;
+      let charBox = this.charBounds[i];
 
-      context.translate(p0.x, p0.y);
-      context.rotate(glyphInfo[i].rotation);
-      this.partialText = glyphInfo[i].text;
+      context.translate(charBox.renderLeft, charBox.renderTop);
+      context.rotate(charBox.angle);
+      this.pl = - charBox.width / 2;
+
+      this.partialText = this.chars[i];
 
       context.fillStrokeShape(this);
       if (textDecoration === 'underline') {
         if (i === 0) {
-          context.moveTo(0, fontSize / 2 + 1);
+          context.moveTo(-charBox.width / 2, fontSize / 2 + 1);
         }
-
-        context.lineTo(fontSize, fontSize / 2 + 1);
+        context.lineTo(charBox.width / 2, fontSize / 2 + 1);
       }
-      context.restore();
 
-      //// To assist with debugging visually, uncomment following
-      //
-      // if (i % 2) context.strokeStyle = 'cyan';
-      // else context.strokeStyle = 'green';
-      // var p1 = glyphInfo[i].p1;
-      // context.moveTo(p0.x, p0.y);
-      // context.lineTo(p1.x, p1.y);
-      // context.stroke();
+      context.restore();
     }
     if (textDecoration === 'underline') {
       context.strokeStyle = fill;
@@ -198,10 +199,8 @@ export class TextPath extends Shape<TextPathConfig> {
     var _context = dummyCanvas.getContext('2d');
 
     _context.save();
-
     _context.font = this._getContextFont();
     var metrics = _context.measureText(text);
-
     _context.restore();
 
     return {
@@ -210,11 +209,14 @@ export class TextPath extends Shape<TextPathConfig> {
     };
   }
   _setTextData() {
+    this.chars = this._graphemeSplit(this.text());
+    this._measureLine();
+
+
     var that = this;
     var size = this._getTextSize(this.attrs.text);
-    var letterSpacing = this.letterSpacing();
+    var letterSpacing =  this.letterSpacing();
     var align = this.align();
-    var kerningFunc = this.kerningFunc();
 
     this.textWidth = size.width;
     this.textHeight = size.height;
@@ -223,6 +225,7 @@ export class TextPath extends Shape<TextPathConfig> {
       this.textWidth + ((this.attrs.text || '').length - 1) * letterSpacing,
       0
     );
+
 
     this.glyphInfo = [];
 
@@ -248,14 +251,7 @@ export class TextPath extends Shape<TextPathConfig> {
 
     var pIndex = -1;
     var currentT = 0;
-    // var sumLength = 0;
-    // for(var j = 0; j < that.dataArray.length; j++) {
-    //   if(that.dataArray[j].pathLength > 0) {
-    //
-    //     if (sumLength + that.dataArray[j].pathLength > offset) {}
-    //       fullPathWidth += that.dataArray[j].pathLength;
-    //   }
-    // }
+
 
     var getNextPathSegment = function () {
       currentT = 0;
@@ -459,36 +455,8 @@ export class TextPath extends Shape<TextPathConfig> {
         break;
       }
 
-      var width = Path.getLineLength(p0.x, p0.y, p1.x, p1.y);
-
-      var kern = 0;
-      if (kerningFunc) {
-        try {
-          // getKerning is a user provided getter. Make sure it never breaks our logic
-          kern = kerningFunc(charArr[i - 1], charArr[i]) * this.fontSize();
-        } catch (e) {
-          kern = 0;
-        }
-      }
-
-      p0.x += kern;
-      p1.x += kern;
-      this.textWidth += kern;
-
-      var midpoint = Path.getPointOnLine(
-        kern + width / 2.0,
-        p0.x,
-        p0.y,
-        p1.x,
-        p1.y
-      );
-
-      var rotation = Math.atan2(p1.y - p0.y, p1.x - p0.x);
+      //var rotation = Math.atan2(p1.y - p0.y, p1.x - p0.x);
       this.glyphInfo.push({
-        transposeX: midpoint.x,
-        transposeY: midpoint.y,
-        text: charArr[i],
-        rotation: rotation,
         p0: p0,
         p1: p1,
       });
@@ -534,6 +502,180 @@ export class TextPath extends Shape<TextPathConfig> {
     };
   }
 
+
+  /**
+   * Divide a string in the user perceived single units
+   * @memberOf fabric.util.string
+   * @param {String} textstring String to escape
+   * @return {Array} array containing the graphemes
+   */
+  _graphemeSplit(textstring: string) {
+    var i = 0, chr, graphemes = [];
+    for (i = 0, chr; i < textstring.length; i++) {
+      if ((chr = this._getWholeChar(textstring, i)) === false) {
+        continue;
+      }
+      graphemes.push(chr);
+    }
+    return graphemes;
+  }
+
+  // taken from mdn in the charAt doc page.
+  _getWholeChar(str: string, i: number) {
+    var code = str.charCodeAt(i);
+    if (isNaN(code)) {
+      return ''; // Position not found
+    }
+    if (code < 0xD800 || code > 0xDFFF) {
+      return str.charAt(i);
+    }
+
+    // High surrogate (could change last hex to 0xDB7F to treat high private
+    // surrogates as single characters)
+    if (0xD800 <= code && code <= 0xDBFF) {
+      if (str.length <= (i + 1)) {
+        throw 'High surrogate without following low surrogate';
+      }
+      var next = str.charCodeAt(i + 1);
+      if (0xDC00 > next || next > 0xDFFF) {
+        throw 'High surrogate without following low surrogate';
+      }
+      return str.charAt(i) + str.charAt(i + 1);
+    }
+    // Low surrogate (0xDC00 <= code && code <= 0xDFFF)
+    if (i === 0) {
+      throw 'Low surrogate without preceding high surrogate';
+    }
+    var prev = str.charCodeAt(i - 1);
+
+    // (could change last hex to 0xDB7F to treat high private
+    // surrogates as single characters)
+    if (0xD800 > prev || prev > 0xDBFF) {
+      throw 'Low surrogate without preceding high surrogate';
+    }
+    // We can pass over low surrogates now as the second component
+    // in a pair which we have already processed
+    return false;
+  }
+
+
+  _measureLine() {
+    var width = 0, i, grapheme,
+      graphemeInfo, numOfSpaces = 0, lineBounds = new Array(this.chars.length),
+      positionInPath = 0, startingPoint, totalPathLength,
+      reverse = false;// this.pathSide === 'right';
+
+
+    this.charBounds = lineBounds;
+    for (i = 0; i < this.chars.length; i++) {
+      grapheme = this.chars[i];
+      graphemeInfo = this._getGraphemeBox(grapheme);
+      lineBounds[i] = graphemeInfo;
+      width += graphemeInfo.kernedWidth;
+    }
+    // this latest bound box represent the last character of the line
+    // to simplify cursor handling in interactive mode.
+    lineBounds[i] = {
+      left: graphemeInfo ? graphemeInfo.left + graphemeInfo.width : 0,
+      width: 0,
+      kernedWidth: 0,
+      height: this.fontSize()
+    };
+
+    totalPathLength = this.segmentsInfo[this.segmentsInfo.length - 1].length;
+    startingPoint = PathUtil.getPointOnPath(this.path, 0, this.segmentsInfo);
+    switch (this.align()) {
+      case 'left':
+        positionInPath = reverse ? (totalPathLength - width) : 0;
+        break;
+      case 'center':
+        positionInPath = (totalPathLength - width) / 2;
+        break;
+      case 'right':
+        positionInPath = reverse ? 0 : (totalPathLength - width);
+        break;
+      //todo - add support for justify
+    }
+    positionInPath += this.pathStartOffset() * (reverse ? -1 : 1);
+    for (i = reverse ? this.chars.length - 1 : 0;
+      reverse ? i >= 0 : i < this.chars.length;
+      reverse ? i-- : i++) {
+      graphemeInfo = lineBounds[i];
+      if (positionInPath > totalPathLength) {
+        positionInPath %= totalPathLength;
+      }
+      else if (positionInPath < 0) {
+        positionInPath += totalPathLength;
+      }
+      // it would probably much faster to send all the grapheme position for a line
+      // and calculate path position/angle at once.
+      this._setGraphemeOnPath(positionInPath, graphemeInfo, startingPoint);
+      positionInPath += graphemeInfo.kernedWidth;
+    }
+
+    return { width: width, numOfSpaces: numOfSpaces };
+  }
+  /**
+    * Measure and return the info of a single grapheme.
+    * needs the the info of previous graphemes already filled
+    * @private
+    * @param {String} grapheme to be measured
+    * @param {Number} lineIndex index of the line where the char is
+    * @param {Number} charIndex position in the line
+    * @param {String} [prevGrapheme] character preceding the one to be measured
+    */
+  _getGraphemeBox(grapheme: string) {
+    var info = this._measureChar(grapheme),
+      kernedWidth = info.kernedWidth,
+      width = info.width, charSpacing: number;
+
+    if (this.letterSpacing() !== 0) {
+      charSpacing =this.letterSpacing();// this._getWidthOfCharSpacing();
+      width += charSpacing;
+      kernedWidth += charSpacing;
+    }
+
+    var box = {
+      width: width,
+      left: 0,
+      height: this.fontSize(),
+      kernedWidth: kernedWidth,
+      deltaY: 0,
+    };
+
+    return box;
+  }
+
+ /*  _getWidthOfCharSpacing() {
+    if (this.letterSpacing() !== 0) {
+      return this.fontSize() * this.letterSpacing() / 1000;
+    }
+    return 0;
+  } */
+
+  _measureChar(char: string) {
+    // first i try to return from cache
+    var width: number, kernedWidth: number;
+    var _context = getDummyContext();
+    _context.save();
+    _context.font = this._getContextFont();
+    kernedWidth = width = _context.measureText(char).width;
+    _context.restore();
+    return { width: width, kernedWidth: kernedWidth };
+  }
+
+  _setGraphemeOnPath(positionInPath, graphemeInfo, startingPoint) {
+    var centerPosition = positionInPath + graphemeInfo.kernedWidth / 2;
+
+    // we are at currentPositionOnPath. we want to know what point on the path is.
+    var info = PathUtil.getPointOnPath(this.path, centerPosition, this.segmentsInfo);
+    graphemeInfo.renderLeft = info.x - startingPoint.x;
+    graphemeInfo.renderTop = info.y - startingPoint.y;
+    graphemeInfo.angle = info.angle + 0;//(this.pathSide ===  'right' ? Math.PI : 0);
+  }
+
+
+
   fontFamily: GetSet<string, this>;
   fontSize: GetSet<number, this>;
   fontStyle: GetSet<string, this>;
@@ -543,9 +685,9 @@ export class TextPath extends Shape<TextPathConfig> {
   text: GetSet<string, this>;
   data: GetSet<string, this>;
 
-  kerningFunc: GetSet<(leftChar: string, rightChar: string) => number, this>;
   textBaseline: GetSet<string, this>;
   textDecoration: GetSet<string, this>;
+  pathStartOffset: GetSet<number, this>;
 }
 
 TextPath.prototype._fillFunc = _fillFunc;
@@ -715,19 +857,15 @@ Factory.addGetterSetter(TextPath, 'text', EMPTY_STRING);
  */
 Factory.addGetterSetter(TextPath, 'textDecoration', null);
 
-/**
- * get/set kerning function.
- * @name Konva.TextPath#kerningFunc
- * @method
- * @param {String} kerningFunc
- * @returns {String}
- * @example
- * // get text decoration
- * var kerningFunc = text.kerningFunc();
- *
- * // center text
- * text.kerningFunc(function(leftChar, rightChar) {
- *   return 1;
- * });
- */
-Factory.addGetterSetter(TextPath, 'kerningFunc', null);
+
+Factory.addGetterSetter(TextPath, 'pathStartOffset', 0, getNumberValidator());
+
+
+var dummyContext;
+function getDummyContext() {
+  if (dummyContext) {
+    return dummyContext;
+  }
+  dummyContext = Util.createCanvasElement().getContext('2d');
+  return dummyContext;
+}
