@@ -80,6 +80,7 @@
     "mocha": "9.2.2",
     "mocha-headless-chrome": "^4.0.0",
     "parcel": "2.3.2",
+    "postcss": "^8.4.12",
     "process": "^0.11.10",
     "rollup": "^2.70.0",
     "rollup-plugin-commonjs": "^10.1.0",

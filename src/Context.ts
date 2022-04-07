@@ -261,7 +261,7 @@ export class Context {
    * @param {Number} [bounds.height]
    */
   clear(bounds?) {
-    var canvas = this.getCanvas();
+    const canvas = this.getCanvas();
 
     if (bounds) {
       this.clearRect(
@@ -271,12 +271,14 @@ export class Context {
         bounds.height || 0
       );
     } else {
-      this.clearRect(
-        0,
-        0,
-        canvas.getWidth() / canvas.pixelRatio,
-        canvas.getHeight() / canvas.pixelRatio
-      );
+      if(canvas){
+        this.clearRect(
+            0,
+            0,
+            canvas.getWidth() / canvas.pixelRatio,
+            canvas.getHeight() / canvas.pixelRatio
+        );
+      }
     }
   }
   _applyLineCap(shape) {
