@@ -1,6 +1,4 @@
-var commaWsp = '(?:\\s+,?\\s*|,\\s*)';
-var rePathCommand = /([-+]?((\d+\.\d+)|((\d+)|(\.\d+)))(?:[eE][-+]?\d+)?)/ig;
-var PiBy2 = Math.PI / 2;
+import { Path } from './Path';
 
 /**
     * Calculate the cos of an angle, avoiding returning floats for known results
@@ -12,10 +10,9 @@ var PiBy2 = Math.PI / 2;
 function cos(angle) {
   if (angle === 0) { return 1; }
   if (angle < 0) {
-    // cos(a) = cos(-a)
     angle = -angle;
   }
-  var angleSlice = angle / PiBy2;
+  var angleSlice = angle / (Math.PI / 2);
   switch (angleSlice) {
     case 1: case 3: return 0;
     case 2: return -1;
@@ -32,9 +29,8 @@ function cos(angle) {
  */
 function sin(angle) {
   if (angle === 0) { return 0; }
-  var angleSlice = angle / PiBy2, sign = 1;
+  var angleSlice = angle / (Math.PI / 2), sign = 1;
   if (angle < 0) {
-    // sin(-a) = -sin(a)
     sign = -1;
   }
   switch (angleSlice) {
@@ -45,13 +41,10 @@ function sin(angle) {
   return Math.sin(angle);
 }
 
-function Point(x: number, y: number) {
-  return { x, y };
-}
 
 function PointLerp(p1: any, p2: any, t = 0.5) {
   t = Math.max(Math.min(1, t), 0);
-  return Point(p1.x + (p2.x - p1.x) * t, p1.y + (p2.y - p1.y) * t);
+  return { x: p1.x + (p2.x - p1.x) * t, y: p1.y + (p2.y - p1.y) * t };
 }
 
 
@@ -139,12 +132,10 @@ function arcToSegments(toX, toY, rx, ry, large, sweep, rotateX) {
 function calcVectorAngle(ux, uy, vx, vy) {
   var ta = Math.atan2(uy, ux),
     tb = Math.atan2(vy, vx);
-  if (tb >= ta) {
+  if (tb >= ta)
     return tb - ta;
-  }
-  else {
+  else
     return 2 * Math.PI - (ta - tb);
-  }
 }
 
 
@@ -176,41 +167,9 @@ function fromArcToBeziers(fx, fy, coords) {
 };
 
 
-
-/**
- * Calc length from point x1,y1 to x2,y2
- * @param {Number} x1 starting point x
- * @param {Number} y1 starting point y
- * @param {Number} x2 starting point x
- * @param {Number} y2 starting point y
- * @return {Number} length of segment
- */
-function calcLineLength(x1, y1, x2, y2) {
-  return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-}
-
-// functions for the Cubic beizer
-// taken from: https://github.com/konvajs/konva/blob/7.0.5/src/shapes/Path.ts#L350
-function CB1(t) {
-  return t * t * t;
-}
-function CB2(t) {
-  return 3 * t * t * (1 - t);
-}
-function CB3(t) {
-  return 3 * t * (1 - t) * (1 - t);
-}
-function CB4(t) {
-  return (1 - t) * (1 - t) * (1 - t);
-}
-
 function getPointOnCubicBezierIterator(p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y) {
   return function (pct) {
-    var c1 = CB1(pct), c2 = CB2(pct), c3 = CB3(pct), c4 = CB4(pct);
-    return {
-      x: p4x * c1 + p3x * c2 + p2x * c3 + p1x * c4,
-      y: p4y * c1 + p3y * c2 + p2y * c3 + p1y * c4
-    };
+    return Path.getPointOnCubicBezier(pct, p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y)
   };
 }
 
@@ -225,25 +184,11 @@ function getTangentCubicIterator(p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y) {
   };
 }
 
-function QB1(t) {
-  return t * t;
-}
 
-function QB2(t) {
-  return 2 * t * (1 - t);
-}
-
-function QB3(t) {
-  return (1 - t) * (1 - t);
-}
 
 function getPointOnQuadraticBezierIterator(p1x, p1y, p2x, p2y, p3x, p3y) {
   return function (pct) {
-    var c1 = QB1(pct), c2 = QB2(pct), c3 = QB3(pct);
-    return {
-      x: p3x * c1 + p2x * c2 + p1x * c3,
-      y: p3y * c1 + p2y * c2 + p1y * c3
-    };
+    return Path.getPointOnQuadraticBezier(pct, p1x, p1y, p2x, p2y, p3x, p3y)
   };
 }
 
@@ -263,7 +208,7 @@ function pathIterator(iterator, x1, y1) {
   var tempP = { x: x1, y: y1 }, p, tmpLen = 0, perc;
   for (perc = 1; perc <= 100; perc += 1) {
     p = iterator(perc / 100);
-    tmpLen += calcLineLength(tempP.x, tempP.y, p.x, p.y);
+    tmpLen += Path.getLineLength(tempP.x, tempP.y, p.x, p.y);
     tempP = p;
   }
   return tmpLen;
@@ -285,7 +230,7 @@ function findPercentageForDistance(segInfo, distance) {
   while (tmpLen < distance && nextStep > 0.0001) {
     p = iterator(perc);
     lastPerc = perc;
-    nextLen = calcLineLength(tempP.x, tempP.y, p.x, p.y);
+    nextLen = Path.getLineLength(tempP.x, tempP.y, p.x, p.y);
     // compare tmpLen each cycle with distance, decide next perc to test.
     if ((nextLen + tmpLen) > distance) {
       // we discard this step and we make smaller steps.
@@ -315,11 +260,12 @@ function findPercentageForDistance(segInfo, distance) {
     *
     */
 function parsePath(pathString) {
+  var commaWsp = '(?:\\s+,?\\s*|,\\s*)';
   var result = [],
     coords = [],
     currentPath,
     parsed,
-    re = rePathCommand,
+    re = /([-+]?((\d+\.\d+)|((\d+)|(\.\d+)))(?:[eE][-+]?\d+)?)/ig,
     rNumber = '[-+]?(?:\\d*\\.\\d+|\\d+\\.?)(?:[eE][-+]?\\d+)?\\s*',
     rNumberCommaWsp = '(' + rNumber + ')' + commaWsp,
     rFlagCommaWsp = '([01])' + commaWsp + '?',
@@ -596,7 +542,7 @@ export const PathUtil = {
           y2 = y1 = current[2];
           break;
         case 'L':
-          tempInfo.length = calcLineLength(x1, y1, current[1], current[2]);
+          tempInfo.length = Path.getLineLength(x1, y1, current[1], current[2]);
           x1 = current[1];
           y1 = current[2];
           break;
@@ -655,7 +601,7 @@ export const PathUtil = {
           // we add those in order to ease calculations later
           tempInfo.destX = x2;
           tempInfo.destY = y2;
-          tempInfo.length = calcLineLength(x1, y1, x2, y2);
+          tempInfo.length = Path.getLineLength(x1, y1, x2, y2);
           x1 = x2;
           y1 = y2;
           break;
@@ -684,11 +630,11 @@ export const PathUtil = {
         return { x: segInfo.x, y: segInfo.y, angle: 0 };
       case 'Z':
       case 'z':
-        info = PointLerp(Point(segInfo.x, segInfo.y), Point(segInfo.destX, segInfo.destY), segPercent);
+        info = PointLerp({ x: segInfo.x, y: segInfo.y }, { x: segInfo.destX, y: segInfo.destY }, segPercent);
         info.angle = Math.atan2(segInfo.destY - segInfo.y, segInfo.destX - segInfo.x);
         return info;
       case 'L':
-        info = PointLerp(Point(segInfo.x, segInfo.y), Point(segment[1], segment[2]), segPercent);
+        info = PointLerp({ x: segInfo.x, y: segInfo.y }, { x: segment[1], y: segment[2] }, segPercent);
         info.angle = Math.atan2(segment[2] - segInfo.y, segment[1] - segInfo.x);
         return info;
       case 'C':

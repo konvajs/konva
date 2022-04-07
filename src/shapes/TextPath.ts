@@ -24,10 +24,8 @@ var EMPTY_STRING = '',
 
 function _fillFunc(context) {
   context.fillText(this.partialText, this.pl, 0);
-  //context.fillText(this.partialText, 0, 0);
 }
 function _strokeFunc(context) {
-  // context.strokeText(this.partialText, this.pl, 0);
   context.strokeText(this.partialText, 0, 0);
 }
 
@@ -48,19 +46,6 @@ function _strokeFunc(context) {
  * @@shapeParams
  * @@nodeParams
  * @example
- * var kerningPairs = {
- *   'A': {
- *     ' ': -0.05517578125,
- *     'T': -0.07421875,
- *     'V': -0.07421875
- *   }
- *   'V': {
- *     ',': -0.091796875,
- *     ":": -0.037109375,
- *     ";": -0.037109375,
- *     "A": -0.07421875
- *   }
- * }
  * var textpath = new Konva.TextPath({
  *   x: 100,
  *   y: 50,
@@ -73,11 +58,11 @@ function _strokeFunc(context) {
  */
 export class TextPath extends Shape<TextPathConfig> {
   dummyCanvas = Util.createCanvasElement();
-  dataArray = [];
-  glyphInfo: Array<{
-    p0: Vector2d;
-    p1: Vector2d;
-  }>;
+  /*   dataArray = [];
+    glyphInfo: Array<{
+      p0: Vector2d;
+      p1: Vector2d;
+    }>; */
   partialText: string;
   textWidth: number;
   textHeight: number;
@@ -92,12 +77,12 @@ export class TextPath extends Shape<TextPathConfig> {
     // call super constructor
     super(config);
 
-    this.dataArray = Path.parsePathData(this.attrs.data);
+    //this.dataArray = Path.parsePathData(this.attrs.data);
     this.path = PathUtil.makePathSimpler(this.attrs.data);
     this.segmentsInfo = PathUtil.getPathSegmentsInfo(this.path);
 
     this.on('dataChange.konva', function () {
-      this.dataArray = Path.parsePathData(this.attrs.data);
+      //this.dataArray = Path.parsePathData(this.attrs.data);
       this.path = PathUtil.makePathSimpler(this.attrs.data);
       this.segmentsInfo = PathUtil.getPathSegmentsInfo(this.path);
       this._setTextData();
@@ -148,29 +133,78 @@ export class TextPath extends Shape<TextPathConfig> {
 
       context.restore();
     }
+
     if (textDecoration === 'underline') {
       context.strokeStyle = fill;
       context.lineWidth = fontSize / 20;
       context.stroke();
     }
-
     context.restore();
+
+    /* //test
+    var tbl = this.textBaseline(), oy = 0, h = this.fontSize() / 2;
+    if (tbl === 'middle')
+      oy = 0
+    else if (tbl === 'top' || tbl === 'hanging')
+      oy = h;
+    else if (tbl === 'bottom' || tbl === 'alphabetic' || tbl === 'ideographic')
+      oy = -h;
+
+    context.save();
+    context.translate(0, oy);
+
+    var glyphInfo = this.charBounds;
+    if (glyphInfo.length >= 1) {
+      var p0 = glyphInfo[0];
+      context.moveTo(p0.renderLeft, p0.renderTop);
+    }
+    for (var i = 0; i < glyphInfo.length - 1; i++) {
+      var p1 = glyphInfo[i];
+      //context.save();
+      //context.translate(p1.renderLeft, p1.renderTop);
+      //context.rotate(p1.angle);
+      //context.translate(-p1.renderLeft, -p1.renderTop); 
+      context.lineTo(p1.renderLeft, p1.renderTop);
+      //context.restore();
+    }
+    context.restore();
+    context.setAttr('lineCap', 'square');
+    context.setAttr('lineWidth', this.fontSize());
+    context.strokeStyle = '#ff000050';
+    context.stroke(); */
+
   }
   _hitFunc(context) {
-    context.beginPath();
 
-    var glyphInfo = this.glyphInfo;
+    context.beginPath();
+    var tbl = this.textBaseline(), oy = 0, h = this.fontSize() / 2;
+
+    if (tbl === 'middle')
+      oy = 0
+    else if (tbl === 'top' || tbl === 'hanging')
+      oy = h;
+    else if (tbl === 'bottom' || tbl === 'alphabetic' || tbl === 'ideographic')
+      oy = -h;
+
+    context.save();
+    context.translate(0, oy);
+
+    var glyphInfo = this.charBounds;
     if (glyphInfo.length >= 1) {
-      var p0 = glyphInfo[0].p0;
-      context.moveTo(p0.x, p0.y);
+      var p0 = glyphInfo[0];
+      context.moveTo(p0.renderLeft, p0.renderTop + oy);
     }
-    for (var i = 0; i < glyphInfo.length; i++) {
-      var p1 = glyphInfo[i].p1;
-      context.lineTo(p1.x, p1.y);
+    for (var i = 0; i < glyphInfo.length - 1; i++) {
+      var p1 = glyphInfo[i];
+      context.lineTo(p1.renderLeft, p1.renderTop + oy);
     }
+
+    //let lineCap = context._context["lineCap"];
+    context.setAttr('lineCap', 'square');
     context.setAttr('lineWidth', this.fontSize());
     context.setAttr('strokeStyle', this.colorKey);
     context.stroke();
+    context.restore();
   }
   /**
    * get text width in pixels
@@ -211,294 +245,20 @@ export class TextPath extends Shape<TextPathConfig> {
   _setTextData() {
     this.chars = this._graphemeSplit(this.text());
     this._measureLine();
-
-
-    var that = this;
-    var size = this._getTextSize(this.attrs.text);
-    var letterSpacing =  this.letterSpacing();
-    var align = this.align();
-
-    this.textWidth = size.width;
-    this.textHeight = size.height;
-
-    var textFullWidth = Math.max(
-      this.textWidth + ((this.attrs.text || '').length - 1) * letterSpacing,
-      0
-    );
-
-
-    this.glyphInfo = [];
-
-    var fullPathWidth = 0;
-    for (var l = 0; l < that.dataArray.length; l++) {
-      if (that.dataArray[l].pathLength > 0) {
-        fullPathWidth += that.dataArray[l].pathLength;
-      }
-    }
-
-    var offset = 0;
-    if (align === 'center') {
-      offset = Math.max(0, fullPathWidth / 2 - textFullWidth / 2);
-    }
-    if (align === 'right') {
-      offset = Math.max(0, fullPathWidth - textFullWidth);
-    }
-
-    var charArr = stringToArray(this.text());
-    var spacesNumber = this.text().split(' ').length - 1;
-
-    var p0, p1, pathCmd;
-
-    var pIndex = -1;
-    var currentT = 0;
-
-
-    var getNextPathSegment = function () {
-      currentT = 0;
-      var pathData = that.dataArray;
-
-      for (var j = pIndex + 1; j < pathData.length; j++) {
-        if (pathData[j].pathLength > 0) {
-          pIndex = j;
-
-          return pathData[j];
-        } else if (pathData[j].command === 'M') {
-          p0 = {
-            x: pathData[j].points[0],
-            y: pathData[j].points[1],
-          };
-        }
-      }
-
-      return {};
-    };
-
-    var findSegmentToFitCharacter = function (c) {
-      var glyphWidth = that._getTextSize(c).width + letterSpacing;
-
-      if (c === ' ' && align === 'justify') {
-        glyphWidth += (fullPathWidth - textFullWidth) / spacesNumber;
-      }
-
-      var currLen = 0;
-      var attempts = 0;
-
-      p1 = undefined;
-      while (
-        Math.abs(glyphWidth - currLen) / glyphWidth > 0.01 &&
-        attempts < 20
-      ) {
-        attempts++;
-        var cumulativePathLength = currLen;
-        while (pathCmd === undefined) {
-          pathCmd = getNextPathSegment();
-
-          if (
-            pathCmd &&
-            cumulativePathLength + pathCmd.pathLength < glyphWidth
-          ) {
-            cumulativePathLength += pathCmd.pathLength;
-            pathCmd = undefined;
-          }
-        }
-
-        if (pathCmd === {} || p0 === undefined) {
-          return undefined;
-        }
-
-        var needNewSegment = false;
-
-        switch (pathCmd.command) {
-          case 'L':
-            if (
-              Path.getLineLength(
-                p0.x,
-                p0.y,
-                pathCmd.points[0],
-                pathCmd.points[1]
-              ) > glyphWidth
-            ) {
-              p1 = Path.getPointOnLine(
-                glyphWidth,
-                p0.x,
-                p0.y,
-                pathCmd.points[0],
-                pathCmd.points[1],
-                p0.x,
-                p0.y
-              );
-            } else {
-              pathCmd = undefined;
-            }
-            break;
-          case 'A':
-            var start = pathCmd.points[4];
-            // 4 = theta
-            var dTheta = pathCmd.points[5];
-            // 5 = dTheta
-            var end = pathCmd.points[4] + dTheta;
-
-            if (currentT === 0) {
-              currentT = start + 0.00000001;
-            } else if (glyphWidth > currLen) {
-              // Just in case start is 0
-              currentT += ((Math.PI / 180.0) * dTheta) / Math.abs(dTheta);
-            } else {
-              currentT -= ((Math.PI / 360.0) * dTheta) / Math.abs(dTheta);
-            }
-
-            // Credit for bug fix: @therth https://github.com/ericdrowell/KonvaJS/issues/249
-            // Old code failed to render text along arc of this path: "M 50 50 a 150 50 0 0 1 250 50 l 50 0"
-            if (
-              (dTheta < 0 && currentT < end) ||
-              (dTheta >= 0 && currentT > end)
-            ) {
-              currentT = end;
-              needNewSegment = true;
-            }
-            p1 = Path.getPointOnEllipticalArc(
-              pathCmd.points[0],
-              pathCmd.points[1],
-              pathCmd.points[2],
-              pathCmd.points[3],
-              currentT,
-              pathCmd.points[6]
-            );
-            break;
-          case 'C':
-            if (currentT === 0) {
-              if (glyphWidth > pathCmd.pathLength) {
-                currentT = 0.00000001;
-              } else {
-                currentT = glyphWidth / pathCmd.pathLength;
-              }
-            } else if (glyphWidth > currLen) {
-              currentT += (glyphWidth - currLen) / pathCmd.pathLength / 2;
-            } else {
-              currentT = Math.max(
-                currentT - (currLen - glyphWidth) / pathCmd.pathLength / 2,
-                0
-              );
-            }
-
-            if (currentT > 1.0) {
-              currentT = 1.0;
-              needNewSegment = true;
-            }
-            p1 = Path.getPointOnCubicBezier(
-              currentT,
-              pathCmd.start.x,
-              pathCmd.start.y,
-              pathCmd.points[0],
-              pathCmd.points[1],
-              pathCmd.points[2],
-              pathCmd.points[3],
-              pathCmd.points[4],
-              pathCmd.points[5]
-            );
-            break;
-          case 'Q':
-            if (currentT === 0) {
-              currentT = glyphWidth / pathCmd.pathLength;
-            } else if (glyphWidth > currLen) {
-              currentT += (glyphWidth - currLen) / pathCmd.pathLength;
-            } else {
-              currentT -= (currLen - glyphWidth) / pathCmd.pathLength;
-            }
-
-            if (currentT > 1.0) {
-              currentT = 1.0;
-              needNewSegment = true;
-            }
-            p1 = Path.getPointOnQuadraticBezier(
-              currentT,
-              pathCmd.start.x,
-              pathCmd.start.y,
-              pathCmd.points[0],
-              pathCmd.points[1],
-              pathCmd.points[2],
-              pathCmd.points[3]
-            );
-            break;
-        }
-
-        if (p1 !== undefined) {
-          currLen = Path.getLineLength(p0.x, p0.y, p1.x, p1.y);
-        }
-
-        if (needNewSegment) {
-          needNewSegment = false;
-          pathCmd = undefined;
-        }
-      }
-    };
-
-    // fake search for offset, this is the best approach
-    var testChar = 'C';
-    var glyphWidth = that._getTextSize(testChar).width + letterSpacing;
-    var lettersInOffset = offset / glyphWidth - 1;
-    // the idea is simple
-    // try to draw testChar until we fill offset
-    for (var k = 0; k < lettersInOffset; k++) {
-      findSegmentToFitCharacter(testChar);
-      if (p0 === undefined || p1 === undefined) {
-        break;
-      }
-      p0 = p1;
-    }
-
-    for (var i = 0; i < charArr.length; i++) {
-      // Find p1 such that line segment between p0 and p1 is approx. width of glyph
-      findSegmentToFitCharacter(charArr[i]);
-
-      if (p0 === undefined || p1 === undefined) {
-        break;
-      }
-
-      //var rotation = Math.atan2(p1.y - p0.y, p1.x - p0.x);
-      this.glyphInfo.push({
-        p0: p0,
-        p1: p1,
-      });
-      p0 = p1;
-    }
   }
   getSelfRect() {
-    if (!this.glyphInfo.length) {
-      return {
-        x: 0,
-        y: 0,
-        width: 0,
-        height: 0,
-      };
-    }
-    var points = [];
-
-    this.glyphInfo.forEach(function (info) {
-      points.push(info.p0.x);
-      points.push(info.p0.y);
-      points.push(info.p1.x);
-      points.push(info.p1.y);
-    });
-    var minX = points[0] || 0;
-    var maxX = points[0] || 0;
-    var minY = points[1] || 0;
-    var maxY = points[1] || 0;
-    var x, y;
-    for (var i = 0; i < points.length / 2; i++) {
-      x = points[i * 2];
-      y = points[i * 2 + 1];
-      minX = Math.min(minX, x);
-      maxX = Math.max(maxX, x);
-      minY = Math.min(minY, y);
-      maxY = Math.max(maxY, y);
-    }
     var fontSize = this.fontSize();
+
+    var xs = this.charBounds.map(x => x.renderLeft);
+    var ys = this.charBounds.map(x => x.renderTop);
+    xs.pop();
+    ys.pop();
+
     return {
-      x: minX - fontSize / 2,
-      y: minY - fontSize / 2,
-      width: maxX - minX + fontSize,
-      height: maxY - minY + fontSize,
+      x: Math.min(...xs) - fontSize / 2,
+      y: Math.min(...ys) - fontSize / 2,
+      width: Math.max(...xs) - Math.min(...xs) + fontSize,
+      height: Math.max(...ys) - Math.min(...ys) + fontSize,
     };
   }
 
@@ -558,24 +318,22 @@ export class TextPath extends Shape<TextPathConfig> {
     return false;
   }
 
-
   _measureLine() {
-    var width = 0, i, grapheme,
-      graphemeInfo, numOfSpaces = 0, lineBounds = new Array(this.chars.length),
+    var width = 0, i = 0, grapheme,
+      graphemeInfo, numOfSpaces = 0,
       positionInPath = 0, startingPoint, totalPathLength,
       reverse = false;// this.pathSide === 'right';
 
-
-    this.charBounds = lineBounds;
+    this.charBounds = new Array(this.chars.length);
     for (i = 0; i < this.chars.length; i++) {
       grapheme = this.chars[i];
       graphemeInfo = this._getGraphemeBox(grapheme);
-      lineBounds[i] = graphemeInfo;
+      this.charBounds[i] = graphemeInfo;
       width += graphemeInfo.kernedWidth;
     }
     // this latest bound box represent the last character of the line
     // to simplify cursor handling in interactive mode.
-    lineBounds[i] = {
+    this.charBounds[i] = {
       left: graphemeInfo ? graphemeInfo.left + graphemeInfo.width : 0,
       width: 0,
       kernedWidth: 0,
@@ -600,13 +358,12 @@ export class TextPath extends Shape<TextPathConfig> {
     for (i = reverse ? this.chars.length - 1 : 0;
       reverse ? i >= 0 : i < this.chars.length;
       reverse ? i-- : i++) {
-      graphemeInfo = lineBounds[i];
-      if (positionInPath > totalPathLength) {
+      graphemeInfo = this.charBounds[i];
+      if (positionInPath > totalPathLength)
         positionInPath %= totalPathLength;
-      }
-      else if (positionInPath < 0) {
+      else if (positionInPath < 0)
         positionInPath += totalPathLength;
-      }
+
       // it would probably much faster to send all the grapheme position for a line
       // and calculate path position/angle at once.
       this._setGraphemeOnPath(positionInPath, graphemeInfo, startingPoint);
@@ -625,44 +382,25 @@ export class TextPath extends Shape<TextPathConfig> {
     * @param {String} [prevGrapheme] character preceding the one to be measured
     */
   _getGraphemeBox(grapheme: string) {
-    var info = this._measureChar(grapheme),
-      kernedWidth = info.kernedWidth,
-      width = info.width, charSpacing: number;
+    var size = this._getTextSize(grapheme);
+    var width = size.width, kernedWidth = size.width, charSpacing = 0;
 
     if (this.letterSpacing() !== 0) {
-      charSpacing =this.letterSpacing();// this._getWidthOfCharSpacing();
+      charSpacing = this.letterSpacing();// this._getWidthOfCharSpacing();
       width += charSpacing;
       kernedWidth += charSpacing;
     }
 
-    var box = {
+    return {
       width: width,
-      left: 0,
-      height: this.fontSize(),
+      // left: 0,
+      height: size.height,
       kernedWidth: kernedWidth,
-      deltaY: 0,
+      // deltaY: 0,
     };
-
-    return box;
   }
 
- /*  _getWidthOfCharSpacing() {
-    if (this.letterSpacing() !== 0) {
-      return this.fontSize() * this.letterSpacing() / 1000;
-    }
-    return 0;
-  } */
 
-  _measureChar(char: string) {
-    // first i try to return from cache
-    var width: number, kernedWidth: number;
-    var _context = getDummyContext();
-    _context.save();
-    _context.font = this._getContextFont();
-    kernedWidth = width = _context.measureText(char).width;
-    _context.restore();
-    return { width: width, kernedWidth: kernedWidth };
-  }
 
   _setGraphemeOnPath(positionInPath, graphemeInfo, startingPoint) {
     var centerPosition = positionInPath + graphemeInfo.kernedWidth / 2;
@@ -860,12 +598,3 @@ Factory.addGetterSetter(TextPath, 'textDecoration', null);
 
 Factory.addGetterSetter(TextPath, 'pathStartOffset', 0, getNumberValidator());
 
-
-var dummyContext;
-function getDummyContext() {
-  if (dummyContext) {
-    return dummyContext;
-  }
-  dummyContext = Util.createCanvasElement().getContext('2d');
-  return dummyContext;
-}
