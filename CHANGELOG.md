@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+- `imageSmoothingEnabled` option for `node.toDataURL()`, `node.toCanvas()` and `node.toImage()`
+
 ## 8.3.5 (2022-03-21)
 
 - Quick fix for `toCanvas()` and `toDataURL()` size calculation.
