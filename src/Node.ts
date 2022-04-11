@@ -1903,6 +1903,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       }),
       context = canvas.getContext();
 
+    if (config.imageSmoothingEnabled === false) {
+      context._context.imageSmoothingEnabled = false;
+    }
     context.save();
 
     if (x || y) {
@@ -1928,6 +1931,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * You can use that property to increase quality of the image, for example for super hight quality exports
    * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
    * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
+   * @param {Boolean} [config.imageSmoothingEnabled] set this to false if you want to disable imageSmoothing
    * @example
    * var canvas = node.toCanvas();
    */
@@ -1954,6 +1958,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * You can use that property to increase quality of the image, for example for super hight quality exports
    * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
    * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
+   * @param {Boolean} [config.imageSmoothingEnabled] set this to false if you want to disable imageSmoothing
    * @returns {String}
    */
   toDataURL(config?: {
@@ -1996,6 +2001,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * You can use that property to increase quality of the image, for example for super hight quality exports
    * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
    * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
+   * @param {Boolean} [config.imageSmoothingEnabled] set this to false if you want to disable imageSmoothing
    * @example
    * var image = node.toImage({
    *   callback(img) {

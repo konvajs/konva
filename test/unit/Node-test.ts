@@ -446,6 +446,36 @@ describe('Node', function () {
   });
 
   // ======================================================
+  it('export with smooth disabled', function (done) {
+    loadImage('lion.png', (imageObj) => {
+      var stage = addStage();
+      var layer = new Konva.Layer({
+        imageSmoothingEnabled: false,
+      });
+      stage.add(layer);
+
+      var image = new Konva.Image({
+        x: -50,
+        y: -50,
+        image: imageObj,
+        scaleX: 5,
+        scaleY: 5,
+      });
+      layer.add(image);
+
+      const canvas = layer.toCanvas({
+        imageSmoothingEnabled: false,
+        pixelRatio: layer.getCanvas().getPixelRatio(),
+      });
+      layer.draw();
+      compareLayerAndCanvas(layer, canvas);
+
+      // just check clone without crashes
+      done();
+    });
+  });
+
+  // ======================================================
   it("listen and don't listen", function () {
     var stage = addStage();
     var layer = new Konva.Layer();

@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.3.5
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Mon Mar 21 2022
+   * Date: Mon Apr 11 2022
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -3982,6 +3982,9 @@
                   (stage ? stage.height() : 0),
               pixelRatio: pixelRatio,
           }), context = canvas.getContext();
+          if (config.imageSmoothingEnabled === false) {
+              context._context.imageSmoothingEnabled = false;
+          }
           context.save();
           if (x || y) {
               context.translate(-1 * x, -1 * y);
@@ -4004,6 +4007,7 @@
        * You can use that property to increase quality of the image, for example for super hight quality exports
        * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
        * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
+       * @param {Boolean} [config.imageSmoothingEnabled] set this to false if you want to disable imageSmoothing
        * @example
        * var canvas = node.toCanvas();
        */
@@ -4030,6 +4034,7 @@
        * You can use that property to increase quality of the image, for example for super hight quality exports
        * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
        * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
+       * @param {Boolean} [config.imageSmoothingEnabled] set this to false if you want to disable imageSmoothing
        * @returns {String}
        */
       toDataURL(config) {
@@ -4062,6 +4067,7 @@
        * You can use that property to increase quality of the image, for example for super hight quality exports
        * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
        * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
+       * @param {Boolean} [config.imageSmoothingEnabled] set this to false if you want to disable imageSmoothing
        * @example
        * var image = node.toImage({
        *   callback(img) {
