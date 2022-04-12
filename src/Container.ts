@@ -393,7 +393,7 @@ export abstract class Container<
       context.beginPath();
       if (clipFunc) {
         let path2d = clipFunc.call(this, context, this);
-        if (path2d instanceof Path2D === false)
+        if (path2d instanceof Path2D === true)
           context.clip(path2d)
         else
           context.clip();
