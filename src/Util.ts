@@ -207,25 +207,6 @@ export class Transform {
     return this.m;
   }
   /**
-   * set to absolute position via translation
-   * @method
-   * @name Konva.Transform#setAbsolutePosition
-   * @returns {Konva.Transform}
-   * @author ericdrowell
-   */
-  setAbsolutePosition(x: number, y: number) {
-    var m0 = this.m[0],
-      m1 = this.m[1],
-      m2 = this.m[2],
-      m3 = this.m[3],
-      m4 = this.m[4],
-      m5 = this.m[5],
-      yt = (m0 * (y - m5) - m1 * (x - m4)) / (m0 * m3 - m1 * m2),
-      xt = (x - m4 - m2 * yt) / m0;
-
-    return this.translate(xt, yt);
-  }
-  /**
    * convert transformation matrix back into node's attributes
    * @method
    * @name Konva.Transform#decompose
