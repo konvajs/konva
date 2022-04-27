@@ -92,7 +92,7 @@ var ANGLES = {
 const TOUCH_DEVICE = 'ontouchstart' in Konva._global;
 
 function getCursor(anchorName, rad) {
-  if (anchorName === 'rotater') {
+  if (anchorName.indexOf('rotater') === 0) {
     return 'crosshair';
   }
 
@@ -139,6 +139,10 @@ var ANCHORS_NAMES = [
   'bottom-left',
   'bottom-center',
   'bottom-right',
+  'rotater-top',
+  'rotater-bottom',
+  'rotater-left',
+  'rotater-right'
 ];
 
 var MAX_SAFE_INTEGER = 100000000;
@@ -523,7 +527,6 @@ export class Transformer extends Group {
       }.bind(this)
     );
 
-    this._createAnchor('rotater');
   }
   _createAnchor(name) {
     var anchor = new Rect({
@@ -580,15 +583,59 @@ export class Transformer extends Group {
           this.width() + padding * 2,
           this.height() + padding * 2
         );
-        ctx.moveTo(this.width() / 2, -padding);
+        
         if (tr.rotateEnabled()) {
-          ctx.lineTo(
-            this.width() / 2,
-            -tr.rotateAnchorOffset() * Util._sign(this.height()) - padding
-          );
+
+          var enabledAnchors = tr.enabledAnchors();
+
+          if (enabledAnchors.indexOf('rotater-top') >= 0) {
+
+            ctx.moveTo(this.width() / 2, -padding);
+
+            ctx.lineTo(
+              this.width() / 2,
+              -tr.rotateAnchorOffset() * Util._sign(this.height()) - padding
+            );
+
+          }
+
+          if (enabledAnchors.indexOf('rotater-bottom') >= 0) {
+
+            ctx.moveTo(this.width() / 2, this.height() + padding);
+
+            ctx.lineTo(
+              this.width() / 2,
+              this.height() + tr.rotateAnchorOffset() * Util._sign(this.height()) - padding
+            );
+
+          }
+
+          if (enabledAnchors.indexOf('rotater-left') >= 0) {
+
+            ctx.moveTo(-padding, this.height() / 2);
+
+            ctx.lineTo(
+              -tr.rotateAnchorOffset() * Util._sign(this.width()) - padding,
+              this.height() / 2
+            );
+
+          }
+
+          if (enabledAnchors.indexOf('rotater-right') >= 0) {
+
+            ctx.moveTo(this.width() + padding, this.height() / 2);
+
+            ctx.lineTo(
+              this.width() + tr.rotateAnchorOffset() * Util._sign(this.width()) + padding,
+              this.height() / 2
+            );
+
+          }
+
         }
 
         ctx.fillStrokeShape(this);
+        
       },
       hitFunc: (ctx, shape) => {
         if (!this.shouldOverdrawWholeArea()) {
@@ -681,13 +728,42 @@ export class Transformer extends Group {
     }
 
     // rotater is working very differently, so do it first
-    if (this._movingAnchorName === 'rotater') {
+    if (this._movingAnchorName.indexOf('rotater') === 0) {
       var attrs = this._getNodeRect();
-      x = anchorNode.x() - attrs.width / 2;
-      y = -anchorNode.y() + attrs.height / 2;
 
-      // hor angle is changed?
-      let delta = Math.atan2(-y, x) + Math.PI / 2;
+      var delta : number;
+
+      if (this._movingAnchorName.indexOf('rotater') === 0) {
+        var attrs = this._getNodeRect();
+        if (this._movingAnchorName.indexOf('top') >= 0) {
+            x = anchorNode.x() - attrs.width / 2;
+            y = -anchorNode.y() + attrs.height / 2;
+
+            delta = Math.atan2(-y, x) + Math.PI / 2;
+        }
+        else if (this._movingAnchorName.indexOf('bottom') >= 0) {
+            x = -anchorNode.x() + attrs.width / 2;
+            y = anchorNode.y() - attrs.height / 2;
+
+            delta = Math.atan2(-y, x) + Math.PI / 2;
+        }
+        else if (this._movingAnchorName.indexOf('left') >= 0) {
+          x = anchorNode.x() - attrs.width / 2;
+          y = -anchorNode.y() + attrs.height / 2;
+          delta = Math.atan2(x, y) + Math.PI / 2;
+        }
+        else if (this._movingAnchorName.indexOf('right') >= 0) {
+          x = -anchorNode.x() + attrs.width / 2;
+          y = anchorNode.y() - attrs.height / 2;
+
+          delta = Math.atan2(x, y) + Math.PI / 2;
+        }
+        else {
+            console.error(new Error('Wrong position argument of rotater: ' +
+                this._movingAnchorName));
+            return;
+        }
+      }
 
       if (attrs.height < 0) {
         delta -= Math.PI;
@@ -971,7 +1047,8 @@ export class Transformer extends Group {
     if (
       this._movingAnchorName &&
       newAttrs.height < 0 &&
-      this._movingAnchorName.indexOf('top') >= 0
+      this._movingAnchorName.indexOf('top') >= 0 &&
+      this._movingAnchorName.indexOf('rotater') == -1
     ) {
       const offset = t.point({
         x: 0,
@@ -990,7 +1067,8 @@ export class Transformer extends Group {
     } else if (
       this._movingAnchorName &&
       newAttrs.height < 0 &&
-      this._movingAnchorName.indexOf('bottom') >= 0
+      this._movingAnchorName.indexOf('bottom') >= 0 &&
+      this._movingAnchorName.indexOf('rotater') == -1
     ) {
       const offset = t.point({
         x: 0,
@@ -1162,10 +1240,28 @@ export class Transformer extends Group {
       visible: resizeEnabled && enabledAnchors.indexOf('bottom-right') >= 0,
     });
 
-    this._batchChangeChild('.rotater', {
+    this._batchChangeChild('.rotater-top', {
       x: width / 2,
       y: -this.rotateAnchorOffset() * Util._sign(height) - padding,
-      visible: this.rotateEnabled(),
+      visible: this.rotateEnabled() && enabledAnchors.indexOf('rotater-top') >= 0,
+    });
+
+    this._batchChangeChild('.rotater-bottom', {
+      x: width / 2,
+      y: height + this.rotateAnchorOffset() * Util._sign(height) - padding,
+      visible: this.rotateEnabled() && enabledAnchors.indexOf('rotater-bottom') >= 0,
+    });
+
+    this._batchChangeChild('.rotater-left', {
+      x: - this.rotateAnchorOffset() - padding,
+      y: height / 2 ,
+      visible: this.rotateEnabled() && enabledAnchors.indexOf('rotater-left') >= 0,
+    });
+
+    this._batchChangeChild('.rotater-right', {
+      x: width + this.rotateAnchorOffset() - padding,
+      y: height / 2,
+      visible: this.rotateEnabled() && enabledAnchors.indexOf('rotater-right') >= 0,
     });
 
     this._batchChangeChild('.back', {

@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.3.5
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Mon Apr 11 2022
+   * Date: Wed Apr 27 2022
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -369,17 +369,6 @@
        */
       getMatrix() {
           return this.m;
-      }
-      /**
-       * set to absolute position via translation
-       * @method
-       * @name Konva.Transform#setAbsolutePosition
-       * @returns {Konva.Transform}
-       * @author ericdrowell
-       */
-      setAbsolutePosition(x, y) {
-          var m0 = this.m[0], m1 = this.m[1], m2 = this.m[2], m3 = this.m[3], m4 = this.m[4], m5 = this.m[5], yt = (m0 * (y - m5) - m1 * (x - m4)) / (m0 * m3 - m1 * m2), xt = (x - m4 - m2 * yt) / m0;
-          return this.translate(xt, yt);
       }
       /**
        * convert transformation matrix back into node's attributes
@@ -14526,7 +14515,7 @@
   };
   const TOUCH_DEVICE = 'ontouchstart' in Konva$2._global;
   function getCursor(anchorName, rad) {
-      if (anchorName === 'rotater') {
+      if (anchorName.indexOf('rotater') === 0) {
           return 'crosshair';
       }
       rad += Util.degToRad(ANGLES[anchorName] || 0);
@@ -14578,6 +14567,10 @@
       'bottom-left',
       'bottom-center',
       'bottom-right',
+      'rotater-top',
+      'rotater-bottom',
+      'rotater-left',
+      'rotater-right'
   ];
   var MAX_SAFE_INTEGER = 100000000;
   function getCenter(shape) {
@@ -14909,7 +14902,6 @@
           ANCHORS_NAMES.forEach(function (name) {
               this._createAnchor(name);
           }.bind(this));
-          this._createAnchor('rotater');
       }
       _createAnchor(name) {
           var anchor = new Rect({
@@ -14960,9 +14952,24 @@
                   var padding = tr.padding();
                   ctx.beginPath();
                   ctx.rect(-padding, -padding, this.width() + padding * 2, this.height() + padding * 2);
-                  ctx.moveTo(this.width() / 2, -padding);
                   if (tr.rotateEnabled()) {
-                      ctx.lineTo(this.width() / 2, -tr.rotateAnchorOffset() * Util._sign(this.height()) - padding);
+                      var enabledAnchors = tr.enabledAnchors();
+                      if (enabledAnchors.indexOf('rotater-top') >= 0) {
+                          ctx.moveTo(this.width() / 2, -padding);
+                          ctx.lineTo(this.width() / 2, -tr.rotateAnchorOffset() * Util._sign(this.height()) - padding);
+                      }
+                      if (enabledAnchors.indexOf('rotater-bottom') >= 0) {
+                          ctx.moveTo(this.width() / 2, this.height() + padding);
+                          ctx.lineTo(this.width() / 2, this.height() + tr.rotateAnchorOffset() * Util._sign(this.height()) - padding);
+                      }
+                      if (enabledAnchors.indexOf('rotater-left') >= 0) {
+                          ctx.moveTo(-padding, this.height() / 2);
+                          ctx.lineTo(-tr.rotateAnchorOffset() * Util._sign(this.width()) - padding, this.height() / 2);
+                      }
+                      if (enabledAnchors.indexOf('rotater-right') >= 0) {
+                          ctx.moveTo(this.width() + padding, this.height() / 2);
+                          ctx.lineTo(this.width() + tr.rotateAnchorOffset() * Util._sign(this.width()) + padding, this.height() / 2);
+                      }
                   }
                   ctx.fillStrokeShape(this);
               },
@@ -15042,12 +15049,37 @@
               return;
           }
           // rotater is working very differently, so do it first
-          if (this._movingAnchorName === 'rotater') {
+          if (this._movingAnchorName.indexOf('rotater') === 0) {
               var attrs = this._getNodeRect();
-              x = anchorNode.x() - attrs.width / 2;
-              y = -anchorNode.y() + attrs.height / 2;
-              // hor angle is changed?
-              let delta = Math.atan2(-y, x) + Math.PI / 2;
+              var delta;
+              if (this._movingAnchorName.indexOf('rotater') === 0) {
+                  var attrs = this._getNodeRect();
+                  if (this._movingAnchorName.indexOf('top') >= 0) {
+                      x = anchorNode.x() - attrs.width / 2;
+                      y = -anchorNode.y() + attrs.height / 2;
+                      delta = Math.atan2(-y, x) + Math.PI / 2;
+                  }
+                  else if (this._movingAnchorName.indexOf('bottom') >= 0) {
+                      x = -anchorNode.x() + attrs.width / 2;
+                      y = anchorNode.y() - attrs.height / 2;
+                      delta = Math.atan2(-y, x) + Math.PI / 2;
+                  }
+                  else if (this._movingAnchorName.indexOf('left') >= 0) {
+                      x = anchorNode.x() - attrs.width / 2;
+                      y = -anchorNode.y() + attrs.height / 2;
+                      delta = Math.atan2(x, y) + Math.PI / 2;
+                  }
+                  else if (this._movingAnchorName.indexOf('right') >= 0) {
+                      x = -anchorNode.x() + attrs.width / 2;
+                      y = anchorNode.y() - attrs.height / 2;
+                      delta = Math.atan2(x, y) + Math.PI / 2;
+                  }
+                  else {
+                      console.error(new Error('Wrong position argument of rotater: ' +
+                          this._movingAnchorName));
+                      return;
+                  }
+              }
               if (attrs.height < 0) {
                   delta -= Math.PI;
               }
@@ -15273,7 +15305,8 @@
           }
           if (this._movingAnchorName &&
               newAttrs.height < 0 &&
-              this._movingAnchorName.indexOf('top') >= 0) {
+              this._movingAnchorName.indexOf('top') >= 0 &&
+              this._movingAnchorName.indexOf('rotater') == -1) {
               const offset = t.point({
                   x: 0,
                   y: -this.padding() * 2,
@@ -15291,7 +15324,8 @@
           }
           else if (this._movingAnchorName &&
               newAttrs.height < 0 &&
-              this._movingAnchorName.indexOf('bottom') >= 0) {
+              this._movingAnchorName.indexOf('bottom') >= 0 &&
+              this._movingAnchorName.indexOf('rotater') == -1) {
               const offset = t.point({
                   x: 0,
                   y: this.padding() * 2,
@@ -15450,10 +15484,25 @@
               offsetY: anchorSize / 2 - padding,
               visible: resizeEnabled && enabledAnchors.indexOf('bottom-right') >= 0,
           });
-          this._batchChangeChild('.rotater', {
+          this._batchChangeChild('.rotater-top', {
               x: width / 2,
               y: -this.rotateAnchorOffset() * Util._sign(height) - padding,
-              visible: this.rotateEnabled(),
+              visible: this.rotateEnabled() && enabledAnchors.indexOf('rotater-top') >= 0,
+          });
+          this._batchChangeChild('.rotater-bottom', {
+              x: width / 2,
+              y: height + this.rotateAnchorOffset() * Util._sign(height) - padding,
+              visible: this.rotateEnabled() && enabledAnchors.indexOf('rotater-bottom') >= 0,
+          });
+          this._batchChangeChild('.rotater-left', {
+              x: -this.rotateAnchorOffset() - padding,
+              y: height / 2,
+              visible: this.rotateEnabled() && enabledAnchors.indexOf('rotater-left') >= 0,
+          });
+          this._batchChangeChild('.rotater-right', {
+              x: width + this.rotateAnchorOffset() - padding,
+              y: height / 2,
+              visible: this.rotateEnabled() && enabledAnchors.indexOf('rotater-right') >= 0,
           });
           this._batchChangeChild('.back', {
               width: width,
