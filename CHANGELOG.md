@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-### 8.3.4 (2022-04-27)
+### 8.3.6 (2022-04-27)
 
 - Better exports definitions. Importing `Konva` should work better in different bundlers and test environments.
 - `imageSmoothingEnabled` option for `node.toDataURL()`, `node.toCanvas()` and `node.toImage()`
