@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.3.5
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Mon Apr 11 2022
+   * Date: Wed Apr 27 2022
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -369,17 +369,6 @@
        */
       getMatrix() {
           return this.m;
-      }
-      /**
-       * set to absolute position via translation
-       * @method
-       * @name Konva.Transform#setAbsolutePosition
-       * @returns {Konva.Transform}
-       * @author ericdrowell
-       */
-      setAbsolutePosition(x, y) {
-          var m0 = this.m[0], m1 = this.m[1], m2 = this.m[2], m3 = this.m[3], m4 = this.m[4], m5 = this.m[5], yt = (m0 * (y - m5) - m1 * (x - m4)) / (m0 * m3 - m1 * m2), xt = (x - m4 - m2 * yt) / m0;
-          return this.translate(xt, yt);
       }
       /**
        * convert transformation matrix back into node's attributes
