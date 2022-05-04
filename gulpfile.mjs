@@ -37,6 +37,34 @@ gulp.task('update-version-lib', function () {
     .pipe(gulp.dest('./lib'));
 });
 
+gulp.task('update-version-cmj', function () {
+  return gulp
+    .src(['./cmj/Global.js'])
+    .pipe(replace('@@version', conf.version))
+    .pipe(rename('Global.js'))
+    .pipe(gulp.dest('./cmj'));
+});
+
+gulp.task('update-version-es-to-cmj-index', function () {
+  return gulp
+    .src(['./lib/index.js'])
+    .pipe(
+      replace(`import { Konva } from './_F`, `import { Konva } from '../cmj/_F`)
+    )
+    .pipe(rename('index.js'))
+    .pipe(gulp.dest('./lib'));
+});
+
+gulp.task('update-version-es-to-cmj-node', function () {
+  return gulp
+    .src(['./lib/index-node.js'])
+    .pipe(
+      replace(`import { Konva } from './_F`, `import { Konva } from '../cmj/_F`)
+    )
+    .pipe(rename('index-node.js'))
+    .pipe(gulp.dest('./lib'));
+});
+
 // create usual build konva.js and konva.min.js
 gulp.task('pre-build', function () {
   return build()
@@ -52,7 +80,16 @@ gulp.task('pre-build', function () {
     .pipe(gulp.dest('./'));
 });
 
-gulp.task('build', gulp.parallel(['update-version-lib', 'pre-build']));
+gulp.task(
+  'build',
+  gulp.parallel([
+    'update-version-lib',
+    'update-version-cmj',
+    'update-version-es-to-cmj-index',
+    'update-version-es-to-cmj-node',
+    'pre-build',
+  ])
+);
 
 // local server for better development
 gulp.task('server', function () {

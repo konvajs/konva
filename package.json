@@ -25,20 +25,20 @@
       "default": "./lib/index.js"
     },
     "./cmj": {
-      "import": "./lib/index.js",
+      "import": "./cmj/index.js",
       "require": "./cmj/index-node.js",
       "node": "./cmj/index-node.js",
       "default": "./cmj/index.js"
     },
     "./cmj/*": {
-      "import": "./lib/*.js",
+      "import": "./cmj/*.js",
       "require": "./cmj/*.js",
       "default": "./cmj/*.js"
     },
     "./lib/*": {
-      "import": "./lib/*.js",
+      "import": "./cmj/*.js",
       "require": "./cmj/*.js",
-      "default": "./lib/*.js"
+      "default": "./cmj/*.js"
     }
   },
   "scripts": {
