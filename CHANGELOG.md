@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### 8.3.8 (2020-05-05)
+
+- Disable all exports in `package.json`
+
 ### 8.3.7 (2022-05-04)
 
 - Migrate to CommonJS exports only

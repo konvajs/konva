@@ -13,7 +13,7 @@
   "browser": "./lib/index.js",
   "typings": "./lib/index-types.d.ts",
   "type": "module",
-  "exports": {
+  "__ignore_exports": {
     ".": {
       "node": {
         "require": "./cmj/index-node.js",
