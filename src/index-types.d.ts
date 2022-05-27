@@ -83,6 +83,7 @@ declare namespace Konva {
 
   export const Group: typeof import('./Group').Group;
   export type Group = import('./Group').Group;
+  export type GroupConfig = import('./Group').GroupConfig;
 
   export const DD: typeof import('./DragAndDrop').DD;
 

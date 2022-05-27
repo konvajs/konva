@@ -1,8 +1,10 @@
 import { Util } from './Util';
-import { Container } from './Container';
+import { Container, ContainerConfig } from './Container';
 import { _registerNode } from './Global';
 import { Node } from './Node';
 import { Shape } from './Shape';
+
+export interface GroupConfig extends ContainerConfig {}
 
 /**
  * Group constructor.  Groups are used to contain shapes or other groups.
