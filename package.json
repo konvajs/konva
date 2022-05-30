@@ -88,7 +88,7 @@
     }
   ],
   "devDependencies": {
-    "@parcel/transformer-image": "2.5.0",
+    "@parcel/transformer-image": "2.6.0",
     "@size-limit/preset-big-lib": "^7.0.8",
     "@types/mocha": "^9.1.1",
     "canvas": "^2.9.1",
@@ -107,9 +107,9 @@
     "gulp-util": "^3.0.8",
     "mocha": "9.2.2",
     "mocha-headless-chrome": "^4.0.0",
-    "parcel": "2.5.0",
+    "parcel": "2.6.0",
     "process": "^0.11.10",
-    "rollup": "^2.70.2",
+    "rollup": "^2.75.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-sourcemaps": "^0.6.3",
@@ -117,7 +117,7 @@
     "size-limit": "^7.0.8",
     "ts-mocha": "^9.0.2",
     "ts-node": "^9.1.1",
-    "typescript": "4.6.3"
+    "typescript": "^4.6.3"
   },
   "keywords": [
     "canvas",
