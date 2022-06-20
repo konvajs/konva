@@ -4690,4 +4690,32 @@ describe('Transformer', function () {
     assert.equal(tr2.width(), rect.width());
     assert.equal(tr2.height(), rect.height());
   });
+  it('detached transformer should not affect client rect', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 60,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [],
+    });
+    layer.add(tr);
+
+    const box = layer.getClientRect();
+
+    // it should update second transformer
+    assert.equal(box.x, rect.x());
+    assert.equal(box.y, rect.y());
+    assert.equal(box.width, rect.width());
+    assert.equal(box.height, rect.height());
+  });
 });
