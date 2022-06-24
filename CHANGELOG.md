@@ -3,15 +3,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-### 8.3.10 (2020-06-20)
+### 8.3.10 (2022-06-20)
 
 - Skip `Konva.Transformer` in `container.getClientRect()` calculations
 
-### 8.3.9 (2020-05-27)
+### 8.3.9 (2022-05-27)
 
 - Typescript fixes
 
-### 8.3.8 (2020-05-05)
+### 8.3.8 (2022-05-05)
 
 - Disable all exports in `package.json`
 
