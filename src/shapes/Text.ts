@@ -492,27 +492,10 @@ export class Text extends Shape<TextConfig> {
             this._addTextLine(match);
             textWidth = Math.max(textWidth, matchWidth);
             currentHeightPx += lineHeightPx;
-            if (
-              !shouldWrap ||
-              (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx)
-            ) {
-              var lastLine = this.textArr[this.textArr.length - 1];
-              if (lastLine) {
-                if (shouldAddEllipsis) {
-                  var haveSpace =
-                    this._getTextWidth(lastLine.text + ELLIPSIS) < maxWidth;
-                  if (!haveSpace) {
-                    lastLine.text = lastLine.text.slice(
-                      0,
-                      lastLine.text.length - 3
-                    );
-                  }
 
-                  this.textArr.splice(this.textArr.length - 1, 1);
-                  this._addTextLine(lastLine.text + ELLIPSIS);
-                }
-              }
-
+            var shouldHandleEllipsis = this._shouldHandleEllipsis(currentHeightPx);
+            if (shouldHandleEllipsis) {
+              this._addEllipsisIfNecessary(shouldHandleEllipsis);
               /*
                * stop wrapping if wrapping is disabled or if adding
                * one more line would overflow the fixed height
@@ -542,6 +525,8 @@ export class Text extends Shape<TextConfig> {
         this._addTextLine(line);
         currentHeightPx += lineHeightPx;
         textWidth = Math.max(textWidth, lineWidth);
+
+        this._addEllipsisIfNecessary(this._shouldHandleEllipsis(currentHeightPx));
       }
       // if element height is fixed, abort if adding one more line would overflow
       if (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx) {
@@ -557,6 +542,62 @@ export class Text extends Shape<TextConfig> {
     //     maxTextWidth = Math.max(maxTextWidth, this.textArr[j].width);
     // }
     this.textWidth = textWidth;
+  }
+
+  /**
+   * whether to handle ellipsis, there are two cases:
+   * 1. the current line is the last line
+   * 2. wrap is NONE
+   * @param {Number} currentHeightPx
+   * @returns 
+   */
+  _shouldHandleEllipsis(currentHeightPx: number): boolean { 
+    var fontSize = +this.fontSize(),
+      lineHeightPx = this.lineHeight() * fontSize,
+      height = this.attrs.height,
+      fixedHeight = height !== AUTO && height !== undefined,
+      padding = this.padding(),
+      maxHeightPx = height - padding * 2,
+      wrap = this.wrap(),
+      shouldWrap = wrap !== NONE;
+
+    return (!shouldWrap || (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx));
+  }
+
+  /**
+   * add ellipses at the end of the line if necessary
+   * @param {Boolean} shouldHandleEllipsis 
+   * @returns 
+   */
+  _addEllipsisIfNecessary(shouldHandleEllipsis: boolean): void { 
+    var width = this.attrs.width,
+      fixedWidth = width !== AUTO && width !== undefined,
+      padding = this.padding(),
+      maxWidth = width - padding * 2,
+      shouldAddEllipsis = this.ellipsis();
+    
+    if (!shouldHandleEllipsis) { 
+      return;
+    }
+  
+    var lastLine = this.textArr[this.textArr.length - 1];
+    if (!lastLine || !shouldAddEllipsis) { 
+      return;
+    }
+    
+    if (fixedWidth) {
+      var haveSpace =
+        this._getTextWidth(lastLine.text + ELLIPSIS) < maxWidth;
+      if (!haveSpace) {
+        lastLine.text = lastLine.text.slice(
+          0,
+          lastLine.text.length - 3
+        );
+      }
+    }
+
+    this.textArr.splice(this.textArr.length - 1, 1);
+    this._addTextLine(lastLine.text + ELLIPSIS);
   }
 
   // for text we can't disable stroke scaling
