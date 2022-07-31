@@ -1301,6 +1301,64 @@ describe('Stage', function () {
     compareCanvases(stageCanvas, canvas, 100);
   });
 
+  it('toImage with large size', async function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var radius = stage.height() / 2 + 10;
+    var circle = new Konva.Circle({
+      x: stage.height() / 2,
+      y: stage.height() / 2,
+      fill: 'black',
+      radius: radius,
+    });
+    layer.add(circle);
+    stage.add(layer);
+
+    try{
+      const img = await stage.toImage({
+        x: -10,
+        y: -10,
+        width: stage.height() + 20,
+        height: stage.height() + 20,
+        callback: img => assert.isTrue(img instanceof Image, 'not an image')
+      });
+      assert.isTrue(img instanceof Image, 'not an image');
+    } catch(e){
+      console.error(e);
+      assert.fail('error creating image');
+    }
+  });
+
+  it('toBlob with large size', async function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var radius = stage.height() / 2 + 10;
+    var circle = new Konva.Circle({
+      x: stage.height() / 2,
+      y: stage.height() / 2,
+      fill: 'black',
+      radius: radius,
+    });
+    layer.add(circle);
+    stage.add(layer);
+
+    try{
+      const blob = await stage.toBlob({
+        x: -10,
+        y: -10,
+        width: stage.height() + 20,
+        height: stage.height() + 20,
+        callback: blob => assert.isTrue(blob instanceof Blob && blob.size > 0, 'blob is empty')
+      });
+      assert.isTrue(blob instanceof Blob && blob.size > 0, 'blob is empty');
+    } catch(e){
+      console.error(e);
+      assert.fail('error creating blob');
+    }
+  });
+
   it('check hit graph with stage listening property', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

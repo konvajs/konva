@@ -1982,12 +1982,13 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   }
   /**
    * converts node into an image.  Since the toImage
-   *  method is asynchronous, a callback is required.  toImage is most commonly used
+   *  method is asynchronous, the resulting image can only be retrieved from the config callback
+   *  or the returned Promise.  toImage is most commonly used
    *  to cache complex drawings as an image so that they don't have to constantly be redrawn
    * @method
    * @name Konva.Node#toImage
    * @param {Object} config
-   * @param {Function} config.callback function executed when the composite has completed
+   * @param {Function} [config.callback] function executed when the composite has completed
    * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
    *  "image/png" is the default
    * @param {Number} [config.x] x position of canvas section
@@ -2002,6 +2003,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
    * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
    * @param {Boolean} [config.imageSmoothingEnabled] set this to false if you want to disable imageSmoothing
+   * @return {Promise<Image>}
    * @example
    * var image = node.toImage({
    *   callback(img) {
@@ -2019,13 +2021,63 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     quality?: number;
     callback?: (img: HTMLImageElement) => void;
   }) {
-    if (!config || !config.callback) {
-      throw 'callback required for toImage method config argument';
-    }
-    var callback = config.callback;
-    delete config.callback;
-    Util._urlToImage(this.toDataURL(config as any), function (img) {
-      callback(img);
+    return new Promise((resolve, reject)=>{
+      try{
+        const callback = config?.callback;
+        if (callback)
+          delete config.callback;
+        Util._urlToImage(this.toDataURL(config as any), function (img) {
+          resolve(img);
+          callback?.(img);
+        });
+      }catch(err){
+        reject(err);
+      }
+    });
+  }
+  /**
+    * Converts node into a blob.  Since the toBlob method is asynchronous,
+    *  the resulting blob can only be retrieved from the config callback
+    *  or the returned Promise.
+    * @method
+    * @name Konva.Node#toBlob
+    * @param {Object} config
+    * @param {Function} [config.callback] function executed when the composite has completed
+    * @param {Number} [config.x] x position of canvas section
+    * @param {Number} [config.y] y position of canvas section
+    * @param {Number} [config.width] width of canvas section
+    * @param {Number} [config.height] height of canvas section
+    * @param {Number} [config.pixelRatio] pixelRatio of output canvas. Default is 1.
+    * You can use that property to increase quality of the image, for example for super hight quality exports
+    * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
+    * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
+    * @param {Boolean} [config.imageSmoothingEnabled] set this to false if you want to disable imageSmoothing
+    * @example
+    * var blob = await node.toBlob({});
+    * @returns {Promise<Blob>}
+    */
+  toBlob(config?: {
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+    pixelRatio?: number;
+    mimeType?: string;
+    quality?: number;
+    callback?: (blob: Blob) => void;
+  }){
+    return new Promise((resolve, reject)=>{
+      try{
+        const callback = config?.callback;
+        if (callback)
+          delete config.callback;
+        this.toCanvas(config).toBlob(blob => {
+          resolve(blob);
+          callback?.(blob);
+        });
+      } catch(err){
+        reject(err);
+      }
     });
   }
   setSize(size) {
