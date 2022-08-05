@@ -23,6 +23,9 @@ var ATTR_CHANGE_LIST = [
     'text',
     'width',
     'height',
+    'pointerDirection',
+    'pointerWidth',
+    'pointerHeight',
   ],
   CHANGE_KONVA = 'Change.konva',
   NONE = 'none',
@@ -209,11 +212,11 @@ export class Tag extends Shape<TagConfig> {
     let bottomRight = 0;
 
     if (typeof cornerRadius === 'number') {
-      topLeft = topRight = bottomLeft = bottomRight = Math.min(
-        cornerRadius,
-        width / 2,
-        height / 2
-      );
+      topLeft =
+        topRight =
+        bottomLeft =
+        bottomRight =
+          Math.min(cornerRadius, width / 2, height / 2);
     } else {
       topLeft = Math.min(cornerRadius[0] || 0, width / 2, height / 2);
       topRight = Math.min(cornerRadius[1] || 0, width / 2, height / 2);

@@ -320,4 +320,57 @@ describe('Label', function () {
       'clearRect(0,0,578,200);save();transform(1,0,0,1,50,50);beginPath();moveTo(0,0);lineTo(90,0);arc(90,10,10,4.712,0,false);lineTo(100,80);arc(80,80,20,0,1.571,false);lineTo(30,100);arc(30,70,30,1.571,3.142,false);lineTo(0,0);arc(0,0,0,3.142,4.712,false);closePath();fillStyle=black;fill();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,50,50);beginPath();moveTo(0,0);lineTo(90,0);arc(90,10,10,4.712,0,false);lineTo(100,80);arc(80,80,20,0,1.571,false);lineTo(30,100);arc(30,70,30,1.571,3.142,false);lineTo(0,0);arc(0,0,0,3.142,4.712,false);closePath();fillStyle=black;fill();restore();'
     );
   });
+
+  it.only('react to pointer properties', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var label = new Konva.Label({
+      x: 100,
+      y: 100,
+      draggable: true,
+    });
+
+    var counter = 0;
+    var oldSync = label._sync;
+    label._sync = () => {
+      oldSync.call(label);
+      counter += 1;
+    };
+
+    const tag = new Konva.Tag({
+      fill: '#bbb',
+      shadowColor: 'black',
+      shadowBlur: 10,
+      shadowOffset: { x: 10, y: 10 },
+      shadowOpacity: 0.2,
+      lineJoin: 'round',
+      pointerDirection: 'up',
+      pointerWidth: 20,
+      pointerHeight: 20,
+      cornerRadius: 5,
+    });
+    // add a tag to the label
+    label.add(tag);
+
+    // add text to the label
+    label.add(
+      new Konva.Text({
+        text: 'hello',
+        fontSize: 50,
+        lineHeight: 1.2,
+        fill: 'green',
+      })
+    );
+    layer.add(label);
+
+    assert.equal(counter, 4);
+    tag.pointerDirection('bottom');
+    assert.equal(counter, 5);
+    tag.pointerWidth(30);
+    assert.equal(counter, 6);
+    tag.pointerHeight(40);
+    assert.equal(counter, 7);
+  });
 });
