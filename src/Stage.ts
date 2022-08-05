@@ -737,7 +737,7 @@ export class Stage extends Container<Layer> {
 
     // always call preventDefault for desktop events because some browsers
     // try to drag and drop the canvas element
-    if (evt.cancelable && eventType !== "touch") {
+    if (evt.cancelable) {
       evt.preventDefault();
     }
   }
