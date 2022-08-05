@@ -10,6 +10,8 @@
     <style>
       body {
         margin: 0;
+        width: 100vw;
+        height: 100vh;
       }
     </style>
     <!-- <script src="https://cdn.rawgit.com/hammerjs/touchemulator/master/touch-emulator.js"></script> -->
@@ -19,162 +21,34 @@
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.7/hammer.js"></script> -->
     <!-- <script src="https://cdn.rawgit.com/hammerjs/touchemulator/master/touch-emulator.js"></script> -->
     <!-- <script src="./hammer.js"></script> -->
-    <script src="https://unpkg.com/fabric@5.2.1/dist/fabric.js"></script>
+    <!-- <script src="https://unpkg.com/fabric@5.2.1/dist/fabric.js"></script> -->
   </head>
 
   <body>
-    <table>
-      <tr>
-          <td >
-              Circle Radius  <input type="range" style="width: 100%;" value="2" max="100" min="-100" />
-          </td>
-          <td> </td>
-          <td>
-              path: <span id="path"></span>
-          </td>
-      </tr>
-      <tr>
-          <td>
-              <span> konva</span>
-              <div id="container" style="background-color:bisque;"></div>
-          </td>
-          <td> </td>
-          <td>
-              <span>fabric</span>
-              <div style="background-color:bisque;">
-                  <canvas id="canvas" width="600" height="600">
-              </div>
-              </div>
-          </td>
-      </tr>
-  </table>
+    <div id="container" style="background-color: bisque"></div>
+
     <script type="module">
       import Konva from '../src/index.ts';
 
-        //按textPath参数， 测量文本宽度
-        function getTextWidth(txtPath) {
-            let atxt = new Konva.Text();
-            atxt.fontFamily(txtPath.fontFamily());
-            atxt.letterSpacing(txtPath.letterSpacing());
-            atxt.fontSize(txtPath.fontSize());
-            atxt.fontStyle(txtPath.fontStyle());
-            atxt.fontVariant(txtPath.fontVariant());
-            let w = atxt.measureSize(txt.text()).width;
-            atxt.destroy();
-            return w + 5;
-        }
+      const stage = new Konva.Stage({
+        container: 'container',
+        width: window.innerWidth / 2,
+        height: window.innerHeight / 2,
+      });
+      const layer = new Konva.Layer();
+      stage.add(layer);
+      const rect = new Konva.Rect({
+        x: 0,
+        y: 0,
+        width: 100,
+        height: 100,
+        fill: 'red',
+      });
+      layer.add(rect);
 
-      var s = '对象是在画布上基于每个'
-        var canvas = new fabric.Canvas('canvas');
-        var stage = new Konva.Stage({
-            container: document.getElementById('container'),
-            width: 600,
-            height: 600,
-        });
-        var layer = new Konva.Layer();
-        stage.add(layer);
-
-        var pat=getArcPath(300, 100, 0);
-        var fabricText = new fabric.Text(s, {
-            fontSize: 22,
-            fontFamily: 'Arial',
-            top: 100,
-            left: 200,
-            //textAlign: 'center',
-            pathAlign: 'center',
-            charSpacing: 50,
-            path: new fabric.Path(pat, {
-                strokeWidth: 2,
-                fill: null,
-                stroke: '#ff0000',
-                visible: true
-            })
-        });
-        canvas.add(fabricText);
-       
-        var txt = new Konva.TextPath({
-            x: 100, y: 200,
-            draggable: true,
-            fill: '#333',
-            fontSize: 22,
-            fontFamily: 'Arial',
-            text: s,
-            //align: 'center',
-            //textBaseline: "top",
-            // letterSpacing: 5,
-            data: pat
-        });
-
-        layer.add(txt);
-        const path = new Konva.Path({
-            x: txt.x(),
-            y: txt.y(),
-            data: txt.data(),
-            stroke: 'red'
-        });
-        layer.add(path);
-        document.querySelector("#path").innerHTML=pat;
-
-        for (let e of document.querySelectorAll('input[type="range"]')) {
-            e.addEventListener('input', () => {
-              
-                let r = 650 - Math.abs(parseFloat(e.value) * 6);
-                let l = getTextWidth(txt) + 50;
-
-                let d = getArcPath(l, r, parseFloat(e.value) > 0 ? 0 : 1)
-               
-                document.querySelector("#path").innerHTML=d;
-
-                txt.data(d);
-                path.data(txt.data())
-
-                fabricText.set("path",
-                    new fabric.Path(d, {
-                        strokeWidth: 1,
-                        stroke: '#ff0000',
-                        fill: null,
-                        visible: true
-                    })
-                )
-                canvas.renderAll();
-            });
-        }
-
-        function getArcPath(l, r, sweepFlag) {
-            const upc = true;
-
-            const n = (l / (2 * Math.PI * r)) * (Math.PI * 2);
-            const n2 = n / 2;
-            const largeArcFlag = n > Math.PI ? 1 : 0;
-
-            //js math. sin /cos 用的是弧度不是角度
-            const ax = Math.abs(r * Math.sin(n2));
-            const ay = Math.abs(r * Math.cos(n2));
-
-            let x1, y1, x2, y2;
-            x1 = r - ax;
-            x2 = r + ax;
-            if (n > 180) {
-                if (upc)
-                    y1 = y2 = r + ay;
-                else
-                    y1 = y2 = r - ay;
-            } else if (n == 180) {
-                x1 = 0;
-                y1 = 0;
-                x2 = r * 2;
-                y2 = 0;
-            } else {
-                if (upc)
-                    y1 = y2 = r - ay;
-                else
-                    y1 = y2 = r + ay;
-            }
-            x2 -= x1, y2 -= y1, x1 = 0, y1 = 0;
-
-            return `M${x1},${y1} A${r},${r} 0 ${largeArcFlag},${sweepFlag} ${x2},${y2}`
-        }
-
+      document.body.onclick = () => {
+        alert('click');
+      };
     </script>
   </body>
 </html>
