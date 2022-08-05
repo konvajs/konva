@@ -321,7 +321,7 @@ describe('Label', function () {
     );
   });
 
-  it.only('react to pointer properties', function () {
+  it('react to pointer properties', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
