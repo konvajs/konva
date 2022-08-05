@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-### 8.3.1 (2022-08-05)
+### 8.3.11 (2022-08-05)
 
 - Fix `Konva.Label` position when tag attributes are changed
 - Fix incorrect ellipsis display for `Konva.Text`

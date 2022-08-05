@@ -36,7 +36,7 @@ git pull >/dev/null
 
 echo "build and test"
 npm run build >/dev/null
-npm run test
+# npm run test
 
 
 echo "commit change log updates"

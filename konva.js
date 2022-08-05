@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.3.10
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Mon Jun 20 2022
+   * Date: Fri Aug 05 2022
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2342,6 +2342,7 @@
       // dragBefore and dragAfter allows us to set correct order of events
       // setup all in dragbefore, and stop dragging only after pointerup triggered.
       _endDragBefore(evt) {
+          const drawNodes = [];
           DD._dragElements.forEach((elem) => {
               const { node } = elem;
               // we need to find pointer relative to that node
@@ -2364,9 +2365,15 @@
               }
               const drawNode = elem.node.getLayer() ||
                   (elem.node instanceof Konva$2['Stage'] && elem.node);
-              if (drawNode) {
-                  drawNode.batchDraw();
+              if (drawNode && drawNodes.indexOf(drawNode) === -1) {
+                  drawNodes.push(drawNode);
               }
+          });
+          // draw in a sync way
+          // because mousemove event may trigger BEFORE batch draw is called
+          // but as we have not hit canvas updated yet, it will trigger incorrect mouseover/mouseout events
+          drawNodes.forEach((drawNode) => {
+              drawNode.draw();
           });
       },
       _endDragAfter(evt) {
@@ -4037,12 +4044,13 @@
       }
       /**
        * converts node into an image.  Since the toImage
-       *  method is asynchronous, a callback is required.  toImage is most commonly used
+       *  method is asynchronous, the resulting image can only be retrieved from the config callback
+       *  or the returned Promise.  toImage is most commonly used
        *  to cache complex drawings as an image so that they don't have to constantly be redrawn
        * @method
        * @name Konva.Node#toImage
        * @param {Object} config
-       * @param {Function} config.callback function executed when the composite has completed
+       * @param {Function} [config.callback] function executed when the composite has completed
        * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
        *  "image/png" is the default
        * @param {Number} [config.x] x position of canvas section
@@ -4057,6 +4065,7 @@
        * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
        * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
        * @param {Boolean} [config.imageSmoothingEnabled] set this to false if you want to disable imageSmoothing
+       * @return {Promise<Image>}
        * @example
        * var image = node.toImage({
        *   callback(img) {
@@ -4065,13 +4074,56 @@
        * });
        */
       toImage(config) {
-          if (!config || !config.callback) {
-              throw 'callback required for toImage method config argument';
-          }
-          var callback = config.callback;
-          delete config.callback;
-          Util._urlToImage(this.toDataURL(config), function (img) {
-              callback(img);
+          return new Promise((resolve, reject) => {
+              try {
+                  const callback = config === null || config === void 0 ? void 0 : config.callback;
+                  if (callback)
+                      delete config.callback;
+                  Util._urlToImage(this.toDataURL(config), function (img) {
+                      resolve(img);
+                      callback === null || callback === void 0 ? void 0 : callback(img);
+                  });
+              }
+              catch (err) {
+                  reject(err);
+              }
+          });
+      }
+      /**
+        * Converts node into a blob.  Since the toBlob method is asynchronous,
+        *  the resulting blob can only be retrieved from the config callback
+        *  or the returned Promise.
+        * @method
+        * @name Konva.Node#toBlob
+        * @param {Object} config
+        * @param {Function} [config.callback] function executed when the composite has completed
+        * @param {Number} [config.x] x position of canvas section
+        * @param {Number} [config.y] y position of canvas section
+        * @param {Number} [config.width] width of canvas section
+        * @param {Number} [config.height] height of canvas section
+        * @param {Number} [config.pixelRatio] pixelRatio of output canvas. Default is 1.
+        * You can use that property to increase quality of the image, for example for super hight quality exports
+        * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
+        * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
+        * @param {Boolean} [config.imageSmoothingEnabled] set this to false if you want to disable imageSmoothing
+        * @example
+        * var blob = await node.toBlob({});
+        * @returns {Promise<Blob>}
+        */
+      toBlob(config) {
+          return new Promise((resolve, reject) => {
+              try {
+                  const callback = config === null || config === void 0 ? void 0 : config.callback;
+                  if (callback)
+                      delete config.callback;
+                  this.toCanvas(config).toBlob(blob => {
+                      resolve(blob);
+                      callback === null || callback === void 0 ? void 0 : callback(blob);
+                  });
+              }
+              catch (err) {
+                  reject(err);
+              }
           });
       }
       setSize(size) {
@@ -6324,7 +6376,10 @@
           Konva$2['_' + eventType + 'ListenClick'] = false;
           // always call preventDefault for desktop events because some browsers
           // try to drag and drop the canvas element
-          if (evt.cancelable) {
+          // TODO: are we sure we need to prevent default at all?
+          // do not call this function on mobile because it prevent "click" event on all parent containers
+          // but apps may listen to it.
+          if (evt.cancelable && eventType !== 'touch') {
               evt.preventDefault();
           }
       }
@@ -11808,6 +11863,9 @@
       'text',
       'width',
       'height',
+      'pointerDirection',
+      'pointerWidth',
+      'pointerHeight',
   ], CHANGE_KONVA$1 = 'Change.konva', NONE$1 = 'none', UP = 'up', RIGHT$1 = 'right', DOWN = 'down', LEFT$1 = 'left', 
   // cached variables
   attrChangeListLen$1 = ATTR_CHANGE_LIST$2.length;
@@ -11975,7 +12033,11 @@
           let bottomLeft = 0;
           let bottomRight = 0;
           if (typeof cornerRadius === 'number') {
-              topLeft = topRight = bottomLeft = bottomRight = Math.min(cornerRadius, width / 2, height / 2);
+              topLeft =
+                  topRight =
+                      bottomLeft =
+                          bottomRight =
+                              Math.min(cornerRadius, width / 2, height / 2);
           }
           else {
               topLeft = Math.min(cornerRadius[0] || 0, width / 2, height / 2);
@@ -13530,19 +13592,9 @@
                           this._addTextLine(match);
                           textWidth = Math.max(textWidth, matchWidth);
                           currentHeightPx += lineHeightPx;
-                          if (!shouldWrap ||
-                              (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx)) {
-                              var lastLine = this.textArr[this.textArr.length - 1];
-                              if (lastLine) {
-                                  if (shouldAddEllipsis) {
-                                      var haveSpace = this._getTextWidth(lastLine.text + ELLIPSIS) < maxWidth;
-                                      if (!haveSpace) {
-                                          lastLine.text = lastLine.text.slice(0, lastLine.text.length - 3);
-                                      }
-                                      this.textArr.splice(this.textArr.length - 1, 1);
-                                      this._addTextLine(lastLine.text + ELLIPSIS);
-                                  }
-                              }
+                          var shouldHandleEllipsis = this._shouldHandleEllipsis(currentHeightPx);
+                          if (shouldHandleEllipsis) {
+                              this._tryToAddEllipsisToLastLine();
                               /*
                                * stop wrapping if wrapping is disabled or if adding
                                * one more line would overflow the fixed height
@@ -13574,6 +13626,9 @@
                   this._addTextLine(line);
                   currentHeightPx += lineHeightPx;
                   textWidth = Math.max(textWidth, lineWidth);
+                  if (this._shouldHandleEllipsis(currentHeightPx)) {
+                      this._tryToAddEllipsisToLastLine();
+                  }
               }
               // if element height is fixed, abort if adding one more line would overflow
               if (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx) {
@@ -13589,6 +13644,33 @@
           //     maxTextWidth = Math.max(maxTextWidth, this.textArr[j].width);
           // }
           this.textWidth = textWidth;
+      }
+      /**
+       * whether to handle ellipsis, there are two cases:
+       * 1. the current line is the last line
+       * 2. wrap is NONE
+       * @param {Number} currentHeightPx
+       * @returns
+       */
+      _shouldHandleEllipsis(currentHeightPx) {
+          var fontSize = +this.fontSize(), lineHeightPx = this.lineHeight() * fontSize, height = this.attrs.height, fixedHeight = height !== AUTO && height !== undefined, padding = this.padding(), maxHeightPx = height - padding * 2, wrap = this.wrap(), shouldWrap = wrap !== NONE;
+          return (!shouldWrap ||
+              (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx));
+      }
+      _tryToAddEllipsisToLastLine() {
+          var width = this.attrs.width, fixedWidth = width !== AUTO && width !== undefined, padding = this.padding(), maxWidth = width - padding * 2, shouldAddEllipsis = this.ellipsis();
+          var lastLine = this.textArr[this.textArr.length - 1];
+          if (!lastLine || !shouldAddEllipsis) {
+              return;
+          }
+          if (fixedWidth) {
+              var haveSpace = this._getTextWidth(lastLine.text + ELLIPSIS) < maxWidth;
+              if (!haveSpace) {
+                  lastLine.text = lastLine.text.slice(0, lastLine.text.length - 3);
+              }
+          }
+          this.textArr.splice(this.textArr.length - 1, 1);
+          this._addTextLine(lastLine.text + ELLIPSIS);
       }
       // for text we can't disable stroke scaling
       // if we do, the result will be unexpected
