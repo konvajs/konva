@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Fix `Konva.Label` position when tag attributes are changed
 - Fix incorrect ellipsis display for `Konva.Text`
 - Fix `click` event trigger on parent containers on touch devices
+- Fix incorrect `mouseleave` event trigger when drag is finished
 
 ### 8.3.10 (2022-06-20)
 
