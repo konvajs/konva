@@ -12,7 +12,7 @@ import {
   assertAlmostEqual,
 } from './test-utils';
 
-describe('Text', function () {
+describe.only('Text', function () {
   // ======================================================
   it('text with empty config is allowed', function () {
     var stage = addStage();
@@ -515,7 +515,7 @@ describe('Text', function () {
     if (isBrowser) {
       assert.equal(
         layer.getContext().getTrace(false, true),
-        "clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 14px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();fillStyle=black;fillText(HEADING,18,7);restore();save();fillStyle=black;fillText(All the…,23,21);restore();restore();"
+        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 14px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();fillStyle=black;fillText(HEADING,18,7);restore();save();fillStyle=black;fillText(All the…,23,21);restore();restore();'
       );
     }
   });
