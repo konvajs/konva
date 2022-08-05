@@ -1223,4 +1223,60 @@ describe('DragAndDrop', function () {
     assert.equal(dragstart, 0);
     assert.equal(dragend, 0);
   });
+
+  it('mouseleave should not occur after drag and drop', function (done) {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle({
+      x: 40,
+      y: 40,
+      radius: 20,
+      strokeWidth: 4,
+      fill: 'green',
+      stroke: 'black',
+      draggable: true,
+    });
+    layer.add(circle);
+    stage.add(layer);
+    var mouseleave = false;
+    var dragend = false;
+    var mouseenter = true;
+    circle.on('mouseenter', function () {
+      mouseenter = true;
+    });
+    circle.on('mouseleave', function () {
+      mouseleave = true;
+    });
+    circle.on('dragend', function () {
+      dragend = true;
+    });
+    simulateMouseMove(stage, {
+      x: 40,
+      y: 40,
+    });
+    assert(mouseenter, 'mouseenter event should have been fired');
+    simulateMouseDown(stage, {
+      x: 40,
+      y: 40,
+    });
+    setTimeout(function () {
+      simulateMouseMove(stage, {
+        x: 100,
+        y: 100,
+      });
+      setTimeout(() => {
+        simulateMouseUp(stage, {
+          x: 100,
+          y: 100,
+        });
+        simulateMouseMove(stage, {
+          x: 102,
+          y: 102,
+        });
+        assert(!mouseleave, 'mouseleave event should not have been fired');
+        assert(dragend, 'dragend event should have been fired');
+        done();
+      }, 70);
+    }, 70);
+  });
 });

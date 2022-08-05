@@ -95,6 +95,7 @@ export const DD = {
   // dragBefore and dragAfter allows us to set correct order of events
   // setup all in dragbefore, and stop dragging only after pointerup triggered.
   _endDragBefore(evt?) {
+    const drawNodes = [];
     DD._dragElements.forEach((elem) => {
       const { node } = elem;
       // we need to find pointer relative to that node
@@ -124,9 +125,16 @@ export const DD = {
       const drawNode =
         elem.node.getLayer() ||
         ((elem.node instanceof Konva['Stage'] && elem.node) as any);
-      if (drawNode) {
-        drawNode.batchDraw();
+
+      if (drawNode && drawNodes.indexOf(drawNode) === -1) {
+        drawNodes.push(drawNode);
       }
+    });
+    // draw in a sync way
+    // because mousemove event may trigger BEFORE batch draw is called
+    // but as we have not hit canvas updated yet, it will trigger incorrect mouseover/mouseout events
+    drawNodes.forEach((drawNode) => {
+      drawNode.draw();
     });
   },
   _endDragAfter(evt) {

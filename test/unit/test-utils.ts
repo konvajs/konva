@@ -202,8 +202,8 @@ export function simulateMouseMove(stage, pos) {
     type: 'mousemove',
   };
 
-  stage._pointermove(evt);
   Konva.DD._drag(evt);
+  stage._pointermove(evt);
 }
 
 export function simulateMouseUp(stage, pos) {
