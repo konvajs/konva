@@ -142,6 +142,9 @@ export function getFunctionValidator() {
 export function getNumberArrayValidator() {
   if (Konva.isUnminified) {
     return function (val: any, attr: string) {
+      if (val instanceof Uint8Array || val instanceof Uint16Array || val instanceof  Uint32Array || val instanceof  Uint8ClampedArray) {
+        return val
+      }
       if (!Util._isArray(val)) {
         Util.warn(
           _formatValue(val) +
