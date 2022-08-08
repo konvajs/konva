@@ -142,7 +142,10 @@ export function getFunctionValidator() {
 export function getNumberArrayValidator() {
   if (Konva.isUnminified) {
     return function (val: any, attr: string) {
-      if (val instanceof Uint8Array || val instanceof Uint16Array || val instanceof  Uint32Array || val instanceof  Uint8ClampedArray) {
+      // Retrieve TypedArray constructor as found in MDN (if TypedArray is available)
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray#description
+      const TypedArray = Int8Array ? Object.getPrototypeOf(Int8Array) : null;
+      if (TypedArray && val instanceof TypedArray) {
         return val
       }
       if (!Util._isArray(val)) {

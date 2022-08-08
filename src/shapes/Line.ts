@@ -51,7 +51,7 @@ function expandPoints(p, tension) {
 }
 
 export interface LineConfig extends ShapeConfig {
-  points?: number[] | Uint8Array | Uint16Array |  Uint32Array | Uint8ClampedArray;
+  points?: number[] | Int8Array | Uint8Array | Uint8ClampedArray | Int16Array | Uint16Array | Int32Array | Uint32Array | Float32Array | Float64Array;
   tension?: number;
   closed?: boolean;
   bezier?: boolean;
