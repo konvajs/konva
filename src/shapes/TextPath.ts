@@ -306,7 +306,7 @@ export class TextPath extends Shape<TextPathConfig> {
           }
         }
 
-        if (pathCmd === {} || p0 === undefined) {
+        if (Object.keys(pathCmd).length === 0 || p0 === undefined) {
           return undefined;
         }
 
