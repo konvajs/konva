@@ -1315,18 +1315,21 @@ describe('Stage', function () {
     layer.add(circle);
     stage.add(layer);
 
-    try{
-      const img = await stage.toImage({
-        x: -10,
-        y: -10,
-        width: stage.height() + 20,
-        height: stage.height() + 20,
-        callback: img => assert.isTrue(img instanceof Image, 'not an image')
-      });
-      assert.isTrue(img instanceof Image, 'not an image');
-    } catch(e){
-      console.error(e);
-      assert.fail('error creating image');
+    if (isBrowser) {
+      try {
+        const img = await stage.toImage({
+          x: -10,
+          y: -10,
+          width: stage.height() + 20,
+          height: stage.height() + 20,
+          callback: (img) =>
+            assert.isTrue(img instanceof Image, 'not an image'),
+        });
+        assert.isTrue(img instanceof Image, 'not an image');
+      } catch (e) {
+        console.error(e);
+        assert.fail('error creating image');
+      }
     }
   });
 
@@ -1344,18 +1347,24 @@ describe('Stage', function () {
     layer.add(circle);
     stage.add(layer);
 
-    try{
-      const blob = await stage.toBlob({
-        x: -10,
-        y: -10,
-        width: stage.height() + 20,
-        height: stage.height() + 20,
-        callback: blob => assert.isTrue(blob instanceof Blob && blob.size > 0, 'blob is empty')
-      });
-      assert.isTrue(blob instanceof Blob && blob.size > 0, 'blob is empty');
-    } catch(e){
-      console.error(e);
-      assert.fail('error creating blob');
+    if (isBrowser) {
+      try {
+        const blob = await stage.toBlob({
+          x: -10,
+          y: -10,
+          width: stage.height() + 20,
+          height: stage.height() + 20,
+          callback: (blob) =>
+            assert.isTrue(
+              blob instanceof Blob && blob.size > 0,
+              'blob is empty'
+            ),
+        });
+        assert.isTrue(blob instanceof Blob && blob.size > 0, 'blob is empty');
+      } catch (e) {
+        console.error(e);
+        assert.fail('error creating blob');
+      }
     }
   });
 
