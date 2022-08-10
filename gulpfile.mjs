@@ -4,7 +4,8 @@ import uglify from 'gulp-uglify-es';
 import replace from 'gulp-replace';
 import jsdoc from 'gulp-jsdoc3';
 import connect from 'gulp-connect';
-import gutil from 'gulp-util';
+import log from 'fancy-log';
+import colors from 'ansi-colors';
 
 import fs from 'fs';
 var NodeParams = fs
@@ -74,7 +75,7 @@ gulp.task('pre-build', function () {
       uglify.default({ output: { comments: /^!|@preserve|@license|@cc_on/i } })
     )
     .on('error', function (err) {
-      gutil.log(gutil.colors.red('[Error]'), err.toString());
+      log(colors.red('[Error]'), err.toString());
     })
     .pipe(rename('konva.min.js'))
     .pipe(gulp.dest('./'));

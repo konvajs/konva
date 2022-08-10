@@ -12,6 +12,7 @@ homedocs
 jsdoc-template
 api
 package-lock.json
+yarn.lock
 lib
 src_old
 *.zip
