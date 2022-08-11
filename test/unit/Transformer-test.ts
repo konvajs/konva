@@ -4710,12 +4710,38 @@ describe('Transformer', function () {
     });
     layer.add(tr);
 
-    const box = layer.getClientRect();
+    const layerClientRect = layer.getClientRect();
+    const rectClientRect = rect.getClientRect();
 
-    // it should update second transformer
-    assert.equal(box.x, rect.x());
-    assert.equal(box.y, rect.y());
-    assert.equal(box.width, rect.width());
-    assert.equal(box.height, rect.height());
+    // the client rect should not be affected by the transformer
+    assert.deepEqual(layerClientRect, rectClientRect);
+  });
+  it('attached transformer should affect client rect', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 60,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+    });
+    layer.add(tr);
+
+    const layerClientRect = layer.getClientRect();
+    const rectClientRect = rect.getClientRect();
+    const trClientRect = tr.getClientRect();
+
+    // the client rect should be affecte by the transformer
+    assert.notDeepEqual(layerClientRect, rectClientRect);
+    assert.deepEqual(layerClientRect, trClientRect);
   });
 });
