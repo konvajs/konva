@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+Not released:
+
+-Allow reset component attributes via overloader
+
 ### 8.3.11 (2022-08-05)
 
 - Fix `Konva.Label` position when tag attributes are changed
