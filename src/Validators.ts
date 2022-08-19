@@ -146,7 +146,7 @@ export function getNumberArrayValidator() {
       // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray#description
       const TypedArray = Int8Array ? Object.getPrototypeOf(Int8Array) : null;
       if (TypedArray && val instanceof TypedArray) {
-        return val
+        return val;
       }
       if (!Util._isArray(val)) {
         Util.warn(
@@ -191,6 +191,10 @@ export function getBooleanValidator() {
 export function getComponentValidator(components: any) {
   if (Konva.isUnminified) {
     return function (val: any, attr: string) {
+      // ignore validation on undefined value, because it will reset to defalt
+      if (val === undefined || val === null) {
+        return val;
+      }
       if (!Util.isObject(val)) {
         Util.warn(
           _formatValue(val) +

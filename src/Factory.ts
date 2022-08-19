@@ -44,7 +44,13 @@ export const Factory = {
       return this;
     };
   },
-  addComponentsGetterSetter(constructor, attr, components, validator?, after?) {
+  addComponentsGetterSetter(
+    constructor,
+    attr: string,
+    components: Array<string>,
+    validator?: Function,
+    after?: Function
+  ) {
     var len = components.length,
       capitalize = Util._capitalize,
       getter = GET + capitalize(attr),
@@ -84,6 +90,11 @@ export const Factory = {
           continue;
         }
         this._setAttr(attr + capitalize(key), val[key]);
+      }
+      if (!val) {
+        components.forEach((component) => {
+          this._setAttr(attr + capitalize(component), undefined);
+        });
       }
 
       this._fireChangeEvent(attr, oldVal, val);

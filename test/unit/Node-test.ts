@@ -3274,6 +3274,25 @@ describe('Node', function () {
     assert.equal(circle.size().height, 11);
   });
 
+  it('overloaders reset', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle({
+      radius: 70,
+      fill: 'green',
+    });
+
+    layer.add(circle);
+    stage.add(layer);
+
+    circle.scale({ x: 2, y: 2 });
+
+    circle.scale(undefined);
+
+    assert.equal(circle.scaleX(), 1);
+    assert.equal(circle.scaleY(), 1);
+  });
+
   it('cache shape', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
