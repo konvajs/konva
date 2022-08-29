@@ -12,7 +12,7 @@ import {
   assertAlmostEqual,
 } from './test-utils';
 
-describe.only('Text', function () {
+describe('Text', function () {
   // ======================================================
   it('text with empty config is allowed', function () {
     var stage = addStage();
