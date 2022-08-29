@@ -12,7 +12,7 @@ import {
   assertAlmostEqual,
 } from './test-utils';
 
-describe('Text', function () {
+describe.only('Text', function () {
   // ======================================================
   it('text with empty config is allowed', function () {
     var stage = addStage();
@@ -452,6 +452,39 @@ describe('Text', function () {
 
     assert.equal(text.textArr.length, 3);
     assert.equal(text.textArr[2].text.slice(-1), '…');
+  });
+
+  // ======================================================
+  it('text single line with ellipsis when there is no need in them', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var rect = new Konva.Rect({
+      x: 10,
+      y: 10,
+      width: 380,
+      height: 300,
+      fill: 'red',
+    });
+
+    var text = new Konva.Text({
+      width: 497,
+      height: 49,
+      text: 'Body text',
+      fill: 'black',
+      fontSize: 40,
+      shadowColor: 'black',
+      shadowOpacity: 1,
+      lineHeight: 1.2,
+      letterSpacing: 0,
+      ellipsis: true,
+    });
+
+    layer.add(rect).add(text);
+    stage.add(layer);
+
+    assert.equal(text.textArr.length, 1);
+    assert.equal(text.textArr[0].text.slice(-1), 't');
   });
 
   // ======================================================

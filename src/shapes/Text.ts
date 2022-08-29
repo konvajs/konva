@@ -526,8 +526,7 @@ export class Text extends Shape<TextConfig> {
         this._addTextLine(line);
         currentHeightPx += lineHeightPx;
         textWidth = Math.max(textWidth, lineWidth);
-
-        if (this._shouldHandleEllipsis(currentHeightPx)) {
+        if (this._shouldHandleEllipsis(currentHeightPx) && i < max - 1) {
           this._tryToAddEllipsisToLastLine();
         }
       }

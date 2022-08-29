@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.3.11
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Tue Aug 09 2022
+   * Date: Mon Aug 29 2022
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -1171,6 +1171,12 @@
   function getNumberArrayValidator() {
       if (Konva$2.isUnminified) {
           return function (val, attr) {
+              // Retrieve TypedArray constructor as found in MDN (if TypedArray is available)
+              // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray#description
+              const TypedArray = Int8Array ? Object.getPrototypeOf(Int8Array) : null;
+              if (TypedArray && val instanceof TypedArray) {
+                  return val;
+              }
               if (!Util._isArray(val)) {
                   Util.warn(_formatValue(val) +
                       ' is a not valid value for "' +
@@ -1209,6 +1215,10 @@
   function getComponentValidator(components) {
       if (Konva$2.isUnminified) {
           return function (val, attr) {
+              // ignore validation on undefined value, because it will reset to defalt
+              if (val === undefined || val === null) {
+                  return val;
+              }
               if (!Util.isObject(val)) {
                   Util.warn(_formatValue(val) +
                       ' is a not valid value for "' +
@@ -1282,6 +1292,11 @@
                       continue;
                   }
                   this._setAttr(attr + capitalize(key), val[key]);
+              }
+              if (!val) {
+                  components.forEach((component) => {
+                      this._setAttr(attr + capitalize(component), undefined);
+                  });
               }
               this._fireChangeEvent(attr, oldVal, val);
               if (after) {
@@ -4090,33 +4105,33 @@
           });
       }
       /**
-        * Converts node into a blob.  Since the toBlob method is asynchronous,
-        *  the resulting blob can only be retrieved from the config callback
-        *  or the returned Promise.
-        * @method
-        * @name Konva.Node#toBlob
-        * @param {Object} config
-        * @param {Function} [config.callback] function executed when the composite has completed
-        * @param {Number} [config.x] x position of canvas section
-        * @param {Number} [config.y] y position of canvas section
-        * @param {Number} [config.width] width of canvas section
-        * @param {Number} [config.height] height of canvas section
-        * @param {Number} [config.pixelRatio] pixelRatio of output canvas. Default is 1.
-        * You can use that property to increase quality of the image, for example for super hight quality exports
-        * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
-        * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
-        * @param {Boolean} [config.imageSmoothingEnabled] set this to false if you want to disable imageSmoothing
-        * @example
-        * var blob = await node.toBlob({});
-        * @returns {Promise<Blob>}
-        */
+       * Converts node into a blob.  Since the toBlob method is asynchronous,
+       *  the resulting blob can only be retrieved from the config callback
+       *  or the returned Promise.
+       * @method
+       * @name Konva.Node#toBlob
+       * @param {Object} config
+       * @param {Function} [config.callback] function executed when the composite has completed
+       * @param {Number} [config.x] x position of canvas section
+       * @param {Number} [config.y] y position of canvas section
+       * @param {Number} [config.width] width of canvas section
+       * @param {Number} [config.height] height of canvas section
+       * @param {Number} [config.pixelRatio] pixelRatio of output canvas. Default is 1.
+       * You can use that property to increase quality of the image, for example for super hight quality exports
+       * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
+       * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
+       * @param {Boolean} [config.imageSmoothingEnabled] set this to false if you want to disable imageSmoothing
+       * @example
+       * var blob = await node.toBlob({});
+       * @returns {Promise<Blob>}
+       */
       toBlob(config) {
           return new Promise((resolve, reject) => {
               try {
                   const callback = config === null || config === void 0 ? void 0 : config.callback;
                   if (callback)
                       delete config.callback;
-                  this.toCanvas(config).toBlob(blob => {
+                  this.toCanvas(config).toBlob((blob) => {
                       resolve(blob);
                       callback === null || callback === void 0 ? void 0 : callback(blob);
                   });
@@ -13626,7 +13641,7 @@
                   this._addTextLine(line);
                   currentHeightPx += lineHeightPx;
                   textWidth = Math.max(textWidth, lineWidth);
-                  if (this._shouldHandleEllipsis(currentHeightPx)) {
+                  if (this._shouldHandleEllipsis(currentHeightPx) && i < max - 1) {
                       this._tryToAddEllipsisToLastLine();
                   }
               }
@@ -14213,7 +14228,7 @@
                           pathCmd = undefined;
                       }
                   }
-                  if (pathCmd === {} || p0 === undefined) {
+                  if (Object.keys(pathCmd).length === 0 || p0 === undefined) {
                       return undefined;
                   }
                   var needNewSegment = false;
@@ -15577,9 +15592,14 @@
           return Node.prototype.toObject.call(this);
       }
       getClientRect() {
-          // return zero size
-          // so it will be skipped in calculations
-          return { x: 0, y: 0, width: 0, height: 0 };
+          if (this.nodes().length > 0) {
+              return super.getClientRect();
+          }
+          else {
+              // if we are detached return zero size
+              // so it will be skipped in calculations
+              return { x: 0, y: 0, width: 0, height: 0 };
+          }
       }
   }
   function validateAnchors(val) {
