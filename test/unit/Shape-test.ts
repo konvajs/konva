@@ -1229,6 +1229,11 @@ describe('Shape', function () {
     // reset shadow
     circle.shadowColor(null);
     assert.equal(circle.getShadowRGBA(), undefined);
+
+    // illegal color
+    circle.shadowColor('#0000f');
+    assert.equal(circle.hasShadow(), true);
+    assert.equal(circle.getShadowRGBA(), undefined);
   });
 
   it('scale should also effect shadow offset', function () {
