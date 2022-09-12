@@ -324,8 +324,11 @@ export class Shape<
     return this._getCache(SHADOW_RGBA, this._getShadowRGBA);
   }
   _getShadowRGBA() {
-    if (this.hasShadow()) {
-      var rgba = Util.colorToRGBA(this.shadowColor());
+    if (!this.hasShadow()) {
+      return;
+    }
+    var rgba = Util.colorToRGBA(this.shadowColor());
+    if (rgba) {
       return (
         'rgba(' +
         rgba.r +
