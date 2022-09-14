@@ -6,12 +6,13 @@ import { SceneCanvas, HitCanvas } from './Canvas';
 import { GetSet, Vector2d } from './types';
 import { Shape } from './Shape';
 import { Layer } from './Layer';
-import { DD } from './DragAndDrop';
+import { DD, registerDragAndDropListenersForWindowGlobal } from './DragAndDrop';
 import { _registerNode } from './Global';
 import * as PointerEvents from './PointerEvents';
 
 export interface StageConfig extends ContainerConfig {
   container: HTMLDivElement | string;
+  windowGlobal?: Window;
 }
 
 // CONSTANTS
@@ -188,6 +189,7 @@ export class Stage extends Container<Layer> {
       }
     );
     this._checkVisibility();
+    registerDragAndDropListenersForWindowGlobal(this.getWindowGlobal());
   }
 
   _validateAdd(child) {
@@ -310,6 +312,9 @@ export class Stage extends Container<Layer> {
   }
   getContent() {
     return this.content;
+  }
+  getWindowGlobal() {
+    return this.attrs.windowGlobal ?? window;
   }
   _toKonvaCanvas(config) {
     config = config || {};

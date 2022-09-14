@@ -635,11 +635,12 @@ export class Transformer extends Group {
     this.sin = Math.abs(height / hypotenuse);
     this.cos = Math.abs(width / hypotenuse);
 
-    if (typeof window !== 'undefined') {
-      window.addEventListener('mousemove', this._handleMouseMove);
-      window.addEventListener('touchmove', this._handleMouseMove);
-      window.addEventListener('mouseup', this._handleMouseUp, true);
-      window.addEventListener('touchend', this._handleMouseUp, true);
+    const windowGlobal = e.target.getStage().getWindowGlobal();
+    if (typeof windowGlobal !== 'undefined') {
+      windowGlobal.addEventListener('mousemove', this._handleMouseMove);
+      windowGlobal.addEventListener('touchmove', this._handleMouseMove);
+      windowGlobal.addEventListener('mouseup', this._handleMouseUp, true);
+      windowGlobal.addEventListener('touchend', this._handleMouseUp, true);
     }
 
     this._transforming = true;
@@ -895,13 +896,14 @@ export class Transformer extends Group {
   _removeEvents(e?) {
     if (this._transforming) {
       this._transforming = false;
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('mousemove', this._handleMouseMove);
-        window.removeEventListener('touchmove', this._handleMouseMove);
-        window.removeEventListener('mouseup', this._handleMouseUp, true);
-        window.removeEventListener('touchend', this._handleMouseUp, true);
-      }
       var node = this.getNode();
+      const windowGlobal = node.getStage().getWindowGlobal();
+      if (typeof windowGlobal !== 'undefined') {
+        windowGlobal.removeEventListener('mousemove', this._handleMouseMove);
+        windowGlobal.removeEventListener('touchmove', this._handleMouseMove);
+        windowGlobal.removeEventListener('mouseup', this._handleMouseUp, true);
+        windowGlobal.removeEventListener('touchend', this._handleMouseUp, true);
+      }
       this._fire('transformend', { evt: e, target: node });
 
       if (node) {
@@ -1209,8 +1211,8 @@ export class Transformer extends Group {
       this.getStage().content && (this.getStage().content.style.cursor = '');
     }
     Group.prototype.destroy.call(this);
-    this.detach();
     this._removeEvents();
+    this.detach();
     return this;
   }
   // do not work as a container
