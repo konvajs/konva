@@ -7,7 +7,6 @@ import { _registerNode } from '../Global';
 export interface RingConfig extends ShapeConfig {
   innerRadius: number;
   outerRadius: number;
-  clockwise?: boolean;
 }
 
 var PIx2 = Math.PI * 2;
@@ -19,7 +18,6 @@ var PIx2 = Math.PI * 2;
  * @param {Object} config
  * @param {Number} config.innerRadius
  * @param {Number} config.outerRadius
- * @param {Boolean} [config.clockwise]
  * @@shapeParams
  * @@nodeParams
  * @example
