@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.3.12
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Mon Aug 29 2022
+   * Date: Mon Oct 03 2022
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -1452,7 +1452,6 @@
   class Context {
       constructor(canvas) {
           this.canvas = canvas;
-          this._context = canvas._canvas.getContext('2d');
           if (Konva$2.enableTrace) {
               this.traceArr = [];
               this._enableTrace();
@@ -1991,6 +1990,10 @@
       });
   });
   class SceneContext extends Context {
+      constructor(canvas) {
+          super(canvas);
+          this._context = canvas._canvas.getContext('2d');
+      }
       _fillColor(shape) {
           var fill = shape.fill();
           this.setAttr('fillStyle', fill);
@@ -2105,6 +2108,12 @@
       }
   }
   class HitContext extends Context {
+      constructor(canvas) {
+          super(canvas);
+          this._context = canvas._canvas.getContext('2d', {
+              willReadFrequently: true,
+          });
+      }
       _fill(shape) {
           this.save();
           this.setAttr('fillStyle', shape.colorKey);
@@ -6140,7 +6149,7 @@
           EVENTS.forEach(([event, methodName]) => {
               this.content.addEventListener(event, (evt) => {
                   this[methodName](evt);
-              });
+              }, { passive: false });
           });
       }
       _pointerenter(evt) {
@@ -6835,8 +6844,11 @@
           return this._getCache(SHADOW_RGBA, this._getShadowRGBA);
       }
       _getShadowRGBA() {
-          if (this.hasShadow()) {
-              var rgba = Util.colorToRGBA(this.shadowColor());
+          if (!this.hasShadow()) {
+              return;
+          }
+          var rgba = Util.colorToRGBA(this.shadowColor());
+          if (rgba) {
               return ('rgba(' +
                   rgba.r +
                   ',' +
@@ -12502,7 +12514,6 @@
    * @param {Object} config
    * @param {Number} config.innerRadius
    * @param {Number} config.outerRadius
-   * @param {Boolean} [config.clockwise]
    * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]

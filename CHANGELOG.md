@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### 8.3.13 (2022-10-03)
+
+- Typescript fixes
+- Better non-passive events usage
+- Better 2d context usage to avoid Chrome warnings
+
 ### 8.3.12 (2022-08-29)
 
 - `ellipsis` fixes for `Konva.Text`
