@@ -456,9 +456,13 @@ export class Stage extends Container<Layer> {
       return;
     }
     EVENTS.forEach(([event, methodName]) => {
-      this.content.addEventListener(event, (evt) => {
-        this[methodName](evt);
-      });
+      this.content.addEventListener(
+        event,
+        (evt) => {
+          this[methodName](evt);
+        },
+        { passive: false }
+      );
     });
   }
   _pointerenter(evt) {
