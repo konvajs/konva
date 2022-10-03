@@ -118,7 +118,6 @@ export class Context {
 
   constructor(canvas: Canvas) {
     this.canvas = canvas;
-    this._context = canvas._canvas.getContext('2d') as CanvasRenderingContext2D;
 
     if (Konva.enableTrace) {
       this.traceArr = [];
@@ -714,6 +713,10 @@ CONTEXT_PROPERTIES.forEach(function (prop) {
 });
 
 export class SceneContext extends Context {
+  constructor(canvas: Canvas) {
+    super(canvas);
+    this._context = canvas._canvas.getContext('2d') as CanvasRenderingContext2D;
+  }
   _fillColor(shape: Shape) {
     var fill = shape.fill();
 
@@ -853,6 +856,12 @@ export class SceneContext extends Context {
 }
 
 export class HitContext extends Context {
+  constructor(canvas: Canvas) {
+    super(canvas);
+    this._context = canvas._canvas.getContext('2d', {
+      willReadFrequently: true,
+    }) as CanvasRenderingContext2D;
+  }
   _fill(shape) {
     this.save();
     this.setAttr('fillStyle', shape.colorKey);
