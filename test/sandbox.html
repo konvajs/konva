@@ -45,10 +45,13 @@
         fill: 'red',
       });
       layer.add(rect);
-
-      document.body.onclick = () => {
-        alert('click');
-      };
+      stage.on('wheel', (e) => {
+        e.evt.preventDefault();
+        console.log('wheel');
+      });
+      stage.on('contextmenu', (e) => {
+        console.log('click');
+      });
     </script>
   </body>
 </html>
