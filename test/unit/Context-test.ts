@@ -57,7 +57,7 @@ describe('Context', function () {
     'textBaseline',
     'globalAlpha',
     'globalCompositeOperation',
-  ];
+  ] as const;
 
   it('context wrapper should work like native context', function () {
     var stage = addStage();
@@ -108,10 +108,10 @@ describe('Context', function () {
 
     // test get
     nativeContext.fillStyle = '#ff0000';
-    assert.equal(context['fillStyle'], '#ff0000');
+    assert.equal(context.fillStyle, '#ff0000');
 
     // test set
-    context['globalAlpha'] = 0.5;
-    assert.equal(context['globalAlpha'], 0.5);
+    context.globalAlpha = 0.5;
+    assert.equal(context.globalAlpha, 0.5);
   });
 });
