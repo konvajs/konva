@@ -86,7 +86,7 @@ var CONTEXT_PROPERTIES = [
   'globalAlpha',
   'globalCompositeOperation',
   'imageSmoothingEnabled',
-];
+] as const;
 
 const traceArrMax = 100;
 /**
@@ -700,6 +700,11 @@ export class Context {
     }
   }
 }
+
+// supported context properties
+type CanvasContextProps = Pick<CanvasRenderingContext2D, typeof CONTEXT_PROPERTIES[number]>;
+
+export interface Context extends CanvasContextProps {};
 
 CONTEXT_PROPERTIES.forEach(function (prop) {
   Object.defineProperty(Context.prototype, prop, {
