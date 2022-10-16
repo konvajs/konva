@@ -118,9 +118,12 @@ export abstract class Container<
    * layer.draw();
    */
   add(...children: ChildType[]) {
-    if (arguments.length > 1) {
-      for (var i = 0; i < arguments.length; i++) {
-        this.add(arguments[i]);
+    if (children.length === 0) {
+      return this;
+    }
+    if (children.length > 1) {
+      for (var i = 0; i < children.length; i++) {
+        this.add(children[i]);
       }
       return this;
     }
