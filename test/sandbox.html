@@ -1,57 +1,278 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
+<head>
+    <meta charset="utf-8"/>
     <title>KonvaJS Sandbox</title>
     <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=1.0, minimum-scale=1.0, maximum-scale=1.0"
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=1.0, minimum-scale=1.0, maximum-scale=1.0"
     />
     <style>
-      body {
-        margin: 0;
-        width: 100vw;
-        height: 100vh;
-      }
+        body {
+            margin: 0;
+            width:  100vw;
+            height: 100vh;
+        }
+
+        .playgroundContainer {
+            display:         flex;
+            flex-flow:       column nowrap;
+            justify-content: flex-start;
+            align-items:     center;
+            position:        relative;
+            width:           100%;
+            height:          100%;
+        }
+
+        .toolBar {
+            display:         flex;
+            flex-flow:       row nowrap;
+            justify-content: space-around;
+            align-items:     center;
+            width:           100%;
+            height:          60px;
+
+            position:        relative;
+            top:             0;
+            border-bottom:   1px solid slateblue;
+            overflow:        hidden;
+        }
+
+        .button {
+            width:               68px;
+            height:              36px;
+            outline:             none;
+            border:              none;
+
+            border-radius:       6px;
+            background-repeat:   no-repeat;
+            background-position: center;
+            background-size:     contain;
+            /*background-color:      transparent;*/
+            background-color:    #316DAC;
+            color:               #FFFFFF;
+            display:             block;
+            user-select:         none; /* Non-prefixed version, currently*/
+
+            font-size:           13px;
+            line-height:         15px;
+        }
+
+        .button:focus,
+        .button:hover {
+            -webkit-tap-highlight-color: transparent;
+            outline:                     none;
+            border:                      none;
+        }
+
+
     </style>
     <!-- <script src="https://cdn.rawgit.com/hammerjs/touchemulator/master/touch-emulator.js"></script> -->
     <script>
-      // TouchEmulator();
+        // TouchEmulator();
     </script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.7/hammer.js"></script> -->
     <!-- <script src="https://cdn.rawgit.com/hammerjs/touchemulator/master/touch-emulator.js"></script> -->
     <!-- <script src="./hammer.js"></script> -->
     <!-- <script src="https://unpkg.com/fabric@5.2.1/dist/fabric.js"></script> -->
-  </head>
+</head>
 
-  <body>
-    <div id="container" style="background-color: bisque"></div>
+<body>
+<div class="playgroundContainer">
+    <div class="toolBar">
+        <button class="button" id="toAddShape">Add Shape</button>
+        <button class="button" id="toAddText">Add Text</button>
+        <button class="button">导出</button>
+        <button class="button" id="toMoveBack">撤销</button>
+        <button class="button" id="toMoveForward">重做</button>
+    </div>
+    <div id="container"></div>
+</div>
 
-    <script type="module">
-      import Konva from '../src/index.ts';
+<script type="module">
+    import { circularQueue } from './circularQueue.js';
+    import { sandboxDemo } from './sandbox.js';
+    import { TransformerX } from './TransformerX.js';
+    import { createRect } from './rect.js';
+    import { createText } from './text.js';
+    import { imageSprite } from './image';
+    import debounce from './debounce';
 
-      const stage = new Konva.Stage({
-        container: 'container',
-        width: window.innerWidth / 2,
-        height: window.innerHeight / 2,
-      });
-      const layer = new Konva.Layer();
-      stage.add(layer);
-      const rect = new Konva.Rect({
-        x: 0,
-        y: 0,
-        width: 100,
-        height: 100,
-        fill: 'red',
-      });
-      layer.add(rect);
-      stage.on('wheel', (e) => {
-        e.evt.preventDefault();
-        console.log('wheel');
-      });
-      stage.on('contextmenu', (e) => {
-        console.log('click');
-      });
-    </script>
-  </body>
+    // let textTransformer;
+    const TEXT_MIN_WIDTH = 100;
+    const TEXT_MIN_HEIGHT = 100;
+    const transformer = new TransformerX();
+    const textTransformer = new TransformerX({
+        padding: 5,
+        // enable only side anchors
+        enabledAnchors: ['middle-left', 'middle-right'],
+        // limit transformer size
+        boundBoxFunc: (oldBox, newBox) => {
+            if (newBox.width < TEXT_MIN_WIDTH) {
+                return oldBox;
+            }
+            return newBox;
+        }
+    });
+
+    const textConfig = {
+        'text': '你爱输入什么都行没dfgdffg拭找34554imiadf测拭3453534sfgsf哈哈哈!', 'fontSize': 32, 'fill': '#315DAC'
+    };
+    const currentTargetAttrs = {
+        'target': null,
+        'attrs': {
+            draggable: 0, fill: 0, height: 0, rotation: 0, scaleX: 0, scaleY: 0, skewX: 0, skewY: 0, width: 0,
+            x: 0,
+            y: 0
+        }
+    };
+
+
+
+
+    function Main() {
+
+        const queue = new circularQueue(3);
+
+        const { stage, container } = sandboxDemo();
+        const IMAGE = new imageSprite({ stage });
+
+        container.add(transformer);
+        container.add(textTransformer);
+
+        const addTextButton = document.querySelector('#toAddText');
+        const addShapeButton = document.querySelector('#toAddShape');
+        const moveBackButton = document.querySelector('#toMoveBack');
+        const moveForwardButton = document.querySelector('#toMoveForward');
+
+        const imageList = [];
+
+        for (i = 0; i < 10; i++) {
+            imageList.push({ url: '/assets/sticker.jpg' });
+        }
+
+        addShapeButton.addEventListener('click', function () {
+            const rect = createRect();
+            IMAGE.createTexture(imageList).then(response => {
+                container.add(...response);
+
+            });
+
+            rect.draggable(true);
+            transformer.nodes([]);
+            transformer.nodes([rect]);
+            currentTargetAttrs['target'] = rect;
+            for (const key in currentTargetAttrs['attrs']) {
+                // console.log(key)
+                if (rect.getAttr(key)) currentTargetAttrs['attrs'][key] = rect.getAttr(key);
+            }
+
+            queue.enqueue(currentTargetAttrs);
+            console.log(currentTargetAttrs);
+        });
+
+        addTextButton.addEventListener('click', function () {
+            createText(textConfig).then(response => {
+                const text = response;
+                container.add(text);
+                !!textTransformer && textTransformer.nodes([]);
+                // noinspection JSCheckFunctionSignatures
+                textTransformer.nodes([text]);
+                text.draggable(true);
+                text.on('transform', (node) => {
+                    console.log(node);
+                    // with enabled anchors we can only change scaleX
+                    // so we don't need to reset height
+                    // just width
+                    text.setAttrs({
+                        width: Math.max(text.width() * text.scaleX(), TEXT_MIN_WIDTH),
+                        scaleX: 1,
+                        scaleY: 1
+                    });
+                });
+                console.log(text.toJSON());
+            });
+        });
+
+        moveBackButton.addEventListener('click', function () {
+            queue.moveBack();
+            applyNodeAttr(queue);
+        });
+
+        moveForwardButton.addEventListener('click', function () {
+            queue.moveForward();
+            applyNodeAttr(queue);
+        });
+
+        function applyNodeAttr(queue) {
+            const { target, attrs } = queue.getCurrent();
+            const currentChildren = container.getChildren(function (node) {
+                return node.getClassName() === 'Rect';
+            });
+
+            console.log(target.getClassName());
+            currentChildren[0].setAttrs(attrs);
+        }
+
+        console.log(queue);
+        // const chineseReg = /[\u4e00-\u9fa5]/g;
+        // const englishReg = /[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\s]/g;
+        // let matchChinese = textConfig.text.match(chineseReg);
+        // let extractChinese = chineseReg.exec(textConfig.text);
+        // let extractEnglish = englishReg.exec(textConfig.text);
+        const chineseReg = /[\u4e00-\u9fa5]/g;
+        const englishReg = /[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\s]/g;
+        let extractEnglish = textConfig.text.split(englishReg);
+        let extractChinese = textConfig.text.split(chineseReg);
+        let isFirstStrTypeChinese = chineseReg.test(textConfig.text[0]);
+        console.log('testFirstString ==> chinese', isFirstStrTypeChinese);
+        console.log('extractChinese', extractChinese);
+        console.log('extractEnglish', extractEnglish);
+
+        if (isFirstStrTypeChinese) {
+            let cacheEnglishChar = extractChinese.filter(character => { return character !== ''; });
+            let cacheChineseChar = extractEnglish.filter(character => { return character !== ''; });
+            let textArray = [];
+
+            for (i = 0; i < cacheChineseChar.length; i++) {
+                textArray.push(cacheChineseChar[i]);
+                textArray.push(cacheEnglishChar[i])
+            }
+
+            console.log(textArray);
+        }
+
+
+        const debounceHandleInfo = debounce((newBox) => {
+            console.log(newBox);
+        }, 500);
+
+        transformer.boundBoxFunc(function (oldBox, newBox) {
+            // width and height of the boxes are corresponding to total absolute width and height of all nodes combined
+            // so it includes scale of the node.
+            if (newBox.width < 5 || newBox.height < 5) {
+                return oldBox;
+            }
+            debounceHandleInfo(newBox);
+            return newBox;
+        });
+
+        transformer.on('transformend', function (event) {
+            console.log(event.target, event.target.attrs);
+            let attrs = Object.assign({ 'attrs': event.target.attrs });
+            let currentTargetAttrs = {
+                'target': event.target,
+                'attrs': JSON.parse(JSON.stringify(attrs))
+            };
+            queue.enqueue(currentTargetAttrs);
+        });
+
+        console.log('stage', stage.toJSON());
+
+    }
+
+    window.addEventListener('DOMContentLoaded', Main);
+
+</script>
+</body>
 </html>

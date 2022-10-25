@@ -137,5 +137,8 @@
     "type": "git",
     "url": "git://github.com/konvajs/konva.git"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "nanoid": "^4.0.0"
+  }
 }
