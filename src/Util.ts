@@ -957,4 +957,10 @@ export const Util = {
       return evt.changedTouches[0].identifier;
     }
   },
+  releaseCanvas(...canvases: HTMLCanvasElement[]) {
+    canvases.forEach(c => {
+      c.width = 0;
+      c.height = 0;
+    })
+  }
 };

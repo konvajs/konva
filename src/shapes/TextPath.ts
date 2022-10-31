@@ -533,6 +533,10 @@ export class TextPath extends Shape<TextPathConfig> {
       height: maxY - minY + fontSize,
     };
   }
+  destroy(): this {
+    Util.releaseCanvas(this.dummyCanvas);
+    return super.destroy();
+  }
 
   fontFamily: GetSet<string, this>;
   fontSize: GetSet<number, this>;
