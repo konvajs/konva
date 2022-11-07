@@ -958,6 +958,8 @@ export const Util = {
     }
   },
   releaseCanvas(...canvases: HTMLCanvasElement[]) {
+    if (!Konva.releaseCanvasOnDestroy) return;
+
     canvases.forEach(c => {
       c.width = 0;
       c.height = 0;
