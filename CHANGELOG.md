@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### 8.3.14 (2022-11-09)
+
+- Automatically release (destroy) used canvas elements. Should fix safari memory issues
+
 ### 8.3.13 (2022-10-03)
 
 - Typescript fixes
