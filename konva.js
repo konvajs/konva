@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.3.13
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Mon Oct 03 2022
+   * Date: Wed Nov 09 2022
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -157,6 +157,17 @@
       isDragReady() {
           return !!Konva$2['DD'].node;
       },
+      /**
+       * Should Konva release canvas elements on destroy. Default is true.
+       * Useful to avoid memory leak issues in Safari on macOS/iOS.
+       * @property releaseCanvasOnDestroy
+       * @default true
+       * @name releaseCanvasOnDestroy
+       * @memberof Konva
+       * @example
+       * Konva.releaseCanvasOnDestroy = true;
+       */
+      releaseCanvasOnDestroy: true,
       // user agent
       document: glob.document,
       // insert Konva into global namespace (window)
@@ -1071,6 +1082,14 @@
               return evt.changedTouches[0].identifier;
           }
       },
+      releaseCanvas(...canvases) {
+          if (!Konva$2.releaseCanvasOnDestroy)
+              return;
+          canvases.forEach(c => {
+              c.width = 0;
+              c.height = 0;
+          });
+      }
   };
 
   function _formatValue(val) {
@@ -2164,6 +2183,7 @@
               1;
           return devicePixelRatio / backingStoreRatio;
       })();
+      Util.releaseCanvas(canvas);
       return _pixelRatio;
   }
   /**
@@ -2556,7 +2576,11 @@
        * node.clearCache();
        */
       clearCache() {
-          this._cache.delete(CANVAS);
+          if (this._cache.has(CANVAS)) {
+              const { scene, filter, hit } = this._cache.get(CANVAS);
+              Util.releaseCanvas(scene, filter, hit);
+              this._cache.delete(CANVAS);
+          }
           this._clearSelfAndDescendantCache();
           this._requestDraw();
           return this;
@@ -3042,6 +3066,7 @@
        */
       destroy() {
           this.remove();
+          this.clearCache();
           return this;
       }
       /**
@@ -5997,6 +6022,7 @@
           if (index > -1) {
               stages.splice(index, 1);
           }
+          Util.releaseCanvas(this.bufferCanvas._canvas, this.bufferHitCanvas._canvas);
           return this;
       }
       /**
@@ -8619,6 +8645,10 @@
           else {
               parent.content.appendChild(this.hitCanvas._canvas);
           }
+      }
+      destroy() {
+          Util.releaseCanvas(this.getNativeCanvasElement(), this.getHitCanvas()._canvas);
+          return super.destroy();
       }
   }
   Layer.prototype.nodeType = 'Layer';
@@ -14407,6 +14437,10 @@
               height: maxY - minY + fontSize,
           };
       }
+      destroy() {
+          Util.releaseCanvas(this.dummyCanvas);
+          return super.destroy();
+      }
   }
   TextPath.prototype._fillFunc = _fillFunc;
   TextPath.prototype._strokeFunc = _strokeFunc;
@@ -17593,6 +17627,7 @@
       var scratchData = tempCanvas
           .getContext('2d')
           .getImageData(0, 0, xSize, ySize);
+      Util.releaseCanvas(tempCanvas);
       // Convert thhe original to polar coordinates
       ToPolar(imageData, scratchData, {
           polarCenterX: xSize / 2,
