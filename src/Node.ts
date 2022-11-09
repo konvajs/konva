@@ -243,7 +243,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * node.clearCache();
    */
   clearCache() {
-    this._cache.delete(CANVAS);
+    if (this._cache.has(CANVAS)) {
+      const { scene, filter, hit } = this._cache.get(CANVAS);
+      Util.releaseCanvas(scene, filter, hit);
+      this._cache.delete(CANVAS);
+    }
+
     this._clearSelfAndDescendantCache();
     this._requestDraw();
     return this;
@@ -853,6 +858,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    */
   destroy() {
     this.remove();
+    this.clearCache();
     return this;
   }
   /**

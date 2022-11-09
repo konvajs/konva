@@ -164,6 +164,17 @@ export const Konva = {
   isDragReady() {
     return !!Konva['DD'].node;
   },
+  /**
+   * Should Konva release canvas elements on destroy. Default is true.
+   * Useful to avoid memory leak issues in Safari on macOS/iOS.
+   * @property releaseCanvasOnDestroy
+   * @default true
+   * @name releaseCanvasOnDestroy
+   * @memberof Konva
+   * @example
+   * Konva.releaseCanvasOnDestroy = true;
+   */
+  releaseCanvasOnDestroy: true,
   // user agent
   document: glob.document,
   // insert Konva into global namespace (window)

@@ -278,6 +278,9 @@ export class Stage extends Container<Layer> {
     if (index > -1) {
       stages.splice(index, 1);
     }
+
+    Util.releaseCanvas(this.bufferCanvas._canvas, this.bufferHitCanvas._canvas)
+
     return this;
   }
   /**
