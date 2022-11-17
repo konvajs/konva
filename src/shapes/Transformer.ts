@@ -1325,8 +1325,8 @@ Factory.addGetterSetter(
  * get/set resize ability. If false it will automatically hide resizing handlers
  * @name Konva.Transformer#resizeEnabled
  * @method
- * @param {Array} array
- * @returns {Array}
+ * @param {Boolean} enabled
+ * @returns {Boolean}
  * @example
  * // get
  * var resizeEnabled = transformer.resizeEnabled();
@@ -1337,9 +1337,9 @@ Factory.addGetterSetter(
 Factory.addGetterSetter(Transformer, 'resizeEnabled', true);
 /**
  * get/set anchor size. Default is 10
- * @name Konva.Transformer#validateAnchors
+ * @name Konva.Transformer#anchorSize
  * @method
- * @param {Number} 10
+ * @param {Number} size
  * @returns {Number}
  * @example
  * // get
