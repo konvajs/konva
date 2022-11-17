@@ -1327,8 +1327,8 @@ Factory.addGetterSetter(
  * get/set resize ability. If false it will automatically hide resizing handlers
  * @name Konva.Transformer#resizeEnabled
  * @method
- * @param {Array} array
- * @returns {Array}
+ * @param {Boolean} enabled
+ * @returns {Boolean}
  * @example
  * // get
  * var resizeEnabled = transformer.resizeEnabled();
@@ -1339,9 +1339,9 @@ Factory.addGetterSetter(
 Factory.addGetterSetter(Transformer, 'resizeEnabled', true);
 /**
  * get/set anchor size. Default is 10
- * @name Konva.Transformer#validateAnchors
+ * @name Konva.Transformer#anchorSize
  * @method
- * @param {Number} 10
+ * @param {Number} size
  * @returns {Number}
  * @example
  * // get
@@ -1441,8 +1441,8 @@ Factory.addGetterSetter(Transformer, 'borderEnabled', true);
  * get/set anchor stroke color
  * @name Konva.Transformer#anchorStroke
  * @method
- * @param {Boolean} enabled
- * @returns {Boolean}
+ * @param {String} strokeColor
+ * @returns {String}
  * @example
  * // get
  * var anchorStroke = transformer.anchorStroke();
@@ -1456,8 +1456,8 @@ Factory.addGetterSetter(Transformer, 'anchorStroke', 'rgb(0, 161, 255)');
  * get/set anchor stroke width
  * @name Konva.Transformer#anchorStrokeWidth
  * @method
- * @param {Boolean} enabled
- * @returns {Boolean}
+ * @param {Number} anchorStrokeWidth
+ * @returns {Number}
  * @example
  * // get
  * var anchorStrokeWidth = transformer.anchorStrokeWidth();
@@ -1476,8 +1476,8 @@ Factory.addGetterSetter(
  * get/set anchor fill color
  * @name Konva.Transformer#anchorFill
  * @method
- * @param {Boolean} enabled
- * @returns {Boolean}
+ * @param {String} anchorFill
+ * @returns {String}
  * @example
  * // get
  * var anchorFill = transformer.anchorFill();
@@ -1491,7 +1491,7 @@ Factory.addGetterSetter(Transformer, 'anchorFill', 'white');
  * get/set anchor corner radius
  * @name Konva.Transformer#anchorCornerRadius
  * @method
- * @param {Number} enabled
+ * @param {Number} radius
  * @returns {Number}
  * @example
  * // get
@@ -1526,8 +1526,8 @@ Factory.addGetterSetter(Transformer, 'borderStroke', 'rgb(0, 161, 255)');
  * get/set border stroke width
  * @name Konva.Transformer#borderStrokeWidth
  * @method
- * @param {Boolean} enabled
- * @returns {Boolean}
+ * @param {Number} strokeWidth
+ * @returns {Number}
  * @example
  * // get
  * var borderStrokeWidth = transformer.borderStrokeWidth();
@@ -1546,8 +1546,8 @@ Factory.addGetterSetter(
  * get/set border dash array
  * @name Konva.Transformer#borderDash
  * @method
- * @param {Boolean} enabled
- * @returns {Boolean}
+ * @param {Array} dash array
+ * @returns {Array}
  * @example
  * // get
  * var borderDash = transformer.borderDash();

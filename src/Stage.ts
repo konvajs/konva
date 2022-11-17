@@ -280,6 +280,9 @@ export class Stage extends Container<Layer> {
     if (index > -1) {
       stages.splice(index, 1);
     }
+
+    Util.releaseCanvas(this.bufferCanvas._canvas, this.bufferHitCanvas._canvas)
+
     return this;
   }
   /**
@@ -461,9 +464,13 @@ export class Stage extends Container<Layer> {
       return;
     }
     EVENTS.forEach(([event, methodName]) => {
-      this.content.addEventListener(event, (evt) => {
-        this[methodName](evt);
-      });
+      this.content.addEventListener(
+        event,
+        (evt) => {
+          this[methodName](evt);
+        },
+        { passive: false }
+      );
     });
   }
   _pointerenter(evt) {

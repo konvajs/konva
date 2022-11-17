@@ -5,10 +5,10 @@
 })(this, (function () { 'use strict';
 
   /*
-   * Konva JavaScript Framework v8.3.12
+   * Konva JavaScript Framework v8.3.14
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Wed Sep 14 2022
+   * Date: Wed Nov 09 2022
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -35,7 +35,7 @@
               : {};
   const Konva$2 = {
       _global: glob,
-      version: '8.3.12',
+      version: '8.3.14',
       isBrowser: detectBrowser(),
       isUnminified: /param/.test(function (param) { }.toString()),
       dblClickWindow: 400,
@@ -157,6 +157,17 @@
       isDragReady() {
           return !!Konva$2['DD'].node;
       },
+      /**
+       * Should Konva release canvas elements on destroy. Default is true.
+       * Useful to avoid memory leak issues in Safari on macOS/iOS.
+       * @property releaseCanvasOnDestroy
+       * @default true
+       * @name releaseCanvasOnDestroy
+       * @memberof Konva
+       * @example
+       * Konva.releaseCanvasOnDestroy = true;
+       */
+      releaseCanvasOnDestroy: true,
       // user agent
       document: glob.document,
       // insert Konva into global namespace (window)
@@ -1071,6 +1082,14 @@
               return evt.changedTouches[0].identifier;
           }
       },
+      releaseCanvas(...canvases) {
+          if (!Konva$2.releaseCanvasOnDestroy)
+              return;
+          canvases.forEach(c => {
+              c.width = 0;
+              c.height = 0;
+          });
+      }
   };
 
   function _formatValue(val) {
@@ -1452,7 +1471,6 @@
   class Context {
       constructor(canvas) {
           this.canvas = canvas;
-          this._context = canvas._canvas.getContext('2d');
           if (Konva$2.enableTrace) {
               this.traceArr = [];
               this._enableTrace();
@@ -1991,6 +2009,10 @@
       });
   });
   class SceneContext extends Context {
+      constructor(canvas) {
+          super(canvas);
+          this._context = canvas._canvas.getContext('2d');
+      }
       _fillColor(shape) {
           var fill = shape.fill();
           this.setAttr('fillStyle', fill);
@@ -2105,6 +2127,12 @@
       }
   }
   class HitContext extends Context {
+      constructor(canvas) {
+          super(canvas);
+          this._context = canvas._canvas.getContext('2d', {
+              willReadFrequently: true,
+          });
+      }
       _fill(shape) {
           this.save();
           this.setAttr('fillStyle', shape.colorKey);
@@ -2155,6 +2183,7 @@
               1;
           return devicePixelRatio / backingStoreRatio;
       })();
+      Util.releaseCanvas(canvas);
       return _pixelRatio;
   }
   /**
@@ -2561,7 +2590,11 @@
        * node.clearCache();
        */
       clearCache() {
-          this._cache.delete(CANVAS);
+          if (this._cache.has(CANVAS)) {
+              const { scene, filter, hit } = this._cache.get(CANVAS);
+              Util.releaseCanvas(scene, filter, hit);
+              this._cache.delete(CANVAS);
+          }
           this._clearSelfAndDescendantCache();
           this._requestDraw();
           return this;
@@ -3047,6 +3080,7 @@
        */
       destroy() {
           this.remove();
+          this.clearCache();
           return this;
       }
       /**
@@ -6003,6 +6037,7 @@
           if (index > -1) {
               stages.splice(index, 1);
           }
+          Util.releaseCanvas(this.bufferCanvas._canvas, this.bufferHitCanvas._canvas);
           return this;
       }
       /**
@@ -6159,7 +6194,7 @@
           EVENTS.forEach(([event, methodName]) => {
               this.content.addEventListener(event, (evt) => {
                   this[methodName](evt);
-              });
+              }, { passive: false });
           });
       }
       _pointerenter(evt) {
@@ -8629,6 +8664,10 @@
           else {
               parent.content.appendChild(this.hitCanvas._canvas);
           }
+      }
+      destroy() {
+          Util.releaseCanvas(this.getNativeCanvasElement(), this.getHitCanvas()._canvas);
+          return super.destroy();
       }
   }
   Layer.prototype.nodeType = 'Layer';
@@ -12524,7 +12563,6 @@
    * @param {Object} config
    * @param {Number} config.innerRadius
    * @param {Number} config.outerRadius
-   * @param {Boolean} [config.clockwise]
    * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
@@ -14417,6 +14455,10 @@
               width: maxX - minX + fontSize,
               height: maxY - minY + fontSize,
           };
+      }
+      destroy() {
+          Util.releaseCanvas(this.dummyCanvas);
+          return super.destroy();
       }
   }
   TextPath.prototype._fillFunc = _fillFunc;
@@ -17606,6 +17648,7 @@
       var scratchData = tempCanvas
           .getContext('2d')
           .getImageData(0, 0, xSize, ySize);
+      Util.releaseCanvas(tempCanvas);
       // Convert thhe original to polar coordinates
       ToPolar(imageData, scratchData, {
           polarCenterX: xSize / 2,
