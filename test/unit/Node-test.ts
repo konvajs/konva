@@ -943,6 +943,14 @@ describe('Node', function () {
     layer2.show();
     assert.equal(layer2.isVisible(), true);
     assert.equal(layer2.canvas._canvas.style.display, 'block');
+
+    layer2.toggleVisibility();
+    assert.equal(layer2.isVisible(), false);
+    assert.equal(layer2.canvas._canvas.style.display, 'none');
+
+    layer2.toggleVisibility();
+    assert.equal(layer2.isVisible(), true);
+    assert.equal(layer2.canvas._canvas.style.display, 'block');
   });
 
   // ======================================================
@@ -2268,6 +2276,16 @@ describe('Node', function () {
     assert.equal(circle.isVisible(), false);
 
     circle.show();
+    layer.draw();
+
+    assert.equal(circle.isVisible(), true);
+
+    circle.toggleVisibility();
+    layer.draw();
+
+    assert.equal(circle.isVisible(), false);
+
+    circle.toggleVisibility();
     layer.draw();
 
     assert.equal(circle.isVisible(), true);

@@ -1043,6 +1043,15 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this.visible(false);
     return this;
   }
+  /**
+   * toggle visibility of node.
+   * @method
+   * @name Konva.Node#toggleVisibility
+   * @returns {Konva.Node}
+   */
+  toggleVisibility() {
+    return this.isVisible() ? this.hide() : this.show();
+  }
   getZIndex() {
     return this.index || 0;
   }
