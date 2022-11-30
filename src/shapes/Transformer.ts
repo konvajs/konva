@@ -217,7 +217,7 @@ function getSnap(snaps: Array<number>, newRotationRad: number, tol: number) {
  * @param {Number} [config.anchorStrokeWidth] Anchor stroke size
  * @param {Number} [config.anchorSize] Default is 10
  * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
- * @param {String} [config.shiftBehavior] How does transformer react on shift key press when we are moving edges? Default is "default"
+ * @param {String} [config.shiftBehavior] How does transformer react on shift key press when we are moving edges? Default is 'default'
  * @param {Boolean} [config.centeredScaling] Should we resize relative to node's center? Default is false
  * @param {Array} [config.enabledAnchors] Array of names of enabled handles
  * @param {Boolean} [config.flipEnabled] Can we flip/mirror shape on transform?. True by default
@@ -1594,9 +1594,9 @@ Factory.addGetterSetter(Transformer, 'keepRatio', true);
  * var shiftBehavior = transformer.shiftBehavior();
  *
  * // set
- * transformer.shiftBehavior("none");
+ * transformer.shiftBehavior('none');
  */
-Factory.addGetterSetter(Transformer, 'shiftBehavior', "default");
+Factory.addGetterSetter(Transformer, 'shiftBehavior', 'default');
 
 /**
  * get/set should we resize relative to node's center?
