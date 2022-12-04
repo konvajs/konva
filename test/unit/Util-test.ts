@@ -76,6 +76,43 @@ describe('Util', function () {
     });
   });
 
+  it('colorToRGBA() - from hex color string with percentage to RGBA conversion!', function () {
+    assert.deepEqual(Konva.Util.colorToRGBA('#F00'), {
+      r: 255,
+      g: 0,
+      b: 0,
+      a: 1,
+    });
+
+    assert.deepEqual(Konva.Util.colorToRGBA('#F00F'), {
+      r: 255,
+      g: 0,
+      b: 0,
+      a: 1,
+    });
+
+    assert.deepEqual(Konva.Util.colorToRGBA('#F00C'), {
+      r: 255,
+      g: 0,
+      b: 0,
+      a: 0.8,
+    });
+
+    assert.deepEqual(Konva.Util.colorToRGBA('#FF0000FF'), {
+      r: 255,
+      g: 0,
+      b: 0,
+      a: 1,
+    });
+
+    assert.deepEqual(Konva.Util.colorToRGBA('#FF0000CC'), {
+      r: 255,
+      g: 0,
+      b: 0,
+      a: 0.8,
+    });
+  });
+
   it('make sure Transform is exported', () => {
     assert.equal(!!Konva.Transform, true);
   });
