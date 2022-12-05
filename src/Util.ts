@@ -609,7 +609,9 @@ export const Util = {
     return (
       Util._namedColorToRBA(str) ||
       Util._hex3ColorToRGBA(str) ||
+      Util._hex4ColorToRGBA(str) ||
       Util._hex6ColorToRGBA(str) ||
+      Util._hex8ColorToRGBA(str) ||
       Util._rgbColorToRGBA(str) ||
       Util._rgbaColorToRGBA(str) ||
       Util._hslColorToRGBA(str)
@@ -659,6 +661,17 @@ export const Util = {
       };
     }
   },
+  // Parse #nnnnnnnn
+  _hex8ColorToRGBA(str: string): RGBA {
+    if (str[0] === '#' && str.length === 9) {
+      return {
+        r: parseInt(str.slice(1, 3), 16),
+        g: parseInt(str.slice(3, 5), 16),
+        b: parseInt(str.slice(5, 7), 16),
+        a: parseInt(str.slice(7, 9), 16) / 0xff,
+      };
+    }
+  },
   // Parse #nnnnnn
   _hex6ColorToRGBA(str: string): RGBA {
     if (str[0] === '#' && str.length === 7) {
@@ -667,6 +680,17 @@ export const Util = {
         g: parseInt(str.slice(3, 5), 16),
         b: parseInt(str.slice(5, 7), 16),
         a: 1,
+      };
+    }
+  },
+  // Parse #nnnn
+  _hex4ColorToRGBA(str: string): RGBA {
+    if (str[0] === '#' && str.length === 5) {
+      return {
+        r: parseInt(str[1] + str[1], 16),
+        g: parseInt(str[2] + str[2], 16),
+        b: parseInt(str[3] + str[3], 16),
+        a: parseInt(str[4] + str[4], 16) / 0xff,
       };
     }
   },
