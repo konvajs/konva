@@ -2435,14 +2435,28 @@
           });
       },
   };
-  if (Konva$2.isBrowser) {
-      window.addEventListener('mouseup', DD._endDragBefore, true);
-      window.addEventListener('touchend', DD._endDragBefore, true);
-      window.addEventListener('mousemove', DD._drag);
-      window.addEventListener('touchmove', DD._drag);
-      window.addEventListener('mouseup', DD._endDragAfter, false);
-      window.addEventListener('touchend', DD._endDragAfter, false);
-  }
+  const registerDragAndDropListenersForWindowGlobal = (windowGlobal) => {
+      if (Konva$2.isBrowser) {
+          windowGlobal.console.log('registering events');
+          // Remove them all first in case this is a duplicate call with the same
+          // windowGlobal. If this is the first call, this will be a noop. This is to
+          // avoid a situation where we're storing multiple Window handles and
+          // possibly introducing a memory leak.
+          windowGlobal.removeEventListener('mouseup', DD._endDragBefore, true);
+          windowGlobal.removeEventListener('touchend', DD._endDragBefore, true);
+          windowGlobal.removeEventListener('mousemove', DD._drag);
+          windowGlobal.removeEventListener('touchmove', DD._drag);
+          windowGlobal.removeEventListener('mouseup', DD._endDragAfter, false);
+          windowGlobal.removeEventListener('touchend', DD._endDragAfter, false);
+          // Go ahead and actually set up the listeners.
+          windowGlobal.addEventListener('mouseup', DD._endDragBefore, true);
+          windowGlobal.addEventListener('touchend', DD._endDragBefore, true);
+          windowGlobal.addEventListener('mousemove', DD._drag);
+          windowGlobal.addEventListener('touchmove', DD._drag);
+          windowGlobal.addEventListener('mouseup', DD._endDragAfter, false);
+          windowGlobal.addEventListener('touchend', DD._endDragAfter, false);
+      }
+  };
 
   // CONSTANTS
   var ABSOLUTE_OPACITY = 'absoluteOpacity', ALL_LISTENERS = 'allEventListeners', ABSOLUTE_TRANSFORM = 'absoluteTransform', ABSOLUTE_SCALE = 'absoluteScale', CANVAS = 'canvas', CHANGE = 'Change', CHILDREN = 'children', KONVA = 'konva', LISTENING = 'listening', MOUSEENTER$1 = 'mouseenter', MOUSELEAVE$1 = 'mouseleave', SET = 'set', SHAPE = 'Shape', SPACE$1 = ' ', STAGE$1 = 'stage', TRANSFORM = 'transform', UPPER_STAGE = 'Stage', VISIBLE = 'visible', TRANSFORM_CHANGE_STR$1 = [
@@ -5938,6 +5952,7 @@
               checkNoClip(this.attrs);
           });
           this._checkVisibility();
+          registerDragAndDropListenersForWindowGlobal(this.getWindowGlobal());
       }
       _validateAdd(child) {
           const isLayer = child.getType() === 'Layer';
@@ -6055,6 +6070,10 @@
       }
       getContent() {
           return this.content;
+      }
+      getWindowGlobal() {
+          var _a;
+          return (_a = this.attrs.windowGlobal) !== null && _a !== void 0 ? _a : window;
       }
       _toKonvaCanvas(config) {
           config = config || {};
@@ -15134,11 +15153,12 @@
           var hypotenuse = Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2));
           this.sin = Math.abs(height / hypotenuse);
           this.cos = Math.abs(width / hypotenuse);
-          if (typeof window !== 'undefined') {
-              window.addEventListener('mousemove', this._handleMouseMove);
-              window.addEventListener('touchmove', this._handleMouseMove);
-              window.addEventListener('mouseup', this._handleMouseUp, true);
-              window.addEventListener('touchend', this._handleMouseUp, true);
+          const windowGlobal = e.target.getStage().getWindowGlobal();
+          if (typeof windowGlobal !== 'undefined') {
+              windowGlobal.addEventListener('mousemove', this._handleMouseMove);
+              windowGlobal.addEventListener('touchmove', this._handleMouseMove);
+              windowGlobal.addEventListener('mouseup', this._handleMouseUp, true);
+              windowGlobal.addEventListener('touchend', this._handleMouseUp, true);
           }
           this._transforming = true;
           var ap = e.target.getAbsolutePosition();
@@ -15338,13 +15358,14 @@
       _removeEvents(e) {
           if (this._transforming) {
               this._transforming = false;
-              if (typeof window !== 'undefined') {
-                  window.removeEventListener('mousemove', this._handleMouseMove);
-                  window.removeEventListener('touchmove', this._handleMouseMove);
-                  window.removeEventListener('mouseup', this._handleMouseUp, true);
-                  window.removeEventListener('touchend', this._handleMouseUp, true);
-              }
               var node = this.getNode();
+              const windowGlobal = node.getStage().getWindowGlobal();
+              if (typeof windowGlobal !== 'undefined') {
+                  windowGlobal.removeEventListener('mousemove', this._handleMouseMove);
+                  windowGlobal.removeEventListener('touchmove', this._handleMouseMove);
+                  windowGlobal.removeEventListener('mouseup', this._handleMouseUp, true);
+                  windowGlobal.removeEventListener('touchend', this._handleMouseUp, true);
+              }
               this._fire('transformend', { evt: e, target: node });
               if (node) {
                   this._nodes.forEach((target) => {
@@ -15627,8 +15648,8 @@
               this.getStage().content && (this.getStage().content.style.cursor = '');
           }
           Group.prototype.destroy.call(this);
-          this.detach();
           this._removeEvents();
+          this.detach();
           return this;
       }
       // do not work as a container

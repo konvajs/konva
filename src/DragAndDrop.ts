@@ -157,13 +157,26 @@ export const DD = {
   },
 };
 
-if (Konva.isBrowser) {
-  window.addEventListener('mouseup', DD._endDragBefore, true);
-  window.addEventListener('touchend', DD._endDragBefore, true);
+export const registerDragAndDropListenersForWindowGlobal = (windowGlobal: Window) => {
+  if (Konva.isBrowser) {
+    (windowGlobal as any).console.log('registering events');
+    // Remove them all first in case this is a duplicate call with the same
+    // windowGlobal. If this is the first call, this will be a noop. This is to
+    // avoid a situation where we're storing multiple Window handles and
+    // possibly introducing a memory leak.
+    windowGlobal.removeEventListener('mouseup', DD._endDragBefore, true);
+    windowGlobal.removeEventListener('touchend', DD._endDragBefore, true);
+    windowGlobal.removeEventListener('mousemove', DD._drag);
+    windowGlobal.removeEventListener('touchmove', DD._drag);
+    windowGlobal.removeEventListener('mouseup', DD._endDragAfter, false);
+    windowGlobal.removeEventListener('touchend', DD._endDragAfter, false);
 
-  window.addEventListener('mousemove', DD._drag);
-  window.addEventListener('touchmove', DD._drag);
-
-  window.addEventListener('mouseup', DD._endDragAfter, false);
-  window.addEventListener('touchend', DD._endDragAfter, false);
+    // Go ahead and actually set up the listeners.
+    windowGlobal.addEventListener('mouseup', DD._endDragBefore, true);
+    windowGlobal.addEventListener('touchend', DD._endDragBefore, true);
+    windowGlobal.addEventListener('mousemove', DD._drag);
+    windowGlobal.addEventListener('touchmove', DD._drag);
+    windowGlobal.addEventListener('mouseup', DD._endDragAfter, false);
+    windowGlobal.addEventListener('touchend', DD._endDragAfter, false);
+  }
 }
