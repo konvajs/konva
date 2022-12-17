@@ -1219,6 +1219,11 @@ export class Transformer extends Group {
     return Node.prototype.toObject.call(this);
   }
 
+  // overwrite clone to NOT use method from Container
+  clone(obj?: any) {
+    var node = Node.prototype.clone.call(this, obj);
+    return node as this;
+  }
   getClientRect() {
     if (this.nodes().length > 0) {
       return super.getClientRect();

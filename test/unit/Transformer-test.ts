@@ -4744,4 +4744,29 @@ describe('Transformer', function () {
     assert.notDeepEqual(layerClientRect, rectClientRect);
     assert.deepEqual(layerClientRect, trClientRect);
   });
+
+  it.only('cloning of transformer should double create child elements', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 60,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+    });
+    layer.add(tr);
+
+    const clone = tr.clone();
+    assert.equal(clone.getChildren().length, tr.getChildren().length);
+    assert.equal(clone.nodes().length, 0);
+  });
 });
