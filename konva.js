@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.3.14
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Wed Nov 09 2022
+   * Date: Sat Dec 17 2022
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -759,7 +759,9 @@
           str = str || 'black';
           return (Util._namedColorToRBA(str) ||
               Util._hex3ColorToRGBA(str) ||
+              Util._hex4ColorToRGBA(str) ||
               Util._hex6ColorToRGBA(str) ||
+              Util._hex8ColorToRGBA(str) ||
               Util._rgbColorToRGBA(str) ||
               Util._rgbaColorToRGBA(str) ||
               Util._hslColorToRGBA(str));
@@ -808,6 +810,17 @@
               };
           }
       },
+      // Parse #nnnnnnnn
+      _hex8ColorToRGBA(str) {
+          if (str[0] === '#' && str.length === 9) {
+              return {
+                  r: parseInt(str.slice(1, 3), 16),
+                  g: parseInt(str.slice(3, 5), 16),
+                  b: parseInt(str.slice(5, 7), 16),
+                  a: parseInt(str.slice(7, 9), 16) / 0xff,
+              };
+          }
+      },
       // Parse #nnnnnn
       _hex6ColorToRGBA(str) {
           if (str[0] === '#' && str.length === 7) {
@@ -816,6 +829,17 @@
                   g: parseInt(str.slice(3, 5), 16),
                   b: parseInt(str.slice(5, 7), 16),
                   a: 1,
+              };
+          }
+      },
+      // Parse #nnnn
+      _hex4ColorToRGBA(str) {
+          if (str[0] === '#' && str.length === 5) {
+              return {
+                  r: parseInt(str[1] + str[1], 16),
+                  g: parseInt(str[2] + str[2], 16),
+                  b: parseInt(str[3] + str[3], 16),
+                  a: parseInt(str[4] + str[4], 16) / 0xff,
               };
           }
       },
@@ -1749,8 +1773,11 @@
        * @method
        * @name Konva.Context#isPointInPath
        */
-      isPointInPath(x, y) {
-          return this._context.isPointInPath(x, y);
+      isPointInPath(x, y, path, fillRule) {
+          if (path) {
+              return this._context.isPointInPath(path, x, y, fillRule);
+          }
+          return this._context.isPointInPath(x, y, fillRule);
       }
       /**
        * fill function.
@@ -15636,6 +15663,11 @@
       toObject() {
           return Node.prototype.toObject.call(this);
       }
+      // overwrite clone to NOT use method from Container
+      clone(obj) {
+          var node = Node.prototype.clone.call(this, obj);
+          return node;
+      }
       getClientRect() {
           if (this.nodes().length > 0) {
               return super.getClientRect();
@@ -15697,8 +15729,8 @@
    * get/set resize ability. If false it will automatically hide resizing handlers
    * @name Konva.Transformer#resizeEnabled
    * @method
-   * @param {Array} array
-   * @returns {Array}
+   * @param {Boolean} enabled
+   * @returns {Boolean}
    * @example
    * // get
    * var resizeEnabled = transformer.resizeEnabled();
@@ -15709,9 +15741,9 @@
   Factory.addGetterSetter(Transformer, 'resizeEnabled', true);
   /**
    * get/set anchor size. Default is 10
-   * @name Konva.Transformer#validateAnchors
+   * @name Konva.Transformer#anchorSize
    * @method
-   * @param {Number} 10
+   * @param {Number} size
    * @returns {Number}
    * @example
    * // get
@@ -15795,8 +15827,8 @@
    * get/set anchor stroke color
    * @name Konva.Transformer#anchorStroke
    * @method
-   * @param {Boolean} enabled
-   * @returns {Boolean}
+   * @param {String} strokeColor
+   * @returns {String}
    * @example
    * // get
    * var anchorStroke = transformer.anchorStroke();
@@ -15809,8 +15841,8 @@
    * get/set anchor stroke width
    * @name Konva.Transformer#anchorStrokeWidth
    * @method
-   * @param {Boolean} enabled
-   * @returns {Boolean}
+   * @param {Number} anchorStrokeWidth
+   * @returns {Number}
    * @example
    * // get
    * var anchorStrokeWidth = transformer.anchorStrokeWidth();
@@ -15823,8 +15855,8 @@
    * get/set anchor fill color
    * @name Konva.Transformer#anchorFill
    * @method
-   * @param {Boolean} enabled
-   * @returns {Boolean}
+   * @param {String} anchorFill
+   * @returns {String}
    * @example
    * // get
    * var anchorFill = transformer.anchorFill();
@@ -15837,7 +15869,7 @@
    * get/set anchor corner radius
    * @name Konva.Transformer#anchorCornerRadius
    * @method
-   * @param {Number} enabled
+   * @param {Number} radius
    * @returns {Number}
    * @example
    * // get
@@ -15865,8 +15897,8 @@
    * get/set border stroke width
    * @name Konva.Transformer#borderStrokeWidth
    * @method
-   * @param {Boolean} enabled
-   * @returns {Boolean}
+   * @param {Number} strokeWidth
+   * @returns {Number}
    * @example
    * // get
    * var borderStrokeWidth = transformer.borderStrokeWidth();
@@ -15879,8 +15911,8 @@
    * get/set border dash array
    * @name Konva.Transformer#borderDash
    * @method
-   * @param {Boolean} enabled
-   * @returns {Boolean}
+   * @param {Array} dash array
+   * @returns {Array}
    * @example
    * // get
    * var borderDash = transformer.borderDash();

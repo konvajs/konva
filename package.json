@@ -52,7 +52,7 @@
     "test:node": "ts-mocha -p ./test/tsconfig.json test/unit/**/*.ts --exit && npm run test:import",
     "test:watch": "rm -rf ./parcel-cache && parcel serve ./test/unit-tests.html ./test/manual-tests.html ./test/sandbox.html",
     "tsc": "tsc --removeComments && tsc --build ./tsconfig-cmj.json",
-    "rollup": "rollup -c",
+    "rollup": "rollup -c --bundleConfigAsCjs",
     "clean": "rm -rf ./lib && rm -rf ./types && rm -rf ./cmj && rm -rf ./test-build",
     "watch": "rollup -c -w",
     "size": "size-limit"

@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+- Fix cloning of `Konva.Transformer`
+
 ### 8.3.14 (2022-11-09)
 
 - Automatically release (destroy) used canvas elements. Should fix safari memory issues
