@@ -26,6 +26,7 @@ describe('Image', function () {
         offset: { x: 50, y: 30 },
         crop: { x: 135, y: 7, width: 167, height: 134 },
         draggable: true,
+        cornerRadius: 15,
       });
 
       layer.add(darth);
@@ -43,9 +44,9 @@ describe('Image', function () {
       assert.equal(darth.getHeight(), 100);
       assert.equal(darth.offset().x, 50);
       assert.equal(darth.offset().y, 30);
+      assert.equal(darth.cornerRadius(), 15);
 
-      var crop = null;
-      crop = darth.crop();
+      var crop = darth.crop();
 
       assert.equal(crop.x, 135);
       assert.equal(crop.y, 7);

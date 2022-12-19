@@ -2,8 +2,11 @@ import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { _registerNode } from '../Global';
 
+import { Util } from '../Util';
 import { GetSet } from '../types';
+import { Context } from '../Context';
 import { getNumberOrArrayOfNumbersValidator } from '../Validators';
+
 export interface RectConfig extends ShapeConfig {
   cornerRadius?: number | number[];
 }
@@ -27,7 +30,7 @@ export interface RectConfig extends ShapeConfig {
  * });
  */
 export class Rect extends Shape<RectConfig> {
-  _sceneFunc(context) {
+  _sceneFunc(context: Context) {
     var cornerRadius = this.cornerRadius(),
       width = this.width(),
       height = this.height();
@@ -38,52 +41,7 @@ export class Rect extends Shape<RectConfig> {
       // simple rect - don't bother doing all that complicated maths stuff.
       context.rect(0, 0, width, height);
     } else {
-      let topLeft = 0;
-      let topRight = 0;
-      let bottomLeft = 0;
-      let bottomRight = 0;
-      if (typeof cornerRadius === 'number') {
-        topLeft = topRight = bottomLeft = bottomRight = Math.min(
-          cornerRadius,
-          width / 2,
-          height / 2
-        );
-      } else {
-        topLeft = Math.min(cornerRadius[0] || 0, width / 2, height / 2);
-        topRight = Math.min(cornerRadius[1] || 0, width / 2, height / 2);
-        bottomRight = Math.min(cornerRadius[2] || 0, width / 2, height / 2);
-        bottomLeft = Math.min(cornerRadius[3] || 0, width / 2, height / 2);
-      }
-      context.moveTo(topLeft, 0);
-      context.lineTo(width - topRight, 0);
-      context.arc(
-        width - topRight,
-        topRight,
-        topRight,
-        (Math.PI * 3) / 2,
-        0,
-        false
-      );
-      context.lineTo(width, height - bottomRight);
-      context.arc(
-        width - bottomRight,
-        height - bottomRight,
-        bottomRight,
-        0,
-        Math.PI / 2,
-        false
-      );
-      context.lineTo(bottomLeft, height);
-      context.arc(
-        bottomLeft,
-        height - bottomLeft,
-        bottomLeft,
-        Math.PI / 2,
-        Math.PI,
-        false
-      );
-      context.lineTo(0, topLeft);
-      context.arc(topLeft, topLeft, topLeft, Math.PI, (Math.PI * 3) / 2, false);
+      Util.drawRoundedRectPath(context, width, height, cornerRadius);
     }
     context.closePath();
     context.fillStrokeShape(this);
