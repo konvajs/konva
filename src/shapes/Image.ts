@@ -1,8 +1,8 @@
 import { Util } from '../Util';
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
-import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
+import { getNumberOrArrayOfNumbersValidator, getNumberValidator } from '../Validators';
 
 import { GetSet, IRect } from '../types';
 import { Context } from '../Context';
@@ -10,6 +10,7 @@ import { Context } from '../Context';
 export interface ImageConfig extends ShapeConfig {
   image: CanvasImageSource | undefined;
   crop?: IRect;
+  cornerRadius?: number | number[];
 }
 
 /**
@@ -66,6 +67,7 @@ export class Image extends Shape<ImageConfig> {
   _sceneFunc(context: Context) {
     const width = this.getWidth();
     const height = this.getHeight();
+    const cornerRadius = this.cornerRadius();
     const image = this.attrs.image;
     let params;
 
@@ -89,23 +91,32 @@ export class Image extends Shape<ImageConfig> {
       }
     }
 
-    if (this.hasFill() || this.hasStroke()) {
-      context.beginPath();
+    context.beginPath();
+    if (!cornerRadius) {
       context.rect(0, 0, width, height);
-      context.closePath();
-      context.fillStrokeShape(this);
+    } else {
+      Util.drawRoundedRectPath(context, width, height, cornerRadius);
     }
-
     if (image) {
+      context.save();
+      cornerRadius && context.clip();
       context.drawImage.apply(context, params);
+      context.restore();
     }
+    context.closePath();
+    context.fillStrokeShape(this);
   }
   _hitFunc(context) {
     var width = this.width(),
-      height = this.height();
+      height = this.height(),
+      cornerRadius = this.cornerRadius();
 
     context.beginPath();
-    context.rect(0, 0, width, height);
+    if (!cornerRadius) {
+      context.rect(0, 0, width, height);
+    } else {
+      Util.drawRoundedRectPath(context, width, height, cornerRadius);
+    }
     context.closePath();
     context.fillStrokeShape(this);
   }
@@ -149,10 +160,36 @@ export class Image extends Shape<ImageConfig> {
   cropY: GetSet<number, this>;
   cropWidth: GetSet<number, this>;
   cropHeight: GetSet<number, this>;
+  cornerRadius: GetSet<number | number[], this>;
 }
 
 Image.prototype.className = 'Image';
 _registerNode(Image);
+
+/**
+ * get/set corner radius
+ * @method
+ * @name Konva.Image#cornerRadius
+ * @param {Number} cornerRadius
+ * @returns {Number}
+ * @example
+ * // get corner radius
+ * var cornerRadius = image.cornerRadius();
+ *
+ * // set corner radius
+ * image.cornerRadius(10);
+ *
+ * // set different corner radius values
+ * // top-left, top-right, bottom-right, bottom-left
+ * image.cornerRadius([0, 10, 20, 30]);
+ */
+Factory.addGetterSetter(
+  Image,
+  'cornerRadius',
+  0,
+  getNumberOrArrayOfNumbersValidator(4)
+);
+
 /**
  * get/set image source. It can be image, canvas or video element
  * @name Konva.Image#image
