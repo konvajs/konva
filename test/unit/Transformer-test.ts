@@ -4745,7 +4745,7 @@ describe('Transformer', function () {
     assert.deepEqual(layerClientRect, trClientRect);
   });
 
-  it.only('cloning of transformer should double create child elements', function () {
+  it('cloning of transformer should double create child elements', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
