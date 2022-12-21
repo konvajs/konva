@@ -91,20 +91,25 @@ export class Image extends Shape<ImageConfig> {
       }
     }
 
-    context.beginPath();
-    if (!cornerRadius) {
-      context.rect(0, 0, width, height);
-    } else {
-      Util.drawRoundedRectPath(context, width, height, cornerRadius);
+    if (this.hasFill() || this.hasStroke()) {
+      context.beginPath();
+      cornerRadius
+        ? Util.drawRoundedRectPath(context, width, height, cornerRadius)
+        : context.rect(0, 0, width, height);
+      context.closePath();
+      context.fillStrokeShape(this);
     }
+
     if (image) {
-      context.save();
-      cornerRadius && context.clip();
+      // context.save();
+      if (cornerRadius) {
+        // Util.drawRoundedRectPath(context, width, height, cornerRadius);
+        context.clip();
+      }
       context.drawImage.apply(context, params);
-      context.restore();
+      // context.restore();
     }
-    context.closePath();
-    context.fillStrokeShape(this);
+    // If you need to draw later, you need to execute save/restore
   }
   _hitFunc(context) {
     var width = this.width(),
