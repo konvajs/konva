@@ -385,4 +385,32 @@ describe('Image', function () {
       done();
     });
   });
+
+  it.only('corner radius', function (done) {
+    loadImage('darth-vader.jpg', (imageObj) => {
+      var stage = addStage();
+
+      var layer = new Konva.Layer();
+      var darth = new Konva.Image({
+        x: 20,
+        y: 20,
+        image: imageObj,
+        cornerRadius: 10,
+        draggable: true,
+        stroke: 'red',
+        strokeWidth: 100,
+        strokeEnabled: false,
+      });
+
+      layer.add(darth);
+      stage.add(layer);
+
+      assert.equal(
+        layer.getContext().getTrace(true),
+        'clearRect();save();transform();beginPath();moveTo();lineTo();arc();lineTo();arc();lineTo();arc();lineTo();arc();closePath();clip();drawImage();restore();'
+      );
+
+      done();
+    });
+  });
 });

@@ -2,7 +2,10 @@ import { Util } from '../Util';
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { _registerNode } from '../Global';
-import { getNumberOrArrayOfNumbersValidator, getNumberValidator } from '../Validators';
+import {
+  getNumberOrArrayOfNumbersValidator,
+  getNumberValidator,
+} from '../Validators';
 
 import { GetSet, IRect } from '../types';
 import { Context } from '../Context';
@@ -91,7 +94,7 @@ export class Image extends Shape<ImageConfig> {
       }
     }
 
-    if (this.hasFill() || this.hasStroke()) {
+    if (this.hasFill() || this.hasStroke() || cornerRadius) {
       context.beginPath();
       cornerRadius
         ? Util.drawRoundedRectPath(context, width, height, cornerRadius)
@@ -101,13 +104,10 @@ export class Image extends Shape<ImageConfig> {
     }
 
     if (image) {
-      // context.save();
       if (cornerRadius) {
-        // Util.drawRoundedRectPath(context, width, height, cornerRadius);
         context.clip();
       }
       context.drawImage.apply(context, params);
-      // context.restore();
     }
     // If you need to draw later, you need to execute save/restore
   }
