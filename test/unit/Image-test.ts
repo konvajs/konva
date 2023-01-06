@@ -44,8 +44,7 @@ describe('Image', function () {
       assert.equal(darth.offset().x, 50);
       assert.equal(darth.offset().y, 30);
 
-      var crop = null;
-      crop = darth.crop();
+      var crop = darth.crop();
 
       assert.equal(crop.x, 135);
       assert.equal(crop.y, 7);
@@ -168,6 +167,7 @@ describe('Image', function () {
         crop: { x: 186, y: 211, width: 106, height: 74 },
         draggable: true,
         scale: { x: 0.5, y: 0.5 },
+        cornerRadius: 15,
       });
 
       layer.add(darth);
@@ -209,6 +209,7 @@ describe('Image', function () {
       assert.equal(darth.cropY(), 6);
       assert.equal(darth.cropWidth(), 7);
       assert.equal(darth.cropHeight(), 8);
+      assert.equal(darth.cornerRadius(), 15);
 
       done();
     });
@@ -381,6 +382,34 @@ describe('Image', function () {
 
       assert.equal(image.width(), 0);
       assert.equal(image.height(), 0);
+      done();
+    });
+  });
+
+  it('corner radius', function (done) {
+    loadImage('darth-vader.jpg', (imageObj) => {
+      var stage = addStage();
+
+      var layer = new Konva.Layer();
+      var darth = new Konva.Image({
+        x: 20,
+        y: 20,
+        image: imageObj,
+        cornerRadius: 10,
+        draggable: true,
+        stroke: 'red',
+        strokeWidth: 100,
+        strokeEnabled: false,
+      });
+
+      layer.add(darth);
+      stage.add(layer);
+
+      assert.equal(
+        layer.getContext().getTrace(true),
+        'clearRect();save();transform();beginPath();moveTo();lineTo();arc();lineTo();arc();lineTo();arc();lineTo();arc();closePath();clip();drawImage();restore();'
+      );
+
       done();
     });
   });

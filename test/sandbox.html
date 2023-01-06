@@ -52,6 +52,38 @@
       stage.on('contextmenu', (e) => {
         console.log('click');
       });
+
+      var imageObj = new Image();
+      imageObj.onload = function () {
+        var yoda = new Konva.Image({
+          x: 150,
+          y: 50,
+          image: imageObj,
+          width: 200,
+          height: 200,
+          draggable: true,
+          strokeWidth: 4,
+          stroke: 'blue',
+          cornerRadius: [10, 20, 30, 40],
+        });
+        layer.add(yoda);
+      };
+      imageObj.src = 'https://konvajs.org/assets/yoda.jpg';
+
+      Konva.Image.fromURL('https://konvajs.org/assets/darth-vader.jpg', function (darthNode) {
+        darthNode.setAttrs({
+          x: 300,
+          y: 50,
+          // scaleX: 0.5,
+          // scaleY: 0.5,
+          draggable: true,
+          strokeEnabled: true,
+          stroke: 'green',
+          strokeWidth: 2,
+          cornerRadius: 30,
+        });
+        layer.add(darthNode);
+      });
     </script>
   </body>
 </html>
