@@ -386,7 +386,7 @@ describe('Image', function () {
     });
   });
 
-  it.only('corner radius', function (done) {
+  it('corner radius', function (done) {
     loadImage('darth-vader.jpg', (imageObj) => {
       var stage = addStage();
 
