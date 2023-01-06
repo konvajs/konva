@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.3.14
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Sat Dec 17 2022
+   * Date: Thu Jan 05 2023
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -1113,6 +1113,30 @@
               c.width = 0;
               c.height = 0;
           });
+      },
+      drawRoundedRectPath(context, width, height, cornerRadius) {
+          let topLeft = 0;
+          let topRight = 0;
+          let bottomLeft = 0;
+          let bottomRight = 0;
+          if (typeof cornerRadius === 'number') {
+              topLeft = topRight = bottomLeft = bottomRight = Math.min(cornerRadius, width / 2, height / 2);
+          }
+          else {
+              topLeft = Math.min(cornerRadius[0] || 0, width / 2, height / 2);
+              topRight = Math.min(cornerRadius[1] || 0, width / 2, height / 2);
+              bottomRight = Math.min(cornerRadius[2] || 0, width / 2, height / 2);
+              bottomLeft = Math.min(cornerRadius[3] || 0, width / 2, height / 2);
+          }
+          context.moveTo(topLeft, 0);
+          context.lineTo(width - topRight, 0);
+          context.arc(width - topRight, topRight, topRight, (Math.PI * 3) / 2, 0, false);
+          context.lineTo(width, height - bottomRight);
+          context.arc(width - bottomRight, height - bottomRight, bottomRight, 0, Math.PI / 2, false);
+          context.lineTo(bottomLeft, height);
+          context.arc(bottomLeft, height - bottomLeft, bottomLeft, Math.PI / 2, Math.PI, false);
+          context.lineTo(0, topLeft);
+          context.arc(topLeft, topLeft, topLeft, Math.PI, (Math.PI * 3) / 2, false);
       }
   };
 
@@ -11767,6 +11791,7 @@
       _sceneFunc(context) {
           const width = this.getWidth();
           const height = this.getHeight();
+          const cornerRadius = this.cornerRadius();
           const image = this.attrs.image;
           let params;
           if (image) {
@@ -11789,20 +11814,31 @@
                   params = [image, 0, 0, width, height];
               }
           }
-          if (this.hasFill() || this.hasStroke()) {
+          if (this.hasFill() || this.hasStroke() || cornerRadius) {
               context.beginPath();
-              context.rect(0, 0, width, height);
+              cornerRadius
+                  ? Util.drawRoundedRectPath(context, width, height, cornerRadius)
+                  : context.rect(0, 0, width, height);
               context.closePath();
               context.fillStrokeShape(this);
           }
           if (image) {
+              if (cornerRadius) {
+                  context.clip();
+              }
               context.drawImage.apply(context, params);
           }
+          // If you need to draw later, you need to execute save/restore
       }
       _hitFunc(context) {
-          var width = this.width(), height = this.height();
+          var width = this.width(), height = this.height(), cornerRadius = this.cornerRadius();
           context.beginPath();
-          context.rect(0, 0, width, height);
+          if (!cornerRadius) {
+              context.rect(0, 0, width, height);
+          }
+          else {
+              Util.drawRoundedRectPath(context, width, height, cornerRadius);
+          }
           context.closePath();
           context.fillStrokeShape(this);
       }
@@ -11843,6 +11879,24 @@
   }
   Image.prototype.className = 'Image';
   _registerNode(Image);
+  /**
+   * get/set corner radius
+   * @method
+   * @name Konva.Image#cornerRadius
+   * @param {Number} cornerRadius
+   * @returns {Number}
+   * @example
+   * // get corner radius
+   * var cornerRadius = image.cornerRadius();
+   *
+   * // set corner radius
+   * image.cornerRadius(10);
+   *
+   * // set different corner radius values
+   * // top-left, top-right, bottom-right, bottom-left
+   * image.cornerRadius([0, 10, 20, 30]);
+   */
+  Factory.addGetterSetter(Image, 'cornerRadius', 0, getNumberOrArrayOfNumbersValidator(4));
   /**
    * get/set image source. It can be image, canvas or video element
    * @name Konva.Image#image
@@ -12333,28 +12387,7 @@
               context.rect(0, 0, width, height);
           }
           else {
-              let topLeft = 0;
-              let topRight = 0;
-              let bottomLeft = 0;
-              let bottomRight = 0;
-              if (typeof cornerRadius === 'number') {
-                  topLeft = topRight = bottomLeft = bottomRight = Math.min(cornerRadius, width / 2, height / 2);
-              }
-              else {
-                  topLeft = Math.min(cornerRadius[0] || 0, width / 2, height / 2);
-                  topRight = Math.min(cornerRadius[1] || 0, width / 2, height / 2);
-                  bottomRight = Math.min(cornerRadius[2] || 0, width / 2, height / 2);
-                  bottomLeft = Math.min(cornerRadius[3] || 0, width / 2, height / 2);
-              }
-              context.moveTo(topLeft, 0);
-              context.lineTo(width - topRight, 0);
-              context.arc(width - topRight, topRight, topRight, (Math.PI * 3) / 2, 0, false);
-              context.lineTo(width, height - bottomRight);
-              context.arc(width - bottomRight, height - bottomRight, bottomRight, 0, Math.PI / 2, false);
-              context.lineTo(bottomLeft, height);
-              context.arc(bottomLeft, height - bottomLeft, bottomLeft, Math.PI / 2, Math.PI, false);
-              context.lineTo(0, topLeft);
-              context.arc(topLeft, topLeft, topLeft, Math.PI, (Math.PI * 3) / 2, false);
+              Util.drawRoundedRectPath(context, width, height, cornerRadius);
           }
           context.closePath();
           context.fillStrokeShape(this);

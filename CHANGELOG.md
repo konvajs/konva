@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### 8.4.0 (2023-01-05)
+
+- Add support for `cornerRadius` for Konva.Image
 - Fix cloning of `Konva.Transformer`
 
 ### 8.3.14 (2022-11-09)
