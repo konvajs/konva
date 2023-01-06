@@ -26,7 +26,6 @@ describe('Image', function () {
         offset: { x: 50, y: 30 },
         crop: { x: 135, y: 7, width: 167, height: 134 },
         draggable: true,
-        cornerRadius: 15,
       });
 
       layer.add(darth);
@@ -44,7 +43,6 @@ describe('Image', function () {
       assert.equal(darth.getHeight(), 100);
       assert.equal(darth.offset().x, 50);
       assert.equal(darth.offset().y, 30);
-      assert.equal(darth.cornerRadius(), 15);
 
       var crop = darth.crop();
 
@@ -169,6 +167,7 @@ describe('Image', function () {
         crop: { x: 186, y: 211, width: 106, height: 74 },
         draggable: true,
         scale: { x: 0.5, y: 0.5 },
+        cornerRadius: 15,
       });
 
       layer.add(darth);
@@ -210,6 +209,7 @@ describe('Image', function () {
       assert.equal(darth.cropY(), 6);
       assert.equal(darth.cropWidth(), 7);
       assert.equal(darth.cropHeight(), 8);
+      assert.equal(darth.cornerRadius(), 15);
 
       done();
     });
