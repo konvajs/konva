@@ -169,7 +169,7 @@ To make a full build run `npm run build`. The command will compile all typescrip
 Konva uses Mocha for testing.
 
 - If you need run test only one time run `npm run test`.
-- While developing it is easy to use `npm start`. Just run it and go to [http://localhost:8080/test/runner.html](http://localhost:8080/test/runner.html). The watcher will rebuild the bundle on any change.
+- While developing it is easy to use `npm start`. Just run it and go to [http://localhost:1234/unit-tests.html](http://localhost:1234/unit-tests.html). The watcher will rebuild the bundle on any change.
 
 Konva is covered with hundreds of tests and well over a thousand assertions.
 Konva uses TDD (test driven development) which means that every new feature or bug fix is accompanied with at least one new test.
