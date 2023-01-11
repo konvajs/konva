@@ -85,6 +85,10 @@ declare namespace Konva {
   export type Group = import('./Group').Group;
   export type GroupConfig = import('./Group').GroupConfig;
 
+  export const AbsoluteRenderOrderGroup: typeof import('./AbsoluteRenderOrderGroup').AbsoluteRenderOrderGroup;
+  export type AbsoluteRenderOrderGroup = import('./AbsoluteRenderOrderGroup').AbsoluteRenderOrderGroup;
+  export type AbsoluteRenderOrderGroupConfig = import('./AbsoluteRenderOrderGroup').AbsoluteRenderOrderGroupConfig;
+
   export const DD: typeof import('./DragAndDrop').DD;
 
   export const Shape: typeof import('./Shape').Shape;

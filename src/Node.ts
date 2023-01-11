@@ -72,6 +72,7 @@ export interface NodeConfig {
   preventDefault?: boolean;
   globalCompositeOperation?: globalCompositeOperationType;
   filters?: Array<Filter>;
+  zOrder?: number;
 }
 
 // CONSTANTS
@@ -2618,6 +2619,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
   rotation: GetSet<number, this>;
   zIndex: GetSet<number, this>;
+  zOrder: GetSet<number, this>;
 
   scale: GetSet<Vector2d | undefined, this>;
   scaleX: GetSet<number, this>;
@@ -3277,6 +3279,25 @@ addGetterSetter(Node, 'dragBoundFunc');
  * node.draggable(false);
  */
 addGetterSetter(Node, 'draggable', false, getBooleanValidator());
+
+/**
+ * get/set z-order position.  Note that z-order is not the same as z-index.  Z-order is used with the 
+ * AbsoluteRenderOrderContainer to recursively render child objects in an absolute z-order.  This field will otherwise 
+ * be ignored.  Alternatively, you can use the z-index features to move an object within a particular group, relative to
+ * the other nodes in the group.
+ * @name Konva.Node#zOrder
+ * @method
+ * @param {Number} zOrder
+ * @returns {Object}
+ * @example
+ * // get z-order
+ * var z = node.zOrder();
+ *
+ * // set z-order
+ * node.zOrder(5);
+ */
+
+addGetterSetter(Node, 'zOrder', 0, getNumberValidator());
 
 Factory.backCompat(Node, {
   rotateDeg: 'rotate',
