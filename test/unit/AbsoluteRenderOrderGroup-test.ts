@@ -138,4 +138,71 @@ describe('AbsoluteRenderOrderGroup', function () {
 		assert.equal(red3, 119, "Did not find correct amount of red in medium dark red pixel for test 1, ordering is possibly incorrect.  Red amount found was: " + red3);
 		assert.equal(black, 0, "Did not find correct amount of red in black pixel for test 1, ordering is possibly incorrect.  Red amount found was: " + black);
 	});
+
+	it('check render order inherits null correctly', function () {
+		var stage = addStage();
+
+		const layer = new Konva.Layer();
+		stage.add(layer);
+
+		// This will test that AbsoluteRenderOrderGroup renders based on z-order, not z-index 
+		const absoluteRenderOrderGroupTest = new Konva.AbsoluteRenderOrderGroup({
+			x: 0,
+			y: 0
+		});
+		layer.add(absoluteRenderOrderGroupTest);
+
+		const redRect = new Konva.Rect({
+			zOrder: 5,
+			width: 100,
+			height: 100,
+			fill: 'red'
+		});
+		absoluteRenderOrderGroupTest.add(redRect);
+
+		const groupInheritanceTest = new Konva.Group();
+		absoluteRenderOrderGroupTest.add(groupInheritanceTest);
+
+		const groupInheritanceTest2 = new Konva.Group();
+		groupInheritanceTest.add(groupInheritanceTest2);
+
+		const blueRect = new Konva.Rect({
+			x: 0,
+			y: 0,
+			width: 100,
+			height: 100,
+			fill: 'blue'
+		});
+		groupInheritanceTest2.add(blueRect);
+
+		layer.draw();
+
+		// Check default z-order.
+		// When looking at pixel color rendered, should be Red as the red rect has higher z-order priority than the 
+		// blue rect, which at this point should be defaulting to 0
+		let context = layer.canvas.getContext();
+		let imageData = context.getImageData(55, 55, 1, 1); // this is an intersecting pixel location between red & blue
+		let red = imageData.data[0];
+		
+		assert.equal(red, 255, "Default test:  Did not find red pixel, unexpected defaulting.  Red amount found was: " + red);
+
+		// Test setting immediate parent higher and check that blue rect inherits it
+		groupInheritanceTest2.zOrder(10);
+		layer.draw();
+
+		imageData = context.getImageData(55, 55, 1, 1); // this is an intersecting pixel location between red & blue
+		let blue = imageData.data[2];
+		
+		assert.equal(blue, 255, "Immediate parent test: did not find blue pixel, unexpected defaulting.  Red amount found was: " + red);
+
+		// Test setting parent of parent and check that blue rect inherits it
+		groupInheritanceTest.zOrder(10);
+		groupInheritanceTest2.zOrder(undefined);
+		layer.draw();
+
+		imageData = context.getImageData(55, 55, 1, 1); // this is an intersecting pixel location between red & blue
+		blue = imageData.data[2];
+		
+		assert.equal(blue, 255, "Immediate parent test: did not find blue pixel, unexpected defaulting.  Red amount found was: " + red);
+	});
 });

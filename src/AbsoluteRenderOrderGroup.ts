@@ -122,16 +122,19 @@ export class AbsoluteRenderOrderGroup extends Group {
 			});
 		} else {
 			// Is a leaf / don't descend farther -- this can be added to children map
-			let zOrder:number = node.zOrder();
+			// Determine zOrder
+			let zOrder:number = node.evaluateZOrderRecursively();
+
+			// Add zOrder if needed
 			if (!orderedChildren.has(zOrder))
 			{
 				orderedChildren.set(zOrder, new Array<Node>());
 			}
 
+			// Add to the correct bucket of zOrders
 			orderedChildren.get(zOrder).push(node); // I'd much prefer the [] syntax for clarity, but seems TS/JS doesn't seem to support it, ugh.
 		}
 	}
-
 }
 
 //AbsoluteRenderOrderGroup.prototype.nodeType = 'AbsoluteRenderOrderGroup';

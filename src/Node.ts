@@ -2574,6 +2574,21 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return Util.haveIntersection(screenRect, this.getClientRect());
   }
 
+  /**
+   * Utility function to evaluate the zOrder of a node.  This differs from just checking the zOrder() as this function
+   * will check parents to inherit a zOrder value if this node does not have one set.  Otherwise, if no zOrders are set
+   * recursively, this will return 0 (this function will not return undefined).
+   * @returns {number}
+   */
+  evaluateZOrderRecursively():number {
+    if (this.zOrder() != undefined)
+      return this.zOrder();  
+    if (this.parent == null)
+      return 0;
+    else
+      return this.parent.evaluateZOrderRecursively();
+  }
+
   preventDefault: GetSet<boolean, this>;
 
   // from filters
@@ -2619,7 +2634,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
   rotation: GetSet<number, this>;
   zIndex: GetSet<number, this>;
-  zOrder: GetSet<number, this>;
+  zOrder: GetSet<number | undefined, this>;
 
   scale: GetSet<Vector2d | undefined, this>;
   scaleX: GetSet<number, this>;
@@ -3285,9 +3300,14 @@ addGetterSetter(Node, 'draggable', false, getBooleanValidator());
  * AbsoluteRenderOrderContainer to recursively render child objects in an absolute z-order.  This field will otherwise 
  * be ignored.  Alternatively, you can use the z-index features to move an object within a particular group, relative to
  * the other nodes in the group.
+ * 
+ * If not set (/set to undefined), the z-order of the parent (recursively) will be inherited.  If no z-orders are set
+ * through parents, the default z-order is 0.
+ * 
+ * Higher z-orders will be rendered on top of lower z-orders.
  * @name Konva.Node#zOrder
  * @method
- * @param {Number} zOrder
+ * @param {Number | undefined} zOrder
  * @returns {Object}
  * @example
  * // get z-order
@@ -3295,9 +3315,12 @@ addGetterSetter(Node, 'draggable', false, getBooleanValidator());
  *
  * // set z-order
  * node.zOrder(5);
+ * 
+ * // unset z-order
+ * node.zOrder(undefined);
  */
 
-addGetterSetter(Node, 'zOrder', 0, getNumberValidator());
+addGetterSetter(Node, 'zOrder', undefined, getNumberValidator());
 
 Factory.backCompat(Node, {
   rotateDeg: 'rotate',
