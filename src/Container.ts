@@ -109,22 +109,27 @@ export abstract class Container<
    * add a child and children into container
    * @name Konva.Container#add
    * @method
-   * @param {...Konva.Node} child
+   * @param {...Konva.Node} children
    * @returns {Container}
    * @example
    * layer.add(rect);
    * layer.add(shape1, shape2, shape3);
+   * // empty arrays are accepted, though each individual child must be defined
+   * layer.add(...shapes);
    * // remember to redraw layer if you changed something
    * layer.draw();
    */
   add(...children: ChildType[]) {
-    if (arguments.length > 1) {
-      for (var i = 0; i < arguments.length; i++) {
-        this.add(arguments[i]);
+    if (children.length === 0) {
+      return this;
+    }
+    if (children.length > 1) {
+      for (var i = 0; i < children.length; i++) {
+        this.add(children[i]);
       }
       return this;
     }
-    var child = children[0];
+    const child = children[0];
     if (child.getParent()) {
       child.moveTo(this);
       return this;
