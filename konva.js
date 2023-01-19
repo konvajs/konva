@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.4.0
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Thu Jan 05 2023
+   * Date: Thu Jan 19 2023
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -5355,22 +5355,27 @@
        * add a child and children into container
        * @name Konva.Container#add
        * @method
-       * @param {...Konva.Node} child
+       * @param {...Konva.Node} children
        * @returns {Container}
        * @example
        * layer.add(rect);
        * layer.add(shape1, shape2, shape3);
+       * // empty arrays are accepted, though each individual child must be defined
+       * layer.add(...shapes);
        * // remember to redraw layer if you changed something
        * layer.draw();
        */
       add(...children) {
-          if (arguments.length > 1) {
-              for (var i = 0; i < arguments.length; i++) {
-                  this.add(arguments[i]);
+          if (children.length === 0) {
+              return this;
+          }
+          if (children.length > 1) {
+              for (var i = 0; i < children.length; i++) {
+                  this.add(children[i]);
               }
               return this;
           }
-          var child = children[0];
+          const child = children[0];
           if (child.getParent()) {
               child.moveTo(this);
               return this;
@@ -13498,14 +13503,13 @@
                   spacesNumber = text.split(' ').length - 1;
                   oneWord = spacesNumber === 0;
                   lineWidth =
-                      align === JUSTIFY && lastLine && !oneWord
-                          ? totalWidth - padding * 2
-                          : width;
+                      align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
                   context.lineTo(lineTranslateX + Math.round(lineWidth), translateY + lineTranslateY + Math.round(fontSize / 2));
                   // I have no idea what is real ratio
                   // just /15 looks good enough
                   context.lineWidth = fontSize / 15;
-                  context.strokeStyle = fill;
+                  const gradient = this._getLinearGradient();
+                  context.strokeStyle = gradient || fill;
                   context.stroke();
                   context.restore();
               }
@@ -13521,7 +13525,8 @@
                           : width;
                   context.lineTo(lineTranslateX + Math.round(lineWidth), translateY + lineTranslateY);
                   context.lineWidth = fontSize / 15;
-                  context.strokeStyle = fill;
+                  const gradient = this._getLinearGradient();
+                  context.strokeStyle = gradient || fill;
                   context.stroke();
                   context.restore();
               }
@@ -13627,7 +13632,8 @@
               normalizeFontFamily(this.fontFamily()));
       }
       _addTextLine(line) {
-          if (this.align() === JUSTIFY) {
+          const align = this.align();
+          if (align === JUSTIFY) {
               line = line.trim();
           }
           var width = this._getTextWidth(line);

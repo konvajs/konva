@@ -243,9 +243,7 @@ export class Text extends Shape<TextConfig> {
         spacesNumber = text.split(' ').length - 1;
         oneWord = spacesNumber === 0;
         lineWidth =
-          align === JUSTIFY && lastLine && !oneWord
-            ? totalWidth - padding * 2
-            : width;
+          align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
         context.lineTo(
           lineTranslateX + Math.round(lineWidth),
           translateY + lineTranslateY + Math.round(fontSize / 2)
@@ -254,7 +252,9 @@ export class Text extends Shape<TextConfig> {
         // I have no idea what is real ratio
         // just /15 looks good enough
         context.lineWidth = fontSize / 15;
-        context.strokeStyle = fill;
+
+        const gradient = this._getLinearGradient();
+        context.strokeStyle = gradient || fill;
         context.stroke();
         context.restore();
       }
@@ -273,7 +273,8 @@ export class Text extends Shape<TextConfig> {
           translateY + lineTranslateY
         );
         context.lineWidth = fontSize / 15;
-        context.strokeStyle = fill;
+        const gradient = this._getLinearGradient();
+        context.strokeStyle = gradient || fill;
         context.stroke();
         context.restore();
       }
@@ -390,7 +391,8 @@ export class Text extends Shape<TextConfig> {
     );
   }
   _addTextLine(line) {
-    if (this.align() === JUSTIFY) {
+    const align = this.align();
+    if (align === JUSTIFY) {
       line = line.trim();
     }
     var width = this._getTextWidth(line);

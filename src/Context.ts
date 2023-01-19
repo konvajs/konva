@@ -322,13 +322,7 @@ export class Context {
    * @method
    * @name Konva.Context#arcTo
    */
-  arcTo(
-    a0: number,
-    a1: number,
-    a2: number,
-    a3: number,
-    a4: number
-  ) {
+  arcTo(a0: number, a1: number, a2: number, a3: number, a4: number) {
     this._context.arcTo(a0, a1, a2, a3, a4);
   }
   /**
@@ -359,12 +353,7 @@ export class Context {
    * @method
    * @name Konva.Context#clearRect
    */
-  clearRect(
-    a0: number,
-    a1: number,
-    a2: number,
-    a3: number
-  ) {
+  clearRect(a0: number, a1: number, a2: number, a3: number) {
     this._context.clearRect(a0, a1, a2, a3);
   }
   /**
@@ -401,12 +390,7 @@ export class Context {
    * @method
    * @name Konva.Context#createLinearGradient
    */
-  createLinearGradient(
-    a0: number,
-    a1: number,
-    a2: number,
-    a3: number
-  ) {
+  createLinearGradient(a0: number, a1: number, a2: number, a3: number) {
     return this._context.createLinearGradient(a0, a1, a2, a3);
   }
   /**
@@ -762,9 +746,12 @@ export class Context {
 }
 
 // supported context properties
-type CanvasContextProps = Pick<CanvasRenderingContext2D, typeof CONTEXT_PROPERTIES[number]>;
+type CanvasContextProps = Pick<
+  CanvasRenderingContext2D,
+  typeof CONTEXT_PROPERTIES[number]
+>;
 
-export interface Context extends CanvasContextProps { };
+export interface Context extends CanvasContextProps {}
 
 CONTEXT_PROPERTIES.forEach(function (prop) {
   Object.defineProperty(Context.prototype, prop, {
