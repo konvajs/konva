@@ -533,11 +533,11 @@ export class Text extends Shape<TextConfig> {
         }
       }
       // if element height is fixed, abort if adding one more line would overflow
-      if (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx) {
-        break;
-      }
       if (this.textArr[this.textArr.length - 1]) {
         this.textArr[this.textArr.length - 1].lastInParagraph = true;
+      }
+      if (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx) {
+        break;
       }
     }
     this.textHeight = fontSize;
