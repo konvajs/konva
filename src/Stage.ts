@@ -662,6 +662,7 @@ export class Stage extends Container<Layer> {
     const clickEndShape = this[eventType + 'ClickEndShape'];
     var processedShapesIds = {};
     let triggeredOnShape = false;
+    const stageClickEvents = [];
     this._changedPointerPositions.forEach((pos) => {
       const shape = (PointerEvents.getCapturedShape(pos.id) ||
         this.getIntersection(pos)) as Shape;
@@ -710,33 +711,35 @@ export class Stage extends Container<Layer> {
         }
       } else {
         this[eventType + 'ClickEndShape'] = null;
-
-        this._fire(events.pointerup, {
-          evt: evt,
-          target: this,
-          currentTarget: this,
-          pointerId: pointerId,
-        });
-
         if (Konva['_' + eventType + 'ListenClick']) {
-          this._fire(events.pointerclick, {
+          stageClickEvents.push([events.pointerclick, {
             evt: evt,
             target: this,
             currentTarget: this,
             pointerId,
-          });
+          }]);
         }
 
         if (fireDblClick) {
-          this._fire(events.pointerdblclick, {
+          stageClickEvents.push([events.pointerdblclick, {
             evt: evt,
             target: this,
             currentTarget: this,
             pointerId,
-          });
+          }]);
         }
       }
     });
+
+    if (!triggeredOnShape) {
+      this._fire(events.pointerup, {
+        evt: evt,
+        target: this,
+        currentTarget: this,
+        pointerId: this._changedPointerPositions[0].id,
+      });
+      stageClickEvents.forEach(([e, evt]) => this._fire(e, evt))
+    }
 
     Konva['_' + eventType + 'ListenClick'] = false;
 
