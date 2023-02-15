@@ -711,6 +711,13 @@ export class Stage extends Container<Layer> {
       } else {
         this[eventType + 'ClickEndShape'] = null;
 
+        this._fire(events.pointerup, {
+          evt: evt,
+          target: this,
+          currentTarget: this,
+          pointerId: pointerId,
+        });
+
         if (Konva['_' + eventType + 'ListenClick']) {
           this._fire(events.pointerclick, {
             evt: evt,
@@ -730,15 +737,6 @@ export class Stage extends Container<Layer> {
         }
       }
     });
-
-    if (!triggeredOnShape) {
-      this._fire(events.pointerup, {
-        evt: evt,
-        target: this,
-        currentTarget: this,
-        pointerId: this._changedPointerPositions[0].id,
-      });
-    }
 
     Konva['_' + eventType + 'ListenClick'] = false;
 
