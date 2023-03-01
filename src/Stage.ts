@@ -732,12 +732,14 @@ export class Stage extends Container<Layer> {
     });
 
     if (!triggeredOnShape) {
-      this._fire(events.pointerup, {
-        evt: evt,
-        target: this,
-        currentTarget: this,
-        pointerId: this._changedPointerPositions[0].id,
-      });
+      for (const pointer of this._changedPointerPositions) {
+        this._fire(events.pointerup, {
+          evt: evt,
+          target: this,
+          currentTarget: this,
+          pointerId: pointer.id,
+        })
+      }
       stageClickEvents.forEach(([e, evt]) => this._fire(e, evt))
     }
 

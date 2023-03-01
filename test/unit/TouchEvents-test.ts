@@ -343,6 +343,8 @@ describe('TouchEvents', function () {
     var stageTouchStart = 0;
     var stageTouchMove = 0;
     var stageTouchEnd = 0;
+    var stageTap = 0;
+    var stageEventStack: string[] = [];
     stage.on('touchstart', function () {
       stageTouchStart++;
     });
@@ -351,7 +353,12 @@ describe('TouchEvents', function () {
     });
     stage.on('touchend', function () {
       stageTouchEnd++;
+      stageEventStack.push('touchend');
     });
+    stage.on('tap', function () {
+      stageTap++;
+      stageEventStack.push('tap');
+    })
 
     // start with one touch
     simulateTouchStart(
@@ -452,6 +459,11 @@ describe('TouchEvents', function () {
     );
     assert.equal(touchEnd, 1);
     assert.equal(stageTouchEnd, 1);
+    assert.equal(stageTap, 1);
+    // Check that tap fires after touchend 
+    // (remember stacks are reverse event order)
+    assert.equal(stageEventStack.pop(), 'tap', 'should fire tap after touchend')
+    assert.equal(stageEventStack.pop(), 'touchend', 'should fire tap after touchend')
 
     // try two touch ends on both shapes
     simulateTouchEnd(
@@ -465,8 +477,9 @@ describe('TouchEvents', function () {
 
     assert.equal(touchEnd, 2);
     assert.equal(touchEnd2, 1);
-    // TODO: it should be 2, not 3
     assert.equal(stageTouchEnd, 3);
+    assert.equal(stageTap, 1)
+    // Don't need to check event stack here, the pointers moved so no tap is fired
   });
 
   it.skip('letting go of two fingers quickly should not fire dbltap', function () {
