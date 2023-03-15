@@ -3,6 +3,7 @@ import { Shape, ShapeConfig } from '../Shape';
 import { GetSet } from '../types';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
+import { Context } from '../Context';
 
 export interface CircleConfig extends ShapeConfig {
   radius?: number;
@@ -27,7 +28,7 @@ export interface CircleConfig extends ShapeConfig {
  * });
  */
 export class Circle extends Shape<CircleConfig> {
-  _sceneFunc(context) {
+  _sceneFunc(context: Context) {
     context.beginPath();
     context.arc(0, 0, this.attrs.radius || 0, 0, Math.PI * 2, false);
     context.closePath();
@@ -39,12 +40,12 @@ export class Circle extends Shape<CircleConfig> {
   getHeight() {
     return this.radius() * 2;
   }
-  setWidth(width) {
+  setWidth(width: number) {
     if (this.radius() !== width / 2) {
       this.radius(width / 2);
     }
   }
-  setHeight(height) {
+  setHeight(height: number) {
     if (this.radius() !== height / 2) {
       this.radius(height / 2);
     }

@@ -1,4 +1,5 @@
 import { Factory } from '../Factory';
+import { Context } from '../Context';
 import { Shape, ShapeConfig } from '../Shape';
 import { Konva } from '../Global';
 import { getNumberValidator } from '../Validators';
@@ -35,7 +36,7 @@ export interface WedgeConfig extends ShapeConfig {
  * });
  */
 export class Wedge extends Shape<WedgeConfig> {
-  _sceneFunc(context) {
+  _sceneFunc(context: Context) {
     context.beginPath();
     context.arc(
       0,
@@ -55,10 +56,10 @@ export class Wedge extends Shape<WedgeConfig> {
   getHeight() {
     return this.radius() * 2;
   }
-  setWidth(width) {
+  setWidth(width: number) {
     this.radius(width / 2);
   }
-  setHeight(height) {
+  setHeight(height: number) {
     this.radius(height / 2);
   }
 
