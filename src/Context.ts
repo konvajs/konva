@@ -280,7 +280,7 @@ export class Context {
     }
   }
   _applyLineCap(shape: Shape) {
-    const lineCap = shape.attrs.lineCap;
+    const lineCap = shape.lineCap();
     if (lineCap) {
       this.setAttr('lineCap', lineCap);
     }
@@ -292,7 +292,7 @@ export class Context {
     }
   }
   _applyLineJoin(shape: Shape) {
-    var lineJoin = shape.attrs.lineJoin;
+    const lineJoin = shape.lineJoin();
     if (lineJoin) {
       this.setAttr('lineJoin', lineJoin);
     }
