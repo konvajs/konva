@@ -280,7 +280,7 @@ export class Context {
     }
   }
   _applyLineCap(shape: Shape) {
-    const lineCap = shape.lineCap();
+    const lineCap = shape.attrs.lineCap;
     if (lineCap) {
       this.setAttr('lineCap', lineCap);
     }
@@ -292,7 +292,7 @@ export class Context {
     }
   }
   _applyLineJoin(shape: Shape) {
-    const lineJoin = shape.lineJoin();
+    const lineJoin = shape.attrs.lineJoin;
     if (lineJoin) {
       this.setAttr('lineJoin', lineJoin);
     }
@@ -794,9 +794,9 @@ export class SceneContext extends Context {
       shape._fillFunc(this);
     }
   }
-  _fill(shape: Shape) {
+  _fill(shape) {
     const hasColor = shape.fill(),
-      fillPriority = shape.fillPriority();
+    fillPriority = shape.getFillPriority();
 
     // priority fills
     if (hasColor && fillPriority === 'color') {
@@ -804,19 +804,19 @@ export class SceneContext extends Context {
       return;
     }
 
-    const hasPattern = shape.fillPatternImage();
+    const hasPattern = shape.getFillPatternImage();
     if (hasPattern && fillPriority === 'pattern') {
       this._fillPattern(shape);
       return;
     }
 
-    const hasLinearGradient = shape.fillLinearGradientColorStops();
+    const hasLinearGradient = shape.getFillLinearGradientColorStops();
     if (hasLinearGradient && fillPriority === 'linear-gradient') {
       this._fillLinearGradient(shape);
       return;
     }
 
-    const hasRadialGradient = shape.fillRadialGradientColorStops();
+    const hasRadialGradient = shape.getFillRadialGradientColorStops();
     if (hasRadialGradient && fillPriority === 'radial-gradient') {
       this._fillRadialGradient(shape);
       return;
@@ -833,10 +833,10 @@ export class SceneContext extends Context {
       this._fillRadialGradient(shape);
     }
   }
-  _strokeLinearGradient(shape: Shape) {
-    const start = shape.strokeLinearGradientStartPoint(),
-      end = shape.strokeLinearGradientEndPoint(),
-      colorStops = shape.strokeLinearGradientColorStops(),
+  _strokeLinearGradient(shape) {
+    const start = shape.getStrokeLinearGradientStartPoint(),
+      end = shape.getStrokeLinearGradientEndPoint(),
+      colorStops = shape.getStrokeLinearGradientColorStops(),
       grd = this.createLinearGradient(start.x, start.y, end.x, end.y);
 
     if (colorStops) {
@@ -847,16 +847,15 @@ export class SceneContext extends Context {
       this.setAttr('strokeStyle', grd);
     }
   }
-  _stroke(shape: Shape) {
+  _stroke(shape) {
     var dash = shape.dash(),
       // ignore strokeScaleEnabled for Text
-      strokeScaleEnabled = shape.strokeScaleEnabled();
+      strokeScaleEnabled = shape.getStrokeScaleEnabled();
 
     if (shape.hasStroke()) {
       if (!strokeScaleEnabled) {
         this.save();
         var pixelRatio = this.getCanvas().getPixelRatio();
-        console.log(pixelRatio);
         this.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
       }
 
@@ -868,11 +867,11 @@ export class SceneContext extends Context {
 
       this.setAttr('lineWidth', shape.strokeWidth());
 
-      if (!shape.shadowForStrokeEnabled()) {
+      if (!shape.getShadowForStrokeEnabled()) {
         this.setAttr('shadowColor', 'rgba(0,0,0,0)');
       }
 
-      var hasLinearGradient = shape.strokeLinearGradientColorStops();
+      var hasLinearGradient = shape.getStrokeLinearGradientColorStops();
       if (hasLinearGradient) {
         this._strokeLinearGradient(shape);
       } else {
@@ -886,10 +885,10 @@ export class SceneContext extends Context {
       }
     }
   }
-  _applyShadow(shape: Shape) {
+  _applyShadow(shape) {
     var color = shape.getShadowRGBA() ?? 'black',
-      blur = shape.shadowBlur() ?? 5,
-      offset = shape.shadowOffset() ?? {
+      blur = shape.getShadowBlur() ?? 5,
+      offset = shape.getShadowOffset() ?? {
         x: 0,
         y: 0,
       },
@@ -915,7 +914,7 @@ export class HitContext extends Context {
       willReadFrequently: true,
     }) as CanvasRenderingContext2D;
   }
-  _fill(shape) {
+  _fill(shape: Shape) {
     this.save();
     this.setAttr('fillStyle', shape.colorKey);
     shape._fillFuncHit(this);
@@ -926,10 +925,10 @@ export class HitContext extends Context {
       this._stroke(shape);
     }
   }
-  _stroke(shape: Shape) {
+  _stroke(shape) {
     if (shape.hasHitStroke()) {
       // ignore strokeScaleEnabled for Text
-      const strokeScaleEnabled = shape.strokeScaleEnabled();
+      const strokeScaleEnabled = shape.getStrokeScaleEnabled();
       if (!strokeScaleEnabled) {
         this.save();
         var pixelRatio = this.getCanvas().getPixelRatio();
