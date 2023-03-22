@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>KonvaJS text paths</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=1.0, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <style>
+      body {
+        margin: 0;
+        width: 100vw;
+        height: 100vh;
+      }
+    </style>
+  </head>
+
+  <body>
+    <input type="range" value="100" id="radius" min="1" max="1000" />
+    <select id="align">
+      <option value="center">center</option>
+      <option value="left">left</option>
+      <option value="right">right</option>
+    </select>
+
+    <div id="container"></div>
+
+    <script type="module">
+      import Konva from '../src/index.ts';
+
+      const stage = new Konva.Stage({
+        container: 'container',
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+
+      const layer = new Konva.Layer();
+      stage.add(layer);
+
+      // define arc calculation
+      // Credits to @opsb https://stackoverflow.com/a/18473154 for the polarToCartesian and describeArc functions
+      const polarToCartesian = (centerX, centerY, radius, angleInDegrees) => ({
+        x: centerX + radius * Math.cos(((angleInDegrees - 90) * Math.PI) / 180),
+        y: centerY + radius * Math.sin(((angleInDegrees - 90) * Math.PI) / 180),
+      });
+      const describeArc = (x, y, radius, startAngle, endAngle) => {
+        const endAngleOriginal = endAngle;
+        if (endAngleOriginal - startAngle === 360) {
+          endAngle = 359;
+        }
+        const start = polarToCartesian(x, y, radius, endAngle);
+        const end = polarToCartesian(x, y, radius, startAngle);
+        const arcSweep = endAngle - startAngle <= 180 ? '0' : '1';
+
+        return {
+          data: [
+            'M',
+            start.x,
+            start.y,
+            'A',
+            radius,
+            radius,
+            0,
+            arcSweep,
+            0,
+            end.x,
+            end.y,
+            endAngleOriginal - startAngle === 360 ? 'z' : '',
+          ].join(' '),
+          start,
+        };
+      };
+
+      // define constants
+      const { data, start } = describeArc(0, 0, 100, 0, 360);
+      const shiftX = 400;
+      const shiftY = 200;
+      const x = shiftX + start.x;
+      const y = shiftX + start.y;
+
+      // create elements
+      const text = new Konva.TextPath({
+        x,
+        y,
+        text: 'Curved text with Konva.TextPath',
+        align: 'center',
+        data,
+        fill: 'black',
+      });
+      const path = new Konva.Path({
+        data,
+        x,
+        y,
+        stroke: 'black',
+        opacity: 0.3,
+      });
+
+      // attach handlers
+      document
+        .querySelector('#align')
+        .addEventListener('change', ({ target: { value } }) => {
+          text.align(value);
+          window.text = text;
+          if (value === 'right') {
+            text.rotation(180);
+          } else if (value === 'left') {
+            text.rotation(-180);
+          } else {
+            text.rotation(0);
+          }
+        });
+      document
+        .querySelector('#radius')
+        .addEventListener('input', ({ target: { value } }) => {
+          const { data, start } = describeArc(0, 0, value, 0, 360);
+          const x = shiftX + start.x;
+          const y = shiftX + start.y;
+
+          text.data(data);
+          path.data(data);
+          text.x(x);
+          path.x(x);
+          text.y(y);
+          path.y(y);
+
+          layer.draw();
+        });
+
+      // add the shapes to the layer
+      layer.add(text);
+      layer.add(path);
+    </script>
+  </body>
+</html>

@@ -181,7 +181,7 @@ Run `npx gulp api` which will build the documentation files and place them in th
 # Pull Requests
 
 I'd be happy to review any pull requests that may better the Konva project,
-in particular if you have a bug fix, enhancement, or a new shape (see `src/shapes` for examples). Before doing so, please first make sure that all of the tests pass (`gulp lint test`).
+in particular if you have a bug fix, enhancement, or a new shape (see `src/shapes` for examples). Before doing so, please first make sure that all of the tests pass (`npm run test`).
 
 ## Contributors
 

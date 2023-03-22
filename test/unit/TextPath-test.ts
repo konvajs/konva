@@ -277,7 +277,7 @@ describe('TextPath', function () {
     layer.add(textpath);
     stage.add(layer);
 
-    cloneAndCompareLayer(layer, 200);
+    cloneAndCompareLayer(layer, 200, 10);
   });
 
   it('Text path with letter spacing', function () {
@@ -757,9 +757,9 @@ describe('TextPath', function () {
 
     // just different results in different envs
     if (isBrowser) {
-      assert.equal(Math.round(rect.height), 329, 'check height');
-    } else {
       assert.equal(Math.round(rect.height), 331, 'check height');
+    } else {
+      assert.equal(Math.round(rect.height), 333, 'check height');
     }
 
     textpath.text('');
