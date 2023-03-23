@@ -8,7 +8,7 @@
    * Konva JavaScript Framework v8.4.2
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Fri Jan 20 2023
+   * Date: Mon Feb 20 2023
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -14993,6 +14993,19 @@
           this._nodes = [];
           this._resetTransformCache();
       }
+      /**
+       * bind events to the Transformer. You can use events: `transform`, `transformstart`, `transformend`, `dragstart`, `dragmove`, `dragend`
+       * @method
+       * @name Konva.Transformer#on
+       * @param {String} evtStr e.g. 'transform'
+       * @param {Function} handler The handler function. The first argument of that function is event object. Event object has `target` as main target of the event, `currentTarget` as current node listener and `evt` as native browser event.
+       * @returns {Konva.Transformer}
+       * @example
+       * // add click listener
+       * tr.on('transformstart', function() {
+       *   console.log('transform started');
+       * });
+       */
       _resetTransformCache() {
           this._clearCache(NODES_RECT);
           this._clearCache('transform');
