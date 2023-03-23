@@ -289,34 +289,17 @@ export class Transformer extends Group {
       this.detach();
     }
 
-    const ancestors = this.getAncestors();
-
-    const filteredNodes = nodes.filter(node => {
+    const filteredNodes = nodes.filter((node) => {
       // check if ancestor of the transformer
-      if (ancestors.includes(node))
+      if (node.isAncestorOf(this)) {
+        Util.error(
+          'Konva.Transformer cannot be an a child of the node you are trying to attach'
+        );
         return false;
-      
-      let pointer = node.parent;
-
-      // check if descendant of any transformer
-      while (pointer) {
-        const type = pointer.getType();
-        if (type != 'Group' && type != 'Shape')
-          break;
-        
-        if (pointer.className == Transformer.prototype.className)
-          return false;
-
-        pointer = pointer.parent;
       }
 
       return true;
     });
-
-    if (filteredNodes.length != nodes.length) {
-      Util.error('nodes should not be descendants of a transformer, or ancestors of this transformer.');
-      return;
-    }
 
     this._nodes = nodes = filteredNodes;
     if (nodes.length === 1 && this.useSingleNodeRotation()) {
