@@ -3,6 +3,7 @@ import { Shape, ShapeConfig } from '../Shape';
 import { GetSet } from '../types';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
+import { Context } from '../Context';
 
 export interface RingConfig extends ShapeConfig {
   innerRadius: number;
@@ -30,7 +31,7 @@ var PIx2 = Math.PI * 2;
  * });
  */
 export class Ring extends Shape<RingConfig> {
-  _sceneFunc(context) {
+  _sceneFunc(context: Context) {
     context.beginPath();
     context.arc(0, 0, this.innerRadius(), 0, PIx2, false);
     context.moveTo(this.outerRadius(), 0);
@@ -44,10 +45,10 @@ export class Ring extends Shape<RingConfig> {
   getHeight() {
     return this.outerRadius() * 2;
   }
-  setWidth(width) {
+  setWidth(width: number) {
     this.outerRadius(width / 2);
   }
-  setHeight(height) {
+  setHeight(height: number) {
     this.outerRadius(height / 2);
   }
 

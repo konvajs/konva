@@ -1,4 +1,5 @@
 import { Factory } from '../Factory';
+import { Context } from '../Context';
 import { Shape, ShapeConfig } from '../Shape';
 import { Animation } from '../Animation';
 import { getNumberValidator } from '../Validators';
@@ -65,7 +66,7 @@ export class Sprite extends Shape<SpriteConfig> {
   _updated = true;
   anim: Animation;
   interval: any;
-  constructor(config) {
+  constructor(config: SpriteConfig) {
     super(config);
     this.anim = new Animation(() => {
       // if we don't need to redraw layer we should return false
@@ -90,7 +91,7 @@ export class Sprite extends Shape<SpriteConfig> {
     });
   }
 
-  _sceneFunc(context) {
+  _sceneFunc(context: Context) {
     var anim = this.animation(),
       index = this.frameIndex(),
       ix4 = index * 4,
@@ -129,7 +130,7 @@ export class Sprite extends Shape<SpriteConfig> {
       }
     }
   }
-  _hitFunc(context) {
+  _hitFunc(context: Context) {
     var anim = this.animation(),
       index = this.frameIndex(),
       ix4 = index * 4,

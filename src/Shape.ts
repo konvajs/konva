@@ -820,6 +820,8 @@ export class Shape<
   strokeHitEnabled: GetSet<boolean, this>;
   strokeWidth: GetSet<number, this>;
   hitStrokeWidth: GetSet<number | 'auto', this>;
+  strokeLinearGradientStartPoint: GetSet<Vector2d, this>;
+  strokeLinearGradientEndPoint: GetSet<Vector2d, this>;
   strokeLinearGradientColorStops: GetSet<Array<number | string>, this>;
 }
 
