@@ -4769,4 +4769,32 @@ describe('Transformer', function () {
     assert.equal(clone.getChildren().length, tr.getChildren().length);
     assert.equal(clone.nodes().length, 0);
   });
+
+  describe('`transformer.nodes( )` should filter invalid nodes if they are descendants of a transformer or parent of the transformer', function () {
+    it('should filter children of a transformer', function () {
+      const stage = addStage()!;
+      
+      const layer = new Konva.Layer();
+      stage.add(layer);
+  
+      const tr = new Konva.Transformer();
+      layer.add(tr);
+  
+      tr.nodes([tr.children![0]]);
+      assert.equal(tr.nodes().length, 0);
+    });
+
+    it('should filter parent of the transformer', function () {
+      const stage = addStage();
+      
+      const layer = new Konva.Layer();
+      stage.add(layer);
+
+      const tr = new Konva.Transformer();
+      layer.add(tr);
+
+      tr.nodes([layer]);
+      assert.equal(tr.nodes().length, 0);
+    });
+  });
 });
