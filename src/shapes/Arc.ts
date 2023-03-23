@@ -4,7 +4,7 @@ import { Konva } from '../Global';
 import { GetSet } from '../types';
 import { getNumberValidator, getBooleanValidator } from '../Validators';
 import { _registerNode } from '../Global';
-import { Transform, Util } from '../Util';
+import { Context } from '../Context';
 
 export interface ArcConfig extends ShapeConfig {
   angle: number;
@@ -38,7 +38,7 @@ export interface ArcConfig extends ShapeConfig {
  * });
  */
 export class Arc extends Shape<ArcConfig> {
-  _sceneFunc(context) {
+  _sceneFunc(context: Context) {
     var angle = Konva.getAngle(this.angle()),
       clockwise = this.clockwise();
 
@@ -54,10 +54,10 @@ export class Arc extends Shape<ArcConfig> {
   getHeight() {
     return this.outerRadius() * 2;
   }
-  setWidth(width) {
+  setWidth(width: number) {
     this.outerRadius(width / 2);
   }
-  setHeight(height) {
+  setHeight(height: number) {
     this.outerRadius(height / 2);
   }
 

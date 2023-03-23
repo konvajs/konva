@@ -266,11 +266,11 @@ export class Transformer extends Group {
    * @example
    * transformer.attachTo(shape);
    */
-  attachTo(node) {
+  attachTo(node: Node) {
     this.setNode(node);
     return this;
   }
-  setNode(node) {
+  setNode(node: Node) {
     Util.warn(
       'tr.setNode(shape), tr.node(shape) and tr.attachTo(shape) methods are deprecated. Please use tr.nodes(nodesArray) instead.'
     );

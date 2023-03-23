@@ -3,6 +3,7 @@ import { Shape, ShapeConfig } from '../Shape';
 import { GetSet } from '../types';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
+import { Context } from '../Context';
 
 export interface RegularPolygonConfig extends ShapeConfig {
   sides: number;
@@ -30,7 +31,7 @@ export interface RegularPolygonConfig extends ShapeConfig {
  * });
  */
 export class RegularPolygon extends Shape<RegularPolygonConfig> {
-  _sceneFunc(context) {
+  _sceneFunc(context: Context) {
     const points = this._getPoints();
 
     context.beginPath();
@@ -81,10 +82,10 @@ export class RegularPolygon extends Shape<RegularPolygonConfig> {
   getHeight() {
     return this.radius() * 2;
   }
-  setWidth(width) {
+  setWidth(width: number) {
     this.radius(width / 2);
   }
-  setHeight(height) {
+  setHeight(height: number) {
     this.radius(height / 2);
   }
 

@@ -111,7 +111,7 @@ export class Image extends Shape<ImageConfig> {
     }
     // If you need to draw later, you need to execute save/restore
   }
-  _hitFunc(context) {
+  _hitFunc(context: Context) {
     var width = this.width(),
       height = this.height(),
       cornerRadius = this.cornerRadius();
@@ -146,7 +146,7 @@ export class Image extends Shape<ImageConfig> {
    *    layer.draw();
    *  });
    */
-  static fromURL(url, callback, onError = null) {
+  static fromURL(url: string, callback: (img: Image) => void, onError: OnErrorEventHandler = null) {
     var img = Util.createImageElement();
     img.onload = function () {
       var image = new Image({
