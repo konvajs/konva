@@ -3,6 +3,7 @@ import { Konva } from './Global';
 import { Canvas } from './Canvas';
 import { Shape } from './Shape';
 import { IRect } from './types';
+import type { Node } from './Node';
 
 function simplifyArray(arr: Array<any>) {
   var retArr = [],
@@ -285,7 +286,7 @@ export class Context {
       this.setAttr('lineCap', lineCap);
     }
   }
-  _applyOpacity(shape: Shape) {
+  _applyOpacity(shape: Node) {
     var absOpacity = shape.getAbsoluteOpacity();
     if (absOpacity !== 1) {
       this.setAttr('globalAlpha', absOpacity);
@@ -796,7 +797,7 @@ export class SceneContext extends Context {
   }
   _fill(shape) {
     const hasColor = shape.fill(),
-    fillPriority = shape.getFillPriority();
+      fillPriority = shape.getFillPriority();
 
     // priority fills
     if (hasColor && fillPriority === 'color') {

@@ -667,10 +667,12 @@ describe('Text', function () {
 
     stage.add(layer);
 
-    var trace =
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 30px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();fillStyle=black;fillText(Y,0,15);fillStyle=black;fillText(O,20.01,15);fillStyle=black;fillText(U,43.345,15);fillStyle=black;fillText( ,65.01,15);fillStyle=black;fillText(A,73.345,15);fillStyle=black;fillText(R,93.354,15);fillStyle=black;fillText(E,115.02,15);fillStyle=black;fillText( ,135.029,15);fillStyle=black;fillText(I,143.364,15);fillStyle=black;fillText(N,151.699,15);fillStyle=black;fillText(V,173.364,15);fillStyle=black;fillText(I,193.374,15);fillStyle=black;fillText(T,201.709,15);fillStyle=black;fillText(E,220.034,15);fillStyle=black;fillText(D,240.044,15);fillStyle=black;fillText(!,261.709,15);restore();restore();';
+    if (Konva.isBrowser) {
+      var trace =
+        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 30px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();fillStyle=black;fillText(Y,0,15);fillStyle=black;fillText(O,20,15);fillStyle=black;fillText(U,43,15);fillStyle=black;fillText( ,65,15);fillStyle=black;fillText(A,73,15);fillStyle=black;fillText(R,93,15);fillStyle=black;fillText(E,115,15);fillStyle=black;fillText( ,135,15);fillStyle=black;fillText(I,143,15);fillStyle=black;fillText(N,151,15);fillStyle=black;fillText(V,173,15);fillStyle=black;fillText(I,193,15);fillStyle=black;fillText(T,201,15);fillStyle=black;fillText(E,220,15);fillStyle=black;fillText(D,240,15);fillStyle=black;fillText(!,261,15);restore();restore();';
 
-    assert.equal(layer.getContext().getTrace(), trace);
+      assert.equal(layer.getContext().getTrace(false, true), trace);
+    }
   });
 
   it('text multi line with justify align and several paragraphs', function () {
