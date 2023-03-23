@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### 8.4.3 (2023-03-23)
+
+- Typescript fixes
+- Better validation for `Konva.Transfomer` `nodes` property
+
 ### 8.4.2 (2023-01-20)
 
 - Fix justify on text with limited height
