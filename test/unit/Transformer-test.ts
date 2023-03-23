@@ -36,7 +36,7 @@ function simulateMouseUp(tr: Transformer, pos = { x: 0, y: 0 }) {
   su(tr.getStage(), pos || { x: 1, y: 1 });
 }
 
-describe('Transformer', function () {
+describe.only('Transformer', function () {
   // ======================================================
   it('init transformer on simple rectangle', function () {
     var stage = addStage();
@@ -4768,5 +4768,18 @@ describe('Transformer', function () {
     const clone = tr.clone();
     assert.equal(clone.getChildren().length, tr.getChildren().length);
     assert.equal(clone.nodes().length, 0);
+  });
+
+  it('should filter parent of the transformer', function () {
+    const stage = addStage();
+
+    const layer = new Konva.Layer();
+    stage.add(layer);
+
+    const tr = new Konva.Transformer();
+    layer.add(tr);
+
+    tr.nodes([layer]);
+    assert.equal(tr.nodes().length, 0);
   });
 });

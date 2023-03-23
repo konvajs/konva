@@ -288,7 +288,20 @@ export class Transformer extends Group {
     if (this._nodes && this._nodes.length) {
       this.detach();
     }
-    this._nodes = nodes;
+
+    const filteredNodes = nodes.filter((node) => {
+      // check if ancestor of the transformer
+      if (node.isAncestorOf(this)) {
+        Util.error(
+          'Konva.Transformer cannot be an a child of the node you are trying to attach'
+        );
+        return false;
+      }
+
+      return true;
+    });
+
+    this._nodes = nodes = filteredNodes;
     if (nodes.length === 1 && this.useSingleNodeRotation()) {
       this.rotation(nodes[0].getAbsoluteRotation());
     } else {
