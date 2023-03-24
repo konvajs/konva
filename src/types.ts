@@ -8,6 +8,33 @@ export interface Vector2d {
   y: number;
 }
 
+export interface PathSegment {
+  command:
+    | 'm'
+    | 'M'
+    | 'l'
+    | 'L'
+    | 'v'
+    | 'V'
+    | 'h'
+    | 'H'
+    | 'z'
+    | 'Z'
+    | 'c'
+    | 'C'
+    | 'q'
+    | 'Q'
+    | 't'
+    | 'T'
+    | 's'
+    | 'S'
+    | 'a'
+    | 'A';
+  start: Vector2d;
+  points: Vector2d[];
+  pathLength: number;
+}
+
 export interface IRect {
   x: number;
   y: number;

@@ -2,7 +2,7 @@ import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { _registerNode } from '../Global';
 
-import { GetSet } from '../types';
+import { GetSet, PathSegment } from '../types';
 
 export interface PathConfig extends ShapeConfig {
   data?: string;
@@ -33,18 +33,16 @@ export class Path extends Shape<PathConfig> {
 
   constructor(config?: PathConfig) {
     super(config);
-    this.dataArray = Path.parsePathData(this.data());
-    this.pathLength = 0;
-    for (var i = 0; i < this.dataArray.length; ++i) {
-      this.pathLength += this.dataArray[i].pathLength;
-    }
+    this._readDataAttribute();
+
     this.on('dataChange.konva', function () {
-      this.dataArray = Path.parsePathData(this.data());
-      this.pathLength = 0;
-      for (var i = 0; i < this.dataArray.length; ++i) {
-        this.pathLength += this.dataArray[i].pathLength;
-      }
+      this._readDataAttribute();
     });
+  }
+
+  _readDataAttribute() {
+    this.dataArray = Path.parsePathData(this.data());
+    this.pathLength = Path.getPathLength(this.dataArray);
   }
 
   _sceneFunc(context) {
@@ -215,21 +213,39 @@ export class Path extends Shape<PathConfig> {
    * var point = path.getPointAtLength(10);
    */
   getPointAtLength(length) {
+    return Path.getPointAtLengthOfDataArray(length, this.dataArray);
+  }
+
+  data: GetSet<string, this>;
+
+  static getLineLength(x1, y1, x2, y2) {
+    return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+  }
+
+  static getPathLength(dataArray: PathSegment[]) {
+    let pathLength = 0;
+    for (var i = 0; i < dataArray.length; ++i) {
+      pathLength += dataArray[i].pathLength;
+    }
+    return pathLength;
+  }
+
+  static getPointAtLengthOfDataArray(length: number, dataArray) {
     var point,
       i = 0,
-      ii = this.dataArray.length;
+      ii = dataArray.length;
 
     if (!ii) {
       return null;
     }
 
-    while (i < ii && length > this.dataArray[i].pathLength) {
-      length -= this.dataArray[i].pathLength;
+    while (i < ii && length > dataArray[i].pathLength) {
+      length -= dataArray[i].pathLength;
       ++i;
     }
 
     if (i === ii) {
-      point = this.dataArray[i - 1].points.slice(-2);
+      point = dataArray[i - 1].points.slice(-2);
       return {
         x: point[0],
         y: point[1],
@@ -237,14 +253,14 @@ export class Path extends Shape<PathConfig> {
     }
 
     if (length < 0.01) {
-      point = this.dataArray[i].points.slice(0, 2);
+      point = dataArray[i].points.slice(0, 2);
       return {
         x: point[0],
         y: point[1],
       };
     }
 
-    var cp = this.dataArray[i];
+    var cp = dataArray[i];
     var p = cp.points;
     switch (cp.command) {
       case 'L':
@@ -286,11 +302,6 @@ export class Path extends Shape<PathConfig> {
     return null;
   }
 
-  data: GetSet<string, this>;
-
-  static getLineLength(x1, y1, x2, y2) {
-    return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-  }
   static getPointOnLine(dist, P1x, P1y, P2x, P2y, fromX?, fromY?) {
     if (fromX === undefined) {
       fromX = P1x;
@@ -406,7 +417,7 @@ export class Path extends Shape<PathConfig> {
    *  L data for the purpose of high performance Path
    *  rendering
    */
-  static parsePathData(data) {
+  static parsePathData(data): PathSegment[] {
     // Path Data Segment must begin with a moveTo
     //m (x y)+  Relative moveTo (subsequent points are treated as lineTo)
     //M (x y)+  Absolute moveTo (subsequent points are treated as lineTo)

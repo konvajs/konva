@@ -74,7 +74,7 @@ function _strokeFunc(context) {
 export class TextPath extends Shape<TextPathConfig> {
   dummyCanvas = Util.createCanvasElement();
   dataArray = [];
-  path: SVGPathElement | Path;
+  path: SVGPathElement | undefined;
   glyphInfo: Array<{
     transposeX: number;
     transposeY: number;
@@ -84,6 +84,7 @@ export class TextPath extends Shape<TextPathConfig> {
     p1: Vector2d;
   }>;
   partialText: string;
+  pathLength: number;
   textWidth: number;
   textHeight: number;
 
@@ -107,19 +108,51 @@ export class TextPath extends Shape<TextPathConfig> {
     this._setTextData();
   }
 
+  _getTextPathLength() {
+    // defines the length of the path
+    // if possible use native browser method, otherwise use KonvaJS implementation
+    if (typeof window !== 'undefined' && this.attrs.data) {
+      try {
+        if (!this.path) {
+          this.path = document.createElementNS(
+            'http://www.w3.org/2000/svg',
+            'path'
+          ) as SVGPathElement;
+          this.path.setAttribute('d', this.attrs.data);
+        }
+        return this.path.getTotalLength();
+      } catch (e) {
+        console.warn(e);
+        return Path.getPathLength(this.dataArray);
+      }
+    }
+
+    return Path.getPathLength(this.dataArray);
+  }
+  _getPointAtLength(length: number) {
+    // if path is not defined yet, do nothing
+    if (!this.attrs.data) {
+      return null;
+    }
+
+    // if possible use native browser method, otherwise use KonvaJS implementation
+    if (typeof window !== 'undefined' && this.attrs.data && this.path) {
+      try {
+        return this.path.getPointAtLength(length);
+      } catch (e) {
+        console.warn(e);
+        // try using KonvaJS implementation as a backup
+        return Path.getPointAtLengthOfDataArray(length, this.dataArray);
+      }
+    } else {
+      return Path.getPointAtLengthOfDataArray(length, this.dataArray);
+    }
+  }
+
   _readDataAttribute() {
     this.dataArray = Path.parsePathData(this.attrs.data);
-    // in case document is not defined (server side rendering)
-    // use the KonvaJs Path class instead of the browser's native SVGPathElement
-    if (typeof window !== 'undefined' && document) {
-      this.path = document.createElementNS(
-        'http://www.w3.org/2000/svg',
-        'path'
-      ) as SVGPathElement;
-      this.path.setAttribute('d', this.attrs.data);
-    } else {
-      this.path = new Path({ data: this.attrs.data }) as Path;
-    }
+    this.path = undefined;
+    this.pathLength = this._getTextPathLength();
   }
 
   _sceneFunc(context) {
@@ -223,7 +256,7 @@ export class TextPath extends Shape<TextPathConfig> {
 
     return {
       width: metrics.width,
-      height: parseInt(this.attrs.fontSize, 10),
+      height: parseInt(`${this.fontSize()}`, 10),
     };
   }
   _setTextData() {
@@ -246,42 +279,15 @@ export class TextPath extends Shape<TextPathConfig> {
       0
     );
 
-    // defines the length of the path
-    // if possible use native browser method, otherwise use KonvaJS implementation
-    const pathLength =
-      (this.path as SVGPathElement).getTotalLength?.() ||
-      (this.path as Path).getLength?.();
-
     let offset = 0;
     if (align === 'center') {
-      offset = Math.max(0, pathLength / 2 - textWidth / 2);
+      offset = Math.max(0, this.pathLength / 2 - textWidth / 2);
     }
     if (align === 'right') {
-      offset = Math.max(0, pathLength - textWidth);
+      offset = Math.max(0, this.pathLength - textWidth);
     }
 
     const charArr = stringToArray(this.text());
-
-    const getPointAtLength = (length: number) => {
-      // if path is not defined yet, do nothing
-      if (!this.attrs.data) {
-        return null;
-      }
-
-      // if possible use native browser method, otherwise use KonvaJS implementation
-      if (typeof window !== 'undefined' && this.attrs.data) {
-        try {
-          return this.path.getPointAtLength(length);
-        } catch (e) {
-          console.warn(e);
-          // try using KonvaJS implementation as a backup
-          this.path = new Path({ data: this.attrs.data });
-          return this.path.getPointAtLength(length);
-        }
-      } else {
-        return this.path.getPointAtLength(length);
-      }
-    };
 
     // Algorithm for calculating glyph positions:
     // 1. Get the begging point of the glyph on the path using the offsetToGlyph,
@@ -290,16 +296,16 @@ export class TextPath extends Shape<TextPathConfig> {
     // 4. Add glyph width to the offsetToGlyph and repeat
     let offsetToGlyph = offset;
     for (var i = 0; i < charArr.length; i++) {
-      const charStartPoint = getPointAtLength(offsetToGlyph);
+      const charStartPoint = this._getPointAtLength(offsetToGlyph);
       if (!charStartPoint) return;
 
       let glyphWidth = this._getTextSize(charArr[i]).width + letterSpacing;
       if (charArr[i] === ' ' && align === 'justify') {
         const numberOfSpaces = this.text().split(' ').length - 1;
-        glyphWidth += (pathLength - textWidth) / numberOfSpaces;
+        glyphWidth += (this.pathLength - textWidth) / numberOfSpaces;
       }
 
-      const charEndPoint = getPointAtLength(offsetToGlyph + glyphWidth);
+      const charEndPoint = this._getPointAtLength(offsetToGlyph + glyphWidth);
 
       const width = Path.getLineLength(
         charStartPoint.x,

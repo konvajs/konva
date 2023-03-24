@@ -13,16 +13,67 @@
         width: 100vw;
         height: 100vh;
       }
+      aside {
+        margin-left: 20px;
+      }
+      div {
+        padding: 2px;
+      }
     </style>
   </head>
 
   <body>
-    <input type="range" value="100" id="radius" min="1" max="1000" />
-    <select id="align">
-      <option value="center">center</option>
-      <option value="left">left</option>
-      <option value="right">right</option>
-    </select>
+    <aside>
+      <div>
+        <label>
+          <span>Curvature</span>
+          <input type="range" value="0" id="radius" min="-100" max="100" />
+          <input type="number" value="0" id="curvature" />
+        </label>
+      </div>
+      <div>
+        <label>
+          <span>Font size</span>
+          <input type="range" value="0" id="fontsize" min="1" max="100" />
+        </label>
+      </div>
+      <div>
+        <label>
+          <span>Alignment</span>
+          <select id="align">
+            <option value="center">center</option>
+            <option value="left">left</option>
+            <option value="right">right</option>
+          </select></label
+        >
+      </div>
+      <div>
+        <label>
+          <span>Font weight</span>
+          <select id="fontweight">
+            <option value="normal">normal</option>
+            <option value="bold">bold</option>
+            <option value="italic">italic</option>
+          </select></label
+        >
+      </div>
+      <div>
+        <label>
+          <span>Text decoration</span>
+          <select id="textdecoration">
+            <option value="">none</option>
+            <option value="line-through">line-through</option>
+            <option value="underline">underline</option>
+          </select></label
+        >
+      </div>
+      <div>
+        <label>
+          <span>Text</span>
+          <textarea id="textinput">Curved text</textarea>
+        </label>
+      </div>
+    </aside>
 
     <div id="container"></div>
 
@@ -38,20 +89,56 @@
       const layer = new Konva.Layer();
       stage.add(layer);
 
+      // define variables
+      let alignXShift = 0;
+      let alignYShift = 0;
+      let curvature = 0;
+      let helpersTimeout;
+
+      // define constants
+      const RADIUS = 50;
+      let shiftX = 400;
+      let shiftY = 200;
+      const RANGE = 100000;
+
+      const getRadius = (currentValue) =>
+        Math.abs(1 / Math.tan(currentValue / 100)) * RADIUS;
+
+      const isOutOfRange = () => validate(getRadius(curvature)) === RANGE;
+      const getArcSweep = () => (Math.sign(curvature) >= 0 ? 0 : 1);
+
+      const validate = (number) => {
+        return Math.max(-RANGE, Math.min(number, RANGE));
+      };
+
       // define arc calculation
       // Credits to @opsb https://stackoverflow.com/a/18473154 for the polarToCartesian and describeArc functions
       const polarToCartesian = (centerX, centerY, radius, angleInDegrees) => ({
-        x: centerX + radius * Math.cos(((angleInDegrees - 90) * Math.PI) / 180),
-        y: centerY + radius * Math.sin(((angleInDegrees - 90) * Math.PI) / 180),
+        x: validate(
+          centerX + radius * Math.cos(((angleInDegrees - 90) * Math.PI) / 180)
+        ),
+        y: validate(
+          centerY + radius * Math.sin(((angleInDegrees - 90) * Math.PI) / 180)
+        ),
       });
-      const describeArc = (x, y, radius, startAngle, endAngle) => {
+      const describeArc = (x, y, radius, startAngle, endAngle, sweep) => {
+        const validatedRadius = validate(radius);
+
+        if (isOutOfRange()) {
+          const width = text.getTextWidth();
+
+          return {
+            data: `M ${-width / 2} 0 L ${width / 2} 0`,
+            start: { x, y },
+          };
+        }
+
         const endAngleOriginal = endAngle;
         if (endAngleOriginal - startAngle === 360) {
           endAngle = 359;
         }
-        const start = polarToCartesian(x, y, radius, endAngle);
-        const end = polarToCartesian(x, y, radius, startAngle);
-        const arcSweep = endAngle - startAngle <= 180 ? '0' : '1';
+        const start = polarToCartesian(x, y, validatedRadius, endAngle);
+        const end = polarToCartesian(x, y, validatedRadius, startAngle);
 
         return {
           data: [
@@ -59,77 +146,274 @@
             start.x,
             start.y,
             'A',
-            radius,
-            radius,
-            0,
-            arcSweep,
-            0,
+            validatedRadius,
+            validatedRadius,
+            1,
+            1,
+            sweep,
             end.x,
             end.y,
             endAngleOriginal - startAngle === 360 ? 'z' : '',
           ].join(' '),
           start,
+          radius: validatedRadius,
+          deltaAngle: endAngle - startAngle,
         };
       };
 
-      // define constants
-      const { data, start } = describeArc(0, 0, 100, 0, 360);
-      const shiftX = 400;
-      const shiftY = 200;
-      const x = shiftX + start.x;
-      const y = shiftX + start.y;
-
       // create elements
       const text = new Konva.TextPath({
-        x,
-        y,
-        text: 'Curved text with Konva.TextPath',
+        text: 'Curved text',
         align: 'center',
-        data,
+        data: 'M 0 0',
+        fontSize: 20,
+        textBaseline: 'middle',
         fill: 'black',
       });
+      const group = new Konva.Group({ draggable: true });
+
+      // helpers
+      const transformer = new Konva.Transformer({
+        resizeEnabled: true,
+        rotateEnabled: true,
+        shouldOverdrawWholeArea: true,
+      });
+      const positioner = new Konva.Rect({
+        fill: 'green',
+        opacity: 0.1,
+        visible: false,
+      });
+      const circleCenter = new Konva.Rect({
+        fill: 'red',
+        opacity: 0.1,
+        visible: false,
+      });
       const path = new Konva.Path({
-        data,
-        x,
-        y,
         stroke: 'black',
         opacity: 0.3,
+        visible: false,
       });
+
+      const getArcData = () =>
+        describeArc(0, 0, getRadius(curvature), 0, 360, getArcSweep());
+
+      // create methods to calculate positions
+      const calculateTextPlacement = () => {
+        const { data, start } = getArcData();
+        const x = shiftX + start.x - alignXShift;
+        const y = shiftY + start.y - alignYShift;
+
+        text.data(data);
+        text.x(x);
+        text.y(y);
+      };
+      const calculatePositionerPlacement = () => {
+        const { start } = getArcData();
+
+        positioner.x(
+          text.x() - start.x - text.getTextWidth() / 2 + alignXShift
+        );
+        positioner.y(
+          text.y() - start.y - text.getTextHeight() / 2 + alignYShift
+        );
+        positioner.width(text.getTextWidth());
+        positioner.height(text.getTextHeight());
+      };
+      const calculateCircleCenterPlacement = () => {
+        const { start } = getArcData();
+
+        let centerShiftY = 0;
+        if (getArcSweep() === 1) {
+          const alignment = text.align();
+          if (alignment !== 'center') {
+            centerShiftY = -start.y * 2;
+          } else {
+            centerShiftY = start.y * 2;
+          }
+        }
+
+        const x = shiftX + start.x - alignXShift;
+        const y = shiftY + start.y - alignYShift + centerShiftY;
+
+        circleCenter.x(x - 2);
+        circleCenter.y(y - 2);
+        circleCenter.width(5);
+        circleCenter.height(5);
+      };
+      const calculatePathPlacement = () => {
+        const { data, start } = getArcData();
+        const x = shiftX + start.x - alignXShift;
+        const y = shiftY + start.y - alignYShift;
+
+        path.data(data);
+
+        path.x(x);
+        path.y(y);
+      };
+
+      // calculate initial positions
+      calculateTextPlacement();
+      calculatePathPlacement();
+      calculatePositionerPlacement();
+
+      // update positions on change
+      const setPosition = () => {
+        calculateTextPlacement();
+        calculatePathPlacement();
+        calculatePositionerPlacement();
+        calculateCircleCenterPlacement();
+      };
+
+      const updateHelpersVisibility = (showHelpers) => {
+        if (helpersTimeout) {
+          clearTimeout(helpersTimeout);
+        }
+
+        // force transformer update
+        if (transformer.nodes().length > 0) {
+          transformer.nodes([group]);
+        }
+
+        helpersTimeout = setTimeout(() => {
+          updateHelpersVisibility(false);
+        }, 2000);
+
+        positioner.visible(showHelpers);
+        circleCenter.visible(showHelpers);
+        path.visible(showHelpers);
+      };
+
+      // create methods to correct rotation and alignment
+      const correctRotation = () => {
+        const value = text.align();
+        if (isOutOfRange()) {
+          text.rotation(0);
+          path.rotation(0);
+        } else if (value === 'right') {
+          text.rotation(180);
+          path.rotation(180);
+        } else if (value === 'left') {
+          text.rotation(180);
+          path.rotation(180);
+        } else {
+          text.rotation(0);
+          path.rotation(0);
+        }
+      };
+      const correctAlignment = () => {
+        const { start, radius, deltaAngle } = getArcData();
+        const value = text.align();
+        if (isOutOfRange()) {
+          alignXShift = 0;
+        } else if (value === 'right') {
+          alignXShift = -text.getTextWidth() / 2;
+        } else if (value === 'left') {
+          alignXShift = text.getTextWidth() / 2;
+        } else {
+          alignXShift = 0;
+        }
+
+        if (value === 'center' && getArcSweep() === 1) {
+          alignYShift = start.y * 4;
+          alignXShift = start.x * 2;
+        } else {
+          alignYShift = 0;
+        }
+      };
 
       // attach handlers
       document
         .querySelector('#align')
         .addEventListener('change', ({ target: { value } }) => {
           text.align(value);
-          window.text = text;
-          if (value === 'right') {
-            text.rotation(180);
-          } else if (value === 'left') {
-            text.rotation(-180);
-          } else {
-            text.rotation(0);
-          }
+          correctAlignment();
+          correctRotation();
+          setPosition();
+          updateHelpersVisibility(false);
+        });
+      document
+        .querySelector('#fontweight')
+        .addEventListener('change', ({ target: { value } }) => {
+          text.fontStyle(value);
+          updateHelpersVisibility(false);
+        });
+      document
+        .querySelector('#textinput')
+
+        .addEventListener('input', ({ target: { value } }) => {
+          text.text(value);
+          setPosition();
+          updateHelpersVisibility(false);
+        });
+      document
+        .querySelector('#textdecoration')
+        .addEventListener('change', ({ target: { value } }) => {
+          text.textDecoration(value);
+          updateHelpersVisibility(false);
+        });
+      document
+        .querySelector('#fontsize')
+        .addEventListener('input', ({ target: { value } }) => {
+          text.fontSize(Number(value));
+          setPosition();
+          updateHelpersVisibility(false);
         });
       document
         .querySelector('#radius')
         .addEventListener('input', ({ target: { value } }) => {
-          const { data, start } = describeArc(0, 0, value, 0, 360);
-          const x = shiftX + start.x;
-          const y = shiftX + start.y;
+          curvature = value;
+          correctAlignment();
+          correctRotation();
+          setPosition();
+          transformer.nodes([]);
 
-          text.data(data);
-          path.data(data);
-          text.x(x);
-          path.x(x);
-          text.y(y);
-          path.y(y);
+          updateHelpersVisibility(true);
 
-          layer.draw();
+          document.querySelector('#curvature').value = value;
+        });
+      document
+        .querySelector('#curvature')
+        .addEventListener('input', ({ target: { value } }) => {
+          curvature = value;
+          correctAlignment();
+          correctRotation();
+          setPosition();
+          updateHelpersVisibility(true);
+          transformer.nodes([]);
+
+          document.querySelector('#radius').value = value;
         });
 
+      // attach handlers to konva elements
+      group.on('click', (e) => {
+        updateHelpersVisibility(false);
+        transformer.nodes([group]);
+      });
+      group.on('dragmove', (e) => {
+        updateHelpersVisibility(false);
+      });
+
+      group.on('transform', (e) => {
+        updateHelpersVisibility(false);
+      });
+      stage.on('click', (e) => {
+        if (e.target === stage) {
+          transformer.nodes([]);
+        }
+
+        updateHelpersVisibility(false);
+      });
+
+      // keep curved text in a group
+      group.add(text);
+      group.add(path);
+      // group.add(positioner);
+      group.add(circleCenter);
+
       // add the shapes to the layer
-      layer.add(text);
-      layer.add(path);
+      layer.add(group);
+
+      layer.add(transformer);
     </script>
   </body>
 </html>
