@@ -2,6 +2,7 @@ import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
+import { Context } from '../Context';
 
 import { GetSet, Vector2d } from '../types';
 
@@ -29,7 +30,7 @@ export interface EllipseConfig extends ShapeConfig {
  * });
  */
 export class Ellipse extends Shape<EllipseConfig> {
-  _sceneFunc(context) {
+  _sceneFunc(context: Context) {
     var rx = this.radiusX(),
       ry = this.radiusY();
 
@@ -49,10 +50,10 @@ export class Ellipse extends Shape<EllipseConfig> {
   getHeight() {
     return this.radiusY() * 2;
   }
-  setWidth(width) {
+  setWidth(width: number) {
     this.radiusX(width / 2);
   }
-  setHeight(height) {
+  setHeight(height: number) {
     this.radiusY(height / 2);
   }
 

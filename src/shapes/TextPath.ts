@@ -1,5 +1,6 @@
 import { Util } from '../Util';
 import { Factory } from '../Factory';
+import { Context } from '../Context';
 import { Shape, ShapeConfig } from '../Shape';
 import { Path } from './Path';
 import { Text, stringToArray } from './Text';
@@ -155,7 +156,7 @@ export class TextPath extends Shape<TextPathConfig> {
     this.pathLength = this._getTextPathLength();
   }
 
-  _sceneFunc(context) {
+  _sceneFunc(context: Context) {
     context.setAttr('font', this._getContextFont());
     context.setAttr('textBaseline', this.textBaseline());
     context.setAttr('textAlign', 'left');
@@ -205,7 +206,7 @@ export class TextPath extends Shape<TextPathConfig> {
 
     context.restore();
   }
-  _hitFunc(context) {
+  _hitFunc(context: Context) {
     context.beginPath();
 
     var glyphInfo = this.glyphInfo;
@@ -235,7 +236,7 @@ export class TextPath extends Shape<TextPathConfig> {
     );
     return this.textHeight;
   }
-  setText(text) {
+  setText(text: string) {
     return Text.prototype.setText.call(this, text);
   }
 
@@ -243,7 +244,7 @@ export class TextPath extends Shape<TextPathConfig> {
     return Text.prototype._getContextFont.call(this);
   }
 
-  _getTextSize(text) {
+  _getTextSize(text: string) {
     var dummyCanvas = this.dummyCanvas;
     var _context = dummyCanvas.getContext('2d');
 

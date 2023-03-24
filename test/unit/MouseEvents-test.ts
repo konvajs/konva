@@ -1750,7 +1750,7 @@ describe('MouseEvents', function () {
     assert.equal(shape, circle);
   });
 
-  it('double click after click should trigger event', function (done) {
+  it('double click after click should trigger event', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -1802,37 +1802,31 @@ describe('MouseEvents', function () {
     assert.equal(smallClicks, 0, 'no  click on small rect');
     assert.equal(smallDblClicks, 0, 'no dblclick on small rect');
 
-    setTimeout(function () {
-      simulateMouseDown(stage, {
-        x: 100,
-        y: 100,
-      });
-      simulateMouseUp(stage, {
-        x: 100,
-        y: 100,
-      });
-
-      assert.equal(bigClicks, 1, 'single click on big rect');
-      assert.equal(smallClicks, 1, 'single click on small rect');
-      assert.equal(smallDblClicks, 0, 'no dblclick on small rect');
-
-      setTimeout(function () {
-        simulateMouseDown(stage, {
-          x: 100,
-          y: 100,
-        });
-        simulateMouseUp(stage, {
-          x: 100,
-          y: 100,
-        });
-
-        assert.equal(bigClicks, 1, 'single click on big rect');
-        assert.equal(smallClicks, 2, 'second click on small rect');
-        assert.equal(smallDblClicks, 1, 'single dblclick on small rect');
-
-        done();
-      });
+    simulateMouseDown(stage, {
+      x: 100,
+      y: 100,
     });
+    simulateMouseUp(stage, {
+      x: 100,
+      y: 100,
+    });
+
+    assert.equal(bigClicks, 1, 'single click on big rect');
+    assert.equal(smallClicks, 1, 'single click on small rect');
+    assert.equal(smallDblClicks, 0, 'no dblclick on small rect');
+
+    simulateMouseDown(stage, {
+      x: 100,
+      y: 100,
+    });
+    simulateMouseUp(stage, {
+      x: 100,
+      y: 100,
+    });
+
+    assert.equal(bigClicks, 1, 'single click on big rect');
+    assert.equal(smallClicks, 2, 'second click on small rect');
+    assert.equal(smallDblClicks, 1, 'single dblclick on small rect');
   });
 
   it('click on stage and second click on shape should not trigger double click (check after dblclick)', function (done) {

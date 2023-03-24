@@ -4,6 +4,7 @@ import { GetSet } from '../types';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 import { Path } from './Path';
+import { Context } from '../Context';
 
 export interface ArrowConfig extends LineConfig {
   points: number[];
@@ -40,7 +41,7 @@ export interface ArrowConfig extends LineConfig {
  * });
  */
 export class Arrow extends Line<ArrowConfig> {
-  _sceneFunc(ctx) {
+  _sceneFunc(ctx: Context) {
     super._sceneFunc(ctx);
     var PI2 = Math.PI * 2;
     var points = this.points();
@@ -126,7 +127,7 @@ export class Arrow extends Line<ArrowConfig> {
     }
   }
 
-  __fillStroke(ctx) {
+  __fillStroke(ctx: Context) {
     // here is a tricky part
     // we need to disable dash for arrow pointers
     var isDashEnabled = this.dashEnabled();

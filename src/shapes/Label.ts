@@ -1,6 +1,7 @@
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { Group } from '../Group';
+import { Context } from '../Context';
 import { ContainerConfig } from '../Container';
 import {
   getNumberOrArrayOfNumbersValidator,
@@ -75,7 +76,7 @@ var ATTR_CHANGE_LIST = [
  *  }));
  */
 export class Label extends Group {
-  constructor(config?) {
+  constructor(config?: LabelConfig) {
     super(config);
     this.on('add.konva', function (evt) {
       this._addListeners(evt.child);
@@ -198,7 +199,7 @@ export interface TagConfig extends ShapeConfig {
  * @param {Number} [config.cornerRadius]
  */
 export class Tag extends Shape<TagConfig> {
-  _sceneFunc(context) {
+  _sceneFunc(context: Context) {
     var width = this.width(),
       height = this.height(),
       pointerDirection = this.pointerDirection(),

@@ -266,11 +266,11 @@ export class Transformer extends Group {
    * @example
    * transformer.attachTo(shape);
    */
-  attachTo(node) {
+  attachTo(node: Node) {
     this.setNode(node);
     return this;
   }
-  setNode(node) {
+  setNode(node: Node) {
     Util.warn(
       'tr.setNode(shape), tr.node(shape) and tr.attachTo(shape) methods are deprecated. Please use tr.nodes(nodesArray) instead.'
     );
@@ -288,7 +288,20 @@ export class Transformer extends Group {
     if (this._nodes && this._nodes.length) {
       this.detach();
     }
-    this._nodes = nodes;
+
+    const filteredNodes = nodes.filter((node) => {
+      // check if ancestor of the transformer
+      if (node.isAncestorOf(this)) {
+        Util.error(
+          'Konva.Transformer cannot be an a child of the node you are trying to attach'
+        );
+        return false;
+      }
+
+      return true;
+    });
+
+    this._nodes = nodes = filteredNodes;
     if (nodes.length === 1 && this.useSingleNodeRotation()) {
       this.rotation(nodes[0].getAbsoluteRotation());
     } else {
@@ -395,6 +408,19 @@ export class Transformer extends Group {
     this._nodes = [];
     this._resetTransformCache();
   }
+  /**
+   * bind events to the Transformer. You can use events: `transform`, `transformstart`, `transformend`, `dragstart`, `dragmove`, `dragend`
+   * @method
+   * @name Konva.Transformer#on
+   * @param {String} evtStr e.g. 'transform'
+   * @param {Function} handler The handler function. The first argument of that function is event object. Event object has `target` as main target of the event, `currentTarget` as current node listener and `evt` as native browser event.
+   * @returns {Konva.Transformer}
+   * @example
+   * // add click listener
+   * tr.on('transformstart', function() {
+   *   console.log('transform started');
+   * });
+   */
   _resetTransformCache() {
     this._clearCache(NODES_RECT);
     this._clearCache('transform');

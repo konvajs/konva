@@ -5,10 +5,10 @@
 })(this, (function () { 'use strict';
 
   /*
-   * Konva JavaScript Framework v8.4.2
+   * Konva JavaScript Framework v8.4.3
    * http://konvajs.org/
    * Licensed under the MIT
-   * Date: Fri Jan 20 2023
+   * Date: Thu Mar 23 2023
    *
    * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
    * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -35,7 +35,7 @@
               : {};
   const Konva$2 = {
       _global: glob,
-      version: '8.4.2',
+      version: '8.4.3',
       isBrowser: detectBrowser(),
       isUnminified: /param/.test(function (param) { }.toString()),
       dblClickWindow: 400,
@@ -1652,7 +1652,7 @@
           }
       }
       _applyLineCap(shape) {
-          var lineCap = shape.getLineCap();
+          const lineCap = shape.attrs.lineCap;
           if (lineCap) {
               this.setAttr('lineCap', lineCap);
           }
@@ -1664,7 +1664,7 @@
           }
       }
       _applyLineJoin(shape) {
-          var lineJoin = shape.attrs.lineJoin;
+          const lineJoin = shape.attrs.lineJoin;
           if (lineJoin) {
               this.setAttr('lineJoin', lineJoin);
           }
@@ -2081,30 +2081,30 @@
           }
       }
       _fillRadialGradient(shape) {
-          var grd = shape._getRadialGradient();
+          const grd = shape._getRadialGradient();
           if (grd) {
               this.setAttr('fillStyle', grd);
               shape._fillFunc(this);
           }
       }
       _fill(shape) {
-          var hasColor = shape.fill(), fillPriority = shape.getFillPriority();
+          const hasColor = shape.fill(), fillPriority = shape.getFillPriority();
           // priority fills
           if (hasColor && fillPriority === 'color') {
               this._fillColor(shape);
               return;
           }
-          var hasPattern = shape.getFillPatternImage();
+          const hasPattern = shape.getFillPatternImage();
           if (hasPattern && fillPriority === 'pattern') {
               this._fillPattern(shape);
               return;
           }
-          var hasLinearGradient = shape.getFillLinearGradientColorStops();
+          const hasLinearGradient = shape.getFillLinearGradientColorStops();
           if (hasLinearGradient && fillPriority === 'linear-gradient') {
               this._fillLinearGradient(shape);
               return;
           }
-          var hasRadialGradient = shape.getFillRadialGradientColorStops();
+          const hasRadialGradient = shape.getFillRadialGradientColorStops();
           if (hasRadialGradient && fillPriority === 'radial-gradient') {
               this._fillRadialGradient(shape);
               return;
@@ -2124,7 +2124,7 @@
           }
       }
       _strokeLinearGradient(shape) {
-          var start = shape.getStrokeLinearGradientStartPoint(), end = shape.getStrokeLinearGradientEndPoint(), colorStops = shape.getStrokeLinearGradientColorStops(), grd = this.createLinearGradient(start.x, start.y, end.x, end.y);
+          const start = shape.getStrokeLinearGradientStartPoint(), end = shape.getStrokeLinearGradientEndPoint(), colorStops = shape.getStrokeLinearGradientColorStops(), grd = this.createLinearGradient(start.x, start.y, end.x, end.y);
           if (colorStops) {
               // build color stops
               for (var n = 0; n < colorStops.length; n += 2) {
@@ -2198,7 +2198,7 @@
       _stroke(shape) {
           if (shape.hasHitStroke()) {
               // ignore strokeScaleEnabled for Text
-              var strokeScaleEnabled = shape.getStrokeScaleEnabled();
+              const strokeScaleEnabled = shape.getStrokeScaleEnabled();
               if (!strokeScaleEnabled) {
                   this.save();
                   var pixelRatio = this.getCanvas().getPixelRatio();
@@ -14893,7 +14893,15 @@
           if (this._nodes && this._nodes.length) {
               this.detach();
           }
-          this._nodes = nodes;
+          const filteredNodes = nodes.filter((node) => {
+              // check if ancestor of the transformer
+              if (node.isAncestorOf(this)) {
+                  Util.error('Konva.Transformer cannot be an a child of the node you are trying to attach');
+                  return false;
+              }
+              return true;
+          });
+          this._nodes = nodes = filteredNodes;
           if (nodes.length === 1 && this.useSingleNodeRotation()) {
               this.rotation(nodes[0].getAbsoluteRotation());
           }
@@ -14993,6 +15001,19 @@
           this._nodes = [];
           this._resetTransformCache();
       }
+      /**
+       * bind events to the Transformer. You can use events: `transform`, `transformstart`, `transformend`, `dragstart`, `dragmove`, `dragend`
+       * @method
+       * @name Konva.Transformer#on
+       * @param {String} evtStr e.g. 'transform'
+       * @param {Function} handler The handler function. The first argument of that function is event object. Event object has `target` as main target of the event, `currentTarget` as current node listener and `evt` as native browser event.
+       * @returns {Konva.Transformer}
+       * @example
+       * // add click listener
+       * tr.on('transformstart', function() {
+       *   console.log('transform started');
+       * });
+       */
       _resetTransformCache() {
           this._clearCache(NODES_RECT);
           this._clearCache('transform');
