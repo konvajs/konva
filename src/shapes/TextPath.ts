@@ -137,17 +137,15 @@ export class TextPath extends Shape<TextPathConfig> {
     }
 
     // if possible use native browser method, otherwise use KonvaJS implementation
-    if (typeof window !== 'undefined' && this.attrs.data && this.path) {
-      try {
-        return this.path.getPointAtLength(length);
-      } catch (e) {
-        console.warn(e);
-        // try using KonvaJS implementation as a backup
-        return Path.getPointAtLengthOfDataArray(length, this.dataArray);
+    if (this.path) {
+      // add one extra pixel, because there may be small miscalculations
+      if (length <= this.path.getTotalLength() + 1) {
+        this.path.getPointAtLength(length);
+      } else {
+        return null;
       }
-    } else {
-      return Path.getPointAtLengthOfDataArray(length, this.dataArray);
     }
+    return Path.getPointAtLengthOfDataArray(length, this.dataArray);
   }
 
   _readDataAttribute() {
@@ -307,6 +305,7 @@ export class TextPath extends Shape<TextPathConfig> {
       }
 
       const charEndPoint = this._getPointAtLength(offsetToGlyph + glyphWidth);
+      if (!charEndPoint) return;
 
       const width = Path.getLineLength(
         charStartPoint.x,

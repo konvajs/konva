@@ -51,6 +51,39 @@ describe('TextPath', function () {
     );
   });
 
+  it('Draw more characters then there are path', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var c = 'M 10,10 60,10';
+
+    var path = new Konva.Path({
+      stroke: 'red',
+      strokeWidth: 1,
+      data: c,
+    });
+
+    layer.add(path);
+
+    var textpath = new Konva.TextPath({
+      fill: 'orange',
+      fontSize: 24,
+      fontFamily: 'Arial',
+      text: "The quick brown fox jumped over the lazy dog's back",
+      data: c,
+    });
+    layer.add(textpath);
+
+    layer.draw();
+
+    var trace = layer.getContext().getTrace();
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(10,10);lineTo(60,10);lineWidth=1;strokeStyle=red;stroke();restore();save();transform(1,0,0,1,0,0);font=normal normal 24px Arial;textBaseline=middle;textAlign=left;save();save();translate(10,10);rotate(0);fillStyle=orange;fillText(T,0,0);restore();save();translate(24.66,10);rotate(0);fillStyle=orange;fillText(h,0,0);restore();save();translate(38.008,10);rotate(0);fillStyle=orange;fillText(e,0,0);restore();save();translate(51.355,10);rotate(0);fillStyle=orange;fillText( ,0,0);restore();restore();restore();'
+    );
+  });
+
   // ======================================================
   it('Find Next Segment when Arc is in Path', function () {
     var stage = addStage();
@@ -728,7 +761,7 @@ describe('TextPath', function () {
     assert.equal(rect.height, 0, 'check height');
   });
 
-  it('check bad calculations', function () {
+  it.only('check bad calculations', function () {
     var stage = addStage();
     stage.draggable(true);
 
