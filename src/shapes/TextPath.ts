@@ -110,24 +110,6 @@ export class TextPath extends Shape<TextPathConfig> {
   }
 
   _getTextPathLength() {
-    // defines the length of the path
-    // if possible use native browser method, otherwise use KonvaJS implementation
-    if (typeof window !== 'undefined' && this.attrs.data) {
-      try {
-        if (!this.path) {
-          this.path = document.createElementNS(
-            'http://www.w3.org/2000/svg',
-            'path'
-          ) as SVGPathElement;
-          this.path.setAttribute('d', this.attrs.data);
-        }
-        return this.path.getTotalLength();
-      } catch (e) {
-        console.warn(e);
-        return Path.getPathLength(this.dataArray);
-      }
-    }
-
     return Path.getPathLength(this.dataArray);
   }
   _getPointAtLength(length: number) {
@@ -136,18 +118,7 @@ export class TextPath extends Shape<TextPathConfig> {
       return null;
     }
 
-    // if possible use native browser method, otherwise use KonvaJS implementation
-    if (typeof window !== 'undefined' && this.attrs.data && this.path) {
-      try {
-        return this.path.getPointAtLength(length);
-      } catch (e) {
-        console.warn(e);
-        // try using KonvaJS implementation as a backup
-        return Path.getPointAtLengthOfDataArray(length, this.dataArray);
-      }
-    } else {
-      return Path.getPointAtLengthOfDataArray(length, this.dataArray);
-    }
+    return Path.getPointAtLengthOfDataArray(length, this.dataArray);
   }
 
   _readDataAttribute() {
