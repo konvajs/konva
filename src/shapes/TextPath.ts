@@ -75,7 +75,6 @@ function _strokeFunc(context) {
 export class TextPath extends Shape<TextPathConfig> {
   dummyCanvas = Util.createCanvasElement();
   dataArray = [];
-  path: SVGPathElement | undefined;
   glyphInfo: Array<{
     transposeX: number;
     transposeY: number;
@@ -123,7 +122,6 @@ export class TextPath extends Shape<TextPathConfig> {
 
   _readDataAttribute() {
     this.dataArray = Path.parsePathData(this.attrs.data);
-    this.path = undefined;
     this.pathLength = this._getTextPathLength();
   }
 
