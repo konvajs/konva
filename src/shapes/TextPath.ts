@@ -75,7 +75,6 @@ function _strokeFunc(context) {
 export class TextPath extends Shape<TextPathConfig> {
   dummyCanvas = Util.createCanvasElement();
   dataArray = [];
-  path: SVGPathElement | undefined;
   glyphInfo: Array<{
     transposeX: number;
     transposeY: number;
@@ -110,24 +109,6 @@ export class TextPath extends Shape<TextPathConfig> {
   }
 
   _getTextPathLength() {
-    // defines the length of the path
-    // if possible use native browser method, otherwise use KonvaJS implementation
-    if (typeof window !== 'undefined' && this.attrs.data) {
-      try {
-        if (!this.path) {
-          this.path = document.createElementNS(
-            'http://www.w3.org/2000/svg',
-            'path'
-          ) as SVGPathElement;
-          this.path.setAttribute('d', this.attrs.data);
-        }
-        return this.path.getTotalLength();
-      } catch (e) {
-        console.warn(e);
-        return Path.getPathLength(this.dataArray);
-      }
-    }
-
     return Path.getPathLength(this.dataArray);
   }
   _getPointAtLength(length: number) {
@@ -136,21 +117,11 @@ export class TextPath extends Shape<TextPathConfig> {
       return null;
     }
 
-    // if possible use native browser method, otherwise use KonvaJS implementation
-    if (this.path) {
-      // add one extra pixel, because there may be small miscalculations
-      if (length <= this.path.getTotalLength() + 1) {
-        this.path.getPointAtLength(length);
-      } else {
-        return null;
-      }
-    }
     return Path.getPointAtLengthOfDataArray(length, this.dataArray);
   }
 
   _readDataAttribute() {
     this.dataArray = Path.parsePathData(this.attrs.data);
-    this.path = undefined;
     this.pathLength = this._getTextPathLength();
   }
 

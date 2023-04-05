@@ -3,6 +3,11 @@ import { Shape, ShapeConfig } from '../Shape';
 import { _registerNode } from '../Global';
 
 import { GetSet, PathSegment } from '../types';
+import {
+  getCubicArcLength,
+  getQuadraticArcLength,
+  t2length,
+} from './bezier/functions';
 
 export interface PathConfig extends ShapeConfig {
   data?: string;
@@ -267,7 +272,13 @@ export class Path extends Shape<PathConfig> {
         return Path.getPointOnLine(length, cp.start.x, cp.start.y, p[0], p[1]);
       case 'C':
         return Path.getPointOnCubicBezier(
-          length / cp.pathLength,
+          t2length(length, Path.getPathLength(dataArray), (i) => {
+            return getCubicArcLength(
+              [cp.start.x, p[0], p[2], p[4]],
+              [cp.start.y, p[1], p[3], p[5]],
+              i
+            );
+          }),
           cp.start.x,
           cp.start.y,
           p[0],
@@ -279,7 +290,13 @@ export class Path extends Shape<PathConfig> {
         );
       case 'Q':
         return Path.getPointOnQuadraticBezier(
-          length / cp.pathLength,
+          t2length(length, Path.getPathLength(dataArray), (i) => {
+            return getQuadraticArcLength(
+              [cp.start.x, p[0], p[2]],
+              [cp.start.y, p[1], p[3]],
+              i
+            );
+          }),
           cp.start.x,
           cp.start.y,
           p[0],
@@ -759,61 +776,17 @@ export class Path extends Shape<PathConfig> {
       case 'L':
         return path.getLineLength(x, y, points[0], points[1]);
       case 'C':
-        // Approximates by breaking curve into 100 line segments
-        len = 0.0;
-        p1 = path.getPointOnCubicBezier(
-          0,
-          x,
-          y,
-          points[0],
-          points[1],
-          points[2],
-          points[3],
-          points[4],
-          points[5]
+        return getCubicArcLength(
+          [x, points[0], points[2], points[4]],
+          [y, points[1], points[3], points[5]],
+          1
         );
-        for (t = 0.01; t <= 1; t += 0.01) {
-          p2 = path.getPointOnCubicBezier(
-            t,
-            x,
-            y,
-            points[0],
-            points[1],
-            points[2],
-            points[3],
-            points[4],
-            points[5]
-          );
-          len += path.getLineLength(p1.x, p1.y, p2.x, p2.y);
-          p1 = p2;
-        }
-        return len;
       case 'Q':
-        // Approximates by breaking curve into 100 line segments
-        len = 0.0;
-        p1 = path.getPointOnQuadraticBezier(
-          0,
-          x,
-          y,
-          points[0],
-          points[1],
-          points[2],
-          points[3]
+        return getQuadraticArcLength(
+          [x, points[0], points[2]],
+          [y, points[1], points[3]],
+          1
         );
-        for (t = 0.01; t <= 1; t += 0.01) {
-          p2 = path.getPointOnQuadraticBezier(
-            t,
-            x,
-            y,
-            points[0],
-            points[1],
-            points[2],
-            points[3]
-          );
-          len += path.getLineLength(p1.x, p1.y, p2.x, p2.y);
-          p1 = p2;
-        }
-        return len;
       case 'A':
         // Approximates by breaking curve into line segments
         len = 0.0;
