@@ -761,6 +761,47 @@ describe('TextPath', function () {
     assert.equal(rect.height, 0, 'check height');
   });
 
+  it.only('dashes on line', function () {
+    var stage = addStage();
+    stage.draggable(true);
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var textpath = new Konva.TextPath({
+      fill: '#333',
+      fontSize: 16,
+      scaleX: 0.8,
+      scaleY: 0.8,
+      text: '----------------',
+      data: 'M 0,10 L 300 10',
+      textDecoration: 'underline',
+      y: 5,
+    });
+    layer.add(textpath);
+    var path = new Konva.Path({
+      stroke: 'red',
+      scaleX: 0.8,
+      scaleY: 0.8,
+      data: 'M 0,10 L 300 10',
+    });
+    layer.add(path);
+    layer.draw();
+
+    var rect = textpath.getClientRect();
+
+    // just different results in different envs
+    if (isBrowser) {
+      assert.equal(Math.round(rect.height), 331, 'check height');
+    } else {
+      assert.equal(Math.round(rect.height), 333, 'check height');
+    }
+
+    textpath.text('');
+    rect = textpath.getClientRect();
+    assert.equal(rect.height, 0, 'check height');
+  });
+
   it.only('check bad calculations', function () {
     var stage = addStage();
     stage.draggable(true);
@@ -773,6 +814,7 @@ describe('TextPath', function () {
       fontSize: 16,
       scaleX: 0.8,
       scaleY: 0.8,
+      textDecoration: 'underline',
       text: '__________________________________________________________________________________________________________________________________________________________________________________________________________________',
       data: 'M 109.98618090452261 138.6656132223618 C 135.94577638190955 48.80547503140701 149.91187876884422 79.79800957914573 151.40954773869348 117.23973382537689 S 123.00811620603017 419.616741991206 122.84170854271358 460.0538041771357 S 134.33883542713568 469.8304329459799 149.98115577889448 464.33898005653265 S 245.4620163316583 411.5856081972362 257.1105527638191 412.91686950376885 S 239.31850251256282 474.434854428392 249.96859296482413 475.76611573492465 S 338.21036306532665 425.67526648869347 348.5276381909548 424.3440051821608 S 337.3640408291457 461.1772344535176 338.5288944723618 464.33898005653265 S 346.8778454773869 466.79295744346734 358.52638190954775 451.4834524183417',
     });
