@@ -368,6 +368,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         pixelRatio: pixelRatio,
         width: 0,
         height: 0,
+        willReadFrequently: true,
       }),
       cachedHitCanvas = new HitCanvas({
         pixelRatio: hitCanvasPixelRatio,

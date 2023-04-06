@@ -766,9 +766,11 @@ CONTEXT_PROPERTIES.forEach(function (prop) {
 });
 
 export class SceneContext extends Context {
-  constructor(canvas: Canvas) {
+  constructor(canvas: Canvas, { willReadFrequently = false } = {}) {
     super(canvas);
-    this._context = canvas._canvas.getContext('2d') as CanvasRenderingContext2D;
+    this._context = canvas._canvas.getContext('2d', {
+      willReadFrequently,
+    }) as CanvasRenderingContext2D;
   }
   _fillColor(shape: Shape) {
     var fill = shape.fill();
