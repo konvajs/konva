@@ -117,6 +117,12 @@ export class TextPath extends Shape<TextPathConfig> {
       return null;
     }
 
+    const totalLength = this.pathLength;
+    // -1px for rounding of the last symbol
+    if (length - 1 > totalLength) {
+      return null;
+    }
+
     return Path.getPointAtLengthOfDataArray(length, this.dataArray);
   }
 

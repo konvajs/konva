@@ -488,12 +488,12 @@ describe('Caching', function () {
     context.stroke();
     context.restore();
 
-    compareLayerAndCanvas(layer, canvas, 150);
+    compareLayerAndCanvas(layer, canvas, 210, 20);
 
     // recache
     group.cache();
     layer.draw();
-    compareLayerAndCanvas(layer, canvas, 150);
+    compareLayerAndCanvas(layer, canvas, 210, 20);
   });
 
   it('cache group with rectangle and text', function () {

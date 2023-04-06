@@ -138,8 +138,9 @@ describe('Star', function () {
     });
 
     layer.add(star);
-    star.cache();
+
     stage.add(layer);
+    star.cache();
 
     assert.deepEqual(star.getSelfRect(), {
       x: -50,

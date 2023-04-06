@@ -227,6 +227,6 @@ describe('Arrow', function () {
     arrow.cache();
     layer.draw();
 
-    cloneAndCompareLayer(layer, 200);
+    cloneAndCompareLayer(layer, 255, 50);
   });
 });

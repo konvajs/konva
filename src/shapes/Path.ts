@@ -7,7 +7,7 @@ import {
   getCubicArcLength,
   getQuadraticArcLength,
   t2length,
-} from './bezier/functions';
+} from '../BezierFunctions';
 
 export interface PathConfig extends ShapeConfig {
   data?: string;
