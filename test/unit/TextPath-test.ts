@@ -830,11 +830,7 @@ describe('TextPath', function () {
     var rect = textpath.getClientRect();
 
     // just different results in different envs
-    if (isBrowser) {
-      assert.equal(Math.round(rect.height), 330, 'check height');
-    } else {
-      assert.equal(Math.round(rect.height), 332, 'check height');
-    }
+    assert.equal(Math.round(rect.height), 330, 'check height');
 
     textpath.text('');
     rect = textpath.getClientRect();
@@ -880,13 +876,8 @@ describe('TextPath', function () {
     layer.draw();
 
     var rect = textpath.getClientRect();
-    if (isBrowser) {
-      assert.equal(Math.round(rect.width), 299);
-      assert.equal(Math.round(rect.height), 171);
-    } else {
-      assert.equal(Math.round(rect.width), 298);
-      assert.equal(Math.round(rect.height), 170);
-    }
+    assert.equal(Math.round(rect.width), 299);
+    assert.equal(Math.round(rect.height), 171);
   });
 
   it.skip('check vertical text path', function () {

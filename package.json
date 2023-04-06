@@ -91,7 +91,7 @@
     "@parcel/transformer-image": "2.8.2",
     "@size-limit/preset-big-lib": "^8.1.0",
     "@types/mocha": "^10.0.1",
-    "canvas": "^2.10.2",
+    "canvas": "^2.11.2",
     "chai": "4.3.7",
     "filehound": "^1.17.6",
     "gulp": "^4.0.2",
