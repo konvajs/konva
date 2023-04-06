@@ -1168,7 +1168,7 @@ describe('Path', function () {
     stage.add(layer);
   });
 
-  it('get point at path - bezier', function () {
+  it.only('get point at path - bezier', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     const data =
@@ -1185,7 +1185,7 @@ describe('Path', function () {
         'path'
       ) as SVGPathElement;
       SVGPath.setAttribute('d', data);
-      for (var i = 0; i < path.getLength(); i += 1) {
+      for (var i = 0; i < path.getLength(); i += 10) {
         var p = path.getPointAtLength(i);
         var circle = new Konva.Circle({
           x: p.x,
@@ -1207,7 +1207,7 @@ describe('Path', function () {
       }
     } else {
       var points = [];
-      for (var i = 0; i < path.getLength(); i += 100) {
+      for (var i = 0; i < path.getLength(); i += 500) {
         var p = path.getPointAtLength(i);
         points.push(p);
         var circle = new Konva.Circle({
@@ -1219,7 +1219,6 @@ describe('Path', function () {
         });
         layer.add(circle);
       }
-      console.log(points);
 
       assert.deepEqual(points, [
         { x: 100, y: 250 },

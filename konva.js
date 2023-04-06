@@ -2060,9 +2060,11 @@
       });
   });
   class SceneContext extends Context {
-      constructor(canvas) {
+      constructor(canvas, { willReadFrequently = false } = {}) {
           super(canvas);
-          this._context = canvas._canvas.getContext('2d');
+          this._context = canvas._canvas.getContext('2d', {
+              willReadFrequently,
+          });
       }
       _fillColor(shape) {
           var fill = shape.fill();
@@ -2357,9 +2359,11 @@
    */
   Factory.addGetterSetter(Canvas, 'pixelRatio', undefined, getNumberValidator());
   class SceneCanvas extends Canvas {
-      constructor(config = { width: 0, height: 0 }) {
+      constructor(config = { width: 0, height: 0, willReadFrequently: false }) {
           super(config);
-          this.context = new SceneContext(this);
+          this.context = new SceneContext(this, {
+              willReadFrequently: config.willReadFrequently,
+          });
           this.setSize(config.width, config.height);
       }
   }
@@ -2722,6 +2726,7 @@
               pixelRatio: pixelRatio,
               width: 0,
               height: 0,
+              willReadFrequently: true,
           }), cachedHitCanvas = new HitCanvas({
               pixelRatio: hitCanvasPixelRatio,
               width: width,
