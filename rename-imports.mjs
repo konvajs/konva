@@ -33,3 +33,15 @@ files.then((filePaths) => {
     });
   });
 });
+
+const indexFiles = ['lib/index.js', 'lib/index-node.js', 'lib/Core.js'];
+indexFiles.forEach((filepath) => {
+  fs.readFile(filepath, 'utf8', (err, text) => {
+    text = text.replace('exports.default =', 'module.exports =');
+    fs.writeFile(filepath, text, function (err) {
+      if (err) {
+        throw err;
+      }
+    });
+  });
+});

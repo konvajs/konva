@@ -5,23 +5,14 @@ function equal(val1, val2, message) {
 }
 
 // try to import only core
-// import Konva from '../';
+import Konva from '../lib/Core.js';
+import { Rect } from '../lib/shapes/Rect.js';
+import '../lib/index-node.js';
 
-// // no external shapes
-// // equal(Konva.Rect, undefined, 'no external shapes');
+equal(Rect !== undefined, true, 'Rect is defined');
 
-// import { Rect } from '../lib/shapes/Rect';
-
-// equal(Rect !== undefined, true, 'Rect is defined');
-
-// equal(Konva.Rect, Rect, 'Rect is injected');
-
-// import Konva2 from '../';
-
-// equal(Konva2.Rect, Rect, 'Rect is injected');
-
-// equal(Konva2, Konva, 'Same Konva');
+equal(Konva.Rect, Rect, 'Rect is injected');
 
 // // just do a simple action
-// const stage = new Konva.Stage();
-// stage.toDataURL();
+const stage = new Konva.Stage();
+stage.toDataURL();

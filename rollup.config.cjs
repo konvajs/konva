@@ -1,5 +1,5 @@
 // import resolve from 'rollup-plugin-node-resolve';
-// import commonjs from 'rollup-plugin-commonjs';
+import commonjs from 'rollup-plugin-commonjs';
 import typescript from 'rollup-plugin-typescript2';
 
 const pkg = require('./package.json');
@@ -29,6 +29,11 @@ export default {
       useTsconfigDeclarationDir: true,
       abortOnError: false,
       removeComments: false,
+      tsconfigOverride: {
+        compilerOptions: {
+          module: 'ES2020',
+        },
+      },
     }),
     // // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
     // commonjs(),

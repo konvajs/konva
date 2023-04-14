@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "lib",
-    "module": "ES2015",
+    "module": "CommonJS",
     "target": "ES2015",
     // "sourceMap": true,
     "noEmitOnError": true,
@@ -9,8 +9,6 @@
     "moduleResolution": "node",
     "declaration": true,
     "removeComments": false
-    // "noImplicitAny": true,
-    // "strict": true
   },
   "include": ["./src/**/*.ts"]
 }

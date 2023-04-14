@@ -84,7 +84,7 @@ gulp.task(
   'build',
   gulp.parallel([
     'update-version-lib',
-    'update-version-cmj',
+    // 'update-version-cmj',
     // 'update-version-es-to-cmj-index',
     // 'update-version-es-to-cmj-node',
     'pre-build',
