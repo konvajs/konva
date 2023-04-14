@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### 9.0.0 (2023-04-13)
+
+- Migrate the npm package from ES back to CommonJS
+
 ### 8.4.4 (2023-04-05)
 
 - Some fixes for `Konva.TextPath` calculations and rendering.

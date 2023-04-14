@@ -140,14 +140,6 @@ const stage = new Konva.Stage({
 // then all regular Konva code will work
 ```
 
-### CommonJS modules
-
-By default `Konva` is delivered as ES modules. Some environments may automatically take CommonJS version of `Konva`. If it doesn't work for you, try to use `cmj` version explicitly:
-
-```js
-const Konva = require('konva/cmj').default;
-```
-
 # Backers
 
 ![https://simpleshow.com](https://avatars.githubusercontent.com/u/99720652?s=200&v=4 'https://simpleshow.com')
