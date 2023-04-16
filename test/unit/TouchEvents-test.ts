@@ -8,7 +8,7 @@ import {
   simulateTouchMove,
 } from './test-utils';
 
-describe('TouchEvents', function () {
+describe.only('TouchEvents', function () {
   // ======================================================
   it('touchstart touchend touchmove tap dbltap', function (done) {
     var stage = addStage();
@@ -343,14 +343,22 @@ describe('TouchEvents', function () {
     var stageTouchStart = 0;
     var stageTouchMove = 0;
     var stageTouchEnd = 0;
+    var stageTap = 0;
+    var stageEventStack: string[] = [];
     stage.on('touchstart', function () {
       stageTouchStart++;
+      stageEventStack.push('touchstart');
     });
     stage.on('touchmove', function () {
       stageTouchMove++;
     });
     stage.on('touchend', function () {
       stageTouchEnd++;
+      stageEventStack.push('touchend');
+    });
+    stage.on('tap', function () {
+      stageTap++;
+      stageEventStack.push('tap');
     });
 
     // start with one touch
@@ -452,6 +460,13 @@ describe('TouchEvents', function () {
     );
     assert.equal(touchEnd, 1);
     assert.equal(stageTouchEnd, 1);
+    assert.equal(stageTap, 2, 'one tap should be fired');
+
+    assert.equal(
+      stageEventStack.join(' '),
+      'touchstart touchstart touchstart touchend tap tap',
+      'should fire tap after touchend'
+    );
 
     // try two touch ends on both shapes
     simulateTouchEnd(
@@ -465,8 +480,9 @@ describe('TouchEvents', function () {
 
     assert.equal(touchEnd, 2);
     assert.equal(touchEnd2, 1);
-    // TODO: it should be 2, not 3
     assert.equal(stageTouchEnd, 3);
+    assert.equal(stageTap, 2, 'still one tap should be fired');
+    // Don't need to check event stack here, the pointers moved so no tap is fired
   });
 
   it.skip('letting go of two fingers quickly should not fire dbltap', function () {
