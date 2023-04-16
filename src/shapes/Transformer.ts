@@ -6,7 +6,7 @@ import { Rect } from './Rect';
 import { Group } from '../Group';
 import { ContainerConfig } from '../Container';
 import { Konva } from '../Global';
-import { getBooleanValidator, getNumberValidator } from '../Validators';
+import { getBooleanValidator, getNumberValidator, getNumberOrArrayOfNumbersValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
 import { GetSet, IRect, Vector2d } from '../types';
@@ -28,7 +28,7 @@ export interface TransformerConfig extends ContainerConfig {
   anchorFill?: string;
   anchorStroke?: string;
   anchorStrokeWidth?: number;
-  anchorSize?: number;
+  anchorSize?: number | Array<number>;
   anchorCornerRadius?: number;
   keepRatio?: boolean;
   centeredScaling?: boolean;
@@ -214,7 +214,7 @@ function getSnap(snaps: Array<number>, newRotationRad: number, tol: number) {
  * @param {String} [config.anchorStroke] Anchor stroke color
  * @param {String} [config.anchorCornerRadius] Anchor corner radius
  * @param {Number} [config.anchorStrokeWidth] Anchor stroke size
- * @param {Number} [config.anchorSize] Default is 10
+ * @param {Number} [config.anchorSize] Default is 10, can be an array specifying width, height
  * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
  * @param {Boolean} [config.centeredScaling] Should we resize relative to node's center? Default is false
  * @param {Array} [config.enabledAnchors] Array of names of enabled handles
@@ -1058,7 +1058,7 @@ export class Transformer extends Group {
     newTr.rotate(newAttrs.rotation);
     newTr.scale(newAttrs.width / baseSize, newAttrs.height / baseSize);
 
-    // now lets think we had [old transform] and n ow we have [new transform]
+    // now lets think we had [old transform] and now we have [new transform]
     // Now, the questions is: how can we transform "parent" to go from [old transform] into [new transform]
     // in equation it will be:
     // [delta transform] * [old transform] = [new transform]
@@ -1122,12 +1122,14 @@ export class Transformer extends Group {
     var padding = this.padding();
 
     var anchorSize = this.anchorSize();
+    var anchorHeight = (anchorSize instanceof Array) ? anchorSize[1] : anchorSize;
+    var anchorWidth = (anchorSize instanceof Array) ? anchorSize[0] : anchorSize;
     this.find('._anchor').forEach((node) => {
       node.setAttrs({
-        width: anchorSize,
-        height: anchorSize,
-        offsetX: anchorSize / 2,
-        offsetY: anchorSize / 2,
+        width: anchorWidth,
+        height: anchorHeight,
+        offsetX: anchorWidth / 2,
+        offsetY: anchorHeight / 2,
         stroke: this.anchorStroke(),
         strokeWidth: this.anchorStrokeWidth(),
         fill: this.anchorFill(),
@@ -1138,53 +1140,53 @@ export class Transformer extends Group {
     this._batchChangeChild('.top-left', {
       x: 0,
       y: 0,
-      offsetX: anchorSize / 2 + padding,
-      offsetY: anchorSize / 2 + padding,
+      offsetX: anchorWidth / 2 + padding,
+      offsetY: anchorHeight / 2 + padding,
       visible: resizeEnabled && enabledAnchors.indexOf('top-left') >= 0,
     });
     this._batchChangeChild('.top-center', {
       x: width / 2,
       y: 0,
-      offsetY: anchorSize / 2 + padding,
+      offsetY: anchorHeight / 2 + padding,
       visible: resizeEnabled && enabledAnchors.indexOf('top-center') >= 0,
     });
     this._batchChangeChild('.top-right', {
       x: width,
       y: 0,
-      offsetX: anchorSize / 2 - padding,
-      offsetY: anchorSize / 2 + padding,
+      offsetX: anchorWidth / 2 - padding,
+      offsetY: anchorHeight / 2 + padding,
       visible: resizeEnabled && enabledAnchors.indexOf('top-right') >= 0,
     });
     this._batchChangeChild('.middle-left', {
       x: 0,
       y: height / 2,
-      offsetX: anchorSize / 2 + padding,
+      offsetX: anchorWidth / 2 + padding,
       visible: resizeEnabled && enabledAnchors.indexOf('middle-left') >= 0,
     });
     this._batchChangeChild('.middle-right', {
       x: width,
       y: height / 2,
-      offsetX: anchorSize / 2 - padding,
+      offsetX: anchorWidth / 2 - padding,
       visible: resizeEnabled && enabledAnchors.indexOf('middle-right') >= 0,
     });
     this._batchChangeChild('.bottom-left', {
       x: 0,
       y: height,
-      offsetX: anchorSize / 2 + padding,
-      offsetY: anchorSize / 2 - padding,
+      offsetX: anchorWidth / 2 + padding,
+      offsetY: anchorHeight / 2 - padding,
       visible: resizeEnabled && enabledAnchors.indexOf('bottom-left') >= 0,
     });
     this._batchChangeChild('.bottom-center', {
       x: width / 2,
       y: height,
-      offsetY: anchorSize / 2 - padding,
+      offsetY: anchorHeight / 2 - padding,
       visible: resizeEnabled && enabledAnchors.indexOf('bottom-center') >= 0,
     });
     this._batchChangeChild('.bottom-right', {
       x: width,
       y: height,
-      offsetX: anchorSize / 2 - padding,
-      offsetY: anchorSize / 2 - padding,
+      offsetX: anchorWidth / 2 - padding,
+      offsetY: anchorHeight / 2 - padding,
       visible: resizeEnabled && enabledAnchors.indexOf('bottom-right') >= 0,
     });
 
@@ -1263,7 +1265,7 @@ export class Transformer extends Group {
   nodes: GetSet<Node[], this>;
   enabledAnchors: GetSet<string[], this>;
   rotationSnaps: GetSet<number[], this>;
-  anchorSize: GetSet<number, this>;
+  anchorSize: GetSet<number | number[], this>;
   resizeEnabled: GetSet<boolean, this>;
   rotateEnabled: GetSet<boolean, this>;
   rotateAnchorOffset: GetSet<number, this>;
@@ -1366,20 +1368,24 @@ Factory.addGetterSetter(
  * transformer.resizeEnabled(false);
  */
 Factory.addGetterSetter(Transformer, 'resizeEnabled', true);
+
 /**
  * get/set anchor size. Default is 10
  * @name Konva.Transformer#anchorSize
  * @method
- * @param {Number} size
- * @returns {Number}
+ * @param {Number | Array<number>} size
+ * @returns {Number | Arrya<number>}
  * @example
  * // get
  * var anchorSize = transformer.anchorSize();
  *
- * // set
- * transformer.anchorSize(20)
+ * // set height and width equal
+ * transformer.anchorSize(20);
+ *
+ * // set height and width separatley, in order of width then height
+ * transformer.anchorSizr([10, 15])
  */
-Factory.addGetterSetter(Transformer, 'anchorSize', 10, getNumberValidator());
+Factory.addGetterSetter(Transformer, 'anchorSize', 10, getNumberOrArrayOfNumbersValidator(2));
 
 /**
  * get/set ability to rotate.

@@ -4782,4 +4782,33 @@ describe('Transformer', function () {
     tr.nodes([layer]);
     assert.equal(tr.nodes().length, 0);
   });
+
+  it('set anchor width and height to different sizes with constructor using anchorSize', function () {
+    const stage = addStage();
+
+    const layer = new Konva.Layer();
+    stage.add(layer);
+
+    const tr = new Konva.Transformer({
+      anchorSize: [10, 15],
+    });
+    layer.add(tr);
+    console.log(tr.anchorSize())
+
+    assert.deepEqual(tr.anchorSize(), [10, 15]);
+  });
+
+  it('set anchor width and height to different sizes with setter', function () {
+    const stage = addStage();
+
+    const layer = new Konva.Layer();
+    stage.add(layer);
+
+    const tr = new Konva.Transformer();
+    layer.add(tr);
+
+    tr.anchorSize([12, 14]);
+
+    assert.deepEqual(tr.anchorSize(), [12, 14]);
+  });
 });
