@@ -118,6 +118,7 @@ export interface KonvaEventObject<EventType> {
   type: string;
   target: Shape | Stage;
   evt: EventType;
+  pointerId: number;
   currentTarget: Node;
   cancelBubble: boolean;
   child?: Node;
