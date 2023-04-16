@@ -8,7 +8,7 @@ import {
   simulateTouchMove,
 } from './test-utils';
 
-describe.only('TouchEvents', function () {
+describe('TouchEvents', function () {
   // ======================================================
   it('touchstart touchend touchmove tap dbltap', function (done) {
     var stage = addStage();
