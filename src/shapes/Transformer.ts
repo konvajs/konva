@@ -31,6 +31,7 @@ export interface TransformerConfig extends ContainerConfig {
   anchorSize?: number;
   anchorCornerRadius?: number;
   keepRatio?: boolean;
+  shiftBehavior?: string;
   centeredScaling?: boolean;
   enabledAnchors?: Array<string>;
   flipEnabled?: boolean;
@@ -216,6 +217,7 @@ function getSnap(snaps: Array<number>, newRotationRad: number, tol: number) {
  * @param {Number} [config.anchorStrokeWidth] Anchor stroke size
  * @param {Number} [config.anchorSize] Default is 10
  * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
+ * @param {String} [config.shiftBehavior] How does transformer react on shift key press when we are moving edges? Default is 'default'
  * @param {Boolean} [config.centeredScaling] Should we resize relative to node's center? Default is false
  * @param {Array} [config.enabledAnchors] Array of names of enabled handles
  * @param {Boolean} [config.flipEnabled] Can we flip/mirror shape on transform?. True by default
@@ -732,7 +734,17 @@ export class Transformer extends Group {
       return;
     }
 
-    var keepProportion = this.keepRatio() || e.shiftKey;
+    var shiftBehavior = this.shiftBehavior();
+
+    var keepProportion: boolean;
+    if (shiftBehavior === 'inverted') {
+      keepProportion = this.keepRatio() && !e.shiftKey;
+    } else if (shiftBehavior === 'none') {
+      keepProportion = this.keepRatio();
+    } else {
+      keepProportion = this.keepRatio() || e.shiftKey;
+    }
+
     var centeredScaling = this.centeredScaling() || e.altKey;
 
     if (this._movingAnchorName === 'top-left') {
@@ -1278,6 +1290,7 @@ export class Transformer extends Group {
   anchorCornerRadius: GetSet<number, this>;
   anchorStrokeWidth: GetSet<number, this>;
   keepRatio: GetSet<boolean, this>;
+  shiftBehavior: GetSet<string, this>;
   centeredScaling: GetSet<boolean, this>;
   flipEnabled: GetSet<boolean, this>;
   ignoreStroke: GetSet<boolean, this>;
@@ -1600,6 +1613,21 @@ Factory.addGetterSetter(Transformer, 'borderDash');
  * transformer.keepRatio(false);
  */
 Factory.addGetterSetter(Transformer, 'keepRatio', true);
+
+/**
+ * get/set how to react on skift key while resizing anchors at corners
+ * @name Konva.Transformer#shiftBehavior
+ * @method
+ * @param {String} shiftBehavior
+ * @returns {String}
+ * @example
+ * // get
+ * var shiftBehavior = transformer.shiftBehavior();
+ *
+ * // set
+ * transformer.shiftBehavior('none');
+ */
+Factory.addGetterSetter(Transformer, 'shiftBehavior', 'default');
 
 /**
  * get/set should we resize relative to node's center?
