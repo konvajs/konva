@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### 9.0.1 (2023-04-17)
+
+- Better performance for any instance creation
+- Little typescript fixes
+
 ### 9.0.0 (2023-04-13)
 
 - Migrate the npm package from ES back to CommonJS
