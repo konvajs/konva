@@ -110,6 +110,8 @@ declare namespace Konva {
   export const Ellipse: typeof import('./shapes/Ellipse').Ellipse;
   export type Ellipse = import('./shapes/Ellipse').Ellipse;
   export type EllipseConfig = import('./shapes/Ellipse').EllipseConfig;
+  export type EllipseRing = import('./shapes/EllipseRing').EllipseRing;
+  export type EllipseRingConfig = import('./shapes/EllipseRing').EllipseRingConfig;
   export const Image: typeof import('./shapes/Image').Image;
   export type Image = import('./shapes/Image').Image;
   export type ImageConfig = import('./shapes/Image').ImageConfig;
