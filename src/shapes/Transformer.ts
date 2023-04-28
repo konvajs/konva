@@ -1120,7 +1120,7 @@ export class Transformer extends Group {
 
   _batchChangeChild(selector: string, attrs: any) {
     const anchor = this.findOne(selector);
-    anchor.setAttrs(attrs);
+    if (anchor) anchor.setAttrs(attrs);
   }
 
   update() {
