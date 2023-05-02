@@ -56,6 +56,7 @@ export interface ShapeConfig extends NodeConfig {
   fillRadialGradientColorStops?: Array<number | string>;
   fillEnabled?: boolean;
   fillPriority?: string;
+  fillRule?: CanvasFillRule
   stroke?: string | CanvasGradient;
   strokeWidth?: number;
   fillAfterStrokeEnabled?: boolean;
@@ -88,6 +89,8 @@ export interface ShapeGetClientRectConfig {
   relativeTo?: Node;
 }
 
+export type FillFuncOutput = void | [Path2D | CanvasFillRule] | [Path2D, CanvasFillRule]
+
 var HAS_SHADOW = 'hasShadow';
 var SHADOW_RGBA = 'shadowRGBA';
 var patternImage = 'patternImage';
@@ -112,7 +115,12 @@ export const shapes: { [key: string]: Shape } = {};
 // what color to use for hit test?
 
 function _fillFunc(context) {
-  context.fill();
+  const fillRule = this.fillRule()
+  if (fillRule) {
+    context.fill(fillRule);
+  } else {
+    context.fill();
+  }
 }
 function _strokeFunc(context) {
   context.stroke();
@@ -176,7 +184,7 @@ export class Shape<
   _centroid: boolean;
   colorKey: string;
 
-  _fillFunc: (ctx: Context) => void;
+  _fillFunc: (ctx: Context) => FillFuncOutput;
   _strokeFunc: (ctx: Context) => void;
   _fillFuncHit: (ctx: Context) => void;
   _strokeFuncHit: (ctx: Context) => void;
@@ -1985,6 +1993,22 @@ Factory.addGetterSetter(Shape, 'fillPatternRotation', 0);
  *
  * // set fill pattern rotation
  * shape.fillPatternRotation(20);
+ */
+
+Factory.addGetterSetter(Shape, 'fillRule', undefined, getStringValidator());
+
+/**
+ * get/set fill rule
+ * @name Konva.Shape#fillRule
+ * @method
+ * @param {CanvasFillRule} rotation
+ * @returns {Konva.Shape}
+ * @example
+ * // get fill rule
+ * var fillRule = shape.fillRule();
+ *
+ * // set fill rule
+ * shape.fillRule('evenodd);
  */
 
 Factory.backCompat(Shape, {
