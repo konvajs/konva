@@ -1958,7 +1958,7 @@ describe('MouseEvents', function () {
     // skip this test for NodeJS because it fails sometimes
     // TODO: WHY?!?!?!
     if (!Konva.isBrowser) {
-      return;
+      return done();
     }
 
     var stage = addStage();
