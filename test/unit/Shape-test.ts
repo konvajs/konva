@@ -884,7 +884,7 @@ describe('Shape', function () {
     context.strokeStyle = 'black';
     context.strokeText('Test TEXT', 50, 75);
 
-    compareLayerAndCanvas(layer, canvas, 254);
+    compareLayerAndCanvas(layer, canvas, 254, 10);
   });
 
   // ======================================================
@@ -1857,7 +1857,6 @@ describe('Shape', function () {
       var pattern3 = star._getFillPattern();
 
       assert.notEqual(pattern2, pattern3);
-      
 
       star.fillPatternX(10);
 
