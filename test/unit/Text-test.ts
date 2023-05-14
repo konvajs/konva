@@ -9,7 +9,6 @@ import {
   loadImage,
   isBrowser,
   isNode,
-  assertAlmostEqual,
 } from './test-utils';
 
 describe('Text', function () {
@@ -102,7 +101,7 @@ describe('Text', function () {
 
     assert.equal(
       layer.getContext().getTrace(false, true),
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,40,40);shadowColor=rgba(255,0,0,0.2);shadowBlur=1;shadowOffsetX=10;shadowOffsetY=10;font=normal normal 50px Arial;textBaseline=middle;textAlign=left;translate(10,10);save();fillStyle=#888;fillText(Hello World!,108,30);lineWidth=2;shadowColor=rgba(0,0,0,0);strokeStyle=#333;strokeText(Hello World!,108,30);restore();restore();'
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,40,40);shadowColor=rgba(255,0,0,0.2);shadowBlur=1;shadowOffsetX=10;shadowOffsetY=10;font=normal normal 50px Arial;textBaseline=middle;textAlign=left;translate(10,10);save();fillStyle=#888;fillText(Hello World!,108,30);lineWidth=2;shadowColor=rgba(0,0,0,0);strokeStyle=#333;miterLimit=2;strokeText(Hello World!,108,30);restore();restore();'
     );
 
     assert.equal(text.getClassName(), 'Text', 'getClassName should be Text');
@@ -1185,6 +1184,7 @@ describe('Text', function () {
     context.scale(2, 1);
     context.textBaseline = 'middle';
     context.fillText('text', 0, 25);
+    context.miterLimit = 2;
     context.strokeText('text', 0, 25);
     compareLayerAndCanvas(layer, canvas);
   });
@@ -1560,5 +1560,29 @@ describe('Text', function () {
       Konva.pixelRatio = oldRatio;
       done();
     });
+  });
+
+  it('stripe bad stroke', () => {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    stage.add(layer);
+    var text = new Konva.Text({
+      text: 'HELLO WORLD',
+      fontFamily: 'Arial',
+      fontSize: 80,
+      stroke: 'red',
+      strokeWidth: 20,
+      fillAfterStrokeEnabled: true,
+      draggable: true,
+    });
+
+    layer.add(text);
+    layer.draw();
+
+    var trace =
+      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);font=normal normal 80px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();lineWidth=20;strokeStyle=red;miterLimit=2;strokeText(HELLO WORLD,0,40);fillStyle=black;fillText(HELLO WORLD,0,40);restore();restore();';
+
+    assert.equal(layer.getContext().getTrace(), trace);
   });
 });

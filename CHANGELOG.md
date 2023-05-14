@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### 9.0.2 (2023-05-14)
+
+- Better text rendering when it has stroke
+
 ### 9.0.1 (2023-04-17)
 
 - Better performance for any instance creation

@@ -98,7 +98,9 @@ function getDummyContext() {
   if (dummyContext) {
     return dummyContext;
   }
-  dummyContext = Util.createCanvasElement().getContext(CONTEXT_2D) as CanvasRenderingContext2D;
+  dummyContext = Util.createCanvasElement().getContext(
+    CONTEXT_2D
+  ) as CanvasRenderingContext2D;
   return dummyContext;
 }
 
@@ -106,6 +108,7 @@ function _fillFunc(context: Context) {
   context.fillText(this._partialText, this._partialTextX, this._partialTextY);
 }
 function _strokeFunc(context: Context) {
+  context.setAttr('miterLimit', 2);
   context.strokeText(this._partialText, this._partialTextX, this._partialTextY);
 }
 
