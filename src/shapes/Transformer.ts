@@ -59,6 +59,7 @@ var ATTR_CHANGE_LIST = [
   'anchorFillChange',
   'anchorCornerRadiusChange',
   'ignoreStrokeChange',
+  'anchorStyleFuncChange',
 ]
   .map((e) => e + `.${EVENTS_NAME}`)
   .join(' ');
@@ -1134,7 +1135,8 @@ export class Transformer extends Group {
     var padding = this.padding();
 
     var anchorSize = this.anchorSize();
-    this.find('._anchor').forEach((node) => {
+    const anchors = this.find<Rect>('._anchor');
+    anchors.forEach((node) => {
       node.setAttrs({
         width: anchorSize,
         height: anchorSize,
@@ -1216,6 +1218,13 @@ export class Transformer extends Group {
       x: 0,
       y: 0,
     });
+
+    const styleFunc = this.anchorStyleFunc();
+    if (styleFunc) {
+      anchors.forEach((node) => {
+        styleFunc(node);
+      });
+    }
     this.getLayer()?.batchDraw();
   }
   /**
@@ -1299,6 +1308,7 @@ export class Transformer extends Group {
     (oldPos: Vector2d, newPos: Vector2d, e: MouseEvent) => Vector2d,
     this
   >;
+  anchorStyleFunc: GetSet<null | ((Node: Rect) => void), this>;
   shouldOverdrawWholeArea: GetSet<boolean, this>;
   useSingleNodeRotation: GetSet<boolean, this>;
 }
@@ -1739,6 +1749,29 @@ Factory.addGetterSetter(Transformer, 'boundBoxFunc');
  * });
  */
 Factory.addGetterSetter(Transformer, 'anchorDragBoundFunc');
+
+/**
+ * get/set styling function for transformer anchors to overwrite default styles
+ * @name Konva.Transformer#anchorStyleFunc
+ * @method
+ * @param {Function} func
+ * @returns {Function}
+ * @example
+ * // get
+ * var anchorStyleFunc = transformer.anchorStyleFunc();
+ *
+ * // set
+ * transformer.anchorStyleFunc(function(anchor) {
+ *  // anchor is a simple Konva.Rect instance
+ *  // it will be executed AFTER all attributes are set, like 'anchorStrokeWidth' or 'anchorFill'
+ *  if (anchor.hasName('.rotater')) {
+ *    // make rotater anchor filled black and looks like a circle
+ *    anchor.fill('black');
+ *    anchor.cornerRadius(anchor.width() / 2);
+ *  }
+ * });
+ */
+Factory.addGetterSetter(Transformer, 'anchorStyleFunc');
 
 /**
  * using this setting you can drag transformer group by dragging empty space between attached nodes

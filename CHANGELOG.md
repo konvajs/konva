@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### 9.1.0 (2023-05-14)
+
+- New `anchorStyleFunc` for `Konva.Transformer` to customize anchor style
+
 ### 9.0.2 (2023-05-14)
 
 - Better text rendering when it has stroke

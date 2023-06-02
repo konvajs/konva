@@ -4782,4 +4782,37 @@ describe('Transformer', function () {
     tr.nodes([layer]);
     assert.equal(tr.nodes().length, 0);
   });
+
+  it('anchorStyleFunc', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 60,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+    });
+    layer.add(tr);
+    // manual check of correct position of node
+    var handler = tr.findOne<Konva.Rect>('.bottom-right');
+    assert.equal(handler.fill(), 'white');
+
+    tr.anchorStyleFunc((anchor) => {
+      if (anchor.hasName('bottom-right')) {
+        anchor.fill('red');
+      }
+    });
+    assert.equal(handler.fill(), 'red');
+    tr.anchorStyleFunc(null);
+    assert.equal(handler.fill(), 'white');
+  });
 });
