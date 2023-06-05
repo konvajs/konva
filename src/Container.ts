@@ -7,9 +7,10 @@ import { Shape } from './Shape';
 import { HitCanvas, SceneCanvas } from './Canvas';
 import { SceneContext } from './Context';
 
+export type ClipFuncOutput = void | [Path2D | CanvasFillRule] | [Path2D, CanvasFillRule]
 export interface ContainerConfig extends NodeConfig {
   clearBeforeDraw?: boolean;
-  clipFunc?: (ctx: SceneContext) => void;
+  clipFunc?: (ctx: SceneContext) => ClipFuncOutput;
   clipX?: number;
   clipY?: number;
   clipWidth?: number;
@@ -396,14 +397,15 @@ export abstract class Container<
       var m = transform.getMatrix();
       context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
       context.beginPath();
+      let clipArgs;
       if (clipFunc) {
-        clipFunc.call(this, context, this);
+        clipArgs = clipFunc.call(this, context, this);
       } else {
         var clipX = this.clipX();
         var clipY = this.clipY();
         context.rect(clipX, clipY, clipWidth, clipHeight);
       }
-      context.clip();
+      context.clip.apply(context, clipArgs);
       m = transform.copy().invert().getMatrix();
       context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
     }
@@ -519,7 +521,7 @@ export abstract class Container<
   // there was "this" instead of "Container<ChildType>",
   // but it breaks react-konva types: https://github.com/konvajs/react-konva/issues/390
   clipFunc: GetSet<
-    (ctx: CanvasRenderingContext2D, shape: Container<ChildType>) => void,
+    (ctx: CanvasRenderingContext2D, shape: Container<ChildType>) => ClipFuncOutput,
     this
   >;
 }
@@ -638,5 +640,8 @@ Factory.addGetterSetter(Container, 'clipFunc');
  * // set clip height
  * container.clipFunc(function(ctx) {
  *   ctx.rect(0, 0, 100, 100);
+ *
+ *   // optionally return a clip Path2D and clip-rule or just the clip-rule
+ *   return [new Path2D('M0 0v50h50Z'), 'evenodd']
  * });
  */
