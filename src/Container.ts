@@ -7,7 +7,10 @@ import { Shape } from './Shape';
 import { HitCanvas, SceneCanvas } from './Canvas';
 import { SceneContext } from './Context';
 
-export type ClipFuncOutput = void | [Path2D | CanvasFillRule] | [Path2D, CanvasFillRule]
+export type ClipFuncOutput =
+  | void
+  | [Path2D | CanvasFillRule]
+  | [Path2D, CanvasFillRule];
 export interface ContainerConfig extends NodeConfig {
   clearBeforeDraw?: boolean;
   clipFunc?: (ctx: SceneContext) => ClipFuncOutput;
@@ -521,7 +524,10 @@ export abstract class Container<
   // there was "this" instead of "Container<ChildType>",
   // but it breaks react-konva types: https://github.com/konvajs/react-konva/issues/390
   clipFunc: GetSet<
-    (ctx: CanvasRenderingContext2D, shape: Container<ChildType>) => ClipFuncOutput,
+    (
+      ctx: CanvasRenderingContext2D,
+      shape: Container<ChildType>
+    ) => ClipFuncOutput,
     this
   >;
 }
@@ -637,10 +643,12 @@ Factory.addGetterSetter(Container, 'clipFunc');
  * // get clip function
  * var clipFunction = container.clipFunc();
  *
- * // set clip height
+ * // set clip function
  * container.clipFunc(function(ctx) {
  *   ctx.rect(0, 0, 100, 100);
+ * });
  *
+ * container.clipFunc(function(ctx) {
  *   // optionally return a clip Path2D and clip-rule or just the clip-rule
  *   return [new Path2D('M0 0v50h50Z'), 'evenodd']
  * });

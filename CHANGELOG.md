@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### 9.2.0 (2023-05-14)
+
+- More controls on clipping
+- `fillRule` for `Konva.Shape`
+
 ### 9.1.0 (2023-05-14)
 
 - New `anchorStyleFunc` for `Konva.Transformer` to customize anchor style
