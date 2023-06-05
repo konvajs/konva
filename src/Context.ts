@@ -362,8 +362,8 @@ export class Context {
    * @method
    * @name Konva.Context#clip
    */
-  clip(fillRule?: CanvasFillRule): void
-  clip(path: Path2D, fillRule?: CanvasFillRule): void
+  clip(fillRule?: CanvasFillRule): void;
+  clip(path: Path2D, fillRule?: CanvasFillRule): void;
   clip(...args: any[]) {
     this._context.clip.apply(this._context, args);
   }
@@ -484,9 +484,10 @@ export class Context {
    * @method
    * @name Konva.Context#fill
    */
-  fill(fillRule?: CanvasFillRule): void
-  fill(path: Path2D, fillRule?: CanvasFillRule): void
+  fill(fillRule?: CanvasFillRule): void;
+  fill(path: Path2D, fillRule?: CanvasFillRule): void;
   fill(...args: any[]) {
+    // this._context.fill();
     this._context.fill.apply(this._context, args);
   }
   /**
@@ -749,7 +750,7 @@ export class Context {
 // supported context properties
 type CanvasContextProps = Pick<
   CanvasRenderingContext2D,
-  typeof CONTEXT_PROPERTIES[number]
+  (typeof CONTEXT_PROPERTIES)[number]
 >;
 
 export interface Context extends CanvasContextProps {}

@@ -56,7 +56,7 @@ export interface ShapeConfig extends NodeConfig {
   fillRadialGradientColorStops?: Array<number | string>;
   fillEnabled?: boolean;
   fillPriority?: string;
-  fillRule?: CanvasFillRule
+  fillRule?: CanvasFillRule;
   stroke?: string | CanvasGradient;
   strokeWidth?: number;
   fillAfterStrokeEnabled?: boolean;
@@ -89,7 +89,10 @@ export interface ShapeGetClientRectConfig {
   relativeTo?: Node;
 }
 
-export type FillFuncOutput = void | [Path2D | CanvasFillRule] | [Path2D, CanvasFillRule]
+export type FillFuncOutput =
+  | void
+  | [Path2D | CanvasFillRule]
+  | [Path2D, CanvasFillRule];
 
 var HAS_SHADOW = 'hasShadow';
 var SHADOW_RGBA = 'shadowRGBA';
@@ -115,7 +118,7 @@ export const shapes: { [key: string]: Shape } = {};
 // what color to use for hit test?
 
 function _fillFunc(context) {
-  const fillRule = this.fillRule()
+  const fillRule = this.attrs.fillRule;
   if (fillRule) {
     context.fill(fillRule);
   } else {
