@@ -25,6 +25,7 @@ import { Wedge } from './shapes/Wedge';
 import { Blur } from './filters/Blur';
 import { Brighten } from './filters/Brighten';
 import { Contrast } from './filters/Contrast';
+import { ColorCurve } from './filters/ColorCurve';
 import { Emboss } from './filters/Emboss';
 import { Enhance } from './filters/Enhance';
 import { Grayscale } from './filters/Grayscale';
@@ -69,6 +70,7 @@ export const Konva = Core.Util._assign(Core, {
     Blur,
     Brighten,
     Contrast,
+    ColorCurve,
     Emboss,
     Enhance,
     Grayscale,
