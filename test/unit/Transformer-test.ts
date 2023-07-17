@@ -2334,6 +2334,69 @@ describe('Transformer', function () {
     assert.equal(stage.content.style.cursor, 'nwse-resize');
   });
 
+  it('check default cursor transformer', function () {
+    if (isNode) {
+      return;
+    }
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect]
+    });
+    layer.add(tr);
+    layer.draw();
+
+    sm(stage, {
+      x: 100,
+      y: 0,
+    });
+    assert.equal(stage.content.style.cursor, 'crosshair');
+  });
+
+  it('using custom cursor on configured transformer should show custom cursor instead of crosshair', function () {
+    if (isNode) {
+      return;
+    }
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+      rotateAnchorCursor: 'grab'
+    });
+    layer.add(tr);
+    layer.draw();
+
+    sm(stage, {
+      x: 100,
+      y: 0,
+    });
+    assert.equal(stage.content.style.cursor, 'grab');
+  });
+
   it('changing parent transform should recalculate transformer attrs', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

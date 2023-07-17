@@ -21,6 +21,7 @@ export interface TransformerConfig extends ContainerConfig {
   rotationSnaps?: Array<number>;
   rotationSnapTolerance?: number;
   rotateAnchorOffset?: number;
+  rotateAnchorCursor?: string,
   borderEnabled?: boolean;
   borderStroke?: string;
   borderStrokeWidth?: number;
@@ -93,9 +94,9 @@ var ANGLES = {
 
 const TOUCH_DEVICE = 'ontouchstart' in Konva._global;
 
-function getCursor(anchorName, rad) {
+function getCursor(anchorName, rad, rotateCursor) {
   if (anchorName === 'rotater') {
-    return 'crosshair';
+    return rotateCursor;
   }
 
   rad += Util.degToRad(ANGLES[anchorName] || 0);
@@ -207,6 +208,7 @@ function getSnap(snaps: Array<number>, newRotationRad: number, tol: number) {
  * @param {Array} [config.rotationSnaps] Array of angles for rotation snaps. Default is []
  * @param {Number} [config.rotationSnapTolerance] Snapping tolerance. If closer than this it will snap. Default is 5
  * @param {Number} [config.rotateAnchorOffset] Default is 50
+ * @param {String} [config.rotateAnchorCursor] Default is crosshair
  * @param {Number} [config.padding] Default is 0
  * @param {Boolean} [config.borderEnabled] Should we draw border? Default is true
  * @param {String} [config.borderStroke] Border stroke color
@@ -581,7 +583,8 @@ export class Transformer extends Group {
     // add hover styling
     anchor.on('mouseenter', () => {
       var rad = Konva.getAngle(this.rotation());
-      var cursor = getCursor(name, rad);
+      var rotateCursor = this.rotateAnchorCursor();
+      var cursor = getCursor(name, rad, rotateCursor);
       anchor.getStage().content &&
         (anchor.getStage().content.style.cursor = cursor);
       this._cursorChange = true;
@@ -1289,6 +1292,7 @@ export class Transformer extends Group {
   rotateEnabled: GetSet<boolean, this>;
   rotateAnchorOffset: GetSet<number, this>;
   rotationSnapTolerance: GetSet<number, this>;
+  rotateAnchorCursor: GetSet<string, this>;
   padding: GetSet<number, this>;
   borderEnabled: GetSet<boolean, this>;
   borderStroke: GetSet<string, this>;
@@ -1453,6 +1457,21 @@ Factory.addGetterSetter(
   50,
   getNumberValidator()
 );
+
+/**
+ * get/set rotation anchor cursor
+ * @name Konva.Transformer#rotateAnchorCursor
+ * @method
+ * @param {String} cursorName
+ * @returns {String}
+ * @example
+ * // get
+ * var currentRotationAnchorCursor = transformer.rotateAnchorCursor();
+ *
+ * // set
+ * transformer.rotateAnchorCursor('grab');
+ */
+Factory.addGetterSetter(Transformer, 'rotateAnchorCursor', 'crosshair');
 
 /**
  * get/set distance for rotation tolerance
