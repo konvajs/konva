@@ -44,7 +44,7 @@ export const DD = {
     DD._dragElements.forEach((elem, key) => {
       const { node } = elem;
       // we need to find pointer relative to that node
-      const stage = node.getStage();
+      const stage = node.getStage()!;
       stage.setPointersPositions(evt);
 
       // it is possible that user call startDrag without any event
@@ -95,11 +95,11 @@ export const DD = {
   // dragBefore and dragAfter allows us to set correct order of events
   // setup all in dragbefore, and stop dragging only after pointerup triggered.
   _endDragBefore(evt?) {
-    const drawNodes = [];
+    const drawNodes: any[] = [];
     DD._dragElements.forEach((elem) => {
       const { node } = elem;
       // we need to find pointer relative to that node
-      const stage = node.getStage();
+      const stage = node.getStage()!;
       if (evt) {
         stage.setPointersPositions(evt);
       }

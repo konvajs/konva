@@ -74,7 +74,7 @@ function _strokeFunc(context) {
  */
 export class TextPath extends Shape<TextPathConfig> {
   dummyCanvas = Util.createCanvasElement();
-  dataArray = [];
+  dataArray: any[] = [];
   glyphInfo: Array<{
     transposeX: number;
     transposeY: number;
@@ -221,7 +221,7 @@ export class TextPath extends Shape<TextPathConfig> {
 
   _getTextSize(text: string) {
     var dummyCanvas = this.dummyCanvas;
-    var _context = dummyCanvas.getContext('2d');
+    var _context = dummyCanvas.getContext('2d')!;
 
     _context.save();
 
@@ -338,7 +338,7 @@ export class TextPath extends Shape<TextPathConfig> {
         height: 0,
       };
     }
-    var points = [];
+    var points: number[] = [];
 
     this.glyphInfo.forEach(function (info) {
       points.push(info.p0.x);

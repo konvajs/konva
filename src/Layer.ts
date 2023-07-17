@@ -120,10 +120,10 @@ export class Layer extends Container<Group | Shape> {
     if (stage && stage.content) {
       stage.content.removeChild(this.getNativeCanvasElement());
 
-      if (index < stage.children.length - 1) {
+      if (index < stage.children!.length - 1) {
         stage.content.insertBefore(
           this.getNativeCanvasElement(),
-          stage.children[index + 1].getCanvas()._canvas
+          stage.children?.[index + 1].getCanvas()._canvas!
         );
       } else {
         stage.content.appendChild(this.getNativeCanvasElement());
@@ -151,10 +151,10 @@ export class Layer extends Container<Group | Shape> {
     }
     stage.content.removeChild(this.getNativeCanvasElement());
 
-    if (this.index < stage.children.length - 1) {
+    if (this.index < stage.children!.length - 1) {
       stage.content.insertBefore(
         this.getNativeCanvasElement(),
-        stage.children[this.index + 1].getCanvas()._canvas
+        stage.children?.[this.index + 1].getCanvas()._canvas!
       );
     } else {
       stage.content.appendChild(this.getNativeCanvasElement());
@@ -171,7 +171,7 @@ export class Layer extends Container<Group | Shape> {
           stage.content.removeChild(this.getNativeCanvasElement());
           stage.content.insertBefore(
             this.getNativeCanvasElement(),
-            children[this.index + 1].getCanvas()._canvas
+            children?.[this.index + 1].getCanvas()._canvas!
           );
         }
       }
@@ -189,7 +189,7 @@ export class Layer extends Container<Group | Shape> {
           stage.content.removeChild(this.getNativeCanvasElement());
           stage.content.insertBefore(
             this.getNativeCanvasElement(),
-            children[1].getCanvas()._canvas
+            children?.[1].getCanvas()._canvas!
           );
         }
       }

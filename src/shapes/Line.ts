@@ -3,10 +3,8 @@ import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { getNumberValidator, getNumberArrayValidator } from '../Validators';
 import { _registerNode } from '../Global';
-
 import { GetSet } from '../types';
 import { Context } from '../Context';
-
 function getControlPoints(x0, y0, x1, y1, x2, y2, t) {
   var d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2)),
     d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)),
@@ -16,16 +14,13 @@ function getControlPoints(x0, y0, x1, y1, x2, y2, t) {
     p1y = y1 - fa * (y2 - y0),
     p2x = x1 + fb * (x2 - x0),
     p2y = y1 + fb * (y2 - y0);
-
   return [p1x, p1y, p2x, p2y];
 }
-
 function expandPoints(p, tension) {
   var len = p.length,
-    allPoints = [],
+    allPoints: any[] = [],
     n,
     cp;
-
   for (n = 2; n < len - 2; n += 2) {
     cp = getControlPoints(
       p[n - 2],
@@ -46,17 +41,14 @@ function expandPoints(p, tension) {
     allPoints.push(cp[2]);
     allPoints.push(cp[3]);
   }
-
   return allPoints;
 }
-
 export interface LineConfig extends ShapeConfig {
   points?: number[] | Int8Array | Uint8Array | Uint8ClampedArray | Int16Array | Uint16Array | Int32Array | Uint32Array | Float32Array | Float64Array;
   tension?: number;
   closed?: boolean;
   bezier?: boolean;
 }
-
 /**
  * Line constructor.&nbsp; Lines are defined by an array of points and
  *  a tension
@@ -80,7 +72,6 @@ export interface LineConfig extends ShapeConfig {
  *   tension: 1
  * });
  */
-
 export class Line<
   Config extends LineConfig = LineConfig
 > extends Shape<Config> {
@@ -93,7 +84,6 @@ export class Line<
       }
     );
   }
-
   _sceneFunc(context: Context) {
     var points = this.points(),
       length = points.length,
@@ -103,24 +93,19 @@ export class Line<
       tp,
       len,
       n;
-
     if (!length) {
       return;
     }
-
     context.beginPath();
     context.moveTo(points[0], points[1]);
-
     // tension
     if (tension !== 0 && length > 4) {
       tp = this.getTensionPoints();
       len = tp.length;
       n = closed ? 0 : 4;
-
       if (!closed) {
         context.quadraticCurveTo(tp[0], tp[1], tp[2], tp[3]);
       }
-
       while (n < len - 2) {
         context.bezierCurveTo(
           tp[n++],
@@ -131,7 +116,6 @@ export class Line<
           tp[n++]
         );
       }
-
       if (!closed) {
         context.quadraticCurveTo(
           tp[len - 2],
@@ -143,7 +127,6 @@ export class Line<
     } else if (bezier) {
       // no tension but bezier
       n = 2;
-
       while (n < length) {
         context.bezierCurveTo(
           points[n++],
@@ -160,7 +143,6 @@ export class Line<
         context.lineTo(points[n], points[n + 1]);
       }
     }
-
     // closed e.g. polygons and blobs
     if (closed) {
       context.closePath();
@@ -217,7 +199,6 @@ export class Line<
           p[0],
           p[1],
         ]);
-
     return tp;
   }
   getWidth() {
@@ -268,20 +249,16 @@ export class Line<
       height: maxY - minY,
     };
   }
-
   closed: GetSet<boolean, this>;
   bezier: GetSet<boolean, this>;
   tension: GetSet<number, this>;
   points: GetSet<number[], this>;
 }
-
 Line.prototype.className = 'Line';
 Line.prototype._attrsAffectingSize = ['points', 'bezier', 'tension'];
 _registerNode(Line);
-
 // add getters setters
 Factory.addGetterSetter(Line, 'closed', false);
-
 /**
  * get/set closed flag.  The default is false
  * @name Konva.Line#closed
@@ -298,9 +275,7 @@ Factory.addGetterSetter(Line, 'closed', false);
  * // open the shape
  * line.closed(false);
  */
-
 Factory.addGetterSetter(Line, 'bezier', false);
-
 /**
  * get/set bezier flag.  The default is false
  * @name Konva.Line#bezier
@@ -314,9 +289,7 @@ Factory.addGetterSetter(Line, 'bezier', false);
  * // set whether the line is a bezier
  * line.bezier(true);
  */
-
 Factory.addGetterSetter(Line, 'tension', 0, getNumberValidator());
-
 /**
  * get/set tension
  * @name Konva.Line#tension
@@ -330,7 +303,6 @@ Factory.addGetterSetter(Line, 'tension', 0, getNumberValidator());
  * // set tension
  * line.tension(3);
  */
-
 Factory.addGetterSetter(Line, 'points', [], getNumberArrayValidator());
 /**
  * get/set points array. Points is a flat array [x1, y1, x2, y2]. It is flat for performance reasons.

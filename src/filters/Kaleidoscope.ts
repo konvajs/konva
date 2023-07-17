@@ -2,7 +2,6 @@ import { Factory } from '../Factory';
 import { Node, Filter } from '../Node';
 import { Util } from '../Util';
 import { getNumberValidator } from '../Validators';
-
 /*
  * ToPolar Filter. Converts image data to polar coordinates. Performs
  *  w*h*4 pixel reads and w*h pixel writes. The r axis is placed along
@@ -18,7 +17,6 @@ import { getNumberValidator } from '../Validators';
  * @param {Number} [opt.polarCenterY] vertical location for the center of the circle,
  *  default is in the middle
  */
-
 var ToPolar = function (src, dst, opt) {
   var srcPixels = src.data,
     dstPixels = dst.data,
@@ -33,7 +31,6 @@ var ToPolar = function (src, dst, opt) {
     g = 0,
     b = 0,
     a = 0;
-
   // Find the largest radius
   var rad,
     rMax = Math.sqrt(xMid * xMid + yMid * yMid);
@@ -41,21 +38,17 @@ var ToPolar = function (src, dst, opt) {
   y = ySize - yMid;
   rad = Math.sqrt(x * x + y * y);
   rMax = rad > rMax ? rad : rMax;
-
   // We'll be uisng y as the radius, and x as the angle (theta=t)
   var rSize = ySize,
     tSize = xSize,
     radius,
     theta;
-
   // We want to cover all angles (0-360) and we need to convert to
   // radians (*PI/180)
   var conversion = ((360 / tSize) * Math.PI) / 180,
     sin,
     cos;
-
   // var x1, x2, x1i, x2i, y1, y2, y1i, y2i, scale;
-
   for (theta = 0; theta < tSize; theta += 1) {
     sin = Math.sin(theta * conversion);
     cos = Math.cos(theta * conversion);
@@ -67,7 +60,6 @@ var ToPolar = function (src, dst, opt) {
       g = srcPixels[i + 1];
       b = srcPixels[i + 2];
       a = srcPixels[i + 3];
-
       // Store it
       //i = (theta * xSize  +  radius) * 4;
       i = (theta + radius * xSize) * 4;
@@ -78,7 +70,6 @@ var ToPolar = function (src, dst, opt) {
     }
   }
 };
-
 /*
  * FromPolar Filter. Converts image data from polar coordinates back to rectangular.
  *  Performs w*h*4 pixel reads and w*h pixel writes.
@@ -95,7 +86,6 @@ var ToPolar = function (src, dst, opt) {
  * @param {Number} [opt.polarRotation] amount to rotate the image counterclockwis,
  *  0 is no rotation, 360 degrees is a full rotation
  */
-
 var FromPolar = function (src, dst, opt) {
   var srcPixels = src.data,
     dstPixels = dst.data,
@@ -112,7 +102,6 @@ var FromPolar = function (src, dst, opt) {
     g = 0,
     b = 0,
     a = 0;
-
   // Find the largest radius
   var rad,
     rMax = Math.sqrt(xMid * xMid + yMid * yMid);
@@ -120,21 +109,17 @@ var FromPolar = function (src, dst, opt) {
   y = ySize - yMid;
   rad = Math.sqrt(x * x + y * y);
   rMax = rad > rMax ? rad : rMax;
-
   // We'll be uisng x as the radius, and y as the angle (theta=t)
   var rSize = ySize,
     tSize = xSize,
     radius,
     theta,
     phaseShift = opt.polarRotation || 0;
-
   // We need to convert to degrees and we need to make sure
   // it's between (0-360)
   // var conversion = tSize/360*180/Math.PI;
   //var conversion = tSize/360*180/Math.PI;
-
   var x1, y1;
-
   for (x = 0; x < xSize; x += 1) {
     for (y = 0; y < ySize; y += 1) {
       dx = x - xMid;
@@ -149,7 +134,6 @@ var FromPolar = function (src, dst, opt) {
       g = srcPixels[i + 1];
       b = srcPixels[i + 2];
       a = srcPixels[i + 3];
-
       // Store it
       i = (y * xSize + x) * 4;
       dstPixels[i + 0] = r;
@@ -159,12 +143,9 @@ var FromPolar = function (src, dst, opt) {
     }
   }
 };
-
 //Konva.Filters.ToPolar = Util._FilterWrapDoubleBuffer(ToPolar);
 //Konva.Filters.FromPolar = Util._FilterWrapDoubleBuffer(FromPolar);
-
 // create a temporary canvas for working - shared between multiple calls
-
 /*
  * Kaleidoscope Filter.
  * @function
@@ -180,22 +161,19 @@ var FromPolar = function (src, dst, opt) {
 export const Kaleidoscope: Filter = function (imageData) {
   var xSize = imageData.width,
     ySize = imageData.height;
-
   var x, y, xoff, i, r, g, b, a, srcPos, dstPos;
   var power = Math.round(this.kaleidoscopePower());
   var angle = Math.round(this.kaleidoscopeAngle());
   var offset = Math.floor((xSize * (angle % 360)) / 360);
-
   if (power < 1) {
     return;
   }
-
   // Work with our shared buffer canvas
   var tempCanvas = Util.createCanvasElement();
   tempCanvas.width = xSize;
   tempCanvas.height = ySize;
   var scratchData = tempCanvas
-    .getContext('2d')
+    .getContext('2d')!
     .getImageData(0, 0, xSize, ySize);
   Util.releaseCanvas(tempCanvas);
   // Convert thhe original to polar coordinates
@@ -203,7 +181,6 @@ export const Kaleidoscope: Filter = function (imageData) {
     polarCenterX: xSize / 2,
     polarCenterY: ySize / 2,
   });
-
   // Determine how big each section will be, if it's too small
   // make it bigger
   var minSectionSize = xSize / Math.pow(2, power);
@@ -213,7 +190,6 @@ export const Kaleidoscope: Filter = function (imageData) {
   }
   minSectionSize = Math.ceil(minSectionSize);
   var sectionSize = minSectionSize;
-
   // Copy the offset region to 0
   // Depending on the size of filter and location of the offset we may need
   // to copy the section backwards to prevent it from rewriting itself
@@ -240,7 +216,6 @@ export const Kaleidoscope: Filter = function (imageData) {
       scratchData.data[dstPos + 3] = a;
     }
   }
-
   // Perform the actual effect
   for (y = 0; y < ySize; y += 1) {
     sectionSize = Math.floor(minSectionSize);
@@ -260,11 +235,9 @@ export const Kaleidoscope: Filter = function (imageData) {
       sectionSize *= 2;
     }
   }
-
   // Convert back from polar coordinates
   FromPolar(scratchData, imageData, { polarRotation: 0 });
 };
-
 /**
  * get/set kaleidoscope power. Use with {@link Konva.Filters.Kaleidoscope} filter.
  * @name Konva.Node#kaleidoscopePower
@@ -279,7 +252,6 @@ Factory.addGetterSetter(
   getNumberValidator(),
   Factory.afterSetFilter
 );
-
 /**
  * get/set kaleidoscope angle. Use with {@link Konva.Filters.Kaleidoscope} filter.
  * @name Konva.Node#kaleidoscopeAngle

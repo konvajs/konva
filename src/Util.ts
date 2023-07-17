@@ -1,7 +1,6 @@
 import { Konva } from './Global';
 import { Context } from './Context';
 import { IRect, RGB, RGBA, Vector2d } from './types';
-
 /*
  * Last updated November 2011
  * By Simon Sarris
@@ -16,7 +15,6 @@ import { IRect, RGB, RGBA, Vector2d } from './types';
  * project, KineticJS-Ext by Wappworks, which is based on Simon's Transform
  * class.  Modified by Eric Rowell
  */
-
 /**
  * Transform constructor.
  * In most of the cases you don't need to use it in your app. Because it is for internal usage in Konva core.
@@ -162,13 +160,10 @@ export class Transform {
   multiply(matrix: Transform) {
     var m11 = this.m[0] * matrix.m[0] + this.m[2] * matrix.m[1];
     var m12 = this.m[1] * matrix.m[0] + this.m[3] * matrix.m[1];
-
     var m21 = this.m[0] * matrix.m[2] + this.m[2] * matrix.m[3];
     var m22 = this.m[1] * matrix.m[2] + this.m[3] * matrix.m[3];
-
     var dx = this.m[0] * matrix.m[4] + this.m[2] * matrix.m[5] + this.m[4];
     var dy = this.m[1] * matrix.m[4] + this.m[3] * matrix.m[5] + this.m[5];
-
     this.m[0] = m11;
     this.m[1] = m12;
     this.m[2] = m21;
@@ -220,9 +215,7 @@ export class Transform {
     var d = this.m[3];
     var e = this.m[4];
     var f = this.m[5];
-
     var delta = a * d - b * c;
-
     let result = {
       x: e,
       y: f,
@@ -232,7 +225,6 @@ export class Transform {
       skewX: 0,
       skewY: 0,
     };
-
     // Apply the QR-like decomposition.
     if (a != 0 || b != 0) {
       var r = Math.sqrt(a * a + b * b);
@@ -252,13 +244,10 @@ export class Transform {
     } else {
       // a = b = c = d = 0
     }
-
     result.rotation = Util._getRotation(result.rotation);
-
     return result;
   }
 }
-
 // CONSTANTS
 var OBJECT_ARRAY = '[object Array]',
   OBJECT_NUMBER = '[object Number]',
@@ -425,7 +414,6 @@ var OBJECT_ARRAY = '[object Array]',
   },
   RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/,
   animQueue: Array<Function> = [];
-
 const req =
   (typeof requestAnimationFrame !== 'undefined' && requestAnimationFrame) ||
   function (f) {
@@ -491,7 +479,6 @@ export const Util = {
       return -1;
     }
   },
-
   requestAnimFrame(callback: Function) {
     animQueue.push(callback);
     if (animQueue.length === 1) {
@@ -523,13 +510,12 @@ export const Util = {
     }
     return false;
   },
-
   /*
    * arg can be an image object or image data
    */
   _urlToImage(url: string, callback: Function) {
     // if arg is a string, then it's a data url
-    var imageObj = Util.createImageElement();
+    var imageObj = new window.Image();
     imageObj.onload = function () {
       callback(imageObj);
     };
@@ -561,7 +547,6 @@ export const Util = {
     }
     return HASH + randColor;
   },
-
   /**
    * get RGB components of a color
    * @method
@@ -615,7 +600,7 @@ export const Util = {
       Util._hex8ColorToRGBA(str) ||
       Util._rgbColorToRGBA(str) ||
       Util._rgbaColorToRGBA(str) ||
-      Util._hslColorToRGBA(str)
+      Util._hslColorToRGBA(str)!
     );
   },
   // Parse named css color. Like "green"
@@ -632,9 +617,9 @@ export const Util = {
     };
   },
   // Parse rgb(n, n, n)
-  _rgbColorToRGBA(str: string): RGBA {
+  _rgbColorToRGBA(str: string): RGBA | undefined {
     if (str.indexOf('rgb(') === 0) {
-      str = str.match(/rgb\(([^)]+)\)/)[1];
+      str = str.match(/rgb\(([^)]+)\)/)?.[1]!;
       var parts = str.split(/ *, */).map(Number);
       return {
         r: parts[0],
@@ -645,9 +630,9 @@ export const Util = {
     }
   },
   // Parse rgba(n, n, n, n)
-  _rgbaColorToRGBA(str: string): RGBA {
+  _rgbaColorToRGBA(str: string): RGBA | undefined {
     if (str.indexOf('rgba(') === 0) {
-      str = str.match(/rgba\(([^)]+)\)/)[1];
+      str = str.match(/rgba\(([^)]+)\)/)?.[1]!;
       var parts = str.split(/ *, */).map((n, index) => {
         if (n.slice(-1) === '%') {
           return index === 3 ? parseInt(n) / 100 : (parseInt(n) / 100) * 255;
@@ -663,7 +648,7 @@ export const Util = {
     }
   },
   // Parse #nnnnnnnn
-  _hex8ColorToRGBA(str: string): RGBA {
+  _hex8ColorToRGBA(str: string): RGBA | undefined{
     if (str[0] === '#' && str.length === 9) {
       return {
         r: parseInt(str.slice(1, 3), 16),
@@ -674,7 +659,7 @@ export const Util = {
     }
   },
   // Parse #nnnnnn
-  _hex6ColorToRGBA(str: string): RGBA {
+  _hex6ColorToRGBA(str: string): RGBA | undefined {
     if (str[0] === '#' && str.length === 7) {
       return {
         r: parseInt(str.slice(1, 3), 16),
@@ -685,7 +670,7 @@ export const Util = {
     }
   },
   // Parse #nnnn
-  _hex4ColorToRGBA(str: string): RGBA {
+  _hex4ColorToRGBA(str: string): RGBA | undefined {
     if (str[0] === '#' && str.length === 5) {
       return {
         r: parseInt(str[1] + str[1], 16),
@@ -696,7 +681,7 @@ export const Util = {
     }
   },
   // Parse #nnn
-  _hex3ColorToRGBA(str: string): RGBA {
+  _hex3ColorToRGBA(str: string): RGBA | undefined {
     if (str[0] === '#' && str.length === 4) {
       return {
         r: parseInt(str[1] + str[1], 16),
@@ -707,20 +692,17 @@ export const Util = {
     }
   },
   // Code adapted from https://github.com/Qix-/color-convert/blob/master/conversions.js#L244
-  _hslColorToRGBA(str: string): RGBA {
+  _hslColorToRGBA(str: string): RGBA | undefined {
     // Check hsl() format
     if (/hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.test(str)) {
       // Extract h, s, l
-      const [_, ...hsl] = /hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.exec(str);
-
+      const [_, ...hsl] = /hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.exec(str)!;
       const h = Number(hsl[0]) / 360;
       const s = Number(hsl[1]) / 100;
       const l = Number(hsl[2]) / 100;
-
       let t2;
       let t3;
       let val;
-
       if (s === 0) {
         val = l * 255;
         return {
@@ -730,26 +712,21 @@ export const Util = {
           a: 1,
         };
       }
-
       if (l < 0.5) {
         t2 = l * (1 + s);
       } else {
         t2 = l + s - l * s;
       }
-
       const t1 = 2 * l - t2;
-
       const rgb = [0, 0, 0];
       for (let i = 0; i < 3; i++) {
         t3 = h + (1 / 3) * -(i - 1);
         if (t3 < 0) {
           t3++;
         }
-
         if (t3 > 1) {
           t3--;
         }
-
         if (6 * t3 < 1) {
           val = t1 + (t2 - t1) * 6 * t3;
         } else if (2 * t3 < 1) {
@@ -759,10 +736,8 @@ export const Util = {
         } else {
           val = t1;
         }
-
         rgb[i] = val * 255;
       }
-
       return {
         r: Math.round(rgb[0]),
         g: Math.round(rgb[1]),
@@ -850,7 +825,6 @@ export const Util = {
   },
   _getProjectionToSegment(x1, y1, x2, y2, x3, y3) {
     var x, y, dist;
-
     var pd2 = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
     if (pd2 == 0) {
       x = x1;
@@ -905,8 +879,8 @@ export const Util = {
   },
   _prepareArrayForTween(startArray, endArray, isClosed) {
     var n,
-      start = [],
-      end = [];
+      start: any[] = [],
+      end: any[] = [];
     if (startArray.length > endArray.length) {
       var temp = endArray;
       endArray = startArray;
@@ -924,8 +898,7 @@ export const Util = {
         y: endArray[n + 1],
       });
     }
-
-    var newStart = [];
+    var newStart: number[] = [];
     end.forEach(function (point) {
       var pr = Util._getProjectionToLine(point, start, isClosed);
       newStart.push(pr.x);
@@ -935,9 +908,7 @@ export const Util = {
   },
   _prepareToStringify(obj) {
     var desc;
-
     obj.visitedByCircularReferenceRemoval = true;
-
     for (var key in obj) {
       if (
         !(obj.hasOwnProperty(key) && obj[key] && typeof obj[key] == 'object')
@@ -962,9 +933,7 @@ export const Util = {
         }
       }
     }
-
     delete obj.visitedByCircularReferenceRemoval;
-
     return obj;
   },
   // very simplified version of Object.assign
@@ -984,7 +953,6 @@ export const Util = {
   },
   releaseCanvas(...canvases: HTMLCanvasElement[]) {
     if (!Konva.releaseCanvasOnDestroy) return;
-
     canvases.forEach(c => {
       c.width = 0;
       c.height = 0;

@@ -47,7 +47,7 @@ export class RegularPolygon extends Shape<RegularPolygonConfig> {
   _getPoints() {
     const sides = this.attrs.sides;
     const radius = this.attrs.radius || 0;
-    const points = [];
+    const points: any[] = [];
     for (var n = 0; n < sides; n++) {
       points.push({
         x: radius * Math.sin((n * 2 * Math.PI) / sides),

@@ -25,7 +25,6 @@ export interface ContainerConfig extends NodeConfig {
  * @constructor
  * @memberof Konva
  * @augments Konva.Node
- * @abstract
  * @param {Object} config
  * @@nodeParams
  * @@containerParams
@@ -313,7 +312,7 @@ export abstract class Container<
    * @returns {Array} array of shapes
    */
   getAllIntersections(pos) {
-    var arr = [];
+    var arr: Array<any> = [];
 
     this.find('Shape').forEach(function (shape: Shape) {
       if (shape.isVisible() && shape.intersects(pos)) {
@@ -343,7 +342,7 @@ export abstract class Container<
   drawScene(can?: SceneCanvas, top?: Node) {
     var layer = this.getLayer(),
       canvas = can || (layer && layer.getCanvas()),
-      context = canvas && canvas.getContext(),
+      context = canvas! && canvas.getContext()!,
       cachedCanvas = this._getCanvasCache(),
       cachedSceneCanvas = cachedCanvas && cachedCanvas.scene;
 
@@ -370,7 +369,7 @@ export abstract class Container<
 
     var layer = this.getLayer(),
       canvas = can || (layer && layer.hitCanvas),
-      context = canvas && canvas.getContext(),
+      context = canvas! && canvas.getContext()!,
       cachedCanvas = this._getCanvasCache(),
       cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
@@ -461,8 +460,8 @@ export abstract class Container<
 
       var rect = child.getClientRect({
         relativeTo: that,
-        skipShadow: config.skipShadow,
-        skipStroke: config.skipStroke,
+        skipShadow: config!.skipShadow,
+        skipStroke: config!.skipStroke,
       });
 
       // skip invisible children (like empty groups)
@@ -511,7 +510,7 @@ export abstract class Container<
     }
 
     if (!skipTransform) {
-      return this._transformedRect(selfRect, relativeTo);
+      return this._transformedRect(selfRect, relativeTo!);
     }
     return selfRect;
   }

@@ -112,7 +112,7 @@ export class Animation {
     const len = animations.length
 
     for (let n = 0; n < len; n++) {
-      if (animations[n].id === this.id) {
+      if (animations[n]['id'] === this.id) {
         return true;
       }
     }

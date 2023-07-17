@@ -148,7 +148,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   parent: Container<Node> | null = null;
   _cache: Map<string, any> = new Map<string, any>();
   _attachedDepsListeners: Map<string, boolean> = new Map<string, boolean>();
-  _lastPos: Vector2d = null;
+  _lastPos: Vector2d = null!;
   _attrsAffectingSize!: string[];
   _batchingTransformChange = false;
   _needClearTransformCache = false;
@@ -322,7 +322,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     ) {
       rect = this.getClientRect({
         skipTransform: true,
-        relativeTo: this.getParent(),
+        relativeTo: this.getParent()!,
       });
     }
     var width = Math.ceil(conf.width || rect.width),
@@ -513,10 +513,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       maxY = Math.max(maxY, transformed.y);
     });
     return {
-      x: minX,
-      y: minY,
-      width: maxX - minX,
-      height: maxY - minY,
+      x: minX!,
+      y: minY!,
+      width: maxX! - minX!,
+      height: maxY! - minY!,
     };
   }
   _drawCachedSceneCanvas(context: Context) {
@@ -1085,7 +1085,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       }
     }
     if (that.nodeType !== UPPER_STAGE) {
-      addChildren(that.getStage().getChildren());
+      addChildren(that.getStage()!.getChildren());
     }
 
     return index;
@@ -1154,7 +1154,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       return null;
     }
     // get pointer (say mouse or touch) position
-    var pos = this.getStage().getPointerPosition();
+    var pos = this.getStage()!.getPointerPosition();
     if (!pos) {
       return null;
     }
@@ -1210,8 +1210,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     // don't clear translation
     this.attrs.x = origTrans.x;
     this.attrs.y = origTrans.y;
-    delete origTrans.x;
-    delete origTrans.y;
 
     // important, use non cached value
     this._clearCache(TRANSFORM);
@@ -1298,7 +1296,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return this;
   }
   _eachAncestorReverse(func, top) {
-    var family = [],
+    var family: any[] = [],
       parent = this.getParent(),
       len,
       n;
@@ -1348,8 +1346,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     var index = this.index,
       len = this.parent.getChildren().length;
     if (index < len - 1) {
-      this.parent.children.splice(index, 1);
-      this.parent.children.push(this);
+      this.parent.children!.splice(index, 1);
+      this.parent.children!.push(this);
       this.parent._setChildrenIndices();
       return true;
     }
@@ -1369,8 +1367,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     var index = this.index,
       len = this.parent.getChildren().length;
     if (index < len - 1) {
-      this.parent.children.splice(index, 1);
-      this.parent.children.splice(index + 1, 0, this);
+      this.parent.children!.splice(index, 1);
+      this.parent.children!.splice(index + 1, 0, this);
       this.parent._setChildrenIndices();
       return true;
     }
@@ -1389,8 +1387,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
     var index = this.index;
     if (index > 0) {
-      this.parent.children.splice(index, 1);
-      this.parent.children.splice(index - 1, 0, this);
+      this.parent.children!.splice(index, 1);
+      this.parent.children!.splice(index - 1, 0, this);
       this.parent._setChildrenIndices();
       return true;
     }
@@ -1409,8 +1407,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
     var index = this.index;
     if (index > 0) {
-      this.parent.children.splice(index, 1);
-      this.parent.children.unshift(this);
+      this.parent.children!.splice(index, 1);
+      this.parent.children!.unshift(this);
       this.parent._setChildrenIndices();
       return true;
     }
@@ -1421,18 +1419,18 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       Util.warn('Node has no parent. zIndex parameter is ignored.');
       return this;
     }
-    if (zIndex < 0 || zIndex >= this.parent.children.length) {
+    if (zIndex < 0 || zIndex >= this.parent.children!.length) {
       Util.warn(
         'Unexpected value ' +
           zIndex +
           ' for zIndex property. zIndex is just index of a node in children of its parent. Expected value is from 0 to ' +
-          (this.parent.children.length - 1) +
+          (this.parent.children!.length - 1) +
           '.'
       );
     }
     var index = this.index;
-    this.parent.children.splice(index, 1);
-    this.parent.children.splice(zIndex, 0, this);
+    this.parent.children!.splice(index, 1);
+    this.parent.children!.splice(zIndex, 0, this);
     this.parent._setChildrenIndices();
     return this;
   }
@@ -1575,7 +1573,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * var group = node.findAncestors('.mygroup');
    */
   findAncestor(selector?: string, includeSelf?: boolean, stopNode?: Container) {
-    return this.findAncestors(selector, includeSelf, stopNode)[0];
+    return this.findAncestors(selector!, includeSelf, stopNode)[0];
   }
   // is current node match passed selector?
   _isMatch(selector: string | Function) {
@@ -1642,7 +1640,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   _getStage(): Stage | undefined {
     var parent = this.getParent();
     if (parent) {
-      return parent.getStage();
+      return parent.getStage()!;
     } else {
       return undefined;
     }
@@ -1761,7 +1759,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       if (parent._isUnderCache) {
         top = parent;
       }
-      parent = parent.getParent();
+      parent = parent.getParent()!;
     }
 
     const transform = this.getAbsoluteTransform(top);
@@ -2079,7 +2077,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         if (callback) delete config.callback;
         this.toCanvas(config).toBlob((blob) => {
           resolve(blob);
-          callback?.(blob);
+          callback?.(blob!);
         });
       } catch (err) {
         reject(err);
@@ -2371,7 +2369,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   // drag & drop
   _createDragElement(evt) {
     var pointerId = evt ? evt.pointerId : undefined;
-    var stage = this.getStage();
+    var stage = this.getStage()!;
     var ap = this.getAbsolutePosition();
     var pos =
       stage._getPointerById(pointerId) ||
@@ -2399,7 +2397,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       this._createDragElement(evt);
     }
 
-    const elem = DD._dragElements.get(this._id);
+    const elem = DD._dragElements.get(this._id)!;
     elem.dragStatus = 'dragging';
     this.fire(
       'dragstart',
@@ -2415,7 +2413,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   _setDragPosition(evt, elem) {
     // const pointers = this.getStage().getPointersPositions();
     // const pos = pointers.find(p => p.id === this._dragEventId);
-    const pos = this.getStage()._getPointerById(elem.pointerId);
+    const pos = this.getStage()!._getPointerById(elem.pointerId);
 
     if (!pos) {
       return;

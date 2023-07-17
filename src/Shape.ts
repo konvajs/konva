@@ -105,7 +105,7 @@ function getDummyContext(): CanvasRenderingContext2D {
   if (dummyContext) {
     return dummyContext;
   }
-  dummyContext = Util.createCanvasElement().getContext('2d');
+  dummyContext = Util.createCanvasElement().getContext('2d')!;
   return dummyContext;
 }
 
@@ -210,11 +210,11 @@ export class Shape<
 
   getContext() {
     Util.warn('shape.getContext() method is deprecated. Please do not use it.');
-    return this.getLayer().getContext();
+    return this.getLayer()!.getContext();
   }
   getCanvas() {
     Util.warn('shape.getCanvas() method is deprecated. Please do not use it.');
-    return this.getLayer().getCanvas();
+    return this.getLayer()!.getCanvas();
   }
 
   getSceneFunc() {
@@ -438,12 +438,12 @@ export class Shape<
    * @returns {Boolean}
    */
   intersects(point) {
-    var stage = this.getStage(),
+    var stage = this.getStage()!,
       bufferHitCanvas = stage.bufferHitCanvas,
       p;
 
     bufferHitCanvas.getContext().clear();
-    this.drawHit(bufferHitCanvas, null, true);
+    this.drawHit(bufferHitCanvas, null!, true);
     p = bufferHitCanvas.context.getImageData(
       Math.round(point.x),
       Math.round(point.y),
@@ -456,7 +456,6 @@ export class Shape<
   destroy() {
     Node.prototype.destroy.call(this);
     delete shapes[this.colorKey];
-    delete this.colorKey;
     return this;
   }
   // why do we need buffer canvas?
@@ -567,7 +566,7 @@ export class Shape<
         fillRect.y,
     };
     if (!skipTransform) {
-      return this._transformedRect(rect, relativeTo);
+      return this._transformedRect(rect, relativeTo!);
     }
     return rect;
   }
@@ -577,7 +576,7 @@ export class Shape<
     // 2 - when we are caching current
     // 3 - when node is cached and we need to draw it into layer
 
-    var layer = this.getLayer(),
+    var layer = this.getLayer()!,
       canvas = can || layer.getCanvas(),
       context = canvas.getContext() as SceneContext,
       cachedCanvas = this._getCanvasCache(),
@@ -662,7 +661,7 @@ export class Shape<
       return this;
     }
 
-    var layer = this.getLayer(),
+    var layer = this.getLayer()!,
       canvas = can || layer.hitCanvas,
       context = canvas && canvas.getContext(),
       drawFunc = this.hitFunc() || this.sceneFunc(),

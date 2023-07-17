@@ -1,14 +1,12 @@
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { _registerNode } from '../Global';
-
 import { GetSet, PathSegment } from '../types';
 import {
   getCubicArcLength,
   getQuadraticArcLength,
   t2length,
 } from '../BezierFunctions';
-
 export interface PathConfig extends ShapeConfig {
   data?: string;
 }
@@ -33,26 +31,21 @@ export interface PathConfig extends ShapeConfig {
  * });
  */
 export class Path extends Shape<PathConfig> {
-  dataArray = [];
+  dataArray: any[] = [];
   pathLength = 0;
-
   constructor(config?: PathConfig) {
     super(config);
     this._readDataAttribute();
-
     this.on('dataChange.konva', function () {
       this._readDataAttribute();
     });
   }
-
   _readDataAttribute() {
     this.dataArray = Path.parsePathData(this.data());
     this.pathLength = Path.getPathLength(this.dataArray);
   }
-
   _sceneFunc(context) {
     var ca = this.dataArray;
-
     // context position
     context.beginPath();
     var isClosed = false;
@@ -81,11 +74,9 @@ export class Path extends Shape<PathConfig> {
             dTheta = p[5],
             psi = p[6],
             fs = p[7];
-
           var r = rx > ry ? rx : ry;
           var scaleX = rx > ry ? 1 : rx / ry;
           var scaleY = rx > ry ? ry / rx : 1;
-
           context.translate(cx, cy);
           context.rotate(psi);
           context.scale(scaleX, scaleY);
@@ -93,7 +84,6 @@ export class Path extends Shape<PathConfig> {
           context.scale(1 / scaleX, 1 / scaleY);
           context.rotate(-psi);
           context.translate(-cx, -cy);
-
           break;
         case 'z':
           isClosed = true;
@@ -101,7 +91,6 @@ export class Path extends Shape<PathConfig> {
           break;
       }
     }
-
     if (!isClosed && !this.hasFill()) {
       context.strokeShape(this);
     } else {
@@ -109,7 +98,7 @@ export class Path extends Shape<PathConfig> {
     }
   }
   getSelfRect() {
-    var points = [];
+    var points: any[] = [];
     this.dataArray.forEach(function (data) {
       if (data.command === 'A') {
         // Approximates by breaking curve into line segments
@@ -179,7 +168,6 @@ export class Path extends Shape<PathConfig> {
     for (var i = 0; i < points.length / 2; i++) {
       x = points[i * 2];
       y = points[i * 2 + 1];
-
       // skip bad values
       if (!isNaN(x)) {
         minX = Math.min(minX, x);
@@ -220,13 +208,10 @@ export class Path extends Shape<PathConfig> {
   getPointAtLength(length) {
     return Path.getPointAtLengthOfDataArray(length, this.dataArray);
   }
-
   data: GetSet<string, this>;
-
   static getLineLength(x1, y1, x2, y2) {
     return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
   }
-
   static getPathLength(dataArray: PathSegment[]) {
     let pathLength = 0;
     for (var i = 0; i < dataArray.length; ++i) {
@@ -234,21 +219,17 @@ export class Path extends Shape<PathConfig> {
     }
     return pathLength;
   }
-
   static getPointAtLengthOfDataArray(length: number, dataArray) {
     var point,
       i = 0,
       ii = dataArray.length;
-
     if (!ii) {
       return null;
     }
-
     while (i < ii && length > dataArray[i].pathLength) {
       length -= dataArray[i].pathLength;
       ++i;
     }
-
     if (i === ii) {
       point = dataArray[i - 1].points.slice(-2);
       return {
@@ -256,7 +237,6 @@ export class Path extends Shape<PathConfig> {
         y: point[1],
       };
     }
-
     if (length < 0.01) {
       point = dataArray[i].points.slice(0, 2);
       return {
@@ -264,7 +244,6 @@ export class Path extends Shape<PathConfig> {
         y: point[1],
       };
     }
-
     var cp = dataArray[i];
     var p = cp.points;
     switch (cp.command) {
@@ -315,10 +294,8 @@ export class Path extends Shape<PathConfig> {
         theta += (dTheta * length) / cp.pathLength;
         return Path.getPointOnEllipticalArc(cx, cy, rx, ry, theta, psi);
     }
-
     return null;
   }
-
   static getPointOnLine(dist, P1x, P1y, P2x, P2y, fromX?, fromY?) {
     if (fromX === undefined) {
       fromX = P1x;
@@ -326,7 +303,6 @@ export class Path extends Shape<PathConfig> {
     if (fromY === undefined) {
       fromY = P1y;
     }
-
     var m = (P2y - P1y) / (P2x - P1x + 0.00000001);
     var run = Math.sqrt((dist * dist) / (1 + m * m));
     if (P2x < P1x) {
@@ -334,7 +310,6 @@ export class Path extends Shape<PathConfig> {
     }
     var rise = m * run;
     var pt;
-
     if (P2x === P1x) {
       // vertical line
       pt = {
@@ -348,7 +323,6 @@ export class Path extends Shape<PathConfig> {
       };
     } else {
       var ix, iy;
-
       var len = this.getLineLength(P1x, P1y, P2x, P2y);
       // if (len < 0.00000001) {
       //   return {
@@ -360,7 +334,6 @@ export class Path extends Shape<PathConfig> {
       u = u / (len * len);
       ix = P1x + u * (P2x - P1x);
       iy = P1y + u * (P2y - P1y);
-
       var pRise = this.getLineLength(fromX, fromY, ix, iy);
       var pRun = Math.sqrt(dist * dist - pRise * pRise);
       run = Math.sqrt((pRun * pRun) / (1 + m * m));
@@ -373,10 +346,8 @@ export class Path extends Shape<PathConfig> {
         y: iy + rise,
       };
     }
-
     return pt;
   }
-
   static getPointOnCubicBezier(pct, P1x, P1y, P2x, P2y, P3x, P3y, P4x, P4y) {
     function CB1(t) {
       return t * t * t;
@@ -392,7 +363,6 @@ export class Path extends Shape<PathConfig> {
     }
     var x = P4x * CB1(pct) + P3x * CB2(pct) + P2x * CB3(pct) + P1x * CB4(pct);
     var y = P4y * CB1(pct) + P3y * CB2(pct) + P2y * CB3(pct) + P1y * CB4(pct);
-
     return {
       x: x,
       y: y,
@@ -410,7 +380,6 @@ export class Path extends Shape<PathConfig> {
     }
     var x = P3x * QB1(pct) + P2x * QB2(pct) + P1x * QB3(pct);
     var y = P3y * QB1(pct) + P2y * QB2(pct) + P1y * QB3(pct);
-
     return {
       x: x,
       y: y,
@@ -456,15 +425,12 @@ export class Path extends Shape<PathConfig> {
     //S (x2 y2 x y)+       Shorthand/Smooth Absolute Bezier curve
     //a (rx ry x-axis-rotation large-arc-flag sweep-flag x y)+     Relative Elliptical Arc
     //A (rx ry x-axis-rotation large-arc-flag sweep-flag x y)+  Absolute Elliptical Arc
-
     // return early if data is not defined
     if (!data) {
       return [];
     }
-
     // command string
     var cs = data;
-
     // command chars
     var cc = [
       'm',
@@ -496,29 +462,25 @@ export class Path extends Shape<PathConfig> {
     }
     // create array
     var arr = cs.split('|');
-    var ca = [];
-    var coords = [];
+    var ca: any[] = [];
+    var coords: any[] = [];
     // init context point
     var cpx = 0;
     var cpy = 0;
-
     var re = /([-+]?((\d+\.\d+)|((\d+)|(\.\d+)))(?:e[-+]?\d+)?)/gi;
     var match;
     for (n = 1; n < arr.length; n++) {
       var str = arr[n];
       var c = str.charAt(0);
       str = str.slice(1);
-
       coords.length = 0;
       while ((match = re.exec(str))) {
         coords.push(match[0]);
       }
-
       // while ((match = re.exec(str))) {
       //   coords.push(match[0]);
       // }
-      var p = [];
-
+      var p: any[] = [];
       for (var j = 0, jlen = coords.length; j < jlen; j++) {
         // extra case for merged flags
         if (coords[j] === '00') {
@@ -532,21 +494,18 @@ export class Path extends Shape<PathConfig> {
           p.push(0);
         }
       }
-
       while (p.length > 0) {
         if (isNaN(p[0])) {
           // case for a trailing comma before next command
           break;
         }
-
-        var cmd = null;
-        var points = [];
+        var cmd: any = null!;
+        var points: any[] = [];
         var startX = cpx,
           startY = cpy;
         // Move var from within the switch to up here (jshint)
         var prevCmd, ctlPtx, ctlPty; // Ss, Tt
         var rx, ry, psi, fa, fs, x1, y1; // Aa
-
         // convert l, H, h, V, and v to L
         switch (c) {
           // Note: Keep the lineTo's above the moveTo's in this switch
@@ -591,7 +550,6 @@ export class Path extends Shape<PathConfig> {
             c = 'L';
             // subsequent points are treated as absolute lineTo
             break;
-
           case 'h':
             cpx += p.shift();
             cmd = 'L';
@@ -744,7 +702,6 @@ export class Path extends Shape<PathConfig> {
             );
             break;
         }
-
         ca.push({
           command: cmd || c,
           points: points,
@@ -755,7 +712,6 @@ export class Path extends Shape<PathConfig> {
           pathLength: this.calcLength(startX, startY, cmd || c, points),
         });
       }
-
       if (c === 'z' || c === 'Z') {
         ca.push({
           command: 'z',
@@ -765,13 +721,11 @@ export class Path extends Shape<PathConfig> {
         });
       }
     }
-
     return ca;
   }
   static calcLength(x, y, cmd, points) {
     var len, p1, p2, t;
     var path = Path;
-
     switch (cmd) {
       case 'L':
         return path.getLineLength(x, y, points[0], points[1]);
@@ -847,10 +801,8 @@ export class Path extends Shape<PathConfig> {
           0
         );
         len += path.getLineLength(p1.x, p1.y, p2.x, p2.y);
-
         return len;
     }
-
     return 0;
   }
   static convertEndpointToCenterParameterization(
@@ -871,32 +823,25 @@ export class Path extends Shape<PathConfig> {
     var yp =
       (-1 * Math.sin(psi) * (x1 - x2)) / 2.0 +
       (Math.cos(psi) * (y1 - y2)) / 2.0;
-
     var lambda = (xp * xp) / (rx * rx) + (yp * yp) / (ry * ry);
-
     if (lambda > 1) {
       rx *= Math.sqrt(lambda);
       ry *= Math.sqrt(lambda);
     }
-
     var f = Math.sqrt(
       (rx * rx * (ry * ry) - rx * rx * (yp * yp) - ry * ry * (xp * xp)) /
         (rx * rx * (yp * yp) + ry * ry * (xp * xp))
     );
-
     if (fa === fs) {
       f *= -1;
     }
     if (isNaN(f)) {
       f = 0;
     }
-
     var cxp = (f * rx * yp) / ry;
     var cyp = (f * -ry * xp) / rx;
-
     var cx = (x1 + x2) / 2.0 + Math.cos(psi) * cxp - Math.sin(psi) * cyp;
     var cy = (y1 + y2) / 2.0 + Math.sin(psi) * cxp + Math.cos(psi) * cyp;
-
     var vMag = function (v) {
       return Math.sqrt(v[0] * v[0] + v[1] * v[1]);
     };
@@ -910,7 +855,6 @@ export class Path extends Shape<PathConfig> {
     var u = [(xp - cxp) / rx, (yp - cyp) / ry];
     var v = [(-1 * xp - cxp) / rx, (-1 * yp - cyp) / ry];
     var dTheta = vAngle(u, v);
-
     if (vRatio(u, v) <= -1) {
       dTheta = Math.PI;
     }
@@ -926,11 +870,9 @@ export class Path extends Shape<PathConfig> {
     return [cx, cy, rx, ry, theta, dTheta, psi, fs];
   }
 }
-
 Path.prototype.className = 'Path';
 Path.prototype._attrsAffectingSize = ['data'];
 _registerNode(Path);
-
 /**
  * get/set SVG path data string.  This method
  *  also automatically parses the data string
