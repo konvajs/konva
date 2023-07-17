@@ -1211,6 +1211,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this.attrs.x = origTrans.x;
     this.attrs.y = origTrans.y;
 
+    delete origTrans.x;
+    delete origTrans.y;
+
     // important, use non cached value
     this._clearCache(TRANSFORM);
     var it = this._getAbsoluteTransform().copy();

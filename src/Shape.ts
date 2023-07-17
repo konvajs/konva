@@ -185,7 +185,7 @@ export class Shape<
   Config extends ShapeConfig = ShapeConfig
 > extends Node<Config> {
   _centroid: boolean;
-  colorKey: string;
+  colorKey?: string;
 
   _fillFunc: (ctx: Context) => FillFuncOutput;
   _strokeFunc: (ctx: Context) => void;
@@ -455,7 +455,8 @@ export class Shape<
 
   destroy() {
     Node.prototype.destroy.call(this);
-    delete shapes[this.colorKey];
+    delete shapes[this.colorKey!];
+    delete this.colorKey;
     return this;
   }
   // why do we need buffer canvas?
