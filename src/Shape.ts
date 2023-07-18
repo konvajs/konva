@@ -733,7 +733,7 @@ export class Shape<
       hitImageData = hitContext.getImageData(0, 0, hitWidth, hitHeight);
       hitData = hitImageData.data;
       len = hitData.length;
-      rgbColorKey = Util._hexToRgb(this.colorKey);
+      rgbColorKey = Util._hexToRgb(this.colorKey!);
 
       // replace non transparent pixels with color key
       for (i = 0; i < len; i += 4) {
