@@ -2011,7 +2011,7 @@ Factory.addGetterSetter(Shape, 'fillRule', undefined, getStringValidator());
  * var fillRule = shape.fillRule();
  *
  * // set fill rule
- * shape.fillRule('evenodd);
+ * shape.fillRule('evenodd');
  */
 
 Factory.backCompat(Shape, {
