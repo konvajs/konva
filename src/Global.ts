@@ -9,7 +9,7 @@
  *
  * @license
  */
-var PI_OVER_180 = Math.PI / 180;
+const PI_OVER_180 = Math.PI / 180;
 /**
  * @namespace Konva
  */
