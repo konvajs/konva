@@ -441,9 +441,9 @@ export class Context {
     var a = arguments,
       _context = this._context;
     if (a.length === 3) {
-      _context.drawImage(image, dx, dy);
+      _context.drawImage(image, sx, sy);
     } else if (a.length === 5) {
-      _context.drawImage(image, dx, dy, dWidth, dHeight);
+      _context.drawImage(image, sx, sy, sWidth, sHeight);
     } else if (a.length === 9) {
       _context.drawImage(
         image,

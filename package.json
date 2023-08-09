@@ -61,6 +61,7 @@
   "devDependencies": {
     "@parcel/transformer-image": "2.8.3",
     "@size-limit/preset-big-lib": "^8.2.4",
+    "@types/jest": "^29.5.3",
     "@types/mocha": "^10.0.1",
     "canvas": "^2.11.2",
     "chai": "4.3.7",
