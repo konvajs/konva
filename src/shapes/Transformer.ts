@@ -1102,13 +1102,13 @@ export class Transformer extends Group {
 
       const attrs = newLocalTransform.decompose();
       node.setAttrs(attrs);
-      this._fire('transform', { evt: evt, target: node });
       node._fire('transform', { evt: evt, target: node });
       node.getLayer()?.batchDraw();
     });
     this.rotation(Util._getRotation(newAttrs.rotation));
     this._resetTransformCache();
     this.update();
+    this._fire('transform', { evt: evt, target: this.getNode() });
     this.getLayer().batchDraw();
   }
   /**
