@@ -148,7 +148,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   parent: Container<Node> | null = null;
   _cache: Map<string, any> = new Map<string, any>();
   _attachedDepsListeners: Map<string, boolean> = new Map<string, boolean>();
-  _lastPos: Vector2d = null;
+  _lastPos: Vector2d | null = null;
   _attrsAffectingSize!: string[];
   _batchingTransformChange = false;
   _needClearTransformCache = false;

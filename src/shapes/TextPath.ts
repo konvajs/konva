@@ -37,7 +37,7 @@ function _strokeFunc(context) {
  * @param {Object} config
  * @param {String} [config.fontFamily] default is Arial
  * @param {Number} [config.fontSize] default is 12
- * @param {String} [config.fontStyle] can be normal, bold, or italic.  Default is normal
+ * @param {String} [config.fontStyle] Can be 'normal', 'italic', or 'bold', '500' or even 'italic bold'.  'normal' is the default.
  * @param {String} [config.fontVariant] can be normal or small-caps.  Default is normal
  * @param {String} [config.textBaseline] Can be 'top', 'bottom', 'middle', 'alphabetic', 'hanging'. Default is middle
  * @param {String} config.text
@@ -444,7 +444,7 @@ Factory.addGetterSetter(TextPath, 'fontFamily', 'Arial');
 Factory.addGetterSetter(TextPath, 'fontSize', 12, getNumberValidator());
 
 /**
- * get/set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
+ * get/set font style.  Can be 'normal', 'italic', or 'bold', '500' or even 'italic bold'.  'normal' is the default.
  * @name Konva.TextPath#fontStyle
  * @method
  * @param {String} fontStyle

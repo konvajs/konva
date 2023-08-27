@@ -134,7 +134,7 @@ function checkDefaultFill(config: TextConfig) {
  * @param {Object} config
  * @param {String} [config.fontFamily] default is Arial
  * @param {Number} [config.fontSize] in pixels.  Default is 12
- * @param {String} [config.fontStyle] can be 'normal', 'bold', 'italic' or even 'italic bold'.  Default is 'normal'
+ * @param {String} [config.fontStyle] can be 'normal', 'italic', or 'bold', '500' or even 'italic bold'.  'normal' is the default.
  * @param {String} [config.fontVariant] can be normal or small-caps.  Default is normal
  * @param {String} [config.textDecoration] can be line-through, underline or empty string. Default is empty string.
  * @param {String} config.text
@@ -702,7 +702,7 @@ Factory.addGetterSetter(Text, 'fontFamily', 'Arial');
 Factory.addGetterSetter(Text, 'fontSize', 12, getNumberValidator());
 
 /**
- * get/set font style.  Can be 'normal', 'italic', or 'bold' or even 'italic bold'.  'normal' is the default.
+ * get/set font style.  Can be 'normal', 'italic', or 'bold', '500' or even 'italic bold'.  'normal' is the default.
  * @name Konva.Text#fontStyle
  * @method
  * @param {String} fontStyle

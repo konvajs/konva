@@ -33,7 +33,7 @@ export interface ContainerConfig extends NodeConfig {
 export abstract class Container<
   ChildType extends Node = Node
 > extends Node<ContainerConfig> {
-  children: Array<ChildType> | undefined = [];
+  children: Array<ChildType> = [];
 
   /**
    * returns an array of direct descendant nodes
@@ -220,7 +220,9 @@ export abstract class Container<
    *  return node.getType() === 'Shape'
    * })
    */
-  findOne<ChildNode extends Node = Node>(selector: string | Function): ChildNode | undefined {
+  findOne<ChildNode extends Node = Node>(
+    selector: string | Function
+  ): ChildNode | undefined {
     var result = this._generalFind<ChildNode>(selector, true);
     return result.length > 0 ? result[0] : undefined;
   }
@@ -313,7 +315,7 @@ export abstract class Container<
    * @returns {Array} array of shapes
    */
   getAllIntersections(pos) {
-    var arr = [];
+    var arr: Shape[] = [];
 
     this.find('Shape').forEach(function (shape: Shape) {
       if (shape.isVisible() && shape.intersects(pos)) {
@@ -341,7 +343,7 @@ export abstract class Container<
     this._requestDraw();
   }
   drawScene(can?: SceneCanvas, top?: Node) {
-    var layer = this.getLayer(),
+    var layer = this.getLayer()!,
       canvas = can || (layer && layer.getCanvas()),
       context = canvas && canvas.getContext(),
       cachedCanvas = this._getCanvasCache(),
@@ -368,7 +370,7 @@ export abstract class Container<
       return this;
     }
 
-    var layer = this.getLayer(),
+    var layer = this.getLayer()!,
       canvas = can || (layer && layer.hitCanvas),
       context = canvas && canvas.getContext(),
       cachedCanvas = this._getCanvasCache(),

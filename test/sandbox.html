@@ -25,78 +25,47 @@
   </head>
 
   <body>
-    <div id="container" style="background-color: bisque"></div>
+    <div id="container"></div>
 
     <script type="module">
       import Konva from '../src/index.ts';
 
-      const config = {
-        canvas: { width: window.innerWidth, height: window.innerHeight },
-        filter: { pixelSize: 26 },
-        image: { naturalWidth: 500, naturalHeight: 500, scale: 1 },
-        imageCropped: { width: 150, height: 150 },
-        shapeReference: { colorOdd: 'white', colorEven: 'black' },
-      };
-
-      const image = document.createElement('img');
-      image.crossOrigin = 'anonymous';
-      image.src = `https://placekitten.com/${config.image.naturalWidth}/${config.image.naturalHeight}`;
-
       var stage = new Konva.Stage({
         container: 'container',
-        width: config.canvas.width,
-        height: config.canvas.height,
+        width: window.innerHeight,
+        height: window.innerHeight,
       });
 
       var layer = new Konva.Layer();
       stage.add(layer);
 
-      image.onload = async function () {
-        // await image.decode(); // used to dynamically determine natural dimensions - not needed, in config
+      const circle = new Konva.Circle({
+        x: 100,
+        y: 150,
+        radius: 50,
+        fill: 'red',
+        draggable: true,
+      });
+      layer.add(circle);
 
-        var imageOriginal = new Konva.Image({
-          x: 0,
-          y: 0,
-          scaleX: config.image.scale,
-          scaleY: config.image.scale,
-          image,
-          width: config.image.naturalWidth,
-          height: config.image.naturalHeight,
-        });
+      const tr = new Konva.Transformer({
+        nodes: [circle],
+      });
+      layer.add(tr);
 
-        var imageFiltered = new Konva.Image({
-          cropX: 0,
-          cropY: 0,
-          cropWidth: config.imageCropped.width,
-          cropHeight: config.imageCropped.height,
-          x: 0,
-          y: 0,
-          scaleX: config.image.scale,
-          scaleY: config.image.scale,
-          image,
-          width: config.imageCropped.width,
-          height: config.imageCropped.height,
-          pixelSize: config.filter.pixelSize,
-        });
+      const dot = new Konva.Circle({
+        x: 100,
+        y: 100,
+        radius: 2,
+        fill: 'blue',
+      });
 
-        imageFiltered.cache();
+      layer.add(dot);
 
-        imageFiltered.filters([Konva.Filters.Pixelate]);
-
-        var rect = new Konva.Image({
-          x: 0,
-          y: 0,
-          scaleX: config.image.scale,
-          scaleY: config.image.scale,
-          width: config.imageCropped.width,
-          height: config.imageCropped.height,
-          stroke: 'red',
-          strokeWidth: 0.5,
-        });
-
-        // add the shapes to the layer
-        layer.add(imageOriginal, imageFiltered, rect);
-      };
+      circle.on('transform', () => {
+        dot.x(circle.x());
+        dot.y(circle.y() - circle.radius() * circle.scaleY() - 50);
+      });
     </script>
   </body>
 </html>
