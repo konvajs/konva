@@ -2396,6 +2396,9 @@ describe('Node', function () {
     assert.equal(group3.getAbsoluteZIndex(), 5);
     assert.equal(group4.getAbsoluteZIndex(), 6);
     assert.equal(shape2.getAbsoluteZIndex(), 7);
+
+    const tempLayer = new Konva.Layer();
+    assert.equal(tempLayer.getAbsoluteZIndex(), 0);
   });
 
   // ======================================================

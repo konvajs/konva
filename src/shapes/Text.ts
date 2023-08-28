@@ -112,7 +112,7 @@ function _strokeFunc(context: Context) {
   context.strokeText(this._partialText, this._partialTextX, this._partialTextY);
 }
 
-function checkDefaultFill(config: TextConfig) {
+function checkDefaultFill(config?: TextConfig) {
   config = config || {};
 
   // set default color to black

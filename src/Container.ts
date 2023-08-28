@@ -197,7 +197,7 @@ export abstract class Container<
    *  return node.getType() === 'Node' && node.getAbsoluteOpacity() < 1;
    * });
    */
-  find<ChildNode extends Node = Node>(selector): Array<ChildNode> {
+  find<ChildNode extends Node>(selector): Array<ChildNode> {
     // protecting _generalFind to prevent user from accidentally adding
     // second argument and getting unexpected `findOne` result
     return this._generalFind<ChildNode>(selector, false);
@@ -317,7 +317,7 @@ export abstract class Container<
   getAllIntersections(pos) {
     var arr: Shape[] = [];
 
-    this.find('Shape').forEach(function (shape: Shape) {
+    this.find<Shape>('Shape').forEach((shape) => {
       if (shape.isVisible() && shape.intersects(pos)) {
         arr.push(shape);
       }
@@ -437,13 +437,14 @@ export abstract class Container<
     }
   }
 
-  getClientRect(config?: {
-    skipTransform?: boolean;
-    skipShadow?: boolean;
-    skipStroke?: boolean;
-    relativeTo?: Container<Node>;
-  }): IRect {
-    config = config || {};
+  getClientRect(
+    config: {
+      skipTransform?: boolean;
+      skipShadow?: boolean;
+      skipStroke?: boolean;
+      relativeTo?: Container<Node>;
+    } = {}
+  ): IRect {
     var skipTransform = config.skipTransform;
     var relativeTo = config.relativeTo;
 

@@ -6,7 +6,7 @@ import { IRect } from './types';
 import type { Node } from './Node';
 
 function simplifyArray(arr: Array<any>) {
-  var retArr = [],
+  var retArr: Array<any> = [],
     len = arr.length,
     util = Util,
     n,
@@ -441,9 +441,19 @@ export class Context {
     if (a.length === 3) {
       _context.drawImage(a0, a1, a2);
     } else if (a.length === 5) {
-      _context.drawImage(a0, a1, a2, a3, a4);
+      _context.drawImage(a0, a1, a2, a3 as number, a4 as number);
     } else if (a.length === 9) {
-      _context.drawImage(a0, a1, a2, a3, a4, a5, a6, a7, a8);
+      _context.drawImage(
+        a0,
+        a1,
+        a2,
+        a3 as number,
+        a4 as number,
+        a5 as number,
+        a6 as number,
+        a7 as number,
+        a8 as number
+      );
     }
   }
   /**

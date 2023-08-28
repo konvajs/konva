@@ -1,6 +1,6 @@
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
-import { GetSet } from '../types';
+import { GetSet, Vector2d } from '../types';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 import { Context } from '../Context';
@@ -45,9 +45,9 @@ export class RegularPolygon extends Shape<RegularPolygonConfig> {
     context.fillStrokeShape(this);
   }
   _getPoints() {
-    const sides = this.attrs.sides;
+    const sides = this.attrs.sides as number;
     const radius = this.attrs.radius || 0;
-    const points = [];
+    const points: Vector2d[] = [];
     for (var n = 0; n < sides; n++) {
       points.push({
         x: radius * Math.sin((n * 2 * Math.PI) / sides),

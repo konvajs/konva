@@ -61,11 +61,11 @@ export class Animation {
    * @param {Konva.Layer|Array} [layers] layer(s) to be redrawn. Can be a layer, an array of layers, or null.  Not specifying a node will result in no redraw.
    * @return {Konva.Animation} this
    */
-  setLayers(layers:null | Layer | Layer[]) {
+  setLayers(layers: null | Layer | Layer[]) {
     let lays: Layer[] = [];
     // if passing in no layers
     if (layers) {
-      lays = Array.isArray(layers)? layers : [layers]
+      lays = Array.isArray(layers) ? layers : [layers];
     }
     this.layers = lays;
     return this;
@@ -87,8 +87,8 @@ export class Animation {
    * @return {Bool} true if layer is added to animation, otherwise false
    */
   addLayer(layer: Layer) {
-    const layers = this.layers
-    const len = layers.length
+    const layers = this.layers;
+    const len = layers.length;
 
     // don't add the layer if it already exists
     for (let n = 0; n < len; n++) {
@@ -107,9 +107,9 @@ export class Animation {
    * @return {Bool} is animation running?
    */
   isRunning() {
-    const a = Animation
-    const animations = a.animations
-    const len = animations.length
+    const a = Animation;
+    const animations = a.animations;
+    const len = animations.length;
 
     for (let n = 0; n < len; n++) {
       if (animations[n].id === this.id) {
@@ -148,7 +148,7 @@ export class Animation {
     this.frame.frameRate = 1000 / this.frame.timeDiff;
   }
 
-  static animations = [];
+  static animations: Array<Animation> = [];
   static animIdCounter = 0;
   static animRunning = false;
 
@@ -157,9 +157,9 @@ export class Animation {
     this._handleAnimation();
   }
   static _removeAnimation(anim) {
-    const id = anim.id
-    const animations = this.animations
-    const len = animations.length
+    const id = anim.id;
+    const animations = this.animations;
+    const len = animations.length;
 
     for (let n = 0; n < len; n++) {
       if (animations[n].id === id) {
@@ -170,8 +170,8 @@ export class Animation {
   }
 
   static _runFrames() {
-    const layerHash = {}
-    const animations = this.animations
+    const layerHash = {};
+    const animations = this.animations;
     /*
      * loop through all animations and execute animation
      *  function.  if the animation object has specified node,
@@ -193,7 +193,7 @@ export class Animation {
       const layersLen = layers.length;
 
       // if animation object has a function, execute it
-      let needRedraw
+      let needRedraw;
       if (func) {
         // allow anim bypassing drawing
         needRedraw = func.call(anim, anim.frame) !== false;

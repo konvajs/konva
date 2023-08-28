@@ -279,7 +279,7 @@ export class Stage extends Container<Layer> {
       stages.splice(index, 1);
     }
 
-    Util.releaseCanvas(this.bufferCanvas._canvas, this.bufferHitCanvas._canvas)
+    Util.releaseCanvas(this.bufferCanvas._canvas, this.bufferHitCanvas._canvas);
 
     return this;
   }
@@ -468,23 +468,27 @@ export class Stage extends Container<Layer> {
       );
     });
   }
-  _pointerenter(evt) {
+  _pointerenter(evt: PointerEvent) {
     this.setPointersPositions(evt);
     const events = getEventsMap(evt.type);
-    this._fire(events.pointerenter, {
-      evt: evt,
-      target: this,
-      currentTarget: this,
-    });
+    if (events) {
+      this._fire(events.pointerenter, {
+        evt: evt,
+        target: this,
+        currentTarget: this,
+      });
+    }
   }
   _pointerover(evt) {
     this.setPointersPositions(evt);
     const events = getEventsMap(evt.type);
-    this._fire(events.pointerover, {
-      evt: evt,
-      target: this,
-      currentTarget: this,
-    });
+    if (events) {
+      this._fire(events.pointerover, {
+        evt: evt,
+        target: this,
+        currentTarget: this,
+      });
+    }
   }
   _getTargetShape(evenType) {
     let shape: Shape | null = this[evenType + 'targetShape'];
@@ -525,7 +529,7 @@ export class Stage extends Container<Layer> {
         currentTarget: this,
       });
     }
-    this.pointerPos = undefined;
+    this.pointerPos = null;
     this._pointerPositions = [];
   }
   _pointerdown(evt: TouchEvent | MouseEvent | PointerEvent) {
@@ -545,8 +549,7 @@ export class Stage extends Container<Layer> {
       Konva['_' + eventType + 'ListenClick'] = true;
 
       // no shape detected? do nothing
-      const hasShape = shape && shape.isListening();
-      if (!hasShape) {
+      if (!shape || !shape.isListening()) {
         return;
       }
 
@@ -587,7 +590,7 @@ export class Stage extends Container<Layer> {
     if (!events) {
       return;
     }
-    if (DD.isDragging && DD.node.preventDefault() && evt.cancelable) {
+    if (DD.isDragging && DD.node!.preventDefault() && evt.cancelable) {
       evt.preventDefault();
     }
     this.setPointersPositions(evt);
@@ -753,7 +756,7 @@ export class Stage extends Container<Layer> {
   }
   _contextmenu(evt) {
     this.setPointersPositions(evt);
-    var shape = this.getIntersection(this.getPointerPosition());
+    var shape = this.getIntersection(this.getPointerPosition()!);
 
     if (shape && shape.isListening()) {
       shape._fireAndBubble(CONTEXTMENU, { evt: evt });
@@ -768,7 +771,7 @@ export class Stage extends Container<Layer> {
 
   _wheel(evt) {
     this.setPointersPositions(evt);
-    var shape = this.getIntersection(this.getPointerPosition());
+    var shape = this.getIntersection(this.getPointerPosition()!);
 
     if (shape && shape.isListening()) {
       shape._fireAndBubble(WHEEL, { evt: evt });
@@ -785,7 +788,7 @@ export class Stage extends Container<Layer> {
     this.setPointersPositions(evt);
     const shape =
       PointerEvents.getCapturedShape(evt.pointerId) ||
-      this.getIntersection(this.getPointerPosition());
+      this.getIntersection(this.getPointerPosition()!);
 
     if (shape) {
       shape._fireAndBubble(POINTERUP, PointerEvents.createEvent(evt));
@@ -814,8 +817,8 @@ export class Stage extends Container<Layer> {
    */
   setPointersPositions(evt) {
     var contentPosition = this._getContentPosition(),
-      x = null,
-      y = null;
+      x: number | null = null,
+      y: number | null = null;
     evt = evt ? evt : window.event;
 
     // touch events
