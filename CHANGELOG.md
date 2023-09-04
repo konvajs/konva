@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+- Fix text rendering when text has both underline and shadow
+
 ### 9.2.0 (2023-05-14)
 
 - More controls on clipping
