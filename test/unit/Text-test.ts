@@ -9,6 +9,7 @@ import {
   loadImage,
   isBrowser,
   isNode,
+  compareCanvases,
 } from './test-utils';
 
 describe('Text', function () {
@@ -985,6 +986,40 @@ describe('Text', function () {
       'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,80);lineTo(169,80);stroke();restore();save();beginPath();moveTo(0,40);lineTo(169,40);stroke();restore();fillStyle=[object CanvasGradient];fillText(hello,0,40);restore();save();save();beginPath();moveTo(0,160);lineTo(191,160);stroke();restore();save();beginPath();moveTo(0,120);lineTo(191,120);stroke();restore();fillStyle=[object CanvasGradient];fillText(world,0,120);restore();restore();';
 
     assert.equal(layer.getContext().getTrace(), trace);
+  });
+
+  it('text with underline and shadow', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      text: 'Test',
+      fill: 'black',
+      fontSize: 40,
+      textDecoration: 'underline',
+      shadowEnabled: true,
+      shadowColor: 'red',
+      shadowOffsetX: 15,
+      shadowOffsetY: 15,
+    });
+
+    layer.add(text);
+    stage.add(layer);
+
+    var trace =
+      'clearRect();save();shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;drawImage();restore();';
+
+    assert.equal(layer.getContext().getTrace(true), trace);
+
+    // now check result visually
+    // text with red shadow is the same as red text with back text on top
+    const group = new Konva.Group({});
+    layer.add(group);
+    group.add(text.clone({ shadowEnabled: false, x: 15, y: 15, fill: 'red' }));
+    group.add(text.clone({ shadowEnabled: false }));
+    const groupCanvas = group.toCanvas();
+
+    compareCanvases(groupCanvas, text.toCanvas(), 200);
   });
 
   // ======================================================

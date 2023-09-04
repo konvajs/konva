@@ -604,6 +604,15 @@ export class Text extends Shape<TextConfig> {
     return true;
   }
 
+  _useBufferCanvas() {
+    const hasUnderline = this.textDecoration().indexOf('underline') !== -1;
+    const hasShadow = this.hasShadow();
+    if (hasUnderline || hasShadow) {
+      return true;
+    }
+    return super._useBufferCanvas();
+  }
+
   fontFamily: GetSet<string, this>;
   fontSize: GetSet<number, this>;
   fontStyle: GetSet<string, this>;
