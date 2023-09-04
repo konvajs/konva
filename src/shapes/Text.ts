@@ -605,9 +605,11 @@ export class Text extends Shape<TextConfig> {
   }
 
   _useBufferCanvas() {
-    const hasUnderline = this.textDecoration().indexOf('underline') !== -1;
+    const hasLine =
+      this.textDecoration().indexOf('underline') !== -1 ||
+      this.textDecoration().indexOf('line-through') !== -1;
     const hasShadow = this.hasShadow();
-    if (hasUnderline && hasShadow) {
+    if (hasLine && hasShadow) {
       return true;
     }
     return super._useBufferCanvas();

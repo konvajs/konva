@@ -1022,6 +1022,40 @@ describe('Text', function () {
     compareCanvases(groupCanvas, text.toCanvas(), 200);
   });
 
+  it('text with line-through and shadow', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      text: 'Test',
+      fill: 'black',
+      fontSize: 40,
+      textDecoration: 'line-through',
+      shadowEnabled: true,
+      shadowColor: 'red',
+      shadowOffsetX: 5,
+      shadowOffsetY: 5,
+    });
+
+    layer.add(text);
+    stage.add(layer);
+
+    var trace =
+      'clearRect();save();shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;drawImage();restore();';
+
+    assert.equal(layer.getContext().getTrace(true), trace);
+
+    // now check result visually
+    // text with red shadow is the same as red text with back text on top
+    const group = new Konva.Group({});
+    layer.add(group);
+    group.add(text.clone({ shadowEnabled: false, x: 5, y: 5, fill: 'red' }));
+    group.add(text.clone({ shadowEnabled: false }));
+    const groupCanvas = group.toCanvas();
+
+    compareCanvases(groupCanvas, text.toCanvas(), 200, 50);
+  });
+
   // ======================================================
   it('change font size should update text data', function () {
     var stage = addStage();
