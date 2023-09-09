@@ -22,6 +22,7 @@ export function stringToArray(string: string) {
 }
 
 export interface TextConfig extends ShapeConfig {
+  direction?: string;
   text?: string;
   fontFamily?: string;
   fontSize?: number;
@@ -46,6 +47,7 @@ var AUTO = 'auto',
   CONTEXT_2D = '2d',
   DASH = '-',
   LEFT = 'left',
+  LTR = 'ltr',
   TEXT = 'text',
   TEXT_UPPER = 'Text',
   TOP = 'top',
@@ -60,6 +62,7 @@ var AUTO = 'auto',
   NONE = 'none',
   ELLIPSIS = '…',
   ATTR_CHANGE_LIST = [
+    'direction',
     'fontFamily',
     'fontSize',
     'fontStyle',
@@ -132,6 +135,7 @@ function checkDefaultFill(config?: TextConfig) {
  * @memberof Konva
  * @augments Konva.Shape
  * @param {Object} config
+ * @param {String} [config.direction] default is ltr
  * @param {String} [config.fontFamily] default is Arial
  * @param {Number} [config.fontSize] in pixels.  Default is 12
  * @param {String} [config.fontStyle] can be 'normal', 'italic', or 'bold', '500' or even 'italic bold'.  'normal' is the default.
@@ -200,6 +204,8 @@ export class Text extends Shape<TextConfig> {
 
     var lineTranslateX = 0;
     var lineTranslateY = 0;
+
+    context.setAttr('direction', this.direction());
 
     context.setAttr('font', this._getContextFont());
 
@@ -615,6 +621,7 @@ export class Text extends Shape<TextConfig> {
     return super._useBufferCanvas();
   }
 
+  direction: GetSet<string, this>;
   fontFamily: GetSet<string, this>;
   fontSize: GetSet<number, this>;
   fontStyle: GetSet<string, this>;
@@ -681,6 +688,22 @@ Factory.overWriteSetter(Text, 'width', getNumberOrAutoValidator());
  */
 
 Factory.overWriteSetter(Text, 'height', getNumberOrAutoValidator());
+
+
+/**
+ * get/set direction
+ * @name Konva.Text#direction
+ * @method
+ * @param {String} direction
+ * @returns {String}
+ * @example
+ * // get direction
+ * var direction = text.direction();
+ *
+ * // set direction
+ * text.direction('rtl');
+ */
+Factory.addGetterSetter(Text, 'direction', 'ltr');
 
 /**
  * get/set font family

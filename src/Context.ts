@@ -82,6 +82,7 @@ var CONTEXT_PROPERTIES = [
   'lineJoin',
   'lineWidth',
   'miterLimit',
+  'direction',
   'font',
   'textAlign',
   'textBaseline',
