@@ -117,7 +117,7 @@ export const shapes: { [key: string]: Shape } = {};
 // the approach is good. But what if we want to cache the shape before we add it into the stage
 // what color to use for hit test?
 
-function _fillFunc(context) {
+function _fillFunc(this: Node, context) {
   const fillRule = this.attrs.fillRule;
   if (fillRule) {
     context.fill(fillRule);
@@ -135,23 +135,23 @@ function _strokeFuncHit(context) {
   context.stroke();
 }
 
-function _clearHasShadowCache() {
+function _clearHasShadowCache(this: Node) {
   this._clearCache(HAS_SHADOW);
 }
 
-function _clearGetShadowRGBACache() {
+function _clearGetShadowRGBACache(this: Node) {
   this._clearCache(SHADOW_RGBA);
 }
 
-function _clearFillPatternCache() {
+function _clearFillPatternCache(this: Node) {
   this._clearCache(patternImage);
 }
 
-function _clearLinearGradientCache() {
+function _clearLinearGradientCache(this: Node) {
   this._clearCache(linearGradient);
 }
 
-function _clearRadialGradientCache() {
+function _clearRadialGradientCache(this: Node) {
   this._clearCache(radialGradient);
 }
 
@@ -750,7 +750,7 @@ export class Shape<
         }
       }
       hitContext.putImageData(hitImageData, 0, 0);
-    } catch (e) {
+    } catch (e: any) {
       Util.error(
         'Unable to draw hit graph from cached scene canvas. ' + e.message
       );

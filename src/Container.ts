@@ -226,16 +226,16 @@ export abstract class Container<
     var result = this._generalFind<ChildNode>(selector, true);
     return result.length > 0 ? result[0] : undefined;
   }
-  _generalFind<ChildNode extends Node = Node>(
+  _generalFind<ChildNode extends Node>(
     selector: string | Function,
     findOne: boolean
   ) {
     var retArr: Array<ChildNode> = [];
 
-    this._descendants((node: ChildNode) => {
+    this._descendants((node) => {
       const valid = node._isMatch(selector);
       if (valid) {
-        retArr.push(node);
+        retArr.push(node as unknown as ChildNode);
       }
       if (valid && findOne) {
         return true;
@@ -256,7 +256,7 @@ export abstract class Container<
       if (!child.hasChildren()) {
         continue;
       }
-      shouldStop = (child as any)._descendants(fn);
+      shouldStop = (child as unknown as Container)._descendants(fn);
       if (shouldStop) {
         return true;
       }
@@ -527,10 +527,7 @@ export abstract class Container<
   // there was "this" instead of "Container<ChildType>",
   // but it breaks react-konva types: https://github.com/konvajs/react-konva/issues/390
   clipFunc: GetSet<
-    (
-      ctx: CanvasRenderingContext2D,
-      shape: Container<ChildType>
-    ) => ClipFuncOutput,
+    (ctx: CanvasRenderingContext2D, shape: Container) => ClipFuncOutput,
     this
   >;
 }

@@ -104,10 +104,10 @@ function getDummyContext() {
   return dummyContext;
 }
 
-function _fillFunc(context: Context) {
+function _fillFunc(this: Text, context: Context) {
   context.fillText(this._partialText, this._partialTextX, this._partialTextY);
 }
-function _strokeFunc(context: Context) {
+function _strokeFunc(this: Text, context: Context) {
   context.setAttr('miterLimit', 2);
   context.strokeText(this._partialText, this._partialTextX, this._partialTextY);
 }

@@ -551,11 +551,9 @@ export class Transformer extends Group {
   _createElements() {
     this._createBack();
 
-    ANCHORS_NAMES.forEach(
-      function (name) {
-        this._createAnchor(name);
-      }.bind(this)
-    );
+    ANCHORS_NAMES.forEach((name) => {
+      this._createAnchor(name);
+    });
 
     this._createAnchor('rotater');
   }
@@ -605,25 +603,25 @@ export class Transformer extends Group {
       width: 0,
       height: 0,
       draggable: true,
-      sceneFunc(ctx) {
-        var tr = this.getParent();
+      sceneFunc(ctx, shape) {
+        var tr = shape.getParent() as Transformer;
         var padding = tr.padding();
         ctx.beginPath();
         ctx.rect(
           -padding,
           -padding,
-          this.width() + padding * 2,
-          this.height() + padding * 2
+          shape.width() + padding * 2,
+          shape.height() + padding * 2
         );
-        ctx.moveTo(this.width() / 2, -padding);
+        ctx.moveTo(shape.width() / 2, -padding);
         if (tr.rotateEnabled()) {
           ctx.lineTo(
-            this.width() / 2,
-            -tr.rotateAnchorOffset() * Util._sign(this.height()) - padding
+            shape.width() / 2,
+            -tr.rotateAnchorOffset() * Util._sign(shape.height()) - padding
           );
         }
 
-        ctx.fillStrokeShape(this);
+        ctx.fillStrokeShape(shape);
       },
       hitFunc: (ctx, shape) => {
         if (!this.shouldOverdrawWholeArea()) {

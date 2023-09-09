@@ -264,7 +264,7 @@ export class Stage extends Container<Layer> {
     }
     obj.container =
       typeof document !== 'undefined' && document.createElement('div');
-    return Container.prototype.clone.call(this, obj);
+    return Container.prototype.clone.call(this, obj) as this;
   }
 
   destroy() {

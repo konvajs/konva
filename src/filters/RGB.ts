@@ -35,7 +35,7 @@ export const RGB: Filter = function (imageData) {
   }
 };
 
-Factory.addGetterSetter(Node, 'red', 0, function (val) {
+Factory.addGetterSetter(Node, 'red', 0, function (this: Node, val) {
   this._filterUpToDate = false;
   if (val > 255) {
     return 255;
@@ -54,7 +54,7 @@ Factory.addGetterSetter(Node, 'red', 0, function (val) {
  * @returns {Integer}
  */
 
-Factory.addGetterSetter(Node, 'green', 0, function (val) {
+Factory.addGetterSetter(Node, 'green', 0, function (this: Node, val) {
   this._filterUpToDate = false;
   if (val > 255) {
     return 255;

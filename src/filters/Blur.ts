@@ -46,7 +46,7 @@ import { getNumberValidator } from '../Validators';
      OTHER DEALINGS IN THE SOFTWARE.
      */
 
-function BlurStack() {
+function BlurStack(this: any) {
   this.r = 0;
   this.g = 0;
   this.b = 0;

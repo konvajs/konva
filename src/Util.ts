@@ -577,7 +577,7 @@ export const Util = {
     var rgb;
     // color string
     if (color in COLORS) {
-      rgb = COLORS[color];
+      rgb = COLORS[color as keyof typeof COLORS];
       return {
         r: rgb[0],
         g: rgb[1],
@@ -588,7 +588,7 @@ export const Util = {
       return this._hexToRgb(color.substring(1));
     } else if (color.substr(0, 4) === RGB_PAREN) {
       // rgb string
-      rgb = RGB_REGEX.exec(color.replace(/ /g, ''));
+      rgb = RGB_REGEX.exec(color.replace(/ /g, '')) as RegExpExecArray;
       return {
         r: parseInt(rgb[1], 10),
         g: parseInt(rgb[2], 10),
@@ -620,7 +620,7 @@ export const Util = {
   },
   // Parse named css color. Like "green"
   _namedColorToRBA(str: string) {
-    var c = COLORS[str.toLowerCase()];
+    var c = COLORS[str.toLowerCase() as keyof typeof COLORS];
     if (!c) {
       return null;
     }
@@ -794,7 +794,7 @@ export const Util = {
       if (this._isPlainObject(obj[key])) {
         retObj[key] = this.cloneObject(obj[key]);
       } else if (this._isArray(obj[key])) {
-        retObj[key] = this.cloneArray(obj[key]);
+        retObj[key] = this.cloneArray(obj[key] as Array<any>);
       } else {
         retObj[key] = obj[key];
       }
@@ -822,7 +822,7 @@ export const Util = {
     );
     return Util.radToDeg(rad);
   },
-  _getRotation(radians) {
+  _getRotation(radians: number) {
     return Konva.angleDeg ? Util.radToDeg(radians) : radians;
   },
   _capitalize(str: string) {
@@ -840,12 +840,12 @@ export const Util = {
     }
     console.warn(KONVA_WARNING + str);
   },
-  each(obj, func) {
+  each(obj: Object, func: Function) {
     for (var key in obj) {
-      func(key, obj[key]);
+      func(key, obj[key as keyof typeof obj]);
     }
   },
-  _inRange(val, left, right) {
+  _inRange(val: number, left: number, right: number) {
     return left <= val && val < right;
   },
   _getProjectionToSegment(x1, y1, x2, y2, x3, y3) {
@@ -876,7 +876,7 @@ export const Util = {
   },
   // line as array of points.
   // line might be closed
-  _getProjectionToLine(pt: Vector2d, line, isClosed) {
+  _getProjectionToLine(pt: Vector2d, line: Array<Vector2d>, isClosed: boolean) {
     var pc = Util.cloneObject(pt);
     var dist = Number.MAX_VALUE;
     line.forEach(function (p1, i) {

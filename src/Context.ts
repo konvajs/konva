@@ -367,7 +367,7 @@ export class Context {
   clip(fillRule?: CanvasFillRule): void;
   clip(path: Path2D, fillRule?: CanvasFillRule): void;
   clip(...args: any[]) {
-    this._context.clip.apply(this._context, args);
+    this._context.clip.apply(this._context, args as any);
   }
   /**
    * closePath function.
@@ -509,7 +509,7 @@ export class Context {
   fill(path: Path2D, fillRule?: CanvasFillRule): void;
   fill(...args: any[]) {
     // this._context.fill();
-    this._context.fill.apply(this._context, args);
+    this._context.fill.apply(this._context, args as any);
   }
   /**
    * fillRect function.
@@ -736,7 +736,7 @@ export class Context {
 
     // attrs
     that.setAttr = function () {
-      origSetter.apply(that, arguments);
+      origSetter.apply(that, arguments as any);
       var prop = arguments[0];
       var val = arguments[1];
       if (

@@ -21,10 +21,10 @@ export interface TextPathConfig extends ShapeConfig {
 var EMPTY_STRING = '',
   NORMAL = 'normal';
 
-function _fillFunc(context) {
+function _fillFunc(this: TextPath, context) {
   context.fillText(this.partialText, 0, 0);
 }
-function _strokeFunc(context) {
+function _strokeFunc(this: TextPath, context) {
   context.strokeText(this.partialText, 0, 0);
 }
 

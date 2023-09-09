@@ -9,7 +9,14 @@
     "moduleResolution": "node",
     "declaration": true,
     "removeComments": false,
-    "strictNullChecks": true,
+
+    "strict": true,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "useUnknownInCatchVariables": false,
+    // probably we would never enable this one
+    // because it's too strict, konva generates many functions on the runtime
+    "strictPropertyInitialization": false,
   },
   "include": ["./src/**/*.ts"]
 }

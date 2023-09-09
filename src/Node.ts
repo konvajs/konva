@@ -145,7 +145,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   attrs: any = {};
   index = 0;
   _allEventListeners: null | Array<Function> = null;
-  parent: Container<Node> | null = null;
+  parent: Container | null = null;
   _cache: Map<string, any> = new Map<string, any>();
   _attachedDepsListeners: Map<string, boolean> = new Map<string, boolean>();
   _lastPos: Vector2d | null = null;
@@ -486,7 +486,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     skipTransform?: boolean;
     skipShadow?: boolean;
     skipStroke?: boolean;
-    relativeTo?: Container<Node>;
+    relativeTo?: Container;
   }): { x: number; y: number; width: number; height: number } {
     // abstract method
     // redefine in Container and Shape
@@ -607,7 +607,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
             filter.call(this, imageData);
             filterContext.putImageData(imageData, 0, 0);
           }
-        } catch (e) {
+        } catch (e: any) {
           Util.error(
             'Unable to apply filter. ' +
               e.message +
@@ -690,7 +690,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this._cache && this._cache.delete(ALL_LISTENERS);
 
     if (arguments.length === 3) {
-      return this._delegate.apply(this, arguments);
+      return this._delegate.apply(this, arguments as any);
     }
     var events = (evtStr as string).split(SPACE),
       len = events.length,
@@ -810,7 +810,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       for (var i = 0; i < targets.length; i++) {
         evt = Util.cloneObject(evt);
         evt.currentTarget = targets[i];
-        handler.call(targets[i], evt);
+        handler.call(targets[i], evt as any);
       }
     });
   }
@@ -2584,6 +2584,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return Util.haveIntersection(screenRect, this.getClientRect());
   }
 
+  // @ts-ignore:
   preventDefault: GetSet<boolean, this>;
 
   // from filters
@@ -2605,7 +2606,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   threshold: GetSet<number, this>;
   value: GetSet<number, this>;
 
-  dragBoundFunc: GetSet<(this: Node, pos: Vector2d) => Vector2d, this>;
+  dragBoundFunc: GetSet<
+    (this: Node, pos: Vector2d, event: any) => Vector2d,
+    this
+  >;
   draggable: GetSet<boolean, this>;
   dragDistance: GetSet<number, this>;
   embossBlend: GetSet<boolean, this>;
@@ -3161,7 +3165,7 @@ addGetterSetter(Node, 'listening', true, getBooleanValidator());
 
 addGetterSetter(Node, 'preventDefault', true, getBooleanValidator());
 
-addGetterSetter(Node, 'filters', null, function (val) {
+addGetterSetter(Node, 'filters', null, function (this: Node, val) {
   this._filterUpToDate = false;
   return val;
 });
