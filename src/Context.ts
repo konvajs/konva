@@ -68,6 +68,7 @@ var COMMA = ',',
     'strokeText',
     'transform',
     'translate',
+    'trySetLetterSpacing',
   ];
 
 var CONTEXT_PROPERTIES = [
@@ -92,6 +93,11 @@ var CONTEXT_PROPERTIES = [
 ] as const;
 
 const traceArrMax = 100;
+
+interface CanvasRenderingContext2DFeatureDetection extends CanvasRenderingContext2D {
+  letterSpacing: string | undefined;
+}
+
 /**
  * Konva wrapper around native 2d canvas context. It has almost the same API of 2d context with some additional functions.
  * With core Konva shapes you don't need to use this object. But you will use it if you want to create
@@ -705,6 +711,21 @@ export class Context {
    */
   translate(x: number, y: number) {
     this._context.translate(x, y);
+  }
+  /**
+    * Set letterSpacing if supported by browser.
+    * @method
+    * @name Konva.Context#trySetLetterSpacing
+    * @returns true if successful, false if not supported.
+    */
+  trySetLetterSpacing(letterSpacing: number): boolean {
+    var context = this._context as CanvasRenderingContext2DFeatureDetection;
+    var letterSpacingSupported = 'letterSpacing' in context;
+
+    if (letterSpacingSupported) {
+      context.letterSpacing = letterSpacing + "px";
+    }
+    return letterSpacingSupported;
   }
   _enableTrace() {
     var that = this,

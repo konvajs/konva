@@ -57,6 +57,7 @@ var AUTO = 'auto',
   PX_SPACE = 'px ',
   SPACE = ' ',
   RIGHT = 'right',
+  RTL = 'rtl',
   WORD = 'word',
   CHAR = 'char',
   NONE = 'none',
@@ -213,6 +214,8 @@ export class Text extends Shape<TextConfig> {
 
     context.setAttr('textAlign', LEFT);
 
+    var letterSpacingSupported = context.trySetLetterSpacing(letterSpacing);
+
     // handle vertical alignment
     if (verticalAlign === MIDDLE) {
       alignY = (this.getHeight() - textArrLen * lineHeightPx - padding * 2) / 2;
@@ -288,7 +291,7 @@ export class Text extends Shape<TextConfig> {
         context.stroke();
         context.restore();
       }
-      if (letterSpacing !== 0 || align === JUSTIFY) {
+      if ((letterSpacing !== 0 && !letterSpacingSupported) || align === JUSTIFY) {
         //   var words = text.split(' ');
         spacesNumber = text.split(' ').length - 1;
         var array = stringToArray(text);
