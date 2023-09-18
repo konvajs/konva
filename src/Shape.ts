@@ -539,7 +539,7 @@ export class Shape<
     const fillRect = this.getSelfRect();
 
     const applyStroke = !config.skipStroke && this.hasStroke();
-    const strokeWidth = (applyStroke && this.strokeWidth()) || 0;
+    const strokeWidth: number = (applyStroke && this.strokeWidth()) || 0;
 
     const fillAndStrokeWidth = fillRect.width + strokeWidth;
     const fillAndStrokeHeight = fillRect.height + strokeWidth;
