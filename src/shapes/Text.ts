@@ -190,6 +190,7 @@ export class Text extends Shape<TextConfig> {
       fontSize = this.fontSize(),
       lineHeightPx = this.lineHeight() * fontSize,
       verticalAlign = this.verticalAlign(),
+      direction = this.direction(),
       alignY = 0,
       align = this.align(),
       totalWidth = this.getWidth(),
@@ -206,7 +207,7 @@ export class Text extends Shape<TextConfig> {
     var lineTranslateX = 0;
     var lineTranslateY = 0;
 
-    context.setAttr('direction', this.direction());
+    context.setAttr('direction', direction);
 
     context.setAttr('font', this._getContextFont());
 
@@ -214,7 +215,6 @@ export class Text extends Shape<TextConfig> {
 
     context.setAttr('textAlign', LEFT);
 
-    var letterSpacingSupported = context.trySetLetterSpacing(letterSpacing);
 
     // handle vertical alignment
     if (verticalAlign === MIDDLE) {
@@ -291,7 +291,10 @@ export class Text extends Shape<TextConfig> {
         context.stroke();
         context.restore();
       }
-      if ((letterSpacing !== 0 && !letterSpacingSupported) || align === JUSTIFY) {
+      // As `letterSpacing` isn't supported on Safari, we use this polyfill.
+      // The exception is for RTL text, which we rely on native as it cannot
+      // be supported otherwise.
+      if (direction !== RTL && (letterSpacing !== 0 || align === JUSTIFY)) {
         //   var words = text.split(' ');
         spacesNumber = text.split(' ').length - 1;
         var array = stringToArray(text);
@@ -312,11 +315,13 @@ export class Text extends Shape<TextConfig> {
           lineTranslateX += this.measureSize(letter).width + letterSpacing;
         }
       } else {
+        context.trySetLetterSpacing(letterSpacing);
         this._partialTextX = lineTranslateX;
         this._partialTextY = translateY + lineTranslateY;
         this._partialText = text;
 
         context.fillStrokeShape(this);
+        context.trySetLetterSpacing(0);
       }
       context.restore();
       if (textArrLen > 1) {
