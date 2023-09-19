@@ -207,7 +207,9 @@ export class Text extends Shape<TextConfig> {
     var lineTranslateX = 0;
     var lineTranslateY = 0;
 
-    context.setAttr('direction', direction);
+    if (direction === RTL) {
+      context.setAttr('direction', direction);
+    }
 
     context.setAttr('font', this._getContextFont());
 
@@ -315,13 +317,14 @@ export class Text extends Shape<TextConfig> {
           lineTranslateX += this.measureSize(letter).width + letterSpacing;
         }
       } else {
-        context.trySetLetterSpacing(letterSpacing);
+        if (letterSpacing !== 0) {
+          context.setAttr('letterSpacing', `${letterSpacing}px`);
+        }
         this._partialTextX = lineTranslateX;
         this._partialTextY = translateY + lineTranslateY;
         this._partialText = text;
 
         context.fillStrokeShape(this);
-        context.trySetLetterSpacing(0);
       }
       context.restore();
       if (textArrLen > 1) {

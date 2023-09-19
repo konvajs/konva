@@ -78,6 +78,7 @@ var CONTEXT_PROPERTIES = [
   'shadowBlur',
   'shadowOffsetX',
   'shadowOffsetY',
+  'letterSpacing',
   'lineCap',
   'lineDashOffset',
   'lineJoin',
@@ -94,8 +95,8 @@ var CONTEXT_PROPERTIES = [
 
 const traceArrMax = 100;
 
-interface CanvasRenderingContext2DFeatureDetection extends CanvasRenderingContext2D {
-  letterSpacing: string | undefined;
+interface ExtendedCanvasRenderingContext2D extends CanvasRenderingContext2D {
+  letterSpacing: string;
 }
 
 /**
@@ -712,21 +713,6 @@ export class Context {
   translate(x: number, y: number) {
     this._context.translate(x, y);
   }
-  /**
-    * Set letterSpacing if supported by browser.
-    * @method
-    * @name Konva.Context#trySetLetterSpacing
-    * @returns true if successful, false if not supported.
-    */
-  trySetLetterSpacing(letterSpacing: number): boolean {
-    var context = this._context as CanvasRenderingContext2DFeatureDetection;
-    var letterSpacingSupported = 'letterSpacing' in context;
-
-    if (letterSpacingSupported) {
-      context.letterSpacing = letterSpacing + "px";
-    }
-    return letterSpacingSupported;
-  }
   _enableTrace() {
     var that = this,
       len = CONTEXT_METHODS.length,
@@ -785,7 +771,7 @@ export class Context {
 
 // supported context properties
 type CanvasContextProps = Pick<
-  CanvasRenderingContext2D,
+  ExtendedCanvasRenderingContext2D,
   (typeof CONTEXT_PROPERTIES)[number]
 >;
 
