@@ -68,7 +68,6 @@ var COMMA = ',',
     'strokeText',
     'transform',
     'translate',
-    'trySetLetterSpacing',
   ];
 
 var CONTEXT_PROPERTIES = [

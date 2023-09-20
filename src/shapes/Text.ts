@@ -42,6 +42,7 @@ export interface TextConfig extends ShapeConfig {
 var AUTO = 'auto',
   //CANVAS = 'canvas',
   CENTER = 'center',
+  INHERIT = 'inherit',
   JUSTIFY = 'justify',
   CHANGE_KONVA = 'Change.konva',
   CONTEXT_2D = '2d',
@@ -136,7 +137,7 @@ function checkDefaultFill(config?: TextConfig) {
  * @memberof Konva
  * @augments Konva.Shape
  * @param {Object} config
- * @param {String} [config.direction] default is ltr
+ * @param {String} [config.direction] default is inherit
  * @param {String} [config.fontFamily] default is Arial
  * @param {Number} [config.fontSize] in pixels.  Default is 12
  * @param {String} [config.fontStyle] can be 'normal', 'italic', or 'bold', '500' or even 'italic bold'.  'normal' is the default.
@@ -200,6 +201,8 @@ export class Text extends Shape<TextConfig> {
       shouldUnderline = textDecoration.indexOf('underline') !== -1,
       shouldLineThrough = textDecoration.indexOf('line-through') !== -1,
       n;
+    
+    direction = direction === INHERIT ? context.direction : direction;
 
     var translateY = 0;
     var translateY = lineHeightPx / 2;
@@ -714,7 +717,7 @@ Factory.overWriteSetter(Text, 'height', getNumberOrAutoValidator());
  * // set direction
  * text.direction('rtl');
  */
-Factory.addGetterSetter(Text, 'direction', 'ltr');
+Factory.addGetterSetter(Text, 'direction', INHERIT);
 
 /**
  * get/set font family
