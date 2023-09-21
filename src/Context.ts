@@ -77,11 +77,13 @@ var CONTEXT_PROPERTIES = [
   'shadowBlur',
   'shadowOffsetX',
   'shadowOffsetY',
+  'letterSpacing',
   'lineCap',
   'lineDashOffset',
   'lineJoin',
   'lineWidth',
   'miterLimit',
+  'direction',
   'font',
   'textAlign',
   'textBaseline',
@@ -91,6 +93,11 @@ var CONTEXT_PROPERTIES = [
 ] as const;
 
 const traceArrMax = 100;
+
+interface ExtendedCanvasRenderingContext2D extends CanvasRenderingContext2D {
+  letterSpacing: string;
+}
+
 /**
  * Konva wrapper around native 2d canvas context. It has almost the same API of 2d context with some additional functions.
  * With core Konva shapes you don't need to use this object. But you will use it if you want to create
@@ -763,7 +770,7 @@ export class Context {
 
 // supported context properties
 type CanvasContextProps = Pick<
-  CanvasRenderingContext2D,
+  ExtendedCanvasRenderingContext2D,
   (typeof CONTEXT_PROPERTIES)[number]
 >;
 

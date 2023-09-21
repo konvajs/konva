@@ -1654,4 +1654,63 @@ describe('Text', function () {
 
     assert.equal(layer.getContext().getTrace(), trace);
   });
+  
+  it('sets ltr text direction', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    stage.add(layer);
+    var text = new Konva.Text({
+      text: 'ltr text',
+      direction: 'ltr',
+    });
+
+    layer.add(text);
+    layer.draw();
+
+    var trace =
+      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);font=normal normal 12px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();fillStyle=black;fillText(ltr text,0,6);restore();restore();';
+
+    assert.equal(layer.getContext().getTrace(), trace);
+  });
+  
+  
+ it('sets rtl text direction', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    stage.add(layer);
+    var text = new Konva.Text({
+      text: 'rtl text',
+      direction: 'rtl',
+    });
+
+    layer.add(text);
+    layer.draw();
+
+    var trace =
+      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);direction=rtl;font=normal normal 12px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();fillStyle=black;fillText(rtl text,0,6);restore();restore();';
+
+    assert.equal(layer.getContext().getTrace(), trace);
+  });
+  
+  it('sets rtl text direction with letterSpacing', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    stage.add(layer);
+    var text = new Konva.Text({
+      text: 'rtl text',
+      direction: 'rtl',
+      letterSpacing: 2,
+    });
+
+    layer.add(text);
+    layer.draw();
+
+    var trace =
+      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);direction=rtl;font=normal normal 12px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();letterSpacing=2px;fillStyle=black;fillText(rtl text,0,6);restore();restore();';
+
+    assert.equal(layer.getContext().getTrace(), trace);
+  });
 });
