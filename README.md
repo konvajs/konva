@@ -71,7 +71,7 @@ Konva supports UMD loading. So you can use all possible variants to load the fra
 ### Load Konva via classical `<script>` tag from CDN:
 
 ```html
-<script src="https://unpkg.com/konva@8/konva.min.js"></script>
+<script src="https://unpkg.com/konva@9/konva.min.js"></script>
 ```
 
 ### Install with npm:
