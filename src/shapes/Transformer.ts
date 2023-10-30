@@ -1056,17 +1056,19 @@ export class Transformer extends Group {
     oldTr.scale(oldAttrs.width / baseSize, oldAttrs.height / baseSize);
 
     const newTr = new Transform();
-    newTr.rotate(newAttrs.rotation);
     const newScaleX = newAttrs.width / baseSize;
     const newScaleY = newAttrs.height / baseSize;
+
     if (this.flipEnabled() === false) {
       newTr.translate(
         newAttrs.x + (newAttrs.width < 0 ? newAttrs.width : 0),
         newAttrs.y + (newAttrs.height < 0 ? newAttrs.height : 0)
       );
+      newTr.rotate(newAttrs.rotation);
       newTr.scale(Math.abs(newScaleX), Math.abs(newScaleY));
     } else {
       newTr.translate(newAttrs.x, newAttrs.y);
+      newTr.rotate(newAttrs.rotation);
       newTr.scale(newScaleX, newScaleY);
     }
 
