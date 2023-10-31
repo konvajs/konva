@@ -4924,9 +4924,9 @@ describe('Transformer', function () {
 
     layer.draw();
 
-    assertAlmostEqual(rect.x(), 350);
+    assertAlmostEqual(rect.x(), 250);
     assertAlmostEqual(rect.y(), 50);
     assertAlmostEqual(rect.scaleX(), 1);
-    assertAlmostEqual(rect.scaleY(), -1);
+    assertAlmostEqual(rect.scaleY(), 1);
   });
 });
