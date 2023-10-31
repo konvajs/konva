@@ -2353,7 +2353,7 @@ describe('Transformer', function () {
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      nodes: [rect]
+      nodes: [rect],
     });
     layer.add(tr);
     layer.draw();
@@ -2385,7 +2385,7 @@ describe('Transformer', function () {
 
     var tr = new Konva.Transformer({
       nodes: [rect],
-      rotateAnchorCursor: 'grab'
+      rotateAnchorCursor: 'grab',
     });
     layer.add(tr);
     layer.draw();
@@ -4877,5 +4877,56 @@ describe('Transformer', function () {
     assert.equal(handler.fill(), 'red');
     tr.anchorStyleFunc(null);
     assert.equal(handler.fill(), 'white');
+  });
+
+  it.only('flip rectangle', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      draggable: true,
+      x: 150,
+      y: 50,
+      width: 100,
+      height: 100,
+      fillLinearGradientStartPoint: { x: -50, y: -50 },
+      fillLinearGradientEndPoint: { x: 50, y: 50 },
+      fillLinearGradientColorStops: [0, 'red', 1, 'yellow'],
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+      flipEnabled: false,
+    });
+    layer.add(tr);
+
+    layer.draw();
+
+    simulateMouseDown(tr, {
+      x: 150,
+      y: 50,
+    });
+    simulateMouseMove(tr, {
+      x: 250,
+      y: 50,
+    });
+    simulateMouseMove(tr, {
+      x: 350,
+      y: 50,
+    });
+
+    simulateMouseUp(tr, {
+      x: 350,
+      y: 50,
+    });
+
+    layer.draw();
+
+    assertAlmostEqual(rect.x(), 350);
+    assertAlmostEqual(rect.y(), 50);
+    assertAlmostEqual(rect.scaleX(), 1);
+    assertAlmostEqual(rect.scaleY(), -1);
   });
 });

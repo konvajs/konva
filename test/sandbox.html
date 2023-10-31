@@ -43,8 +43,10 @@
         x: 100,
         y: 150,
         radius: 50,
-        fill: 'red',
         draggable: true,
+        fillLinearGradientStartPoint: { x: -50, y: -50 },
+        fillLinearGradientEndPoint: { x: 50, y: 50 },
+        fillLinearGradientColorStops: [0, 'red', 1, 'yellow'],
       });
 
       layer.add(circle);
