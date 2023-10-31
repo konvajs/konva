@@ -4879,7 +4879,7 @@ describe('Transformer', function () {
     assert.equal(handler.fill(), 'white');
   });
 
-  it.only('flip rectangle', function () {
+  it('flip rectangle', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
