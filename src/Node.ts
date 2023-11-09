@@ -57,6 +57,7 @@ export interface NodeConfig {
   listening?: boolean;
   id?: string;
   name?: string;
+  data?: any;
   opacity?: number;
   scale?: Vector2d;
   scaleX?: number;
