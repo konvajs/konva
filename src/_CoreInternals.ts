@@ -2,6 +2,9 @@
 import { Konva as Global } from './Global';
 
 import { Util, Transform } from './Util';
+import { Factory } from './Factory';
+import * as Validators from './Validators';
+
 import { Node } from './Node';
 import { Container } from './Container';
 
@@ -24,6 +27,8 @@ import { Canvas } from './Canvas';
 
 export const Konva = Util._assign(Global, {
   Util,
+  Factory,
+  Validators,
   Transform,
   Node,
   Container,

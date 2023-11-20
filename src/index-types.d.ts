@@ -41,6 +41,7 @@ declare namespace Konva {
   export const isDragReady: () => boolean;
   export const getAngle: (angle: number) => number;
 
+  export type GetSet<Type, This> = import('./types').GetSet<Type, This>
   export type Vector2d = import('./types').Vector2d;
 
   export const Node: typeof import('./Node').Node;
@@ -63,6 +64,8 @@ declare namespace Konva {
   export type Transform = import('./Util').Transform;
 
   export const Util: typeof import('./Util').Util;
+  export const Factory: typeof import('./Factory').Factory;
+  export const Validators: typeof import('./Validators');
 
   export const Context: typeof import('./Context').Context;
   export type Context = import('./Context').Context;
