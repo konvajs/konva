@@ -1368,6 +1368,26 @@ describe('Stage', function () {
     }
   });
 
+  it('toBlob with mimeType option using', async function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+
+    stage.add(layer);
+
+    if (isBrowser) {
+      try {
+        const blob = await stage.toBlob({
+          mimeType: 'image/jpeg',
+          quality: 0.5,
+        });
+        assert.isTrue(blob instanceof Blob && blob.type === 'image/jpeg', "can't change type of blob");
+      } catch (e) {
+        console.error(e);
+        assert.fail('error creating blob');
+      }
+    }
+  });
+
   it('check hit graph with stage listening property', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
