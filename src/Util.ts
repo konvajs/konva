@@ -577,7 +577,7 @@ export const Util = {
     var rgb;
     // color string
     if (color in COLORS) {
-      rgb = COLORS[color];
+      rgb = COLORS[color as keyof typeof COLORS];
       return {
         r: rgb[0],
         g: rgb[1],
@@ -588,7 +588,7 @@ export const Util = {
       return this._hexToRgb(color.substring(1));
     } else if (color.substr(0, 4) === RGB_PAREN) {
       // rgb string
-      rgb = RGB_REGEX.exec(color.replace(/ /g, ''));
+      rgb = RGB_REGEX.exec(color.replace(/ /g, '')) as RegExpExecArray;
       return {
         r: parseInt(rgb[1], 10),
         g: parseInt(rgb[2], 10),
@@ -605,7 +605,7 @@ export const Util = {
   },
   // convert any color string to RGBA object
   // from https://github.com/component/color-parser
-  colorToRGBA(str: string): RGBA {
+  colorToRGBA(str: string) {
     str = str || 'black';
     return (
       Util._namedColorToRBA(str) ||
@@ -620,7 +620,7 @@ export const Util = {
   },
   // Parse named css color. Like "green"
   _namedColorToRBA(str: string) {
-    var c = COLORS[str.toLowerCase()];
+    var c = COLORS[str.toLowerCase() as keyof typeof COLORS];
     if (!c) {
       return null;
     }
@@ -632,9 +632,9 @@ export const Util = {
     };
   },
   // Parse rgb(n, n, n)
-  _rgbColorToRGBA(str: string): RGBA {
+  _rgbColorToRGBA(str: string) {
     if (str.indexOf('rgb(') === 0) {
-      str = str.match(/rgb\(([^)]+)\)/)[1];
+      str = str.match(/rgb\(([^)]+)\)/)![1];
       var parts = str.split(/ *, */).map(Number);
       return {
         r: parts[0],
@@ -645,9 +645,9 @@ export const Util = {
     }
   },
   // Parse rgba(n, n, n, n)
-  _rgbaColorToRGBA(str: string): RGBA {
+  _rgbaColorToRGBA(str: string) {
     if (str.indexOf('rgba(') === 0) {
-      str = str.match(/rgba\(([^)]+)\)/)[1];
+      str = str.match(/rgba\(([^)]+)\)/)![1]!;
       var parts = str.split(/ *, */).map((n, index) => {
         if (n.slice(-1) === '%') {
           return index === 3 ? parseInt(n) / 100 : (parseInt(n) / 100) * 255;
@@ -663,7 +663,7 @@ export const Util = {
     }
   },
   // Parse #nnnnnnnn
-  _hex8ColorToRGBA(str: string): RGBA {
+  _hex8ColorToRGBA(str: string) {
     if (str[0] === '#' && str.length === 9) {
       return {
         r: parseInt(str.slice(1, 3), 16),
@@ -674,7 +674,7 @@ export const Util = {
     }
   },
   // Parse #nnnnnn
-  _hex6ColorToRGBA(str: string): RGBA {
+  _hex6ColorToRGBA(str: string) {
     if (str[0] === '#' && str.length === 7) {
       return {
         r: parseInt(str.slice(1, 3), 16),
@@ -685,7 +685,7 @@ export const Util = {
     }
   },
   // Parse #nnnn
-  _hex4ColorToRGBA(str: string): RGBA {
+  _hex4ColorToRGBA(str: string) {
     if (str[0] === '#' && str.length === 5) {
       return {
         r: parseInt(str[1] + str[1], 16),
@@ -696,7 +696,7 @@ export const Util = {
     }
   },
   // Parse #nnn
-  _hex3ColorToRGBA(str: string): RGBA {
+  _hex3ColorToRGBA(str: string) {
     if (str[0] === '#' && str.length === 4) {
       return {
         r: parseInt(str[1] + str[1], 16),
@@ -707,11 +707,11 @@ export const Util = {
     }
   },
   // Code adapted from https://github.com/Qix-/color-convert/blob/master/conversions.js#L244
-  _hslColorToRGBA(str: string): RGBA {
+  _hslColorToRGBA(str: string) {
     // Check hsl() format
     if (/hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.test(str)) {
       // Extract h, s, l
-      const [_, ...hsl] = /hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.exec(str);
+      const [_, ...hsl] = /hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.exec(str)!;
 
       const h = Number(hsl[0]) / 360;
       const s = Number(hsl[1]) / 100;
@@ -794,7 +794,7 @@ export const Util = {
       if (this._isPlainObject(obj[key])) {
         retObj[key] = this.cloneObject(obj[key]);
       } else if (this._isArray(obj[key])) {
-        retObj[key] = this.cloneArray(obj[key]);
+        retObj[key] = this.cloneArray(obj[key] as Array<any>);
       } else {
         retObj[key] = obj[key];
       }
@@ -822,7 +822,7 @@ export const Util = {
     );
     return Util.radToDeg(rad);
   },
-  _getRotation(radians) {
+  _getRotation(radians: number) {
     return Konva.angleDeg ? Util.radToDeg(radians) : radians;
   },
   _capitalize(str: string) {
@@ -840,12 +840,12 @@ export const Util = {
     }
     console.warn(KONVA_WARNING + str);
   },
-  each(obj, func) {
+  each(obj: Object, func: Function) {
     for (var key in obj) {
-      func(key, obj[key]);
+      func(key, obj[key as keyof typeof obj]);
     }
   },
-  _inRange(val, left, right) {
+  _inRange(val: number, left: number, right: number) {
     return left <= val && val < right;
   },
   _getProjectionToSegment(x1, y1, x2, y2, x3, y3) {
@@ -876,7 +876,7 @@ export const Util = {
   },
   // line as array of points.
   // line might be closed
-  _getProjectionToLine(pt: Vector2d, line, isClosed) {
+  _getProjectionToLine(pt: Vector2d, line: Array<Vector2d>, isClosed: boolean) {
     var pc = Util.cloneObject(pt);
     var dist = Number.MAX_VALUE;
     line.forEach(function (p1, i) {
@@ -905,8 +905,8 @@ export const Util = {
   },
   _prepareArrayForTween(startArray, endArray, isClosed) {
     var n,
-      start = [],
-      end = [];
+      start: Vector2d[] = [],
+      end: Vector2d[] = [];
     if (startArray.length > endArray.length) {
       var temp = endArray;
       endArray = startArray;
@@ -925,7 +925,7 @@ export const Util = {
       });
     }
 
-    var newStart = [];
+    var newStart: number[] = [];
     end.forEach(function (point) {
       var pr = Util._getProjectionToLine(point, start, isClosed);
       newStart.push(pr.x);
@@ -985,22 +985,27 @@ export const Util = {
   releaseCanvas(...canvases: HTMLCanvasElement[]) {
     if (!Konva.releaseCanvasOnDestroy) return;
 
-    canvases.forEach(c => {
+    canvases.forEach((c) => {
       c.width = 0;
       c.height = 0;
-    })
+    });
   },
-  drawRoundedRectPath(context: Context, width: number, height: number, cornerRadius: number | number[]) {
+  drawRoundedRectPath(
+    context: Context,
+    width: number,
+    height: number,
+    cornerRadius: number | number[]
+  ) {
     let topLeft = 0;
     let topRight = 0;
     let bottomLeft = 0;
     let bottomRight = 0;
     if (typeof cornerRadius === 'number') {
-      topLeft = topRight = bottomLeft = bottomRight = Math.min(
-        cornerRadius,
-        width / 2,
-        height / 2
-      );
+      topLeft =
+        topRight =
+        bottomLeft =
+        bottomRight =
+          Math.min(cornerRadius, width / 2, height / 2);
     } else {
       topLeft = Math.min(cornerRadius[0] || 0, width / 2, height / 2);
       topRight = Math.min(cornerRadius[1] || 0, width / 2, height / 2);
@@ -1037,5 +1042,5 @@ export const Util = {
     );
     context.lineTo(0, topLeft);
     context.arc(topLeft, topLeft, topLeft, Math.PI, (Math.PI * 3) / 2, false);
-  }
+  },
 };

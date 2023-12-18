@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### 9.2.3 (2023-10-31)
+
+- Better `Konva.Transformer` work when it has `flipEnabled = false`.
+
+### 9.2.2 (2023-09-14)
+
+- Better RTL support
+- Some typescript fixes
+
+### 9.2.1 (2023-09-14)
+
+- Fix text rendering when text has both underline and shadow
+- Typescript fixes
+
+### 9.2.0 (2023-05-14)
+
+- More controls on clipping
+- `fillRule` for `Konva.Shape`
+
+### 9.1.0 (2023-05-14)
+
+- New `anchorStyleFunc` for `Konva.Transformer` to customize anchor style
+
+### 9.0.2 (2023-05-14)
+
+- Better text rendering when it has stroke
+
 ### 9.0.1 (2023-04-17)
 
 - Better performance for any instance creation

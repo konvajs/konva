@@ -195,7 +195,7 @@ export const Kaleidoscope: Filter = function (imageData) {
   tempCanvas.width = xSize;
   tempCanvas.height = ySize;
   var scratchData = tempCanvas
-    .getContext('2d')
+    .getContext('2d')!
     .getImageData(0, 0, xSize, ySize);
   Util.releaseCanvas(tempCanvas);
   // Convert thhe original to polar coordinates

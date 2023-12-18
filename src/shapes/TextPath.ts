@@ -7,7 +7,7 @@ import { Text, stringToArray } from './Text';
 import { getNumberValidator } from '../Validators';
 import { _registerNode } from '../Global';
 
-import { GetSet, Vector2d } from '../types';
+import { GetSet, PathSegment, Vector2d } from '../types';
 
 export interface TextPathConfig extends ShapeConfig {
   text?: string;
@@ -21,10 +21,10 @@ export interface TextPathConfig extends ShapeConfig {
 var EMPTY_STRING = '',
   NORMAL = 'normal';
 
-function _fillFunc(context) {
+function _fillFunc(this: TextPath, context) {
   context.fillText(this.partialText, 0, 0);
 }
-function _strokeFunc(context) {
+function _strokeFunc(this: TextPath, context) {
   context.strokeText(this.partialText, 0, 0);
 }
 
@@ -37,7 +37,7 @@ function _strokeFunc(context) {
  * @param {Object} config
  * @param {String} [config.fontFamily] default is Arial
  * @param {Number} [config.fontSize] default is 12
- * @param {String} [config.fontStyle] can be normal, bold, or italic.  Default is normal
+ * @param {String} [config.fontStyle] Can be 'normal', 'italic', or 'bold', '500' or even 'italic bold'.  'normal' is the default.
  * @param {String} [config.fontVariant] can be normal or small-caps.  Default is normal
  * @param {String} [config.textBaseline] Can be 'top', 'bottom', 'middle', 'alphabetic', 'hanging'. Default is middle
  * @param {String} config.text
@@ -74,7 +74,7 @@ function _strokeFunc(context) {
  */
 export class TextPath extends Shape<TextPathConfig> {
   dummyCanvas = Util.createCanvasElement();
-  dataArray = [];
+  dataArray: PathSegment[] = [];
   glyphInfo: Array<{
     transposeX: number;
     transposeY: number;
@@ -221,7 +221,7 @@ export class TextPath extends Shape<TextPathConfig> {
 
   _getTextSize(text: string) {
     var dummyCanvas = this.dummyCanvas;
-    var _context = dummyCanvas.getContext('2d');
+    var _context = dummyCanvas.getContext('2d')!;
 
     _context.save();
 
@@ -338,7 +338,7 @@ export class TextPath extends Shape<TextPathConfig> {
         height: 0,
       };
     }
-    var points = [];
+    var points: number[] = [];
 
     this.glyphInfo.forEach(function (info) {
       points.push(info.p0.x);
@@ -444,7 +444,7 @@ Factory.addGetterSetter(TextPath, 'fontFamily', 'Arial');
 Factory.addGetterSetter(TextPath, 'fontSize', 12, getNumberValidator());
 
 /**
- * get/set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
+ * get/set font style.  Can be 'normal', 'italic', or 'bold', '500' or even 'italic bold'.  'normal' is the default.
  * @name Konva.TextPath#fontStyle
  * @method
  * @param {String} fontStyle

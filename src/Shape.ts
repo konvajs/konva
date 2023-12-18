@@ -56,6 +56,7 @@ export interface ShapeConfig extends NodeConfig {
   fillRadialGradientColorStops?: Array<number | string>;
   fillEnabled?: boolean;
   fillPriority?: string;
+  fillRule?: CanvasFillRule;
   stroke?: string | CanvasGradient;
   strokeWidth?: number;
   fillAfterStrokeEnabled?: boolean;
@@ -88,6 +89,11 @@ export interface ShapeGetClientRectConfig {
   relativeTo?: Node;
 }
 
+export type FillFuncOutput =
+  | void
+  | [Path2D | CanvasFillRule]
+  | [Path2D, CanvasFillRule];
+
 var HAS_SHADOW = 'hasShadow';
 var SHADOW_RGBA = 'shadowRGBA';
 var patternImage = 'patternImage';
@@ -99,7 +105,7 @@ function getDummyContext(): CanvasRenderingContext2D {
   if (dummyContext) {
     return dummyContext;
   }
-  dummyContext = Util.createCanvasElement().getContext('2d');
+  dummyContext = Util.createCanvasElement().getContext('2d')!;
   return dummyContext;
 }
 
@@ -111,8 +117,13 @@ export const shapes: { [key: string]: Shape } = {};
 // the approach is good. But what if we want to cache the shape before we add it into the stage
 // what color to use for hit test?
 
-function _fillFunc(context) {
-  context.fill();
+function _fillFunc(this: Node, context) {
+  const fillRule = this.attrs.fillRule;
+  if (fillRule) {
+    context.fill(fillRule);
+  } else {
+    context.fill();
+  }
 }
 function _strokeFunc(context) {
   context.stroke();
@@ -124,23 +135,23 @@ function _strokeFuncHit(context) {
   context.stroke();
 }
 
-function _clearHasShadowCache() {
+function _clearHasShadowCache(this: Node) {
   this._clearCache(HAS_SHADOW);
 }
 
-function _clearGetShadowRGBACache() {
+function _clearGetShadowRGBACache(this: Node) {
   this._clearCache(SHADOW_RGBA);
 }
 
-function _clearFillPatternCache() {
+function _clearFillPatternCache(this: Node) {
   this._clearCache(patternImage);
 }
 
-function _clearLinearGradientCache() {
+function _clearLinearGradientCache(this: Node) {
   this._clearCache(linearGradient);
 }
 
-function _clearRadialGradientCache() {
+function _clearRadialGradientCache(this: Node) {
   this._clearCache(radialGradient);
 }
 
@@ -176,7 +187,7 @@ export class Shape<
   _centroid: boolean;
   colorKey: string;
 
-  _fillFunc: (ctx: Context) => void;
+  _fillFunc: (ctx: Context) => FillFuncOutput;
   _strokeFunc: (ctx: Context) => void;
   _fillFuncHit: (ctx: Context) => void;
   _strokeFuncHit: (ctx: Context) => void;
@@ -199,11 +210,11 @@ export class Shape<
 
   getContext() {
     Util.warn('shape.getContext() method is deprecated. Please do not use it.');
-    return this.getLayer().getContext();
+    return this.getLayer()!.getContext();
   }
   getCanvas() {
     Util.warn('shape.getCanvas() method is deprecated. Please do not use it.');
-    return this.getLayer().getCanvas();
+    return this.getLayer()!.getCanvas();
   }
 
   getSceneFunc() {
@@ -427,13 +438,15 @@ export class Shape<
    * @returns {Boolean}
    */
   intersects(point) {
-    var stage = this.getStage(),
-      bufferHitCanvas = stage.bufferHitCanvas,
-      p;
+    var stage = this.getStage();
+    if (!stage) {
+      return false;
+    }
+    const bufferHitCanvas = stage.bufferHitCanvas;
 
     bufferHitCanvas.getContext().clear();
-    this.drawHit(bufferHitCanvas, null, true);
-    p = bufferHitCanvas.context.getImageData(
+    this.drawHit(bufferHitCanvas, undefined, true);
+    const p = bufferHitCanvas.context.getImageData(
       Math.round(point.x),
       Math.round(point.y),
       1,
@@ -445,7 +458,7 @@ export class Shape<
   destroy() {
     Node.prototype.destroy.call(this);
     delete shapes[this.colorKey];
-    delete this.colorKey;
+    delete (this as any).colorKey;
     return this;
   }
   // why do we need buffer canvas?
@@ -526,7 +539,7 @@ export class Shape<
     const fillRect = this.getSelfRect();
 
     const applyStroke = !config.skipStroke && this.hasStroke();
-    const strokeWidth = (applyStroke && this.strokeWidth()) || 0;
+    const strokeWidth: number = (applyStroke && this.strokeWidth()) || 0;
 
     const fillAndStrokeWidth = fillRect.width + strokeWidth;
     const fillAndStrokeHeight = fillRect.height + strokeWidth;
@@ -566,8 +579,8 @@ export class Shape<
     // 2 - when we are caching current
     // 3 - when node is cached and we need to draw it into layer
 
-    var layer = this.getLayer(),
-      canvas = can || layer.getCanvas(),
+    var layer = this.getLayer();
+    var canvas = can || layer!.getCanvas(),
       context = canvas.getContext() as SceneContext,
       cachedCanvas = this._getCanvasCache(),
       drawFunc = this.getSceneFunc(),
@@ -652,7 +665,7 @@ export class Shape<
     }
 
     var layer = this.getLayer(),
-      canvas = can || layer.hitCanvas,
+      canvas = can || layer!.hitCanvas,
       context = canvas && canvas.getContext(),
       drawFunc = this.hitFunc() || this.sceneFunc(),
       cachedCanvas = this._getCanvasCache(),
@@ -737,7 +750,7 @@ export class Shape<
         }
       }
       hitContext.putImageData(hitImageData, 0, 0);
-    } catch (e) {
+    } catch (e: any) {
       Util.error(
         'Unable to draw hit graph from cached scene canvas. ' + e.message
       );
@@ -1985,6 +1998,22 @@ Factory.addGetterSetter(Shape, 'fillPatternRotation', 0);
  *
  * // set fill pattern rotation
  * shape.fillPatternRotation(20);
+ */
+
+Factory.addGetterSetter(Shape, 'fillRule', undefined, getStringValidator());
+
+/**
+ * get/set fill rule
+ * @name Konva.Shape#fillRule
+ * @method
+ * @param {CanvasFillRule} rotation
+ * @returns {Konva.Shape}
+ * @example
+ * // get fill rule
+ * var fillRule = shape.fillRule();
+ *
+ * // set fill rule
+ * shape.fillRule('evenodd');
  */
 
 Factory.backCompat(Shape, {

@@ -36,7 +36,7 @@ export const RGBA: Filter = function (imageData) {
   }
 };
 
-Factory.addGetterSetter(Node, 'red', 0, function (val) {
+Factory.addGetterSetter(Node, 'red', 0, function (this: Node, val: number) {
   this._filterUpToDate = false;
   if (val > 255) {
     return 255;
@@ -55,7 +55,7 @@ Factory.addGetterSetter(Node, 'red', 0, function (val) {
  * @returns {Integer}
  */
 
-Factory.addGetterSetter(Node, 'green', 0, function (val) {
+Factory.addGetterSetter(Node, 'green', 0, function (this: Node, val) {
   this._filterUpToDate = false;
   if (val > 255) {
     return 255;
@@ -84,7 +84,7 @@ Factory.addGetterSetter(Node, 'blue', 0, RGBComponent, Factory.afterSetFilter);
  * @returns {Integer}
  */
 
-Factory.addGetterSetter(Node, 'alpha', 1, function (val) {
+Factory.addGetterSetter(Node, 'alpha', 1, function (this: Node, val) {
   this._filterUpToDate = false;
   if (val > 1) {
     return 1;

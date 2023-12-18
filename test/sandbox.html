@@ -25,33 +25,51 @@
   </head>
 
   <body>
-    <div id="container" style="background-color: bisque"></div>
+    <div id="container"></div>
 
     <script type="module">
       import Konva from '../src/index.ts';
 
-      const stage = new Konva.Stage({
+      var stage = new Konva.Stage({
         container: 'container',
-        width: window.innerWidth / 2,
-        height: window.innerHeight / 2,
+        width: window.innerHeight,
+        height: window.innerHeight,
       });
-      const layer = new Konva.Layer();
+
+      var layer = new Konva.Layer();
       stage.add(layer);
-      console.time('load');
-      for (var i = 0; i < 30000; i++) {
-        const shape = new Konva.Circle({
-          x: Math.random() * stage.width(),
-          y: Math.random() * stage.height(),
-          radius: 10,
-          draggable: true,
-          fill: Konva.Util.getRandomColor(),
-        });
-        layer.add(shape);
-      }
-      console.timeEnd('load');
-      console.time('draw');
-      layer.draw();
-      console.timeEnd('draw');
+
+      const circle = new Konva.Circle({
+        x: 100,
+        y: 150,
+        radius: 50,
+        draggable: true,
+        fillLinearGradientStartPoint: { x: -50, y: -50 },
+        fillLinearGradientEndPoint: { x: 50, y: 50 },
+        fillLinearGradientColorStops: [0, 'red', 1, 'yellow'],
+      });
+
+      layer.add(circle);
+
+      const tr = new Konva.Transformer({
+        nodes: [circle],
+        flipEnabled: false,
+      });
+      layer.add(tr);
+
+      const dot = new Konva.Circle({
+        x: 100,
+        y: 100,
+        radius: 2,
+        fill: 'blue',
+      });
+
+      layer.add(dot);
+
+      circle.on('transform', () => {
+        dot.x(circle.x());
+        dot.y(circle.y() - circle.radius() * circle.scaleY() - 50);
+      });
     </script>
   </body>
 </html>

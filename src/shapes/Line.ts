@@ -22,7 +22,7 @@ function getControlPoints(x0, y0, x1, y1, x2, y2, t) {
 
 function expandPoints(p, tension) {
   var len = p.length,
-    allPoints = [],
+    allPoints: Array<number> = [],
     n,
     cp;
 
@@ -51,7 +51,17 @@ function expandPoints(p, tension) {
 }
 
 export interface LineConfig extends ShapeConfig {
-  points?: number[] | Int8Array | Uint8Array | Uint8ClampedArray | Int16Array | Uint16Array | Int32Array | Uint32Array | Float32Array | Float64Array;
+  points?:
+    | number[]
+    | Int8Array
+    | Uint8Array
+    | Uint8ClampedArray
+    | Int16Array
+    | Uint16Array
+    | Int32Array
+    | Uint32Array
+    | Float32Array
+    | Float64Array;
   tension?: number;
   closed?: boolean;
   bezier?: boolean;

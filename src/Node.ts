@@ -145,10 +145,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   attrs: any = {};
   index = 0;
   _allEventListeners: null | Array<Function> = null;
-  parent: Container<Node> | null = null;
+  parent: Container | null = null;
   _cache: Map<string, any> = new Map<string, any>();
   _attachedDepsListeners: Map<string, boolean> = new Map<string, boolean>();
-  _lastPos: Vector2d = null;
+  _lastPos: Vector2d | null = null;
   _attrsAffectingSize!: string[];
   _batchingTransformChange = false;
   _needClearTransformCache = false;
@@ -322,7 +322,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     ) {
       rect = this.getClientRect({
         skipTransform: true,
-        relativeTo: this.getParent(),
+        relativeTo: this.getParent() || undefined,
       });
     }
     var width = Math.ceil(conf.width || rect.width),
@@ -486,20 +486,23 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     skipTransform?: boolean;
     skipShadow?: boolean;
     skipStroke?: boolean;
-    relativeTo?: Container<Node>;
+    relativeTo?: Container;
   }): { x: number; y: number; width: number; height: number } {
     // abstract method
     // redefine in Container and Shape
     throw new Error('abstract "getClientRect" method call');
   }
-  _transformedRect(rect: IRect, top: Node) {
+  _transformedRect(rect: IRect, top?: Node | null) {
     var points = [
       { x: rect.x, y: rect.y },
       { x: rect.x + rect.width, y: rect.y },
       { x: rect.x + rect.width, y: rect.y + rect.height },
       { x: rect.x, y: rect.y + rect.height },
     ];
-    var minX: number, minY: number, maxX: number, maxY: number;
+    var minX: number = Infinity,
+      minY: number = Infinity,
+      maxX: number = -Infinity,
+      maxY: number = -Infinity;
     var trans = this.getAbsoluteTransform(top);
     points.forEach(function (point) {
       var transformed = trans.point(point);
@@ -604,7 +607,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
             filter.call(this, imageData);
             filterContext.putImageData(imageData, 0, 0);
           }
-        } catch (e) {
+        } catch (e: any) {
           Util.error(
             'Unable to apply filter. ' +
               e.message +
@@ -687,7 +690,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this._cache && this._cache.delete(ALL_LISTENERS);
 
     if (arguments.length === 3) {
-      return this._delegate.apply(this, arguments);
+      return this._delegate.apply(this, arguments as any);
     }
     var events = (evtStr as string).split(SPACE),
       len = events.length,
@@ -807,7 +810,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       for (var i = 0; i < targets.length; i++) {
         evt = Util.cloneObject(evt);
         evt.currentTarget = targets[i];
-        handler.call(targets[i], evt);
+        handler.call(targets[i], evt as any);
       }
     });
   }
@@ -1084,8 +1087,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         addChildren(nodes);
       }
     }
-    if (that.nodeType !== UPPER_STAGE) {
-      addChildren(that.getStage().getChildren());
+    const stage = this.getStage();
+    if (that.nodeType !== UPPER_STAGE && stage) {
+      addChildren(stage.getChildren());
     }
 
     return index;
@@ -1150,11 +1154,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * rect.getRelativePointerPosition();
    */
   getRelativePointerPosition() {
-    if (!this.getStage()) {
+    const stage = this.getStage();
+    if (!stage) {
       return null;
     }
     // get pointer (say mouse or touch) position
-    var pos = this.getStage().getPointerPosition();
+    var pos = stage.getPointerPosition();
     if (!pos) {
       return null;
     }
@@ -1205,13 +1210,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return absoluteTransform.getTranslation();
   }
   setAbsolutePosition(pos: Vector2d) {
-    var origTrans = this._clearTransform();
+    const { x, y, ...origTrans } = this._clearTransform();
 
     // don't clear translation
-    this.attrs.x = origTrans.x;
-    this.attrs.y = origTrans.y;
-    delete origTrans.x;
-    delete origTrans.y;
+    this.attrs.x = x;
+    this.attrs.y = y;
 
     // important, use non cached value
     this._clearCache(TRANSFORM);
@@ -1298,7 +1301,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return this;
   }
   _eachAncestorReverse(func, top) {
-    var family = [],
+    var family: Array<Node> = [],
       parent = this.getParent(),
       len,
       n;
@@ -1541,7 +1544,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // get one of the parent group
    * var parentGroups = node.findAncestors('Group');
    */
-  findAncestors(selector: string, includeSelf?: boolean, stopNode?: Node) {
+  findAncestors(
+    selector: string | Function,
+    includeSelf?: boolean,
+    stopNode?: Node
+  ) {
     var res: Array<Node> = [];
 
     if (includeSelf && this._isMatch(selector)) {
@@ -1574,7 +1581,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // get one of the parent group
    * var group = node.findAncestors('.mygroup');
    */
-  findAncestor(selector?: string, includeSelf?: boolean, stopNode?: Container) {
+  findAncestor(
+    selector: string | Function,
+    includeSelf?: boolean,
+    stopNode?: Container
+  ) {
     return this.findAncestors(selector, includeSelf, stopNode)[0];
   }
   // is current node match passed selector?
@@ -1639,12 +1650,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return this._getCache(STAGE, this._getStage);
   }
 
-  _getStage(): Stage | undefined {
+  _getStage() {
     var parent = this.getParent();
     if (parent) {
       return parent.getStage();
     } else {
-      return undefined;
+      return null;
     }
   }
   /**
@@ -1689,7 +1700,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#getAbsoluteTransform
    * @returns {Konva.Transform}
    */
-  getAbsoluteTransform(top?: Node) {
+  getAbsoluteTransform(top?: Node | null) {
     // if using an argument, we can't cache the result.
     if (top) {
       return this._getAbsoluteTransform(top);
@@ -1756,7 +1767,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     // do not cache this calculations,
     // because it use cache transform
     // this is special logic for caching with some shapes with shadow
-    var parent: Node = this;
+    var parent: Node | null = this;
     while (parent) {
       if (parent._isUnderCache) {
         top = parent;
@@ -2071,7 +2082,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     pixelRatio?: number;
     mimeType?: string;
     quality?: number;
-    callback?: (blob: Blob) => void;
+    callback?: (blob: Blob | null) => void;
   }) {
     return new Promise((resolve, reject) => {
       try {
@@ -2080,7 +2091,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         this.toCanvas(config).toBlob((blob) => {
           resolve(blob);
           callback?.(blob);
-        });
+        }, config?.mimeType, config?.quality);
       } catch (err) {
         reject(err);
       }
@@ -2373,6 +2384,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     var pointerId = evt ? evt.pointerId : undefined;
     var stage = this.getStage();
     var ap = this.getAbsolutePosition();
+    if (!stage) {
+      return;
+    }
     var pos =
       stage._getPointerById(pointerId) ||
       stage._changedPointerPositions[0] ||
@@ -2399,7 +2413,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       this._createDragElement(evt);
     }
 
-    const elem = DD._dragElements.get(this._id);
+    const elem = DD._dragElements.get(this._id)!;
     elem.dragStatus = 'dragging';
     this.fire(
       'dragstart',
@@ -2415,7 +2429,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   _setDragPosition(evt, elem) {
     // const pointers = this.getStage().getPointersPositions();
     // const pos = pointers.find(p => p.id === this._dragEventId);
-    const pos = this.getStage()._getPointerById(elem.pointerId);
+    const pos = this.getStage()!._getPointerById(elem.pointerId);
 
     if (!pos) {
       return;
@@ -2570,6 +2584,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return Util.haveIntersection(screenRect, this.getClientRect());
   }
 
+  // @ts-ignore:
   preventDefault: GetSet<boolean, this>;
 
   // from filters
@@ -2591,7 +2606,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   threshold: GetSet<number, this>;
   value: GetSet<number, this>;
 
-  dragBoundFunc: GetSet<(this: Node, pos: Vector2d) => Vector2d, this>;
+  dragBoundFunc: GetSet<
+    (this: Node, pos: Vector2d, event: any) => Vector2d,
+    this
+  >;
   draggable: GetSet<boolean, this>;
   dragDistance: GetSet<number, this>;
   embossBlend: GetSet<boolean, this>;
@@ -3147,7 +3165,7 @@ addGetterSetter(Node, 'listening', true, getBooleanValidator());
 
 addGetterSetter(Node, 'preventDefault', true, getBooleanValidator());
 
-addGetterSetter(Node, 'filters', null, function (val) {
+addGetterSetter(Node, 'filters', null, function (this: Node, val) {
   this._filterUpToDate = false;
   return val;
 });

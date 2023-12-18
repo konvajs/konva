@@ -4,7 +4,7 @@ import { getNumberValidator } from '../Validators';
 
 function pixelAt(idata, x, y) {
   var idx = (y * idata.width + x) * 4;
-  var d = [];
+  var d: Array<number> = [];
   d.push(
     idata.data[idx++],
     idata.data[idx++],
@@ -55,7 +55,7 @@ function backgroundMask(idata, threshold) {
     var mean = rgbMean([rgbv_ne, rgbv_no, rgbv_se, rgbv_so]);
 
     // Mask based on color distance
-    var mask = [];
+    var mask: Array<number> = [];
     for (var i = 0; i < idata.width * idata.height; i++) {
       var d = rgbDistance(mean, [
         idata.data[i * 4],
@@ -80,7 +80,7 @@ function erodeMask(mask, sw, sh) {
   var side = Math.round(Math.sqrt(weights.length));
   var halfSide = Math.floor(side / 2);
 
-  var maskResult = [];
+  var maskResult: Array<number> = [];
   for (var y = 0; y < sh; y++) {
     for (var x = 0; x < sw; x++) {
       var so = y * sw + x;
@@ -111,7 +111,7 @@ function dilateMask(mask, sw, sh) {
   var side = Math.round(Math.sqrt(weights.length));
   var halfSide = Math.floor(side / 2);
 
-  var maskResult = [];
+  var maskResult: Array<number> = [];
   for (var y = 0; y < sh; y++) {
     for (var x = 0; x < sw; x++) {
       var so = y * sw + x;
@@ -142,7 +142,7 @@ function smoothEdgeMask(mask, sw, sh) {
   var side = Math.round(Math.sqrt(weights.length));
   var halfSide = Math.floor(side / 2);
 
-  var maskResult = [];
+  var maskResult: Array<number> = [];
   for (var y = 0; y < sh; y++) {
     for (var x = 0; x < sw; x++) {
       var so = y * sw + x;

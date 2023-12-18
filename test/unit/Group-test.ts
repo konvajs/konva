@@ -1,4 +1,5 @@
 import { addStage, cloneAndCompareLayer, Konva } from './test-utils';
+import { assert } from 'chai';
 
 describe('Group', function () {
   // ======================================================
@@ -44,5 +45,43 @@ describe('Group', function () {
     layer.draw();
 
     cloneAndCompareLayer(layer, 200);
+  });
+
+  it('clip group with a Path2D', function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+
+    var path = new Konva.Group({
+      width: 100,
+      height: 100,
+      clipFunc: () => [new Path2D('M0 0v50h50Z')]
+    });
+
+    layer.add(path);
+    stage.add(layer);
+
+    const trace = layer.getContext().getTrace()
+
+    assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();clip([object Path2D]);transform(1,0,0,1,0,0);restore();');
+  });
+
+  it('clip group with a Path2D and clipRule', function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+
+    var path = new Konva.Group({
+      width: 100,
+      height: 100,
+      clipFunc: () => [new Path2D('M0 0v50h50Z'), 'evenodd'],
+    });
+
+    layer.add(path);
+    stage.add(layer);
+
+    const trace = layer.getContext().getTrace()
+
+    assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();clip([object Path2D],evenodd);transform(1,0,0,1,0,0);restore();');
   });
 });

@@ -2334,6 +2334,69 @@ describe('Transformer', function () {
     assert.equal(stage.content.style.cursor, 'nwse-resize');
   });
 
+  it('check default cursor transformer', function () {
+    if (isNode) {
+      return;
+    }
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+    });
+    layer.add(tr);
+    layer.draw();
+
+    sm(stage, {
+      x: 100,
+      y: 0,
+    });
+    assert.equal(stage.content.style.cursor, 'crosshair');
+  });
+
+  it('using custom cursor on configured transformer should show custom cursor instead of crosshair', function () {
+    if (isNode) {
+      return;
+    }
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+      rotateAnchorCursor: 'grab',
+    });
+    layer.add(tr);
+    layer.draw();
+
+    sm(stage, {
+      x: 100,
+      y: 0,
+    });
+    assert.equal(stage.content.style.cursor, 'grab');
+  });
+
   it('changing parent transform should recalculate transformer attrs', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -4781,5 +4844,89 @@ describe('Transformer', function () {
 
     tr.nodes([layer]);
     assert.equal(tr.nodes().length, 0);
+  });
+
+  it('anchorStyleFunc', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 60,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+    });
+    layer.add(tr);
+    // manual check of correct position of node
+    var handler = tr.findOne<Konva.Rect>('.bottom-right');
+    assert.equal(handler.fill(), 'white');
+
+    tr.anchorStyleFunc((anchor) => {
+      if (anchor.hasName('bottom-right')) {
+        anchor.fill('red');
+      }
+    });
+    assert.equal(handler.fill(), 'red');
+    tr.anchorStyleFunc(null);
+    assert.equal(handler.fill(), 'white');
+  });
+
+  it('flip rectangle', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      draggable: true,
+      x: 150,
+      y: 50,
+      width: 100,
+      height: 100,
+      fillLinearGradientStartPoint: { x: -50, y: -50 },
+      fillLinearGradientEndPoint: { x: 50, y: 50 },
+      fillLinearGradientColorStops: [0, 'red', 1, 'yellow'],
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+      flipEnabled: false,
+    });
+    layer.add(tr);
+
+    layer.draw();
+
+    simulateMouseDown(tr, {
+      x: 150,
+      y: 50,
+    });
+    simulateMouseMove(tr, {
+      x: 250,
+      y: 50,
+    });
+    simulateMouseMove(tr, {
+      x: 350,
+      y: 50,
+    });
+
+    simulateMouseUp(tr, {
+      x: 350,
+      y: 50,
+    });
+
+    layer.draw();
+
+    assertAlmostEqual(rect.x(), 250);
+    assertAlmostEqual(rect.y(), 50);
+    assertAlmostEqual(rect.scaleX(), 1);
+    assertAlmostEqual(rect.scaleY(), 1);
   });
 });

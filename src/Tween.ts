@@ -190,9 +190,9 @@ export class Tween {
   anim: Animation;
   tween: TweenEngine;
   _id: number;
-  onFinish: Function;
-  onReset: Function;
-  onUpdate: Function;
+  onFinish: Function | undefined;
+  onReset: Function | undefined;
+  onUpdate: Function | undefined;
 
   constructor(config: TweenConfig) {
     var that = this,
@@ -314,7 +314,7 @@ export class Tween {
           if (n % 2 === 0) {
             diff.push(end[n] - start[n]);
           } else {
-            var startRGBA = Util.colorToRGBA(start[n]);
+            var startRGBA = Util.colorToRGBA(start[n])!;
             endRGBA = Util.colorToRGBA(end[n]);
             start[n] = startRGBA;
             diff.push({

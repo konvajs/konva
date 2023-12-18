@@ -1603,4 +1603,23 @@ describe('Path', function () {
 
     assert.equal(trace1, trace2);
   });
+
+  it('draw path with fillRule', function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+
+    var path = new Konva.Path({
+      data: 'M200,100h100v50z',
+      fill: '#ccc',
+      fillRule: 'evenodd',
+    });
+
+    layer.add(path);
+    stage.add(layer);
+
+    const trace = layer.getContext().getTrace()
+
+    assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(200,100);lineTo(300,100);lineTo(300,150);closePath();fillStyle=#ccc;fill(evenodd);restore();');
+  });
 });

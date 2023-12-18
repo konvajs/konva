@@ -1,3 +1,4 @@
+import { Node } from './Node';
 import { Util } from './Util';
 import { getComponentValidator } from './Validators';
 
@@ -15,7 +16,7 @@ export const Factory = {
 
     constructor.prototype[method] =
       constructor.prototype[method] ||
-      function () {
+      function (this: Node) {
         var val = this.attrs[attr];
         return val === undefined ? def : val;
       };
@@ -147,7 +148,7 @@ export const Factory = {
       var oldGetter = GET + Util._capitalize(oldMethodName);
       var oldSetter = SET + Util._capitalize(oldMethodName);
 
-      function deprecated() {
+      function deprecated(this: Node) {
         method.apply(this, arguments);
         Util.error(
           '"' +
@@ -163,7 +164,7 @@ export const Factory = {
       constructor.prototype[oldSetter] = deprecated;
     });
   },
-  afterSetFilter() {
+  afterSetFilter(this: Node) {
     this._filterUpToDate = false;
   },
 };

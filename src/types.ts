@@ -31,7 +31,7 @@ export interface PathSegment {
     | 'a'
     | 'A';
   start: Vector2d;
-  points: Vector2d[];
+  points: number[];
   pathLength: number;
 }
 

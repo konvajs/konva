@@ -126,10 +126,10 @@ export class Image extends Shape<ImageConfig> {
     context.fillStrokeShape(this);
   }
   getWidth() {
-    return this.attrs.width ?? this.image()?.width;
+    return this.attrs.width ?? (this.image() as any)?.width;
   }
   getHeight() {
-    return this.attrs.height ?? this.image()?.height;
+    return this.attrs.height ?? (this.image() as any)?.height;
   }
 
   /**
@@ -146,7 +146,11 @@ export class Image extends Shape<ImageConfig> {
    *    layer.draw();
    *  });
    */
-  static fromURL(url: string, callback: (img: Image) => void, onError: OnErrorEventHandler = null) {
+  static fromURL(
+    url: string,
+    callback: (img: Image) => void,
+    onError: OnErrorEventHandler = null
+  ) {
     var img = Util.createImageElement();
     img.onload = function () {
       var image = new Image({

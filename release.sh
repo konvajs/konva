@@ -59,7 +59,7 @@ git tag $1 >/dev/null
 cd ../konva
 git push >/dev/null
 git push --tags >/dev/null
-npm publish >/dev/null
+npm publish
 
 echo "copy konva.js into konva-site"
 cp ./konva.js ../konva-site/
