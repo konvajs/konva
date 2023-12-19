@@ -18,6 +18,7 @@ export interface Box extends IRect {
 export interface TransformerConfig extends ContainerConfig {
   resizeEnabled?: boolean;
   rotateEnabled?: boolean;
+  rotateLinkLineVisiable?: boolean;
   rotationSnaps?: Array<number>;
   rotationSnapTolerance?: number;
   rotateAnchorOffset?: number;
@@ -205,6 +206,7 @@ function getSnap(snaps: Array<number>, newRotationRad: number, tol: number) {
  * @param {Object} config
  * @param {Boolean} [config.resizeEnabled] Default is true
  * @param {Boolean} [config.rotateEnabled] Default is true
+ * @param {Boolean} [config.rotateLinkLineVisiable] Default is true
  * @param {Array} [config.rotationSnaps] Array of angles for rotation snaps. Default is []
  * @param {Number} [config.rotationSnapTolerance] Snapping tolerance. If closer than this it will snap. Default is 5
  * @param {Number} [config.rotateAnchorOffset] Default is 50
@@ -614,7 +616,7 @@ export class Transformer extends Group {
           shape.height() + padding * 2
         );
         ctx.moveTo(shape.width() / 2, -padding);
-        if (tr.rotateEnabled()) {
+        if (tr.rotateEnabled() && tr.rotateLinkLineVisiable()) {
           ctx.lineTo(
             shape.width() / 2,
             -tr.rotateAnchorOffset() * Util._sign(shape.height()) - padding
@@ -1289,6 +1291,7 @@ export class Transformer extends Group {
   anchorSize: GetSet<number, this>;
   resizeEnabled: GetSet<boolean, this>;
   rotateEnabled: GetSet<boolean, this>;
+  rotateLinkLineVisiable: GetSet<boolean, this>;
   rotateAnchorOffset: GetSet<number, this>;
   rotationSnapTolerance: GetSet<number, this>;
   rotateAnchorCursor: GetSet<string, this>;
@@ -1421,6 +1424,21 @@ Factory.addGetterSetter(Transformer, 'anchorSize', 10, getNumberValidator());
  * transformer.rotateEnabled(false);
  */
 Factory.addGetterSetter(Transformer, 'rotateEnabled', true);
+
+/**
+ * get/set visiable to rotate link line.
+ * @name Konva.Transformer#rotateLinkLineVisiable
+ * @method
+ * @param {Boolean} enabled
+ * @returns {Boolean}
+ * @example
+ * // get
+ * var rotateLinkLineVisiable = transformer.rotateLinkLineVisiable();
+ *
+ * // set
+ * transformer.rotateLinkLineVisiable(false);
+ */
+Factory.addGetterSetter(Transformer, 'rotateLinkLineVisiable', true);
 
 /**
  * get/set rotation snaps angles.
