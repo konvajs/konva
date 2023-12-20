@@ -2091,7 +2091,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         this.toCanvas(config).toBlob((blob) => {
           resolve(blob);
           callback?.(blob);
-        });
+        }, config?.mimeType, config?.quality);
       } catch (err) {
         reject(err);
       }
