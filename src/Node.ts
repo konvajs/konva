@@ -60,6 +60,8 @@ export interface NodeConfig {
   opacity?: number;
   scale?: Vector2d;
   scaleX?: number;
+  skewX?: number;
+  skewY?: number;
   scaleY?: number;
   rotation?: number;
   rotationDeg?: number;
@@ -911,7 +913,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @returns {Object}
    */
   getAttrs() {
-    return this.attrs || {};
+    return (this.attrs || {}) as Config & Record<string, any>;
   }
   /**
    * set multiple attrs at once using an object literal
@@ -1481,15 +1483,21 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @returns {Object}
    */
   toObject() {
-    var obj = {} as any,
-      attrs = this.getAttrs(),
+    var attrs = this.getAttrs() as any,
       key,
       val,
       getter,
       defaultValue,
       nonPlainObject;
 
-    obj.attrs = {};
+    const obj: {
+      attrs: Config & Record<string, any>;
+      className: string;
+      children?: Array<any>;
+    } = {
+      attrs: {} as Config & Record<string, any>,
+      className: this.getClassName(),
+    };
 
     for (key in attrs) {
       val = attrs[key];
@@ -1507,12 +1515,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       // restore attr value
       attrs[key] = val;
       if (defaultValue !== val) {
-        obj.attrs[key] = val;
+        (obj.attrs as any)[key] = val;
       }
     }
 
-    obj.className = this.getClassName();
-    return Util._prepareToStringify(obj);
+    return Util._prepareToStringify(obj) as typeof obj;
   }
   /**
    * convert Node into a JSON string.  Returns a JSON string.
@@ -2088,10 +2095,14 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       try {
         const callback = config?.callback;
         if (callback) delete config.callback;
-        this.toCanvas(config).toBlob((blob) => {
-          resolve(blob);
-          callback?.(blob);
-        }, config?.mimeType, config?.quality);
+        this.toCanvas(config).toBlob(
+          (blob) => {
+            resolve(blob);
+            callback?.(blob);
+          },
+          config?.mimeType,
+          config?.quality
+        );
       } catch (err) {
         reject(err);
       }

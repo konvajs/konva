@@ -270,7 +270,7 @@ export abstract class Container<
     obj.children = [];
 
     this.getChildren().forEach((child) => {
-      obj.children.push(child.toObject());
+      obj.children!.push(child.toObject());
     });
 
     return obj;
