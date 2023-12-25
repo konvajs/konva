@@ -42,6 +42,12 @@ export interface TransformerConfig extends ContainerConfig {
   boundBoxFunc?: (oldBox: Box, newBox: Box) => Box;
   useSingleNodeRotation?: boolean;
   shouldOverdrawWholeArea?: boolean;
+  anchorDragBoundFunc?: (
+    oldPos: Vector2d,
+    newPos: Vector2d,
+    evt: any
+  ) => Vector2d;
+  anchorStyleFunc?: (anchor: Shape) => void;
 }
 
 var EVENTS_NAME = 'tr-konva';
