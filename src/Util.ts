@@ -933,7 +933,7 @@ export const Util = {
     });
     return newStart;
   },
-  _prepareToStringify(obj) {
+  _prepareToStringify<T>(obj: any): T | null {
     var desc;
 
     obj.visitedByCircularReferenceRemoval = true;

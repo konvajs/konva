@@ -1,6 +1,6 @@
 {
   "name": "konva",
-  "version": "9.2.3",
+  "version": "9.3.0",
   "author": "Anton Lavrenov",
   "files": [
     "README.md",
@@ -60,8 +60,8 @@
   ],
   "devDependencies": {
     "@parcel/transformer-image": "2.10.1",
-    "@size-limit/preset-big-lib": "^10.0.1",
-    "@types/mocha": "^10.0.3",
+    "@size-limit/preset-big-lib": "^11.0.1",
+    "@types/mocha": "^10.0.6",
     "canvas": "^2.11.2",
     "chai": "4.3.10",
     "filehound": "^1.17.6",
@@ -80,15 +80,15 @@
     "mocha-headless-chrome": "^4.0.0",
     "parcel": "2.10.1",
     "process": "^0.11.10",
-    "rollup": "^4.2.0",
+    "rollup": "^4.9.1",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-typescript2": "^0.36.0",
-    "size-limit": "^10.0.1",
+    "size-limit": "^11.0.1",
     "ts-mocha": "^10.0.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   },
   "keywords": [
     "canvas",
