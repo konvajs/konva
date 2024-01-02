@@ -597,7 +597,7 @@ export class Context {
     y: number,
     width: number,
     height: number,
-    radii: number
+    radii: number | DOMPointInit | (number | DOMPointInit)[]
   ) {
     this._context.roundRect(x, y, width, height, radii);
   }
