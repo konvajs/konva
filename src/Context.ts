@@ -592,12 +592,14 @@ export class Context {
    * @method
    * @name Konva.Context#roundRect
    */
-  roundRect(x: number, y: number, width: number, height: number, radii: number) {
-    if (this._context.roundRect) {
-      this._context.roundRect(x, y, width, height, radii);
-    } else {
-      this._context.rect(x, y, width, height);
-    }
+  roundRect(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    radii: number
+  ) {
+    this._context.roundRect(x, y, width, height, radii);
   }
   /**
    * putImageData function.
