@@ -22,6 +22,7 @@ describe('Context', function () {
     'arc',
     'arcTo',
     'rect',
+    'roundRect',
     'ellipse',
     'fill',
     'stroke',

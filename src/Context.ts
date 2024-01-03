@@ -58,6 +58,7 @@ var COMMA = ',',
     'putImageData',
     'quadraticCurveTo',
     'rect',
+    'roundRect',
     'restore',
     'rotate',
     'save',
@@ -585,6 +586,20 @@ export class Context {
    */
   rect(x: number, y: number, width: number, height: number) {
     this._context.rect(x, y, width, height);
+  }
+  /**
+   * roundRect function.
+   * @method
+   * @name Konva.Context#roundRect
+   */
+  roundRect(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    radii: number | DOMPointInit | (number | DOMPointInit)[]
+  ) {
+    this._context.roundRect(x, y, width, height, radii);
   }
   /**
    * putImageData function.
