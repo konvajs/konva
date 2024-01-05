@@ -343,10 +343,13 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       return;
     }
 
-    // let's just add 1 pixel extra,
     // because using Math.floor on x, y position may shift drawing
-    width += offset * 2 + 1;
-    height += offset * 2 + 1;
+    // to avoid shift we need to increase size
+    // but we better to avoid it, for better filters flows
+    const extraPaddingX = Math.abs(Math.round(rect.x) - x) > 0.5 ? 1 : 0;
+    const extraPaddingY = Math.abs(Math.round(rect.y) - y) > 0.5 ? 1 : 0;
+    width += offset * 2 + extraPaddingX;
+    height += offset * 2 + extraPaddingY;
 
     x -= offset;
     y -= offset;
