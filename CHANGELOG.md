@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### 9.3.1 (2024-01-17)
+
+- Fix Pixelate filter work/fix caching size
+- Fix node export when large buffer canvas is used
+
 ### 9.3.0 (2023-12-20)
 
 - New attribute `rotateLineVisible` for `Konva.Transformer` to show/hide rotate line

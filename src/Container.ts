@@ -342,7 +342,7 @@ export abstract class Container<
     });
     this._requestDraw();
   }
-  drawScene(can?: SceneCanvas, top?: Node) {
+  drawScene(can?: SceneCanvas, top?: Node, bufferCanvas?: SceneCanvas) {
     var layer = this.getLayer()!,
       canvas = can || (layer && layer.getCanvas()),
       context = canvas && canvas.getContext(),
@@ -361,7 +361,7 @@ export abstract class Container<
       this._drawCachedSceneCanvas(context);
       context.restore();
     } else {
-      this._drawChildren('drawScene', canvas, top);
+      this._drawChildren('drawScene', canvas, top, bufferCanvas);
     }
     return this;
   }
@@ -387,7 +387,7 @@ export abstract class Container<
     }
     return this;
   }
-  _drawChildren(drawMethod, canvas, top) {
+  _drawChildren(drawMethod, canvas, top, bufferCanvas?) {
     var context = canvas && canvas.getContext(),
       clipWidth = this.clipWidth(),
       clipHeight = this.clipHeight(),
@@ -426,7 +426,7 @@ export abstract class Container<
     }
 
     this.children?.forEach(function (child) {
-      child[drawMethod](canvas, top);
+      child[drawMethod](canvas, top, bufferCanvas);
     });
     if (hasComposition) {
       context.restore();

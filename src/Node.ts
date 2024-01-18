@@ -449,7 +449,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return this._cache.has(CANVAS);
   }
 
-  abstract drawScene(canvas?: Canvas, top?: Node): void;
+  abstract drawScene(canvas?: Canvas, top?: Node, bufferCanvas?: Canvas): void;
   abstract drawHit(canvas?: Canvas, top?: Node): void;
   /**
    * Return client rectangle {x, y, width, height} of node. This rectangle also include all styling (strokes, shadows, etc).
@@ -1932,6 +1932,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       }),
       context = canvas.getContext();
 
+    const bufferCanvas = new SceneCanvas({
+      width: canvas.width,
+      height: canvas.height,
+      pixelRatio: canvas.pixelRatio,
+    });
+
     if (config.imageSmoothingEnabled === false) {
       context._context.imageSmoothingEnabled = false;
     }
@@ -1941,7 +1947,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       context.translate(-1 * x, -1 * y);
     }
 
-    this.drawScene(canvas);
+    this.drawScene(canvas, undefined, bufferCanvas);
     context.restore();
 
     return canvas;

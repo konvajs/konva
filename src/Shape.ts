@@ -469,10 +469,6 @@ export class Shape<
     // so they use that method with forced fill
     // it probably will be simpler, then copy/paste the code
 
-    // buffer canvas is available only inside the stage
-    if (!this.getStage()) {
-      return false;
-    }
     // force skip buffer canvas
     const perfectDrawEnabled = this.attrs.perfectDrawEnabled ?? true;
     if (!perfectDrawEnabled) {
@@ -573,7 +569,7 @@ export class Shape<
     }
     return rect;
   }
-  drawScene(can?: SceneCanvas, top?: Node) {
+  drawScene(can?: SceneCanvas, top?: Node, bufferCanvas?: SceneCanvas) {
     // basically there are 3 drawing modes
     // 1 - simple drawing when nothing is cached.
     // 2 - when we are caching current
@@ -586,7 +582,6 @@ export class Shape<
       drawFunc = this.getSceneFunc(),
       hasShadow = this.hasShadow(),
       stage,
-      bufferCanvas,
       bufferContext;
 
     var skipBuffer = canvas.isCache;
@@ -614,8 +609,8 @@ export class Shape<
     // if buffer canvas is needed
     if (this._useBufferCanvas() && !skipBuffer) {
       stage = this.getStage();
-      bufferCanvas = stage.bufferCanvas;
-      bufferContext = bufferCanvas.getContext();
+      const bc = bufferCanvas || stage.bufferCanvas;
+      bufferContext = bc.getContext();
       bufferContext.clear();
       bufferContext.save();
       bufferContext._applyLineJoin(this);
@@ -626,20 +621,14 @@ export class Shape<
       drawFunc.call(this, bufferContext, this);
       bufferContext.restore();
 
-      var ratio = bufferCanvas.pixelRatio;
+      var ratio = bc.pixelRatio;
 
       if (hasShadow) {
         context._applyShadow(this);
       }
       context._applyOpacity(this);
       context._applyGlobalCompositeOperation(this);
-      context.drawImage(
-        bufferCanvas._canvas,
-        0,
-        0,
-        bufferCanvas.width / ratio,
-        bufferCanvas.height / ratio
-      );
+      context.drawImage(bc._canvas, 0, 0, bc.width / ratio, bc.height / ratio);
     } else {
       context._applyLineJoin(this);
 

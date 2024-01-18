@@ -12,6 +12,7 @@ import {
   compareLayers,
   loadImage,
   Konva,
+  compareCanvases,
 } from './test-utils';
 
 describe('Shape', function () {
@@ -1477,6 +1478,40 @@ describe('Shape', function () {
         'clearRect();save();globalAlpha;drawImage();restore();'
       );
     }
+  });
+
+  it('export when buffer canvas is used should handle scaling correctly', async function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group();
+    layer.add(group);
+
+    var text = new Konva.Text({
+      text: 'hello',
+      fontSize: 300,
+      fill: 'green',
+      shadowColor: 'black',
+    });
+    group.add(text);
+
+    const canvas1 = group.toCanvas({
+      x: group.x(),
+      y: group.y(),
+      width: text.width(),
+      height: text.height(),
+    });
+    text.stroke('transparent');
+    const canvas2 = group.toCanvas({
+      x: group.x(),
+      y: group.y(),
+      width: text.width(),
+      height: text.height(),
+    });
+
+    compareCanvases(canvas2, canvas1, 255, 10);
   });
 
   // ======================================================
