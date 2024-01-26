@@ -1933,8 +1933,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       context = canvas.getContext();
 
     const bufferCanvas = new SceneCanvas({
-      width: canvas.width,
-      height: canvas.height,
+      // width and height already multiplied by pixelRatio
+      // so we need to revert that
+      width: canvas.width / canvas.pixelRatio,
+      height: canvas.height / canvas.pixelRatio,
       pixelRatio: canvas.pixelRatio,
     });
 
