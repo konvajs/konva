@@ -1514,6 +1514,42 @@ describe('Shape', function () {
     compareCanvases(canvas2, canvas1, 255, 10);
   });
 
+  it('export when buffer canvas is used should handle scaling correctly another time', async function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group({
+      x: 400,
+    });
+    layer.add(group);
+
+    var text = new Konva.Text({
+      text: 'hello',
+      fontSize: 300,
+      fill: 'green',
+      shadowColor: 'black',
+    });
+    group.add(text);
+
+    const canvas1 = group.toCanvas({
+      x: group.x(),
+      y: group.y(),
+      width: text.width(),
+      height: text.height(),
+    });
+    text.stroke('transparent');
+    const canvas2 = group.toCanvas({
+      x: group.x(),
+      y: group.y(),
+      width: text.width(),
+      height: text.height(),
+    });
+
+    compareCanvases(canvas2, canvas1, 240, 110);
+  });
+
   // ======================================================
   it('optional disable shadow for stroke', function () {
     var stage = addStage();

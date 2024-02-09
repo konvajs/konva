@@ -1935,8 +1935,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     const bufferCanvas = new SceneCanvas({
       // width and height already multiplied by pixelRatio
       // so we need to revert that
-      width: canvas.width / canvas.pixelRatio,
-      height: canvas.height / canvas.pixelRatio,
+      // also increase size by x nd y offset to make sure content fits canvas
+      width: canvas.width / canvas.pixelRatio + Math.abs(x),
+      height: canvas.height / canvas.pixelRatio + Math.abs(y),
       pixelRatio: canvas.pixelRatio,
     });
 
