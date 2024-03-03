@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### 9.3.5 (2024-03-04)
+
+- `tranformer` event will be triggered AFTER all data of transformer is updated
+- Improve performance of transformer
+
 ### 9.3.4 (2024-03-03)
 
 - Fix clipping with zero size
