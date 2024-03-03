@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### 9.3.4 (2024-03-03)
+
+- Fix clipping with zero size
+
 ### 9.3.3 (2024-02-09)
 
 - Another fix for exporting buffered shapes
