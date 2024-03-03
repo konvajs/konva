@@ -4929,4 +4929,78 @@ describe('Transformer', function () {
     assertAlmostEqual(rect.scaleX(), 1);
     assertAlmostEqual(rect.scaleY(), 1);
   });
+
+  it('should be able to prevent rotation in transform event', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 55,
+      y: 55,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+    });
+    layer.add(tr);
+    layer.draw();
+
+    tr.on('transform', function (e) {
+      tr.rotation(0);
+    });
+
+    simulateMouseDown(tr, {
+      x: 100,
+      y: 2,
+    });
+    simulateMouseMove(tr, {
+      x: 110,
+      y: 2,
+    });
+    assert.equal(tr.rotation(), 0);
+    simulateMouseUp(tr, { x: 110, y: 2 });
+  });
+
+  // it('skip render on hit graph while transforming', function () {
+  //   var stage = addStage();
+  //   var layer = new Konva.Layer();
+  //   stage.add(layer);
+
+  //   var rect = new Konva.Rect({
+  //     x: 55,
+  //     y: 55,
+  //     draggable: true,
+  //     width: 100,
+  //     height: 100,
+  //     fill: 'yellow',
+  //   });
+  //   layer.add(rect);
+
+  //   var tr = new Konva.Transformer({
+  //     nodes: [rect],
+  //   });
+  //   layer.add(tr);
+  //   layer.draw();
+
+  //   simulateMouseDown(tr, {
+  //     x: 100,
+  //     y: 2,
+  //   });
+  //   simulateMouseMove(tr, {
+  //     x: 110,
+  //     y: 2,
+  //   });
+  //   const shape = layer.getIntersection({
+  //     x: 100,
+  //     y: 100,
+  //   });
+  //   assert.equal(shape, null);
+  //   simulateMouseUp(tr, { x: 110, y: 2 });
+  // });
 });
