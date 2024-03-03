@@ -392,7 +392,9 @@ export abstract class Container<
       clipWidth = this.clipWidth(),
       clipHeight = this.clipHeight(),
       clipFunc = this.clipFunc(),
-      hasClip = (clipWidth && clipHeight) || clipFunc;
+      hasClip =
+        (typeof clipWidth === 'number' && typeof clipHeight === 'number') ||
+        clipFunc;
 
     const selfCache = top === this;
 
@@ -408,7 +410,7 @@ export abstract class Container<
       } else {
         var clipX = this.clipX();
         var clipY = this.clipY();
-        context.rect(clipX, clipY, clipWidth, clipHeight);
+        context.rect(clipX || 0, clipY || 0, clipWidth, clipHeight);
       }
       context.clip.apply(context, clipArgs);
       m = transform.copy().invert().getMatrix();
