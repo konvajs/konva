@@ -4967,40 +4967,46 @@ describe('Transformer', function () {
     simulateMouseUp(tr, { x: 110, y: 2 });
   });
 
-  // it('skip render on hit graph while transforming', function () {
-  //   var stage = addStage();
-  //   var layer = new Konva.Layer();
-  //   stage.add(layer);
+  it('skip render on hit graph while transforming', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
 
-  //   var rect = new Konva.Rect({
-  //     x: 55,
-  //     y: 55,
-  //     draggable: true,
-  //     width: 100,
-  //     height: 100,
-  //     fill: 'yellow',
-  //   });
-  //   layer.add(rect);
+    var rect = new Konva.Rect({
+      x: 55,
+      y: 55,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
 
-  //   var tr = new Konva.Transformer({
-  //     nodes: [rect],
-  //   });
-  //   layer.add(tr);
-  //   layer.draw();
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+    });
+    layer.add(tr);
+    layer.draw();
 
-  //   simulateMouseDown(tr, {
-  //     x: 100,
-  //     y: 2,
-  //   });
-  //   simulateMouseMove(tr, {
-  //     x: 110,
-  //     y: 2,
-  //   });
-  //   const shape = layer.getIntersection({
-  //     x: 100,
-  //     y: 100,
-  //   });
-  //   assert.equal(shape, null);
-  //   simulateMouseUp(tr, { x: 110, y: 2 });
-  // });
+    simulateMouseDown(tr, {
+      x: 100,
+      y: 2,
+    });
+    simulateMouseMove(tr, {
+      x: 110,
+      y: 2,
+    });
+    let shape = layer.getIntersection({
+      x: 100,
+      y: 100,
+    });
+    assert.equal(shape, null);
+    simulateMouseUp(tr, { x: 110, y: 2 });
+    layer.draw();
+    shape = layer.getIntersection({
+      x: 100,
+      y: 100,
+    });
+    assert.equal(shape, rect);
+  });
 });

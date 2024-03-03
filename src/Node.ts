@@ -1029,7 +1029,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       }
     });
 
-    var dragSkip = !skipDragCheck && !Konva.hitOnDragEnabled && layerUnderDrag;
+    var dragSkip =
+      !skipDragCheck &&
+      !Konva.hitOnDragEnabled &&
+      (layerUnderDrag || Konva.isTransforming());
     return this.isListening() && this.isVisible() && !dragSkip;
   }
 

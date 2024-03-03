@@ -155,6 +155,9 @@ export const Konva = {
   isDragging() {
     return Konva['DD'].isDragging;
   },
+  isTransforming() {
+    return Konva['Transformer']?.isTransforming();
+  },
   /**
    * returns whether or not a drag and drop operation is ready, but may
    *  not necessarily have started

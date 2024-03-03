@@ -507,7 +507,8 @@ export class Stage extends Container<Layer> {
     this.setPointersPositions(evt);
 
     var targetShape = this._getTargetShape(eventType);
-    var eventsEnabled = !DD.isDragging || Konva.hitOnDragEnabled;
+    var eventsEnabled =
+      !(Konva.isDragging() || Konva.isTransforming()) || Konva.hitOnDragEnabled;
     if (targetShape && eventsEnabled) {
       targetShape._fireAndBubble(events.pointerout, { evt: evt });
       targetShape._fireAndBubble(events.pointerleave, { evt: evt });
@@ -590,12 +591,13 @@ export class Stage extends Container<Layer> {
     if (!events) {
       return;
     }
-    if (DD.isDragging && DD.node!.preventDefault() && evt.cancelable) {
+    if (Konva.isDragging() && DD.node!.preventDefault() && evt.cancelable) {
       evt.preventDefault();
     }
     this.setPointersPositions(evt);
 
-    var eventsEnabled = !DD.isDragging || Konva.hitOnDragEnabled;
+    var eventsEnabled =
+      !(Konva.isDragging() || Konva.isTransforming()) || Konva.hitOnDragEnabled;
     if (!eventsEnabled) {
       return;
     }

@@ -203,6 +203,7 @@ function getSnap(snaps: Array<number>, newRotationRad: number, tol: number) {
   return snapped;
 }
 
+let activeTransformersCount = 0;
 /**
  * Transformer constructor.  Transformer is a special type of group that allow you transform Konva
  * primitives and shapes. Transforming tool is not changing `width` and `height` properties of nodes
@@ -244,7 +245,6 @@ function getSnap(snaps: Array<number>, newRotationRad: number, tol: number) {
  * });
  * layer.add(transformer);
  */
-
 export class Transformer extends Group {
   _nodes: Array<Node>;
   _movingAnchorName: string | null = null;
@@ -253,6 +253,10 @@ export class Transformer extends Group {
   sin: number;
   cos: number;
   _cursorChange: boolean;
+
+  static isTransforming = () => {
+    return activeTransformersCount > 0;
+  };
 
   constructor(config?: TransformerConfig) {
     // call super constructor
@@ -690,6 +694,7 @@ export class Transformer extends Group {
       x: pos.x - ap.x,
       y: pos.y - ap.y,
     };
+    activeTransformersCount++;
     this._fire('transformstart', { evt: e.evt, target: this.getNode() });
     this._nodes.forEach((target) => {
       target._fire('transformstart', { evt: e.evt, target });
@@ -955,6 +960,7 @@ export class Transformer extends Group {
         window.removeEventListener('touchend', this._handleMouseUp, true);
       }
       var node = this.getNode();
+      activeTransformersCount--;
       this._fire('transformend', { evt: e, target: node });
 
       if (node) {
