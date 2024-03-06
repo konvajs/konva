@@ -4967,7 +4967,7 @@ describe('Transformer', function () {
     simulateMouseUp(tr, { x: 110, y: 2 });
   });
 
-  it('skip render on hit graph while transforming', function () {
+  it('skip render on hit graph while transforming', function (done) {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -5008,5 +5008,84 @@ describe('Transformer', function () {
       y: 100,
     });
     assert.equal(shape, rect);
+    // reset position
+    rect.setAttrs({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 100,
+    });
+
+    tr.nodes([rect]);
+    layer.draw();
+    // now check if graph is visible back when we moved a bit
+    simulateMouseDown(tr, {
+      x: 100,
+      y: 2,
+    });
+    simulateMouseMove(tr, {
+      x: 110,
+      y: 2,
+    });
+    setTimeout(() => {
+      shape = layer.getIntersection({
+        x: 100,
+        y: 100,
+      });
+      assert.equal(shape, null);
+      simulateMouseUp(tr, { x: 110, y: 2 });
+      setTimeout(() => {
+        shape = layer.getIntersection({
+          x: 100,
+          y: 100,
+        });
+        assert.equal(shape, rect);
+        done();
+      }, 100);
+    }, 100);
+  });
+
+  it('enable hit graph back on transformer destroy', function (done) {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 55,
+      y: 55,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+    });
+    layer.add(tr);
+    layer.draw();
+
+    // now check if graph is visible back when we moved a bit
+    simulateMouseDown(tr, {
+      x: 100,
+      y: 2,
+    });
+    simulateMouseMove(tr, {
+      x: 110,
+      y: 2,
+    });
+    setTimeout(() => {
+      tr.destroy();
+      setTimeout(() => {
+        var shape = layer.getIntersection({
+          x: 100,
+          y: 100,
+        });
+        assert.equal(shape, rect);
+        done();
+      }, 100);
+    }, 100);
   });
 });

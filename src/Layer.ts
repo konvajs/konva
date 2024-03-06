@@ -469,7 +469,10 @@ export class Layer extends Container<Group | Shape> {
   }
 
   destroy(): this {
-    Util.releaseCanvas(this.getNativeCanvasElement(), this.getHitCanvas()._canvas);
+    Util.releaseCanvas(
+      this.getNativeCanvasElement(),
+      this.getHitCanvas()._canvas
+    );
     return super.destroy();
   }
 

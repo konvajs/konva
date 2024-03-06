@@ -962,10 +962,14 @@ export class Transformer extends Group {
       var node = this.getNode();
       activeTransformersCount--;
       this._fire('transformend', { evt: e, target: node });
+      // redraw layer to restore hit graph
+      this.getLayer()?.batchDraw();
 
       if (node) {
         this._nodes.forEach((target) => {
           target._fire('transformend', { evt: e, target });
+          // redraw layer to restore hit graph
+          target.getLayer()?.batchDraw();
         });
       }
       this._movingAnchorName = null;
