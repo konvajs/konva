@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### 9.3.6 (2024-03-04)
+
+- Fix transformer bug to enable hit graph back
+
 ### 9.3.5 (2024-03-04)
 
 - `tranformer` event will be triggered AFTER all data of transformer is updated
