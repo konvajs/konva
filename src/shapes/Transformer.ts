@@ -615,6 +615,7 @@ export class Transformer extends Group {
       width: 0,
       height: 0,
       draggable: true,
+      listening: false,
       sceneFunc(ctx, shape) {
         var tr = shape.getParent() as Transformer;
         var padding = tr.padding();
