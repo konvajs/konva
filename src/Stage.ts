@@ -551,6 +551,7 @@ export class Stage extends Container<Layer> {
 
       // no shape detected? do nothing
       if (!shape || !shape.isListening()) {
+        this[eventType + 'ClickStartShape'] = undefined;
         return;
       }
 
