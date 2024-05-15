@@ -6,6 +6,9 @@ import {
   simulateMouseDown,
   simulateMouseMove,
   simulateMouseUp,
+  simulatePointerDown,
+  simulatePointerMove,
+  simulatePointerUp,
 } from './test-utils';
 
 describe('DragAndDropEvents', function () {
@@ -219,10 +222,6 @@ describe('DragAndDropEvents', function () {
       clicked = true;
     });
 
-    circle.on('dblclick', function () {
-      //console.log('dblclick');
-    });
-
     simulateMouseDown(stage, {
       x: 40,
       y: 40,
@@ -235,6 +234,58 @@ describe('DragAndDropEvents', function () {
       });
 
       simulateMouseUp(stage, {
+        x: 100,
+        y: 100,
+      });
+
+      assert(!clicked, 'click event should not have been fired');
+
+      done();
+    }, 20);
+  });
+
+  // TODO: how to solve it?
+  // hint: every shape has pointerId that indicates which pointer is dragging it
+  // but "pointer" event and mouse event has different pointerId
+  // so we need to find a way to match them
+  // should we save several pointers per shape?
+  // doesn't sound good
+  // switch to pointer only event handling?
+  it.skip('click should not occur after drag and drop', function (done) {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var circle = new Konva.Circle({
+      x: 40,
+      y: 40,
+      radius: 20,
+      strokeWidth: 4,
+      fill: 'green',
+      stroke: 'black',
+      draggable: true,
+    });
+
+    layer.add(circle);
+    stage.add(layer);
+
+    var clicked = false;
+
+    stage.on('pointerclick', function () {
+      clicked = true;
+    });
+
+    simulatePointerDown(stage, {
+      x: 40,
+      y: 40,
+    });
+
+    setTimeout(function () {
+      simulatePointerMove(stage, {
+        x: 100,
+        y: 100,
+      });
+
+      simulatePointerUp(stage, {
         x: 100,
         y: 100,
       });
