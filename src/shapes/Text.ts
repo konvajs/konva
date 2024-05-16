@@ -201,11 +201,18 @@ export class Text extends Shape<TextConfig> {
       shouldUnderline = textDecoration.indexOf('underline') !== -1,
       shouldLineThrough = textDecoration.indexOf('line-through') !== -1,
       n;
-    
+
     direction = direction === INHERIT ? context.direction : direction;
 
-    var translateY = 0;
     var translateY = lineHeightPx / 2;
+    const baseline = this.textBaseline();
+    if (baseline === 'alphabetic') {
+      var metrics = this.measureSize('M'); // Use a sample character to get the ascent
+
+      translateY =
+        (metrics.fontBoundingBoxAscent - metrics.fontBoundingBoxDescent) / 2 +
+        lineHeightPx / 2;
+    }
 
     var lineTranslateX = 0;
     var lineTranslateY = 0;
@@ -216,10 +223,9 @@ export class Text extends Shape<TextConfig> {
 
     context.setAttr('font', this._getContextFont());
 
-    context.setAttr('textBaseline', MIDDLE);
+    context.setAttr('textBaseline', baseline);
 
     context.setAttr('textAlign', LEFT);
-
 
     // handle vertical alignment
     if (verticalAlign === MIDDLE) {
@@ -399,6 +405,18 @@ export class Text extends Shape<TextConfig> {
     metrics = _context.measureText(text);
     _context.restore();
     return {
+      // copy all text metrics data:
+      actualBoundingBoxAscent: metrics.actualBoundingBoxAscent,
+      actualBoundingBoxDescent: metrics.actualBoundingBoxDescent,
+      actualBoundingBoxLeft: metrics.actualBoundingBoxLeft,
+      actualBoundingBoxRight: metrics.actualBoundingBoxRight,
+      alphabeticBaseline: metrics.alphabeticBaseline,
+      emHeightAscent: metrics.emHeightAscent,
+      emHeightDescent: metrics.emHeightDescent,
+      fontBoundingBoxAscent: metrics.fontBoundingBoxAscent,
+      fontBoundingBoxDescent: metrics.fontBoundingBoxDescent,
+      hangingBaseline: metrics.hangingBaseline,
+      ideographicBaseline: metrics.ideographicBaseline,
       width: metrics.width,
       height: fontSize,
     };
@@ -637,6 +655,7 @@ export class Text extends Shape<TextConfig> {
 
   direction: GetSet<string, this>;
   fontFamily: GetSet<string, this>;
+  textBaseline: GetSet<string, this>;
   fontSize: GetSet<number, this>;
   fontStyle: GetSet<string, this>;
   fontVariant: GetSet<string, this>;
@@ -703,7 +722,6 @@ Factory.overWriteSetter(Text, 'width', getNumberOrAutoValidator());
 
 Factory.overWriteSetter(Text, 'height', getNumberOrAutoValidator());
 
-
 /**
  * get/set direction
  * @name Konva.Text#direction
@@ -733,6 +751,8 @@ Factory.addGetterSetter(Text, 'direction', INHERIT);
  * text.fontFamily('Arial');
  */
 Factory.addGetterSetter(Text, 'fontFamily', 'Arial');
+
+Factory.addGetterSetter(Text, 'textBaseline', MIDDLE);
 
 /**
  * get/set font size in pixels

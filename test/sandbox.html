@@ -30,46 +30,77 @@
     <script type="module">
       import Konva from '../src/index.ts';
 
+      var stageWidth = window.innerWidth;
+      var stageHeight = window.innerHeight;
+
       var stage = new Konva.Stage({
         container: 'container',
-        width: window.innerHeight,
-        height: window.innerHeight,
+        width: stageWidth,
+        height: stageHeight,
       });
 
       var layer = new Konva.Layer();
       stage.add(layer);
 
-      const circle = new Konva.Circle({
-        x: 100,
-        y: 150,
-        radius: 50,
-        draggable: true,
-        fillLinearGradientStartPoint: { x: -50, y: -50 },
-        fillLinearGradientEndPoint: { x: 50, y: 50 },
-        fillLinearGradientColorStops: [0, 'red', 1, 'yellow'],
+      // Stage Background
+      var background = new Konva.Rect({
+        width: stageWidth,
+        height: stageHeight,
+        x: 0,
+        y: 0,
+        fill: 'red',
       });
+      layer.add(background);
 
-      layer.add(circle);
-
-      const tr = new Konva.Transformer({
-        nodes: [circle],
-        flipEnabled: false,
+      // Text Item
+      var text = new Konva.Text({
+        text: 'testtest',
+        x: 50,
+        y: 25,
+        // width: 400,
+        // height: 200,
+        fontSize: 64,
+        // verticalAlign: 'middle',
+        align: 'center',
+        fontFamily: 'Times New Roman',
+        // textBaseline: 'alphabetic',
       });
-      layer.add(tr);
+      layer.add(text);
 
-      const dot = new Konva.Circle({
-        x: 100,
-        y: 100,
-        radius: 2,
-        fill: 'blue',
+      // Top line lining up perfect in MAC OSX CHROME, inline with top of text
+      var topLine = new Konva.Line({
+        points: [125, 103, 400, 103],
+        stroke: 'green',
+        strokeWidth: 1,
       });
+      layer.add(topLine);
 
-      layer.add(dot);
-
-      circle.on('transform', () => {
-        dot.x(circle.x());
-        dot.y(circle.y() - circle.radius() * circle.scaleY() - 50);
+      // Bottom line lining up perfect in MAC OSX CHROME, inline with bottom of text
+      var bottomLine = new Konva.Line({
+        points: [125, 143, 400, 143],
+        stroke: 'green',
+        strokeWidth: 1,
       });
+      layer.add(bottomLine);
+
+      layer.draw();
+
+      // Get text bounding box
+      var textRect = text.getClientRect();
+
+      // Create overlay text
+      var overlayText = document.createElement('div');
+      overlayText.id = 'overlayText';
+      overlayText.style.position = 'absolute';
+      overlayText.style.left = textRect.x + 'px';
+      overlayText.style.top = textRect.y + 'px';
+      overlayText.style.width = textRect.width + 'px';
+      overlayText.style.height = textRect.height + 'px';
+      overlayText.style.lineHeight = textRect.height + 'px'; // Center vertically
+      overlayText.style.textAlign = 'center';
+      overlayText.style.fontSize = '64px';
+      overlayText.innerHTML = 'testtest';
+      document.getElementById('container').appendChild(overlayText);
     </script>
   </body>
 </html>
