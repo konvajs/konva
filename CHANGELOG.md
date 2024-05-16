@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### 9.3.8 (2024-03-04)
+
+- Fix click events fires on stage
+- Temporary `Konva._fixTextRendering = true` flag to fix inconsistent text
+
 ### 9.3.6 (2024-03-04)
 
 - Fix transformer bug to enable hit graph back
