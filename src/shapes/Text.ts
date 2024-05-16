@@ -205,10 +205,11 @@ export class Text extends Shape<TextConfig> {
     direction = direction === INHERIT ? context.direction : direction;
 
     var translateY = lineHeightPx / 2;
-    const baseline = this.textBaseline();
-    if (baseline === 'alphabetic') {
+    var baseline = MIDDLE;
+    if (Konva._fixTextRendering) {
       var metrics = this.measureSize('M'); // Use a sample character to get the ascent
 
+      baseline = 'alphabetic';
       translateY =
         (metrics.fontBoundingBoxAscent - metrics.fontBoundingBoxDescent) / 2 +
         lineHeightPx / 2;
@@ -655,7 +656,6 @@ export class Text extends Shape<TextConfig> {
 
   direction: GetSet<string, this>;
   fontFamily: GetSet<string, this>;
-  textBaseline: GetSet<string, this>;
   fontSize: GetSet<number, this>;
   fontStyle: GetSet<string, this>;
   fontVariant: GetSet<string, this>;
@@ -751,8 +751,6 @@ Factory.addGetterSetter(Text, 'direction', INHERIT);
  * text.fontFamily('Arial');
  */
 Factory.addGetterSetter(Text, 'fontFamily', 'Arial');
-
-Factory.addGetterSetter(Text, 'textBaseline', MIDDLE);
 
 /**
  * get/set font size in pixels
