@@ -3,7 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-### 9.3.8 (2024-03-04)
+### 9.3.9 (2024-05-20)
+
+- Fix underline and line-through for `Konva.Text` when `Konva._fixTextRendering = true`
+
+### 9.3.8 (2024-05-15)
 
 - Fix click events fires on stage
 - Temporary `Konva._fixTextRendering = true` flag to fix inconsistent text
