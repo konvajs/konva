@@ -30,10 +30,10 @@
     <script type="module">
       import Konva from '../src/index.ts';
 
-      Konva._fixTextRendering = true;
-
       var stageWidth = window.innerWidth;
       var stageHeight = window.innerHeight;
+
+      Konva._fixTextRendering = true;
 
       var stage = new Konva.Stage({
         container: 'container',
@@ -44,65 +44,16 @@
       var layer = new Konva.Layer();
       stage.add(layer);
 
-      // Stage Background
-      var background = new Konva.Rect({
-        width: stageWidth,
-        height: stageHeight,
-        x: 0,
-        y: 0,
-        fill: 'red',
-      });
-      layer.add(background);
-
-      // Text Item
       var text = new Konva.Text({
-        text: 'testtest',
-        x: 50,
-        y: 25,
-        // width: 400,
-        // height: 200,
-        fontSize: 64,
-        // verticalAlign: 'middle',
-        align: 'center',
-        fontFamily: 'Times New Roman',
-        // textBaseline: 'alphabetic',
+        x: 10,
+        y: 10,
+        text: 'Simple Text',
+        fontSize: 300,
+        fontFamily: 'Calibri',
+        fill: 'green',
+        textDecoration: 'underline line-through',
       });
       layer.add(text);
-
-      // Top line lining up perfect in MAC OSX CHROME, inline with top of text
-      var topLine = new Konva.Line({
-        points: [125, 103, 400, 103],
-        stroke: 'green',
-        strokeWidth: 1,
-      });
-      layer.add(topLine);
-
-      // Bottom line lining up perfect in MAC OSX CHROME, inline with bottom of text
-      var bottomLine = new Konva.Line({
-        points: [125, 143, 400, 143],
-        stroke: 'green',
-        strokeWidth: 1,
-      });
-      layer.add(bottomLine);
-
-      layer.draw();
-
-      // Get text bounding box
-      var textRect = text.getClientRect();
-
-      // Create overlay text
-      var overlayText = document.createElement('div');
-      overlayText.id = 'overlayText';
-      overlayText.style.position = 'absolute';
-      overlayText.style.left = textRect.x + 'px';
-      overlayText.style.top = textRect.y + 'px';
-      overlayText.style.width = textRect.width + 'px';
-      overlayText.style.height = textRect.height + 'px';
-      overlayText.style.lineHeight = textRect.height + 'px'; // Center vertically
-      overlayText.style.textAlign = 'center';
-      overlayText.style.fontSize = '64px';
-      overlayText.innerHTML = 'testtest';
-      document.getElementById('container').appendChild(overlayText);
     </script>
   </body>
 </html>

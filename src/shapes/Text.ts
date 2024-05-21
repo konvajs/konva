@@ -261,18 +261,17 @@ export class Text extends Shape<TextConfig> {
         context.save();
         context.beginPath();
 
-        context.moveTo(
-          lineTranslateX,
-          translateY + lineTranslateY + Math.round(fontSize / 2)
-        );
+        let yOffset = Konva._fixTextRendering
+          ? Math.round(fontSize / 4)
+          : Math.round(fontSize / 2);
+        const x = lineTranslateX;
+        const y = translateY + lineTranslateY + yOffset;
+        context.moveTo(x, y);
         spacesNumber = text.split(' ').length - 1;
         oneWord = spacesNumber === 0;
         lineWidth =
           align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
-        context.lineTo(
-          lineTranslateX + Math.round(lineWidth),
-          translateY + lineTranslateY + Math.round(fontSize / 2)
-        );
+        context.lineTo(x + Math.round(lineWidth), y);
 
         // I have no idea what is real ratio
         // just /15 looks good enough
@@ -286,7 +285,8 @@ export class Text extends Shape<TextConfig> {
       if (shouldLineThrough) {
         context.save();
         context.beginPath();
-        context.moveTo(lineTranslateX, translateY + lineTranslateY);
+        let yOffset = Konva._fixTextRendering ? -Math.round(fontSize / 4) : 0;
+        context.moveTo(lineTranslateX, translateY + lineTranslateY + yOffset);
         spacesNumber = text.split(' ').length - 1;
         oneWord = spacesNumber === 0;
         lineWidth =
@@ -295,7 +295,7 @@ export class Text extends Shape<TextConfig> {
             : width;
         context.lineTo(
           lineTranslateX + Math.round(lineWidth),
-          translateY + lineTranslateY
+          translateY + lineTranslateY + yOffset
         );
         context.lineWidth = fontSize / 15;
         const gradient = this._getLinearGradient();
