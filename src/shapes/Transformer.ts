@@ -47,7 +47,7 @@ export interface TransformerConfig extends ContainerConfig {
     newPos: Vector2d,
     evt: any
   ) => Vector2d;
-  anchorStyleFunc?: (anchor: Shape) => void;
+  anchorStyleFunc?: (anchor: Rect) => void;
 }
 
 var EVENTS_NAME = 'tr-konva';

@@ -965,3 +965,15 @@ _registerNode(Stage);
  * stage.container(container);
  */
 Factory.addGetterSetter(Stage, 'container');
+
+// chrome is clearing canvas in inactive browser window, causing layer content to be erased
+// so let's redraw layers as soon as window becomes active
+// TODO: any other way to solve this issue?
+// TODO: should we remove it if chrome fixes the issue?
+if (Konva.isBrowser) {
+  window.addEventListener('focus', () => {
+    stages.forEach((stage) => {
+      stage.batchDraw();
+    });
+  });
+}

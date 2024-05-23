@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### 9.3.10 (2024-05-23)
+
+- Fix chrome clear canvas issue
+- Typescript fixes
+
 ### 9.3.9 (2024-05-20)
 
 - Fix underline and line-through for `Konva.Text` when `Konva._fixTextRendering = true`
