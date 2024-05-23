@@ -971,7 +971,7 @@ Factory.addGetterSetter(Stage, 'container');
 // TODO: any other way to solve this issue?
 // TODO: should we remove it if chrome fixes the issue?
 if (Konva.isBrowser) {
-  window.addEventListener('focus', () => {
+  document.addEventListener('visibilitychange', () => {
     stages.forEach((stage) => {
       stage.batchDraw();
     });
