@@ -26,7 +26,7 @@ export type LineJoin = 'round' | 'bevel' | 'miter';
 export type LineCap = 'butt' | 'round' | 'square';
 
 export interface ShapeConfig extends NodeConfig {
-  fill?: string;
+  fill?: string | CanvasGradient;
   fillPatternImage?: HTMLImageElement;
   fillPatternX?: number;
   fillPatternY?: number;
