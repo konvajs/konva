@@ -145,7 +145,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     [index: string]: Array<{ name: string; handler: Function }>;
   } = {};
   attrs: any = {};
-  index = 0;
   _allEventListeners: null | Array<Function> = null;
   parent: Container | null = null;
   _cache: Map<string, any> = new Map<string, any>();
@@ -170,6 +169,17 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this._shouldFireChangeEvents = true;
 
     // all change event listeners are attached to the prototype
+  }
+
+  get index() {
+    if (this.parent) {
+      return this.parent.children.indexOf(this);
+    }
+    return -1;
+  }
+
+  set index(_val: number) {
+
   }
 
   hasChildren() {
@@ -854,7 +864,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     if (parent && parent.children) {
       parent.children.splice(this.index, 1);
-      parent._setChildrenIndices();
       this.parent = null;
     }
   }
@@ -1361,7 +1370,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (index < len - 1) {
       this.parent.children.splice(index, 1);
       this.parent.children.push(this);
-      this.parent._setChildrenIndices();
       return true;
     }
     return false;
@@ -1382,7 +1390,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (index < len - 1) {
       this.parent.children.splice(index, 1);
       this.parent.children.splice(index + 1, 0, this);
-      this.parent._setChildrenIndices();
       return true;
     }
     return false;
@@ -1402,7 +1409,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (index > 0) {
       this.parent.children.splice(index, 1);
       this.parent.children.splice(index - 1, 0, this);
-      this.parent._setChildrenIndices();
       return true;
     }
     return false;
@@ -1422,7 +1428,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (index > 0) {
       this.parent.children.splice(index, 1);
       this.parent.children.unshift(this);
-      this.parent._setChildrenIndices();
       return true;
     }
     return false;
@@ -1444,7 +1449,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     var index = this.index;
     this.parent.children.splice(index, 1);
     this.parent.children.splice(zIndex, 0, this);
-    this.parent._setChildrenIndices();
     return this;
   }
   /**
