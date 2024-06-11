@@ -175,7 +175,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (this.parent) {
       return this.parent.children.indexOf(this);
     }
-    return -1;
+    return 0;
   }
 
   set index(_val: number) {
