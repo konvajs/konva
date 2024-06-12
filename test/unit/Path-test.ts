@@ -1134,11 +1134,11 @@ describe('Path', function () {
 
       assert.deepEqual(points, [
         { x: 300, y: 10 },
-        { x: 290.2871413779118, y: 27.48314552325543 },
-        { x: 280.57428275582356, y: 44.96629104651086 },
-        { x: 270.86142413373534, y: 62.4494365697663 },
-        { x: 261.1485655116471, y: 79.93258209302172 },
-        { x: 251.43570688955887, y: 97.41572761627717 },
+        { x: 290.28714137642737, y: 27.483145522430753 },
+        { x: 280.57428275285474, y: 44.96629104486151 },
+        { x: 270.86142412928206, y: 62.44943656729226 },
+        { x: 261.1485655057094, y: 79.93258208972301 },
+        { x: 251.4357068821368, y: 97.41572761215377 },
         { x: 230.89220826660141, y: 87.23996356219386 },
         { x: 207.0639321224534, y: 74.08466390481559 },
         { x: 182.87529785963875, y: 63.52674972743341 },
@@ -1166,6 +1166,47 @@ describe('Path', function () {
     }
 
     stage.add(layer);
+  });
+
+  it('get point at path with float attrs', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    const data =
+      'M419.0000314094981 342.88624187900973 L419.00003140949804 577.0038889378335 L465.014001082264 577.0038889378336 Z';
+    var path = new Konva.Path({
+      stroke: 'red',
+      strokeWidth: 3,
+      data,
+    });
+    layer.add(path);
+    if (isBrowser) {
+      const SVGPath = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'path'
+      ) as SVGPathElement;
+      SVGPath.setAttribute('d', data);
+      for (var i = 0; i < path.getLength(); i += 1) {
+        var p = path.getPointAtLength(i);
+        var circle = new Konva.Circle({
+          x: p.x,
+          y: p.y,
+          radius: 2,
+          fill: 'black',
+          stroke: 'black',
+        });
+        layer.add(circle);
+        const position = SVGPath.getPointAtLength(i);
+        assert(
+          Math.abs(p.x - position.x) <= 1,
+          'error for x should be smaller than 10% for i = ' + i
+        );
+        assert(
+          Math.abs(p.y - position.y) <= 1,
+          'error for y should be smaller than 10% for i = ' + i
+        );
+      }
+    }
   });
 
   it('get point at path - bezier', function () {
@@ -1618,8 +1659,11 @@ describe('Path', function () {
     layer.add(path);
     stage.add(layer);
 
-    const trace = layer.getContext().getTrace()
+    const trace = layer.getContext().getTrace();
 
-    assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(200,100);lineTo(300,100);lineTo(300,150);closePath();fillStyle=#ccc;fill(evenodd);restore();');
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(200,100);lineTo(300,100);lineTo(300,150);closePath();fillStyle=#ccc;fill(evenodd);restore();'
+    );
   });
 });

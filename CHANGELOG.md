@@ -3,6 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+- Fix svg `path.getPointAtLength()` calculations in some cases
 - Fix `shape.getClientRect()` when any of parents is cached
 
 ### 9.3.11 (2024-05-23)

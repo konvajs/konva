@@ -320,61 +320,38 @@ export class Path extends Shape<PathConfig> {
   }
 
   static getPointOnLine(dist, P1x, P1y, P2x, P2y, fromX?, fromY?) {
-    if (fromX === undefined) {
-      fromX = P1x;
-    }
-    if (fromY === undefined) {
-      fromY = P1y;
-    }
+    fromX = fromX ?? P1x;
+    fromY = fromY ?? P1y;
 
-    var m = (P2y - P1y) / (P2x - P1x + 0.00000001);
-    var run = Math.sqrt((dist * dist) / (1 + m * m));
-    if (P2x < P1x) {
-      run *= -1;
+    const len = this.getLineLength(P1x, P1y, P2x, P2y);
+    if (len < 1e-10) {
+      return { x: P1x, y: P1y };
     }
-    var rise = m * run;
-    var pt;
 
     if (P2x === P1x) {
-      // vertical line
-      pt = {
-        x: fromX,
-        y: fromY + rise,
-      };
-    } else if ((fromY - P1y) / (fromX - P1x + 0.00000001) === m) {
-      pt = {
-        x: fromX + run,
-        y: fromY + rise,
-      };
-    } else {
-      var ix, iy;
-
-      var len = this.getLineLength(P1x, P1y, P2x, P2y);
-      // if (len < 0.00000001) {
-      //   return {
-      //     x: P1x,
-      //     y: P1y,
-      //   };
-      // }
-      var u = (fromX - P1x) * (P2x - P1x) + (fromY - P1y) * (P2y - P1y);
-      u = u / (len * len);
-      ix = P1x + u * (P2x - P1x);
-      iy = P1y + u * (P2y - P1y);
-
-      var pRise = this.getLineLength(fromX, fromY, ix, iy);
-      var pRun = Math.sqrt(dist * dist - pRise * pRise);
-      run = Math.sqrt((pRun * pRun) / (1 + m * m));
-      if (P2x < P1x) {
-        run *= -1;
-      }
-      rise = m * run;
-      pt = {
-        x: ix + run,
-        y: iy + rise,
-      };
+      // Vertical line
+      return { x: fromX, y: fromY + (P2y > P1y ? dist : -dist) };
     }
 
-    return pt;
+    const m = (P2y - P1y) / (P2x - P1x);
+    const run = Math.sqrt((dist * dist) / (1 + m * m)) * (P2x < P1x ? -1 : 1);
+    const rise = m * run;
+
+    if (Math.abs(fromY - P1y - m * (fromX - P1x)) < 1e-10) {
+      return { x: fromX + run, y: fromY + rise };
+    }
+
+    const u =
+      ((fromX - P1x) * (P2x - P1x) + (fromY - P1y) * (P2y - P1y)) / (len * len);
+    const ix = P1x + u * (P2x - P1x);
+    const iy = P1y + u * (P2y - P1y);
+    const pRise = this.getLineLength(fromX, fromY, ix, iy);
+    const pRun = Math.sqrt(dist * dist - pRise * pRise);
+    const adjustedRun =
+      Math.sqrt((pRun * pRun) / (1 + m * m)) * (P2x < P1x ? -1 : 1);
+    const adjustedRise = m * adjustedRun;
+
+    return { x: ix + adjustedRun, y: iy + adjustedRise };
   }
 
   static getPointOnCubicBezier(pct, P1x, P1y, P2x, P2y, P3x, P3y, P4x, P4y) {
