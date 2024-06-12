@@ -1653,6 +1653,35 @@ describe('Shape', function () {
     assert.equal(rect.height, 100, 'should not effect width');
   });
 
+  it('getClientRect should not use cached values', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var shape = new Konva.Rect({
+      x: 100,
+      y: 100,
+      width: 100,
+      height: 100,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      strokeEnabled: false,
+      shadowOffsetX: 10,
+      shadowEnabled: false,
+    });
+
+    layer.add(shape);
+    stage.add(layer);
+
+    layer.cache();
+
+    layer.scaleX(2);
+
+    const rect = shape.getClientRect();
+
+    assert.equal(rect.x, 200);
+  });
+
   it('getClientRect for shape in transformed parent', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
