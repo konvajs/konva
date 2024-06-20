@@ -670,6 +670,11 @@ export class Transformer extends Group {
     });
   }
   _handleMouseDown(e) {
+    // do nothing if we already transforming
+    // that is possible to trigger with multitouch
+    if (this._transforming) {
+      return;
+    }
     this._movingAnchorName = e.target.name().split(' ')[0];
 
     var attrs = this._getNodeRect();

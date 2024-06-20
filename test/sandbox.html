@@ -48,12 +48,25 @@
         x: 10,
         y: 10,
         text: 'Simple Text',
-        fontSize: 300,
+        fontSize: 100,
         fontFamily: 'Calibri',
         fill: 'green',
         textDecoration: 'underline line-through',
+        draggable: true,
       });
       layer.add(text);
+
+      var tr = new Konva.Transformer({
+        nodes: [text],
+      });
+      layer.add(tr);
+
+      tr.on('transformstart', () => {
+        console.log('transform start');
+      });
+      tr.on('transformend', () => {
+        console.log('transform end');
+      });
     </script>
   </body>
 </html>
