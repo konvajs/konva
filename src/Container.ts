@@ -83,7 +83,6 @@ export abstract class Container<
     this.getChildren().forEach((child) => {
       // reset parent to prevent many _setChildrenIndices calls
       child.parent = null;
-      child.index = 0;
       child.remove();
     });
     this.children = [];
@@ -100,7 +99,6 @@ export abstract class Container<
     this.getChildren().forEach((child) => {
       // reset parent to prevent many _setChildrenIndices calls
       child.parent = null;
-      child.index = 0;
       child.destroy();
     });
     this.children = [];
@@ -139,7 +137,6 @@ export abstract class Container<
       return this;
     }
     this._validateAdd(child);
-    child.index = this.getChildren().length;
     child.parent = this;
     child._clearCaches();
     this.getChildren().push(child);
@@ -335,12 +332,6 @@ export abstract class Container<
     this.children?.forEach(function (node) {
       node._clearSelfAndDescendantCache(attr);
     });
-  }
-  _setChildrenIndices() {
-    this.children?.forEach(function (child, n) {
-      child.index = n;
-    });
-    this._requestDraw();
   }
   drawScene(can?: SceneCanvas, top?: Node, bufferCanvas?: SceneCanvas) {
     var layer = this.getLayer()!,
