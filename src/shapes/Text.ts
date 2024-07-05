@@ -405,21 +405,30 @@ export class Text extends Shape<TextConfig> {
 
     metrics = _context.measureText(text);
     _context.restore();
+
+    // Scale the fallback values based on the provided fontSize compared to the sample size (100 in your new case)
+    const scaleFactor = fontSize / 100;
+
+    // Note, fallback values are from chrome browser with 100px font size and font-family "Arial"
     return {
-      // copy all text metrics data:
-      actualBoundingBoxAscent: metrics.actualBoundingBoxAscent,
-      actualBoundingBoxDescent: metrics.actualBoundingBoxDescent,
-      actualBoundingBoxLeft: metrics.actualBoundingBoxLeft,
-      actualBoundingBoxRight: metrics.actualBoundingBoxRight,
-      alphabeticBaseline: metrics.alphabeticBaseline,
-      emHeightAscent: metrics.emHeightAscent,
-      emHeightDescent: metrics.emHeightDescent,
-      fontBoundingBoxAscent: metrics.fontBoundingBoxAscent,
-      fontBoundingBoxDescent: metrics.fontBoundingBoxDescent,
-      hangingBaseline: metrics.hangingBaseline,
-      ideographicBaseline: metrics.ideographicBaseline,
+      actualBoundingBoxAscent:
+        metrics.actualBoundingBoxAscent ?? 71.58203125 * scaleFactor,
+      actualBoundingBoxDescent: metrics.actualBoundingBoxDescent ?? 0, // Remains zero as there is no descent in the provided metrics
+      actualBoundingBoxLeft:
+        metrics.actualBoundingBoxLeft ?? -7.421875 * scaleFactor,
+      actualBoundingBoxRight:
+        metrics.actualBoundingBoxRight ?? 75.732421875 * scaleFactor,
+      alphabeticBaseline: metrics.alphabeticBaseline ?? 0, // Remains zero as it's typically relative to the baseline itself
+      emHeightAscent: metrics.emHeightAscent ?? 100 * scaleFactor,
+      emHeightDescent: metrics.emHeightDescent ?? -20 * scaleFactor,
+      fontBoundingBoxAscent: metrics.fontBoundingBoxAscent ?? 91 * scaleFactor,
+      fontBoundingBoxDescent:
+        metrics.fontBoundingBoxDescent ?? 21 * scaleFactor,
+      hangingBaseline:
+        metrics.hangingBaseline ?? 72.80000305175781 * scaleFactor,
+      ideographicBaseline: metrics.ideographicBaseline ?? -21 * scaleFactor,
       width: metrics.width,
-      height: fontSize,
+      height: fontSize, // Typically set to the font size
     };
   }
   _getContextFont() {
