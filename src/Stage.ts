@@ -353,6 +353,7 @@ export class Stage extends Container<Layer> {
   /**
    * get visible intersection shape. This is the preferred
    *  method for determining if a point intersects a shape or not
+   * nodes with listening set to false will not be detected
    * @method
    * @name Konva.Stage#getIntersection
    * @param {Object} pos

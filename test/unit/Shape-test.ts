@@ -2303,4 +2303,36 @@ describe('Shape', function () {
     assert.equal(callCount, 0);
     Konva.Util.warn = oldWarn;
   });
+
+  it('fill rule on hit graph', function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var mask = new Konva.Shape({
+      sceneFunc: function (ctx, shape) {
+        ctx.beginPath();
+        ctx.rect(0, 0, 500, 500);
+        ctx.rect(100, 100, 100, 100);
+        ctx.closePath();
+        ctx.fillShape(shape);
+      },
+      draggable: true,
+      fill: 'red',
+      fillRule: 'evenodd',
+    });
+
+    layer.add(mask);
+    layer.draw();
+    const trace = layer.getContext().getTrace();
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();rect(0,0,500,500);rect(100,100,100,100);closePath();fillStyle=red;fill(evenodd);restore();'
+    );
+
+    const hitShape = layer.getIntersection({ x: 150, y: 150 });
+    assert.equal(hitShape, null);
+  });
 });

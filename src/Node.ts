@@ -3155,6 +3155,8 @@ addGetterSetter(Node, 'listening', true, getBooleanValidator());
 /**
  * get/set listening attr.  If you need to determine if a node is listening or not
  *   by taking into account its parents, use the isListening() method
+ *   nodes with listening set to false will not be detected in hit graph
+ *   so they will be ignored in container.getIntersection() method
  * @name Konva.Node#listening
  * @method
  * @param {Boolean} listening Can be true, or false.  The default is true.

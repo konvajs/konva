@@ -128,8 +128,13 @@ function _fillFunc(this: Node, context) {
 function _strokeFunc(context) {
   context.stroke();
 }
-function _fillFuncHit(context) {
-  context.fill();
+function _fillFuncHit(this: Node, context) {
+  const fillRule = this.attrs.fillRule;
+  if (fillRule) {
+    context.fill(fillRule);
+  } else {
+    context.fill();
+  }
 }
 function _strokeFuncHit(context) {
   context.stroke();

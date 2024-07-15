@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+- Support `fillRule` for `Konva.Shape` on hit graph
+
 ### 9.3.13 (2024-07-05)
 
 - Fallback for `Konva.Text.measureSize()` when 2d context doesn't return full data

@@ -309,6 +309,7 @@ export class Layer extends Container<Group | Shape> {
    * get visible intersection shape. This is the preferred
    * method for determining if a point intersects a shape or not
    * also you may pass optional selector parameter to return ancestor of intersected shape
+   * nodes with listening set to false will not be detected
    * @method
    * @name Konva.Layer#getIntersection
    * @param {Object} pos

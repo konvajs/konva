@@ -307,6 +307,7 @@ export abstract class Container<
    * canvas and redraw every shape inside the container, it should only be used for special situations
    * because it performs very poorly.  Please use the {@link Konva.Stage#getIntersection} method if at all possible
    * because it performs much better
+   * nodes with listening set to false will not be detected
    * @method
    * @name Konva.Container#getAllIntersections
    * @param {Object} pos
