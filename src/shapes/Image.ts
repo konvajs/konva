@@ -65,6 +65,11 @@ export class Image extends Shape<ImageConfig> {
     }
   }
   _useBufferCanvas() {
+    const hasCornerRadius = !!this.cornerRadius();
+    const hasShadow = this.hasShadow();
+    if (hasCornerRadius && hasShadow) {
+      return true;
+    }
     return super._useBufferCanvas(true);
   }
   _sceneFunc(context: Context) {
