@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+### 9.3.14 (2024-07-16)
+
+- Fix shadow + corner radius for images
 - Support `fillRule` for `Konva.Shape` on hit graph
 
 ### 9.3.13 (2024-07-05)
