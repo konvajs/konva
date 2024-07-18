@@ -116,19 +116,19 @@ type NodeEventMap = GlobalEventHandlersEventMap & {
   [index: string]: any;
 };
 
-export interface KonvaEventObject<EventType> {
+export interface KonvaEventObject<EventType, This = Node> {
   type: string;
   target: Shape | Stage;
   evt: EventType;
   pointerId: number;
-  currentTarget: Node;
+  currentTarget: This;
   cancelBubble: boolean;
   child?: Node;
 }
 
 export type KonvaEventListener<This, EventType> = (
   this: This,
-  ev: KonvaEventObject<EventType>
+  ev: KonvaEventObject<EventType, This>
 ) => void;
 
 /**
@@ -814,7 +814,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       var targets = evt.target.findAncestors(selector, true, stopNode);
       for (var i = 0; i < targets.length; i++) {
         evt = Util.cloneObject(evt);
-        evt.currentTarget = targets[i];
+        evt.currentTarget = targets[i] as any;
         handler.call(targets[i], evt as any);
       }
     });
