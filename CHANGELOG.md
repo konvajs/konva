@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+- ts fixes
+
 ### 9.3.14 (2024-07-16)
 
 - Fix shadow + corner radius for images
