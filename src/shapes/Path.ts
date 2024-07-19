@@ -2,7 +2,7 @@ import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { _registerNode } from '../Global';
 
-import { GetSet, PathSegment, Vector2d } from '../types';
+import { GetSet, PathSegment } from '../types';
 import {
   getCubicArcLength,
   getQuadraticArcLength,
@@ -235,10 +235,7 @@ export class Path extends Shape<PathConfig> {
     return pathLength;
   }
 
-  static getPointAtLengthOfDataArray(
-    length: number,
-    dataArray
-  ): Vector2d | null {
+  static getPointAtLengthOfDataArray(length: number, dataArray) {
     var point,
       i = 0,
       ii = dataArray.length;
@@ -322,7 +319,7 @@ export class Path extends Shape<PathConfig> {
     return null;
   }
 
-  static getPointOnLine(dist, P1x, P1y, P2x, P2y, fromX?, fromY?): Vector2d {
+  static getPointOnLine(dist, P1x, P1y, P2x, P2y, fromX?, fromY?) {
     fromX = fromX ?? P1x;
     fromY = fromY ?? P1y;
 
@@ -357,17 +354,7 @@ export class Path extends Shape<PathConfig> {
     return { x: ix + adjustedRun, y: iy + adjustedRise };
   }
 
-  static getPointOnCubicBezier(
-    pct,
-    P1x,
-    P1y,
-    P2x,
-    P2y,
-    P3x,
-    P3y,
-    P4x,
-    P4y
-  ): Vector2d {
+  static getPointOnCubicBezier(pct, P1x, P1y, P2x, P2y, P3x, P3y, P4x, P4y) {
     function CB1(t) {
       return t * t * t;
     }
@@ -388,15 +375,7 @@ export class Path extends Shape<PathConfig> {
       y: y,
     };
   }
-  static getPointOnQuadraticBezier(
-    pct,
-    P1x,
-    P1y,
-    P2x,
-    P2y,
-    P3x,
-    P3y
-  ): Vector2d {
+  static getPointOnQuadraticBezier(pct, P1x, P1y, P2x, P2y, P3x, P3y) {
     function QB1(t) {
       return t * t;
     }
