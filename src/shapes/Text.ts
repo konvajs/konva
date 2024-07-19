@@ -392,13 +392,13 @@ export class Text extends Shape<TextConfig> {
    * That method can't handle multiline text.
    * @method
    * @name Konva.Text#measureSize
-   * @param {String} [text] text to measure
-   * @returns {Object} { width , height} of measured text
+   * @param {String} text text to measure
+   * @returns {Object} { width , height } of measured text
    */
-  measureSize(text) {
+  measureSize(text: string) {
     var _context = getDummyContext(),
       fontSize = this.fontSize(),
-      metrics;
+      metrics: TextMetrics;
 
     _context.save();
     _context.font = this._getContextFont();
