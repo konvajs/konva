@@ -14,6 +14,7 @@ import { Stage } from './Stage';
 import { Context } from './Context';
 import { Shape } from './Shape';
 import { Layer } from './Layer';
+import { ColorCurveType } from './filters/ColorCurve';
 
 export type Filter = (this: Node, imageData: ImageData) => void;
 
@@ -2617,6 +2618,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   blue: GetSet<number, this>;
   brightness: GetSet<number, this>;
   contrast: GetSet<number, this>;
+  colorCurve: GetSet<ColorCurveType, this>;
   blurRadius: GetSet<number, this>;
   luminance: GetSet<number, this>;
   green: GetSet<number, this>;

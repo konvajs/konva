@@ -10,6 +10,7 @@
 import { Blur } from './filters/Blur';
 import { Brighten } from './filters/Brighten';
 import { Contrast } from './filters/Contrast';
+import { ColorCurve } from './filters/ColorCurve'
 import { Emboss } from './filters/Emboss';
 import { Enhance } from './filters/Enhance';
 import { Grayscale } from './filters/Grayscale';
@@ -159,6 +160,7 @@ declare namespace Konva {
     Blur: typeof Blur;
     Brighten: typeof Brighten;
     Contrast: typeof Contrast;
+    ColorCurve: typeof ColorCurve;
     Emboss: typeof Emboss;
     Enhance: typeof Enhance;
     Grayscale: typeof Grayscale;
