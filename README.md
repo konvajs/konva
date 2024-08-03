@@ -64,6 +64,10 @@ Konva works in all modern mobile and desktop browsers. A browser need to be capa
 
 At the current moment `Konva` doesn't work in IE11 directly. To make it work you just need to provide some polyfills such as `Array.prototype.find`, `String.prototype.trimLeft`, `String.prototype.trimRight`, `Array.from`.
 
+# Debugging
+
+The Chrome inspector simply shows the canvas element.  To see the Konva objects and their details, install the konva-dev extension at https://github.com/konvajs/konva-devtool.
+
 # Loading and installing Konva
 
 Konva supports UMD loading. So you can use all possible variants to load the framework into your project:

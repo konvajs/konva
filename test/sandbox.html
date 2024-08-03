@@ -30,45 +30,42 @@
     <script type="module">
       import Konva from '../src/index.ts';
 
+      var stageWidth = window.innerWidth;
+      var stageHeight = window.innerHeight;
+
+      Konva._fixTextRendering = true;
+
       var stage = new Konva.Stage({
         container: 'container',
-        width: window.innerHeight,
-        height: window.innerHeight,
+        width: stageWidth,
+        height: stageHeight,
       });
 
       var layer = new Konva.Layer();
       stage.add(layer);
 
-      const circle = new Konva.Circle({
-        x: 100,
-        y: 150,
-        radius: 50,
+      var text = new Konva.Text({
+        x: 10,
+        y: 10,
+        text: 'Simple Text',
+        fontSize: 100,
+        fontFamily: 'Calibri',
+        fill: 'green',
+        textDecoration: 'underline line-through',
         draggable: true,
-        fillLinearGradientStartPoint: { x: -50, y: -50 },
-        fillLinearGradientEndPoint: { x: 50, y: 50 },
-        fillLinearGradientColorStops: [0, 'red', 1, 'yellow'],
       });
+      layer.add(text);
 
-      layer.add(circle);
-
-      const tr = new Konva.Transformer({
-        nodes: [circle],
-        flipEnabled: false,
+      var tr = new Konva.Transformer({
+        nodes: [text],
       });
       layer.add(tr);
 
-      const dot = new Konva.Circle({
-        x: 100,
-        y: 100,
-        radius: 2,
-        fill: 'blue',
+      tr.on('transformstart', () => {
+        console.log('transform start');
       });
-
-      layer.add(dot);
-
-      circle.on('transform', () => {
-        dot.x(circle.x());
-        dot.y(circle.y() - circle.radius() * circle.scaleY() - 50);
+      tr.on('transformend', () => {
+        console.log('transform end');
       });
     </script>
   </body>

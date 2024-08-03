@@ -413,4 +413,39 @@ describe('Image', function () {
       done();
     });
   });
+
+  it('corner radius with shadow', function (done) {
+    // that will trigger buffer canvas
+    loadImage('darth-vader.jpg', (imageObj) => {
+      var stage = addStage();
+
+      var layer = new Konva.Layer();
+      var darth = new Konva.Image({
+        x: 20,
+        y: 20,
+        image: imageObj,
+        cornerRadius: 10,
+        draggable: true,
+        stroke: 'red',
+        strokeWidth: 100,
+        strokeEnabled: false,
+        shadowColor: 'black',
+        shadowBlur: 10,
+        shadowOffsetX: 10,
+        shadowOffsetY: 10,
+        scaleX: 0.5,
+        scaleY: 0.5,
+      });
+
+      layer.add(darth);
+      stage.add(layer);
+
+      assert.equal(
+        layer.getContext().getTrace(true),
+        'clearRect();save();shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;drawImage();restore();'
+      );
+
+      done();
+    });
+  });
 });

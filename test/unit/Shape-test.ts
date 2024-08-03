@@ -12,6 +12,7 @@ import {
   compareLayers,
   loadImage,
   Konva,
+  compareCanvases,
 } from './test-utils';
 
 describe('Shape', function () {
@@ -1479,6 +1480,76 @@ describe('Shape', function () {
     }
   });
 
+  it('export when buffer canvas is used should handle scaling correctly', async function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group();
+    layer.add(group);
+
+    var text = new Konva.Text({
+      text: 'hello',
+      fontSize: 300,
+      fill: 'green',
+      shadowColor: 'black',
+    });
+    group.add(text);
+
+    const canvas1 = group.toCanvas({
+      x: group.x(),
+      y: group.y(),
+      width: text.width(),
+      height: text.height(),
+    });
+    text.stroke('transparent');
+    const canvas2 = group.toCanvas({
+      x: group.x(),
+      y: group.y(),
+      width: text.width(),
+      height: text.height(),
+    });
+
+    compareCanvases(canvas2, canvas1, 255, 10);
+  });
+
+  it('export when buffer canvas is used should handle scaling correctly another time', async function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group({
+      x: 400,
+    });
+    layer.add(group);
+
+    var text = new Konva.Text({
+      text: 'hello',
+      fontSize: 300,
+      fill: 'green',
+      shadowColor: 'black',
+    });
+    group.add(text);
+
+    const canvas1 = group.toCanvas({
+      x: group.x(),
+      y: group.y(),
+      width: text.width(),
+      height: text.height(),
+    });
+    text.stroke('transparent');
+    const canvas2 = group.toCanvas({
+      x: group.x(),
+      y: group.y(),
+      width: text.width(),
+      height: text.height(),
+    });
+
+    compareCanvases(canvas2, canvas1, 240, 110);
+  });
+
   // ======================================================
   it('optional disable shadow for stroke', function () {
     var stage = addStage();
@@ -1580,6 +1651,35 @@ describe('Shape', function () {
 
     assert.equal(rect.width, 100, 'should not effect width');
     assert.equal(rect.height, 100, 'should not effect width');
+  });
+
+  it('getClientRect should not use cached values', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var shape = new Konva.Rect({
+      x: 100,
+      y: 100,
+      width: 100,
+      height: 100,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      strokeEnabled: false,
+      shadowOffsetX: 10,
+      shadowEnabled: false,
+    });
+
+    layer.add(shape);
+    stage.add(layer);
+
+    layer.cache();
+
+    layer.scaleX(2);
+
+    const rect = shape.getClientRect();
+
+    assert.equal(rect.x, 200);
   });
 
   it('getClientRect for shape in transformed parent', function () {
@@ -2202,5 +2302,37 @@ describe('Shape', function () {
 
     assert.equal(callCount, 0);
     Konva.Util.warn = oldWarn;
+  });
+
+  it('fill rule on hit graph', function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var mask = new Konva.Shape({
+      sceneFunc: function (ctx, shape) {
+        ctx.beginPath();
+        ctx.rect(0, 0, 500, 500);
+        ctx.rect(100, 100, 100, 100);
+        ctx.closePath();
+        ctx.fillShape(shape);
+      },
+      draggable: true,
+      fill: 'red',
+      fillRule: 'evenodd',
+    });
+
+    layer.add(mask);
+    layer.draw();
+    const trace = layer.getContext().getTrace();
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();rect(0,0,500,500);rect(100,100,100,100);closePath();fillStyle=red;fill(evenodd);restore();'
+    );
+
+    const hitShape = layer.getIntersection({ x: 150, y: 150 });
+    assert.equal(hitShape, null);
   });
 });

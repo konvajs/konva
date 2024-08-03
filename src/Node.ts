@@ -116,19 +116,19 @@ type NodeEventMap = GlobalEventHandlersEventMap & {
   [index: string]: any;
 };
 
-export interface KonvaEventObject<EventType> {
+export interface KonvaEventObject<EventType, This = Node> {
   type: string;
   target: Shape | Stage;
   evt: EventType;
   pointerId: number;
-  currentTarget: Node;
+  currentTarget: This;
   cancelBubble: boolean;
   child?: Node;
 }
 
 export type KonvaEventListener<This, EventType> = (
   this: This,
-  ev: KonvaEventObject<EventType>
+  ev: KonvaEventObject<EventType, This>
 ) => void;
 
 /**
@@ -343,10 +343,13 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       return;
     }
 
-    // let's just add 1 pixel extra,
     // because using Math.floor on x, y position may shift drawing
-    width += offset * 2 + 1;
-    height += offset * 2 + 1;
+    // to avoid shift we need to increase size
+    // but we better to avoid it, for better filters flows
+    const extraPaddingX = Math.abs(Math.round(rect.x) - x) > 0.5 ? 1 : 0;
+    const extraPaddingY = Math.abs(Math.round(rect.y) - y) > 0.5 ? 1 : 0;
+    width += offset * 2 + extraPaddingX;
+    height += offset * 2 + extraPaddingY;
 
     x -= offset;
     y -= offset;
@@ -446,7 +449,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return this._cache.has(CANVAS);
   }
 
-  abstract drawScene(canvas?: Canvas, top?: Node): void;
+  abstract drawScene(canvas?: Canvas, top?: Node, bufferCanvas?: Canvas): void;
   abstract drawHit(canvas?: Canvas, top?: Node): void;
   /**
    * Return client rectangle {x, y, width, height} of node. This rectangle also include all styling (strokes, shadows, etc).
@@ -811,7 +814,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       var targets = evt.target.findAncestors(selector, true, stopNode);
       for (var i = 0; i < targets.length; i++) {
         evt = Util.cloneObject(evt);
-        evt.currentTarget = targets[i];
+        evt.currentTarget = targets[i] as any;
         handler.call(targets[i], evt as any);
       }
     });
@@ -1026,7 +1029,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       }
     });
 
-    var dragSkip = !skipDragCheck && !Konva.hitOnDragEnabled && layerUnderDrag;
+    var dragSkip =
+      !skipDragCheck &&
+      !Konva.hitOnDragEnabled &&
+      (layerUnderDrag || Konva.isTransforming());
     return this.isListening() && this.isVisible() && !dragSkip;
   }
 
@@ -1929,6 +1935,15 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       }),
       context = canvas.getContext();
 
+    const bufferCanvas = new SceneCanvas({
+      // width and height already multiplied by pixelRatio
+      // so we need to revert that
+      // also increase size by x nd y offset to make sure content fits canvas
+      width: canvas.width / canvas.pixelRatio + Math.abs(x),
+      height: canvas.height / canvas.pixelRatio + Math.abs(y),
+      pixelRatio: canvas.pixelRatio,
+    });
+
     if (config.imageSmoothingEnabled === false) {
       context._context.imageSmoothingEnabled = false;
     }
@@ -1938,7 +1953,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       context.translate(-1 * x, -1 * y);
     }
 
-    this.drawScene(canvas);
+    this.drawScene(canvas, undefined, bufferCanvas);
     context.restore();
 
     return canvas;
@@ -3140,6 +3155,8 @@ addGetterSetter(Node, 'listening', true, getBooleanValidator());
 /**
  * get/set listening attr.  If you need to determine if a node is listening or not
  *   by taking into account its parents, use the isListening() method
+ *   nodes with listening set to false will not be detected in hit graph
+ *   so they will be ignored in container.getIntersection() method
  * @name Konva.Node#listening
  * @method
  * @param {Boolean} listening Can be true, or false.  The default is true.

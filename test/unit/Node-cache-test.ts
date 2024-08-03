@@ -1469,7 +1469,7 @@ describe('Caching', function () {
     layer.draw();
     assert.equal(
       circle._cache.get('canvas').filter.width,
-      21 * circle._cache.get('canvas').filter.pixelRatio
+      20 * circle._cache.get('canvas').filter.pixelRatio
     );
     circle.filters([]);
     // TODO: should we clear cache canvas?

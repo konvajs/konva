@@ -307,6 +307,7 @@ export abstract class Container<
    * canvas and redraw every shape inside the container, it should only be used for special situations
    * because it performs very poorly.  Please use the {@link Konva.Stage#getIntersection} method if at all possible
    * because it performs much better
+   * nodes with listening set to false will not be detected
    * @method
    * @name Konva.Container#getAllIntersections
    * @param {Object} pos
@@ -342,7 +343,7 @@ export abstract class Container<
     });
     this._requestDraw();
   }
-  drawScene(can?: SceneCanvas, top?: Node) {
+  drawScene(can?: SceneCanvas, top?: Node, bufferCanvas?: SceneCanvas) {
     var layer = this.getLayer()!,
       canvas = can || (layer && layer.getCanvas()),
       context = canvas && canvas.getContext(),
@@ -361,7 +362,7 @@ export abstract class Container<
       this._drawCachedSceneCanvas(context);
       context.restore();
     } else {
-      this._drawChildren('drawScene', canvas, top);
+      this._drawChildren('drawScene', canvas, top, bufferCanvas);
     }
     return this;
   }
@@ -387,12 +388,14 @@ export abstract class Container<
     }
     return this;
   }
-  _drawChildren(drawMethod, canvas, top) {
+  _drawChildren(drawMethod, canvas, top, bufferCanvas?) {
     var context = canvas && canvas.getContext(),
       clipWidth = this.clipWidth(),
       clipHeight = this.clipHeight(),
       clipFunc = this.clipFunc(),
-      hasClip = (clipWidth && clipHeight) || clipFunc;
+      hasClip =
+        (typeof clipWidth === 'number' && typeof clipHeight === 'number') ||
+        clipFunc;
 
     const selfCache = top === this;
 
@@ -408,7 +411,7 @@ export abstract class Container<
       } else {
         var clipX = this.clipX();
         var clipY = this.clipY();
-        context.rect(clipX, clipY, clipWidth, clipHeight);
+        context.rect(clipX || 0, clipY || 0, clipWidth, clipHeight);
       }
       context.clip.apply(context, clipArgs);
       m = transform.copy().invert().getMatrix();
@@ -426,7 +429,7 @@ export abstract class Container<
     }
 
     this.children?.forEach(function (child) {
-      child[drawMethod](canvas, top);
+      child[drawMethod](canvas, top, bufferCanvas);
     });
     if (hasComposition) {
       context.restore();

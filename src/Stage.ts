@@ -11,7 +11,7 @@ import { _registerNode } from './Global';
 import * as PointerEvents from './PointerEvents';
 
 export interface StageConfig extends ContainerConfig {
-  container: HTMLDivElement | string;
+  container?: HTMLDivElement | string;
 }
 
 // CONSTANTS
@@ -353,6 +353,7 @@ export class Stage extends Container<Layer> {
   /**
    * get visible intersection shape. This is the preferred
    *  method for determining if a point intersects a shape or not
+   * nodes with listening set to false will not be detected
    * @method
    * @name Konva.Stage#getIntersection
    * @param {Object} pos
@@ -507,7 +508,8 @@ export class Stage extends Container<Layer> {
     this.setPointersPositions(evt);
 
     var targetShape = this._getTargetShape(eventType);
-    var eventsEnabled = !DD.isDragging || Konva.hitOnDragEnabled;
+    var eventsEnabled =
+      !(Konva.isDragging() || Konva.isTransforming()) || Konva.hitOnDragEnabled;
     if (targetShape && eventsEnabled) {
       targetShape._fireAndBubble(events.pointerout, { evt: evt });
       targetShape._fireAndBubble(events.pointerleave, { evt: evt });
@@ -550,6 +552,7 @@ export class Stage extends Container<Layer> {
 
       // no shape detected? do nothing
       if (!shape || !shape.isListening()) {
+        this[eventType + 'ClickStartShape'] = undefined;
         return;
       }
 
@@ -590,12 +593,13 @@ export class Stage extends Container<Layer> {
     if (!events) {
       return;
     }
-    if (DD.isDragging && DD.node!.preventDefault() && evt.cancelable) {
+    if (Konva.isDragging() && DD.node!.preventDefault() && evt.cancelable) {
       evt.preventDefault();
     }
     this.setPointersPositions(evt);
 
-    var eventsEnabled = !DD.isDragging || Konva.hitOnDragEnabled;
+    var eventsEnabled =
+      !(Konva.isDragging() || Konva.isTransforming()) || Konva.hitOnDragEnabled;
     if (!eventsEnabled) {
       return;
     }
@@ -962,3 +966,15 @@ _registerNode(Stage);
  * stage.container(container);
  */
 Factory.addGetterSetter(Stage, 'container');
+
+// chrome is clearing canvas in inactive browser window, causing layer content to be erased
+// so let's redraw layers as soon as window becomes active
+// TODO: any other way to solve this issue?
+// TODO: should we remove it if chrome fixes the issue?
+if (Konva.isBrowser) {
+  document.addEventListener('visibilitychange', () => {
+    stages.forEach((stage) => {
+      stage.batchDraw();
+    });
+  });
+}

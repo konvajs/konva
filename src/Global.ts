@@ -90,6 +90,7 @@ export const Konva = {
   _mouseDblClickPointerId: null,
   _touchDblClickPointerId: null,
   _pointerDblClickPointerId: null,
+  _fixTextRendering: false,
 
   /**
    * Global pixel ratio configuration. KonvaJS automatically detect pixel ratio of current device.
@@ -154,6 +155,9 @@ export const Konva = {
    */
   isDragging() {
     return Konva['DD'].isDragging;
+  },
+  isTransforming() {
+    return Konva['Transformer']?.isTransforming();
   },
   /**
    * returns whether or not a drag and drop operation is ready, but may

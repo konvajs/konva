@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+- ts fixes
+
+### 9.3.14 (2024-07-16)
+
+- Fix shadow + corner radius for images
+- Support `fillRule` for `Konva.Shape` on hit graph
+
+### 9.3.13 (2024-07-05)
+
+- Fallback for `Konva.Text.measureSize()` when 2d context doesn't return full data
+
+### 9.3.12 (2024-06-20)
+
+- Fix stopped transforming when it was triggered by multi-touch
+- Fix svg `path.getPointAtLength()` calculations in some cases
+- Fix `shape.getClientRect()` when any of parents is cached
+
+### 9.3.11 (2024-05-23)
+
+- Fix chrome clear canvas issue
+- Typescript fixes
+
+### 9.3.9 (2024-05-20)
+
+- Fix underline and line-through for `Konva.Text` when `Konva._fixTextRendering = true`
+
+### 9.3.8 (2024-05-15)
+
+- Fix click events fires on stage
+- Temporary `Konva._fixTextRendering = true` flag to fix inconsistent text
+
+### 9.3.6 (2024-03-04)
+
+- Fix transformer bug to enable hit graph back
+
+### 9.3.5 (2024-03-04)
+
+- `tranformer` event will be triggered AFTER all data of transformer is updated
+- Improve performance of transformer
+
+### 9.3.4 (2024-03-03)
+
+- Fix clipping with zero size
+
+### 9.3.3 (2024-02-09)
+
+- Another fix for exporting buffered shapes
+
+### 9.3.2 (2024-01-26)
+
+- Fix large memory usage on node export
+
+### 9.3.1 (2024-01-17)
+
+- Fix Pixelate filter work/fix caching size
+- Fix node export when large buffer canvas is used
+
 ### 9.3.0 (2023-12-20)
 
 - New attribute `rotateLineVisible` for `Konva.Transformer` to show/hide rotate line

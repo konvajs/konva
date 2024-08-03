@@ -47,7 +47,7 @@ export interface TransformerConfig extends ContainerConfig {
     newPos: Vector2d,
     evt: any
   ) => Vector2d;
-  anchorStyleFunc?: (anchor: Shape) => void;
+  anchorStyleFunc?: (anchor: Rect) => void;
 }
 
 var EVENTS_NAME = 'tr-konva';
@@ -203,6 +203,7 @@ function getSnap(snaps: Array<number>, newRotationRad: number, tol: number) {
   return snapped;
 }
 
+let activeTransformersCount = 0;
 /**
  * Transformer constructor.  Transformer is a special type of group that allow you transform Konva
  * primitives and shapes. Transforming tool is not changing `width` and `height` properties of nodes
@@ -244,7 +245,6 @@ function getSnap(snaps: Array<number>, newRotationRad: number, tol: number) {
  * });
  * layer.add(transformer);
  */
-
 export class Transformer extends Group {
   _nodes: Array<Node>;
   _movingAnchorName: string | null = null;
@@ -253,6 +253,10 @@ export class Transformer extends Group {
   sin: number;
   cos: number;
   _cursorChange: boolean;
+
+  static isTransforming = () => {
+    return activeTransformersCount > 0;
+  };
 
   constructor(config?: TransformerConfig) {
     // call super constructor
@@ -666,6 +670,11 @@ export class Transformer extends Group {
     });
   }
   _handleMouseDown(e) {
+    // do nothing if we already transforming
+    // that is possible to trigger with multitouch
+    if (this._transforming) {
+      return;
+    }
     this._movingAnchorName = e.target.name().split(' ')[0];
 
     var attrs = this._getNodeRect();
@@ -690,6 +699,7 @@ export class Transformer extends Group {
       x: pos.x - ap.x,
       y: pos.y - ap.y,
     };
+    activeTransformersCount++;
     this._fire('transformstart', { evt: e.evt, target: this.getNode() });
     this._nodes.forEach((target) => {
       target._fire('transformstart', { evt: e.evt, target });
@@ -955,11 +965,16 @@ export class Transformer extends Group {
         window.removeEventListener('touchend', this._handleMouseUp, true);
       }
       var node = this.getNode();
+      activeTransformersCount--;
       this._fire('transformend', { evt: e, target: node });
+      // redraw layer to restore hit graph
+      this.getLayer()?.batchDraw();
 
       if (node) {
         this._nodes.forEach((target) => {
           target._fire('transformend', { evt: e, target });
+          // redraw layer to restore hit graph
+          target.getLayer()?.batchDraw();
         });
       }
       this._movingAnchorName = null;
@@ -1109,11 +1124,14 @@ export class Transformer extends Group {
 
       const attrs = newLocalTransform.decompose();
       node.setAttrs(attrs);
-      this._fire('transform', { evt: evt, target: node });
-      node._fire('transform', { evt: evt, target: node });
       node.getLayer()?.batchDraw();
     });
     this.rotation(Util._getRotation(newAttrs.rotation));
+    // trigger transform event AFTER we update rotation
+    this._nodes.forEach((node) => {
+      this._fire('transform', { evt: evt, target: node });
+      node._fire('transform', { evt: evt, target: node });
+    });
     this._resetTransformCache();
     this.update();
     this.getLayer()!.batchDraw();

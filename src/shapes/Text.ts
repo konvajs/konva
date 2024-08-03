@@ -201,11 +201,19 @@ export class Text extends Shape<TextConfig> {
       shouldUnderline = textDecoration.indexOf('underline') !== -1,
       shouldLineThrough = textDecoration.indexOf('line-through') !== -1,
       n;
-    
+
     direction = direction === INHERIT ? context.direction : direction;
 
-    var translateY = 0;
     var translateY = lineHeightPx / 2;
+    var baseline = MIDDLE;
+    if (Konva._fixTextRendering) {
+      var metrics = this.measureSize('M'); // Use a sample character to get the ascent
+
+      baseline = 'alphabetic';
+      translateY =
+        (metrics.fontBoundingBoxAscent - metrics.fontBoundingBoxDescent) / 2 +
+        lineHeightPx / 2;
+    }
 
     var lineTranslateX = 0;
     var lineTranslateY = 0;
@@ -216,10 +224,9 @@ export class Text extends Shape<TextConfig> {
 
     context.setAttr('font', this._getContextFont());
 
-    context.setAttr('textBaseline', MIDDLE);
+    context.setAttr('textBaseline', baseline);
 
     context.setAttr('textAlign', LEFT);
-
 
     // handle vertical alignment
     if (verticalAlign === MIDDLE) {
@@ -254,18 +261,17 @@ export class Text extends Shape<TextConfig> {
         context.save();
         context.beginPath();
 
-        context.moveTo(
-          lineTranslateX,
-          translateY + lineTranslateY + Math.round(fontSize / 2)
-        );
+        let yOffset = Konva._fixTextRendering
+          ? Math.round(fontSize / 4)
+          : Math.round(fontSize / 2);
+        const x = lineTranslateX;
+        const y = translateY + lineTranslateY + yOffset;
+        context.moveTo(x, y);
         spacesNumber = text.split(' ').length - 1;
         oneWord = spacesNumber === 0;
         lineWidth =
           align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
-        context.lineTo(
-          lineTranslateX + Math.round(lineWidth),
-          translateY + lineTranslateY + Math.round(fontSize / 2)
-        );
+        context.lineTo(x + Math.round(lineWidth), y);
 
         // I have no idea what is real ratio
         // just /15 looks good enough
@@ -279,7 +285,8 @@ export class Text extends Shape<TextConfig> {
       if (shouldLineThrough) {
         context.save();
         context.beginPath();
-        context.moveTo(lineTranslateX, translateY + lineTranslateY);
+        let yOffset = Konva._fixTextRendering ? -Math.round(fontSize / 4) : 0;
+        context.moveTo(lineTranslateX, translateY + lineTranslateY + yOffset);
         spacesNumber = text.split(' ').length - 1;
         oneWord = spacesNumber === 0;
         lineWidth =
@@ -288,7 +295,7 @@ export class Text extends Shape<TextConfig> {
             : width;
         context.lineTo(
           lineTranslateX + Math.round(lineWidth),
-          translateY + lineTranslateY
+          translateY + lineTranslateY + yOffset
         );
         context.lineWidth = fontSize / 15;
         const gradient = this._getLinearGradient();
@@ -385,22 +392,43 @@ export class Text extends Shape<TextConfig> {
    * That method can't handle multiline text.
    * @method
    * @name Konva.Text#measureSize
-   * @param {String} [text] text to measure
-   * @returns {Object} { width , height} of measured text
+   * @param {String} text text to measure
+   * @returns {Object} { width , height } of measured text
    */
-  measureSize(text) {
+  measureSize(text: string) {
     var _context = getDummyContext(),
       fontSize = this.fontSize(),
-      metrics;
+      metrics: TextMetrics;
 
     _context.save();
     _context.font = this._getContextFont();
 
     metrics = _context.measureText(text);
     _context.restore();
+
+    // Scale the fallback values based on the provided fontSize compared to the sample size (100 in your new case)
+    const scaleFactor = fontSize / 100;
+
+    // Note, fallback values are from chrome browser with 100px font size and font-family "Arial"
     return {
+      actualBoundingBoxAscent:
+        metrics.actualBoundingBoxAscent ?? 71.58203125 * scaleFactor,
+      actualBoundingBoxDescent: metrics.actualBoundingBoxDescent ?? 0, // Remains zero as there is no descent in the provided metrics
+      actualBoundingBoxLeft:
+        metrics.actualBoundingBoxLeft ?? -7.421875 * scaleFactor,
+      actualBoundingBoxRight:
+        metrics.actualBoundingBoxRight ?? 75.732421875 * scaleFactor,
+      alphabeticBaseline: metrics.alphabeticBaseline ?? 0, // Remains zero as it's typically relative to the baseline itself
+      emHeightAscent: metrics.emHeightAscent ?? 100 * scaleFactor,
+      emHeightDescent: metrics.emHeightDescent ?? -20 * scaleFactor,
+      fontBoundingBoxAscent: metrics.fontBoundingBoxAscent ?? 91 * scaleFactor,
+      fontBoundingBoxDescent:
+        metrics.fontBoundingBoxDescent ?? 21 * scaleFactor,
+      hangingBaseline:
+        metrics.hangingBaseline ?? 72.80000305175781 * scaleFactor,
+      ideographicBaseline: metrics.ideographicBaseline ?? -21 * scaleFactor,
       width: metrics.width,
-      height: fontSize,
+      height: fontSize, // Typically set to the font size
     };
   }
   _getContextFont() {
@@ -702,7 +730,6 @@ Factory.overWriteSetter(Text, 'width', getNumberOrAutoValidator());
  */
 
 Factory.overWriteSetter(Text, 'height', getNumberOrAutoValidator());
-
 
 /**
  * get/set direction
