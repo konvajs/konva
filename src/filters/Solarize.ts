@@ -7,13 +7,19 @@ import { Filter } from '../Node';
  * @function
  * @name Solarize
  * @memberof Konva.Filters
- * @param {Object} imageData
+ * * @param {LegalCanvas} canvas
  * @example
  * node.cache();
  * node.filters([Konva.Filters.Solarize]);
  */
 
-export const Solarize: Filter = function (imageData) {
+export const Solarize: Filter = function (canvas: LegalCanvas) {
+  const imageData = canvas.context.getImageData(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
   var data = imageData.data,
     w = imageData.width,
     h = imageData.height,
@@ -44,4 +50,6 @@ export const Solarize: Filter = function (imageData) {
       data[offset + 2] = b;
     } while (--x);
   } while (--y);
+  canvas.context.putImageData(imageData, 0, 0);
+  return canvas;
 };

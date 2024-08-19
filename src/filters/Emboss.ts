@@ -1,5 +1,5 @@
 import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
+import { Node, Filter, LegalCanvas } from '../Node';
 import { Util } from '../Util';
 import { getNumberValidator } from '../Validators';
 /**
@@ -9,7 +9,7 @@ import { getNumberValidator } from '../Validators';
  * License: [http://www.pixastic.com/lib/license.txt]
  * @function
  * @memberof Konva.Filters
- * @param {Object} imageData
+ * * @param {LegalCanvas} canvas
  * @example
  * node.cache();
  * node.filters([Konva.Filters.Emboss]);
@@ -18,11 +18,17 @@ import { getNumberValidator } from '../Validators';
  * node.embossDirection('right');
  * node.embossBlend(true);
  */
-export const Emboss: Filter = function (imageData) {
+export const Emboss: Filter = function (canvas: LegalCanvas) {
   // pixastic strength is between 0 and 10.  I want it between 0 and 1
   // pixastic greyLevel is between 0 and 255.  I want it between 0 and 1.  Also,
   // a max value of greyLevel yields a white emboss, and the min value yields a black
   // emboss.  Therefore, I changed greyLevel to whiteLevel
+  const imageData = canvas.context.getImageData(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
   var strength = this.embossStrength() * 10,
     greyLevel = this.embossWhiteLevel() * 255,
     direction = this.embossDirection(),
@@ -138,6 +144,9 @@ export const Emboss: Filter = function (imageData) {
       }
     } while (--x);
   } while (--y);
+
+  canvas.context.putImageData(imageData, 0, 0);
+  return canvas;
 };
 
 Factory.addGetterSetter(

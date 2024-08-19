@@ -7,7 +7,7 @@ import { RGBComponent } from '../Validators';
  * @function
  * @name RGBA
  * @memberof Konva.Filters
- * @param {Object} imageData
+ * * @param {LegalCanvas} canvas
  * @author codefo
  * @example
  * node.cache();
@@ -17,7 +17,13 @@ import { RGBComponent } from '../Validators';
  * node.alpha(0.3);
  */
 
-export const RGBA: Filter = function (imageData) {
+export const RGBA: Filter = function (canvas: LegalCanvas) {
+  const imageData = canvas.context.getImageData(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
   var data = imageData.data,
     nPixels = data.length,
     red = this.red(),
@@ -34,6 +40,8 @@ export const RGBA: Filter = function (imageData) {
     data[i + 1] = green * alpha + data[i + 1] * ia; // g
     data[i + 2] = blue * alpha + data[i + 2] * ia; // b
   }
+  canvas.context.putImageData(imageData, 0, 0);
+  return canvas;
 };
 
 Factory.addGetterSetter(Node, 'red', 0, function (this: Node, val: number) {

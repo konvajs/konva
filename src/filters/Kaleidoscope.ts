@@ -177,7 +177,13 @@ var FromPolar = function (src, dst, opt) {
  * node.kaleidoscopePower(3);
  * node.kaleidoscopeAngle(45);
  */
-export const Kaleidoscope: Filter = function (imageData) {
+export const Kaleidoscope: Filter = function (canvas: LegalCanvas) {
+  const imageData = canvas.context.getImageData(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
   var xSize = imageData.width,
     ySize = imageData.height;
 
@@ -263,6 +269,8 @@ export const Kaleidoscope: Filter = function (imageData) {
 
   // Convert back from polar coordinates
   FromPolar(scratchData, imageData, { polarRotation: 0 });
+  canvas.context.putImageData(imageData, 0, 0);
+  return canvas;
 };
 
 /**

@@ -8,7 +8,7 @@ import { getNumberValidator } from '../Validators';
  * @function
  * @name Threshold
  * @memberof Konva.Filters
- * @param {Object} imageData
+ * * @param {LegalCanvas} canvas
  * @author ippo615
  * @example
  * node.cache();
@@ -16,7 +16,13 @@ import { getNumberValidator } from '../Validators';
  * node.threshold(0.1);
  */
 
-export const Threshold: Filter = function (imageData) {
+export const Threshold: Filter = function (canvas: LegalCanvas) {
+  const imageData = canvas.context.getImageData(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
   var level = this.threshold() * 255,
     data = imageData.data,
     len = data.length,
@@ -25,6 +31,8 @@ export const Threshold: Filter = function (imageData) {
   for (i = 0; i < len; i += 1) {
     data[i] = data[i] < level ? 0 : 255;
   }
+  canvas.context.putImageData(imageData, 0, 0);
+  return canvas;
 };
 
 Factory.addGetterSetter(

@@ -3,12 +3,18 @@ import { Filter } from '../Node';
  * Invert Filter
  * @function
  * @memberof Konva.Filters
- * @param {Object} imageData
+ * * @param {LegalCanvas} canvas
  * @example
  * node.cache();
  * node.filters([Konva.Filters.Invert]);
  */
-export const Invert: Filter = function (imageData) {
+export const Invert: Filter = function (canvas: LegalCanvas) {
+  const imageData = canvas.context.getImageData(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
   var data = imageData.data,
     len = data.length,
     i;
@@ -21,4 +27,6 @@ export const Invert: Filter = function (imageData) {
     // blue
     data[i + 2] = 255 - data[i + 2];
   }
+  canvas.context.putImageData(imageData, 0, 0);
+  return canvas;
 };

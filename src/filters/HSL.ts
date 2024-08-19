@@ -1,5 +1,5 @@
 import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
+import { Node, Filter, LegalCanvas } from '../Node';
 import { getNumberValidator } from '../Validators';
 
 Factory.addGetterSetter(
@@ -51,14 +51,20 @@ Factory.addGetterSetter(
  * HSL Filter. Adjusts the hue, saturation and luminance (or lightness)
  * @function
  * @memberof Konva.Filters
- * @param {Object} imageData
+ * * @param {LegalCanvas} canvas
  * @author ippo615
  * @example
  * image.filters([Konva.Filters.HSL]);
  * image.luminance(0.2);
  */
 
-export const HSL: Filter = function (imageData) {
+export const HSL: Filter = function (canvas: LegalCanvas) {
+  const imageData = canvas.context.getImageData(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
   var data = imageData.data,
     nPixels = data.length,
     v = 1,
@@ -105,4 +111,6 @@ export const HSL: Filter = function (imageData) {
     data[i + 2] = br * r + bg * g + bb * b + l;
     data[i + 3] = a; // alpha
   }
+  canvas.context.putImageData(imageData, 0, 0);
+  return canvas;
 };

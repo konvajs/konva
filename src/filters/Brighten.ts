@@ -1,18 +1,24 @@
 import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
+import { Node, Filter, LegalCanvas } from '../Node';
 import { getNumberValidator } from '../Validators';
 
 /**
  * Brighten Filter.
  * @function
  * @memberof Konva.Filters
- * @param {Object} imageData
+ * * @param {LegalCanvas} canvas
  * @example
  * node.cache();
  * node.filters([Konva.Filters.Brighten]);
  * node.brightness(0.8);
  */
-export const Brighten: Filter = function (imageData) {
+export const Brighten: Filter = function (canvas: LegalCanvas) {
+  const imageData = canvas.context.getImageData(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
   var brightness = this.brightness() * 255,
     data = imageData.data,
     len = data.length,
@@ -26,6 +32,9 @@ export const Brighten: Filter = function (imageData) {
     // blue
     data[i + 2] += brightness;
   }
+
+  canvas.context.putImageData(imageData, 0, 0);
+  return canvas;
 };
 
 Factory.addGetterSetter(

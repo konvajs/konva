@@ -1,5 +1,5 @@
 import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
+import { Node, Filter, LegalCanvas } from '../Node';
 import { getNumberValidator } from '../Validators';
 
 function remap(fromValue, fromMin, fromMax, toMin, toMax) {
@@ -30,14 +30,20 @@ function remap(fromValue, fromMin, fromMax, toMin, toMax) {
  * @function
  * @name Enhance
  * @memberof Konva.Filters
- * @param {Object} imageData
+ * * @param {LegalCanvas} canvas
  * @author ippo615
  * @example
  * node.cache();
  * node.filters([Konva.Filters.Enhance]);
  * node.enhance(0.4);
  */
-export const Enhance: Filter = function (imageData) {
+export const Enhance: Filter = function (canvas: LegalCanvas) {
+  const imageData = canvas.context.getImageData(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
   var data = imageData.data,
     nSubPixels = data.length,
     rMin = data[0],
@@ -134,6 +140,8 @@ export const Enhance: Filter = function (imageData) {
     data[i + 2] = remap(data[i + 2], bMin, bMax, bGoalMin, bGoalMax);
     //data[i + 3] = remap(data[i + 3], aMin, aMax, aGoalMin, aGoalMax);
   }
+  canvas.context.putImageData(imageData, 0, 0);
+  return canvas;
 };
 
 /**

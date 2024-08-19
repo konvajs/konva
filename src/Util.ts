@@ -29,7 +29,7 @@ import { IRect, RGB, RGBA, Vector2d } from './types';
 export class Transform {
   m: Array<number>;
   dirty = false;
-  constructor(m = [1, 0, 0, 1, 0, 0]) {
+  constructor (m = [1, 0, 0, 1, 0, 0]) {
     this.m = (m && m.slice()) || [1, 0, 0, 1, 0, 0];
   }
   reset() {
@@ -509,9 +509,18 @@ export const Util = {
     // on some environments canvas.style is readonly
     try {
       (<any>canvas).style = canvas.style || {};
-    } catch (e) {}
+    } catch (e) { }
     return canvas;
   },
+  createOffScreenCanvas(size: { width: number; height: number }) {
+    if (window.OffscreenCanvas !== undefined) {
+      return new OffscreenCanvas(size.width, size.height);
+    }
+    const canvas = this.createCanvasElement();
+    canvas.width = size.width;
+    canvas.height = size.height;
+    return canvas;
+  }
   createImageElement() {
     return document.createElement('img');
   },
@@ -1005,7 +1014,7 @@ export const Util = {
         topRight =
         bottomLeft =
         bottomRight =
-          Math.min(cornerRadius, width / 2, height / 2);
+        Math.min(cornerRadius, width / 2, height / 2);
     } else {
       topLeft = Math.min(cornerRadius[0] || 0, width / 2, height / 2);
       topRight = Math.min(cornerRadius[1] || 0, width / 2, height / 2);

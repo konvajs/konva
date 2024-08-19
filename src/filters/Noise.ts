@@ -7,14 +7,20 @@ import { getNumberValidator } from '../Validators';
  * @function
  * @name Noise
  * @memberof Konva.Filters
- * @param {Object} imageData
+ * * @param {LegalCanvas} canvas
  * @author ippo615
  * @example
  * node.cache();
  * node.filters([Konva.Filters.Noise]);
  * node.noise(0.8);
  */
-export const Noise: Filter = function (imageData) {
+export const Noise: Filter = function (canvas: LegalCanvas) {
+  const imageData = canvas.context.getImageData(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
   var amount = this.noise() * 255,
     data = imageData.data,
     nPixels = data.length,
@@ -26,6 +32,8 @@ export const Noise: Filter = function (imageData) {
     data[i + 1] += half - 2 * half * Math.random();
     data[i + 2] += half - 2 * half * Math.random();
   }
+  canvas.context.putImageData(imageData, 0, 0);
+  return canvas;
 };
 
 Factory.addGetterSetter(

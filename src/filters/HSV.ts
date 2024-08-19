@@ -7,14 +7,20 @@ import { getNumberValidator } from '../Validators';
  * @function
  * @name HSV
  * @memberof Konva.Filters
- * @param {Object} imageData
+ * * @param {LegalCanvas} canvas
  * @author ippo615
  * @example
  * image.filters([Konva.Filters.HSV]);
  * image.value(200);
  */
 
-export const HSV: Filter = function (imageData) {
+export const HSV: Filter = function (canvas: LegalCanvas) {
+  const imageData = canvas.context.getImageData(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
   var data = imageData.data,
     nPixels = data.length,
     v = Math.pow(2, this.value()),
@@ -60,6 +66,8 @@ export const HSV: Filter = function (imageData) {
     data[i + 2] = br * r + bg * g + bb * b;
     data[i + 3] = a; // alpha
   }
+  canvas.context.putImageData(imageData, 0, 0);
+  return canvas;
 };
 
 Factory.addGetterSetter(

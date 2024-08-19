@@ -10,7 +10,7 @@ import { getNumberValidator } from '../Validators';
  * @function
  * @name Pixelate
  * @memberof Konva.Filters
- * @param {Object} imageData
+ * * @param {LegalCanvas} canvas
  * @author ippo615
  * @example
  * node.cache();
@@ -18,7 +18,13 @@ import { getNumberValidator } from '../Validators';
  * node.pixelSize(10);
  */
 
-export const Pixelate: Filter = function (imageData) {
+export const Pixelate: Filter = function (canvas: LegalCanvas) {
+  const imageData = canvas.context.getImageData(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
   var pixelSize = Math.ceil(this.pixelSize()),
     width = imageData.width,
     height = imageData.height,
@@ -103,6 +109,9 @@ export const Pixelate: Filter = function (imageData) {
       }
     }
   }
+
+  canvas.context.putImageData(imageData, 0, 0);
+  return canvas;
 };
 
 Factory.addGetterSetter(

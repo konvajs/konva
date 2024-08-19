@@ -1,15 +1,21 @@
-import { Filter } from '../Node';
+import { Filter, LegalCanvas } from '../Node';
 
 /**
  * Grayscale Filter
  * @function
  * @memberof Konva.Filters
- * @param {Object} imageData
+ * * @param {LegalCanvas} canvas
  * @example
  * node.cache();
  * node.filters([Konva.Filters.Grayscale]);
  */
-export const Grayscale: Filter = function (imageData) {
+export const Grayscale: Filter = function (canvas: LegalCanvas) {
+  const imageData = canvas.context.getImageData(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
   var data = imageData.data,
     len = data.length,
     i,
@@ -24,4 +30,6 @@ export const Grayscale: Filter = function (imageData) {
     // blue
     data[i + 2] = brightness;
   }
+  canvas.context.putImageData(imageData, 0, 0);
+  return canvas;
 };

@@ -15,7 +15,8 @@ import { Context } from './Context';
 import { Shape } from './Shape';
 import { Layer } from './Layer';
 
-export type Filter = (this: Node, imageData: ImageData) => void;
+export type LegalCanvas = HTMLCanvasElement | OffscreenCanvas;
+export type Filter = (this: Node, canvas: LegalCanvas) => void;
 
 type globalCompositeOperationType =
   | ''
@@ -163,7 +164,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   _dragEventId: number | null = null;
   _shouldFireChangeEvents = false;
 
-  constructor(config?: Config) {
+  constructor (config?: Config) {
     // on initial set attrs wi don't need to fire change events
     // because nobody is listening to them yet
     this.setAttrs(config);
@@ -366,10 +367,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     // console.log({ x, y, width, height }, rect);
 
     var cachedSceneCanvas = new SceneCanvas({
-        pixelRatio: pixelRatio,
-        width: width,
-        height: height,
-      }),
+      pixelRatio: pixelRatio,
+      width: width,
+      height: height,
+    }),
       cachedFilterCanvas = new SceneCanvas({
         pixelRatio: pixelRatio,
         width: 0,
@@ -591,12 +592,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
             sceneCanvas.getWidth() / ratio,
             sceneCanvas.getHeight() / ratio
           );
-          imageData = filterContext.getImageData(
-            0,
-            0,
-            filterCanvas.getWidth(),
-            filterCanvas.getHeight()
-          );
+          let canvas = Util.createOffScreenCanvas(filterCanvas.getWidth(), filterCanvas.getHeight());
 
           // apply filters to filter context
           for (n = 0; n < len; n++) {
@@ -604,19 +600,20 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
             if (typeof filter !== 'function') {
               Util.error(
                 'Filter should be type of function, but got ' +
-                  typeof filter +
-                  ' instead. Please check correct filters'
+                typeof filter +
+                ' instead. Please check correct filters'
               );
               continue;
             }
-            filter.call(this, imageData);
-            filterContext.putImageData(imageData, 0, 0);
+            canvas = filter.call(this, canvas);
           }
+          // draw the final result on top of scene canvas
+          filterContext.drawImage(canvas, 0, 0);
         } catch (e: any) {
           Util.error(
             'Unable to apply filter. ' +
-              e.message +
-              ' This post my help you https://konvajs.org/docs/posts/Tainted_Canvas.html.'
+            e.message +
+            ' This post my help you https://konvajs.org/docs/posts/Tainted_Canvas.html.'
           );
         }
 
@@ -1435,10 +1432,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (zIndex < 0 || zIndex >= this.parent.children.length) {
       Util.warn(
         'Unexpected value ' +
-          zIndex +
-          ' for zIndex property. zIndex is just index of a node in children of its parent. Expected value is from 0 to ' +
-          (this.parent.children.length - 1) +
-          '.'
+        zIndex +
+        ' for zIndex property. zIndex is just index of a node in children of its parent. Expected value is from 0 to ' +
+        (this.parent.children.length - 1) +
+        '.'
       );
     }
     var index = this.index;
@@ -1619,8 +1616,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       if (!Util.isValidSelector(sel)) {
         Util.warn(
           'Selector "' +
-            sel +
-            '" is invalid. Allowed selectors examples are "#foo", ".bar" or "Group".'
+          sel +
+          '" is invalid. Allowed selectors examples are "#foo", ".bar" or "Group".'
         );
         Util.warn(
           'If you have a custom shape with such className, please change it to start with upper letter like "Triangle".'
@@ -2714,8 +2711,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (!Konva[className]) {
       Util.warn(
         'Can not find a node with class name "' +
-          className +
-          '". Fallback to "Shape".'
+        className +
+        '". Fallback to "Shape".'
       );
       className = 'Shape';
     }

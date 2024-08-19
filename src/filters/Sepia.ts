@@ -6,12 +6,18 @@ import { Filter } from '../Node';
  * @function
  * @name Sepia
  * @memberof Konva.Filters
- * @param {Object} imageData
+ * * @param {LegalCanvas} canvas
  * @example
  * node.cache();
  * node.filters([Konva.Filters.Sepia]);
  */
-export const Sepia: Filter = function (imageData) {
+export const Sepia: Filter = function (canvas: LegalCanvas) {
+  const imageData = canvas.context.getImageData(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
   var data = imageData.data,
     nPixels = data.length,
     i,
@@ -28,4 +34,6 @@ export const Sepia: Filter = function (imageData) {
     data[i + 1] = Math.min(255, r * 0.349 + g * 0.686 + b * 0.168);
     data[i + 2] = Math.min(255, r * 0.272 + g * 0.534 + b * 0.131);
   }
+  canvas.context.putImageData(imageData, 0, 0);
+  return canvas;
 };

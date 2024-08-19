@@ -1,5 +1,5 @@
 import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
+import { Node, Filter, LegalCanvas } from '../Node';
 import { getNumberValidator } from '../Validators';
 
 function pixelAt(idata, x, y) {
@@ -17,8 +17,8 @@ function pixelAt(idata, x, y) {
 function rgbDistance(p1, p2) {
   return Math.sqrt(
     Math.pow(p1[0] - p2[0], 2) +
-      Math.pow(p1[1] - p2[1], 2) +
-      Math.pow(p1[2] - p2[2], 2)
+    Math.pow(p1[1] - p2[1], 2) +
+    Math.pow(p1[2] - p2[2], 2)
   );
 }
 
@@ -173,13 +173,19 @@ function smoothEdgeMask(mask, sw, sh) {
  * @function
  * @name Mask
  * @memberof Konva.Filters
- * @param {Object} imageData
+ * * @param {LegalCanvas} canvas
  * @example
  * node.cache();
  * node.filters([Konva.Filters.Mask]);
  * node.threshold(200);
  */
-export const Mask: Filter = function (imageData) {
+export const Mask: Filter = function (canvas: LegalCanvas) {
+  const imageData = canvas.context.getImageData(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
   // Detect pixels close to the background color
   var threshold = this.threshold(),
     mask = backgroundMask(imageData, threshold);
@@ -197,7 +203,8 @@ export const Mask: Filter = function (imageData) {
     applyMask(imageData, mask);
   }
 
-  return imageData;
+  canvas.context.putImageData(imageData, 0, 0);
+  return canvas;
 };
 
 Factory.addGetterSetter(

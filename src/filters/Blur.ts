@@ -1,5 +1,5 @@
 import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
+import { Node, Filter, LegalCanvas } from '../Node';
 import { getNumberValidator } from '../Validators';
 /*
  the Gauss filter
@@ -154,7 +154,7 @@ function filterGaussBlurRGBA(imageData, radius) {
       g_sum =
       b_sum =
       a_sum =
-        0;
+      0;
 
     r_out_sum = radiusPlus1 * (pr = pixels[yi]);
     g_out_sum = radiusPlus1 * (pg = pixels[yi + 1]);
@@ -254,7 +254,7 @@ function filterGaussBlurRGBA(imageData, radius) {
       b_sum =
       a_sum =
       r_sum =
-        0;
+      0;
 
     yi = x << 2;
     r_out_sum = radiusPlus1 * (pr = pixels[yi]);
@@ -358,15 +358,20 @@ function filterGaussBlurRGBA(imageData, radius) {
  * @function
  * @name Blur
  * @memberof Konva.Filters
- * @param {Object} imageData
+ * * @param {LegalCanvas} canvas
  * @example
  * node.cache();
  * node.filters([Konva.Filters.Blur]);
  * node.blurRadius(10);
  */
-export const Blur: Filter = function Blur(imageData) {
+export const Blur: Filter = function Blur(canvas: LegalCanvas) {
   var radius = Math.round(this.blurRadius());
-
+  const imageData = canvas.context.getImageData(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
   if (radius > 0) {
     filterGaussBlurRGBA(imageData, radius);
   }

@@ -1,18 +1,24 @@
 import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
+import { Node, Filter, LegalCanvas } from '../Node';
 import { getNumberValidator } from '../Validators';
 /**
  * Contrast Filter.
  * @function
  * @memberof Konva.Filters
- * @param {Object} imageData
+ * * @param {LegalCanvas} canvas
  * @example
  * node.cache();
  * node.filters([Konva.Filters.Contrast]);
  * node.contrast(10);
  */
 
-export const Contrast: Filter = function (imageData) {
+export const Contrast: Filter = function (canvas: LegalCanvas) {
+  const imageData = canvas.context.getImageData(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
   var adjust = Math.pow((this.contrast() + 100) / 100, 2);
 
   var data = imageData.data,
@@ -56,6 +62,9 @@ export const Contrast: Filter = function (imageData) {
     data[i + 1] = green;
     data[i + 2] = blue;
   }
+
+  canvas.context.putImageData(imageData, 0, 0);
+  return canvas;
 };
 
 /**
