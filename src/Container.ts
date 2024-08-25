@@ -2,7 +2,7 @@ import { Factory } from './Factory';
 import { Node, NodeConfig } from './Node';
 import { getNumberValidator } from './Validators';
 
-import { GetSet, IRect } from './types';
+import { GetClientRectConfig, GetSet, IRect } from './types';
 import { Shape } from './Shape';
 import { HitCanvas, SceneCanvas } from './Canvas';
 import { SceneContext } from './Context';
@@ -440,14 +440,7 @@ export abstract class Container<
     }
   }
 
-  getClientRect(
-    config: {
-      skipTransform?: boolean;
-      skipShadow?: boolean;
-      skipStroke?: boolean;
-      relativeTo?: Container<Node>;
-    } = {}
-  ): IRect {
+  getClientRect(config: GetClientRectConfig = {}): IRect {
     var skipTransform = config.skipTransform;
     var relativeTo = config.relativeTo;
 

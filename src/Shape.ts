@@ -14,7 +14,7 @@ import { Context, SceneContext } from './Context';
 import { _registerNode } from './Global';
 import * as PointerEvents from './PointerEvents';
 
-import { GetSet, Vector2d } from './types';
+import { GetClientRectConfig, GetSet, Vector2d } from './types';
 import { HitCanvas, SceneCanvas } from './Canvas';
 
 // hack from here https://stackoverflow.com/questions/52667959/what-is-the-purpose-of-bivariancehack-in-typescript-types/52668133#52668133
@@ -82,12 +82,7 @@ export interface ShapeConfig extends NodeConfig {
   perfectDrawEnabled?: boolean;
 }
 
-export interface ShapeGetClientRectConfig {
-  skipTransform?: boolean;
-  skipShadow?: boolean;
-  skipStroke?: boolean;
-  relativeTo?: Node;
-}
+export interface ShapeGetClientRectConfig extends GetClientRectConfig {}
 
 export type FillFuncOutput =
   | void
