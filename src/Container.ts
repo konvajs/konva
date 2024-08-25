@@ -282,7 +282,7 @@ export abstract class Container<
    * @name Konva.Container#isAncestorOf
    * @param {Konva.Node} node
    */
-  isAncestorOf(node: Node) {
+  isAncestorOf(node: Node): boolean {
     var parent = node.getParent();
     while (parent) {
       if (parent._id === this._id) {
@@ -293,14 +293,14 @@ export abstract class Container<
 
     return false;
   }
-  clone(obj?: any) {
+  clone(obj?: any): typeof this {
     // call super method
     var node = Node.prototype.clone.call(this, obj);
 
     this.getChildren().forEach(function (no) {
       node.add(no.clone());
     });
-    return node as this;
+    return node;
   }
   /**
    * get all shapes that intersect a point.  Note: because this method must clear a temporary
@@ -315,7 +315,7 @@ export abstract class Container<
    * @param {Number} pos.y
    * @returns {Array} array of shapes
    */
-  getAllIntersections(pos) {
+  getAllIntersections(pos): Shape[] {
     var arr: Shape[] = [];
 
     this.find<Shape>('Shape').forEach((shape) => {
@@ -326,7 +326,7 @@ export abstract class Container<
 
     return arr;
   }
-  _clearSelfAndDescendantCache(attr?: string) {
+  _clearSelfAndDescendantCache(attr?: string): void {
     super._clearSelfAndDescendantCache(attr);
     // skip clearing if node is cached with canvas
     // for performance reasons !!!
@@ -337,13 +337,17 @@ export abstract class Container<
       node._clearSelfAndDescendantCache(attr);
     });
   }
-  _setChildrenIndices() {
+  _setChildrenIndices(): void {
     this.children?.forEach(function (child, n) {
       child.index = n;
     });
     this._requestDraw();
   }
-  drawScene(can?: SceneCanvas, top?: Node, bufferCanvas?: SceneCanvas) {
+  drawScene(
+    can?: SceneCanvas,
+    top?: Node,
+    bufferCanvas?: SceneCanvas
+  ): typeof this {
     var layer = this.getLayer()!,
       canvas = can || (layer && layer.getCanvas()),
       context = canvas && canvas.getContext(),
@@ -366,7 +370,7 @@ export abstract class Container<
     }
     return this;
   }
-  drawHit(can?: HitCanvas, top?: Node) {
+  drawHit(can?: HitCanvas, top?: Node): typeof this {
     if (!this.shouldDrawHit(top)) {
       return this;
     }
@@ -388,7 +392,7 @@ export abstract class Container<
     }
     return this;
   }
-  _drawChildren(drawMethod, canvas, top, bufferCanvas?) {
+  _drawChildren(drawMethod, canvas, top, bufferCanvas?): void {
     var context = canvas && canvas.getContext(),
       clipWidth = this.clipWidth(),
       clipHeight = this.clipHeight(),
