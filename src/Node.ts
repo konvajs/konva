@@ -3,7 +3,18 @@ import { Factory } from './Factory';
 import { SceneCanvas, HitCanvas, Canvas } from './Canvas';
 import { Konva } from './Global';
 import { Container } from './Container';
-import { GetSet, Vector2d, IRect } from './types';
+import {
+  GetSet,
+  Vector2d,
+  IRect,
+  ToCanvasConfig,
+  ToDataURLConfig,
+  ToImageConfig,
+  ToBlobConfig,
+  Size,
+  CacheConfig,
+  GetClientRectConfig,
+} from './types';
 import { DD } from './DragAndDrop';
 import {
   getNumberValidator,
@@ -172,11 +183,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     // all change event listeners are attached to the prototype
   }
 
-  hasChildren() {
+  hasChildren(): boolean {
     return false;
   }
 
-  _clearCache(attr?: string) {
+  _clearCache(attr?: string): void {
     // if we want to clear transform cache
     // we don't really need to remove it from the cache
     // but instead mark as "dirty"
@@ -300,17 +311,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *   drawBorder: true
    * });
    */
-  cache(config?: {
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-    drawBorder?: boolean;
-    offset?: number;
-    pixelRatio?: number;
-    imageSmoothingEnabled?: boolean;
-    hitCanvasPixelRatio?: number;
-  }) {
+  cache(config?: CacheConfig): typeof this | undefined {
     var conf = config || {};
     var rect = {} as IRect;
 
@@ -445,7 +446,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#isCached
    * @returns {Boolean}
    */
-  isCached() {
+  isCached(): boolean {
     return this._cache.has(CANVAS);
   }
 
@@ -487,17 +488,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * rect.getClientRect();
    * // returns Object {x: -2, y: 46, width: 104, height: 208}
    */
-  getClientRect(config?: {
-    skipTransform?: boolean;
-    skipShadow?: boolean;
-    skipStroke?: boolean;
-    relativeTo?: Container;
-  }): { x: number; y: number; width: number; height: number } {
+  getClientRect(config?: GetClientRectConfig): IRect {
     // abstract method
     // redefine in Container and Shape
     throw new Error('abstract "getClientRect" method call');
   }
-  _transformedRect(rect: IRect, top?: Node | null) {
+  _transformedRect(rect: IRect, top?: Node | null): IRect {
     var points = [
       { x: rect.x, y: rect.y },
       { x: rect.x + rect.width, y: rect.y },
@@ -527,7 +523,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       height: maxY - minY,
     };
   }
-  _drawCachedSceneCanvas(context: Context) {
+  _drawCachedSceneCanvas(context: Context): void {
     context.save();
     context._applyOpacity(this);
     context._applyGlobalCompositeOperation(this);
@@ -547,7 +543,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     );
     context.restore();
   }
-  _drawCachedHitCanvas(context: Context) {
+  _drawCachedHitCanvas(context: Context): void {
     var canvasCache = this._getCanvasCache(),
       hitCanvas = canvasCache.hit;
     context.save();
@@ -750,7 +746,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // remove listener by name
    * node.off('click.foo');
    */
-  off(evtStr?: string, callback?: Function) {
+  off(evtStr?: string, callback?: Function): typeof this {
     var events = (evtStr || '').split(SPACE),
       len = events.length,
       n,
@@ -787,7 +783,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return this;
   }
   // some event aliases for third party integration like HammerJS
-  dispatchEvent(evt: any) {
+  dispatchEvent(evt: any): typeof this {
     var e = {
       target: this,
       type: evt.type,
@@ -796,19 +792,23 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this.fire(evt.type, e);
     return this;
   }
-  addEventListener(type: string, handler: (e: Event) => void) {
+  addEventListener(type: string, handler: (e: Event) => void): typeof this {
     // we have to pass native event to handler
     this.on(type, function (evt) {
       handler.call(this, evt.evt);
     });
     return this;
   }
-  removeEventListener(type: string) {
+  removeEventListener(type: string): typeof this {
     this.off(type);
     return this;
   }
   // like node.on
-  _delegate(event: string, selector: string, handler: (e: Event) => void) {
+  _delegate(
+    event: string,
+    selector: string,
+    handler: (e: Event) => void
+  ): void {
     var stopNode = this;
     this.on(event, function (evt) {
       var targets = evt.target.findAncestors(selector, true, stopNode);
@@ -827,7 +827,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @example
    * node.remove();
    */
-  remove() {
+  remove(): typeof this {
     if (this.isDragging()) {
       this.stopDrag();
     }
@@ -837,7 +837,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this._remove();
     return this;
   }
-  _clearCaches() {
+  _clearCaches(): void {
     this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
     this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
     this._clearSelfAndDescendantCache(ABSOLUTE_SCALE);
@@ -845,7 +845,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this._clearSelfAndDescendantCache(VISIBLE);
     this._clearSelfAndDescendantCache(LISTENING);
   }
-  _remove() {
+  _remove(): void {
     // every cached attr that is calculated via node tree
     // traversal must be cleared when removing a node
     this._clearCaches();
@@ -898,9 +898,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *   console.log(node.getId());
    * })
    */
-  getAncestors() {
+  getAncestors(): Container[] {
     var parent = this.getParent(),
-      ancestors: Array<Node> = [];
+      ancestors: Array<Container> = [];
 
     while (parent) {
       ancestors.push(parent);
@@ -915,8 +915,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#getAttrs
    * @returns {Object}
    */
-  getAttrs() {
-    return (this.attrs || {}) as Config & Record<string, any>;
+  getAttrs(): Partial<Config> {
+    return this.attrs || {};
   }
   /**
    * set multiple attrs at once using an object literal
@@ -930,7 +930,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *   fill: 'red'
    * });
    */
-  setAttrs(config: any) {
+  setAttrs(config?: Partial<Config>) {
     this._batchTransformChanges(() => {
       var key, method;
       if (!config) {
@@ -1125,7 +1125,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   // like node.position(pos)
   // for performance reasons, lets batch transform reset
   // so it work faster
-  _batchTransformChanges(func) {
+  _batchTransformChanges(func: () => void): void {
     this._batchingTransformChange = true;
     func();
     this._batchingTransformChange = false;
@@ -1136,14 +1136,14 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this._needClearTransformCache = false;
   }
 
-  setPosition(pos: Vector2d) {
+  setPosition(pos: Vector2d): typeof this {
     this._batchTransformChanges(() => {
       this.x(pos.x);
       this.y(pos.y);
     });
     return this;
   }
-  getPosition() {
+  getPosition(): Vector2d {
     return {
       x: this.x(),
       y: this.y(),
@@ -1161,7 +1161,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // if you want to know position of the click, related to the rectangle you can use
    * rect.getRelativePointerPosition();
    */
-  getRelativePointerPosition() {
+  getRelativePointerPosition(): Vector2d | null {
     const stage = this.getStage();
     if (!stage) {
       return null;
@@ -1192,7 +1192,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // so stage transforms are ignored
    * node.getAbsolutePosition(stage)
    */
-  getAbsolutePosition(top?: Node) {
+  getAbsolutePosition(top?: Node): Vector2d {
     let haveCachedParent = false;
     let parent = this.parent;
     while (parent) {
@@ -1217,7 +1217,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     return absoluteTransform.getTranslation();
   }
-  setAbsolutePosition(pos: Vector2d) {
+  setAbsolutePosition(pos: Vector2d): typeof this {
     const { x, y, ...origTrans } = this._clearTransform();
 
     // don't clear translation
@@ -1241,7 +1241,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     return this;
   }
-  _setTransform(trans) {
+  _setTransform(trans): void {
     var key;
 
     for (key in trans) {
@@ -1291,7 +1291,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *   y: 2
    * });
    */
-  move(change: Vector2d) {
+  move(change: Vector2d): typeof this {
     var changeX = change.x,
       changeY = change.y,
       x = this.x(),
@@ -1308,7 +1308,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this.setPosition({ x: x, y: y });
     return this;
   }
-  _eachAncestorReverse(func, top) {
+  _eachAncestorReverse(func: (node: Node) => void, top?: Node): void {
     var family: Array<Node> = [],
       parent = this.getParent(),
       len,
@@ -1341,7 +1341,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @param {Number} theta
    * @returns {Konva.Node}
    */
-  rotate(theta: number) {
+  rotate(theta: number): typeof this {
     this.rotation(this.rotation() + theta);
     return this;
   }
@@ -1413,7 +1413,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#moveToBottom
    * @returns {Boolean}
    */
-  moveToBottom() {
+  moveToBottom(): boolean {
     if (!this.parent) {
       Util.warn('Node has no parent. moveToBottom function is ignored.');
       return false;
@@ -1427,7 +1427,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
     return false;
   }
-  setZIndex(zIndex) {
+  setZIndex(zIndex: number): typeof this {
     if (!this.parent) {
       Util.warn('Node has no parent. zIndex parameter is ignored.');
       return this;
@@ -1453,10 +1453,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#getAbsoluteOpacity
    * @returns {Number}
    */
-  getAbsoluteOpacity() {
+  getAbsoluteOpacity(): number {
     return this._getCache(ABSOLUTE_OPACITY, this._getAbsoluteOpacity);
   }
-  _getAbsoluteOpacity() {
+  _getAbsoluteOpacity(): number {
     var absOpacity = this.opacity();
     var parent = this.getParent();
     if (parent && !parent._isUnderCache) {
@@ -1474,7 +1474,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // move node from current layer into layer2
    * node.moveTo(layer2);
    */
-  moveTo(newContainer: any) {
+  moveTo(newContainer: Container): typeof this {
     // do nothing if new container is already parent
     if (this.getParent() !== newContainer) {
       this._remove();
@@ -1533,7 +1533,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#toJSON
    * @returns {String}
    */
-  toJSON() {
+  toJSON(): string {
     return JSON.stringify(this.toObject());
   }
   /**
@@ -1542,7 +1542,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#getParent
    * @returns {Konva.Node}
    */
-  getParent() {
+  getParent(): Container | null {
     return this.parent;
   }
   /**
@@ -1561,7 +1561,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     selector: string | Function,
     includeSelf?: boolean,
     stopNode?: Node
-  ) {
+  ): Node[] {
     var res: Array<Node> = [];
 
     if (includeSelf && this._isMatch(selector)) {
@@ -1598,11 +1598,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     selector: string | Function,
     includeSelf?: boolean,
     stopNode?: Container
-  ) {
+  ): Node | undefined {
     return this.findAncestors(selector, includeSelf, stopNode)[0];
   }
   // is current node match passed selector?
-  _isMatch(selector: string | Function) {
+  _isMatch(selector: string | Function): boolean {
     if (!selector) {
       return false;
     }
@@ -1663,7 +1663,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return this._getCache(STAGE, this._getStage);
   }
 
-  _getStage() {
+  _getStage(): Stage | null {
     var parent = this.getParent();
     if (parent) {
       return parent.getStage();
@@ -1695,7 +1695,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // fire click event that bubbles
    * node.fire('click', null, true);
    */
-  fire(eventType: string, evt: any = {}, bubble?: boolean) {
+  fire(eventType: string, evt: any = {}, bubble?: boolean): typeof this {
     evt.target = evt.target || this;
     // bubble
     if (bubble) {
@@ -1713,19 +1713,16 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#getAbsoluteTransform
    * @returns {Konva.Transform}
    */
-  getAbsoluteTransform(top?: Node | null) {
+  getAbsoluteTransform(top?: Node | null): Transform {
     // if using an argument, we can't cache the result.
     if (top) {
       return this._getAbsoluteTransform(top);
     } else {
       // if no argument, we can cache the result
-      return this._getCache(
-        ABSOLUTE_TRANSFORM,
-        this._getAbsoluteTransform
-      ) as Transform;
+      return this._getCache(ABSOLUTE_TRANSFORM, this._getAbsoluteTransform);
     }
   }
-  _getAbsoluteTransform(top?: Node) {
+  _getAbsoluteTransform(top?: Node): Transform {
     var at: Transform;
     // we we need position relative to an ancestor, we will iterate for all
     if (top) {
@@ -1776,7 +1773,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // get absolute scale x
    * var scaleX = node.getAbsoluteScale().x;
    */
-  getAbsoluteScale(top?: Node) {
+  getAbsoluteScale(top?: Node): Vector2d {
     // do not cache this calculations,
     // because it use cache transform
     // this is special logic for caching with some shapes with shadow
@@ -1806,7 +1803,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * // get absolute rotation
    * var rotation = node.getAbsoluteRotation();
    */
-  getAbsoluteRotation() {
+  getAbsoluteRotation(): number {
     // var parent: Node = this;
     // var rotation = 0;
 
@@ -1823,8 +1820,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#getTransform
    * @returns {Konva.Transform}
    */
-  getTransform() {
-    return this._getCache(TRANSFORM, this._getTransform) as Transform;
+  getTransform(): Transform {
+    return this._getCache(TRANSFORM, this._getTransform);
   }
   _getTransform(): Transform {
     var m: Transform = this._cache.get(TRANSFORM) || new Transform();
@@ -1915,7 +1912,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
     return node;
   }
-  _toKonvaCanvas(config) {
+  _toKonvaCanvas(config?: ToCanvasConfig): SceneCanvas {
     config = config || {};
 
     var box = this.getClientRect();
@@ -1976,7 +1973,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @example
    * var canvas = node.toCanvas();
    */
-  toCanvas(config?) {
+  toCanvas(config?: ToCanvasConfig): HTMLCanvasElement {
     return this._toKonvaCanvas(config)._canvas;
   }
   /**
@@ -2002,16 +1999,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @param {Boolean} [config.imageSmoothingEnabled] set this to false if you want to disable imageSmoothing
    * @returns {String}
    */
-  toDataURL(config?: {
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-    pixelRatio?: number;
-    mimeType?: string;
-    quality?: number;
-    callback?: (str: string) => void;
-  }) {
+  toDataURL(config?: ToDataURLConfig): string {
     config = config || {};
     var mimeType = config.mimeType || null,
       quality = config.quality || null;
@@ -2052,16 +2040,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *   }
    * });
    */
-  toImage(config?: {
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-    pixelRatio?: number;
-    mimeType?: string;
-    quality?: number;
-    callback?: (img: HTMLImageElement) => void;
-  }) {
+  toImage(config?: ToImageConfig): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
       try {
         const callback = config?.callback;
@@ -2096,16 +2075,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * var blob = await node.toBlob({});
    * @returns {Promise<Blob>}
    */
-  toBlob(config?: {
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-    pixelRatio?: number;
-    mimeType?: string;
-    quality?: number;
-    callback?: (blob: Blob | null) => void;
-  }) {
+  toBlob(config?: ToBlobConfig): Promise<Blob | null> {
     return new Promise((resolve, reject) => {
       try {
         const callback = config?.callback;
@@ -2123,12 +2093,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       }
     });
   }
-  setSize(size) {
+  setSize(size: IRect): typeof this {
     this.width(size.width);
     this.height(size.height);
     return this;
   }
-  getSize() {
+  getSize(): Size {
     return {
       width: this.width(),
       height: this.height(),
@@ -2140,7 +2110,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#getClassName
    * @returns {String}
    */
-  getClassName() {
+  getClassName(): string {
     return this.className || this.nodeType;
   }
   /**
@@ -2149,7 +2119,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#getType
    * @returns {String}
    */
-  getType() {
+  getType(): string {
     return this.nodeType;
   }
   getDragDistance(): number {
@@ -2162,7 +2132,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       return Konva.dragDistance;
     }
   }
-  _off(type, name?, callback?) {
+  _off(type, name?, callback?): void {
     var evtListeners = this.eventListeners[type],
       i,
       evtName,
@@ -2190,7 +2160,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       }
     }
   }
-  _fireChangeEvent(attr, oldVal, newVal) {
+  _fireChangeEvent(attr, oldVal, newVal): void {
     this._fire(attr + CHANGE, {
       oldVal: oldVal,
       newVal: newVal,
@@ -2207,7 +2177,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * node.addName('selected');
    * node.name(); // return 'red selected'
    */
-  addName(name) {
+  addName(name: string): typeof this {
     if (!this.hasName(name)) {
       var oldName = this.name();
       var newName = oldName ? oldName + ' ' + name : name;
@@ -2227,7 +2197,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * node.hasName('selected'); // return false
    * node.hasName(''); // return false
    */
-  hasName(name) {
+  hasName(name: string): boolean {
     if (!name) {
       return false;
     }
@@ -2251,7 +2221,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * node.hasName('selected'); // return false
    * node.name(); // return 'red'
    */
-  removeName(name) {
+  removeName(name: string): typeof this {
     var names = (this.name() || '').split(/\s/g);
     var index = names.indexOf(name);
     if (index !== -1) {
@@ -2270,7 +2240,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @example
    * node.setAttr('x', 5);
    */
-  setAttr(attr, val) {
+  setAttr(attr: string, val: any): typeof this {
     var func = this[SET + Util._capitalize(attr)];
 
     if (Util._isFunction(func)) {
@@ -2281,13 +2251,13 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
     return this;
   }
-  _requestDraw() {
+  _requestDraw(): void {
     if (Konva.autoDrawEnabled) {
       const drawNode = this.getLayer() || this.getStage();
       drawNode?.batchDraw();
     }
   }
-  _setAttr(key, val) {
+  _setAttr(key: string, val: any): void {
     var oldVal = this.attrs[key];
     if (oldVal === val && !Util.isObject(val)) {
       return;
@@ -2302,7 +2272,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
     this._requestDraw();
   }
-  _setComponentAttr(key, component, val) {
+  _setComponentAttr(key: string, component: string, val: any): void {
     var oldVal;
     if (val !== undefined) {
       oldVal = this.attrs[key];
@@ -2316,7 +2286,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       this._fireChangeEvent(key, oldVal, val);
     }
   }
-  _fireAndBubble(eventType, evt, compareShape?) {
+  _fireAndBubble(eventType, evt, compareShape?): void {
     if (evt && this.nodeType === SHAPE) {
       evt.target = this;
     }
@@ -2372,7 +2342,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     return events;
   }
-  _fire(eventType, evt) {
+  _fire(eventType, evt): void {
     evt = evt || {};
     evt.currentTarget = this;
     evt.type = eventType;
@@ -2399,14 +2369,14 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#draw
    * @returns {Konva.Node}
    */
-  draw() {
+  draw(): typeof this {
     this.drawScene();
     this.drawHit();
     return this;
   }
 
   // drag & drop
-  _createDragElement(evt) {
+  _createDragElement(evt): void {
     var pointerId = evt ? evt.pointerId : undefined;
     var stage = this.getStage();
     var ap = this.getAbsolutePosition();
@@ -2434,7 +2404,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @method
    * @name Konva.Node#startDrag
    */
-  startDrag(evt?: any, bubbleEvent = true) {
+  startDrag(evt?: any, bubbleEvent = true): void {
     if (!DD._dragElements.has(this._id)) {
       this._createDragElement(evt);
     }
@@ -2452,7 +2422,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     );
   }
 
-  _setDragPosition(evt, elem) {
+  _setDragPosition(evt, elem): void {
     // const pointers = this.getStage().getPointersPositions();
     // const pos = pointers.find(p => p.id === this._dragEventId);
     const pos = this.getStage()!._getPointerById(elem.pointerId);
@@ -2494,7 +2464,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @method
    * @name Konva.Node#stopDrag
    */
-  stopDrag(evt?) {
+  stopDrag(evt?): void {
     const elem = DD._dragElements.get(this._id);
     if (elem) {
       elem.dragStatus = 'stopped';
@@ -2503,7 +2473,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     DD._endDragAfter(evt);
   }
 
-  setDraggable(draggable) {
+  setDraggable(draggable): void {
     this._setAttr('draggable', draggable);
     this._dragChange();
   }
@@ -2513,12 +2483,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @method
    * @name Konva.Node#isDragging
    */
-  isDragging() {
+  isDragging(): boolean {
     const elem = DD._dragElements.get(this._id);
     return elem ? elem.dragStatus === 'dragging' : false;
   }
 
-  _listenDrag() {
+  _listenDrag(): void {
     this._dragCleanup();
 
     this.on('mousedown.konva touchstart.konva', function (evt) {
@@ -2546,7 +2516,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     });
   }
 
-  _dragChange() {
+  _dragChange(): void {
     if (this.attrs.draggable) {
       this._listenDrag();
     } else {
@@ -2574,7 +2544,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
   }
 
-  _dragCleanup() {
+  _dragCleanup(): void {
     this.off('mousedown.konva');
     this.off('touchstart.konva');
   }
