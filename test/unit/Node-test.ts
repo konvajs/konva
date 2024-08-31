@@ -2004,7 +2004,7 @@ describe('Node', function () {
   });
 
   // ======================================================
-  it('remove event with with callback', function () {
+  it('remove event with callback', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var circle = new Konva.Circle({
@@ -2043,6 +2043,47 @@ describe('Node', function () {
 
     assert.equal(event1, 1, 'event1 still triggered once');
     assert.equal(event2, 2, 'event2 triggered twice');
+  });
+
+  // ======================================================
+  it('remove and add event inside callback handler', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle();
+    stage.add(layer);
+    layer.add(circle);
+    layer.draw();
+
+    var event1 = 0;
+    var event2 = 0;
+    var event3 = 0;
+
+    var callback1 = function () {
+      event1 += 1;
+      circle.off('event', callback1);
+      circle.on('event', callback3);
+    };
+    var callback2 = function () {
+      event2 += 1;
+    };
+    var callback3 = function () {
+      event3 += 1;
+    };
+
+    circle.on('event', callback1);
+    circle.on('event', callback2);
+
+    circle.fire('event');
+
+    assert.equal(event1, 1, 'event1 triggered once');
+    assert.equal(event2, 1, 'event2 triggered once');
+    assert.equal(event3, 0, 'event2 not triggered');
+
+    circle.fire('event');
+
+    assert.equal(event1, 1, 'event1 still triggered once');
+    assert.equal(event2, 2, 'event2 triggered twice');
+    assert.equal(event3, 1, 'event3 triggered once');
   });
 
   // ======================================================
