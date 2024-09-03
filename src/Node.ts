@@ -16,6 +16,10 @@ import { Shape } from './Shape';
 import { Layer } from './Layer';
 
 export type Filter = (this: Node, imageData: ImageData) => void;
+/**### A combination of HTMLCanvas adn OffscreenCanvas */
+export type LegalCanvas = HTMLCanvasElement | OffscreenCanvas;
+/**### different from Filter, which is use canvas instead of imageData */
+export type Filter2 = (this: Node, canvas: LegalCanvas) => LegalCanvas;
 
 type globalCompositeOperationType =
   | ''
@@ -156,6 +160,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   _needClearTransformCache = false;
 
   _filterUpToDate = false;
+  /** update signature for filter2 */
+  _filter2UpToDate = false;
   _isUnderCache = false;
   nodeType!: string;
   className!: string;
@@ -389,6 +395,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     this._cache.delete(CANVAS);
     this._filterUpToDate = false;
+    this._filter2UpToDate = false;
 
     if (conf.imageSmoothingEnabled === false) {
       cachedSceneCanvas.getContext()._context.imageSmoothingEnabled = false;
@@ -571,6 +578,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       imageData,
       n,
       filter;
+    const filter2s = this.filter2s()
 
     if (filters) {
       if (!this._filterUpToDate) {
@@ -621,6 +629,44 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         }
 
         this._filterUpToDate = true;
+      }
+
+      return filterCanvas;
+    }
+    if (filter2s && filter2s.length > 0) {
+      if (!this._filter2UpToDate) {
+        var ratio = sceneCanvas.pixelRatio;
+        filterCanvas.setSize(
+          sceneCanvas.width / sceneCanvas.pixelRatio,
+          sceneCanvas.height / sceneCanvas.pixelRatio
+        );
+        try {
+          len = filter2s.length;
+          filterContext.clear();
+
+          // copy cached canvas onto filter context
+          filterContext.drawImage(
+            sceneCanvas._canvas,
+            0,
+            0,
+            sceneCanvas.getWidth() / ratio,
+            sceneCanvas.getHeight() / ratio
+          );
+          let currentCanvas = filterCanvas._canvas;
+          for (n = 0; n < len; n++) {
+             currentCanvas = filter2s[n].call(this, currentCanvas);
+          }
+          filterContext.clearRect(0, 0, filterCanvas.getWidth(), filterCanvas.getHeight());
+          filterContext.drawImage(currentCanvas, 0, 0);
+        } catch (e: any) {
+          Util.error(
+            'Unable to apply filter. ' +
+              e.message +
+              ' This post my help you https://konvajs.org/docs/posts/Tainted_Canvas.html.'
+          );
+        }
+
+        this._filter2UpToDate = true;
       }
 
       return filterCanvas;
@@ -2644,6 +2690,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   embossWhiteLevel: GetSet<number, this>;
   enhance: GetSet<number, this>;
   filters: GetSet<Filter[], this>;
+  filter2s: GetSet<Filter2[], this>;
   position: GetSet<Vector2d, this>;
   absolutePosition: GetSet<Vector2d, this>;
   size: GetSet<{ width: number; height: number }, this>;
@@ -3195,6 +3242,11 @@ addGetterSetter(Node, 'preventDefault', true, getBooleanValidator());
 
 addGetterSetter(Node, 'filters', null, function (this: Node, val) {
   this._filterUpToDate = false;
+  return val;
+});
+
+addGetterSetter(Node, 'filter2s', null, function (this: Node, val) {
+  this._filter2UpToDate = false;
   return val;
 });
 /**

@@ -512,6 +512,15 @@ export const Util = {
     } catch (e) {}
     return canvas;
   },
+  createOffScreenCanvas(size: { width: number; height: number }) {
+    if (window.OffscreenCanvas !== undefined) {
+      return new OffscreenCanvas(size.width, size.height);
+    }
+    const canvas = this.createCanvasElement();
+    canvas.width = size.width;
+    canvas.height = size.height;
+    return canvas;
+  }
   createImageElement() {
     return document.createElement('img');
   },
