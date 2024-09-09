@@ -13,12 +13,33 @@ import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
 
-export function stringToArray(string: string) {
-  // we need to use `Array.from` because it can split unicode string correctly
-  // we also can use some regexp magic from lodash:
-  // https://github.com/lodash/lodash/blob/fb1f99d9d90ad177560d771bc5953a435b2dc119/lodash.toarray/index.js#L256
-  // but I decided it is too much code for that small fix
-  return Array.from(string);
+export function stringToArray(string: string): string[] {
+  // Use Unicode-aware splitting
+  return [...string].reduce((acc, char, index, array) => {
+    // Handle emoji sequences (including ZWJ sequences)
+    if (
+      /\p{Emoji_Modifier_Base}\p{Emoji_Modifier}?(?:\u200D\p{Emoji_Presentation})+/u.test(
+        char
+      )
+    ) {
+      acc.push(char);
+    }
+    // Handle regional indicator symbols (flags)
+    else if (
+      /\p{Regional_Indicator}{2}/u.test(char + (array[index + 1] || ''))
+    ) {
+      acc.push(char + array[index + 1]);
+    }
+    // Handle Indic scripts and other combining characters
+    else if (index > 0 && /\p{Mn}|\p{Me}|\p{Mc}/u.test(char)) {
+      acc[acc.length - 1] += char;
+    }
+    // Handle other characters
+    else {
+      acc.push(char);
+    }
+    return acc;
+  }, [] as string[]);
 }
 
 export interface TextConfig extends ShapeConfig {
