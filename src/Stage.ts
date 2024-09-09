@@ -11,7 +11,7 @@ import { _registerNode } from './Global';
 import * as PointerEvents from './PointerEvents';
 
 export interface StageConfig extends ContainerConfig {
-  container: HTMLDivElement | string;
+  container?: HTMLDivElement | string;
 }
 
 // CONSTANTS

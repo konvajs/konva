@@ -235,8 +235,8 @@ export class Path extends Shape<PathConfig> {
     return pathLength;
   }
 
-  static getPointAtLengthOfDataArray(length: number, dataArray) {
-    var point,
+  static getPointAtLengthOfDataArray(length: number, dataArray: PathSegment[]) {
+    var points: number[],
       i = 0,
       ii = dataArray.length;
 
@@ -250,18 +250,18 @@ export class Path extends Shape<PathConfig> {
     }
 
     if (i === ii) {
-      point = dataArray[i - 1].points.slice(-2);
+      points = dataArray[i - 1].points.slice(-2);
       return {
-        x: point[0],
-        y: point[1],
+        x: points[0],
+        y: points[1],
       };
     }
 
     if (length < 0.01) {
-      point = dataArray[i].points.slice(0, 2);
+      points = dataArray[i].points.slice(0, 2);
       return {
-        x: point[0],
-        y: point[1],
+        x: points[0],
+        y: points[1],
       };
     }
 
@@ -319,7 +319,15 @@ export class Path extends Shape<PathConfig> {
     return null;
   }
 
-  static getPointOnLine(dist, P1x, P1y, P2x, P2y, fromX?, fromY?) {
+  static getPointOnLine(
+    dist: number,
+    P1x: number,
+    P1y: number,
+    P2x: number,
+    P2y: number,
+    fromX?: number,
+    fromY?: number
+  ) {
     fromX = fromX ?? P1x;
     fromY = fromY ?? P1y;
 
