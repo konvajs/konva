@@ -166,5 +166,6 @@ export const Factory = {
   },
   afterSetFilter(this: Node) {
     this._filterUpToDate = false;
+    this._filter2UpToDate = false;
   },
 };
