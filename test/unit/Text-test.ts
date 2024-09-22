@@ -164,6 +164,34 @@ describe('Text', function () {
     compareLayerAndCanvas(layer, canvas, 254);
   });
 
+  it('check hindi with letterSpacing', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      x: 10,
+      y: 10,
+      text: 'आपकी दौड़ के लिए परफेक्ट जूते!',
+      fontSize: 50,
+      letterSpacing: 10,
+    });
+
+    layer.add(text);
+    stage.add(layer);
+
+    var canvas = createCanvas();
+    var context = canvas.getContext('2d');
+    context.textBaseline = 'middle';
+    context.letterSpacing = '10px';
+    context.font = 'normal normal 50px Arial';
+    context.fillStyle = 'darkgrey';
+    context.fillText('आपकी दौड़ के लिए परफेक्ट जूते!', 10, 10 + 25);
+
+    if (isBrowser) {
+      compareLayerAndCanvas(layer, canvas, 254, 200);
+    }
+  });
+
   it('text cache with fill and shadow', function () {
     // TODO: on node-canvas it doesn't work
     // text scaling is not correct
