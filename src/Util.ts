@@ -1,6 +1,6 @@
 import { Konva } from './Global';
 import { Context } from './Context';
-import { IRect, RGB, RGBA, Vector2d } from './types';
+import { IRect, RGB, Vector2d } from './types';
 
 /*
  * Last updated November 2011
