@@ -154,7 +154,7 @@ export const Konva = {
    * @memberof Konva
    */
   isDragging() {
-    return Konva['DD'].isDragging;
+    return Konva['DD']?.isDragging;
   },
   isTransforming() {
     return Konva['Transformer']?.isTransforming();
