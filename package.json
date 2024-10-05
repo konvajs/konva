@@ -81,7 +81,6 @@
     "parcel": "2.12.0",
     "process": "^0.11.10",
     "rollup": "^4.24.0",
-    "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-typescript2": "^0.36.0",
