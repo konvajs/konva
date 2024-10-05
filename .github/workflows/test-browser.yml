@@ -21,5 +21,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: sudo apt-get update && sudo apt-get install -y build-essential
+      - run: npm install -g @mapbox/node-pre-gyp 
       - run: npm install
       - run: npm run test:browser
