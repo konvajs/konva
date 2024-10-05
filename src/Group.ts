@@ -19,7 +19,7 @@ export interface GroupConfig extends ContainerConfig {}
  */
 export class Group extends Container<Group | Shape> {
   _validateAdd(child: Node) {
-    var type = child.getType();
+    const type = child.getType();
     if (type !== 'Group' && type !== 'Shape') {
       Util.throw('You may only add groups and shapes to groups.');
     }

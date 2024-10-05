@@ -13,9 +13,9 @@ import { getNumberValidator } from '../Validators';
  */
 
 export const Contrast: Filter = function (imageData) {
-  var adjust = Math.pow((this.contrast() + 100) / 100, 2);
+  const adjust = Math.pow((this.contrast() + 100) / 100, 2);
 
-  var data = imageData.data,
+  let data = imageData.data,
     nPixels = data.length,
     red = 150,
     green = 150,

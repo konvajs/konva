@@ -15,7 +15,7 @@ import { Text } from './Text';
 export interface LabelConfig extends ContainerConfig {}
 
 // constants
-var ATTR_CHANGE_LIST = [
+const ATTR_CHANGE_LIST = [
     'fontFamily',
     'fontSize',
     'fontStyle',
@@ -105,9 +105,9 @@ export class Label extends Group {
     return this.find('Tag')[0] as Tag;
   }
   _addListeners(text) {
-    var that = this,
+    let that = this,
       n;
-    var func = function () {
+    const func = function () {
       that._sync();
     };
 
@@ -123,7 +123,7 @@ export class Label extends Group {
     return this.getText().height();
   }
   _sync() {
-    var text = this.getText(),
+    let text = this.getText(),
       tag = this.getTag(),
       width,
       height,
@@ -200,7 +200,7 @@ export interface TagConfig extends ShapeConfig {
  */
 export class Tag extends Shape<TagConfig> {
   _sceneFunc(context: Context) {
-    var width = this.width(),
+    const width = this.width(),
       height = this.height(),
       pointerDirection = this.pointerDirection(),
       pointerWidth = this.pointerWidth(),
@@ -289,7 +289,7 @@ export class Tag extends Shape<TagConfig> {
     context.fillStrokeShape(this);
   }
   getSelfRect() {
-    var x = 0,
+    let x = 0,
       y = 0,
       pointerWidth = this.pointerWidth(),
       pointerHeight = this.pointerHeight(),

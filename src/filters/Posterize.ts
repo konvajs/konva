@@ -18,7 +18,7 @@ import { getNumberValidator } from '../Validators';
 
 export const Posterize: Filter = function (imageData) {
   // level must be between 1 and 255
-  var levels = Math.round(this.levels() * 254) + 1,
+  let levels = Math.round(this.levels() * 254) + 1,
     data = imageData.data,
     len = data.length,
     scale = 255 / levels,

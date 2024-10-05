@@ -17,7 +17,7 @@ import { getNumberValidator } from '../Validators';
  */
 
 export const Threshold: Filter = function (imageData) {
-  var level = this.threshold() * 255,
+  let level = this.threshold() * 255,
     data = imageData.data,
     len = data.length,
     i;

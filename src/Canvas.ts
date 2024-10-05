@@ -5,15 +5,15 @@ import { Factory } from './Factory';
 import { getNumberValidator } from './Validators';
 
 // calculate pixel ratio
-var _pixelRatio;
+let _pixelRatio;
 function getDevicePixelRatio() {
   if (_pixelRatio) {
     return _pixelRatio;
   }
-  var canvas = Util.createCanvasElement();
-  var context = canvas.getContext('2d') as any;
+  const canvas = Util.createCanvasElement();
+  const context = canvas.getContext('2d') as any;
   _pixelRatio = (function () {
-    var devicePixelRatio = Konva._global.devicePixelRatio || 1,
+    const devicePixelRatio = Konva._global.devicePixelRatio || 1,
       backingStoreRatio =
         context.webkitBackingStorePixelRatio ||
         context.mozBackingStorePixelRatio ||
@@ -55,9 +55,9 @@ export class Canvas {
   isCache = false;
 
   constructor(config: ICanvasConfig) {
-    var conf = config || {};
+    const conf = config || {};
 
-    var pixelRatio =
+    const pixelRatio =
       conf.pixelRatio || Konva.pixelRatio || getDevicePixelRatio();
 
     this.pixelRatio = pixelRatio;
@@ -86,7 +86,7 @@ export class Canvas {
     return this.pixelRatio;
   }
   setPixelRatio(pixelRatio) {
-    var previousRatio = this.pixelRatio;
+    const previousRatio = this.pixelRatio;
     this.pixelRatio = pixelRatio;
     this.setSize(
       this.getWidth() / previousRatio,
@@ -98,7 +98,7 @@ export class Canvas {
     this.width = this._canvas.width = width * this.pixelRatio;
     this._canvas.style.width = width + 'px';
 
-    var pixelRatio = this.pixelRatio,
+    const pixelRatio = this.pixelRatio,
       _context = this.getContext()._context;
     _context.scale(pixelRatio, pixelRatio);
   }
@@ -106,7 +106,7 @@ export class Canvas {
     // take into account pixel ratio
     this.height = this._canvas.height = height * this.pixelRatio;
     this._canvas.style.height = height + 'px';
-    var pixelRatio = this.pixelRatio,
+    const pixelRatio = this.pixelRatio,
       _context = this.getContext()._context;
     _context.scale(pixelRatio, pixelRatio);
   }

@@ -1,4 +1,4 @@
-/*eslint-disable max-depth */
+ 
 import { Factory } from '../Factory';
 import { Util } from '../Util';
 import { Node, Filter } from '../Node';
@@ -19,7 +19,7 @@ import { getNumberValidator } from '../Validators';
  */
 
 export const Pixelate: Filter = function (imageData) {
-  var pixelSize = Math.ceil(this.pixelSize()),
+  let pixelSize = Math.ceil(this.pixelSize()),
     width = imageData.width,
     height = imageData.height,
     x,

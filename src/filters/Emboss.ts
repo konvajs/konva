@@ -23,7 +23,7 @@ export const Emboss: Filter = function (imageData) {
   // pixastic greyLevel is between 0 and 255.  I want it between 0 and 1.  Also,
   // a max value of greyLevel yields a white emboss, and the min value yields a black
   // emboss.  Therefore, I changed greyLevel to whiteLevel
-  var strength = this.embossStrength() * 10,
+  let strength = this.embossStrength() * 10,
     greyLevel = this.embossWhiteLevel() * 255,
     direction = this.embossDirection(),
     blend = this.embossBlend(),
@@ -73,9 +73,9 @@ export const Emboss: Filter = function (imageData) {
   }
 
   do {
-    var offsetY = (y - 1) * w4;
+    const offsetY = (y - 1) * w4;
 
-    var otherY = dirY;
+    let otherY = dirY;
     if (y + otherY < 1) {
       otherY = 0;
     }
@@ -83,13 +83,13 @@ export const Emboss: Filter = function (imageData) {
       otherY = 0;
     }
 
-    var offsetYOther = (y - 1 + otherY) * w * 4;
+    const offsetYOther = (y - 1 + otherY) * w * 4;
 
-    var x = w;
+    let x = w;
     do {
-      var offset = offsetY + (x - 1) * 4;
+      const offset = offsetY + (x - 1) * 4;
 
-      var otherX = dirX;
+      let otherX = dirX;
       if (x + otherX < 1) {
         otherX = 0;
       }
@@ -97,17 +97,17 @@ export const Emboss: Filter = function (imageData) {
         otherX = 0;
       }
 
-      var offsetOther = offsetYOther + (x - 1 + otherX) * 4;
+      const offsetOther = offsetYOther + (x - 1 + otherX) * 4;
 
-      var dR = data[offset] - data[offsetOther];
-      var dG = data[offset + 1] - data[offsetOther + 1];
-      var dB = data[offset + 2] - data[offsetOther + 2];
+      const dR = data[offset] - data[offsetOther];
+      const dG = data[offset + 1] - data[offsetOther + 1];
+      const dB = data[offset + 2] - data[offsetOther + 2];
 
-      var dif = dR;
-      var absDif = dif > 0 ? dif : -dif;
+      let dif = dR;
+      const absDif = dif > 0 ? dif : -dif;
 
-      var absG = dG > 0 ? dG : -dG;
-      var absB = dB > 0 ? dB : -dB;
+      const absG = dG > 0 ? dG : -dG;
+      const absB = dB > 0 ? dB : -dB;
 
       if (absG > absDif) {
         dif = dG;
@@ -119,15 +119,15 @@ export const Emboss: Filter = function (imageData) {
       dif *= strength;
 
       if (blend) {
-        var r = data[offset] + dif;
-        var g = data[offset + 1] + dif;
-        var b = data[offset + 2] + dif;
+        const r = data[offset] + dif;
+        const g = data[offset + 1] + dif;
+        const b = data[offset + 2] + dif;
 
         data[offset] = r > 255 ? 255 : r < 0 ? 0 : r;
         data[offset + 1] = g > 255 ? 255 : g < 0 ? 0 : g;
         data[offset + 2] = b > 255 ? 255 : b < 0 ? 0 : b;
       } else {
-        var grey = greyLevel - dif;
+        let grey = greyLevel - dif;
         if (grey < 0) {
           grey = 0;
         } else if (grey > 255) {

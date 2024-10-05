@@ -692,7 +692,6 @@ export const cValues = [
 export const binomialCoefficients = [[1], [1, 1], [1, 2, 1], [1, 3, 3, 1]];
 
 export const getCubicArcLength = (xs: number[], ys: number[], t: number) => {
-  let z: number;
   let sum: number;
   let correctedT: number;
 
@@ -702,7 +701,7 @@ export const getCubicArcLength = (xs: number[], ys: number[], t: number) => {
 
   const n = 20;
 
-  z = t / 2;
+  const z = t / 2;
   sum = 0;
   for (let i = 0; i < n; i++) {
     correctedT = z * tValues[n][i] + z;

@@ -60,7 +60,7 @@ export interface TextConfig extends ShapeConfig {
 }
 
 // constants
-var AUTO = 'auto',
+const AUTO = 'auto',
   //CANVAS = 'canvas',
   CENTER = 'center',
   INHERIT = 'inherit',
@@ -119,7 +119,7 @@ function normalizeFontFamily(fontFamily: string) {
     .join(', ');
 }
 
-var dummyContext: CanvasRenderingContext2D;
+let dummyContext: CanvasRenderingContext2D;
 function getDummyContext() {
   if (dummyContext) {
     return dummyContext;
@@ -194,21 +194,21 @@ export class Text extends Shape<TextConfig> {
   constructor(config?: TextConfig) {
     super(checkDefaultFill(config));
     // update text data for certain attr changes
-    for (var n = 0; n < attrChangeListLen; n++) {
+    for (let n = 0; n < attrChangeListLen; n++) {
       this.on(ATTR_CHANGE_LIST[n] + CHANGE_KONVA, this._setTextData);
     }
     this._setTextData();
   }
 
   _sceneFunc(context: Context) {
-    var textArr = this.textArr,
+    const textArr = this.textArr,
       textArrLen = textArr.length;
 
     if (!this.text()) {
       return;
     }
 
-    var padding = this.padding(),
+    let padding = this.padding(),
       fontSize = this.fontSize(),
       lineHeightPx = this.lineHeight() * fontSize,
       verticalAlign = this.verticalAlign(),
@@ -225,10 +225,10 @@ export class Text extends Shape<TextConfig> {
 
     direction = direction === INHERIT ? context.direction : direction;
 
-    var translateY = lineHeightPx / 2;
-    var baseline = MIDDLE;
+    let translateY = lineHeightPx / 2;
+    let baseline = MIDDLE;
     if (Konva._fixTextRendering) {
-      var metrics = this.measureSize('M'); // Use a sample character to get the ascent
+      const metrics = this.measureSize('M'); // Use a sample character to get the ascent
 
       baseline = 'alphabetic';
       translateY =
@@ -282,7 +282,7 @@ export class Text extends Shape<TextConfig> {
         context.save();
         context.beginPath();
 
-        let yOffset = Konva._fixTextRendering
+        const yOffset = Konva._fixTextRendering
           ? Math.round(fontSize / 4)
           : Math.round(fontSize / 2);
         const x = lineTranslateX;
@@ -306,7 +306,7 @@ export class Text extends Shape<TextConfig> {
       if (shouldLineThrough) {
         context.save();
         context.beginPath();
-        let yOffset = Konva._fixTextRendering ? -Math.round(fontSize / 4) : 0;
+        const yOffset = Konva._fixTextRendering ? -Math.round(fontSize / 4) : 0;
         context.moveTo(lineTranslateX, translateY + lineTranslateY + yOffset);
         spacesNumber = text.split(' ').length - 1;
         oneWord = spacesNumber === 0;
@@ -330,9 +330,9 @@ export class Text extends Shape<TextConfig> {
       if (direction !== RTL && (letterSpacing !== 0 || align === JUSTIFY)) {
         //   var words = text.split(' ');
         spacesNumber = text.split(' ').length - 1;
-        var array = stringToArray(text);
-        for (var li = 0; li < array.length; li++) {
-          var letter = array[li];
+        const array = stringToArray(text);
+        for (let li = 0; li < array.length; li++) {
+          const letter = array[li];
           // skip justify for the last line
           if (letter === ' ' && !lastLine && align === JUSTIFY) {
             lineTranslateX += (totalWidth - padding * 2 - width) / spacesNumber;
@@ -364,7 +364,7 @@ export class Text extends Shape<TextConfig> {
     }
   }
   _hitFunc(context: Context) {
-    var width = this.getWidth(),
+    const width = this.getWidth(),
       height = this.getHeight();
 
     context.beginPath();
@@ -373,7 +373,7 @@ export class Text extends Shape<TextConfig> {
     context.fillStrokeShape(this);
   }
   setText(text: string) {
-    var str = Util._isString(text)
+    const str = Util._isString(text)
       ? text
       : text === null || text === undefined
       ? ''
@@ -382,11 +382,11 @@ export class Text extends Shape<TextConfig> {
     return this;
   }
   getWidth() {
-    var isAuto = this.attrs.width === AUTO || this.attrs.width === undefined;
+    const isAuto = this.attrs.width === AUTO || this.attrs.width === undefined;
     return isAuto ? this.getTextWidth() + this.padding() * 2 : this.attrs.width;
   }
   getHeight() {
-    var isAuto = this.attrs.height === AUTO || this.attrs.height === undefined;
+    const isAuto = this.attrs.height === AUTO || this.attrs.height === undefined;
     return isAuto
       ? this.fontSize() * this.textArr.length * this.lineHeight() +
           this.padding() * 2
@@ -417,7 +417,7 @@ export class Text extends Shape<TextConfig> {
    * @returns {Object} { width , height } of measured text
    */
   measureSize(text: string) {
-    var _context = getDummyContext(),
+    let _context = getDummyContext(),
       fontSize = this.fontSize(),
       metrics: TextMetrics;
 
@@ -468,7 +468,7 @@ export class Text extends Shape<TextConfig> {
     if (align === JUSTIFY) {
       line = line.trim();
     }
-    var width = this._getTextWidth(line);
+    const width = this._getTextWidth(line);
     return this.textArr.push({
       text: line,
       width: width,
@@ -476,15 +476,15 @@ export class Text extends Shape<TextConfig> {
     });
   }
   _getTextWidth(text: string) {
-    var letterSpacing = this.letterSpacing();
-    var length = text.length;
+    const letterSpacing = this.letterSpacing();
+    const length = text.length;
     return (
       getDummyContext().measureText(text).width +
       (length ? letterSpacing * (length - 1) : 0)
     );
   }
   _setTextData() {
-    var lines = this.text().split('\n'),
+    let lines = this.text().split('\n'),
       fontSize = +this.fontSize(),
       textWidth = 0,
       lineHeightPx = this.lineHeight() * fontSize,
@@ -504,11 +504,11 @@ export class Text extends Shape<TextConfig> {
 
     this.textArr = [];
     getDummyContext().font = this._getContextFont();
-    var additionalWidth = shouldAddEllipsis ? this._getTextWidth(ELLIPSIS) : 0;
-    for (var i = 0, max = lines.length; i < max; ++i) {
-      var line = lines[i];
+    const additionalWidth = shouldAddEllipsis ? this._getTextWidth(ELLIPSIS) : 0;
+    for (let i = 0, max = lines.length; i < max; ++i) {
+      let line = lines[i];
 
-      var lineWidth = this._getTextWidth(line);
+      let lineWidth = this._getTextWidth(line);
       if (fixedWidth && lineWidth > maxWidth) {
         /*
          * if width is fixed and line does not fit entirely
@@ -519,12 +519,12 @@ export class Text extends Shape<TextConfig> {
            * use binary search to find the longest substring that
            * that would fit in the specified width
            */
-          var low = 0,
+          let low = 0,
             high = line.length,
             match = '',
             matchWidth = 0;
           while (low < high) {
-            var mid = (low + high) >>> 1,
+            const mid = (low + high) >>> 1,
               substr = line.slice(0, mid + 1),
               substrWidth = this._getTextWidth(substr) + additionalWidth;
             if (substrWidth <= maxWidth) {
@@ -545,8 +545,8 @@ export class Text extends Shape<TextConfig> {
             if (wrapAtWord) {
               // try to find a space or dash where wrapping could be done
               var wrapIndex;
-              var nextChar = line[match.length];
-              var nextIsSpaceOrDash = nextChar === SPACE || nextChar === DASH;
+              const nextChar = line[match.length];
+              const nextIsSpaceOrDash = nextChar === SPACE || nextChar === DASH;
               if (nextIsSpaceOrDash && matchWidth <= maxWidth) {
                 wrapIndex = match.length;
               } else {
@@ -568,7 +568,7 @@ export class Text extends Shape<TextConfig> {
             textWidth = Math.max(textWidth, matchWidth);
             currentHeightPx += lineHeightPx;
 
-            var shouldHandleEllipsis =
+            const shouldHandleEllipsis =
               this._shouldHandleEllipsis(currentHeightPx);
             if (shouldHandleEllipsis) {
               this._tryToAddEllipsisToLastLine();
@@ -629,7 +629,7 @@ export class Text extends Shape<TextConfig> {
    * @returns
    */
   _shouldHandleEllipsis(currentHeightPx: number): boolean {
-    var fontSize = +this.fontSize(),
+    const fontSize = +this.fontSize(),
       lineHeightPx = this.lineHeight() * fontSize,
       height = this.attrs.height,
       fixedHeight = height !== AUTO && height !== undefined,
@@ -645,19 +645,19 @@ export class Text extends Shape<TextConfig> {
   }
 
   _tryToAddEllipsisToLastLine(): void {
-    var width = this.attrs.width,
+    const width = this.attrs.width,
       fixedWidth = width !== AUTO && width !== undefined,
       padding = this.padding(),
       maxWidth = width - padding * 2,
       shouldAddEllipsis = this.ellipsis();
 
-    var lastLine = this.textArr[this.textArr.length - 1];
+    const lastLine = this.textArr[this.textArr.length - 1];
     if (!lastLine || !shouldAddEllipsis) {
       return;
     }
 
     if (fixedWidth) {
-      var haveSpace = this._getTextWidth(lastLine.text + ELLIPSIS) < maxWidth;
+      const haveSpace = this._getTextWidth(lastLine.text + ELLIPSIS) < maxWidth;
       if (!haveSpace) {
         lastLine.text = lastLine.text.slice(0, lastLine.text.length - 3);
       }

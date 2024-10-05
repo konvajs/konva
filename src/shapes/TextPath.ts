@@ -18,7 +18,7 @@ export interface TextPathConfig extends ShapeConfig {
   letterSpacing?: number;
 }
 
-var EMPTY_STRING = '',
+const EMPTY_STRING = '',
   NORMAL = 'normal';
 
 function _fillFunc(this: TextPath, context) {
@@ -137,18 +137,18 @@ export class TextPath extends Shape<TextPathConfig> {
     context.setAttr('textAlign', 'left');
     context.save();
 
-    var textDecoration = this.textDecoration();
-    var fill = this.fill();
-    var fontSize = this.fontSize();
+    const textDecoration = this.textDecoration();
+    const fill = this.fill();
+    const fontSize = this.fontSize();
 
-    var glyphInfo = this.glyphInfo;
+    const glyphInfo = this.glyphInfo;
     if (textDecoration === 'underline') {
       context.beginPath();
     }
-    for (var i = 0; i < glyphInfo.length; i++) {
+    for (let i = 0; i < glyphInfo.length; i++) {
       context.save();
 
-      var p0 = glyphInfo[i].p0;
+      const p0 = glyphInfo[i].p0;
 
       context.translate(p0.x, p0.y);
       context.rotate(glyphInfo[i].rotation);
@@ -184,13 +184,13 @@ export class TextPath extends Shape<TextPathConfig> {
   _hitFunc(context: Context) {
     context.beginPath();
 
-    var glyphInfo = this.glyphInfo;
+    const glyphInfo = this.glyphInfo;
     if (glyphInfo.length >= 1) {
-      var p0 = glyphInfo[0].p0;
+      const p0 = glyphInfo[0].p0;
       context.moveTo(p0.x, p0.y);
     }
-    for (var i = 0; i < glyphInfo.length; i++) {
-      var p1 = glyphInfo[i].p1;
+    for (let i = 0; i < glyphInfo.length; i++) {
+      const p1 = glyphInfo[i].p1;
       context.lineTo(p1.x, p1.y);
     }
     context.setAttr('lineWidth', this.fontSize());
@@ -220,13 +220,13 @@ export class TextPath extends Shape<TextPathConfig> {
   }
 
   _getTextSize(text: string) {
-    var dummyCanvas = this.dummyCanvas;
-    var _context = dummyCanvas.getContext('2d')!;
+    const dummyCanvas = this.dummyCanvas;
+    const _context = dummyCanvas.getContext('2d')!;
 
     _context.save();
 
     _context.font = this._getContextFont();
-    var metrics = _context.measureText(text);
+    const metrics = _context.measureText(text);
 
     _context.restore();
 
@@ -271,7 +271,7 @@ export class TextPath extends Shape<TextPathConfig> {
     // 3. Calculate the rotation, width, and midpoint of the glyph using the start and end points,
     // 4. Add glyph width to the offsetToGlyph and repeat
     let offsetToGlyph = offset;
-    for (var i = 0; i < charArr.length; i++) {
+    for (let i = 0; i < charArr.length; i++) {
       const charStartPoint = this._getPointAtLength(offsetToGlyph);
       if (!charStartPoint) return;
 
@@ -338,7 +338,7 @@ export class TextPath extends Shape<TextPathConfig> {
         height: 0,
       };
     }
-    var points: number[] = [];
+    const points: number[] = [];
 
     this.glyphInfo.forEach(function (info) {
       points.push(info.p0.x);
@@ -346,12 +346,12 @@ export class TextPath extends Shape<TextPathConfig> {
       points.push(info.p1.x);
       points.push(info.p1.y);
     });
-    var minX = points[0] || 0;
-    var maxX = points[0] || 0;
-    var minY = points[1] || 0;
-    var maxY = points[1] || 0;
-    var x, y;
-    for (var i = 0; i < points.length / 2; i++) {
+    let minX = points[0] || 0;
+    let maxX = points[0] || 0;
+    let minY = points[1] || 0;
+    let maxY = points[1] || 0;
+    let x, y;
+    for (let i = 0; i < points.length / 2; i++) {
       x = points[i * 2];
       y = points[i * 2 + 1];
       minX = Math.min(minX, x);
@@ -359,7 +359,7 @@ export class TextPath extends Shape<TextPathConfig> {
       minY = Math.min(minY, y);
       maxY = Math.max(maxY, y);
     }
-    var fontSize = this.fontSize();
+    const fontSize = this.fontSize();
     return {
       x: minX - fontSize / 2,
       y: minY - fontSize / 2,

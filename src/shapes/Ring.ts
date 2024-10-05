@@ -10,7 +10,7 @@ export interface RingConfig extends ShapeConfig {
   outerRadius: number;
 }
 
-var PIx2 = Math.PI * 2;
+const PIx2 = Math.PI * 2;
 /**
  * Ring constructor
  * @constructor

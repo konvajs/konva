@@ -54,7 +54,7 @@ function BlurStack(this: any) {
   this.next = null;
 }
 
-var mul_table = [
+const mul_table = [
   512, 512, 456, 512, 328, 456, 335, 512, 405, 328, 271, 456, 388, 335, 292,
   512, 454, 405, 364, 328, 298, 271, 496, 456, 420, 388, 360, 335, 312, 292,
   273, 512, 482, 454, 428, 405, 383, 364, 345, 328, 312, 298, 284, 271, 259,
@@ -74,7 +74,7 @@ var mul_table = [
   289, 287, 285, 282, 280, 278, 275, 273, 271, 269, 267, 265, 263, 261, 259,
 ];
 
-var shg_table = [
+const shg_table = [
   9, 11, 12, 13, 13, 14, 14, 15, 15, 15, 15, 16, 16, 16, 16, 17, 17, 17, 17, 17,
   17, 17, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 19, 19, 19,
   19, 19, 19, 19, 19, 19, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20,
@@ -92,11 +92,11 @@ var shg_table = [
 ];
 
 function filterGaussBlurRGBA(imageData, radius) {
-  var pixels = imageData.data,
+  const pixels = imageData.data,
     width = imageData.width,
     height = imageData.height;
 
-  var x,
+  let x,
     y,
     i,
     p,
@@ -121,7 +121,7 @@ function filterGaussBlurRGBA(imageData, radius) {
     pa,
     rbs;
 
-  var div = radius + radius + 1,
+  let div = radius + radius + 1,
     widthMinus1 = width - 1,
     heightMinus1 = height - 1,
     radiusPlus1 = radius + 1,
@@ -365,7 +365,7 @@ function filterGaussBlurRGBA(imageData, radius) {
  * node.blurRadius(10);
  */
 export const Blur: Filter = function Blur(imageData) {
-  var radius = Math.round(this.blurRadius());
+  const radius = Math.round(this.blurRadius());
 
   if (radius > 0) {
     filterGaussBlurRGBA(imageData, radius);

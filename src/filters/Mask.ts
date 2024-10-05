@@ -3,8 +3,8 @@ import { Node, Filter } from '../Node';
 import { getNumberValidator } from '../Validators';
 
 function pixelAt(idata, x, y) {
-  var idx = (y * idata.width + x) * 4;
-  var d: Array<number> = [];
+  let idx = (y * idata.width + x) * 4;
+  const d: Array<number> = [];
   d.push(
     idata.data[idx++],
     idata.data[idx++],
@@ -23,9 +23,9 @@ function rgbDistance(p1, p2) {
 }
 
 function rgbMean(pTab) {
-  var m = [0, 0, 0];
+  const m = [0, 0, 0];
 
-  for (var i = 0; i < pTab.length; i++) {
+  for (let i = 0; i < pTab.length; i++) {
     m[0] += pTab[i][0];
     m[1] += pTab[i][1];
     m[2] += pTab[i][2];
@@ -39,12 +39,12 @@ function rgbMean(pTab) {
 }
 
 function backgroundMask(idata, threshold) {
-  var rgbv_no = pixelAt(idata, 0, 0);
-  var rgbv_ne = pixelAt(idata, idata.width - 1, 0);
-  var rgbv_so = pixelAt(idata, 0, idata.height - 1);
-  var rgbv_se = pixelAt(idata, idata.width - 1, idata.height - 1);
+  const rgbv_no = pixelAt(idata, 0, 0);
+  const rgbv_ne = pixelAt(idata, idata.width - 1, 0);
+  const rgbv_so = pixelAt(idata, 0, idata.height - 1);
+  const rgbv_se = pixelAt(idata, idata.width - 1, idata.height - 1);
 
-  var thres = threshold || 10;
+  const thres = threshold || 10;
   if (
     rgbDistance(rgbv_no, rgbv_ne) < thres &&
     rgbDistance(rgbv_ne, rgbv_se) < thres &&
@@ -52,12 +52,12 @@ function backgroundMask(idata, threshold) {
     rgbDistance(rgbv_so, rgbv_no) < thres
   ) {
     // Mean color
-    var mean = rgbMean([rgbv_ne, rgbv_no, rgbv_se, rgbv_so]);
+    const mean = rgbMean([rgbv_ne, rgbv_no, rgbv_se, rgbv_so]);
 
     // Mask based on color distance
-    var mask: Array<number> = [];
-    for (var i = 0; i < idata.width * idata.height; i++) {
-      var d = rgbDistance(mean, [
+    const mask: Array<number> = [];
+    for (let i = 0; i < idata.width * idata.height; i++) {
+      const d = rgbDistance(mean, [
         idata.data[i * 4],
         idata.data[i * 4 + 1],
         idata.data[i * 4 + 2],
@@ -70,29 +70,29 @@ function backgroundMask(idata, threshold) {
 }
 
 function applyMask(idata, mask) {
-  for (var i = 0; i < idata.width * idata.height; i++) {
+  for (let i = 0; i < idata.width * idata.height; i++) {
     idata.data[4 * i + 3] = mask[i];
   }
 }
 
 function erodeMask(mask, sw, sh) {
-  var weights = [1, 1, 1, 1, 0, 1, 1, 1, 1];
-  var side = Math.round(Math.sqrt(weights.length));
-  var halfSide = Math.floor(side / 2);
+  const weights = [1, 1, 1, 1, 0, 1, 1, 1, 1];
+  const side = Math.round(Math.sqrt(weights.length));
+  const halfSide = Math.floor(side / 2);
 
-  var maskResult: Array<number> = [];
-  for (var y = 0; y < sh; y++) {
-    for (var x = 0; x < sw; x++) {
-      var so = y * sw + x;
-      var a = 0;
-      for (var cy = 0; cy < side; cy++) {
-        for (var cx = 0; cx < side; cx++) {
-          var scy = y + cy - halfSide;
-          var scx = x + cx - halfSide;
+  const maskResult: Array<number> = [];
+  for (let y = 0; y < sh; y++) {
+    for (let x = 0; x < sw; x++) {
+      const so = y * sw + x;
+      let a = 0;
+      for (let cy = 0; cy < side; cy++) {
+        for (let cx = 0; cx < side; cx++) {
+          const scy = y + cy - halfSide;
+          const scx = x + cx - halfSide;
 
           if (scy >= 0 && scy < sh && scx >= 0 && scx < sw) {
-            var srcOff = scy * sw + scx;
-            var wt = weights[cy * side + cx];
+            const srcOff = scy * sw + scx;
+            const wt = weights[cy * side + cx];
 
             a += mask[srcOff] * wt;
           }
@@ -107,23 +107,23 @@ function erodeMask(mask, sw, sh) {
 }
 
 function dilateMask(mask, sw, sh) {
-  var weights = [1, 1, 1, 1, 1, 1, 1, 1, 1];
-  var side = Math.round(Math.sqrt(weights.length));
-  var halfSide = Math.floor(side / 2);
+  const weights = [1, 1, 1, 1, 1, 1, 1, 1, 1];
+  const side = Math.round(Math.sqrt(weights.length));
+  const halfSide = Math.floor(side / 2);
 
-  var maskResult: Array<number> = [];
-  for (var y = 0; y < sh; y++) {
-    for (var x = 0; x < sw; x++) {
-      var so = y * sw + x;
-      var a = 0;
-      for (var cy = 0; cy < side; cy++) {
-        for (var cx = 0; cx < side; cx++) {
-          var scy = y + cy - halfSide;
-          var scx = x + cx - halfSide;
+  const maskResult: Array<number> = [];
+  for (let y = 0; y < sh; y++) {
+    for (let x = 0; x < sw; x++) {
+      const so = y * sw + x;
+      let a = 0;
+      for (let cy = 0; cy < side; cy++) {
+        for (let cx = 0; cx < side; cx++) {
+          const scy = y + cy - halfSide;
+          const scx = x + cx - halfSide;
 
           if (scy >= 0 && scy < sh && scx >= 0 && scx < sw) {
-            var srcOff = scy * sw + scx;
-            var wt = weights[cy * side + cx];
+            const srcOff = scy * sw + scx;
+            const wt = weights[cy * side + cx];
 
             a += mask[srcOff] * wt;
           }
@@ -138,23 +138,23 @@ function dilateMask(mask, sw, sh) {
 }
 
 function smoothEdgeMask(mask, sw, sh) {
-  var weights = [1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9];
-  var side = Math.round(Math.sqrt(weights.length));
-  var halfSide = Math.floor(side / 2);
+  const weights = [1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9];
+  const side = Math.round(Math.sqrt(weights.length));
+  const halfSide = Math.floor(side / 2);
 
-  var maskResult: Array<number> = [];
-  for (var y = 0; y < sh; y++) {
-    for (var x = 0; x < sw; x++) {
-      var so = y * sw + x;
-      var a = 0;
-      for (var cy = 0; cy < side; cy++) {
-        for (var cx = 0; cx < side; cx++) {
-          var scy = y + cy - halfSide;
-          var scx = x + cx - halfSide;
+  const maskResult: Array<number> = [];
+  for (let y = 0; y < sh; y++) {
+    for (let x = 0; x < sw; x++) {
+      const so = y * sw + x;
+      let a = 0;
+      for (let cy = 0; cy < side; cy++) {
+        for (let cx = 0; cx < side; cx++) {
+          const scy = y + cy - halfSide;
+          const scx = x + cx - halfSide;
 
           if (scy >= 0 && scy < sh && scx >= 0 && scx < sw) {
-            var srcOff = scy * sw + scx;
-            var wt = weights[cy * side + cx];
+            const srcOff = scy * sw + scx;
+            const wt = weights[cy * side + cx];
 
             a += mask[srcOff] * wt;
           }
@@ -181,7 +181,7 @@ function smoothEdgeMask(mask, sw, sh) {
  */
 export const Mask: Filter = function (imageData) {
   // Detect pixels close to the background color
-  var threshold = this.threshold(),
+  let threshold = this.threshold(),
     mask = backgroundMask(imageData, threshold);
   if (mask) {
     // Erode

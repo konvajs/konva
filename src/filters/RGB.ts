@@ -17,7 +17,7 @@ import { RGBComponent } from '../Validators';
  */
 
 export const RGB: Filter = function (imageData) {
-  var data = imageData.data,
+  let data = imageData.data,
     nPixels = data.length,
     red = this.red(),
     green = this.green(),
