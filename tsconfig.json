@@ -5,7 +5,7 @@
     "target": "ES2018",
     // "sourceMap": true,
     "noEmitOnError": true,
-    "lib": ["ES2015", "dom"],
+    "lib": ["ES2019", "dom"],
     "moduleResolution": "node",
     "declaration": true,
     "removeComments": false,
