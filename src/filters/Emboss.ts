@@ -174,7 +174,7 @@ Factory.addGetterSetter(
   Node,
   'embossDirection',
   'top-left',
-  null,
+  undefined,
   Factory.afterSetFilter
 );
 /**
@@ -190,7 +190,7 @@ Factory.addGetterSetter(
   Node,
   'embossBlend',
   false,
-  null,
+  undefined,
   Factory.afterSetFilter
 );
 /**

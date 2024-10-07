@@ -843,6 +843,11 @@ export class Shape<
   strokeLinearGradientStartPoint: GetSet<Vector2d, this>;
   strokeLinearGradientEndPoint: GetSet<Vector2d, this>;
   strokeLinearGradientColorStops: GetSet<Array<number | string>, this>;
+  strokeLinearGradientStartPointX: GetSet<number, this>;
+  strokeLinearGradientStartPointY: GetSet<number, this>;
+  strokeLinearGradientEndPointX: GetSet<number, this>;
+  strokeLinearGradientEndPointY: GetSet<number, this>;
+  fillRule: GetSet<CanvasFillRule, this>;
 }
 
 Shape.prototype._fillFunc = _fillFunc;
