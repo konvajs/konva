@@ -37,17 +37,17 @@ export interface StarConfig extends ShapeConfig {
  */
 export class Star extends Shape<StarConfig> {
   _sceneFunc(context: Context) {
-    var innerRadius = this.innerRadius(),
+    const innerRadius = this.innerRadius(),
       outerRadius = this.outerRadius(),
       numPoints = this.numPoints();
 
     context.beginPath();
     context.moveTo(0, 0 - outerRadius);
 
-    for (var n = 1; n < numPoints * 2; n++) {
-      var radius = n % 2 === 0 ? outerRadius : innerRadius;
-      var x = radius * Math.sin((n * Math.PI) / numPoints);
-      var y = -1 * radius * Math.cos((n * Math.PI) / numPoints);
+    for (let n = 1; n < numPoints * 2; n++) {
+      const radius = n % 2 === 0 ? outerRadius : innerRadius;
+      const x = radius * Math.sin((n * Math.PI) / numPoints);
+      const y = -1 * radius * Math.cos((n * Math.PI) / numPoints);
       context.lineTo(x, y);
     }
     context.closePath();

@@ -67,7 +67,7 @@ export class Transform {
    * @returns {Object} 2D point(x, y)
    */
   point(point: Vector2d) {
-    var m = this.m;
+    const m = this.m;
     return {
       x: m[0] * point.x + m[2] * point.y + m[4],
       y: m[1] * point.x + m[3] * point.y + m[5],
@@ -109,12 +109,12 @@ export class Transform {
    * @returns {Konva.Transform}
    */
   rotate(rad: number) {
-    var c = Math.cos(rad);
-    var s = Math.sin(rad);
-    var m11 = this.m[0] * c + this.m[2] * s;
-    var m12 = this.m[1] * c + this.m[3] * s;
-    var m21 = this.m[0] * -s + this.m[2] * c;
-    var m22 = this.m[1] * -s + this.m[3] * c;
+    const c = Math.cos(rad);
+    const s = Math.sin(rad);
+    const m11 = this.m[0] * c + this.m[2] * s;
+    const m12 = this.m[1] * c + this.m[3] * s;
+    const m21 = this.m[0] * -s + this.m[2] * c;
+    const m22 = this.m[1] * -s + this.m[3] * c;
     this.m[0] = m11;
     this.m[1] = m12;
     this.m[2] = m21;
@@ -142,10 +142,10 @@ export class Transform {
    * @returns {Konva.Transform}
    */
   skew(sx: number, sy: number) {
-    var m11 = this.m[0] + this.m[2] * sy;
-    var m12 = this.m[1] + this.m[3] * sy;
-    var m21 = this.m[2] + this.m[0] * sx;
-    var m22 = this.m[3] + this.m[1] * sx;
+    const m11 = this.m[0] + this.m[2] * sy;
+    const m12 = this.m[1] + this.m[3] * sy;
+    const m21 = this.m[2] + this.m[0] * sx;
+    const m22 = this.m[3] + this.m[1] * sx;
     this.m[0] = m11;
     this.m[1] = m12;
     this.m[2] = m21;
@@ -160,14 +160,14 @@ export class Transform {
    * @returns {Konva.Transform}
    */
   multiply(matrix: Transform) {
-    var m11 = this.m[0] * matrix.m[0] + this.m[2] * matrix.m[1];
-    var m12 = this.m[1] * matrix.m[0] + this.m[3] * matrix.m[1];
+    const m11 = this.m[0] * matrix.m[0] + this.m[2] * matrix.m[1];
+    const m12 = this.m[1] * matrix.m[0] + this.m[3] * matrix.m[1];
 
-    var m21 = this.m[0] * matrix.m[2] + this.m[2] * matrix.m[3];
-    var m22 = this.m[1] * matrix.m[2] + this.m[3] * matrix.m[3];
+    const m21 = this.m[0] * matrix.m[2] + this.m[2] * matrix.m[3];
+    const m22 = this.m[1] * matrix.m[2] + this.m[3] * matrix.m[3];
 
-    var dx = this.m[0] * matrix.m[4] + this.m[2] * matrix.m[5] + this.m[4];
-    var dy = this.m[1] * matrix.m[4] + this.m[3] * matrix.m[5] + this.m[5];
+    const dx = this.m[0] * matrix.m[4] + this.m[2] * matrix.m[5] + this.m[4];
+    const dy = this.m[1] * matrix.m[4] + this.m[3] * matrix.m[5] + this.m[5];
 
     this.m[0] = m11;
     this.m[1] = m12;
@@ -184,13 +184,13 @@ export class Transform {
    * @returns {Konva.Transform}
    */
   invert() {
-    var d = 1 / (this.m[0] * this.m[3] - this.m[1] * this.m[2]);
-    var m0 = this.m[3] * d;
-    var m1 = -this.m[1] * d;
-    var m2 = -this.m[2] * d;
-    var m3 = this.m[0] * d;
-    var m4 = d * (this.m[2] * this.m[5] - this.m[3] * this.m[4]);
-    var m5 = d * (this.m[1] * this.m[4] - this.m[0] * this.m[5]);
+    const d = 1 / (this.m[0] * this.m[3] - this.m[1] * this.m[2]);
+    const m0 = this.m[3] * d;
+    const m1 = -this.m[1] * d;
+    const m2 = -this.m[2] * d;
+    const m3 = this.m[0] * d;
+    const m4 = d * (this.m[2] * this.m[5] - this.m[3] * this.m[4]);
+    const m5 = d * (this.m[1] * this.m[4] - this.m[0] * this.m[5]);
     this.m[0] = m0;
     this.m[1] = m1;
     this.m[2] = m2;
@@ -214,16 +214,16 @@ export class Transform {
    * @returns {Konva.Transform}
    */
   decompose() {
-    var a = this.m[0];
-    var b = this.m[1];
-    var c = this.m[2];
-    var d = this.m[3];
-    var e = this.m[4];
-    var f = this.m[5];
+    const a = this.m[0];
+    const b = this.m[1];
+    const c = this.m[2];
+    const d = this.m[3];
+    const e = this.m[4];
+    const f = this.m[5];
 
-    var delta = a * d - b * c;
+    const delta = a * d - b * c;
 
-    let result = {
+    const result = {
       x: e,
       y: f,
       rotation: 0,
@@ -235,14 +235,14 @@ export class Transform {
 
     // Apply the QR-like decomposition.
     if (a != 0 || b != 0) {
-      var r = Math.sqrt(a * a + b * b);
+      const r = Math.sqrt(a * a + b * b);
       result.rotation = b > 0 ? Math.acos(a / r) : -Math.acos(a / r);
       result.scaleX = r;
       result.scaleY = delta / r;
       result.skewX = (a * c + b * d) / delta;
       result.skewY = 0;
     } else if (c != 0 || d != 0) {
-      var s = Math.sqrt(c * c + d * d);
+      const s = Math.sqrt(c * c + d * d);
       result.rotation =
         Math.PI / 2 - (d > 0 ? Math.acos(-c / s) : -Math.acos(c / s));
       result.scaleX = delta / s;
@@ -260,7 +260,7 @@ export class Transform {
 }
 
 // CONSTANTS
-var OBJECT_ARRAY = '[object Array]',
+let OBJECT_ARRAY = '[object Array]',
   OBJECT_NUMBER = '[object Number]',
   OBJECT_STRING = '[object String]',
   OBJECT_BOOLEAN = '[object Boolean]',
@@ -465,14 +465,14 @@ export const Util = {
     return Object.prototype.toString.call(obj) === OBJECT_BOOLEAN;
   },
   // arrays are objects too
-  isObject(val: any): val is Object {
+  isObject(val: any): val is object {
     return val instanceof Object;
   },
   isValidSelector(selector: any) {
     if (typeof selector !== 'string') {
       return false;
     }
-    var firstChar = selector[0];
+    const firstChar = selector[0];
     return (
       firstChar === '#' ||
       firstChar === '.' ||
@@ -505,7 +505,7 @@ export const Util = {
     }
   },
   createCanvasElement() {
-    var canvas = document.createElement('canvas');
+    const canvas = document.createElement('canvas');
     // on some environments canvas.style is readonly
     try {
       (<any>canvas).style = canvas.style || {};
@@ -529,7 +529,7 @@ export const Util = {
    */
   _urlToImage(url: string, callback: Function) {
     // if arg is a string, then it's a data url
-    var imageObj = Util.createImageElement();
+    const imageObj = Util.createImageElement();
     imageObj.onload = function () {
       callback(imageObj);
     };
@@ -540,7 +540,7 @@ export const Util = {
   },
   _hexToRgb(hex: string): RGB {
     hex = hex.replace(HASH, EMPTY_STRING);
-    var bigint = parseInt(hex, 16);
+    const bigint = parseInt(hex, 16);
     return {
       r: (bigint >> 16) & 255,
       g: (bigint >> 8) & 255,
@@ -555,7 +555,7 @@ export const Util = {
    * shape.fill(Konva.Util.getRandomColor());
    */
   getRandomColor() {
-    var randColor = ((Math.random() * 0xffffff) << 0).toString(16);
+    let randColor = ((Math.random() * 0xffffff) << 0).toString(16);
     while (randColor.length < 6) {
       randColor = ZERO + randColor;
     }
@@ -574,7 +574,7 @@ export const Util = {
    * var rgb = Konva.Util.getRGB('rgb(0,0,255)');
    */
   getRGB(color: string): RGB {
-    var rgb;
+    let rgb;
     // color string
     if (color in COLORS) {
       rgb = COLORS[color as keyof typeof COLORS];
@@ -620,7 +620,7 @@ export const Util = {
   },
   // Parse named css color. Like "green"
   _namedColorToRBA(str: string) {
-    var c = COLORS[str.toLowerCase() as keyof typeof COLORS];
+    const c = COLORS[str.toLowerCase() as keyof typeof COLORS];
     if (!c) {
       return null;
     }
@@ -635,7 +635,7 @@ export const Util = {
   _rgbColorToRGBA(str: string) {
     if (str.indexOf('rgb(') === 0) {
       str = str.match(/rgb\(([^)]+)\)/)![1];
-      var parts = str.split(/ *, */).map(Number);
+      const parts = str.split(/ *, */).map(Number);
       return {
         r: parts[0],
         g: parts[1],
@@ -648,7 +648,7 @@ export const Util = {
   _rgbaColorToRGBA(str: string) {
     if (str.indexOf('rgba(') === 0) {
       str = str.match(/rgba\(([^)]+)\)/)![1]!;
-      var parts = str.split(/ *, */).map((n, index) => {
+      const parts = str.split(/ *, */).map((n, index) => {
         if (n.slice(-1) === '%') {
           return index === 3 ? parseInt(n) / 100 : (parseInt(n) / 100) * 255;
         }
@@ -789,8 +789,8 @@ export const Util = {
     );
   },
   cloneObject<Any>(obj: Any): Any {
-    var retObj: any = {};
-    for (var key in obj) {
+    const retObj: any = {};
+    for (const key in obj) {
       if (this._isPlainObject(obj[key])) {
         retObj[key] = this.cloneObject(obj[key]);
       } else if (this._isArray(obj[key])) {
@@ -840,8 +840,8 @@ export const Util = {
     }
     console.warn(KONVA_WARNING + str);
   },
-  each(obj: Object, func: Function) {
-    for (var key in obj) {
+  each(obj: object, func: Function) {
+    for (const key in obj) {
       func(key, obj[key as keyof typeof obj]);
     }
   },
@@ -849,15 +849,15 @@ export const Util = {
     return left <= val && val < right;
   },
   _getProjectionToSegment(x1, y1, x2, y2, x3, y3) {
-    var x, y, dist;
+    let x, y, dist;
 
-    var pd2 = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+    const pd2 = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
     if (pd2 == 0) {
       x = x1;
       y = y1;
       dist = (x3 - x2) * (x3 - x2) + (y3 - y2) * (y3 - y2);
     } else {
-      var u = ((x3 - x1) * (x2 - x1) + (y3 - y1) * (y2 - y1)) / pd2;
+      const u = ((x3 - x1) * (x2 - x1) + (y3 - y1) * (y2 - y1)) / pd2;
       if (u < 0) {
         x = x1;
         y = y1;
@@ -877,14 +877,14 @@ export const Util = {
   // line as array of points.
   // line might be closed
   _getProjectionToLine(pt: Vector2d, line: Array<Vector2d>, isClosed: boolean) {
-    var pc = Util.cloneObject(pt);
-    var dist = Number.MAX_VALUE;
+    const pc = Util.cloneObject(pt);
+    let dist = Number.MAX_VALUE;
     line.forEach(function (p1, i) {
       if (!isClosed && i === line.length - 1) {
         return;
       }
-      var p2 = line[(i + 1) % line.length];
-      var proj = Util._getProjectionToSegment(
+      const p2 = line[(i + 1) % line.length];
+      const proj = Util._getProjectionToSegment(
         p1.x,
         p1.y,
         p2.x,
@@ -892,7 +892,7 @@ export const Util = {
         pt.x,
         pt.y
       );
-      var px = proj[0],
+      const px = proj[0],
         py = proj[1],
         pdist = proj[2];
       if (pdist < dist) {
@@ -904,11 +904,11 @@ export const Util = {
     return pc;
   },
   _prepareArrayForTween(startArray, endArray, isClosed) {
-    var n,
+    let n,
       start: Vector2d[] = [],
       end: Vector2d[] = [];
     if (startArray.length > endArray.length) {
-      var temp = endArray;
+      const temp = endArray;
       endArray = startArray;
       startArray = temp;
     }
@@ -925,20 +925,20 @@ export const Util = {
       });
     }
 
-    var newStart: number[] = [];
+    const newStart: number[] = [];
     end.forEach(function (point) {
-      var pr = Util._getProjectionToLine(point, start, isClosed);
+      const pr = Util._getProjectionToLine(point, start, isClosed);
       newStart.push(pr.x);
       newStart.push(pr.y);
     });
     return newStart;
   },
   _prepareToStringify<T>(obj: any): T | null {
-    var desc;
+    let desc;
 
     obj.visitedByCircularReferenceRemoval = true;
 
-    for (var key in obj) {
+    for (const key in obj) {
       if (
         !(obj.hasOwnProperty(key) && obj[key] && typeof obj[key] == 'object')
       ) {
@@ -969,7 +969,7 @@ export const Util = {
   },
   // very simplified version of Object.assign
   _assign<T, U>(target: T, source: U) {
-    for (var key in source) {
+    for (const key in source) {
       (<any>target)[key] = source[key];
     }
     return target as T & U;

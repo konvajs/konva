@@ -18,7 +18,7 @@ export interface LayerConfig extends ContainerConfig {
 }
 
 // constants
-var HASH = '#',
+const HASH = '#',
   BEFORE_DRAW = 'beforeDraw',
   DRAW = 'draw',
   /*
@@ -116,7 +116,7 @@ export class Layer extends Container<Group | Shape> {
   // extend Node.prototype.setZIndex
   setZIndex(index) {
     super.setZIndex(index);
-    var stage = this.getStage();
+    const stage = this.getStage();
     if (stage && stage.content) {
       stage.content.removeChild(this.getNativeCanvasElement());
 
@@ -133,7 +133,7 @@ export class Layer extends Container<Group | Shape> {
   }
   moveToTop() {
     Node.prototype.moveToTop.call(this);
-    var stage = this.getStage();
+    const stage = this.getStage();
     if (stage && stage.content) {
       stage.content.removeChild(this.getNativeCanvasElement());
       stage.content.appendChild(this.getNativeCanvasElement());
@@ -141,11 +141,11 @@ export class Layer extends Container<Group | Shape> {
     return true;
   }
   moveUp() {
-    var moved = Node.prototype.moveUp.call(this);
+    const moved = Node.prototype.moveUp.call(this);
     if (!moved) {
       return false;
     }
-    var stage = this.getStage();
+    const stage = this.getStage();
     if (!stage || !stage.content) {
       return false;
     }
@@ -164,9 +164,9 @@ export class Layer extends Container<Group | Shape> {
   // extend Node.prototype.moveDown
   moveDown() {
     if (Node.prototype.moveDown.call(this)) {
-      var stage = this.getStage();
+      const stage = this.getStage();
       if (stage) {
-        var children = stage.children;
+        const children = stage.children;
         if (stage.content) {
           stage.content.removeChild(this.getNativeCanvasElement());
           stage.content.insertBefore(
@@ -182,9 +182,9 @@ export class Layer extends Container<Group | Shape> {
   // extend Node.prototype.moveToBottom
   moveToBottom() {
     if (Node.prototype.moveToBottom.call(this)) {
-      var stage = this.getStage();
+      const stage = this.getStage();
       if (stage) {
-        var children = stage.children;
+        const children = stage.children;
         if (stage.content) {
           stage.content.removeChild(this.getNativeCanvasElement());
           stage.content.insertBefore(
@@ -201,7 +201,7 @@ export class Layer extends Container<Group | Shape> {
     return this;
   }
   remove() {
-    var _canvas = this.getNativeCanvasElement();
+    const _canvas = this.getNativeCanvasElement();
 
     Node.prototype.remove.call(this);
 
@@ -220,7 +220,7 @@ export class Layer extends Container<Group | Shape> {
     return this;
   }
   _validateAdd(child) {
-    var type = child.getType();
+    const type = child.getType();
     if (type !== 'Group' && type !== 'Shape') {
       Util.throw('You may only add groups and shapes to a layer.');
     }
@@ -325,8 +325,8 @@ export class Layer extends Container<Group | Shape> {
     }
     // in some cases antialiased area may be bigger than 1px
     // it is possible if we will cache node, then scale it a lot
-    var spiralSearchDistance = 1;
-    var continueSearch = false;
+    let spiralSearchDistance = 1;
+    let continueSearch = false;
     while (true) {
       for (let i = 0; i < INTERSECTION_OFFSETS_LEN; i++) {
         const intersectionOffset = INTERSECTION_OFFSETS[i];
@@ -386,7 +386,7 @@ export class Layer extends Container<Group | Shape> {
     return {};
   }
   drawScene(can?: SceneCanvas, top?: Node) {
-    var layer = this.getLayer(),
+    const layer = this.getLayer(),
       canvas = can || (layer && layer.getCanvas());
 
     this._fire(BEFORE_DRAW, {
@@ -406,7 +406,7 @@ export class Layer extends Container<Group | Shape> {
     return this;
   }
   drawHit(can?: HitCanvas, top?: Node) {
-    var layer = this.getLayer(),
+    const layer = this.getLayer(),
       canvas = can || (layer && layer.hitCanvas);
 
     if (layer && layer.clearBeforeDraw()) {
@@ -460,8 +460,8 @@ export class Layer extends Container<Group | Shape> {
     if (!this.parent || !this.parent['content']) {
       return;
     }
-    var parent = this.parent as any;
-    var added = !!this.hitCanvas._canvas.parentNode;
+    const parent = this.parent as any;
+    const added = !!this.hitCanvas._canvas.parentNode;
     if (added) {
       parent.content.removeChild(this.hitCanvas._canvas);
     } else {

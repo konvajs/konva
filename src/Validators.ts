@@ -52,8 +52,8 @@ export function getNumberValidator() {
 export function getNumberOrArrayOfNumbersValidator(noOfElements: number) {
   if (Konva.isUnminified) {
     return function <T>(val: T, attr: string): T | void {
-      let isNumber = Util._isNumber(val);
-      let isValidArray = Util._isArray(val) && val.length == noOfElements;
+      const isNumber = Util._isNumber(val);
+      const isValidArray = Util._isArray(val) && val.length == noOfElements;
       if (!isNumber && !isValidArray) {
         Util.warn(
           _formatValue(val) +
@@ -72,8 +72,8 @@ export function getNumberOrArrayOfNumbersValidator(noOfElements: number) {
 export function getNumberOrAutoValidator() {
   if (Konva.isUnminified) {
     return function <T extends string>(val: T, attr: string): T | void {
-      var isNumber = Util._isNumber(val);
-      var isAuto = val === 'auto';
+      const isNumber = Util._isNumber(val);
+      const isAuto = val === 'auto';
 
       if (!(isNumber || isAuto)) {
         Util.warn(
@@ -175,7 +175,7 @@ export function getNumberArrayValidator() {
 export function getBooleanValidator() {
   if (Konva.isUnminified) {
     return function (val: any, attr: string) {
-      var isBool = val === true || val === false;
+      const isBool = val === true || val === false;
       if (!isBool) {
         Util.warn(
           _formatValue(val) +

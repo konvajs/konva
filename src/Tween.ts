@@ -4,7 +4,7 @@ import { Node, NodeConfig } from './Node';
 import { Konva } from './Global';
 import { Line } from './shapes/Line';
 
-var blacklist = {
+let blacklist = {
     node: 1,
     duration: 1,
     easing: 1,
@@ -58,7 +58,7 @@ class TweenEngine {
     this.pause();
   }
   fire(str) {
-    var handler = this[str];
+    const handler = this[str];
     if (handler) {
       handler();
     }
@@ -133,7 +133,7 @@ class TweenEngine {
     this.fire('onUpdate');
   }
   onEnterFrame() {
-    var t = this.getTimer() - this._startTime;
+    const t = this.getTimer() - this._startTime;
     if (this.state === PLAYING) {
       this.setTime(t);
     } else if (this.state === REVERSING) {
@@ -195,7 +195,7 @@ export class Tween {
   onUpdate: Function | undefined;
 
   constructor(config: TweenConfig) {
-    var that = this,
+    let that = this,
       node = config.node as any,
       nodeId = node._id,
       duration,
@@ -214,7 +214,7 @@ export class Tween {
     this.node = node;
     this._id = idCounter++;
 
-    var layers =
+    const layers =
       node.getLayer() ||
       (node instanceof Konva['Stage'] ? node.getLayers() : null);
     if (!layers) {
@@ -266,7 +266,7 @@ export class Tween {
     this.onUpdate = config.onUpdate;
   }
   _addAttr(key, end) {
-    var node = this.node,
+    let node = this.node,
       nodeId = node._id,
       start,
       diff,
@@ -314,7 +314,7 @@ export class Tween {
           if (n % 2 === 0) {
             diff.push(end[n] - start[n]);
           } else {
-            var startRGBA = Util.colorToRGBA(start[n])!;
+            const startRGBA = Util.colorToRGBA(start[n])!;
             endRGBA = Util.colorToRGBA(end[n]);
             start[n] = startRGBA;
             diff.push({
@@ -353,7 +353,7 @@ export class Tween {
     Tween.tweens[nodeId][key] = this._id;
   }
   _tweenFunc(i) {
-    var node = this.node,
+    let node = this.node,
       attrs = Tween.attrs[node._id][this._id],
       key,
       attr,
@@ -428,10 +428,10 @@ export class Tween {
       this.anim.stop();
     };
     this.tween.onFinish = () => {
-      var node = this.node as Node;
+      const node = this.node as Node;
 
       // after tweening  points of line we need to set original end
-      var attrs = Tween.attrs[node._id][this._id];
+      const attrs = Tween.attrs[node._id][this._id];
       if (attrs.points && attrs.points.trueEnd) {
         node.setAttr('points', attrs.points.trueEnd);
       }
@@ -441,9 +441,9 @@ export class Tween {
       }
     };
     this.tween.onReset = () => {
-      var node = this.node as any;
+      const node = this.node as any;
       // after tweening  points of line we need to set original start
-      var attrs = Tween.attrs[node._id][this._id];
+      const attrs = Tween.attrs[node._id][this._id];
       if (attrs.points && attrs.points.trueStart) {
         node.points(attrs.points.trueStart);
       }
@@ -525,7 +525,7 @@ export class Tween {
    * @name Konva.Tween#destroy
    */
   destroy() {
-    var nodeId = this.node._id,
+    let nodeId = this.node._id,
       thisId = this._id,
       attrs = Tween.tweens[nodeId],
       key;
@@ -555,7 +555,7 @@ export class Tween {
  * });
  */
 Node.prototype.to = function (params) {
-  var onFinish = params.onFinish;
+  const onFinish = params.onFinish;
   params.node = this;
   params.onFinish = function () {
     this.destroy();
@@ -563,7 +563,7 @@ Node.prototype.to = function (params) {
       onFinish();
     }
   };
-  var tween = new Tween(params as any);
+  const tween = new Tween(params as any);
   tween.play();
 };
 
@@ -583,7 +583,7 @@ export const Easings = {
    * @memberof Konva.Easings
    */
   BackEaseIn(t, b, c, d) {
-    var s = 1.70158;
+    const s = 1.70158;
     return c * (t /= d) * t * ((s + 1) * t - s) + b;
   },
   /**
@@ -592,7 +592,7 @@ export const Easings = {
    * @memberof Konva.Easings
    */
   BackEaseOut(t, b, c, d) {
-    var s = 1.70158;
+    const s = 1.70158;
     return c * ((t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
   },
   /**
@@ -601,7 +601,7 @@ export const Easings = {
    * @memberof Konva.Easings
    */
   BackEaseInOut(t, b, c, d) {
-    var s = 1.70158;
+    let s = 1.70158;
     if ((t /= d / 2) < 1) {
       return (c / 2) * (t * t * (((s *= 1.525) + 1) * t - s)) + b;
     }
@@ -614,7 +614,7 @@ export const Easings = {
    */
   ElasticEaseIn(t, b, c, d, a, p) {
     // added s = 0
-    var s = 0;
+    let s = 0;
     if (t === 0) {
       return b;
     }
@@ -645,7 +645,7 @@ export const Easings = {
    */
   ElasticEaseOut(t, b, c, d, a, p) {
     // added s = 0
-    var s = 0;
+    let s = 0;
     if (t === 0) {
       return b;
     }
@@ -674,7 +674,7 @@ export const Easings = {
    */
   ElasticEaseInOut(t, b, c, d, a, p) {
     // added s = 0
-    var s = 0;
+    let s = 0;
     if (t === 0) {
       return b;
     }

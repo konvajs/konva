@@ -10,7 +10,7 @@ import { Filter } from '../Node';
  * node.filters([Konva.Filters.Grayscale]);
  */
 export const Grayscale: Filter = function (imageData) {
-  var data = imageData.data,
+  let data = imageData.data,
     len = data.length,
     i,
     brightness;

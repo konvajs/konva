@@ -94,11 +94,11 @@ export type FillFuncOutput =
   | [Path2D | CanvasFillRule]
   | [Path2D, CanvasFillRule];
 
-var HAS_SHADOW = 'hasShadow';
-var SHADOW_RGBA = 'shadowRGBA';
-var patternImage = 'patternImage';
-var linearGradient = 'linearGradient';
-var radialGradient = 'radialGradient';
+const HAS_SHADOW = 'hasShadow';
+const SHADOW_RGBA = 'shadowRGBA';
+const patternImage = 'patternImage';
+const linearGradient = 'linearGradient';
+const radialGradient = 'radialGradient';
 
 let dummyContext: CanvasRenderingContext2D;
 function getDummyContext(): CanvasRenderingContext2D {
@@ -255,7 +255,7 @@ export class Shape<
   }
   __getFillPattern() {
     if (this.fillPatternImage()) {
-      var ctx = getDummyContext();
+      const ctx = getDummyContext();
       const pattern = ctx.createPattern(
         this.fillPatternImage(),
         this.fillPatternRepeat() || 'repeat'
@@ -294,16 +294,16 @@ export class Shape<
     return this._getCache(linearGradient, this.__getLinearGradient);
   }
   __getLinearGradient() {
-    var colorStops = this.fillLinearGradientColorStops();
+    const colorStops = this.fillLinearGradientColorStops();
     if (colorStops) {
-      var ctx = getDummyContext();
+      const ctx = getDummyContext();
 
-      var start = this.fillLinearGradientStartPoint();
-      var end = this.fillLinearGradientEndPoint();
-      var grd = ctx.createLinearGradient(start.x, start.y, end.x, end.y);
+      const start = this.fillLinearGradientStartPoint();
+      const end = this.fillLinearGradientEndPoint();
+      const grd = ctx.createLinearGradient(start.x, start.y, end.x, end.y);
 
       // build color stops
-      for (var n = 0; n < colorStops.length; n += 2) {
+      for (let n = 0; n < colorStops.length; n += 2) {
         grd.addColorStop(colorStops[n] as number, colorStops[n + 1] as string);
       }
       return grd;
@@ -314,13 +314,13 @@ export class Shape<
     return this._getCache(radialGradient, this.__getRadialGradient);
   }
   __getRadialGradient() {
-    var colorStops = this.fillRadialGradientColorStops();
+    const colorStops = this.fillRadialGradientColorStops();
     if (colorStops) {
-      var ctx = getDummyContext();
+      const ctx = getDummyContext();
 
-      var start = this.fillRadialGradientStartPoint();
-      var end = this.fillRadialGradientEndPoint();
-      var grd = ctx.createRadialGradient(
+      const start = this.fillRadialGradientStartPoint();
+      const end = this.fillRadialGradientEndPoint();
+      const grd = ctx.createRadialGradient(
         start.x,
         start.y,
         this.fillRadialGradientStartRadius(),
@@ -330,7 +330,7 @@ export class Shape<
       );
 
       // build color stops
-      for (var n = 0; n < colorStops.length; n += 2) {
+      for (let n = 0; n < colorStops.length; n += 2) {
         grd.addColorStop(colorStops[n] as number, colorStops[n + 1] as string);
       }
       return grd;
@@ -343,7 +343,7 @@ export class Shape<
     if (!this.hasShadow()) {
       return;
     }
-    var rgba = Util.colorToRGBA(this.shadowColor());
+    const rgba = Util.colorToRGBA(this.shadowColor());
     if (rgba) {
       return (
         'rgba(' +
@@ -443,7 +443,7 @@ export class Shape<
    * @returns {Boolean}
    */
   intersects(point) {
-    var stage = this.getStage();
+    const stage = this.getStage();
     if (!stage) {
       return false;
     }
@@ -524,7 +524,7 @@ export class Shape<
    *
    */
   getSelfRect() {
-    var size = this.size();
+    const size = this.size();
     return {
       x: this._centroid ? -size.width / 2 : 0,
       y: this._centroid ? -size.height / 2 : 0,
@@ -593,8 +593,8 @@ export class Shape<
     // 2 - when we are caching current
     // 3 - when node is cached and we need to draw it into layer
 
-    var layer = this.getLayer();
-    var canvas = can || layer!.getCanvas(),
+    const layer = this.getLayer();
+    let canvas = can || layer!.getCanvas(),
       context = canvas.getContext() as SceneContext,
       cachedCanvas = this._getCanvasCache(),
       drawFunc = this.getSceneFunc(),
@@ -602,8 +602,8 @@ export class Shape<
       stage,
       bufferContext;
 
-    var skipBuffer = canvas.isCache;
-    var cachingSelf = top === this;
+    const skipBuffer = canvas.isCache;
+    const cachingSelf = top === this;
 
     if (!this.isVisible() && !cachingSelf) {
       return this;
@@ -612,7 +612,7 @@ export class Shape<
     if (cachedCanvas) {
       context.save();
 
-      var m = this.getAbsoluteTransform(top).getMatrix();
+      const m = this.getAbsoluteTransform(top).getMatrix();
       context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
       this._drawCachedSceneCanvas(context);
       context.restore();
@@ -639,7 +639,7 @@ export class Shape<
       drawFunc.call(this, bufferContext, this);
       bufferContext.restore();
 
-      var ratio = bc.pixelRatio;
+      const ratio = bc.pixelRatio;
 
       if (hasShadow) {
         context._applyShadow(this);
@@ -671,7 +671,7 @@ export class Shape<
       return this;
     }
 
-    var layer = this.getLayer(),
+    const layer = this.getLayer(),
       canvas = can || layer!.hitCanvas,
       context = canvas && canvas.getContext(),
       drawFunc = this.hitFunc() || this.sceneFunc(),
@@ -687,7 +687,7 @@ export class Shape<
     if (cachedHitCanvas) {
       context.save();
 
-      var m = this.getAbsoluteTransform(top).getMatrix();
+      const m = this.getAbsoluteTransform(top).getMatrix();
       context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
 
       this._drawCachedHitCanvas(context);
@@ -702,7 +702,7 @@ export class Shape<
 
     const selfCache = this === top;
     if (!selfCache) {
-      var o = this.getAbsoluteTransform(top).getMatrix();
+      const o = this.getAbsoluteTransform(top).getMatrix();
       context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
     }
     drawFunc.call(this, context, this);
@@ -722,7 +722,7 @@ export class Shape<
    * shape.drawHitFromCache();
    */
   drawHitFromCache(alphaThreshold = 0) {
-    var cachedCanvas = this._getCanvasCache(),
+    let cachedCanvas = this._getCanvasCache(),
       sceneCanvas = this._getCachedSceneCanvas(),
       hitCanvas = cachedCanvas.hit,
       hitContext = hitCanvas.getContext(),

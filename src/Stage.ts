@@ -15,7 +15,7 @@ export interface StageConfig extends ContainerConfig {
 }
 
 // CONSTANTS
-var STAGE = 'Stage',
+const STAGE = 'Stage',
   STRING = 'string',
   PX = 'px',
   MOUSEOUT = 'mouseout',
@@ -215,7 +215,7 @@ export class Stage extends Container<Layer> {
   setContainer(container) {
     if (typeof container === STRING) {
       if (container.charAt(0) === '.') {
-        var className = container.slice(1);
+        const className = container.slice(1);
         container = document.getElementsByClassName(className)[0];
       } else {
         var id;
@@ -249,7 +249,7 @@ export class Stage extends Container<Layer> {
    * @name Konva.Stage#clear
    */
   clear() {
-    var layers = this.children,
+    let layers = this.children,
       len = layers.length,
       n;
 
@@ -270,11 +270,11 @@ export class Stage extends Container<Layer> {
   destroy() {
     super.destroy();
 
-    var content = this.content;
+    const content = this.content;
     if (content && Util._isInDocument(content)) {
       this.container().removeChild(content);
     }
-    var index = stages.indexOf(this);
+    const index = stages.indexOf(this);
     if (index > -1) {
       stages.splice(index, 1);
     }
@@ -322,13 +322,13 @@ export class Stage extends Container<Layer> {
     config.width = config.width || this.width();
     config.height = config.height || this.height();
 
-    var canvas = new SceneCanvas({
+    const canvas = new SceneCanvas({
       width: config.width,
       height: config.height,
       pixelRatio: config.pixelRatio || 1,
     });
-    var _context = canvas.getContext()._context;
-    var layers = this.children;
+    const _context = canvas.getContext()._context;
+    const layers = this.children;
 
     if (config.x || config.y) {
       _context.translate(-1 * config.x, -1 * config.y);
@@ -338,7 +338,7 @@ export class Stage extends Container<Layer> {
       if (!layer.isVisible()) {
         return;
       }
-      var layerCanvas = layer._toKonvaCanvas(config);
+      const layerCanvas = layer._toKonvaCanvas(config);
       _context.drawImage(
         layerCanvas._canvas,
         config.x,
@@ -367,7 +367,7 @@ export class Stage extends Container<Layer> {
     if (!pos) {
       return null;
     }
-    var layers = this.children,
+    let layers = this.children,
       len = layers.length,
       end = len - 1,
       n;
@@ -382,8 +382,8 @@ export class Stage extends Container<Layer> {
     return null;
   }
   _resizeDOM() {
-    var width = this.width();
-    var height = this.height();
+    const width = this.width();
+    const height = this.height();
     if (this.content) {
       // set content dimensions
       this.content.style.width = width + PX;
@@ -401,14 +401,14 @@ export class Stage extends Container<Layer> {
   }
   add(layer: Layer, ...rest) {
     if (arguments.length > 1) {
-      for (var i = 0; i < arguments.length; i++) {
+      for (let i = 0; i < arguments.length; i++) {
         this.add(arguments[i]);
       }
       return this;
     }
     super.add(layer);
 
-    var length = this.children.length;
+    const length = this.children.length;
     if (length > MAX_LAYERS_NUMBER) {
       Util.warn(
         'The stage has ' +
@@ -507,8 +507,8 @@ export class Stage extends Container<Layer> {
     }
     this.setPointersPositions(evt);
 
-    var targetShape = this._getTargetShape(eventType);
-    var eventsEnabled =
+    const targetShape = this._getTargetShape(eventType);
+    const eventsEnabled =
       !(Konva.isDragging() || Konva.isTransforming()) || Konva.hitOnDragEnabled;
     if (targetShape && eventsEnabled) {
       targetShape._fireAndBubble(events.pointerout, { evt: evt });
@@ -543,9 +543,9 @@ export class Stage extends Container<Layer> {
     }
     this.setPointersPositions(evt);
 
-    var triggeredOnShape = false;
+    let triggeredOnShape = false;
     this._changedPointerPositions.forEach((pos) => {
-      var shape = this.getIntersection(pos);
+      const shape = this.getIntersection(pos);
       DD.justDragged = false;
       // probably we are staring a click
       Konva['_' + eventType + 'ListenClick'] = true;
@@ -598,22 +598,22 @@ export class Stage extends Container<Layer> {
     }
     this.setPointersPositions(evt);
 
-    var eventsEnabled =
+    const eventsEnabled =
       !(Konva.isDragging() || Konva.isTransforming()) || Konva.hitOnDragEnabled;
     if (!eventsEnabled) {
       return;
     }
 
-    var processedShapesIds = {};
+    const processedShapesIds = {};
     let triggeredOnShape = false;
-    var targetShape = this._getTargetShape(eventType);
+    const targetShape = this._getTargetShape(eventType);
     this._changedPointerPositions.forEach((pos) => {
       const shape = (PointerEvents.getCapturedShape(pos.id) ||
         this.getIntersection(pos)) as Shape;
       const pointerId = pos.id;
       const event = { evt: evt, pointerId };
 
-      var differentTarget = targetShape !== shape;
+      const differentTarget = targetShape !== shape;
 
       if (differentTarget && targetShape) {
         targetShape._fireAndBubble(events.pointerout, { ...event }, shape);
@@ -667,7 +667,7 @@ export class Stage extends Container<Layer> {
     this.setPointersPositions(evt);
     const clickStartShape = this[eventType + 'ClickStartShape'];
     const clickEndShape = this[eventType + 'ClickEndShape'];
-    var processedShapesIds = {};
+    const processedShapesIds = {};
     let triggeredOnShape = false;
     this._changedPointerPositions.forEach((pos) => {
       const shape = (PointerEvents.getCapturedShape(pos.id) ||
@@ -760,7 +760,7 @@ export class Stage extends Container<Layer> {
   }
   _contextmenu(evt) {
     this.setPointersPositions(evt);
-    var shape = this.getIntersection(this.getPointerPosition()!);
+    const shape = this.getIntersection(this.getPointerPosition()!);
 
     if (shape && shape.isListening()) {
       shape._fireAndBubble(CONTEXTMENU, { evt: evt });
@@ -775,7 +775,7 @@ export class Stage extends Container<Layer> {
 
   _wheel(evt) {
     this.setPointersPositions(evt);
-    var shape = this.getIntersection(this.getPointerPosition()!);
+    const shape = this.getIntersection(this.getPointerPosition()!);
 
     if (shape && shape.isListening()) {
       shape._fireAndBubble(WHEEL, { evt: evt });
@@ -820,7 +820,7 @@ export class Stage extends Container<Layer> {
    * });
    */
   setPointersPositions(evt) {
-    var contentPosition = this._getContentPosition(),
+    let contentPosition = this._getContentPosition(),
       x: number | null = null,
       y: number | null = null;
     evt = evt ? evt : window.event;
@@ -879,7 +879,7 @@ export class Stage extends Container<Layer> {
       };
     }
 
-    var rect = this.content.getBoundingClientRect();
+    const rect = this.content.getBoundingClientRect();
 
     return {
       top: rect.top,
@@ -904,7 +904,7 @@ export class Stage extends Container<Layer> {
     if (!Konva.isBrowser) {
       return;
     }
-    var container = this.container();
+    const container = this.container();
     if (!container) {
       throw 'Stage has no container. A container is required.';
     }

@@ -117,7 +117,7 @@ export class Image extends Shape<ImageConfig> {
     // If you need to draw later, you need to execute save/restore
   }
   _hitFunc(context: Context) {
-    var width = this.width(),
+    const width = this.width(),
       height = this.height(),
       cornerRadius = this.cornerRadius();
 
@@ -156,9 +156,9 @@ export class Image extends Shape<ImageConfig> {
     callback: (img: Image) => void,
     onError: OnErrorEventHandler = null
   ) {
-    var img = Util.createImageElement();
+    const img = Util.createImageElement();
     img.onload = function () {
-      var image = new Image({
+      const image = new Image({
         image: img,
       });
       callback(image);

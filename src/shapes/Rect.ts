@@ -31,7 +31,7 @@ export interface RectConfig extends ShapeConfig {
  */
 export class Rect extends Shape<RectConfig> {
   _sceneFunc(context: Context) {
-    var cornerRadius = this.cornerRadius(),
+    const cornerRadius = this.cornerRadius(),
       width = this.width(),
       height = this.height();
 

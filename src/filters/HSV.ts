@@ -15,7 +15,7 @@ import { getNumberValidator } from '../Validators';
  */
 
 export const HSV: Filter = function (imageData) {
-  var data = imageData.data,
+  let data = imageData.data,
     nPixels = data.length,
     v = Math.pow(2, this.value()),
     s = Math.pow(2, this.saturation()),
@@ -34,20 +34,20 @@ export const HSV: Filter = function (imageData) {
   //[ .299V-.300vsu+1.25vsw    .587V-.588vsu-1.05vsw    .114V+.886vsu-.203vsw ] [B]
 
   // Precompute the values in the matrix:
-  var vsu = v * s * Math.cos((h * Math.PI) / 180),
+  const vsu = v * s * Math.cos((h * Math.PI) / 180),
     vsw = v * s * Math.sin((h * Math.PI) / 180);
   // (result spot)(source spot)
-  var rr = 0.299 * v + 0.701 * vsu + 0.167 * vsw,
+  const rr = 0.299 * v + 0.701 * vsu + 0.167 * vsw,
     rg = 0.587 * v - 0.587 * vsu + 0.33 * vsw,
     rb = 0.114 * v - 0.114 * vsu - 0.497 * vsw;
-  var gr = 0.299 * v - 0.299 * vsu - 0.328 * vsw,
+  const gr = 0.299 * v - 0.299 * vsu - 0.328 * vsw,
     gg = 0.587 * v + 0.413 * vsu + 0.035 * vsw,
     gb = 0.114 * v - 0.114 * vsu + 0.293 * vsw;
-  var br = 0.299 * v - 0.3 * vsu + 1.25 * vsw,
+  const br = 0.299 * v - 0.3 * vsu + 1.25 * vsw,
     bg = 0.587 * v - 0.586 * vsu - 1.05 * vsw,
     bb = 0.114 * v + 0.886 * vsu - 0.2 * vsw;
 
-  var r, g, b, a;
+  let r, g, b, a;
 
   for (i = 0; i < nPixels; i += 4) {
     r = data[i + 0];

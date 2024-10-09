@@ -13,7 +13,7 @@ import { getNumberValidator } from '../Validators';
  * node.brightness(0.8);
  */
 export const Brighten: Filter = function (imageData) {
-  var brightness = this.brightness() * 255,
+  let brightness = this.brightness() * 255,
     data = imageData.data,
     len = data.length,
     i;

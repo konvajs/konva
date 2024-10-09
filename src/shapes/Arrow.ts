@@ -43,19 +43,19 @@ export interface ArrowConfig extends LineConfig {
 export class Arrow extends Line<ArrowConfig> {
   _sceneFunc(ctx: Context) {
     super._sceneFunc(ctx);
-    var PI2 = Math.PI * 2;
-    var points = this.points();
+    const PI2 = Math.PI * 2;
+    const points = this.points();
 
-    var tp = points;
-    var fromTension = this.tension() !== 0 && points.length > 4;
+    let tp = points;
+    const fromTension = this.tension() !== 0 && points.length > 4;
     if (fromTension) {
       tp = this.getTensionPoints();
     }
-    var length = this.pointerLength();
+    const length = this.pointerLength();
 
-    var n = points.length;
+    const n = points.length;
 
-    var dx, dy;
+    let dx, dy;
     if (fromTension) {
       const lp = [
         tp[tp.length - 4],
@@ -88,9 +88,9 @@ export class Arrow extends Line<ArrowConfig> {
       dy = points[n - 1] - points[n - 3];
     }
 
-    var radians = (Math.atan2(dy, dx) + PI2) % PI2;
+    const radians = (Math.atan2(dy, dx) + PI2) % PI2;
 
-    var width = this.pointerWidth();
+    const width = this.pointerWidth();
 
     if (this.pointerAtEnding()) {
       ctx.save();
@@ -130,7 +130,7 @@ export class Arrow extends Line<ArrowConfig> {
   __fillStroke(ctx: Context) {
     // here is a tricky part
     // we need to disable dash for arrow pointers
-    var isDashEnabled = this.dashEnabled();
+    const isDashEnabled = this.dashEnabled();
     if (isDashEnabled) {
       // manually disable dash for head
       // it is better not to use setter here,

@@ -39,7 +39,7 @@ export interface ArcConfig extends ShapeConfig {
  */
 export class Arc extends Shape<ArcConfig> {
   _sceneFunc(context: Context) {
-    var angle = Konva.getAngle(this.angle()),
+    const angle = Konva.getAngle(this.angle()),
       clockwise = this.clockwise();
 
     context.beginPath();

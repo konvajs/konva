@@ -6,7 +6,7 @@ import { IRect } from './types';
 import type { Node } from './Node';
 
 function simplifyArray(arr: Array<any>) {
-  var retArr: Array<any> = [],
+  let retArr: Array<any> = [],
     len = arr.length,
     util = Util,
     n,
@@ -26,7 +26,7 @@ function simplifyArray(arr: Array<any>) {
   return retArr;
 }
 
-var COMMA = ',',
+const COMMA = ',',
   OPEN_PAREN = '(',
   CLOSE_PAREN = ')',
   OPEN_PAREN_BRACKET = '([',
@@ -71,7 +71,7 @@ var COMMA = ',',
     'translate',
   ];
 
-var CONTEXT_PROPERTIES = [
+const CONTEXT_PROPERTIES = [
   'fillStyle',
   'strokeStyle',
   'shadowColor',
@@ -124,7 +124,7 @@ interface ExtendedCanvasRenderingContext2D extends CanvasRenderingContext2D {
 export class Context {
   canvas: Canvas;
   _context: CanvasRenderingContext2D;
-  traceArr: Array<String>;
+  traceArr: Array<string>;
 
   constructor(canvas: Canvas) {
     this.canvas = canvas;
@@ -183,7 +183,7 @@ export class Context {
   }
 
   getTrace(relaxed?: boolean, rounded?: boolean) {
-    var traceArr = this.traceArr,
+    let traceArr = this.traceArr,
       len = traceArr.length,
       str = '',
       n,
@@ -231,7 +231,7 @@ export class Context {
     this.traceArr = [];
   }
   _trace(str) {
-    var traceArr = this.traceArr,
+    let traceArr = this.traceArr,
       len;
 
     traceArr.push(str);
@@ -247,7 +247,7 @@ export class Context {
    * @name Konva.Context#reset
    */
   reset() {
-    var pixelRatio = this.getCanvas().getPixelRatio();
+    const pixelRatio = this.getCanvas().getPixelRatio();
     this.setTransform(1 * pixelRatio, 0, 0, 1 * pixelRatio, 0, 0);
   }
   /**
@@ -270,7 +270,7 @@ export class Context {
    * @param {Number} [bounds.height]
    */
   clear(bounds?: IRect) {
-    var canvas = this.getCanvas();
+    const canvas = this.getCanvas();
 
     if (bounds) {
       this.clearRect(
@@ -295,7 +295,7 @@ export class Context {
     }
   }
   _applyOpacity(shape: Node) {
-    var absOpacity = shape.getAbsoluteOpacity();
+    const absOpacity = shape.getAbsoluteOpacity();
     if (absOpacity !== 1) {
       this.setAttr('globalAlpha', absOpacity);
     }
@@ -391,7 +391,7 @@ export class Context {
    * @name Konva.Context#createImageData
    */
   createImageData(width, height) {
-    var a = arguments;
+    const a = arguments;
     if (a.length === 2) {
       return this._context.createImageData(width, height);
     } else if (a.length === 1) {
@@ -446,7 +446,7 @@ export class Context {
     dHeight?: number
   ) {
     // this._context.drawImage(...arguments);
-    var a = arguments,
+    const a = arguments,
       _context = this._context;
     if (a.length === 3) {
       _context.drawImage(image, sx, sy);
@@ -728,15 +728,15 @@ export class Context {
     this._context.translate(x, y);
   }
   _enableTrace() {
-    var that = this,
+    let that = this,
       len = CONTEXT_METHODS.length,
       origSetter = this.setAttr,
       n,
       args;
 
     // to prevent creating scope function at each loop
-    var func = function (methodName) {
-      var origMethod = that[methodName],
+    const func = function (methodName) {
+      let origMethod = that[methodName],
         ret;
 
       that[methodName] = function () {
@@ -759,8 +759,8 @@ export class Context {
     // attrs
     that.setAttr = function () {
       origSetter.apply(that, arguments as any);
-      var prop = arguments[0];
-      var val = arguments[1];
+      const prop = arguments[0];
+      let val = arguments[1];
       if (
         prop === 'shadowOffsetX' ||
         prop === 'shadowOffsetY' ||
@@ -776,7 +776,7 @@ export class Context {
   }
   _applyGlobalCompositeOperation(node) {
     const op = node.attrs.globalCompositeOperation;
-    var def = !op || op === 'source-over';
+    const def = !op || op === 'source-over';
     if (!def) {
       this.setAttr('globalCompositeOperation', op);
     }
@@ -810,7 +810,7 @@ export class SceneContext extends Context {
     }) as CanvasRenderingContext2D;
   }
   _fillColor(shape: Shape) {
-    var fill = shape.fill();
+    const fill = shape.fill();
 
     this.setAttr('fillStyle', fill);
     shape._fillFunc(this);
@@ -820,7 +820,7 @@ export class SceneContext extends Context {
     shape._fillFunc(this);
   }
   _fillLinearGradient(shape: Shape) {
-    var grd = shape._getLinearGradient();
+    const grd = shape._getLinearGradient();
 
     if (grd) {
       this.setAttr('fillStyle', grd);
@@ -881,21 +881,21 @@ export class SceneContext extends Context {
 
     if (colorStops) {
       // build color stops
-      for (var n = 0; n < colorStops.length; n += 2) {
+      for (let n = 0; n < colorStops.length; n += 2) {
         grd.addColorStop(colorStops[n] as number, colorStops[n + 1] as string);
       }
       this.setAttr('strokeStyle', grd);
     }
   }
   _stroke(shape) {
-    var dash = shape.dash(),
+    const dash = shape.dash(),
       // ignore strokeScaleEnabled for Text
       strokeScaleEnabled = shape.getStrokeScaleEnabled();
 
     if (shape.hasStroke()) {
       if (!strokeScaleEnabled) {
         this.save();
-        var pixelRatio = this.getCanvas().getPixelRatio();
+        const pixelRatio = this.getCanvas().getPixelRatio();
         this.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
       }
 
@@ -911,7 +911,7 @@ export class SceneContext extends Context {
         this.setAttr('shadowColor', 'rgba(0,0,0,0)');
       }
 
-      var hasLinearGradient = shape.getStrokeLinearGradientColorStops();
+      const hasLinearGradient = shape.getStrokeLinearGradientColorStops();
       if (hasLinearGradient) {
         this._strokeLinearGradient(shape);
       } else {
@@ -926,7 +926,7 @@ export class SceneContext extends Context {
     }
   }
   _applyShadow(shape) {
-    var color = shape.getShadowRGBA() ?? 'black',
+    const color = shape.getShadowRGBA() ?? 'black',
       blur = shape.getShadowBlur() ?? 5,
       offset = shape.getShadowOffset() ?? {
         x: 0,
@@ -971,13 +971,13 @@ export class HitContext extends Context {
       const strokeScaleEnabled = shape.getStrokeScaleEnabled();
       if (!strokeScaleEnabled) {
         this.save();
-        var pixelRatio = this.getCanvas().getPixelRatio();
+        const pixelRatio = this.getCanvas().getPixelRatio();
         this.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
       }
       this._applyLineCap(shape);
 
-      var hitStrokeWidth = shape.hitStrokeWidth();
-      var strokeWidth =
+      const hitStrokeWidth = shape.hitStrokeWidth();
+      const strokeWidth =
         hitStrokeWidth === 'auto' ? shape.strokeWidth() : hitStrokeWidth;
 
       this.setAttr('lineWidth', strokeWidth);

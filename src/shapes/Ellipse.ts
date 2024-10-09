@@ -31,7 +31,7 @@ export interface EllipseConfig extends ShapeConfig {
  */
 export class Ellipse extends Shape<EllipseConfig> {
   _sceneFunc(context: Context) {
-    var rx = this.radiusX(),
+    const rx = this.radiusX(),
       ry = this.radiusY();
 
     context.beginPath();

@@ -6,7 +6,7 @@ import { Util } from './Util';
 
 export const DD = {
   get isDragging() {
-    var flag = false;
+    let flag = false;
     DD._dragElements.forEach((elem) => {
       if (elem.dragStatus === 'dragging') {
         flag = true;
@@ -17,7 +17,7 @@ export const DD = {
   justDragged: false,
   get node() {
     // return first dragging node
-    var node: Node | undefined;
+    let node: Node | undefined;
     DD._dragElements.forEach((elem) => {
       node = elem.node;
     });
@@ -62,8 +62,8 @@ export const DD = {
         return;
       }
       if (elem.dragStatus !== 'dragging') {
-        var dragDistance = node.dragDistance();
-        var distance = Math.max(
+        const dragDistance = node.dragDistance();
+        const distance = Math.max(
           Math.abs(pos.x - elem.startPointerPos.x),
           Math.abs(pos.y - elem.startPointerPos.y)
         );

@@ -15,7 +15,7 @@ import { getNumberValidator } from '../Validators';
  * node.noise(0.8);
  */
 export const Noise: Filter = function (imageData) {
-  var amount = this.noise() * 255,
+  let amount = this.noise() * 255,
     data = imageData.data,
     nPixels = data.length,
     half = amount / 2,
