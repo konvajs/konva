@@ -15,12 +15,11 @@ import { getNumberValidator } from '../Validators';
  */
 
 export const HSV: Filter = function (imageData) {
-  let data = imageData.data,
+  const data = imageData.data,
     nPixels = data.length,
     v = Math.pow(2, this.value()),
     s = Math.pow(2, this.saturation()),
-    h = Math.abs(this.hue() + 360) % 360,
-    i;
+    h = Math.abs(this.hue() + 360) % 360;
 
   // Basis for the technique used:
   // http://beesbuzz.biz/code/hsv_color_transforms.php
@@ -49,7 +48,7 @@ export const HSV: Filter = function (imageData) {
 
   let r, g, b, a;
 
-  for (i = 0; i < nPixels; i += 4) {
+  for (let i = 0; i < nPixels; i += 4) {
     r = data[i + 0];
     g = data[i + 1];
     b = data[i + 2];
