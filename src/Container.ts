@@ -458,15 +458,14 @@ export abstract class Container<
       width: 0,
       height: 0,
     };
-    const that = this;
-    this.children?.forEach(function (child) {
+    this.children?.forEach((child) => {
       // skip invisible children
       if (!child.visible()) {
         return;
       }
 
       const rect = child.getClientRect({
-        relativeTo: that,
+        relativeTo: this,
         skipShadow: config.skipShadow,
         skipStroke: config.skipStroke,
       });
