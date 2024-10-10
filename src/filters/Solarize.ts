@@ -14,11 +14,12 @@ import { Filter } from '../Node';
  */
 
 export const Solarize: Filter = function (imageData) {
-  let data = imageData.data,
+  const data = imageData.data,
     w = imageData.width,
     h = imageData.height,
-    w4 = w * 4,
-    y = h;
+    w4 = w * 4;
+
+  let y = h;
 
   do {
     const offsetY = (y - 1) * w4;

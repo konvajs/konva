@@ -1,11 +1,10 @@
-import { Util } from '../Util';
 import { Factory } from '../Factory';
-import { Shape, ShapeConfig } from '../Shape';
-import { getNumberValidator, getNumberArrayValidator } from '../Validators';
 import { _registerNode } from '../Global';
+import { Shape, ShapeConfig } from '../Shape';
+import { getNumberArrayValidator, getNumberValidator } from '../Validators';
 
-import { GetSet } from '../types';
 import { Context } from '../Context';
+import { GetSet } from '../types';
 
 function getControlPoints(x0, y0, x1, y1, x2, y2, t) {
   const d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2)),
@@ -21,13 +20,11 @@ function getControlPoints(x0, y0, x1, y1, x2, y2, t) {
 }
 
 function expandPoints(p, tension) {
-  let len = p.length,
-    allPoints: Array<number> = [],
-    n,
-    cp;
+  const len = p.length,
+    allPoints: Array<number> = [];
 
-  for (n = 2; n < len - 2; n += 2) {
-    cp = getControlPoints(
+  for (let n = 2; n < len - 2; n += 2) {
+    const cp = getControlPoints(
       p[n - 2],
       p[n - 1],
       p[n],
