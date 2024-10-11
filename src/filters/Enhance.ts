@@ -4,9 +4,8 @@ import { getNumberValidator } from '../Validators';
 
 function remap(fromValue: number, fromMin: number, fromMax: number, toMin: number, toMax: number) {
   // Compute the range of the data
-  let fromRange = fromMax - fromMin,
-    toRange = toMax - toMin,
-    toValue;
+  const fromRange = fromMax - fromMin,
+    toRange = toMax - toMin;
 
   // If either range is 0, then the value can only be mapped to 1 value
   if (fromRange === 0) {
@@ -17,7 +16,7 @@ function remap(fromValue: number, fromMin: number, fromMax: number, toMin: numbe
   }
 
   // (1) untranslate, (2) unscale, (3) rescale, (4) retranslate
-  toValue = (fromValue - fromMin) / fromRange;
+  let toValue = (fromValue - fromMin) / fromRange;
   toValue = toRange * toValue + toMin;
 
   return toValue;
@@ -38,9 +37,9 @@ function remap(fromValue: number, fromMin: number, fromMax: number, toMin: numbe
  * node.enhance(0.4);
  */
 export const Enhance: Filter = function (imageData) {
-  let data = imageData.data,
-    nSubPixels = data.length,
-    rMin = data[0],
+  const data = imageData.data,
+    nSubPixels = data.length;
+  let rMin = data[0],
     rMax = rMin,
     r,
     gMin = data[1],
@@ -48,8 +47,7 @@ export const Enhance: Filter = function (imageData) {
     g,
     bMin = data[2],
     bMax = bMin,
-    b,
-    i;
+    b;
 
   // If we are not enhancing anything - don't do any computation
   const enhanceAmount = this.enhance();
@@ -58,7 +56,7 @@ export const Enhance: Filter = function (imageData) {
   }
 
   // 1st Pass - find the min and max for each channel:
-  for (i = 0; i < nSubPixels; i += 4) {
+  for (let i = 0; i < nSubPixels; i += 4) {
     r = data[i + 0];
     if (r < rMin) {
       rMin = r;
@@ -128,7 +126,7 @@ export const Enhance: Filter = function (imageData) {
   }
 
   // Pass 2 - remap everything, except the alpha
-  for (i = 0; i < nSubPixels; i += 4) {
+  for (let i = 0; i < nSubPixels; i += 4) {
     data[i + 0] = remap(data[i + 0], rMin, rMax, rGoalMin, rGoalMax);
     data[i + 1] = remap(data[i + 1], gMin, gMax, gGoalMin, gGoalMax);
     data[i + 2] = remap(data[i + 2], bMin, bMax, bGoalMin, bGoalMax);

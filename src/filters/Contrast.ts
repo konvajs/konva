@@ -15,14 +15,13 @@ import { getNumberValidator } from '../Validators';
 export const Contrast: Filter = function (imageData) {
   const adjust = Math.pow((this.contrast() + 100) / 100, 2);
 
-  let data = imageData.data,
-    nPixels = data.length,
-    red = 150,
+  const data = imageData.data,
+    nPixels = data.length;
+  let red = 150,
     green = 150,
-    blue = 150,
-    i;
+    blue = 150;
 
-  for (i = 0; i < nPixels; i += 4) {
+  for (let i = 0; i < nPixels; i += 4) {
     red = data[i];
     green = data[i + 1];
     blue = data[i + 2];

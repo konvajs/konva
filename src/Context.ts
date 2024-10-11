@@ -6,14 +6,12 @@ import { IRect } from './types';
 import type { Node } from './Node';
 
 function simplifyArray(arr: Array<any>) {
-  let retArr: Array<any> = [],
+  const retArr: Array<any> = [],
     len = arr.length,
-    util = Util,
-    n,
-    val;
+    util = Util;
 
-  for (n = 0; n < len; n++) {
-    val = arr[n];
+  for (let n = 0; n < len; n++) {
+    let val = arr[n];
     if (util._isNumber(val)) {
       val = Math.round(val * 1000) / 1000;
     } else if (!util._isString(val)) {

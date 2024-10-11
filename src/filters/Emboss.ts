@@ -23,16 +23,16 @@ export const Emboss: Filter = function (imageData) {
   // pixastic greyLevel is between 0 and 255.  I want it between 0 and 1.  Also,
   // a max value of greyLevel yields a white emboss, and the min value yields a black
   // emboss.  Therefore, I changed greyLevel to whiteLevel
-  let strength = this.embossStrength() * 10,
+  const strength = this.embossStrength() * 10,
     greyLevel = this.embossWhiteLevel() * 255,
     direction = this.embossDirection(),
     blend = this.embossBlend(),
-    dirY = 0,
-    dirX = 0,
     data = imageData.data,
     w = imageData.width,
     h = imageData.height,
-    w4 = w * 4,
+    w4 = w * 4;
+  let  dirY = 0,
+    dirX = 0,
     y = h;
 
   switch (direction) {

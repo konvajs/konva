@@ -121,18 +121,19 @@ function filterGaussBlurRGBA(imageData, radius) {
     pa,
     rbs;
 
-  let div = radius + radius + 1,
+  const div = radius + radius + 1,
     widthMinus1 = width - 1,
     heightMinus1 = height - 1,
     radiusPlus1 = radius + 1,
     sumFactor = (radiusPlus1 * (radiusPlus1 + 1)) / 2,
     stackStart = new BlurStack(),
-    stackEnd = null,
-    stack = stackStart,
-    stackIn: any = null,
-    stackOut: any = null,
     mul_sum = mul_table[radius],
     shg_sum = shg_table[radius];
+
+  let stackEnd = null,
+    stack = stackStart,
+    stackIn: any = null,
+    stackOut: any = null;
 
   for (i = 1; i < div; i++) {
     stack = stack.next = new BlurStack();
