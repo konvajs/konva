@@ -2379,18 +2379,18 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     const topListeners = this._getProtoListeners(eventType);
     if (topListeners) {
-      for (var i = 0; i < topListeners.length; i++) {
-        topListeners[i].handler.call(this, evt);
-      }
+      topListeners.slice(0).forEach((listener) => {
+        listener.handler.call(this, evt);
+      });
     }
 
     // it is important to iterate over self listeners without cache
     // because events can be added/removed while firing
     const selfListeners = this.eventListeners[eventType];
     if (selfListeners) {
-      for (var i = 0; i < selfListeners.length; i++) {
-        selfListeners[i].handler.call(this, evt);
-      }
+      selfListeners.slice(0).forEach((listener) => {
+        listener.handler.call(this, evt);
+      });
     }
   }
   /**
