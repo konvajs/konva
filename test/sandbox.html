@@ -44,28 +44,27 @@
       var layer = new Konva.Layer();
       stage.add(layer);
 
-      var text = new Konva.Text({
+      var rect = new Konva.Rect({
         x: 10,
         y: 10,
-        text: 'Simple Text',
-        fontSize: 100,
-        fontFamily: 'Calibri',
+        width: 100,
+        height: 100,
         fill: 'green',
-        textDecoration: 'underline line-through',
         draggable: true,
       });
-      layer.add(text);
+      layer.add(rect);
 
-      var tr = new Konva.Transformer({
-        nodes: [text],
+      window.addEventListener('touchend', () => {
+        console.log('touchend');
       });
-      layer.add(tr);
-
-      tr.on('transformstart', () => {
-        console.log('transform start');
+      window.addEventListener('touchcancel', () => {
+        console.log('touchcancel');
       });
-      tr.on('transformend', () => {
-        console.log('transform end');
+      window.addEventListener('lostpointercapture', () => {
+        console.log('lostpointercapture');
+      });
+      window.addEventListener('focusout', () => {
+        console.log('focusout');
       });
     </script>
   </body>

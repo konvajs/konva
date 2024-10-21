@@ -161,10 +161,13 @@ export const DD = {
 if (Konva.isBrowser) {
   window.addEventListener('mouseup', DD._endDragBefore, true);
   window.addEventListener('touchend', DD._endDragBefore, true);
+  // add touchcancel to fix this: https://github.com/konvajs/konva/issues/1843
+  window.addEventListener('touchcancel', DD._endDragBefore, true);
 
   window.addEventListener('mousemove', DD._drag);
   window.addEventListener('touchmove', DD._drag);
 
   window.addEventListener('mouseup', DD._endDragAfter, false);
   window.addEventListener('touchend', DD._endDragAfter, false);
+  window.addEventListener('touchcancel', DD._endDragAfter, false);
 }
