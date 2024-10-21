@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 9.3.16 (2024-10-21)
+
+- Fix freeze on ios on touch cancel event
+- Typescript fixes
+
 ## 9.3.15 (2024-09-09)
 
 - fix letter spacing for Hindi text
