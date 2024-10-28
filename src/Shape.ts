@@ -722,31 +722,25 @@ export class Shape<
    * shape.drawHitFromCache();
    */
   drawHitFromCache(alphaThreshold = 0) {
-    let cachedCanvas = this._getCanvasCache(),
+    const cachedCanvas = this._getCanvasCache(),
       sceneCanvas = this._getCachedSceneCanvas(),
       hitCanvas = cachedCanvas.hit,
       hitContext = hitCanvas.getContext(),
       hitWidth = hitCanvas.getWidth(),
-      hitHeight = hitCanvas.getHeight(),
-      hitImageData,
-      hitData,
-      len,
-      rgbColorKey,
-      i,
-      alpha;
+      hitHeight = hitCanvas.getHeight();
 
     hitContext.clear();
     hitContext.drawImage(sceneCanvas._canvas, 0, 0, hitWidth, hitHeight);
 
     try {
-      hitImageData = hitContext.getImageData(0, 0, hitWidth, hitHeight);
-      hitData = hitImageData.data;
-      len = hitData.length;
-      rgbColorKey = Util._hexToRgb(this.colorKey);
+      const hitImageData = hitContext.getImageData(0, 0, hitWidth, hitHeight);
+      const hitData = hitImageData.data;
+      const len = hitData.length;
+      const rgbColorKey = Util._hexToRgb(this.colorKey);
 
       // replace non transparent pixels with color key
-      for (i = 0; i < len; i += 4) {
-        alpha = hitData[i + 3];
+      for (let i = 0; i < len; i += 4) {
+        const alpha = hitData[i + 3];
         if (alpha > alphaThreshold) {
           hitData[i] = rgbColorKey.r;
           hitData[i + 1] = rgbColorKey.g;

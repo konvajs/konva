@@ -52,19 +52,17 @@ export const Factory = {
     validator?: Function,
     after?: Function
   ) {
-    let len = components.length,
+    const len = components.length,
       capitalize = Util._capitalize,
       getter = GET + capitalize(attr),
-      setter = SET + capitalize(attr),
-      n,
-      component;
+      setter = SET + capitalize(attr);
 
     // getter
     constructor.prototype[getter] = function () {
       const ret = {};
 
-      for (n = 0; n < len; n++) {
-        component = components[n];
+      for (let n = 0; n < len; n++) {
+        const component = components[n];
         ret[component] = this.getAttr(attr + capitalize(component));
       }
 
@@ -75,8 +73,7 @@ export const Factory = {
 
     // setter
     constructor.prototype[setter] = function (val) {
-      let oldVal = this.attrs[attr],
-        key;
+      const oldVal = this.attrs[attr];
 
       if (validator) {
         val = validator.call(this, val);
@@ -86,7 +83,7 @@ export const Factory = {
         basicValidator.call(this, val, attr);
       }
 
-      for (key in val) {
+      for (const key in val) {
         if (!val.hasOwnProperty(key)) {
           continue;
         }
