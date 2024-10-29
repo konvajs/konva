@@ -4,7 +4,7 @@ import { Node, NodeConfig } from './Node';
 import { Konva } from './Global';
 import { Line } from './shapes/Line';
 
-let blacklist = {
+const blacklist = {
     node: 1,
     duration: 1,
     easing: 1,
@@ -14,8 +14,8 @@ let blacklist = {
   PAUSED = 1,
   PLAYING = 2,
   REVERSING = 3,
-  idCounter = 0,
   colorAttrs = ['fill', 'stroke', 'shadowColor'];
+let idCounter = 0;
 
 class TweenEngine {
   prop: string;
@@ -195,12 +195,12 @@ export class Tween {
   onUpdate: Function | undefined;
 
   constructor(config: TweenConfig) {
-    let that = this,
+    const that = this,
       node = config.node as any,
       nodeId = node._id,
-      duration,
       easing = config.easing || Easings.Linear,
-      yoyo = !!config.yoyo,
+      yoyo = !!config.yoyo;
+    let duration,
       key;
 
     if (typeof config.duration === 'undefined') {
@@ -266,26 +266,23 @@ export class Tween {
     this.onUpdate = config.onUpdate;
   }
   _addAttr(key, end) {
-    let node = this.node,
-      nodeId = node._id,
-      start,
-      diff,
-      tweenId,
-      n,
+    const node = this.node,
+      nodeId = node._id;
+    let diff,
       len,
       trueEnd,
       trueStart,
       endRGBA;
 
     // remove conflict from tween map if it exists
-    tweenId = Tween.tweens[nodeId][key];
+    const tweenId = Tween.tweens[nodeId][key];
 
     if (tweenId) {
       delete Tween.attrs[nodeId][tweenId][key];
     }
 
     // add to tween map
-    start = node.getAttr(key);
+    let start = node.getAttr(key);
 
     if (Util._isArray(end)) {
       diff = [];
@@ -310,7 +307,7 @@ export class Tween {
       }
 
       if (key.indexOf('fill') === 0) {
-        for (n = 0; n < len; n++) {
+        for (let n = 0; n < len; n++) {
           if (n % 2 === 0) {
             diff.push(end[n] - start[n]);
           } else {
@@ -326,7 +323,7 @@ export class Tween {
           }
         }
       } else {
-        for (n = 0; n < len; n++) {
+        for (let n = 0; n < len; n++) {
           diff.push(end[n] - start[n]);
         }
       }
@@ -353,9 +350,9 @@ export class Tween {
     Tween.tweens[nodeId][key] = this._id;
   }
   _tweenFunc(i) {
-    let node = this.node,
-      attrs = Tween.attrs[node._id][this._id],
-      key,
+    const node = this.node,
+      attrs = Tween.attrs[node._id][this._id];
+    let key,
       attr,
       start,
       diff,
@@ -525,14 +522,13 @@ export class Tween {
    * @name Konva.Tween#destroy
    */
   destroy() {
-    let nodeId = this.node._id,
+    const nodeId = this.node._id,
       thisId = this._id,
-      attrs = Tween.tweens[nodeId],
-      key;
+      attrs = Tween.tweens[nodeId];
 
     this.pause();
 
-    for (key in attrs) {
+    for (const key in attrs) {
       delete Tween.tweens[nodeId][key];
     }
 
