@@ -686,7 +686,7 @@ export class Stage extends Container<Layer> {
 
       let fireDblClick = false;
       if (Konva['_' + eventType + 'InDblClickWindow']) {
-        fireDblClick = true;
+        if (evt.button === 0) fireDblClick = true;
         clearTimeout(this[eventType + 'DblTimeout']);
       } else if (!DD.justDragged) {
         // don't set inDblClickWindow after dragging
