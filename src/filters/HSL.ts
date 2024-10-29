@@ -59,13 +59,12 @@ Factory.addGetterSetter(
  */
 
 export const HSL: Filter = function (imageData) {
-  let data = imageData.data,
+  const data = imageData.data,
     nPixels = data.length,
     v = 1,
     s = Math.pow(2, this.saturation()),
     h = Math.abs(this.hue() + 360) % 360,
-    l = this.luminance() * 127,
-    i;
+    l = this.luminance() * 127;
 
   // Basis for the technique used:
   // http://beesbuzz.biz/code/hsv_color_transforms.php
@@ -94,7 +93,7 @@ export const HSL: Filter = function (imageData) {
 
   let r: number, g: number, b: number, a: number;
 
-  for (i = 0; i < nPixels; i += 4) {
+  for (let i = 0; i < nPixels; i += 4) {
     r = data[i + 0];
     g = data[i + 1];
     b = data[i + 2];
