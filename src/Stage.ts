@@ -754,7 +754,7 @@ export class Stage extends Container<Layer> {
     // TODO: are we sure we need to prevent default at all?
     // do not call this function on mobile because it prevent "click" event on all parent containers
     // but apps may listen to it.
-    if (evt.cancelable && eventType !== 'touch') {
+    if (evt.cancelable && eventType !== 'touch' && eventType !== 'pointer') {
       evt.preventDefault();
     }
   }
