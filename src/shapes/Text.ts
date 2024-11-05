@@ -310,9 +310,7 @@ export class Text extends Shape<TextConfig> {
         spacesNumber = text.split(' ').length - 1;
         oneWord = spacesNumber === 0;
         lineWidth =
-          align === JUSTIFY && lastLine && !oneWord
-            ? totalWidth - padding * 2
-            : width;
+        align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
         context.lineTo(
           lineTranslateX + Math.round(lineWidth),
           translateY + lineTranslateY + yOffset
