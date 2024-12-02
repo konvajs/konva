@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 9.3.17 (2024-12-02) (unreleased)
+
+- Fix `Arrow.getClientRect()`
+
 ## 9.3.16 (2024-10-21)
 
 - Fix freeze on ios on touch cancel event
