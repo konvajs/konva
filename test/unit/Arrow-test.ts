@@ -229,4 +229,33 @@ describe('Arrow', function () {
 
     cloneAndCompareLayer(layer, 255, 50);
   });
+
+  it('getClientRect', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var arrow = new Konva.Arrow({
+      points: [50, 50, 150, 50],
+      stroke: 'blue',
+      fill: 'blue',
+      // large stroke width will not work :(
+      strokeWidth: 1,
+      draggable: true,
+      tension: 0,
+      pointerLength: 10,
+      pointerWidth: 20,
+    });
+    layer.add(arrow);
+
+
+    stage.add(layer);
+
+    var rect = arrow.getClientRect({ skipStroke: true });
+    layer.add(new Konva.Rect({...rect, stroke: 'red' }));
+
+    assert.equal(rect.x, 50);
+    assert.equal(rect.y, 40);
+    assert.equal(rect.width, 100);
+    assert.equal(rect.height, 20);
+  });
 });

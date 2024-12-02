@@ -741,7 +741,7 @@ describe('Text', function () {
   });
 
   // ======================================================
-  it.only('text multi line with justify align and decoration', function () {
+  it('text multi line with justify align and decoration', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 

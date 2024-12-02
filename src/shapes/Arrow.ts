@@ -151,9 +151,9 @@ export class Arrow extends Line<ArrowConfig> {
     const lineRect = super.getSelfRect();
     const offset = this.pointerWidth() / 2;
     return {
-      x: lineRect.x - offset,
+      x: lineRect.x,
       y: lineRect.y - offset,
-      width: lineRect.width + offset * 2,
+      width: lineRect.width,
       height: lineRect.height + offset * 2,
     };
   }
