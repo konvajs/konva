@@ -1765,6 +1765,9 @@ Factory.addGetterSetter(Transformer, 'padding', 0, getNumberValidator());
  */
 
 Factory.addGetterSetter(Transformer, 'nodes');
+// @ts-ignore
+// deprecated
+Factory.addGetterSetter(Transformer, 'node');
 
 /**
  * get/set bounding box function. **IMPORTANT!** boundBondFunc operates in absolute coordinates.

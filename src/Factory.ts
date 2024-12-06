@@ -129,7 +129,7 @@ export const Factory = {
 
     // getter
     constructor.prototype[getter] = function () {
-      const ret = {};
+      const ret: Record<string, any> = {};
 
       for (let n = 0; n < len; n++) {
         const component = components[n];
