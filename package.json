@@ -1,6 +1,7 @@
 {
   "name": "konva",
   "version": "9.3.16",
+  "description": "HTML5 2d canvas library.",
   "author": "Anton Lavrenov",
   "files": [
     "README.md",

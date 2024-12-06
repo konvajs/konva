@@ -33,9 +33,9 @@ export function alphaComponent(val: number) {
   return val;
 }
 
-export function getNumberValidator() {
+export function getNumberValidator<T>() {
   if (Konva.isUnminified) {
-    return function <T>(val: T, attr: string): T | void {
+    return function (val: T, attr: string): T {
       if (!Util._isNumber(val)) {
         Util.warn(
           _formatValue(val) +
@@ -49,11 +49,11 @@ export function getNumberValidator() {
   }
 }
 
-export function getNumberOrArrayOfNumbersValidator(noOfElements: number) {
+export function getNumberOrArrayOfNumbersValidator<T>(noOfElements: number) {
   if (Konva.isUnminified) {
-    return function <T>(val: T, attr: string): T | void {
-      const isNumber = Util._isNumber(val);
-      const isValidArray = Util._isArray(val) && val.length == noOfElements;
+    return function (val: T, attr: string): T {
+      let isNumber = Util._isNumber(val);
+      let isValidArray = Util._isArray(val) && val.length == noOfElements;
       if (!isNumber && !isValidArray) {
         Util.warn(
           _formatValue(val) +
@@ -69,11 +69,11 @@ export function getNumberOrArrayOfNumbersValidator(noOfElements: number) {
   }
 }
 
-export function getNumberOrAutoValidator() {
+export function getNumberOrAutoValidator<T>() {
   if (Konva.isUnminified) {
-    return function <T extends string>(val: T, attr: string): T | void {
-      const isNumber = Util._isNumber(val);
-      const isAuto = val === 'auto';
+    return function (val: T, attr: string): T {
+      var isNumber = Util._isNumber(val);
+      var isAuto = val === 'auto';
 
       if (!(isNumber || isAuto)) {
         Util.warn(
@@ -88,9 +88,9 @@ export function getNumberOrAutoValidator() {
   }
 }
 
-export function getStringValidator() {
+export function getStringValidator<T>() {
   if (Konva.isUnminified) {
-    return function (val: any, attr: string) {
+    return function (val: T, attr: string): T {
       if (!Util._isString(val)) {
         Util.warn(
           _formatValue(val) +
@@ -104,13 +104,13 @@ export function getStringValidator() {
   }
 }
 
-export function getStringOrGradientValidator() {
+export function getStringOrGradientValidator<T>() {
   if (Konva.isUnminified) {
-    return function (val: any, attr: string) {
+    return function (val: T, attr: string): T {
       const isString = Util._isString(val);
       const isGradient =
         Object.prototype.toString.call(val) === '[object CanvasGradient]' ||
-        (val && val.addColorStop);
+        (val && val['addColorStop']);
       if (!(isString || isGradient)) {
         Util.warn(
           _formatValue(val) +
@@ -124,9 +124,9 @@ export function getStringOrGradientValidator() {
   }
 }
 
-export function getFunctionValidator() {
+export function getFunctionValidator<T>() {
   if (Konva.isUnminified) {
-    return function (val: any, attr: string) {
+    return function (val: T, attr: string): T {
       if (!Util._isFunction(val)) {
         Util.warn(
           _formatValue(val) +
@@ -139,9 +139,9 @@ export function getFunctionValidator() {
     };
   }
 }
-export function getNumberArrayValidator() {
+export function getNumberArrayValidator<T>() {
   if (Konva.isUnminified) {
-    return function (val: any, attr: string) {
+    return function (val: T, attr: string): T {
       // Retrieve TypedArray constructor as found in MDN (if TypedArray is available)
       // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray#description
       const TypedArray = Int8Array ? Object.getPrototypeOf(Int8Array) : null;
@@ -172,10 +172,10 @@ export function getNumberArrayValidator() {
     };
   }
 }
-export function getBooleanValidator() {
+export function getBooleanValidator<T>() {
   if (Konva.isUnminified) {
-    return function (val: any, attr: string) {
-      const isBool = val === true || val === false;
+    return function (val: T, attr: string): T {
+      var isBool = val === true || val === false;
       if (!isBool) {
         Util.warn(
           _formatValue(val) +
@@ -188,9 +188,9 @@ export function getBooleanValidator() {
     };
   }
 }
-export function getComponentValidator(components: any) {
+export function getComponentValidator<T>(components: string[]) {
   if (Konva.isUnminified) {
-    return function (val: any, attr: string) {
+    return function (val: T, attr: string): T {
       // ignore validation on undefined value, because it will reset to defalt
       if (val === undefined || val === null) {
         return val;

@@ -317,7 +317,10 @@ export class Tag extends Shape<TagConfig> {
     };
   }
 
-  pointerDirection: GetSet<'left' | 'top' | 'right' | 'bottom' | 'up' | 'down', this>;
+  pointerDirection: GetSet<
+    'left' | 'up' | 'right' | 'down' | typeof NONE,
+    this
+  >;
   pointerWidth: GetSet<number, this>;
   pointerHeight: GetSet<number, this>;
   cornerRadius: GetSet<number, this>;
