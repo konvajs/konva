@@ -1,6 +1,7 @@
 import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
+import { Filter, Node } from '../Node';
 import { getNumberValidator } from '../Validators';
+
 /**
  * Posterize Filter. Adjusts the channels so that there are no more
  *  than n different values for that channel. This is also applied
@@ -15,16 +16,14 @@ import { getNumberValidator } from '../Validators';
  * node.filters([Konva.Filters.Posterize]);
  * node.levels(0.8); // between 0 and 1
  */
-
 export const Posterize: Filter = function (imageData) {
   // level must be between 1 and 255
-  let levels = Math.round(this.levels() * 254) + 1,
+  const levels = Math.round(this.levels() * 254) + 1,
     data = imageData.data,
     len = data.length,
-    scale = 255 / levels,
-    i;
+    scale = 255 / levels;
 
-  for (i = 0; i < len; i += 1) {
+  for (let i = 0; i < len; i += 1) {
     data[i] = Math.floor(data[i] / scale) * scale;
   }
 };

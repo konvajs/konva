@@ -249,11 +249,10 @@ export class Stage extends Container<Layer> {
    * @name Konva.Stage#clear
    */
   clear() {
-    let layers = this.children,
-      len = layers.length,
-      n;
+    const layers = this.children,
+      len = layers.length;
 
-    for (n = 0; n < len; n++) {
+    for (let n = 0; n < len; n++) {
       layers[n].clear();
     }
     return this;
@@ -367,12 +366,11 @@ export class Stage extends Container<Layer> {
     if (!pos) {
       return null;
     }
-    let layers = this.children,
+    const layers = this.children,
       len = layers.length,
-      end = len - 1,
-      n;
+      end = len - 1;
 
-    for (n = end; n >= 0; n--) {
+    for (let n = end; n >= 0; n--) {
       const shape = layers[n].getIntersection(pos);
       if (shape) {
         return shape;
@@ -820,8 +818,8 @@ export class Stage extends Container<Layer> {
    * });
    */
   setPointersPositions(evt) {
-    let contentPosition = this._getContentPosition(),
-      x: number | null = null,
+    const contentPosition = this._getContentPosition();
+    let x: number | null = null,
       y: number | null = null;
     evt = evt ? evt : window.event;
 
