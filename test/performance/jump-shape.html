@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script src="../../konva.js"></script>
+    <!-- <script src="https://unpkg.com/konva@^7/konva.min.js"></script> -->
+    <script src="http://www.html5canvastutorials.com/lib/stats/stats.js"></script>
+    <script defer="defer">
+      var lastTime = 0;
+
+      var width = window.innerWidth;
+      var height = window.innerHeight;
+
+      var bunnys = [];
+      var gravity = 0.75;
+
+      var maxX = width - 10;
+      var minX = 0;
+      var maxY = height - 10;
+      var minY = 0;
+
+      var startBunnyCount = 4000;
+      var isAdding = false;
+      var count = 0;
+      var container;
+      var layer;
+      var stats;
+      var amount = 10;
+      var counter;
+
+      Konva.pixelRatio = 1;
+
+      var stage = new Konva.Stage({
+        container: 'container',
+        width: width - 10,
+        height: height - 10,
+      });
+      layer = new Konva.Layer({ listening: false });
+      stage.add(layer);
+      stats = new Stats();
+
+      document.body.appendChild(stats.domElement);
+      stats.domElement.style.position = 'absolute';
+      stats.domElement.style.top = '0px';
+
+      window.requestAnimationFrame(update);
+
+      counter = document.createElement('div');
+      counter.className = 'counter';
+      counter.style.position = 'absolute';
+      counter.style.top = '50px';
+
+      document.body.appendChild(counter);
+
+      count = startBunnyCount;
+      counter.innerHTML = startBunnyCount + ' ELEMENTS';
+
+      container = stage;
+      // stage.addChild(container);
+
+      stage.on('mousedown', function () {
+        isAdding = true;
+      });
+
+      stage.on('mouseup', function () {
+        isAdding = false;
+      });
+
+      document.addEventListener('touchstart', onTouchStart, true);
+      document.addEventListener('touchend', onTouchEnd, true);
+
+      function createShape() {
+        return new Konva.Rect({
+          transformsEnabled: 'position',
+          x: 10,
+          y: 10,
+          perfectDrawEnabled: false,
+          // radius: 10,
+          width: 10,
+          height: 10,
+          fill: Konva.Util.getRandomColor(),
+        });
+      }
+
+      for (var i = 0; i < startBunnyCount; i++) {
+        var bunny = createShape();
+
+        bunny.speedX = Math.random() * 10;
+        bunny.speedY = Math.random() * 10 - 5;
+
+        bunnys.push(bunny);
+        layer.add(bunny);
+      }
+
+      function onTouchStart(event) {
+        isAdding = true;
+      }
+
+      function onTouchEnd(event) {
+        isAdding = false;
+      }
+
+      function update() {
+        stats.begin();
+        if (isAdding) {
+          // add 10 at a time :)
+
+          for (var i = 0; i < amount; i++) {
+            var bunny = createShape();
+            bunny.speedX = Math.random() * 10;
+            bunny.speedY = Math.random() * 10 - 5;
+            bunnys.push(bunny);
+            layer.add(bunny);
+
+            count++;
+          }
+          counter.innerHTML = count + ' BUNNIES';
+        }
+
+        for (var i = 0; i < bunnys.length; i++) {
+          var bunny = bunnys[i];
+          var pos = {
+            x: bunny.x(),
+            y: bunny.y(),
+          };
+          pos.x = pos.x + bunny.speedX;
+          pos.y = pos.y + bunny.speedY;
+          bunny.speedY += gravity;
+          if (pos.x > maxX - 20) {
+            bunny.speedX *= -1;
+            pos.x = maxX - 20;
+          } else if (pos.x < minX) {
+            bunny.speedX *= -1;
+            pos.x = minX;
+          }
+
+          if (pos.y > maxY - 20) {
+            bunny.speedY *= -0.85;
+            pos.y = maxY - 20;
+            if (Math.random() > 0.5) {
+              bunny.speedY -= Math.random() * 6;
+            }
+          } else if (pos.y < minY) {
+            bunny.speedY = 0;
+            pos.y = minY;
+          }
+          bunny.position({
+            x: pos.x,
+            y: pos.y,
+          });
+        }
+        layer.draw();
+        requestAnimationFrame(update);
+        stats.end();
+      }
+    </script>
+  </body>
+</html>

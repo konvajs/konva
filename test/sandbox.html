@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>KonvaJS Sandbox</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=1.0, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <style>
+      body {
+        margin: 0;
+        width: 100vw;
+        height: 100vh;
+      }
+    </style>
+    <!-- <script src="https://cdn.rawgit.com/hammerjs/touchemulator/master/touch-emulator.js"></script> -->
+    <script>
+      // TouchEmulator();
+    </script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.7/hammer.js"></script> -->
+    <!-- <script src="https://cdn.rawgit.com/hammerjs/touchemulator/master/touch-emulator.js"></script> -->
+    <!-- <script src="./hammer.js"></script> -->
+    <!-- <script src="https://unpkg.com/fabric@5.2.1/dist/fabric.js"></script> -->
+  </head>
+
+  <body>
+    <div id="container"></div>
+
+    <script type="module">
+      import Konva from '../src/index.ts';
+
+      var stageWidth = window.innerWidth;
+      var stageHeight = window.innerHeight;
+
+      Konva._fixTextRendering = true;
+
+      var stage = new Konva.Stage({
+        container: 'container',
+        width: stageWidth,
+        height: stageHeight,
+      });
+
+      var layer = new Konva.Layer();
+      stage.add(layer);
+
+      var rect = new Konva.Rect({
+        x: 10,
+        y: 10,
+        width: 100,
+        height: 100,
+        fill: 'green',
+        draggable: true,
+      });
+      layer.add(rect);
+
+      window.addEventListener('touchend', () => {
+        console.log('touchend');
+      });
+      window.addEventListener('touchcancel', () => {
+        console.log('touchcancel');
+      });
+      window.addEventListener('lostpointercapture', () => {
+        console.log('lostpointercapture');
+      });
+      window.addEventListener('focusout', () => {
+        console.log('focusout');
+      });
+    </script>
+  </body>
+</html>
