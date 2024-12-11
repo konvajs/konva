@@ -310,7 +310,7 @@ export class Text extends Shape<TextConfig> {
         spacesNumber = text.split(' ').length - 1;
         oneWord = spacesNumber === 0;
         lineWidth =
-          align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
+        align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
         context.lineTo(
           lineTranslateX + Math.round(lineWidth),
           translateY + lineTranslateY + yOffset
@@ -383,8 +383,7 @@ export class Text extends Shape<TextConfig> {
     return isAuto ? this.getTextWidth() + this.padding() * 2 : this.attrs.width;
   }
   getHeight() {
-    const isAuto =
-      this.attrs.height === AUTO || this.attrs.height === undefined;
+    const isAuto = this.attrs.height === AUTO || this.attrs.height === undefined;
     return isAuto
       ? this.fontSize() * this.textArr.length * this.lineHeight() +
           this.padding() * 2
@@ -502,9 +501,7 @@ export class Text extends Shape<TextConfig> {
 
     this.textArr = [];
     getDummyContext().font = this._getContextFont();
-    const additionalWidth = shouldAddEllipsis
-      ? this._getTextWidth(ELLIPSIS)
-      : 0;
+    const additionalWidth = shouldAddEllipsis ? this._getTextWidth(ELLIPSIS) : 0;
     for (let i = 0, max = lines.length; i < max; ++i) {
       let line = lines[i];
 
