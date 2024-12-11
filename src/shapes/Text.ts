@@ -309,7 +309,8 @@ export class Text extends Shape<TextConfig> {
         context.moveTo(lineTranslateX, translateY + lineTranslateY + yOffset);
         spacesNumber = text.split(' ').length - 1;
         oneWord = spacesNumber === 0;
-        lineWidth = align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
+        lineWidth = 
+        align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
         context.lineTo(
           lineTranslateX + Math.round(lineWidth),
           translateY + lineTranslateY + yOffset
