@@ -264,7 +264,7 @@ export class Text extends Shape<TextConfig> {
       var lineTranslateY = 0;
       var obj = textArr[n],
         text = obj.text,
-        width = obj.width,
+        width = obj.width + letterSpacing,
         lastLine = obj.lastInParagraph,
         spacesNumber,
         oneWord,
