@@ -146,7 +146,7 @@ describe('Text', function () {
     var text = new Konva.Text({
       x: 10,
       y: 10,
-      text: '😬',
+      text: '😬👧🏿',
       fontSize: 50,
       letterSpacing: 1,
     });
@@ -159,7 +159,7 @@ describe('Text', function () {
     context.textBaseline = 'middle';
     context.font = 'normal normal 50px Arial';
     context.fillStyle = 'darkgrey';
-    context.fillText('😬', 10, 10 + 25);
+    context.fillText('😬👧🏿', 10, 10 + 25);
 
     compareLayerAndCanvas(layer, canvas, 254);
   });

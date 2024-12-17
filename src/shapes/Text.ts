@@ -16,13 +16,14 @@ import { GetSet } from '../types';
 export function stringToArray(string: string): string[] {
   // Use Unicode-aware splitting
   return [...string].reduce((acc, char, index, array) => {
-    // Handle emoji sequences (including ZWJ sequences)
-    if (
-      /\p{Emoji_Modifier_Base}\p{Emoji_Modifier}?(?:\u200D\p{Emoji_Presentation})+/u.test(
-        char
-      )
-    ) {
-      acc.push(char);
+    // Handle emoji with skin tone modifiers and ZWJ sequences
+    if (/\p{Emoji}/u.test(char)) {
+      if (acc.length > 0 && /\p{Emoji}/u.test(acc[acc.length - 1])) {
+        // Combine with previous emoji if it's part of a sequence
+        acc[acc.length - 1] += char;
+      } else {
+        acc.push(char);
+      }
     }
     // Handle regional indicator symbols (flags)
     else if (
@@ -310,7 +311,7 @@ export class Text extends Shape<TextConfig> {
         spacesNumber = text.split(' ').length - 1;
         oneWord = spacesNumber === 0;
         lineWidth =
-        align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
+          align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
         context.lineTo(
           lineTranslateX + Math.round(lineWidth),
           translateY + lineTranslateY + yOffset
@@ -383,7 +384,8 @@ export class Text extends Shape<TextConfig> {
     return isAuto ? this.getTextWidth() + this.padding() * 2 : this.attrs.width;
   }
   getHeight() {
-    const isAuto = this.attrs.height === AUTO || this.attrs.height === undefined;
+    const isAuto =
+      this.attrs.height === AUTO || this.attrs.height === undefined;
     return isAuto
       ? this.fontSize() * this.textArr.length * this.lineHeight() +
           this.padding() * 2
@@ -501,7 +503,9 @@ export class Text extends Shape<TextConfig> {
 
     this.textArr = [];
     getDummyContext().font = this._getContextFont();
-    const additionalWidth = shouldAddEllipsis ? this._getTextWidth(ELLIPSIS) : 0;
+    const additionalWidth = shouldAddEllipsis
+      ? this._getTextWidth(ELLIPSIS)
+      : 0;
     for (let i = 0, max = lines.length; i < max; ++i) {
       let line = lines[i];
 
