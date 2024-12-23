@@ -161,6 +161,35 @@ describe('Text', function () {
     context.fillStyle = 'darkgrey';
     context.fillText('😬👧🏿', 10, 10 + 25);
 
+    compareLayerAndCanvas(layer, canvas, 254, 100);
+  });
+
+  it('check emoji rendering', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      text: '😁😁😁',
+      x: 10,
+      y: 10,
+      fontSize: 20,
+      draggable: true,
+      width: 65,
+      fill: 'black',
+      scaleY: 0.9999999999999973,
+    });
+
+    layer.add(text);
+    stage.add(layer);
+
+    var canvas = createCanvas();
+    var context = canvas.getContext('2d');
+    context.textBaseline = 'middle';
+    context.font = 'normal normal 20px Arial';
+    context.fillStyle = 'black';
+    context.fillText('😁😁', 10, 10 + 10);
+    context.fillText('😁', 10, 10 + 30);
+
     compareLayerAndCanvas(layer, canvas, 254);
   });
 
