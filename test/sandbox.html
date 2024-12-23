@@ -13,6 +13,27 @@
         width: 100vw;
         height: 100vh;
       }
+      body {
+        padding: 0;
+        margin: 0;
+      }
+
+      .test {
+        position: absolute;
+        color: red;
+        font-size: 20px;
+        font-family: Arial;
+        border: 0;
+        background-color: transparent;
+        outline: none;
+        resize: none;
+        overflow: hidden;
+        line-height: 1;
+        padding: 0px;
+        letter-spacing: 20px;
+        width: 500px;
+        text-align: center;
+      }
     </style>
     <!-- <script src="https://cdn.rawgit.com/hammerjs/touchemulator/master/touch-emulator.js"></script> -->
     <script>
@@ -26,6 +47,7 @@
 
   <body>
     <div id="container"></div>
+    <textarea class="test" id="text">Hello</textarea>
 
     <script type="module">
       import Konva from '../src/index.ts';
@@ -41,31 +63,25 @@
         height: stageHeight,
       });
 
-      var layer = new Konva.Layer();
+      Konva._fixTextRendering = true;
+
+      const layer = new Konva.Layer();
       stage.add(layer);
 
-      var rect = new Konva.Rect({
-        x: 10,
-        y: 10,
-        width: 100,
-        height: 100,
-        fill: 'green',
-        draggable: true,
+      const shape = new Konva.Text({
+        x: 50,
+        y: 50,
+        text: 'Hello',
+        fontSize: 20,
+        fontFamily: 'Arial',
+        letterSpacing: 20,
+        align: 'center',
+        width: 500,
       });
-      layer.add(rect);
+      layer.add(shape);
 
-      window.addEventListener('touchend', () => {
-        console.log('touchend');
-      });
-      window.addEventListener('touchcancel', () => {
-        console.log('touchcancel');
-      });
-      window.addEventListener('lostpointercapture', () => {
-        console.log('lostpointercapture');
-      });
-      window.addEventListener('focusout', () => {
-        console.log('focusout');
-      });
+      text.style.top = shape.y() + 'px';
+      text.style.left = shape.x() + 'px';
     </script>
   </body>
 </html>

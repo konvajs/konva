@@ -264,7 +264,7 @@ export class Text extends Shape<TextConfig> {
       var lineTranslateY = 0;
       var obj = textArr[n],
         text = obj.text,
-        width = obj.width + letterSpacing,
+        width = obj.width,
         lastLine = obj.lastInParagraph,
         spacesNumber,
         oneWord,
@@ -477,10 +477,9 @@ export class Text extends Shape<TextConfig> {
   _getTextWidth(text: string) {
     const letterSpacing = this.letterSpacing();
     const length = text.length;
-    return (
-      getDummyContext().measureText(text).width +
-      (length ? letterSpacing * (length - 1) : 0)
-    );
+    // letterSpacing * length is the total letter spacing for the text
+    // previously we used letterSpacing * (length - 1) but it doesn't match DOM behavior
+    return getDummyContext().measureText(text).width + letterSpacing * length;
   }
   _setTextData() {
     let lines = this.text().split('\n'),
