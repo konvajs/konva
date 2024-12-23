@@ -1,6 +1,6 @@
 export interface GetSet<Type, This> {
   (): Type;
-  (v: Type): This;
+  (v: Type | null | undefined): This;
 }
 
 export interface Vector2d {
