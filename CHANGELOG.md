@@ -3,13 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 9.3.18 (2024-12-17) (unreleased)
+## 9.3.17 (2024-12-23)
 
-- Fix emoji rendering with letterSpacing
-
-## 9.3.17 (2024-12-02) (unreleased)
-
-- Fix `Arrow.getClientRect()`
+- Fixed `Arrow.getClientRect()`
+- Fixed emoji rendering with letterSpacing
+- Fixed line-through for justify text
+- Changes in letter spacing width calculations to match DOM rendering
 
 ## 9.3.16 (2024-10-21)
 
