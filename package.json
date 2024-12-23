@@ -17,7 +17,7 @@
     "start": "npm run test:watch",
     "compile": "npm run clean && npm run tsc && cp ./src/index-types.d.ts ./lib/index-types.d.ts && npm run rollup",
     "build": "npm run compile && cp ./src/index-types.d.ts ./lib && gulp build && node ./rename-imports.mjs",
-    "test:import": "npm run build  && node ./test/import-test.cjs &&node ./test/import-test.mjs",
+    "test:import": "npm run build  && node ./test/import-test.cjs && node ./test/import-test.mjs",
     "test": "npm run test:browser && npm run test:node",
     "test:build": "parcel build ./test/unit-tests.html --dist-dir ./test-build --target none --public-url ./ --no-source-maps",
     "test:browser": "npm run test:build && mocha-headless-chrome -f ./test-build/unit-tests.html -a disable-web-security -a no-sandbox",
