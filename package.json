@@ -20,7 +20,7 @@
     "test:import": "npm run build  && node ./test/import-test.cjs &&node ./test/import-test.mjs",
     "test": "npm run test:browser && npm run test:node",
     "test:build": "parcel build ./test/unit-tests.html --dist-dir ./test-build --target none --public-url ./ --no-source-maps",
-    "test:browser": "npm run test:build && mocha-headless-chrome -f ./test-build/unit-tests.html -a disable-web-security",
+    "test:browser": "npm run test:build && mocha-headless-chrome -f ./test-build/unit-tests.html -a disable-web-security -a no-sandbox",
     "test:watch": "rm -rf ./.parcel-cache && PARCEL_WORKERS=0  parcel serve ./test/unit-tests.html ./test/manual-tests.html ./test/sandbox.html ./test/text-paths.html ./test/bunnies.html",
     "test:node": "ts-mocha -r ./test/node-global-setup.mjs -p ./test/tsconfig.json test/unit/**/*.ts --exit && npm run test:import",
     "tsc": "tsc --removeComments",
