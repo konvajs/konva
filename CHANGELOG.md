@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 9.3.18 (2024-12-23)
+
+- Fixed emoji split in multiple lines
+
 ## 9.3.17 (2024-12-23)
 
 - Fixed `Arrow.getClientRect()`
