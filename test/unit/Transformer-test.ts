@@ -5088,4 +5088,49 @@ describe('Transformer', function () {
       }, 100);
     }, 100);
   });
+
+  it('should properly clean up subscriptions on detach/destroy', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 60,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+    // draw to attach all listeners
+    layer.draw();
+
+    // Count initial number of event listeners
+    var initialListeners = Object.keys(rect.eventListeners).length;
+
+    // Create and attach first transformer
+    var tr1 = new Konva.Transformer({
+      nodes: [rect],
+    });
+    layer.add(tr1);
+
+    // Destroy first transformer
+    tr1.destroy();
+
+    // Create and attach second transformer
+    var tr2 = new Konva.Transformer({
+      nodes: [rect],
+    });
+    layer.add(tr2);
+
+    // Destroy second transformer
+    tr2.destroy();
+
+    // Check that we have same number of listeners as initially
+    assert.equal(
+      Object.keys(rect.eventListeners).length,
+      initialListeners,
+      'Event listeners should be cleaned up properly'
+    );
+  });
 });

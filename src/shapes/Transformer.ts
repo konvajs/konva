@@ -335,10 +335,12 @@ export class Transformer extends Group {
           this.update();
         }
       };
-      const additionalEvents = node._attrsAffectingSize
-        .map((prop) => prop + 'Change.' + this._getEventNamespace())
-        .join(' ');
-      node.on(additionalEvents, onChange);
+      if (node._attrsAffectingSize.length) {
+        const additionalEvents = node._attrsAffectingSize
+          .map((prop) => prop + 'Change.' + this._getEventNamespace())
+          .join(' ');
+        node.on(additionalEvents, onChange);
+      }
       node.on(
         TRANSFORM_CHANGE_STR.map(
           (e) => e + `.${this._getEventNamespace()}`
