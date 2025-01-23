@@ -8,11 +8,11 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [23.x]
+        node-version: [20.x]
 
     steps:
       - uses: actions/checkout@v2
