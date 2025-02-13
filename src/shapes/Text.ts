@@ -640,7 +640,7 @@ export class Text extends Shape<TextConfig> {
    * 1. the current line is the last line
    * 2. wrap is NONE
    * @param {Number} currentHeightPx
-   * @returns
+   * @returns {Boolean}
    */
   _shouldHandleEllipsis(currentHeightPx: number): boolean {
     const fontSize = +this.fontSize(),
