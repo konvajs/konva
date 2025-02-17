@@ -98,7 +98,12 @@ export class Arc extends Shape<ArcConfig> {
 
 Arc.prototype._centroid = true;
 Arc.prototype.className = 'Arc';
-Arc.prototype._attrsAffectingSize = ['innerRadius', 'outerRadius'];
+Arc.prototype._attrsAffectingSize = [
+  'innerRadius',
+  'outerRadius',
+  'angle',
+  'clockwise',
+];
 _registerNode(Arc);
 
 // add getters setters
