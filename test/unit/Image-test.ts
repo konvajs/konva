@@ -107,17 +107,10 @@ describe('Image', function () {
 
       var trace = layer.getContext().getTrace();
 
-      if (isBrowser) {
-        assert.equal(
-          trace,
-          'clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);drawImage([object HTMLImageElement],135,7,167,134,0,0,100,100);restore();clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);drawImage([object HTMLImageElement],135,7,167,134,0,0,200,100);restore();clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);drawImage([object HTMLImageElement],135,7,167,134,0,0,100,100);restore();'
-        );
-      } else {
-        assert.equal(
-          trace,
-          'clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);drawImage([object Object],135,7,167,134,0,0,100,100);restore();clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);drawImage([object Object],135,7,167,134,0,0,200,100);restore();clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);drawImage([object Object],135,7,167,134,0,0,100,100);restore();'
-        );
-      }
+      assert.equal(
+        trace,
+        'clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);drawImage([object HTMLImageElement],135,7,167,134,0,0,100,100);restore();clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);drawImage([object HTMLImageElement],135,7,167,134,0,0,200,100);restore();clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);drawImage([object HTMLImageElement],135,7,167,134,0,0,100,100);restore();'
+      );
 
       done();
     });
@@ -241,17 +234,10 @@ describe('Image', function () {
 
       var trace = layer.getContext().getTrace();
 
-      if (isBrowser) {
-        assert.equal(
-          trace,
-          'clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);globalAlpha=0.5;shadowColor=rgba(0,0,0,0.1);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;drawImage([object HTMLImageElement],0,0,100,100);restore();'
-        );
-      } else {
-        assert.equal(
-          trace,
-          'clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);globalAlpha=0.5;shadowColor=rgba(0,0,0,0.1);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;drawImage([object Object],0,0,100,100);restore();'
-        );
-      }
+      assert.equal(
+        trace,
+        'clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);globalAlpha=0.5;shadowColor=rgba(0,0,0,0.1);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;drawImage([object HTMLImageElement],0,0,100,100);restore();'
+      );
 
       done();
     });
@@ -285,17 +271,10 @@ describe('Image', function () {
 
       var trace = layer.getContext().getTrace();
 
-      if (isBrowser) {
-        assert.equal(
-          trace,
-          'clearRect(0,0,578,200);save();shadowColor=rgba(0,0,0,0.5);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();'
-        );
-      } else {
-        assert.equal(
-          trace,
-          'clearRect(0,0,578,200);save();shadowColor=rgba(0,0,0,0.5);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;globalAlpha=0.5;drawImage([object Object],0,0,578,200);restore();'
-        );
-      }
+      assert.equal(
+        trace,
+        'clearRect(0,0,578,200);save();shadowColor=rgba(0,0,0,0.5);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();'
+      );
 
       done();
     });

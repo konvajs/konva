@@ -1,5 +1,5 @@
 import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
+import { Filter, Node } from '../Node';
 import { getNumberValidator } from '../Validators';
 
 /**

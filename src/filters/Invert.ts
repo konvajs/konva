@@ -9,11 +9,10 @@ import { Filter } from '../Node';
  * node.filters([Konva.Filters.Invert]);
  */
 export const Invert: Filter = function (imageData) {
-  let data = imageData.data,
-    len = data.length,
-    i;
+  const data = imageData.data,
+    len = data.length;
 
-  for (i = 0; i < len; i += 4) {
+  for (let i = 0; i < len; i += 4) {
     // red
     data[i] = 255 - data[i];
     // green

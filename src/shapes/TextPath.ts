@@ -551,7 +551,7 @@ Factory.addGetterSetter(TextPath, 'text', EMPTY_STRING);
  * // underline text
  * shape.textDecoration('underline');
  */
-Factory.addGetterSetter(TextPath, 'textDecoration', null);
+Factory.addGetterSetter(TextPath, 'textDecoration', '');
 
 /**
  * get/set kerning function.
@@ -568,4 +568,4 @@ Factory.addGetterSetter(TextPath, 'textDecoration', null);
  *   return 1;
  * });
  */
-Factory.addGetterSetter(TextPath, 'kerningFunc', null);
+Factory.addGetterSetter(TextPath, 'kerningFunc', undefined);

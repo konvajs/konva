@@ -16,13 +16,19 @@ import { GetSet } from '../types';
 export function stringToArray(string: string): string[] {
   // Use Unicode-aware splitting
   return [...string].reduce((acc, char, index, array) => {
-    // Handle emoji sequences (including ZWJ sequences)
-    if (
-      /\p{Emoji_Modifier_Base}\p{Emoji_Modifier}?(?:\u200D\p{Emoji_Presentation})+/u.test(
-        char
-      )
-    ) {
-      acc.push(char);
+    // Handle emoji with skin tone modifiers and ZWJ sequences
+    if (/\p{Emoji}/u.test(char)) {
+      // Check if next character is a modifier or ZWJ sequence
+      const nextChar = array[index + 1];
+      if (nextChar && /\p{Emoji_Modifier}|\u200D/u.test(nextChar)) {
+        // If we have a modifier, combine with current emoji
+        acc.push(char + nextChar);
+        // Skip the next character since we've used it
+        array[index + 1] = '';
+      } else {
+        // No modifier - treat as separate emoji
+        acc.push(char);
+      }
     }
     // Handle regional indicator symbols (flags)
     else if (
@@ -35,7 +41,8 @@ export function stringToArray(string: string): string[] {
       acc[acc.length - 1] += char;
     }
     // Handle other characters
-    else {
+    else if (char) {
+      // Only push if not an empty string (skipped modifier)
       acc.push(char);
     }
     return acc;
@@ -310,7 +317,7 @@ export class Text extends Shape<TextConfig> {
         spacesNumber = text.split(' ').length - 1;
         oneWord = spacesNumber === 0;
         lineWidth =
-        align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
+          align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
         context.lineTo(
           lineTranslateX + Math.round(lineWidth),
           translateY + lineTranslateY + yOffset
@@ -383,7 +390,8 @@ export class Text extends Shape<TextConfig> {
     return isAuto ? this.getTextWidth() + this.padding() * 2 : this.attrs.width;
   }
   getHeight() {
-    const isAuto = this.attrs.height === AUTO || this.attrs.height === undefined;
+    const isAuto =
+      this.attrs.height === AUTO || this.attrs.height === undefined;
     return isAuto
       ? this.fontSize() * this.textArr.length * this.lineHeight() +
           this.padding() * 2
@@ -475,10 +483,9 @@ export class Text extends Shape<TextConfig> {
   _getTextWidth(text: string) {
     const letterSpacing = this.letterSpacing();
     const length = text.length;
-    return (
-      getDummyContext().measureText(text).width +
-      (length ? letterSpacing * (length - 1) : 0)
-    );
+    // letterSpacing * length is the total letter spacing for the text
+    // previously we used letterSpacing * (length - 1) but it doesn't match DOM behavior
+    return getDummyContext().measureText(text).width + letterSpacing * length;
   }
   _setTextData() {
     let lines = this.text().split('\n'),
@@ -501,7 +508,9 @@ export class Text extends Shape<TextConfig> {
 
     this.textArr = [];
     getDummyContext().font = this._getContextFont();
-    const additionalWidth = shouldAddEllipsis ? this._getTextWidth(ELLIPSIS) : 0;
+    const additionalWidth = shouldAddEllipsis
+      ? this._getTextWidth(ELLIPSIS)
+      : 0;
     for (let i = 0, max = lines.length; i < max; ++i) {
       let line = lines[i];
 
@@ -517,13 +526,16 @@ export class Text extends Shape<TextConfig> {
            * that would fit in the specified width
            */
           let low = 0,
-            high = line.length,
+            high = stringToArray(line).length, // Convert to array for proper emoji handling
             match = '',
             matchWidth = 0;
           while (low < high) {
             const mid = (low + high) >>> 1,
-              substr = line.slice(0, mid + 1),
+              // Convert array indices to string
+              lineArray = stringToArray(line),
+              substr = lineArray.slice(0, mid + 1).join(''),
               substrWidth = this._getTextWidth(substr) + additionalWidth;
+
             if (substrWidth <= maxWidth) {
               low = mid + 1;
               match = substr;
@@ -541,20 +553,24 @@ export class Text extends Shape<TextConfig> {
             // a fitting substring was found
             if (wrapAtWord) {
               // try to find a space or dash where wrapping could be done
-              var wrapIndex;
-              const nextChar = line[match.length];
+              const lineArray = stringToArray(line);
+              const matchArray = stringToArray(match);
+              const nextChar = lineArray[matchArray.length];
               const nextIsSpaceOrDash = nextChar === SPACE || nextChar === DASH;
+
+              let wrapIndex;
               if (nextIsSpaceOrDash && matchWidth <= maxWidth) {
-                wrapIndex = match.length;
+                wrapIndex = matchArray.length;
               } else {
-                wrapIndex =
-                  Math.max(match.lastIndexOf(SPACE), match.lastIndexOf(DASH)) +
-                  1;
+                // Find last space or dash in the array
+                const lastSpaceIndex = matchArray.lastIndexOf(SPACE);
+                const lastDashIndex = matchArray.lastIndexOf(DASH);
+                wrapIndex = Math.max(lastSpaceIndex, lastDashIndex) + 1;
               }
+
               if (wrapIndex > 0) {
-                // re-cut the substring found at the space/dash position
                 low = wrapIndex;
-                match = match.slice(0, low);
+                match = lineArray.slice(0, low).join('');
                 matchWidth = this._getTextWidth(match);
               }
             }
@@ -575,13 +591,14 @@ export class Text extends Shape<TextConfig> {
                */
               break;
             }
-            line = line.slice(low);
-            line = line.trimLeft();
+
+            // Convert remaining text using array operations
+            const lineArray = stringToArray(line);
+            line = lineArray.slice(low).join('').trimLeft();
+
             if (line.length > 0) {
-              // Check if the remaining text would fit on one line
               lineWidth = this._getTextWidth(line);
               if (lineWidth <= maxWidth) {
-                // if it does, add the line and break out of the loop
                 this._addTextLine(line);
                 currentHeightPx += lineHeightPx;
                 textWidth = Math.max(textWidth, lineWidth);
@@ -623,7 +640,7 @@ export class Text extends Shape<TextConfig> {
    * 1. the current line is the last line
    * 2. wrap is NONE
    * @param {Number} currentHeightPx
-   * @returns
+   * @returns {Boolean}
    */
   _shouldHandleEllipsis(currentHeightPx: number): boolean {
     const fontSize = +this.fontSize(),

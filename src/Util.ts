@@ -260,7 +260,7 @@ export class Transform {
 }
 
 // CONSTANTS
-let OBJECT_ARRAY = '[object Array]',
+const OBJECT_ARRAY = '[object Array]',
   OBJECT_NUMBER = '[object Number]',
   OBJECT_STRING = '[object String]',
   OBJECT_BOOLEAN = '[object Boolean]',
@@ -423,8 +423,8 @@ let OBJECT_ARRAY = '[object Array]',
     yellow: [255, 255, 0],
     yellowgreen: [154, 205, 5],
   },
-  RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/,
-  animQueue: Array<Function> = [];
+  RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/;
+  let animQueue: Array<Function> = [];
 
 const req =
   (typeof requestAnimationFrame !== 'undefined' && requestAnimationFrame) ||
@@ -904,21 +904,20 @@ export const Util = {
     return pc;
   },
   _prepareArrayForTween(startArray, endArray, isClosed) {
-    let n,
-      start: Vector2d[] = [],
+    const start: Vector2d[] = [],
       end: Vector2d[] = [];
     if (startArray.length > endArray.length) {
       const temp = endArray;
       endArray = startArray;
       startArray = temp;
     }
-    for (n = 0; n < startArray.length; n += 2) {
+    for (let n = 0; n < startArray.length; n += 2) {
       start.push({
         x: startArray[n],
         y: startArray[n + 1],
       });
     }
-    for (n = 0; n < endArray.length; n += 2) {
+    for (let n = 0; n < endArray.length; n += 2) {
       end.push({
         x: endArray[n],
         y: endArray[n + 1],

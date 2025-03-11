@@ -335,10 +335,12 @@ export class Transformer extends Group {
           this.update();
         }
       };
-      const additionalEvents = node._attrsAffectingSize
-        .map((prop) => prop + 'Change.' + this._getEventNamespace())
-        .join(' ');
-      node.on(additionalEvents, onChange);
+      if (node._attrsAffectingSize.length) {
+        const additionalEvents = node._attrsAffectingSize
+          .map((prop) => prop + 'Change.' + this._getEventNamespace())
+          .join(' ');
+        node.on(additionalEvents, onChange);
+      }
       node.on(
         TRANSFORM_CHANGE_STR.map(
           (e) => e + `.${this._getEventNamespace()}`
@@ -1745,8 +1747,6 @@ Factory.addGetterSetter(Transformer, 'ignoreStroke', false);
  */
 Factory.addGetterSetter(Transformer, 'padding', 0, getNumberValidator());
 
-Factory.addGetterSetter(Transformer, 'node');
-
 /**
  * get/set attached nodes of the Transformer. Transformer will adapt to their size and listen to their events
  * @method
@@ -1767,6 +1767,9 @@ Factory.addGetterSetter(Transformer, 'node');
  */
 
 Factory.addGetterSetter(Transformer, 'nodes');
+// @ts-ignore
+// deprecated
+Factory.addGetterSetter(Transformer, 'node');
 
 /**
  * get/set bounding box function. **IMPORTANT!** boundBondFunc operates in absolute coordinates.

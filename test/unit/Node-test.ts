@@ -2296,17 +2296,10 @@ describe('Node', function () {
 
     var bufferTrace = stage.bufferCanvas.getContext().getTrace();
 
-    if (isBrowser) {
-      assert.equal(
-        sceneTrace,
-        'clearRect(0,0,578,200);save();globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();'
-      );
-    } else {
-      assert.equal(
-        sceneTrace,
-        'clearRect(0,0,578,200);save();globalAlpha=0.5;drawImage([object Object],0,0,578,200);restore();'
-      );
-    }
+    assert.equal(
+      sceneTrace,
+      'clearRect(0,0,578,200);save();globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();'
+    );
 
     assert.equal(
       bufferTrace,

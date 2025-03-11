@@ -15,18 +15,15 @@ import { RGBComponent } from '../Validators';
  * node.blue(120);
  * node.green(200);
  */
-
 export const RGB: Filter = function (imageData) {
-  let data = imageData.data,
+  const data = imageData.data,
     nPixels = data.length,
     red = this.red(),
     green = this.green(),
-    blue = this.blue(),
-    i,
-    brightness;
+    blue = this.blue();
 
-  for (i = 0; i < nPixels; i += 4) {
-    brightness =
+  for (let i = 0; i < nPixels; i += 4) {
+    const brightness =
       (0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2]) / 255;
     data[i] = brightness * red; // r
     data[i + 1] = brightness * green; // g

@@ -146,7 +146,7 @@ describe('Text', function () {
     var text = new Konva.Text({
       x: 10,
       y: 10,
-      text: '😬',
+      text: '😬👧🏿',
       fontSize: 50,
       letterSpacing: 1,
     });
@@ -159,7 +159,36 @@ describe('Text', function () {
     context.textBaseline = 'middle';
     context.font = 'normal normal 50px Arial';
     context.fillStyle = 'darkgrey';
-    context.fillText('😬', 10, 10 + 25);
+    context.fillText('😬👧🏿', 10, 10 + 25);
+
+    compareLayerAndCanvas(layer, canvas, 254, 100);
+  });
+
+  it('check emoji rendering', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      text: '😁😁😁',
+      x: 10,
+      y: 10,
+      fontSize: 20,
+      draggable: true,
+      width: 65,
+      fill: 'black',
+      scaleY: 0.9999999999999973,
+    });
+
+    layer.add(text);
+    stage.add(layer);
+
+    var canvas = createCanvas();
+    var context = canvas.getContext('2d');
+    context.textBaseline = 'middle';
+    context.font = 'normal normal 20px Arial';
+    context.fillStyle = 'black';
+    context.fillText('😁😁', 10, 10 + 10);
+    context.fillText('😁', 10, 10 + 30);
 
     compareLayerAndCanvas(layer, canvas, 254);
   });
@@ -282,7 +311,7 @@ describe('Text', function () {
     var oldWidth = text.width();
     text.letterSpacing(10);
 
-    assert.equal(text.width(), oldWidth + 40);
+    assert.equal(text.width(), oldWidth + 50);
     layer.draw();
   });
   // ======================================================
@@ -780,7 +809,7 @@ describe('Text', function () {
     }
 
     var trace =
-      'fillText(;,106.482,77);fillStyle=#555;fillText( ,117.549,77);fillStyle=#555;fillText(A,126.438,77);fillStyle=#555;fillText(n,140.776,77);fillStyle=#555;fillText(d,153.563,77);fillStyle=#555;fillText( ,168.525,77);fillStyle=#555;fillText(o,177.415,77);fillStyle=#555;fillText(n,190.201,77);fillStyle=#555;fillText(e,202.987,77);fillStyle=#555;fillText( ,217.95,77);fillStyle=#555;fillText(m,226.84,77);fillStyle=#555;fillText(a,243.502,77);fillStyle=#555;fillText(n,256.288,77);fillStyle=#555;fillText( ,271.251,77);fillStyle=#555;fillText(i,280.141,77);fillStyle=#555;fillText(n,288.251,77);fillStyle=#555;fillText( ,303.214,77);fillStyle=#555;fillText(h,312.104,77);fillStyle=#555;fillText(i,324.89,77);fillStyle=#555;fillText(s,333,77);restore();save();save();beginPath();moveTo(0,98);lineTo(245,98);stroke();restore();save();beginPath();moveTo(0,91);lineTo(245,91);stroke();restore();fillStyle=#555;fillText(t,0,91);fillStyle=#555;fillText(i,8.89,91);fillStyle=#555;fillText(m,17,91);fillStyle=#555;fillText(e,33.662,91);fillStyle=#555;fillText( ,46.448,91);fillStyle=#555;fillText(p,55.338,91);fillStyle=#555;fillText(l,68.124,91);fillStyle=#555;fillText(a,76.234,91);fillStyle=#555;fillText(y,89.021,91);fillStyle=#555;fillText(s,101.021,91);fillStyle=#555;fillText( ,113.021,91);fillStyle=#555;fillText(m,121.91,91);fillStyle=#555;fillText(a,138.572,91);fillStyle=#555;fillText(n,151.358,91);fillStyle=#555;fillText(y,164.145,91);fillStyle=#555;fillText( ,176.145,91);fillStyle=#555;fillText(p,185.034,91);fillStyle=#555;fillText(a,197.82,91);fillStyle=#555;fillText(r,210.606,91);fillStyle=#555;fillText(t,220.269,91);fillStyle=#555;fillText(s,229.158,91);fillStyle=#555;fillText(.,241.158,91);restore();restore();';
+      'fillText(;,106.482,77);fillStyle=#555;fillText( ,116.549,77);fillStyle=#555;fillText(A,125.438,77);fillStyle=#555;fillText(n,139.776,77);fillStyle=#555;fillText(d,152.563,77);fillStyle=#555;fillText( ,166.525,77);fillStyle=#555;fillText(o,175.415,77);fillStyle=#555;fillText(n,188.201,77);fillStyle=#555;fillText(e,200.987,77);fillStyle=#555;fillText( ,214.95,77);fillStyle=#555;fillText(m,223.84,77);fillStyle=#555;fillText(a,240.502,77);fillStyle=#555;fillText(n,253.288,77);fillStyle=#555;fillText( ,267.251,77);fillStyle=#555;fillText(i,276.141,77);fillStyle=#555;fillText(n,284.251,77);fillStyle=#555;fillText( ,298.214,77);fillStyle=#555;fillText(h,307.104,77);fillStyle=#555;fillText(i,319.89,77);fillStyle=#555;fillText(s,328,77);restore();save();save();beginPath();moveTo(0,98);lineTo(250,98);stroke();restore();save();beginPath();moveTo(0,91);lineTo(250,91);stroke();restore();fillStyle=#555;fillText(t,0,91);fillStyle=#555;fillText(i,8.89,91);fillStyle=#555;fillText(m,17,91);fillStyle=#555;fillText(e,33.662,91);fillStyle=#555;fillText( ,46.448,91);fillStyle=#555;fillText(p,55.338,91);fillStyle=#555;fillText(l,68.124,91);fillStyle=#555;fillText(a,76.234,91);fillStyle=#555;fillText(y,89.021,91);fillStyle=#555;fillText(s,101.021,91);fillStyle=#555;fillText( ,113.021,91);fillStyle=#555;fillText(m,121.91,91);fillStyle=#555;fillText(a,138.572,91);fillStyle=#555;fillText(n,151.358,91);fillStyle=#555;fillText(y,164.145,91);fillStyle=#555;fillText( ,176.145,91);fillStyle=#555;fillText(p,185.034,91);fillStyle=#555;fillText(a,197.82,91);fillStyle=#555;fillText(r,210.606,91);fillStyle=#555;fillText(t,220.269,91);fillStyle=#555;fillText(s,229.158,91);fillStyle=#555;fillText(.,241.158,91);restore();restore();';
 
     assert.equal(layer.getContext().getTrace(), trace);
   });
@@ -1244,9 +1273,9 @@ describe('Text', function () {
     // so we need to adjust offset
     const diff = isBrowser ? 4 : 50;
     assert.equal(Math.abs(Math.round(text1.width()) - 1725) < diff, true);
-    assert.equal(Math.abs(Math.round(text2.width()) - 2613) < diff, true);
-    assert.equal(Math.abs(Math.round(text3.width()) - 2005) < diff, true);
-    assert.equal(Math.abs(Math.round(text4.width()) - 1932) < diff, true);
+    assert.equal(Math.abs(Math.round(text2.width()) - 2616) < diff, true);
+    assert.equal(Math.abs(Math.round(text3.width()) - 2009) < diff, true);
+    assert.equal(Math.abs(Math.round(text4.width()) - 1936) < diff, true);
   });
 
   it('default text color should be black', function () {

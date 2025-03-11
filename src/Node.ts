@@ -198,7 +198,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     // for transform the cache can be NOT empty
     // but we still need to recalculate it if it is dirty
     const isTransform = attr === TRANSFORM || attr === ABSOLUTE_TRANSFORM;
-    const invalid = cache === undefined || (isTransform && cache.dirty === true);
+    const invalid =
+      cache === undefined || (isTransform && cache.dirty === true);
 
     // if not cached, we need to set it using the private getter method.
     if (invalid) {
@@ -2660,7 +2661,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   rotation: GetSet<number, this>;
   zIndex: GetSet<number, this>;
 
-  scale: GetSet<Vector2d | undefined, this>;
+  scale: GetSet<Vector2d, this>;
   scaleX: GetSet<number, this>;
   scaleY: GetSet<number, this>;
   skew: GetSet<Vector2d, this>;
@@ -3102,7 +3103,7 @@ addGetterSetter(Node, 'offsetY', 0, getNumberValidator());
  * node.offsetY(3);
  */
 
-addGetterSetter(Node, 'dragDistance', null, getNumberValidator());
+addGetterSetter(Node, 'dragDistance', undefined, getNumberValidator());
 
 /**
  * get/set drag distance
@@ -3193,7 +3194,7 @@ addGetterSetter(Node, 'listening', true, getBooleanValidator());
 
 addGetterSetter(Node, 'preventDefault', true, getBooleanValidator());
 
-addGetterSetter(Node, 'filters', null, function (this: Node, val) {
+addGetterSetter(Node, 'filters', undefined, function (this: Node, val) {
   this._filterUpToDate = false;
   return val;
 });
