@@ -11,7 +11,7 @@ import { _registerNode } from './Global';
  * @constructor
  * @memberof Konva
  * @augments Konva.Layer
- * @@containerParams
+ @@containerParams
  * @example
  * var layer = new Konva.FastLayer();
  */
