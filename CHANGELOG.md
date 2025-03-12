@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 9.3.19 (2025-03-12)
+
+- Typescript fixes
+- Memory leak fixes
+
 ## 9.3.18 (2024-12-23)
 
 - Fixed emoji split in multiple lines
