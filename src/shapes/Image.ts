@@ -40,9 +40,16 @@ export interface ImageConfig extends ShapeConfig {
  * imageObj.src = '/path/to/image.jpg'
  */
 export class Image extends Shape<ImageConfig> {
+  private _loadListener: () => void;
+
   constructor(attrs: ImageConfig) {
     super(attrs);
-    this.on('imageChange.konva', () => {
+    this._loadListener = () => {
+      this._requestDraw();
+    };
+
+    this.on('imageChange.konva', (props: any) => {
+      this._removeImageLoad(props.oldVal);
       this._setImageLoad();
     });
 
@@ -59,10 +66,18 @@ export class Image extends Shape<ImageConfig> {
       return;
     }
     if (image && image['addEventListener']) {
-      image['addEventListener']('load', () => {
-        this._requestDraw();
-      });
+      image['addEventListener']('load', this._loadListener);
     }
+  }
+  _removeImageLoad(image: any) {
+    if (image && image['removeEventListener']) {
+      image['removeEventListener']('load', this._loadListener);
+    }
+  }
+  destroy() {
+    this._removeImageLoad(this.image());
+    super.destroy();
+    return this;
   }
   _useBufferCanvas() {
     const hasCornerRadius = !!this.cornerRadius();
