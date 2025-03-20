@@ -545,7 +545,7 @@ describe('Text', function () {
   });
 
   // ======================================================
-  it('multiline with ellipsis', function () {
+  it.only('multiline with ellipsis', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -569,6 +569,7 @@ describe('Text', function () {
     assert.equal(text.textArr.length, 7);
     assert.equal(text.textArr[6].text.slice(-1), '…');
 
+    console.log(ayer.getContext().getTrace(false, true));
     if (isBrowser) {
       assert.equal(
         layer.getContext().getTrace(false, true),

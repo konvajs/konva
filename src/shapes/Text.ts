@@ -534,12 +534,23 @@ export class Text extends Shape<TextConfig> {
               // Convert array indices to string
               lineArray = stringToArray(line),
               substr = lineArray.slice(0, mid + 1).join(''),
-              substrWidth = this._getTextWidth(substr) + additionalWidth;
+              substrWidth = this._getTextWidth(substr);
 
-            if (substrWidth <= maxWidth) {
+            // Only add ellipsis width when we need to consider truncation
+            // for the current line (when it might be the last visible line)
+            const shouldConsiderEllipsis =
+              shouldAddEllipsis &&
+              fixedHeight &&
+              currentHeightPx + lineHeightPx > maxHeightPx;
+
+            const effectiveWidth = shouldConsiderEllipsis
+              ? substrWidth + additionalWidth
+              : substrWidth;
+
+            if (effectiveWidth <= maxWidth) {
               low = mid + 1;
               match = substr;
-              matchWidth = substrWidth;
+              matchWidth = substrWidth; // Store actual text width without ellipsis
             } else {
               high = mid;
             }
