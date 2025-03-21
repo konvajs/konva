@@ -7,6 +7,7 @@ import { Arc } from './shapes/Arc';
 import { Arrow } from './shapes/Arrow';
 import { Circle } from './shapes/Circle';
 import { Ellipse } from './shapes/Ellipse';
+import { EllipseRing } from './shapes/EllipseRing';
 import { Image } from './shapes/Image';
 import { Label, Tag } from './shapes/Label';
 import { Line } from './shapes/Line';
@@ -47,6 +48,7 @@ export const Konva = Core.Util._assign(Core, {
   Arrow,
   Circle,
   Ellipse,
+  EllipseRing,
   Image,
   Label,
   Tag,
