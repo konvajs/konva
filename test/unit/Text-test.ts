@@ -572,7 +572,7 @@ describe('Text', function () {
     if (isBrowser) {
       assert.equal(
         layer.getContext().getTrace(false, true),
-        "clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 14px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();fillStyle=black;fillText(HEADING,18,7);restore();save();fillStyle=black;fillText(,50,21);restore();save();fillStyle=black;fillText(All the world's,7,35);restore();save();fillStyle=black;fillText(a stage,,25,49);restore();save();fillStyle=black;fillText(merely,28,63);restore();save();fillStyle=black;fillText(players. They,7,77);restore();save();fillStyle=black;fillText(have…,27,91);restore();restore();"
+        "clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 14px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();fillStyle=black;fillText(HEADING,18,7);restore();save();fillStyle=black;fillText(,50,21);restore();save();fillStyle=black;fillText(All the world's a,1,35);restore();save();fillStyle=black;fillText(stage, merely,7,49);restore();save();fillStyle=black;fillText(players. They,7,63);restore();save();fillStyle=black;fillText(have theirrrrrrr,5,77);restore();save();fillStyle=black;fillText(exits and…,14,91);restore();restore();"
       );
     }
   });
