@@ -214,11 +214,11 @@ export class Stage extends Container<Layer> {
    */
   setContainer(container) {
     if (typeof container === STRING) {
+      let id;
       if (container.charAt(0) === '.') {
         const className = container.slice(1);
         container = document.getElementsByClassName(className)[0];
       } else {
-        var id;
         if (container.charAt(0) !== '#') {
           id = container;
         } else {
