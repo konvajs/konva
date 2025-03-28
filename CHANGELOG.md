@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 9.3.21 (not released)
+
+- Fixed memory leaks on Tween destroy
+- Fixed incorrect export of stage/layer when internal nodes used buffer canvas for rendering
+
 ## 9.3.20 (2025-03-20)
 
 - Fix text rendering when ellipses are used
