@@ -385,7 +385,7 @@ export class Layer extends Container<Group | Shape> {
     // empty pixel
     return {};
   }
-  drawScene(can?: SceneCanvas, top?: Node) {
+  drawScene(can?: SceneCanvas, top?: Node, bufferCanvas?: SceneCanvas) {
     const layer = this.getLayer(),
       canvas = can || (layer && layer.getCanvas());
 
@@ -397,7 +397,7 @@ export class Layer extends Container<Group | Shape> {
       canvas.getContext().clear();
     }
 
-    Container.prototype.drawScene.call(this, canvas, top);
+    Container.prototype.drawScene.call(this, canvas, top, bufferCanvas);
 
     this._fire(DRAW, {
       node: this,
