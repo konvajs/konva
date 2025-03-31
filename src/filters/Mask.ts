@@ -2,7 +2,7 @@ import { Factory } from '../Factory';
 import { Filter, Node } from '../Node';
 import { getNumberValidator } from '../Validators';
 
-function pixelAt(idata, x, y) {
+function pixelAt(idata, x: number, y: number) {
   let idx = (y * idata.width + x) * 4;
   const d: Array<number> = [];
   d.push(
@@ -137,7 +137,7 @@ function dilateMask(mask, sw, sh) {
   return maskResult;
 }
 
-function smoothEdgeMask(mask, sw, sh) {
+function smoothEdgeMask(mask, sw: number, sh: number) {
   const weights = [1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9];
   const side = Math.round(Math.sqrt(weights.length));
   const halfSide = Math.floor(side / 2);

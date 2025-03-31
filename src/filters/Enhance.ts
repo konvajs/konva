@@ -94,15 +94,12 @@ export const Enhance: Filter = function (imageData) {
     bMin = 0;
   }
 
-  let rMid,
-    rGoalMax,
-    rGoalMin,
-    gMid,
-    gGoalMax,
-    gGoalMin,
-    bMid,
-    bGoalMax,
-    bGoalMin;
+  let rGoalMax: number,
+    rGoalMin: number,
+    gGoalMax: number,
+    gGoalMin: number,
+    bGoalMax: number,
+    bGoalMin: number;
 
   // If the enhancement is positive - stretch the histogram
   if (enhanceAmount > 0) {
@@ -114,13 +111,13 @@ export const Enhance: Filter = function (imageData) {
     bGoalMin = bMin - enhanceAmount * (bMin - 0);
     // If the enhancement is negative -   compress the histogram
   } else {
-    rMid = (rMax + rMin) * 0.5;
+    const rMid = (rMax + rMin) * 0.5;
     rGoalMax = rMax + enhanceAmount * (rMax - rMid);
     rGoalMin = rMin + enhanceAmount * (rMin - rMid);
-    gMid = (gMax + gMin) * 0.5;
+    const gMid = (gMax + gMin) * 0.5;
     gGoalMax = gMax + enhanceAmount * (gMax - gMid);
     gGoalMin = gMin + enhanceAmount * (gMin - gMid);
-    bMid = (bMax + bMin) * 0.5;
+    const bMid = (bMax + bMin) * 0.5;
     bGoalMax = bMax + enhanceAmount * (bMax - bMid);
     bGoalMin = bMin + enhanceAmount * (bMin - bMid);
   }

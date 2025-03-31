@@ -73,7 +73,7 @@ export class Path extends Shape<PathConfig> {
           context.quadraticCurveTo(p[0], p[1], p[2], p[3]);
           break;
         case 'A':
-          var cx = p[0],
+          const cx = p[0],
             cy = p[1],
             rx = p[2],
             ry = p[3],
@@ -82,9 +82,9 @@ export class Path extends Shape<PathConfig> {
             psi = p[6],
             fs = p[7];
 
-          var r = rx > ry ? rx : ry;
-          var scaleX = rx > ry ? 1 : rx / ry;
-          var scaleY = rx > ry ? ry / rx : 1;
+          const r = rx > ry ? rx : ry;
+          const scaleX = rx > ry ? 1 : rx / ry;
+          const scaleY = rx > ry ? ry / rx : 1;
 
           context.translate(cx, cy);
           context.rotate(psi);
@@ -305,13 +305,13 @@ export class Path extends Shape<PathConfig> {
           p[3]
         );
       case 'A':
-        var cx = p[0],
+        const cx = p[0],
           cy = p[1],
           rx = p[2],
           ry = p[3],
-          theta = p[4],
           dTheta = p[5],
           psi = p[6];
+        let theta = p[4];
         theta += (dTheta * length) / cp.pathLength;
         return Path.getPointOnEllipticalArc(cx, cy, rx, ry, theta, psi);
     }
@@ -483,7 +483,7 @@ export class Path extends Shape<PathConfig> {
     // convert white spaces to commas
     cs = cs.replace(new RegExp(' ', 'g'), ',');
     // create pipes so that we can split the data
-    for (var n = 0; n < cc.length; n++) {
+    for (let n = 0; n < cc.length; n++) {
       cs = cs.replace(new RegExp(cc[n], 'g'), '|' + cc[n]);
     }
     // create array
@@ -496,7 +496,7 @@ export class Path extends Shape<PathConfig> {
 
     const re = /([-+]?((\d+\.\d+)|((\d+)|(\.\d+)))(?:e[-+]?\d+)?)/gi;
     let match;
-    for (n = 1; n < arr.length; n++) {
+    for (let n = 1; n < arr.length; n++) {
       let str = arr[n];
       let c = str.charAt(0);
       str = str.slice(1);

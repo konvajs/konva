@@ -1,5 +1,5 @@
 import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
+import { Filter, Node } from '../Node';
 import { getNumberValidator } from '../Validators';
 
 /**
@@ -46,13 +46,11 @@ export const HSV: Filter = function (imageData) {
     bg = 0.587 * v - 0.586 * vsu - 1.05 * vsw,
     bb = 0.114 * v + 0.886 * vsu - 0.2 * vsw;
 
-  let r, g, b, a;
-
   for (let i = 0; i < nPixels; i += 4) {
-    r = data[i + 0];
-    g = data[i + 1];
-    b = data[i + 2];
-    a = data[i + 3];
+    const r = data[i + 0];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    const a = data[i + 3];
 
     data[i + 0] = rr * r + rg * g + rb * b;
     data[i + 1] = gr * r + gg * g + gb * b;
