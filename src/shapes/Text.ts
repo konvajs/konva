@@ -171,7 +171,7 @@ function checkDefaultFill(config?: TextConfig) {
  * @param {String} [config.fontVariant] can be normal or small-caps.  Default is normal
  * @param {String} [config.textDecoration] can be line-through, underline or empty string. Default is empty string.
  * @param {String} config.text
- * @param {String} [config.align] can be left, center, or right
+ * @param {String} [config.align] can be left, center, right or justify
  * @param {String} [config.verticalAlign] can be top, middle or bottom
  * @param {Number} [config.padding]
  * @param {Number} [config.lineHeight] default is 1
@@ -885,6 +885,8 @@ Factory.addGetterSetter(Text, 'padding', 0, getNumberValidator());
  *
  * // align text to right
  * text.align('right');
+ *
+ * // justify text
  */
 
 Factory.addGetterSetter(Text, 'align', LEFT);

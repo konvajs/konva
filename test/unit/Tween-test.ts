@@ -98,8 +98,8 @@ describe('Tween', function () {
 
     tween.destroy();
 
-    assert.equal(Konva.Tween.tweens[circle._id].x, undefined);
-    assert.equal(Konva.Tween.attrs[circle._id][tween._id], undefined);
+    assert.equal(Konva.Tween.tweens[circle._id], undefined);
+    assert.equal(Konva.Tween.attrs[circle._id], undefined);
   });
 
   // ======================================================
@@ -238,7 +238,7 @@ describe('Tween', function () {
       duration: 0.1,
       onFinish: function () {
         assert.equal(circle.x(), stage.width() / 2);
-        assert.equal(Object.keys(Konva.Tween.attrs[circle._id]).length, 0);
+        assert.equal(Konva.Tween.attrs[circle._id], undefined);
         done();
       },
     });
@@ -305,16 +305,10 @@ describe('Tween', function () {
       points: [100, 100, 200, 100, 200, 200, 100, 200],
       duration: 0.1,
       onFinish: function () {
-        assert.deepEqual(line.points(), [
-          100,
-          100,
-          200,
-          100,
-          200,
-          200,
-          100,
-          200,
-        ]);
+        assert.deepEqual(
+          line.points(),
+          [100, 100, 200, 100, 200, 200, 100, 200]
+        );
         done();
       },
     });
@@ -364,16 +358,10 @@ describe('Tween', function () {
         tween.reverse();
       },
       onReset: function () {
-        assert.deepEqual(line.points(), [
-          100,
-          100,
-          200,
-          100,
-          200,
-          200,
-          100,
-          200,
-        ]);
+        assert.deepEqual(
+          line.points(),
+          [100, 100, 200, 100, 200, 200, 100, 200]
+        );
         done();
       },
     });

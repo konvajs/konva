@@ -163,7 +163,6 @@ export class Image extends Shape<ImageConfig> {
    *  Konva.Image.fromURL(imageURL, function(image){
    *    // image is Konva.Image instance
    *    layer.add(image);
-   *    layer.draw();
    *  });
    */
   static fromURL(

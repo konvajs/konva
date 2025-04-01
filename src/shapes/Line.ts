@@ -102,26 +102,24 @@ export class Line<
   }
 
   _sceneFunc(context: Context) {
-    let points = this.points(),
+    const points = this.points(),
       length = points.length,
       tension = this.tension(),
       closed = this.closed(),
-      bezier = this.bezier(),
-      tp,
-      len,
-      n;
+      bezier = this.bezier();
 
     if (!length) {
       return;
     }
+    let n = 0;
 
     context.beginPath();
     context.moveTo(points[0], points[1]);
 
     // tension
     if (tension !== 0 && length > 4) {
-      tp = this.getTensionPoints();
-      len = tp.length;
+      const tp = this.getTensionPoints();
+      const len = tp.length;
       n = closed ? 0 : 4;
 
       if (!closed) {

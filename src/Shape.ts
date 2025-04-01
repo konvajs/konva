@@ -594,13 +594,12 @@ export class Shape<
     // 3 - when node is cached and we need to draw it into layer
 
     const layer = this.getLayer();
-    let canvas = can || layer!.getCanvas(),
+    const canvas = can || layer!.getCanvas(),
       context = canvas.getContext() as SceneContext,
       cachedCanvas = this._getCanvasCache(),
       drawFunc = this.getSceneFunc(),
-      hasShadow = this.hasShadow(),
-      stage,
-      bufferContext;
+      hasShadow = this.hasShadow();
+    let stage, bufferContext;
 
     const skipBuffer = canvas.isCache;
     const cachingSelf = top === this;
@@ -633,7 +632,7 @@ export class Shape<
       bufferContext.save();
       bufferContext._applyLineJoin(this);
       // layer might be undefined if we are using cache before adding to layer
-      var o = this.getAbsoluteTransform(top).getMatrix();
+      const o = this.getAbsoluteTransform(top).getMatrix();
       bufferContext.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
 
       drawFunc.call(this, bufferContext, this);
@@ -651,7 +650,7 @@ export class Shape<
       context._applyLineJoin(this);
 
       if (!cachingSelf) {
-        var o = this.getAbsoluteTransform(top).getMatrix();
+        const o = this.getAbsoluteTransform(top).getMatrix();
         context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
         context._applyOpacity(this);
         context._applyGlobalCompositeOperation(this);

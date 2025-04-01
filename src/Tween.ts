@@ -200,8 +200,7 @@ export class Tween {
       nodeId = node._id,
       easing = config.easing || Easings.Linear,
       yoyo = !!config.yoyo;
-    let duration,
-      key;
+    let duration, key;
 
     if (typeof config.duration === 'undefined') {
       duration = 0.3;
@@ -268,11 +267,7 @@ export class Tween {
   _addAttr(key, end) {
     const node = this.node,
       nodeId = node._id;
-    let diff,
-      len,
-      trueEnd,
-      trueStart,
-      endRGBA;
+    let diff, len, trueEnd, trueStart, endRGBA;
 
     // remove conflict from tween map if it exists
     const tweenId = Tween.tweens[nodeId][key];
@@ -352,14 +347,7 @@ export class Tween {
   _tweenFunc(i) {
     const node = this.node,
       attrs = Tween.attrs[node._id][this._id];
-    let key,
-      attr,
-      start,
-      diff,
-      newVal,
-      n,
-      len,
-      end;
+    let key, attr, start, diff, newVal, n, len, end;
 
     for (key in attrs) {
       attr = attrs[key];
@@ -528,11 +516,26 @@ export class Tween {
 
     this.pause();
 
+    // Clean up animation
+    if (this.anim) {
+      this.anim.stop();
+    }
+
+    // Clean up tween entries
     for (const key in attrs) {
       delete Tween.tweens[nodeId][key];
     }
 
+    // Clean up attrs entry
     delete Tween.attrs[nodeId][thisId];
+
+    // Clean up parent objects if empty
+    if (Object.keys(Tween.tweens[nodeId]).length === 0) {
+      delete Tween.tweens[nodeId];
+    }
+    if (Object.keys(Tween.attrs[nodeId]).length === 0) {
+      delete Tween.attrs[nodeId];
+    }
   }
 }
 

@@ -1550,6 +1550,53 @@ describe('Shape', function () {
     compareCanvases(canvas2, canvas1, 240, 110);
   });
 
+  it('export stage when buffer canvas is for line', async function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    const group = new Konva.Group({
+      id: 'group01',
+      draggable: false,
+      opacity: 0.99,
+    });
+    layer.add(group);
+
+    const arrow = new Konva.Arrow({
+      x: 0,
+      y: 0,
+      points: [50, 25, 200, 25, 200, 225, 400, 225],
+      stroke: 'purple',
+      fill: 'purple',
+      strokeWidth: 4,
+      pointerAtEnding: true,
+      bezier: true,
+    });
+    group.add(arrow);
+
+    const bounds = layer.getClientRect({ relativeTo: stage });
+    const pos = stage.getPosition();
+
+    const canvas1 = layer.toCanvas({
+      pixelRatio: 1,
+      x: bounds.x + pos.x,
+      y: bounds.y + pos.y,
+      width: bounds.width,
+      height: bounds.height,
+    });
+    group.opacity(1);
+    const canvas2 = layer.toCanvas({
+      pixelRatio: 1,
+      x: bounds.x + pos.x,
+      y: bounds.y + pos.y,
+      width: bounds.width,
+      height: bounds.height,
+    });
+
+    compareCanvases(canvas1, canvas2, 240, 110);
+  });
+
   // ======================================================
   it('optional disable shadow for stroke', function () {
     var stage = addStage();

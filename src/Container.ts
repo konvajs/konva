@@ -120,8 +120,6 @@ export abstract class Container<
    * layer.add(shape1, shape2, shape3);
    * // empty arrays are accepted, though each individual child must be defined
    * layer.add(...shapes);
-   * // remember to redraw layer if you changed something
-   * layer.draw();
    */
   add(...children: ChildType[]) {
     if (children.length === 0) {
