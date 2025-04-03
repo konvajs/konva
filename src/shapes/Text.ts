@@ -242,9 +242,6 @@ export class Text extends Shape<TextConfig> {
         lineHeightPx / 2;
     }
 
-    var lineTranslateX = 0;
-    var lineTranslateY = 0;
-
     if (direction === RTL) {
       context.setAttr('direction', direction);
     }
@@ -266,15 +263,12 @@ export class Text extends Shape<TextConfig> {
 
     // draw text lines
     for (n = 0; n < textArrLen; n++) {
-      var lineTranslateX = 0;
-      var lineTranslateY = 0;
-      var obj = textArr[n],
+      let lineTranslateX = 0;
+      let lineTranslateY = 0;
+      const obj = textArr[n],
         text = obj.text,
         width = obj.width,
-        lastLine = obj.lastInParagraph,
-        spacesNumber,
-        oneWord,
-        lineWidth;
+        lastLine = obj.lastInParagraph;
 
       // horizontal alignment
       context.save();
@@ -294,9 +288,7 @@ export class Text extends Shape<TextConfig> {
         const x = lineTranslateX;
         const y = translateY + lineTranslateY + yOffset;
         context.moveTo(x, y);
-        spacesNumber = text.split(' ').length - 1;
-        oneWord = spacesNumber === 0;
-        lineWidth =
+        const lineWidth =
           align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
         context.lineTo(x + Math.round(lineWidth), y);
 
@@ -314,9 +306,7 @@ export class Text extends Shape<TextConfig> {
         context.beginPath();
         const yOffset = Konva._fixTextRendering ? -Math.round(fontSize / 4) : 0;
         context.moveTo(lineTranslateX, translateY + lineTranslateY + yOffset);
-        spacesNumber = text.split(' ').length - 1;
-        oneWord = spacesNumber === 0;
-        lineWidth =
+        const lineWidth =
           align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
         context.lineTo(
           lineTranslateX + Math.round(lineWidth),
@@ -333,7 +323,7 @@ export class Text extends Shape<TextConfig> {
       // be supported otherwise.
       if (direction !== RTL && (letterSpacing !== 0 || align === JUSTIFY)) {
         //   var words = text.split(' ');
-        spacesNumber = text.split(' ').length - 1;
+        const spacesNumber = text.split(' ').length - 1;
         const array = stringToArray(text);
         for (let li = 0; li < array.length; li++) {
           const letter = array[li];

@@ -1,4 +1,3 @@
- 
 import { Factory } from '../Factory';
 import { Util } from '../Util';
 import { Node, Filter } from '../Node';
@@ -22,23 +21,9 @@ export const Pixelate: Filter = function (imageData) {
   let pixelSize = Math.ceil(this.pixelSize()),
     width = imageData.width,
     height = imageData.height,
-    x,
-    y,
-    i,
     //pixelsPerBin = pixelSize * pixelSize,
-    red,
-    green,
-    blue,
-    alpha,
     nBinsX = Math.ceil(width / pixelSize),
     nBinsY = Math.ceil(height / pixelSize),
-    xBinStart,
-    xBinEnd,
-    yBinStart,
-    yBinEnd,
-    xBin,
-    yBin,
-    pixelsInBin,
     data = imageData.data;
 
   if (pixelSize <= 0) {
@@ -46,31 +31,31 @@ export const Pixelate: Filter = function (imageData) {
     return;
   }
 
-  for (xBin = 0; xBin < nBinsX; xBin += 1) {
-    for (yBin = 0; yBin < nBinsY; yBin += 1) {
+  for (let xBin = 0; xBin < nBinsX; xBin += 1) {
+    for (let yBin = 0; yBin < nBinsY; yBin += 1) {
       // Initialize the color accumlators to 0
-      red = 0;
-      green = 0;
-      blue = 0;
-      alpha = 0;
+      let red = 0;
+      let green = 0;
+      let blue = 0;
+      let alpha = 0;
 
       // Determine which pixels are included in this bin
-      xBinStart = xBin * pixelSize;
-      xBinEnd = xBinStart + pixelSize;
-      yBinStart = yBin * pixelSize;
-      yBinEnd = yBinStart + pixelSize;
+      const xBinStart = xBin * pixelSize;
+      const xBinEnd = xBinStart + pixelSize;
+      const yBinStart = yBin * pixelSize;
+      const yBinEnd = yBinStart + pixelSize;
 
       // Add all of the pixels to this bin!
-      pixelsInBin = 0;
-      for (x = xBinStart; x < xBinEnd; x += 1) {
+      let pixelsInBin = 0;
+      for (let x = xBinStart; x < xBinEnd; x += 1) {
         if (x >= width) {
           continue;
         }
-        for (y = yBinStart; y < yBinEnd; y += 1) {
+        for (let y = yBinStart; y < yBinEnd; y += 1) {
           if (y >= height) {
             continue;
           }
-          i = (width * y + x) * 4;
+          const i = (width * y + x) * 4;
           red += data[i + 0];
           green += data[i + 1];
           blue += data[i + 2];
@@ -86,15 +71,15 @@ export const Pixelate: Filter = function (imageData) {
       alpha = alpha / pixelsInBin;
 
       // Draw this bin
-      for (x = xBinStart; x < xBinEnd; x += 1) {
+      for (let x = xBinStart; x < xBinEnd; x += 1) {
         if (x >= width) {
           continue;
         }
-        for (y = yBinStart; y < yBinEnd; y += 1) {
+        for (let y = yBinStart; y < yBinEnd; y += 1) {
           if (y >= height) {
             continue;
           }
-          i = (width * y + x) * 4;
+          const i = (width * y + x) * 4;
           data[i + 0] = red;
           data[i + 1] = green;
           data[i + 2] = blue;
