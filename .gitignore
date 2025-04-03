@@ -19,6 +19,7 @@ src_old
 types
 out.png
 cmj
+.test-temp
 
 # Numerous always-ignore extensions
 *.diff

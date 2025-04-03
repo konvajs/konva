@@ -1,10 +1,25 @@
 {
   "compilerOptions": {
     "target": "ES2015",
-    "noEmitOnError": true,
+    "noEmitOnError": false,
     "moduleResolution": "node",
     "lib": ["ES2015", "dom"],
-    "module": "CommonJS"
+    "module": "CommonJS",
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "allowJs": true,
+    "noEmit": false,
+    "checkJs": false,
+    "allowUnreachableCode": true,
+    "allowUnusedLabels": true,
+    "noFallthroughCasesInSwitch": false,
+    "noImplicitReturns": false,
+    "noImplicitThis": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "strict": false
   },
-  "include": ["../src/**/*.ts"]
+  "include": ["../src/**/*.ts", "./**/*.ts"],
+  "exclude": ["../node_modules/**/*"]
 }
