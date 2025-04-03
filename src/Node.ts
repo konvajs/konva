@@ -713,39 +713,32 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     evtStr: K,
     handler: KonvaEventListener<this, NodeEventMap[K]>
   ) {
-    this._cache && this._cache.delete(ALL_LISTENERS);
+    if (this._cache) {
+      this._cache.delete(ALL_LISTENERS);
+    }
 
     if (arguments.length === 3) {
       return this._delegate.apply(this, arguments as any);
     }
-    let events = (evtStr as string).split(SPACE),
-      len = events.length,
-      n,
-      event,
-      parts,
-      baseEvent,
-      name;
+    const events = (evtStr as string).split(SPACE);
 
     /*
      * loop through types and attach event listeners to
      * each one.  eg. 'click mouseover.namespace mouseout'
      * will create three event bindings
      */
-    for (n = 0; n < len; n++) {
-      event = events[n];
-      parts = event.split('.');
-      baseEvent = parts[0];
-      name = parts[1] || '';
+    for (let n = 0; n < events.length; n++) {
+      const event = events[n];
+      const parts = event.split('.');
+      const baseEvent = parts[0];
+      const name = parts[1] || '';
 
       // create events array if it doesn't exist
       if (!this.eventListeners[baseEvent]) {
         this.eventListeners[baseEvent] = [];
       }
 
-      this.eventListeners[baseEvent].push({
-        name: name,
-        handler: handler,
-      });
+      this.eventListeners[baseEvent].push({ name , handler });
     }
 
     return this;
@@ -2228,7 +2221,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * node.addName('selected');
    * node.name(); // return 'red selected'
    */
-  addName(name) {
+  addName(name: string) {
     if (!this.hasName(name)) {
       const oldName = this.name();
       const newName = oldName ? oldName + ' ' + name : name;
@@ -2400,7 +2393,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     const topListeners = this._getProtoListeners(eventType);
     if (topListeners) {
-      for (var i = 0; i < topListeners.length; i++) {
+      for (let i = 0; i < topListeners.length; i++) {
         topListeners[i].handler.call(this, evt);
       }
     }
@@ -2409,7 +2402,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     // because events can be added/removed while firing
     const selfListeners = this.eventListeners[eventType];
     if (selfListeners) {
-      for (var i = 0; i < selfListeners.length; i++) {
+      for (let i = 0; i < selfListeners.length; i++) {
         selfListeners[i].handler.call(this, evt);
       }
     }
