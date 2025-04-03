@@ -7,6 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Fixed memory leaks on Tween destroy
 - Fixed incorrect export of stage/layer when internal nodes used buffer canvas for rendering
+- Fixed incorrect render of cached node when buffer canvas is used
+- Fixed incorrect path lenth calculations
 
 ## 9.3.20 (2025-03-20)
 
