@@ -70,7 +70,7 @@ export const Factory = {
     attr: U,
     def?: Value<T, U>
   ) {
-    var method = GET + Util._capitalize(attr);
+    const method = GET + Util._capitalize(attr);
 
     constructor.prototype[method] =
       constructor.prototype[method] ||
@@ -86,7 +86,7 @@ export const Factory = {
     validator?: ValidatorFunc<Value<T, U>>,
     after?: AfterFunc<T>
   ) {
-    var method = SET + Util._capitalize(attr);
+    const method = SET + Util._capitalize(attr);
 
     if (!constructor.prototype[method]) {
       Factory.overWriteSetter(constructor, attr, validator, after);
@@ -99,7 +99,7 @@ export const Factory = {
     validator?: ValidatorFunc<Value<T, U>>,
     after?: AfterFunc<T>
   ) {
-    var method = SET + Util._capitalize(attr);
+    const method = SET + Util._capitalize(attr);
     constructor.prototype[method] = function (val) {
       if (validator && val !== undefined && val !== null) {
         val = validator.call(this, val, attr);
@@ -180,7 +180,7 @@ export const Factory = {
     constructor: T,
     attr: U
   ) {
-    var capitalizedAttr = Util._capitalize(attr),
+    const capitalizedAttr = Util._capitalize(attr),
       setter = SET + capitalizedAttr,
       getter = GET + capitalizedAttr;
 
