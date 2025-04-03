@@ -602,7 +602,7 @@ export class Shape<
       stage,
       bufferContext;
 
-    const skipBuffer = canvas.isCache;
+    const skipBuffer = false;
     const cachingSelf = top === this;
 
     if (!this.isVisible() && !cachingSelf) {
@@ -646,7 +646,13 @@ export class Shape<
       }
       context._applyOpacity(this);
       context._applyGlobalCompositeOperation(this);
-      context.drawImage(bc._canvas, 0, 0, bc.width / ratio, bc.height / ratio);
+      context.drawImage(
+        bc._canvas,
+        bc.x || 0,
+        bc.y || 0,
+        bc.width / ratio,
+        bc.height / ratio
+      );
     } else {
       context._applyLineJoin(this);
 

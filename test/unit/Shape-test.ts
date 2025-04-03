@@ -1597,6 +1597,36 @@ describe('Shape', function () {
     compareCanvases(canvas1, canvas2, 240, 110);
   });
 
+  it('check stroke rendering on buffer canvas', async function () {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    const rect = new Konva.Rect({
+      x: 150,
+      y: 50,
+      width: 50,
+      height: 50,
+      fill: '#039BE5',
+      stroke: 'yellow',
+      strokeWidth: 5,
+      shadowColor: 'black',
+      shadowOffset: { x: 10, y: 10 },
+      shadowOpacity: 0.5,
+    });
+
+    layer.add(rect);
+
+    const canvas1 = layer.toCanvas();
+    rect.cache();
+    const canvas2 = layer.toCanvas();
+
+    // throw new Error('stop');
+
+    compareCanvases(canvas1, canvas2);
+  });
+
   // ======================================================
   it('optional disable shadow for stroke', function () {
     var stage = addStage();

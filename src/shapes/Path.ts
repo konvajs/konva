@@ -258,11 +258,19 @@ export class Path extends Shape<PathConfig> {
     }
 
     if (length < 0.01) {
-      points = dataArray[i].points.slice(0, 2);
-      return {
-        x: points[0],
-        y: points[1],
-      };
+      const cmd = dataArray[i].command;
+      if (cmd === 'M') {
+        points = dataArray[i].points.slice(0, 2);
+        return {
+          x: points[0],
+          y: points[1],
+        };
+      } else {
+        return {
+          x: dataArray[i].start.x,
+          y: dataArray[i].start.y,
+        };
+      }
     }
 
     const cp = dataArray[i];

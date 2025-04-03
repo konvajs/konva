@@ -131,6 +131,14 @@ export function compareCanvases(canvas1, canvas2, tol?, secondTol?) {
       b.appendChild(canvas2);
       c.appendChild(diffCanvas);
       div.appendChild(b);
+      if (!canvas1.parentNode) {
+        const d = get('div', '<div>Original:</div>');
+        canvas1.style.position = '';
+        canvas1.style.display = '';
+        d.style.float = 'left';
+        d.appendChild(canvas1);
+        div.appendChild(d);
+      }
       div.appendChild(c);
       getContainer().appendChild(div);
     }

@@ -1,8 +1,6 @@
 import { Util } from './Util';
 import { SceneContext, HitContext, Context } from './Context';
 import { Konva } from './Global';
-import { Factory } from './Factory';
-import { getNumberValidator } from './Validators';
 
 // calculate pixel ratio
 let _pixelRatio;

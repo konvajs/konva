@@ -1083,6 +1083,7 @@ describe('Path', function () {
   it('get point at path', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
+    stage.add(layer);
     const data =
       'M 300,10 L 250,100 A 100 40 30 1 0 150 150 C 160,100, 290,100, 300,150';
     var path = new Konva.Path({
@@ -1102,7 +1103,7 @@ describe('Path', function () {
         var circle = new Konva.Circle({
           x: p.x,
           y: p.y,
-          radius: 2,
+          radius: 0.1,
           fill: 'black',
           stroke: 'black',
         });
@@ -1164,13 +1165,49 @@ describe('Path', function () {
         { x: 299.87435436448743, y: 149.4028482225714 },
       ]);
     }
+  });
 
+  it('get point at vertical path', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    const data = 'M 614.96002,7.5147864 611.20262,429.59529';
+    var path = new Konva.Path({
+      stroke: 'red',
+      strokeWidth: 3,
+      data,
+      x: -600,
+    });
+    layer.add(path);
+    if (isBrowser) {
+      const SVGPath = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'path'
+      ) as SVGPathElement;
+      SVGPath.setAttribute('d', data);
+      for (var i = 0.001; i < path.getLength(); i += 1) {
+        var p = path.getPointAtLength(i);
+        console.log(p);
+        var circle = new Konva.Circle({
+          x: p.x + path.x(),
+          y: p.y + path.y(),
+          radius: 2,
+          fill: 'black',
+          stroke: 'black',
+        });
+        layer.add(circle);
+        const position = SVGPath.getPointAtLength(i);
+        console.log(position);
+        assert(Math.abs(p.x - position.x) <= 1);
+        assert(Math.abs(p.y - position.y) <= 1);
+      }
+    }
     stage.add(layer);
   });
 
   it('get point at path with float attrs', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
+    stage.add(layer);
 
     const data =
       'M419.0000314094981 342.88624187900973 L419.00003140949804 577.0038889378335 L465.014001082264 577.0038889378336 Z';

@@ -248,8 +248,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    */
   clearCache() {
     if (this._cache.has(CANVAS)) {
-      const { scene, filter, hit } = this._cache.get(CANVAS);
-      Util.releaseCanvas(scene, filter, hit);
+      const { scene, filter, hit, buffer } = this._cache.get(CANVAS);
+      Util.releaseCanvas(scene, filter, hit, buffer);
       this._cache.delete(CANVAS);
     }
 
@@ -385,6 +385,18 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       sceneContext = cachedSceneCanvas.getContext(),
       hitContext = cachedHitCanvas.getContext();
 
+    const bufferCanvas = new SceneCanvas({
+        // width and height already multiplied by pixelRatio
+        // so we need to revert that
+        // also increase size by x nd y offset to make sure content fits canvas
+        width:
+          cachedSceneCanvas.width / cachedSceneCanvas.pixelRatio + Math.abs(x),
+        height:
+          cachedSceneCanvas.height / cachedSceneCanvas.pixelRatio + Math.abs(y),
+        pixelRatio: cachedSceneCanvas.pixelRatio,
+      }),
+      bufferContext = bufferCanvas.getContext();
+
     cachedHitCanvas.isCache = true;
     cachedSceneCanvas.isCache = true;
 
@@ -398,16 +410,23 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     sceneContext.save();
     hitContext.save();
+    bufferContext.save();
 
     sceneContext.translate(-x, -y);
     hitContext.translate(-x, -y);
+    bufferContext.translate(-x, -y);
+    // hard-code offset to make sure content fits canvas
+    // @ts-ignore
+    bufferCanvas.x = x;
+    // @ts-ignore
+    bufferCanvas.y = y;
 
     // extra flag to skip on getAbsolute opacity calc
     this._isUnderCache = true;
     this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
     this._clearSelfAndDescendantCache(ABSOLUTE_SCALE);
 
-    this.drawScene(cachedSceneCanvas, this);
+    this.drawScene(cachedSceneCanvas, this, bufferCanvas);
     this.drawHit(cachedHitCanvas, this);
     this._isUnderCache = false;
 
@@ -431,6 +450,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       scene: cachedSceneCanvas,
       filter: cachedFilterCanvas,
       hit: cachedHitCanvas,
+      buffer: bufferCanvas,
       x: x,
       y: y,
     });
