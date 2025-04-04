@@ -544,8 +544,8 @@ export class Path extends Shape<PathConfig> {
         const startX = cpx,
           startY = cpy;
         // Move var from within the switch to up here (jshint)
-        var prevCmd, ctlPtx, ctlPty; // Ss, Tt
-        var rx, ry, psi, fa, fs, x1, y1; // Aa
+        let prevCmd, ctlPtx, ctlPty; // Ss, Tt
+        let rx, ry, psi, fa, fs, x1, y1; // Aa
 
         // convert l, H, h, V, and v to L
         switch (c) {
@@ -563,8 +563,8 @@ export class Path extends Shape<PathConfig> {
             break;
           // Note: lineTo handlers need to be above this point
           case 'm':
-            var dx = p.shift()!;
-            var dy = p.shift()!;
+            const dx = p.shift()!;
+            const dy = p.shift()!;
             cpx += dx;
             cpy += dy;
             cmd = 'M';
@@ -790,12 +790,12 @@ export class Path extends Shape<PathConfig> {
       case 'A':
         // Approximates by breaking curve into line segments
         len = 0.0;
-        var start = points[4];
+        const start = points[4];
         // 4 = theta
-        var dTheta = points[5];
+        const dTheta = points[5];
         // 5 = dTheta
-        var end = points[4] + dTheta;
-        var inc = Math.PI / 180.0;
+        const end = points[4] + dTheta;
+        let inc = Math.PI / 180.0;
         // 1 degree resolution
         if (Math.abs(start - end) < inc) {
           inc = Math.abs(start - end);
