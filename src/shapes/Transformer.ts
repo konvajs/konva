@@ -770,11 +770,11 @@ export class Transformer extends Group {
       keepProportion = this.keepRatio() || e.shiftKey;
     }
 
-    var centeredScaling = this.centeredScaling() || e.altKey;
+    let centeredScaling = this.centeredScaling() || e.altKey;
 
     if (this._movingAnchorName === 'top-left') {
       if (keepProportion) {
-        var comparePoint = centeredScaling
+        const comparePoint = centeredScaling
           ? {
               x: this.width() / 2,
               y: this.height() / 2,
@@ -788,9 +788,9 @@ export class Transformer extends Group {
             Math.pow(comparePoint.y - anchorNode.y(), 2)
         );
 
-        var reverseX = this.findOne('.top-left')!.x() > comparePoint.x ? -1 : 1;
+        const reverseX = this.findOne('.top-left')!.x() > comparePoint.x ? -1 : 1;
 
-        var reverseY = this.findOne('.top-left')!.y() > comparePoint.y ? -1 : 1;
+        const reverseY = this.findOne('.top-left')!.y() > comparePoint.y ? -1 : 1;
 
         x = newHypotenuse * this.cos * reverseX;
         y = newHypotenuse * this.sin * reverseY;
@@ -802,7 +802,7 @@ export class Transformer extends Group {
       this.findOne('.top-left')!.y(anchorNode.y());
     } else if (this._movingAnchorName === 'top-right') {
       if (keepProportion) {
-        var comparePoint = centeredScaling
+        const comparePoint = centeredScaling
           ? {
               x: this.width() / 2,
               y: this.height() / 2,
@@ -817,10 +817,10 @@ export class Transformer extends Group {
             Math.pow(comparePoint.y - anchorNode.y(), 2)
         );
 
-        var reverseX =
+        const reverseX =
           this.findOne('.top-right')!.x() < comparePoint.x ? -1 : 1;
 
-        var reverseY =
+        const reverseY =
           this.findOne('.top-right')!.y() > comparePoint.y ? -1 : 1;
 
         x = newHypotenuse * this.cos * reverseX;
@@ -838,7 +838,7 @@ export class Transformer extends Group {
       this.findOne('.bottom-right')!.x(anchorNode.x());
     } else if (this._movingAnchorName === 'bottom-left') {
       if (keepProportion) {
-        var comparePoint = centeredScaling
+        const comparePoint = centeredScaling
           ? {
               x: this.width() / 2,
               y: this.height() / 2,
@@ -853,9 +853,9 @@ export class Transformer extends Group {
             Math.pow(anchorNode.y() - comparePoint.y, 2)
         );
 
-        var reverseX = comparePoint.x < anchorNode.x() ? -1 : 1;
+        const reverseX = comparePoint.x < anchorNode.x() ? -1 : 1;
 
-        var reverseY = anchorNode.y() < comparePoint.y ? -1 : 1;
+        const reverseY = anchorNode.y() < comparePoint.y ? -1 : 1;
 
         x = newHypotenuse * this.cos * reverseX;
         y = newHypotenuse * this.sin * reverseY;
@@ -872,7 +872,7 @@ export class Transformer extends Group {
       this.findOne('.bottom-right')!.y(anchorNode.y());
     } else if (this._movingAnchorName === 'bottom-right') {
       if (keepProportion) {
-        var comparePoint = centeredScaling
+        const comparePoint = centeredScaling
           ? {
               x: this.width() / 2,
               y: this.height() / 2,
@@ -887,10 +887,10 @@ export class Transformer extends Group {
             Math.pow(anchorNode.y() - comparePoint.y, 2)
         );
 
-        var reverseX =
+        const reverseX =
           this.findOne('.bottom-right')!.x() < comparePoint.x ? -1 : 1;
 
-        var reverseY =
+        const reverseY =
           this.findOne('.bottom-right')!.y() < comparePoint.y ? -1 : 1;
 
         x = newHypotenuse * this.cos * reverseX;
@@ -908,7 +908,7 @@ export class Transformer extends Group {
       );
     }
 
-    var centeredScaling = this.centeredScaling() || e.altKey;
+    centeredScaling = this.centeredScaling() || e.altKey;
     if (centeredScaling) {
       const topLeft = this.findOne('.top-left')!;
       const bottomRight = this.findOne('.bottom-right')!;
