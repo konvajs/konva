@@ -1,13 +1,13 @@
 import { Factory } from '../Factory';
-import { Shape, ShapeConfig } from '../Shape';
 import { _registerNode } from '../Global';
+import { Shape, ShapeConfig } from '../Shape';
 
-import { GetSet, PathSegment } from '../types';
 import {
   getCubicArcLength,
   getQuadraticArcLength,
   t2length,
 } from '../BezierFunctions';
+import { GetSet, PathSegment } from '../types';
 
 export interface PathConfig extends ShapeConfig {
   data?: string;
@@ -858,15 +858,15 @@ export class Path extends Shape<PathConfig> {
     return 0;
   }
   static convertEndpointToCenterParameterization(
-    x1,
-    y1,
-    x2,
-    y2,
-    fa,
-    fs,
-    rx,
-    ry,
-    psiDeg
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    fa: number,
+    fs: number,
+    rx: number,
+    ry: number,
+    psiDeg: number
   ) {
     // Derived from: http://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
     const psi = psiDeg * (Math.PI / 180.0);
