@@ -213,10 +213,16 @@ export class Shape<
     shapes[key] = this;
   }
 
+  /**
+   * @deprecated 
+   */
   getContext() {
     Util.warn('shape.getContext() method is deprecated. Please do not use it.');
     return this.getLayer()!.getContext();
   }
+  /**
+   * @deprecated 
+   */
   getCanvas() {
     Util.warn('shape.getCanvas() method is deprecated. Please do not use it.');
     return this.getLayer()!.getCanvas();
@@ -442,7 +448,7 @@ export class Shape<
    * @param {Number} point.y
    * @returns {Boolean}
    */
-  intersects(point) {
+  intersects(point: Vector2d) {
     const stage = this.getStage();
     if (!stage) {
       return false;
@@ -599,7 +605,7 @@ export class Shape<
       cachedCanvas = this._getCanvasCache(),
       drawFunc = this.getSceneFunc(),
       hasShadow = this.hasShadow();
-    let stage, bufferContext;
+    let stage;
 
     const skipBuffer = false;
     const cachingSelf = top === this;
@@ -627,7 +633,7 @@ export class Shape<
     if (this._useBufferCanvas() && !skipBuffer) {
       stage = this.getStage();
       const bc = bufferCanvas || stage.bufferCanvas;
-      bufferContext = bc.getContext();
+      const bufferContext = bc.getContext();
       bufferContext.clear();
       bufferContext.save();
       bufferContext._applyLineJoin(this);

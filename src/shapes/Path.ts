@@ -1,13 +1,13 @@
 import { Factory } from '../Factory';
-import { Shape, ShapeConfig } from '../Shape';
 import { _registerNode } from '../Global';
+import { Shape, ShapeConfig } from '../Shape';
 
-import { GetSet, PathSegment } from '../types';
 import {
   getCubicArcLength,
   getQuadraticArcLength,
   t2length,
 } from '../BezierFunctions';
+import { GetSet, PathSegment } from '../types';
 
 export interface PathConfig extends ShapeConfig {
   data?: string;
@@ -217,7 +217,7 @@ export class Path extends Shape<PathConfig> {
    * @example
    * var point = path.getPointAtLength(10);
    */
-  getPointAtLength(length) {
+  getPointAtLength(length: number) {
     return Path.getPointAtLengthOfDataArray(length, this.dataArray);
   }
 
@@ -370,26 +370,33 @@ export class Path extends Shape<PathConfig> {
     return { x: ix + adjustedRun, y: iy + adjustedRise };
   }
 
-  static getPointOnCubicBezier(pct, P1x, P1y, P2x, P2y, P3x, P3y, P4x, P4y) {
-    function CB1(t) {
+  static getPointOnCubicBezier(
+    pct: number,
+    P1x: number,
+    P1y: number,
+    P2x: number,
+    P2y: number,
+    P3x: number,
+    P3y: number,
+    P4x: number,
+    P4y: number
+  ) {
+    function CB1(t: number) {
       return t * t * t;
     }
-    function CB2(t) {
+    function CB2(t: number) {
       return 3 * t * t * (1 - t);
     }
-    function CB3(t) {
+    function CB3(t: number) {
       return 3 * t * (1 - t) * (1 - t);
     }
-    function CB4(t) {
+    function CB4(t: number) {
       return (1 - t) * (1 - t) * (1 - t);
     }
     const x = P4x * CB1(pct) + P3x * CB2(pct) + P2x * CB3(pct) + P1x * CB4(pct);
     const y = P4y * CB1(pct) + P3y * CB2(pct) + P2y * CB3(pct) + P1y * CB4(pct);
 
-    return {
-      x: x,
-      y: y,
-    };
+    return { x, y };
   }
   static getPointOnQuadraticBezier(pct, P1x, P1y, P2x, P2y, P3x, P3y) {
     function QB1(t) {
@@ -404,10 +411,7 @@ export class Path extends Shape<PathConfig> {
     const x = P3x * QB1(pct) + P2x * QB2(pct) + P1x * QB3(pct);
     const y = P3y * QB1(pct) + P2y * QB2(pct) + P1y * QB3(pct);
 
-    return {
-      x: x,
-      y: y,
-    };
+    return { x, y };
   }
   static getPointOnEllipticalArc(
     cx: number,
@@ -854,15 +858,15 @@ export class Path extends Shape<PathConfig> {
     return 0;
   }
   static convertEndpointToCenterParameterization(
-    x1,
-    y1,
-    x2,
-    y2,
-    fa,
-    fs,
-    rx,
-    ry,
-    psiDeg
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    fa: number,
+    fs: number,
+    rx: number,
+    ry: number,
+    psiDeg: number
   ) {
     // Derived from: http://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
     const psi = psiDeg * (Math.PI / 180.0);
