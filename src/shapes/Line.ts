@@ -6,7 +6,15 @@ import { getNumberArrayValidator, getNumberValidator } from '../Validators';
 import { Context } from '../Context';
 import { GetSet } from '../types';
 
-function getControlPoints(x0, y0, x1, y1, x2, y2, t) {
+function getControlPoints(
+  x0: number,
+  y0: number,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  t: number
+) {
   const d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2)),
     d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)),
     fa = (t * d01) / (d01 + d12),
