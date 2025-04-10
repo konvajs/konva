@@ -1,19 +1,19 @@
-import { Util, Transform } from './Util';
-import { Factory } from './Factory';
-import { SceneCanvas, HitCanvas, Canvas } from './Canvas';
-import { Konva } from './Global';
+import { Canvas, HitCanvas, SceneCanvas } from './Canvas';
 import { Container } from './Container';
-import { GetSet, Vector2d, IRect } from './types';
+import { Context } from './Context';
 import { DD } from './DragAndDrop';
+import { Factory } from './Factory';
+import { Konva } from './Global';
+import { Layer } from './Layer';
+import { Shape } from './Shape';
+import { Stage } from './Stage';
+import { GetSet, IRect, Vector2d } from './types';
+import { Transform, Util } from './Util';
 import {
+  getBooleanValidator,
   getNumberValidator,
   getStringValidator,
-  getBooleanValidator,
 } from './Validators';
-import { Stage } from './Stage';
-import { Context } from './Context';
-import { Shape } from './Shape';
-import { Layer } from './Layer';
 
 export type Filter = (this: Node, imageData: ImageData) => void;
 
@@ -738,7 +738,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         this.eventListeners[baseEvent] = [];
       }
 
-      this.eventListeners[baseEvent].push({ name , handler });
+      this.eventListeners[baseEvent].push({ name, handler });
     }
 
     return this;
@@ -894,13 +894,13 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @example
    * var x = node.getAttr('x');
    */
-  getAttr(attr: string) {
+  getAttr<T>(attr: string) {
     const method = 'get' + Util._capitalize(attr);
     if (Util._isFunction((this as any)[method])) {
       return (this as any)[method]();
     }
     // otherwise get directly
-    return this.attrs[attr];
+    return this.attrs[attr] as T | undefined;
   }
   /**
    * get ancestors
@@ -2284,7 +2284,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @example
    * node.setAttr('x', 5);
    */
-  setAttr(attr, val) {
+  setAttr(attr: string, val) {
     const func = this[SET + Util._capitalize(attr)];
 
     if (Util._isFunction(func)) {
@@ -2301,7 +2301,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       drawNode?.batchDraw();
     }
   }
-  _setAttr(key, val) {
+  _setAttr(key: string, val) {
     const oldVal = this.attrs[key];
     if (oldVal === val && !Util.isObject(val)) {
       return;

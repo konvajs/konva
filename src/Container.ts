@@ -1,11 +1,10 @@
-import { Factory } from './Factory';
-import { Node, NodeConfig } from './Node';
-import { getNumberValidator } from './Validators';
-
-import { GetSet, IRect } from './types';
-import { Shape } from './Shape';
 import { HitCanvas, SceneCanvas } from './Canvas';
 import { SceneContext } from './Context';
+import { Factory } from './Factory';
+import { Node, NodeConfig } from './Node';
+import { Shape } from './Shape';
+import { GetSet, IRect } from './types';
+import { getNumberValidator } from './Validators';
 
 export type ClipFuncOutput =
   | void
@@ -51,18 +50,11 @@ export abstract class Container<
    * });
    */
   getChildren(filterFunc?: (item: Node) => boolean) {
-    if (!filterFunc) {
-      return this.children || [];
-    }
-
     const children = this.children || [];
-    const results: Array<ChildType> = [];
-    children.forEach(function (child) {
-      if (filterFunc(child)) {
-        results.push(child);
-      }
-    });
-    return results;
+    if (filterFunc) {
+      return children.filter(filterFunc);
+    }
+    return children;
   }
   /**
    * determine if node has children
@@ -233,7 +225,7 @@ export abstract class Container<
     this._descendants((node) => {
       const valid = node._isMatch(selector);
       if (valid) {
-        retArr.push(node as unknown as ChildNode);
+        retArr.push(node as ChildNode);
       }
       if (valid && findOne) {
         return true;
