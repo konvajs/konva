@@ -114,7 +114,7 @@ export class Layer extends Container<Group | Shape> {
     return this;
   }
   // extend Node.prototype.setZIndex
-  setZIndex(index) {
+  setZIndex(index: number) {
     super.setZIndex(index);
     const stage = this.getStage();
     if (stage && stage.content) {
