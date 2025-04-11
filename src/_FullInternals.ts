@@ -16,6 +16,7 @@ import { RegularPolygon } from './shapes/RegularPolygon';
 import { Ring } from './shapes/Ring';
 import { Sprite } from './shapes/Sprite';
 import { Star } from './shapes/Star';
+import { Cloud } from './shapes/Cloud';
 import { Text } from './shapes/Text';
 import { TextPath } from './shapes/TextPath';
 import { Transformer } from './shapes/Transformer';
@@ -57,6 +58,7 @@ export const Konva = Core.Util._assign(Core, {
   Ring,
   Sprite,
   Star,
+  Cloud,
   Text,
   TextPath,
   Transformer,
