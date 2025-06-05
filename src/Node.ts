@@ -88,6 +88,10 @@ const ABSOLUTE_OPACITY = 'absoluteOpacity',
   LISTENING = 'listening',
   MOUSEENTER = 'mouseenter',
   MOUSELEAVE = 'mouseleave',
+  POINTERENTER = 'pointerenter',
+  POINTERLEAVE = 'pointerleave',
+  TOUCHENTER = 'touchenter',
+  TOUCHLEAVE = 'touchleave',
   NAME = 'name',
   SET = 'set',
   SHAPE = 'Shape',
@@ -2335,8 +2339,17 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       evt.target = this;
     }
 
+    const nonBubbling = [
+      MOUSEENTER,
+      MOUSELEAVE,
+      POINTERENTER,
+      POINTERLEAVE,
+      TOUCHENTER,
+      TOUCHLEAVE,
+    ];
+
     const shouldStop =
-      (eventType === MOUSEENTER || eventType === MOUSELEAVE) &&
+      nonBubbling.indexOf(eventType) !== -1 &&
       ((compareShape &&
         (this === compareShape ||
           (this.isAncestorOf && this.isAncestorOf(compareShape)))) ||
@@ -2347,7 +2360,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
       // simulate event bubbling
       const stopBubble =
-        (eventType === MOUSEENTER || eventType === MOUSELEAVE) &&
+        nonBubbling.indexOf(eventType) !== -1 &&
         compareShape &&
         compareShape.isAncestorOf &&
         compareShape.isAncestorOf(this) &&

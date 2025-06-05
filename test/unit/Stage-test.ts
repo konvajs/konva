@@ -8,6 +8,7 @@ import {
   simulateTouchStart,
   simulateTouchMove,
   simulateTouchEnd,
+  simulatePointerMove,
   compareCanvases,
   createCanvas,
   showHit,
@@ -1220,6 +1221,36 @@ describe('Stage', function () {
     });
     stage._pointerleave({ type: 'mouseleave' });
     assert.equal(count, 2);
+  });
+
+  it('stage pointerleave should not fire when leaving a child', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var circle = new Konva.Circle({
+      fill: 'red',
+      radius: 30,
+      x: 50,
+      y: 50,
+    });
+    layer.add(circle);
+    layer.draw();
+
+    var stageLeave = 0;
+    var circleLeave = 0;
+    stage.on('pointerleave', function () {
+      stageLeave += 1;
+    });
+    circle.on('pointerleave', function () {
+      circleLeave += 1;
+    });
+
+    simulatePointerMove(stage, { x: 50, y: 50 });
+    simulatePointerMove(stage, { x: 90, y: 50 });
+
+    assert.equal(circleLeave, 1, 'circle pointerleave should fire');
+    assert.equal(stageLeave, 0, 'stage pointerleave should not fire');
   });
 
   it('toDataURL with hidden layer', function () {
