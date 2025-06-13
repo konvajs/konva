@@ -15,6 +15,8 @@ export interface Box extends IRect {
   rotation: number;
 }
 
+const isTouchDevice = 'ontouchstart' in window
+
 export interface TransformerConfig extends ContainerConfig {
   resizeEnabled?: boolean;
   rotateEnabled?: boolean;
@@ -1164,7 +1166,8 @@ export class Transformer extends Group {
     const resizeEnabled = this.resizeEnabled();
     const padding = this.padding();
 
-    const anchorSize = this.anchorSize();
+    const anchorSizeOrigin = this.anchorSize();
+    const anchorSize = isTouchDevice ? anchorSizeOrigin * 2 : anchorSizeOrigin;
     const anchors = this.find<Rect>('._anchor');
     anchors.forEach((node) => {
       node.setAttrs({
