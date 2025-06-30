@@ -213,8 +213,9 @@ describe('RegularPolygon', function () {
   it('limit corner radius', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
-    const sides = 5,
-      radius = 50;
+    var sides = 5;
+    var radius = 50;
+
     var poly = new Konva.RegularPolygon({
       x: 100,
       y: 100,
@@ -223,7 +224,7 @@ describe('RegularPolygon', function () {
       fill: 'black',
       cornerRadius: 25,
     });
-    const resultCircleRadius = radius * Math.cos(Math.PI / sides);
+    var resultCircleRadius = radius * Math.cos(Math.PI / sides);
     
     layer.add(poly);
     stage.add(layer);
