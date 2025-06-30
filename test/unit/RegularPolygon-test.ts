@@ -5,6 +5,8 @@ import {
   Konva,
   cloneAndCompareLayer,
   assertAlmostEqual,
+  createCanvas,
+  compareLayerAndCanvas,
 } from './test-utils';
 
 describe('RegularPolygon', function () {
@@ -205,5 +207,31 @@ describe('RegularPolygon', function () {
 
     assertAlmostEqual(box.width, 91.60254037844388);
     assertAlmostEqual(box.height, 80.00000000000003);
+  });
+
+  // ======================================================
+  it('limit corner radius', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var poly = new Konva.RegularPolygon({
+      x: 50,
+      y: 50,
+      sides: 5,
+      radius: 50,
+      fill: 'black',
+      cornerRadius: 25,
+    });
+
+    layer.add(poly);
+    stage.add(layer);
+
+    // corner radius creates perfect circle at 1/2 radius
+    var canvas = createCanvas();
+    var context = canvas.getContext('2d');
+    context.beginPath();
+    context.arc(100, 100, 50, 0, Math.PI * 2);
+    context.fillStyle = 'black';
+    context.fill();
+    compareLayerAndCanvas(layer, canvas, 100);
   });
 });
