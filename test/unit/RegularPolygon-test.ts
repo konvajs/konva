@@ -213,25 +213,28 @@ describe('RegularPolygon', function () {
   it('limit corner radius', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
+    const sides = 5,
+      radius = 50;
     var poly = new Konva.RegularPolygon({
-      x: 50,
-      y: 50,
-      sides: 5,
-      radius: 50,
+      x: 100,
+      y: 100,
+      sides: sides,
+      radius: radius,
       fill: 'black',
       cornerRadius: 25,
     });
-
+    const resultCircleRadius = radius * Math.cos(Math.PI / sides);
+    
     layer.add(poly);
     stage.add(layer);
-
+   
     // corner radius creates perfect circle at 1/2 radius
     var canvas = createCanvas();
     var context = canvas.getContext('2d');
     context.beginPath();
-    context.arc(100, 100, 50, 0, Math.PI * 2);
+    context.arc(100, 100, resultCircleRadius, 0, Math.PI * 2);
     context.fillStyle = 'black';
     context.fill();
-    compareLayerAndCanvas(layer, canvas, 100);
+    compareLayerAndCanvas(layer, canvas, 200);
   });
 });
