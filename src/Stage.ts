@@ -58,6 +58,7 @@ const STAGE = 'Stage',
     [POINTERMOVE, '_pointermove'],
     [POINTERUP, '_pointerup'],
     [POINTERCANCEL, '_pointercancel'],
+    [POINTERLEAVE, '_pointerleave'],
     [LOSTPOINTERCAPTURE, '_lostpointercapture'],
   ];
 
