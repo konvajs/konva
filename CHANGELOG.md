@@ -3,12 +3,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 9.3.21 (not released)
+## 9.3.21 (2025-07-07)
 
 - Fixed memory leaks on Tween destroy
 - Fixed incorrect export of stage/layer when internal nodes used buffer canvas for rendering
 - Fixed incorrect render of cached node when buffer canvas is used
 - Fixed incorrect path lenth calculations
+- Fixed `pointerleave` bubbling
+- Added `pointerleave` event in `Stage`
 
 ## 9.3.20 (2025-03-20)
 
