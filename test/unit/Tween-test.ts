@@ -257,6 +257,34 @@ describe('Tween', function () {
     });
   });
 
+  it('to method double simple usage', function (done) {
+    var stage = addStage();
+
+    let finishCount = 0;
+    const onFinish = () => {
+      if (finishCount === 2) {
+        done();
+      }
+    };
+    stage.to({
+      x: 10,
+      duration: 0.001,
+      onFinish: () => {
+        assert(stage.x() === 10);
+        finishCount += 1;
+        onFinish();
+      },
+    });
+    stage.to({
+      y: 10,
+      duration: 0.001,
+      onFinish: () => {
+        finishCount += 1;
+        onFinish();
+      },
+    });
+  });
+
   it('tween to call update callback', function (done) {
     var stage = addStage();
     var updateCount = 0;
@@ -303,6 +331,8 @@ describe('Tween', function () {
 
     line.to({
       points: [100, 100, 200, 100, 200, 200, 100, 200],
+      // add another attribute for better test of cleanup
+      x: 10,
       duration: 0.1,
       onFinish: function () {
         assert.deepEqual(

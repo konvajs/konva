@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 9.3.22 (2025-07-08)
+
+- Fixed possible crash on `node.to()` method
+
 ## 9.3.21 (2025-07-07)
 
 - Fixed memory leaks on Tween destroy
