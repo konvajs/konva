@@ -1223,6 +1223,19 @@ describe('Stage', function () {
     assert.equal(count, 2);
   });
 
+  it('stage pointerleave should fire when leaving stage', function () {
+    var stage = addStage();
+
+    var stageLeave = 0;
+    stage.on('pointerleave', function () {
+      stageLeave += 1;
+    });
+
+    stage.fire('pointerleave', undefined, false);
+
+    assert.equal(stageLeave, 1, 'stage pointerleave should fire');
+  });
+
   it('stage pointerleave should not fire when leaving a child', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
