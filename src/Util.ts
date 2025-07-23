@@ -995,6 +995,11 @@ export const Util = {
     height: number,
     cornerRadius: number | number[]
   ) {
+    // if negative dimensions, abs width/height and move rectangle
+    let xOrigin = width < 0 ? width : 0;
+    let yOrigin = height < 0 ? height : 0;
+    width = Math.abs(width);
+    height = Math.abs(height);
     let topLeft = 0;
     let topRight = 0;
     let bottomLeft = 0;
@@ -1011,35 +1016,42 @@ export const Util = {
       bottomRight = Math.min(cornerRadius[2] || 0, width / 2, height / 2);
       bottomLeft = Math.min(cornerRadius[3] || 0, width / 2, height / 2);
     }
-    context.moveTo(topLeft, 0);
-    context.lineTo(width - topRight, 0);
+    context.moveTo(xOrigin + topLeft, yOrigin);
+    context.lineTo(xOrigin + width - topRight, yOrigin);
     context.arc(
-      width - topRight,
-      topRight,
+      xOrigin + width - topRight,
+      yOrigin + topRight,
       topRight,
       (Math.PI * 3) / 2,
       0,
       false
     );
-    context.lineTo(width, height - bottomRight);
+    context.lineTo(xOrigin + width, yOrigin + height - bottomRight);
     context.arc(
-      width - bottomRight,
-      height - bottomRight,
+      xOrigin + width - bottomRight,
+      yOrigin + height - bottomRight,
       bottomRight,
       0,
       Math.PI / 2,
       false
     );
-    context.lineTo(bottomLeft, height);
+    context.lineTo(xOrigin + bottomLeft, yOrigin + height);
     context.arc(
-      bottomLeft,
-      height - bottomLeft,
+      xOrigin + bottomLeft,
+      yOrigin + height - bottomLeft,
       bottomLeft,
       Math.PI / 2,
       Math.PI,
       false
     );
-    context.lineTo(0, topLeft);
-    context.arc(topLeft, topLeft, topLeft, Math.PI, (Math.PI * 3) / 2, false);
+    context.lineTo(xOrigin, yOrigin + topLeft);
+    context.arc(
+        xOrigin + topLeft, 
+        yOrigin + topLeft, 
+        topLeft, 
+        Math.PI, 
+        (Math.PI * 3) / 2, 
+        false
+    );
   },
 };
