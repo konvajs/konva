@@ -5,6 +5,8 @@ import {
   Konva,
   cloneAndCompareLayer,
   assertAlmostEqual,
+  createCanvas,
+  compareLayerAndCanvas,
 } from './test-utils';
 
 describe('RegularPolygon', function () {
@@ -205,5 +207,60 @@ describe('RegularPolygon', function () {
 
     assertAlmostEqual(box.width, 91.60254037844388);
     assertAlmostEqual(box.height, 80.00000000000003);
+  });
+
+  // ======================================================
+  it('limit corner radius', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var sides = 5;
+    var radius = 50;
+
+    var poly = new Konva.RegularPolygon({
+      x: 100,
+      y: 100,
+      sides: sides,
+      radius: radius,
+      fill: 'black',
+      cornerRadius: 25,
+    });
+    var resultCircleRadius = radius * Math.cos(Math.PI / sides);
+    
+    layer.add(poly);
+    stage.add(layer);
+   
+    // corner radius creates perfect circle at 1/2 radius
+    var canvas = createCanvas();
+    var context = canvas.getContext('2d');
+    context.beginPath();
+    context.arc(100, 100, resultCircleRadius, 0, Math.PI * 2);
+    context.fillStyle = 'black';
+    context.fill();
+    compareLayerAndCanvas(layer, canvas, 200);
+  });
+
+  // ======================================================
+  it('negative polygon radius with cornerRadius', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var poly = new Konva.RegularPolygon({
+      x: 100,
+      y: 100,
+      sides: 5,
+      radius: -100,
+      fill: 'black',
+      cornerRadius: 20,
+    });
+
+    layer.add(poly);
+    stage.add(layer);
+    layer.draw();
+
+    var trace = layer.getContext().getTrace();
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();moveTo(26.18,80.979);arcTo(0,100,-26.18,80.979,32.361);lineTo(-68.925,49.923);arcTo(-95.106,30.902,-85.106,0.125,32.361);lineTo(-68.779,-50.125);arcTo(-58.779,-80.902,-26.418,-80.902,32.361);lineTo(26.418,-80.902);arcTo(58.779,-80.902,68.779,-50.125,32.361);lineTo(85.106,0.125);arcTo(95.106,30.902,68.925,49.923,32.361);closePath();fillStyle=black;fill();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();moveTo(26.18,80.979);arcTo(0,100,-26.18,80.979,32.361);lineTo(-68.925,49.923);arcTo(-95.106,30.902,-85.106,0.125,32.361);lineTo(-68.779,-50.125);arcTo(-58.779,-80.902,-26.418,-80.902,32.361);lineTo(26.418,-80.902);arcTo(58.779,-80.902,68.779,-50.125,32.361);lineTo(85.106,0.125);arcTo(95.106,30.902,68.925,49.923,32.361);closePath();fillStyle=black;fill();restore();'
+    );
   });
 });
