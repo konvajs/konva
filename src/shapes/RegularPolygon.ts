@@ -147,14 +147,13 @@ Factory.addGetterSetter(RegularPolygon, 'sides', 0, getNumberValidator());
  * @returns {Number}
  * @example
  * // get corner radius
- * var cornerRadius = rect.cornerRadius();
+ * var cornerRadius = poly.cornerRadius();
  *
  * // set corner radius
- * rect.cornerRadius(10);
+ * poly.cornerRadius(10);
  *
- * // set different corner radius values
- * // top-left, top-right, bottom-right, bottom-left
- * rect.cornerRadius([0, 10, 20, 30]);
+ * // set different corner radius values (pentagon)
+ * poly.cornerRadius([0, 10, 20, 30, 40]);
  */
 Factory.addGetterSetter(
   RegularPolygon,

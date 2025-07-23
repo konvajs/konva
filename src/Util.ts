@@ -1049,6 +1049,7 @@ export const Util = {
     radius: number,
     cornerRadius: number | number[]
   ) {
+    radius = Math.abs(radius);
     for (let i = 0; i < sides; i++) {
       const prev = points[(i - 1 + sides) % sides];
       const curr = points[i];
