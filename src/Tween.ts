@@ -530,11 +530,13 @@ export class Tween {
     delete Tween.attrs[nodeId][thisId];
 
     // Clean up parent objects if empty
-    if (Object.keys(Tween.tweens[nodeId]).length === 0) {
-      delete Tween.tweens[nodeId];
-    }
-    if (Object.keys(Tween.attrs[nodeId]).length === 0) {
-      delete Tween.attrs[nodeId];
+    if (Tween.tweens[nodeId]) {
+      if (Object.keys(Tween.tweens[nodeId]).length === 0) {
+        delete Tween.tweens[nodeId];
+      }
+      if (Object.keys(Tween.attrs[nodeId]).length === 0) {
+        delete Tween.attrs[nodeId];
+      }
     }
   }
 }
