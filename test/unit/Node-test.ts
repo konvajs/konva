@@ -924,11 +924,11 @@ describe('Node', function () {
     });
 
     circle1.on('mousemove', function () {
-      console.log('mousemove circle1');
+      // console.log('mousemove circle1');
     });
 
     circle2.on('mousemove', function () {
-      console.log('mousemove circle2');
+      // console.log('mousemove circle2');
     });
 
     layer1.add(circle1);
@@ -1101,11 +1101,11 @@ describe('Node', function () {
     });
 
     circle1.on('mousemove', function () {
-      console.log('mousemove circle1');
+      // console.log('mousemove circle1');
     });
 
     circle2.on('mousemove', function () {
-      console.log('mousemove circle2');
+      // console.log('mousemove circle2');
     });
 
     group.add(circle2);
@@ -1887,12 +1887,6 @@ describe('Node', function () {
 
     circle.on('click', function () {
       clicks.push('circle');
-
-      /*
-             var evt = window.event;
-             var rightClick = evt.which ? evt.which == 3 : evt.button == 2;
-             console.log(rightClick);
-             */
     });
     var foo;
     circle.on('customEvent', function (evt) {

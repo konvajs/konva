@@ -2386,9 +2386,7 @@ describe('MouseEvents', function () {
     var layer = new Konva.Layer();
     stage.add(layer);
 
-    stage.on('mousedown mousemove mouseup click', function (e) {
-      console.log('state', e.type);
-    });
+    stage.on('mousedown mousemove mouseup click', function (e) {});
 
     var rect = new Konva.Rect({
       width: 50,
@@ -2402,7 +2400,6 @@ describe('MouseEvents', function () {
 
     var clicks = 0;
     rect.on('click', function () {
-      console.log('click');
       clicks += 1;
       if (clicks === 2) {
         debugger;

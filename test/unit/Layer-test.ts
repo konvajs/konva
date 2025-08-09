@@ -171,9 +171,7 @@ describe('Layer', function () {
 
     circle.colorKey = '#000000';
 
-    circle.on('mouseover', function () {
-      console.log('mouseover');
-    });
+    circle.on('mouseover', function () {});
 
     layer.add(circle);
     stage.add(layer);

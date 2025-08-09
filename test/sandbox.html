@@ -48,37 +48,40 @@
       var layer = new Konva.Layer();
       stage.add(layer);
 
-      var canvas = document.createElement('canvas');
-      // use external library to parse and draw gif animation
-      function onDrawFrame(ctx, frame) {
-        // update canvas size
-        canvas.width = frame.width;
-        canvas.height = frame.height;
-        // update canvas that we are using for Konva.Image
-        ctx.drawImage(frame.buffer, 0, 0);
-        // redraw the layer
-        layer.draw();
-      }
+      const text = new Konva.Text({
+        text: 'Hello, how are you doing today? Would you like to start using konva.js',
+        width: 400,
+        fontSize: 50,
+        x: 100,
+        y: 100,
+        draggable: true,
+      });
+      layer.add(text);
 
-      gifler('https://konvajs.org/assets/yoda.gif').frames(canvas, onDrawFrame);
-
-      function testKonvaImage() {
-        setInterval(() => {
-          const image = new Konva.Image({
-            image: canvas,
-            x: Math.random() * width,
-            y: Math.random() * height,
-          });
-          layer.add(image);
-
-          setTimeout(() => {
-            image.image(canvas);
-            image.destroy();
-          }, 500);
-        }, 10);
-      }
-
-      testKonvaImage();
+      const anim = new Konva.Animation((frame) => {
+        text.charRenderFunc(({ char, index, context }) => {
+          const animationDuration = 4000;
+          const animationTime = frame.time % animationDuration;
+          const length = text.text().length;
+          const durationPerChar = animationDuration / length;
+          const localStartTime = index * durationPerChar;
+          const localTime = animationTime - localStartTime;
+          const inAnimation = localTime > 0;
+          if (!inAnimation) {
+            context.setAttr('globalAlpha', 0);
+            return;
+          }
+          const afterAnimation = localTime > durationPerChar;
+          if (afterAnimation) {
+            return;
+          }
+          const animationAlpha = Math.abs(localTime / durationPerChar);
+          const oldOpacity = context.globalAlpha;
+          context.setAttr('globalAlpha', oldOpacity * animationAlpha * 0.5);
+          context.translate(0, -15 + (localTime / durationPerChar) * 15);
+        });
+      }, layer);
+      anim.start();
     </script>
   </body>
 </html>

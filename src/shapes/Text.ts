@@ -13,6 +13,18 @@ import { _registerNode } from '../Global';
 
 import { GetSet } from '../types';
 
+export interface CharRenderProps {
+  char: string;
+  index: number;
+  x: number;
+  y: number;
+  lineIndex: number;
+  column: number;
+  isLastInLine: boolean;
+  width: number;
+  context: Context;
+}
+
 export function stringToArray(string: string): string[] {
   // Use Unicode-aware splitting
   return [...string].reduce((acc, char, index, array) => {
@@ -223,6 +235,7 @@ export class Text extends Shape<TextConfig> {
       align = this.align(),
       totalWidth = this.getWidth(),
       letterSpacing = this.letterSpacing(),
+      charRenderFunc = this.charRenderFunc(),
       fill = this.fill(),
       textDecoration = this.textDecoration(),
       shouldUnderline = textDecoration.indexOf('underline') !== -1,
@@ -318,10 +331,14 @@ export class Text extends Shape<TextConfig> {
         context.stroke();
         context.restore();
       }
+
       // As `letterSpacing` isn't supported on Safari, we use this polyfill.
       // The exception is for RTL text, which we rely on native as it cannot
       // be supported otherwise.
-      if (direction !== RTL && (letterSpacing !== 0 || align === JUSTIFY)) {
+      if (
+        direction !== RTL &&
+        (letterSpacing !== 0 || align === JUSTIFY || charRenderFunc)
+      ) {
         //   var words = text.split(' ');
         const spacesNumber = text.split(' ').length - 1;
         const array = stringToArray(text);
@@ -338,7 +355,31 @@ export class Text extends Shape<TextConfig> {
           this._partialTextX = lineTranslateX;
           this._partialTextY = translateY + lineTranslateY;
           this._partialText = letter;
+
+          if (charRenderFunc) {
+            context.save();
+            const previousLines = textArr.slice(0, n);
+            const previousGraphemes = previousLines.reduce(
+              (acc, line) => acc + stringToArray(line.text).length,
+              0
+            );
+            const charIndex = li + previousGraphemes;
+            charRenderFunc({
+              char: letter,
+              index: charIndex,
+              x: lineTranslateX,
+              y: translateY + lineTranslateY,
+              lineIndex: n,
+              column: li,
+              isLastInLine: lastLine,
+              width: this.measureSize(letter).width,
+              context,
+            });
+          }
           context.fillStrokeShape(this);
+          if (charRenderFunc) {
+            context.restore();
+          }
           lineTranslateX += this.measureSize(letter).width + letterSpacing;
         }
       } else {
@@ -713,6 +754,7 @@ export class Text extends Shape<TextConfig> {
   text: GetSet<string, this>;
   wrap: GetSet<string, this>;
   ellipsis: GetSet<boolean, this>;
+  charRenderFunc: GetSet<null | ((props: CharRenderProps) => void), this>;
 }
 
 Text.prototype._fillFunc = _fillFunc;
@@ -995,3 +1037,21 @@ Factory.addGetterSetter(Text, 'text', '', getStringValidator());
  */
 
 Factory.addGetterSetter(Text, 'textDecoration', '');
+
+/**
+ * get/set per-character render hook. The callback is invoked for each grapheme before drawing.
+ * It can mutate the provided context (e.g. translate, rotate, change styles) and should return void.
+ * Note: per-character rendering may disable native kerning/ligatures.
+ * @name Konva.Text#charRenderFunc
+ * @method
+ * @param {(props: {char: string, index: number, x: number, y: number, lineIndex: number, column: number, isLastInLine: boolean, width: number, context: Konva.Context}) => void} charRenderFunc
+ * @returns {(props: CharRenderProps) => void}
+ * @example
+ * // apply small x-translation to every second character
+ * text.charRenderFunc(function(props) {
+ *   if (props.index % 2 === 1) {
+ *     props.context.translate(2, 0);
+ *   }
+ * });
+ */
+Factory.addGetterSetter(Text, 'charRenderFunc', undefined);

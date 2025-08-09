@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "lib",
-    "module": "CommonJS",
+    "module": "ESNext",
     "target": "ES2018",
     // "sourceMap": true,
     "noEmitOnError": true,

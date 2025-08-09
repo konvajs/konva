@@ -831,7 +831,6 @@ describe('Caching', function () {
     group.cache();
 
     const canvas = group._cache.get('canvas').scene;
-    console.log(canvas.width / 2);
     assert.equal(canvas.width, 106 * canvas.pixelRatio);
   });
 

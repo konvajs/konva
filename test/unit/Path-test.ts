@@ -1186,7 +1186,6 @@ describe('Path', function () {
       SVGPath.setAttribute('d', data);
       for (var i = 0.001; i < path.getLength(); i += 1) {
         var p = path.getPointAtLength(i);
-        console.log(p);
         var circle = new Konva.Circle({
           x: p.x + path.x(),
           y: p.y + path.y(),
@@ -1196,7 +1195,6 @@ describe('Path', function () {
         });
         layer.add(circle);
         const position = SVGPath.getPointAtLength(i);
-        console.log(position);
         assert(Math.abs(p.x - position.x) <= 1);
         assert(Math.abs(p.y - position.y) <= 1);
       }

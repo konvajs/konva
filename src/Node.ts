@@ -913,7 +913,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @returns {Array}
    * @example
    * shape.getAncestors().forEach(function(node) {
-   *   console.log(node.getId());
+   *   console.log(node.id());
    * })
    */
   getAncestors() {

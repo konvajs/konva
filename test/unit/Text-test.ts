@@ -215,7 +215,7 @@ describe('Text', function () {
     var canvas = createCanvas();
     var context = canvas.getContext('2d');
     context.textBaseline = 'middle';
-    context.letterSpacing = '10px';
+    (context as any).letterSpacing = '10px';
     context.font = 'normal normal 50px Arial';
     context.fillStyle = 'darkgrey';
     context.fillText('आपकी दौड़ के लिए परफेक्ट जूते!', 10, 10 + 25);
@@ -1625,14 +1625,14 @@ describe('Text', function () {
       ctx.textBaseline = 'middle';
 
       var grd = ctx.createPattern(imageObj, 'repeat');
-      grd.setTransform({
+      (grd as any).setTransform({
         a: 1,
         b: 0,
         c: 0,
         d: 1,
         e: -50,
         f: 0,
-      });
+      } as any);
       ctx.fillStyle = grd;
 
       ctx.fillText(text.text(), 0, 15);
@@ -1668,19 +1668,13 @@ describe('Text', function () {
       ctx.textBaseline = 'middle';
 
       var grd = ctx.createPattern(imageObj, 'repeat');
-      const matrix =
-        typeof DOMMatrix === 'undefined'
-          ? {
-              a: 0.5, // Horizontal scaling. A value of 1 results in no scaling.
-              b: 0, // Vertical skewing.
-              c: 0, // Horizontal skewing.
-              d: 0.5,
-              e: 0, // Horizontal translation (moving).
-              f: 0, // Vertical translation (moving).
-            }
-          : new DOMMatrix([0.5, 0, 0, 0.5, 0, 0]);
+      // node-canvas expects its own DOMMatrix type; cast to any for cross-env test
+      const matrix: any =
+        typeof (global as any).DOMMatrix === 'undefined'
+          ? { a: 0.5, b: 0, c: 0, d: 0.5, e: 0, f: 0 }
+          : new (global as any).DOMMatrix([0.5, 0, 0, 0.5, 0, 0]);
 
-      grd.setTransform(matrix);
+      (grd as any).setTransform(matrix);
 
       ctx.fillStyle = grd;
 
@@ -1790,5 +1784,33 @@ describe('Text', function () {
       'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);font=normal normal 100px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();fillStyle=black;fillText(hello,0,85);restore();restore();';
 
     assert.equal(layer.getContext().getTrace(), trace);
+  });
+
+  it('charRenderFunc draws per character and can mutate context', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var text = new Konva.Text({
+      x: 10,
+      y: 10,
+      text: 'AB',
+      fontSize: 20,
+      charRenderFunc: function (props) {
+        if (props.index === 1) {
+          // shift only the second character
+          props.context.translate(0, 10);
+        }
+      },
+    });
+    layer.add(text);
+    layer.draw();
+
+    var trace = layer.getContext().getTrace();
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 20px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();save();fillStyle=black;fillText(A,0,10);restore();save();translate(0,10);fillStyle=black;fillText(B,13.34,10);restore();restore();restore();'
+    );
   });
 });

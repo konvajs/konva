@@ -398,7 +398,7 @@ describe('Stage', function () {
       '17) getAllIntersections should return one shape'
     );
     assert.equal(
-      stage.getAllIntersections({ x: 266, y: 114 })[0].getId(),
+      stage.getAllIntersections({ x: 266, y: 114 })[0].id(),
       'greenCircle',
       '19) first intersection should be greenCircle'
     );
@@ -409,7 +409,7 @@ describe('Stage', function () {
       '18) getAllIntersections should return one shape'
     );
     assert.equal(
-      stage.getAllIntersections({ x: 414, y: 115 })[0].getId(),
+      stage.getAllIntersections({ x: 414, y: 115 })[0].id(),
       'redCircle',
       '20) first intersection should be redCircle'
     );
@@ -420,12 +420,12 @@ describe('Stage', function () {
       '1) getAllIntersections should return two shapes'
     );
     assert.equal(
-      stage.getAllIntersections({ x: 350, y: 118 })[0].getId(),
+      stage.getAllIntersections({ x: 350, y: 118 })[0].id(),
       'redCircle',
       '2) first intersection should be redCircle'
     );
     assert.equal(
-      stage.getAllIntersections({ x: 350, y: 118 })[1].getId(),
+      stage.getAllIntersections({ x: 350, y: 118 })[1].id(),
       'greenCircle',
       '3) second intersection should be greenCircle'
     );
@@ -440,7 +440,7 @@ describe('Stage', function () {
       '4) getAllIntersections should return one shape'
     );
     assert.equal(
-      stage.getAllIntersections({ x: 350, y: 118 })[0].getId(),
+      stage.getAllIntersections({ x: 350, y: 118 })[0].id(),
       'redCircle',
       '5) first intersection should be redCircle'
     );
@@ -455,12 +455,12 @@ describe('Stage', function () {
       '6) getAllIntersections should return two shapes'
     );
     assert.equal(
-      stage.getAllIntersections({ x: 350, y: 118 })[0].getId(),
+      stage.getAllIntersections({ x: 350, y: 118 })[0].id(),
       'redCircle',
       '7) first intersection should be redCircle'
     );
     assert.equal(
-      stage.getAllIntersections({ x: 350, y: 118 })[1].getId(),
+      stage.getAllIntersections({ x: 350, y: 118 })[1].id(),
       'greenCircle',
       '8) second intersection should be greenCircle'
     );
@@ -475,7 +475,7 @@ describe('Stage', function () {
       '9) getAllIntersections should return one shape'
     );
     assert.equal(
-      stage.getAllIntersections({ x: 350, y: 118 })[0].getId(),
+      stage.getAllIntersections({ x: 350, y: 118 })[0].id(),
       'greenCircle',
       '10) first intersection should be greenCircle'
     );
@@ -490,12 +490,12 @@ describe('Stage', function () {
       '11) getAllIntersections should return two shapes'
     );
     assert.equal(
-      stage.getAllIntersections({ x: 350, y: 118 })[0].getId(),
+      stage.getAllIntersections({ x: 350, y: 118 })[0].id(),
       'redCircle',
       '12) first intersection should be redCircle'
     );
     assert.equal(
-      stage.getAllIntersections({ x: 350, y: 118 })[1].getId(),
+      stage.getAllIntersections({ x: 350, y: 118 })[1].id(),
       'greenCircle',
       '13) second intersection should be greenCircle'
     );
@@ -507,12 +507,12 @@ describe('Stage', function () {
       '14) getAllIntersections should return two shapes'
     );
     assert.equal(
-      layer.getAllIntersections({ x: 350, y: 118 })[0].getId(),
+      layer.getAllIntersections({ x: 350, y: 118 })[0].id(),
       'redCircle',
       '15) first intersection should be redCircle'
     );
     assert.equal(
-      layer.getAllIntersections({ x: 350, y: 118 })[1].getId(),
+      layer.getAllIntersections({ x: 350, y: 118 })[1].id(),
       'greenCircle',
       '16) second intersection should be greenCircle'
     );
@@ -1424,7 +1424,10 @@ describe('Stage', function () {
           mimeType: 'image/jpeg',
           quality: 0.5,
         });
-        assert.isTrue(blob instanceof Blob && blob.type === 'image/jpeg', "can't change type of blob");
+        assert.isTrue(
+          blob instanceof Blob && blob.type === 'image/jpeg',
+          "can't change type of blob"
+        );
       } catch (e) {
         console.error(e);
         assert.fail('error creating blob');
