@@ -327,7 +327,7 @@ describe('Image', function () {
         layer.add(image);
         layer.draw();
         assert.equal(image instanceof Konva.Image, true);
-        var nativeImg = image.image();
+        var nativeImg = image.image() as HTMLImageElement;
         assert.equal(nativeImg instanceof Image, true);
         assert.equal(nativeImg.src.indexOf(src) !== -1, true);
         assert.equal(nativeImg.complete, true);

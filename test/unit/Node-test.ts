@@ -2552,11 +2552,18 @@ describe('Node', function () {
   });
 
   it('make sure we can create non existing node type', function () {
+    const oldWarn = console.warn;
+    let called = false;
+    console.warn = function () {
+      called = true;
+    };
     var json =
       '{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true},"className":"WeirdShape"}]}]}';
     var layer = Konva.Node.create(json);
 
     assert.deepEqual(layer.find('Shape').length, 1);
+    console.warn = oldWarn;
+    assert.equal(called, true);
   });
 
   // ======================================================
@@ -3478,6 +3485,7 @@ describe('Node', function () {
     assert.equal(rect.findAncestor('#group'), group);
     assert.equal(rect.findAncestor('Group'), group);
 
+    // @ts-expect-error - test for no selector
     assert.equal(rect.findAncestor(), null, 'return null if no selector');
   });
 

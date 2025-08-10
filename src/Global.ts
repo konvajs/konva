@@ -184,6 +184,11 @@ export const Konva = {
   // insert Konva into global namespace (window)
   // it is required for npm packages
   _injectGlobal(Konva) {
+    if (typeof glob.Konva !== 'undefined') {
+      console.error(
+        'Severa Konva instances detected. It is not recommended to use multiple Konva instances in the same environment.'
+      );
+    }
     glob.Konva = Konva;
   },
 };

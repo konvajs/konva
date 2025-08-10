@@ -1,7 +1,7 @@
 import FileHound from 'filehound';
 import fs from 'fs';
 
-const files = FileHound.create().paths('./lib').ext(['js', 'ts']).find();
+const files = FileHound.create().paths('./.test-temp').ext(['js', 'ts']).find();
 
 files.then((filePaths) => {
   filePaths.forEach((filepath) => {
@@ -17,10 +17,9 @@ files.then((filePaths) => {
       if (err) throw err;
 
       // stupid replacement back
-      text = text.replace(
-        "import * as Canvas from 'canvas.js';",
-        "import * as Canvas from 'canvas';"
-      );
+      text = text.replace("from 'canvas.js';", "from 'canvas';");
+      text = text.replace("from 'chai.js';", "from 'chai';");
+      text = text.replace("from 'skia-canvas.js';", "from 'skia-canvas';");
 
       // Handle import("./x/y/z") syntax.
       text = text.replace(/(import\s*\(\s*['"])(.*)(?=['"])/g, '$1$2.js');

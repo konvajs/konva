@@ -1,10 +1,9 @@
 import { assert } from 'chai';
 import KonvaModule from '../../src/index';
-import '../../src/index-node';
 
 export const Konva = KonvaModule;
 
-import * as canvas from 'canvas';
+// import * as canvas from 'canvas';
 
 Konva.enableTrace = true;
 Konva.showWarnings = true;
@@ -84,12 +83,14 @@ export function loadImage(url, callback) {
     url = (document.getElementById(url) as HTMLImageElement).src;
   }
 
-  return canvas
-    .loadImage(url)
-    .then(callback)
-    .catch((e) => {
-      console.error(e);
-    });
+  const image = Konva.Util.createImageElement();
+  image.onload = () => {
+    callback(image);
+  };
+  image.onerror = (e) => {
+    console.error('Error loading image', url, e);
+  };
+  image.src = url;
 }
 
 export function getPixelRatio() {
@@ -171,7 +172,7 @@ export function compareLayers(layer1: Layer, layer2: Layer, tol?, secondTol?) {
 }
 
 export function createCanvas() {
-  var node = canvas.createCanvas(300, 300);
+  var node = Konva.Util.createCanvasElement();
   node.width = 578 * Konva.pixelRatio;
   node.height = 200 * Konva.pixelRatio;
   node.getContext('2d').scale(Konva.pixelRatio, Konva.pixelRatio);

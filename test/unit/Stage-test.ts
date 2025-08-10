@@ -551,6 +551,11 @@ describe('Stage', function () {
   // ======================================================
   it('Should not throw on clip for stage', function () {
     // no asserts, because we check throw
+    const oldWarn = console.warn;
+    let called = false;
+    console.warn = function () {
+      called = true;
+    };
     var stage = addStage({
       clipFunc: function () {},
     });
@@ -566,6 +571,8 @@ describe('Stage', function () {
 
     layer.add(text);
     stage.add(layer);
+    console.warn = oldWarn;
+    assert.equal(called, true);
   });
 
   // ======================================================

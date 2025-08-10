@@ -86,8 +86,6 @@ describe('Group', function () {
 
     const trace = layer.getContext().getTrace();
 
-    console.log(trace);
-
     assert.equal(
       trace,
       'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();rect(0,0,0,0);clip();transform(1,0,0,1,0,0);restore();'

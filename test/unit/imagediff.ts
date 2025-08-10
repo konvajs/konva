@@ -1,4 +1,5 @@
-import { createCanvas, Canvas } from 'canvas';
+import KonvaModule from '../../src/index';
+export const Konva = KonvaModule;
 
 var TYPE_ARRAY = /\[object Array\]/i,
   TYPE_CANVAS = /\[object (Canvas|HTMLCanvasElement)\]/i,
@@ -6,15 +7,24 @@ var TYPE_ARRAY = /\[object Array\]/i,
   TYPE_CONTEXT = /\[object CanvasRenderingContext2D\]/i,
   TYPE_IMAGE = /\[object (Image|HTMLImageElement)\]/i,
   TYPE_IMAGE_DATA = /\[object ImageData\]/i,
-  UNDEFINED = 'undefined',
-  canvas = getCanvas(),
-  context = canvas.getContext('2d');
+  UNDEFINED = 'undefined';
 
 // Creation
 function getCanvas(width?, height?) {
-  return createCanvas(width, height);
+  return Konva.Util.createCanvasElement();
 }
+
+let singleCanvas;
+function getSingleCanvas() {
+  if (!singleCanvas) {
+    singleCanvas = getCanvas();
+  }
+  return singleCanvas;
+}
+
 function getImageData(width, height) {
+  const canvas = getSingleCanvas();
+  const context = canvas.getContext('2d');
   canvas.width = width;
   canvas.height = height;
   context.clearRect(0, 0, width, height);
@@ -26,7 +36,7 @@ function isImage(object) {
   return isType(object, TYPE_IMAGE);
 }
 function isCanvas(object) {
-  return isType(object, TYPE_CANVAS) || object instanceof Canvas;
+  return isType(object, TYPE_CANVAS);
 }
 function isContext(object) {
   return isType(object, TYPE_CONTEXT);
@@ -49,10 +59,7 @@ function isImageType(object) {
   );
 }
 function isType(object, type) {
-  return (
-    typeof object === 'object' &&
-    !!Object.prototype.toString.apply(object).match(type)
-  );
+  return typeof object === 'object' && !!object.toString().match(type);
 }
 
 // Type Conversion
@@ -61,6 +68,8 @@ function copyImageData(imageData) {
     width = imageData.width,
     data = imageData.data;
 
+  const canvas = getSingleCanvas();
+  const context = canvas.getContext('2d');
   canvas.width = width;
   canvas.height = height;
   const newImageData = context.getImageData(0, 0, width, height);
@@ -89,6 +98,8 @@ function toImageData(object) {
 function toImageDataFromImage(image) {
   const height = image.height,
     width = image.width;
+  const canvas = getSingleCanvas();
+  const context = canvas.getContext('2d');
   canvas.width = width;
   canvas.height = height;
   context.clearRect(0, 0, width, height);
@@ -189,8 +200,7 @@ function diffUnequal(a, b, options) {
     bData = b.data,
     cData = c.data,
     align = options && options.align;
-  var rowOffset,
-    columnOffset;
+  var rowOffset, columnOffset;
 
   for (let i = cData.length - 1; i > 0; i = i - 4) {
     cData[i] = 255;
@@ -239,10 +249,10 @@ function diffUnequal(a, b, options) {
 function checkType(...args) {
   for (let i = 0; i < args.length; i++) {
     if (!isImageType(args[i])) {
-      throw {
-        name: 'ImageTypeError',
-        message: 'Submitted object was not an image.',
-      };
+      // throw {
+      //   name: 'ImageTypeError',
+      //   message: 'Submitted object was not an image.',
+      // };
     }
   }
 }

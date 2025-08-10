@@ -2068,7 +2068,7 @@ describe('MouseEvents', function () {
       type: 'mouseenter',
     };
 
-    stage._pointerenter(evt);
+    stage._pointerenter(evt as PointerEvent);
 
     assert.equal(mouseenterCount, 1, 'mouseenterCount should be 1');
   });
@@ -2268,7 +2268,7 @@ describe('MouseEvents', function () {
       type: 'mouseenter',
     };
 
-    stage._pointerenter(evt);
+    stage._pointerenter(evt as PointerEvent);
 
     simulateMouseMove(stage, {
       x: 10,

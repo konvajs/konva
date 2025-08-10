@@ -1,5 +1,6 @@
 import { assert } from 'chai';
 import { Transformer } from '../../src/shapes/Transformer';
+import type { Rect } from '../../src/shapes/Rect';
 
 import {
   addStage,
@@ -4842,8 +4843,15 @@ describe('Transformer', function () {
     const tr = new Konva.Transformer();
     layer.add(tr);
 
+    const oldError = console.error;
+    let called = false;
+    console.error = function () {
+      called = true;
+    };
     tr.nodes([layer]);
     assert.equal(tr.nodes().length, 0);
+    console.error = oldError;
+    assert.equal(called, true);
   });
 
   it('anchorStyleFunc', function () {
@@ -4866,7 +4874,7 @@ describe('Transformer', function () {
     });
     layer.add(tr);
     // manual check of correct position of node
-    var handler = tr.findOne<Konva.Rect>('.bottom-right');
+    var handler = tr.findOne<Rect>('.bottom-right');
     assert.equal(handler.fill(), 'white');
 
     tr.anchorStyleFunc((anchor) => {

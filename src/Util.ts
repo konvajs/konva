@@ -2,6 +2,14 @@ import { Konva } from './Global';
 import { Context } from './Context';
 import { IRect, RGB, Vector2d } from './types';
 
+const ensureBrowser = () => {
+  if (typeof document === 'undefined') {
+    throw new Error(
+      'document is undefined, this is not a browser environment. For node.js env add `import "konva/register-node"`'
+    );
+  }
+};
+
 /*
  * Last updated November 2011
  * By Simon Sarris
@@ -424,7 +432,7 @@ const OBJECT_ARRAY = '[object Array]',
     yellowgreen: [154, 205, 5],
   },
   RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/;
-  let animQueue: Array<Function> = [];
+let animQueue: Array<Function> = [];
 
 const req =
   (typeof requestAnimationFrame !== 'undefined' && requestAnimationFrame) ||
@@ -505,6 +513,7 @@ export const Util = {
     }
   },
   createCanvasElement() {
+    ensureBrowser();
     const canvas = document.createElement('canvas');
     // on some environments canvas.style is readonly
     try {
@@ -513,6 +522,7 @@ export const Util = {
     return canvas;
   },
   createImageElement() {
+    ensureBrowser();
     return document.createElement('img');
   },
   _isInDocument(el: any) {

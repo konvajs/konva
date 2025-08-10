@@ -1780,10 +1780,15 @@ describe('Text', function () {
     layer.draw();
     Konva._fixTextRendering = false;
 
-    const trace =
-      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);font=normal normal 100px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();fillStyle=black;fillText(hello,0,85);restore();restore();';
-
-    assert.equal(layer.getContext().getTrace(), trace);
+    if (Konva.Util['isSkia']) {
+      const trace =
+        'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);font=normal normal 100px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();fillStyle=black;fillText(hello,0,84.668);restore();restore();';
+      assert.equal(layer.getContext().getTrace(), trace);
+    } else {
+      const trace =
+        'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);font=normal normal 100px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();fillStyle=black;fillText(hello,0,85);restore();restore();';
+      assert.equal(layer.getContext().getTrace(), trace);
+    }
   });
 
   it('charRenderFunc draws per character and can mutate context', function () {

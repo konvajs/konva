@@ -366,7 +366,7 @@ describe('Label', function () {
     layer.add(label);
 
     assert.equal(counter, 4);
-    tag.pointerDirection('bottom');
+    tag.pointerDirection('down');
     assert.equal(counter, 5);
     tag.pointerWidth(30);
     assert.equal(counter, 6);

@@ -1160,6 +1160,8 @@ describe('Shape', function () {
     // no we should hit the rect
     assert.equal(stage.getIntersection({ x: 5, y: 5 }), rect);
 
+    const oldWarn = console.warn;
+    console.warn = function () {};
     rect.strokeHitEnabled(false);
 
     assert.equal(rect.hitStrokeWidth(), 0);
@@ -1171,15 +1173,7 @@ describe('Shape', function () {
     rect.hitStrokeWidth(0);
 
     assert.equal(rect.strokeHitEnabled(), false);
-
-    // var trace = layer
-    //   .getHitCanvas()
-    //   .getContext()
-    //   .getTrace(true);
-    // assert.equal(
-    //   trace,
-    //   'clearRect();save();transform();beginPath();rect();closePath();save();fillStyle;fill();restore();restore();'
-    // );
+    console.warn = oldWarn;
   });
 
   it('enable hitStrokeWidth even if we have no stroke on scene', function () {
