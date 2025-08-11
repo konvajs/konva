@@ -2,11 +2,23 @@ import { Konva } from './Global';
 import { Context } from './Context';
 import { IRect, RGB, Vector2d } from './types';
 
+const NODE_ERROR = `Konva.js unsupported environment.
+
+Looks like you are trying to use Konva.js in Node.js environment. because "document" object is undefined.
+
+To use Konva.js in Node.js environment, you need to use the "canvas-backend" or "skia-backend" module.
+
+bash: npm install canvas
+js: import "konva/canvas-backend";
+
+or
+
+bash: npm install skia-canvas
+js: import "konva/skia-backend";
+`;
 const ensureBrowser = () => {
   if (typeof document === 'undefined') {
-    throw new Error(
-      'document is undefined, this is not a browser environment. For node.js env add `import "konva/register-node"`'
-    );
+    throw new Error(NODE_ERROR);
   }
 };
 

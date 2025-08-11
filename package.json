@@ -14,8 +14,19 @@
     ".": {
       "default": "./lib/index.js"
     },
-    "./setup-node-canvas": {
-      "default": "./lib/setup-node-canvas.js"
+    "./lib/*": {
+      "default": "./lib/*.js"
+    },
+    "./lib/*.js": {
+      "import": "./lib/*.js",
+      "require": "./lib/*.js",
+      "default": "./lib/*.js"
+    },
+    "./canvas-backend": {
+      "default": "./lib/canvas-backend.js"
+    },
+    "./skia-backend": {
+      "default": "./lib/skia-backend.js"
     }
   },
   "main": "./lib/index.js",
@@ -29,7 +40,6 @@
     "test:build": "PARCEL_WORKER_BACKEND=process parcel build ./test/unit-tests.html --dist-dir ./test-build --target none --public-url ./ --no-source-maps",
     "test:browser": "npm run test:build && mocha-headless-chrome -f ./test-build/unit-tests.html -a disable-web-security -a no-sandbox -a disable-setuid-sandbox",
     "test:watch": "rm -rf ./.parcel-cache && PARCEL_WORKERS=0  parcel serve ./test/unit-tests.html ./test/manual-tests.html ./test/sandbox.html ./test/text-paths.html ./test/bunnies.html",
-    
     "test:node:canvas": "rm -rf ./.test-temp && mkdir ./.test-temp && (tsc -p ./test/tsconfig.json --outDir ./.test-temp || true) && node ./rename-imports-test.mjs && mocha './.test-temp/test/unit/**/*.js' -r ./test/node-canvas-global-setup.mjs --exit && rm -rf ./.test-temp && npm run test:import",
     "test:node:skia": "rm -rf ./.test-temp && mkdir ./.test-temp && (tsc -p ./test/tsconfig.json --outDir ./.test-temp || true) && node ./rename-imports-test.mjs && mocha './.test-temp/test/unit/**/*.js' -r ./test/node-skia-global-setup.mjs --exit && rm -rf ./.test-temp && npm run test:import",
     "test:node": "npm run test:node:canvas && npm run test:node:skia",

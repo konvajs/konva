@@ -1,7 +1,5 @@
 export async function mochaGlobalSetup() {
-  await import(
-    new URL('../.test-temp/src/setup-node-skia.js', import.meta.url)
-  );
+  await import(new URL('../.test-temp/src/skia-backend.js', import.meta.url));
 
   globalThis.Path2D ??= class Path2D {
     constructor(path) {

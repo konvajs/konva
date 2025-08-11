@@ -3,7 +3,7 @@ export async function mochaGlobalSetup() {
   // Path from this file (test/) to compiled file (.test-temp/src/...)
   try {
     await import(
-      new URL('../.test-temp/src/setup-node-canvas.js', import.meta.url)
+      new URL('../.test-temp/src/canvas-backend.js', import.meta.url)
     );
   } catch (e) {
     // If not compiled yet or path missing, keep going; tests that need it will fail clearly
