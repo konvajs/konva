@@ -1076,4 +1076,47 @@ export const Util = {
         false
     );
   },
+  drawRoundedPolygonPath(
+    context: Context, 
+    points: Vector2d[],
+    sides: number,
+    radius: number,
+    cornerRadius: number | number[]
+  ) {
+    radius = Math.abs(radius);
+    for (let i = 0; i < sides; i++) {
+      const prev = points[(i - 1 + sides) % sides];
+      const curr = points[i];
+      const next = points[(i + 1) % sides];
+      const vec1 = {x: curr.x - prev.x, y: curr.y - prev.y};
+      const vec2 = {x: next.x - curr.x, y: next.y - curr.y};
+      const len1 = Math.hypot(vec1.x, vec1.y);
+      const len2 = Math.hypot(vec2.x, vec2.y);
+      let currCornerRadius;
+      if (typeof cornerRadius === 'number') {
+        currCornerRadius = cornerRadius;
+      } else {
+        currCornerRadius = i < cornerRadius.length ? cornerRadius[i] : 0;
+      }
+      const maxCornerRadius = radius * Math.cos(Math.PI / sides);
+      // cornerRadius creates perfect circle at 1/2 radius
+      currCornerRadius = maxCornerRadius * Math.min(1, (currCornerRadius / radius) * 2);
+      const normalVec1 = {x: vec1.x / len1, y: vec1.y / len1};
+      const normalVec2 = {x: vec2.x / len2, y: vec2.y / len2};
+      const p1 = {
+        x: curr.x - normalVec1.x * currCornerRadius,
+        y: curr.y - normalVec1.y * currCornerRadius,
+      };
+      const p2 = {
+        x: curr.x + normalVec2.x * currCornerRadius,
+        y: curr.y + normalVec2.y * currCornerRadius,
+      };
+      if (i === 0) {
+        context.moveTo(p1.x, p1.y);
+      } else {
+        context.lineTo(p1.x, p1.y);
+      }
+      context.arcTo(curr.x, curr.y, p2.x, p2.y, currCornerRadius);
+    }
+  }
 };
