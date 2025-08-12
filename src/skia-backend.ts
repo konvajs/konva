@@ -29,8 +29,6 @@ Konva.Util.createImageElement = () => {
   return node;
 };
 
-// this line is not part of the public API
-// but will be used in tests
-Konva.Util['isSkia'] = true;
+Konva._renderBackend = 'skia-canvas';
 
 export default Konva;

@@ -246,7 +246,7 @@ export class Text extends Shape<TextConfig> {
 
     let translateY = lineHeightPx / 2;
     let baseline = MIDDLE;
-    if (Konva._fixTextRendering) {
+    if (!Konva.legacyTextRendering) {
       const metrics = this.measureSize('M'); // Use a sample character to get the ascent
 
       baseline = 'alphabetic';
@@ -295,7 +295,7 @@ export class Text extends Shape<TextConfig> {
         context.save();
         context.beginPath();
 
-        const yOffset = Konva._fixTextRendering
+        const yOffset = !Konva.legacyTextRendering
           ? Math.round(fontSize / 4)
           : Math.round(fontSize / 2);
         const x = lineTranslateX;
@@ -317,7 +317,9 @@ export class Text extends Shape<TextConfig> {
       if (shouldLineThrough) {
         context.save();
         context.beginPath();
-        const yOffset = Konva._fixTextRendering ? -Math.round(fontSize / 4) : 0;
+        const yOffset = !Konva.legacyTextRendering
+          ? -Math.round(fontSize / 4)
+          : 0;
         context.moveTo(lineTranslateX, translateY + lineTranslateY + yOffset);
         const lineWidth =
           align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;

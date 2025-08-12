@@ -19,8 +19,6 @@ Konva.Util.createImageElement = () => {
   return node;
 };
 
-// this line is not part of the public API
-// but will be used in tests
-Konva.Util['Canvas'] = Canvas;
+Konva._renderBackend = 'node-canvas';
 
 export default Konva;

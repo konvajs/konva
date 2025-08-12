@@ -90,7 +90,17 @@ export const Konva = {
   _mouseDblClickPointerId: null,
   _touchDblClickPointerId: null,
   _pointerDblClickPointerId: null,
-  _fixTextRendering: false,
+  _renderBackend: 'web', // web, node-canvas, skia-canvas
+  /**
+   * Use legacy text rendering. with "middle" baseline by default.
+   * @property legacyTextRendering
+   * @default false
+   * @name legacyTextRendering
+   * @memberof Konva
+   * @example
+   * Konva.legacyTextRendering = true;
+   */
+  legacyTextRendering: false,
 
   /**
    * Global pixel ratio configuration. KonvaJS automatically detect pixel ratio of current device.
