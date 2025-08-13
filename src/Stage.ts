@@ -592,7 +592,17 @@ export class Stage extends Container<Layer> {
     if (!events) {
       return;
     }
-    if (Konva.isDragging() && DD.node!.preventDefault() && evt.cancelable) {
+    // prevent default only for touch-based interactions to avoid blocking
+    // native mouse wheel scrolling during drag on desktop
+    const isTouchPointer =
+      (evt as any).type.indexOf('touch') >= 0 ||
+      (evt as any).pointerType === 'touch';
+    if (
+      Konva.isDragging() &&
+      DD.node!.preventDefault() &&
+      evt.cancelable &&
+      isTouchPointer
+    ) {
       evt.preventDefault();
     }
     this.setPointersPositions(evt);

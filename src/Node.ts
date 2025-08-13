@@ -2080,7 +2080,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     quality?: number;
     callback?: (img: HTMLImageElement) => void;
   }) {
-    return new Promise((resolve, reject) => {
+    return new Promise<HTMLImageElement>((resolve, reject) => {
       try {
         const callback = config?.callback;
         if (callback) delete config.callback;
