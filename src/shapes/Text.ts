@@ -250,9 +250,12 @@ export class Text extends Shape<TextConfig> {
       const metrics = this.measureSize('M'); // Use a sample character to get the ascent
 
       baseline = 'alphabetic';
-      translateY =
-        (metrics.fontBoundingBoxAscent - metrics.fontBoundingBoxDescent) / 2 +
-        lineHeightPx / 2;
+      const ascent =
+        metrics.fontBoundingBoxAscent ?? metrics.actualBoundingBoxAscent;
+      const descent =
+        metrics.fontBoundingBoxDescent ?? metrics.actualBoundingBoxDescent;
+
+      translateY = (ascent - descent) / 2 + lineHeightPx / 2;
     }
 
     if (direction === RTL) {

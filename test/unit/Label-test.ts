@@ -81,17 +81,10 @@ describe('Label', function () {
 
     var trace = layer.getContext().getTrace(false, true);
 
-    if (isBrowser) {
-      assert.equal(
-        trace,
-        'clearRect(0,0,578,200);save();lineJoin=round;transform(1,0,0,1,-64,120);shadowColor=rgba(0,0,0,0.2);shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;beginPath();moveTo(5,0);lineTo(153,0);lineTo(163,-20);lineTo(173,0);lineTo(322,0);arc(322,5,5,4,0,false);lineTo(327,55);arc(322,55,5,0,1,false);lineTo(5,60);arc(5,55,5,1,3,false);lineTo(0,5);arc(5,5,5,3,4,false);closePath();fillStyle=#bbb;fill();restore();save();transform(1,0,0,1,-64,120);font=normal normal 50px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();fillStyle=green;fillText(Hello big world,0,30);restore();restore();'
-      );
-    } else {
-      assert.equal(
-        trace,
-        'clearRect(0,0,578,200);save();lineJoin=round;transform(1,0,0,1,-64,120);shadowColor=rgba(0,0,0,0.2);shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;beginPath();moveTo(5,0);lineTo(153,0);lineTo(163,-20);lineTo(173,0);lineTo(322,0);arc(322,5,5,4,0,false);lineTo(327,55);arc(322,55,5,0,1,false);lineTo(5,60);arc(5,55,5,1,3,false);lineTo(0,5);arc(5,5,5,3,4,false);closePath();fillStyle=#bbb;fill();restore();save();transform(1,0,0,1,-64,120);font=normal normal 50px Arial;textBaseline=middle;textAlign=left;translate(0,0);save();fillStyle=green;fillText(Hello big world,0,30);restore();restore();'
-      );
-    }
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();lineJoin=round;transform(1,0,0,1,-64,120);shadowColor=rgba(0,0,0,0.2);shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;beginPath();moveTo(5,0);lineTo(153,0);lineTo(163,-20);lineTo(173,0);lineTo(322,0);arc(322,5,5,4,0,false);lineTo(327,55);arc(322,55,5,0,1,false);lineTo(5,60);arc(5,55,5,1,3,false);lineTo(0,5);arc(5,5,5,3,4,false);closePath();fillStyle=#bbb;fill();restore();save();transform(1,0,0,1,-64,120);font=normal normal 50px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();fillStyle=green;fillText(Hello big world,0,47);restore();restore();'
+    );
   });
 
   it('find label class', function () {

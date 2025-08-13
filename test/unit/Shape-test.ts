@@ -15,6 +15,8 @@ import {
   compareCanvases,
 } from './test-utils';
 
+import { getOffsetY } from './Text-test';
+
 describe('Shape', function () {
   // ======================================================
   it('test intersects()', function () {
@@ -861,14 +863,14 @@ describe('Shape', function () {
     context.shadowOffsetX = 20 * Konva.pixelRatio;
     context.shadowOffsetY = 20 * Konva.pixelRatio;
     context.font = 'normal 50px Arial';
-    context.textBaseline = 'middle';
+    context.textBaseline = 'alphabetic';
 
     context.fillStyle = 'green';
-    context.fillText('Test TEXT', 50, 75);
+    context.fillText('Test TEXT', 50, 50 + getOffsetY(context));
 
     context.lineWidth = 2;
     context.strokeStyle = 'black';
-    context.strokeText('Test TEXT', 50, 75);
+    context.strokeText('Test TEXT', 50, 50 + getOffsetY(context));
 
     context.stroke();
     context.fill();
@@ -876,14 +878,14 @@ describe('Shape', function () {
 
     // draw text again to remove shadow under stroke
     context.font = 'normal 50px Arial';
-    context.textBaseline = 'middle';
-    context.fillText('Test TEXT', 50, 75);
+    context.textBaseline = 'alphabetic';
+    context.fillText('Test TEXT', 50, 50 + getOffsetY(context));
     context.fillStyle = 'green';
-    context.fillText('Test TEXT', 50, 75);
+    context.fillText('Test TEXT', 50, 50 + getOffsetY(context));
 
     context.lineWidth = 2;
     context.strokeStyle = 'black';
-    context.strokeText('Test TEXT', 50, 75);
+    context.strokeText('Test TEXT', 50, 50 + getOffsetY(context));
 
     compareLayerAndCanvas(layer, canvas, 254, 10);
   });
