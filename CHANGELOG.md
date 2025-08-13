@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 10.0.0-0 (2025-08-14)
+
+- **Breaking**: Konva module is fully migrated from CommonJS modules to ES modules. It may break some older bundlers and CommonJS environments. In CommonJS environment you have to use default property from require:
+
+```js
+// before
+const Konva = require('konva');
+
+// after
+const Konva = require('konva').default;
+```
+
+- **Breaking:** Dropped default support for node.js environment. Now you have to explicitly import it:
+
+```bash
+npm install canvas
+```
+
+```js
+import Konva from 'konva';
+import 'konva/canvas-backend';
+```
+
+- Added new `skia` render backend for node.js:
+
+```bash
+npm install skia-canvas
+```
+
+```js
+import Konva from 'konva';
+import 'konva/skia-backend';
+```
+
+- New property `charRenderFunc` for `Konva.Text` for controlling "per-character-render". May be useful any character animations:
+
+````js
+var text = new Konva.Text({
+  x: 10,
+  y: 10,
+  text: 'AB',
+  fontSize: 20,
+  charRenderFunc: function ({ context, index }) {
+    if (index === 1) {
+      // shift only the second character
+      context.translate(0, 10);
+    }
+  },
+});
+```
+
+- Fixed corner radius render for `Konva.Rect` when negative width or height are used
+- Added `cornerRadius` support for `Konva.RegularPolygon`
+
 ## 9.3.22 (2025-07-08)
 
 - Fixed possible crash on `node.to()` method
@@ -304,7 +358,7 @@ group.find('Shape').visible(false);
 
 // new code:
 group.find('Shape').forEach((shape) => shape.visible(false));
-```
+````
 
 - argument `selector` is removed from `node.getIntersection(pos)` API. I don't think you even knew about it.
 - `Konva.Util.extend` is removed.
