@@ -677,7 +677,7 @@ export class Stage extends Container<Layer> {
     const clickStartShape = this[eventType + 'ClickStartShape'];
     const clickEndShape = this[eventType + 'ClickEndShape'];
     const processedShapesIds = {};
-    let triggeredOnShape = false;
+    let skipPointerUpTrigger = false;
     this._changedPointerPositions.forEach((pos) => {
       const shape = (PointerEvents.getCapturedShape(pos.id) ||
         this.getIntersection(pos)) as Shape;
@@ -708,7 +708,7 @@ export class Stage extends Container<Layer> {
       }, Konva.dblClickWindow);
 
       if (shape && shape.isListening()) {
-        triggeredOnShape = true;
+        skipPointerUpTrigger = true;
         this[eventType + 'ClickEndShape'] = shape;
         shape._fireAndBubble(events.pointerup, { ...event });
 
@@ -726,6 +726,16 @@ export class Stage extends Container<Layer> {
         }
       } else {
         this[eventType + 'ClickEndShape'] = null;
+
+        if (!skipPointerUpTrigger) {
+          this._fire(events.pointerup, {
+            evt: evt,
+            target: this,
+            currentTarget: this,
+            pointerId: this._changedPointerPositions[0].id,
+          });
+          skipPointerUpTrigger = true;
+        }
 
         if (Konva['_' + eventType + 'ListenClick']) {
           this._fire(events.pointerclick, {
@@ -747,7 +757,7 @@ export class Stage extends Container<Layer> {
       }
     });
 
-    if (!triggeredOnShape) {
+    if (!skipPointerUpTrigger) {
       this._fire(events.pointerup, {
         evt: evt,
         target: this,

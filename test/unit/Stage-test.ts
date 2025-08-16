@@ -900,6 +900,32 @@ describe('Stage', function () {
     assert.equal(dblicks, 1, 'first dbclick registered');
   });
 
+  it('stage mouseup should fire before click on empty area', function () {
+    if (isNode) {
+      return;
+    }
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var order: string[] = [];
+
+    stage.on('mousedown', function () {
+      order.push('down');
+    });
+    stage.on('mouseup', function () {
+      order.push('up');
+    });
+    stage.on('click', function () {
+      order.push('click');
+    });
+
+    simulateMouseDown(stage, { x: 10, y: 10 });
+    simulateMouseUp(stage, { x: 10, y: 10 });
+
+    assert.deepEqual(order, ['down', 'up', 'click']);
+  });
+
   it('can listen taps on empty areas', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
