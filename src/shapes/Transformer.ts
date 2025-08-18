@@ -788,9 +788,11 @@ export class Transformer extends Group {
             Math.pow(comparePoint.y - anchorNode.y(), 2)
         );
 
-        const reverseX = this.findOne('.top-left')!.x() > comparePoint.x ? -1 : 1;
+        const reverseX =
+          this.findOne('.top-left')!.x() > comparePoint.x ? -1 : 1;
 
-        const reverseY = this.findOne('.top-left')!.y() > comparePoint.y ? -1 : 1;
+        const reverseY =
+          this.findOne('.top-left')!.y() > comparePoint.y ? -1 : 1;
 
         x = newHypotenuse * this.cos * reverseX;
         y = newHypotenuse * this.sin * reverseY;
@@ -1107,6 +1109,16 @@ export class Transformer extends Group {
     const delta = newTr.multiply(oldTr.invert());
 
     this._nodes.forEach((node) => {
+      // check to close this issue: https://github.com/konvajs/konva/issues/1957
+      // a node can be destroyed during the transformation
+      // probably a developer must remove it from transformer
+      if (!node.getStage()) {
+        // do we need a helping message?
+        // Util.error(
+        //   'Node is not attached to the stage. This is not allowed. Please attach the node to the stage before transforming. If node was destroyed, make sure to remove it from transformer.'
+        // );
+        return;
+      }
       // for each node we have the same [delta transform]
       // the equations is
       // [delta transform] * [parent transform] * [old local transform] = [parent transform] * [new local transform]

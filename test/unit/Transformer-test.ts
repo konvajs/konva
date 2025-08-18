@@ -5141,4 +5141,43 @@ describe('Transformer', function () {
       'Event listeners should be cleaned up properly'
     );
   });
+
+  it.only('should handle transformation when node is not on stage (case for node destroy)', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    // Create a rect but don't add it to stage yet
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+    });
+    layer.add(tr);
+
+    // Should not throw error when drawing with node not on stage
+    layer.draw();
+
+    // Transformer should have zero size when node is not on stage
+
+    // Try to move an anchor to trigger transformation - should throw error
+    simulateMouseDown(tr, {
+      x: 50,
+      y: 50,
+    });
+    simulateMouseMove(tr, {
+      x: 60,
+      y: 60,
+    });
+    simulateMouseUp(tr, {
+      x: 60,
+      y: 60,
+    });
+  });
 });
