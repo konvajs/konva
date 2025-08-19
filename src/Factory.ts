@@ -46,12 +46,10 @@ type ValidatorFunc<T> = (val: ExtractGetSet<T>, attr: string) => T;
 /**
  * Extracts the "components" (keys) of a GetSet value. The value must be an object.
  */
-type ExtractComponents<T extends Constructor, U extends Attr<T>> = Value<
-  T,
-  U
-> extends Record<string, any>
-  ? EnforceString<keyof Value<T, U>>[]
-  : never;
+type ExtractComponents<T extends Constructor, U extends Attr<T>> =
+  Value<T, U> extends Record<string, any>
+    ? EnforceString<keyof Value<T, U>>[]
+    : never;
 
 export const Factory = {
   addGetterSetter<T extends Constructor, U extends Attr<T>>(

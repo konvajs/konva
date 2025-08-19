@@ -30,7 +30,7 @@ export interface ContainerConfig extends NodeConfig {
  * @@containerParams
  */
 export abstract class Container<
-  ChildType extends Node = Node
+  ChildType extends Node = Node,
 > extends Node<ContainerConfig> {
   children: Array<ChildType> = [];
 

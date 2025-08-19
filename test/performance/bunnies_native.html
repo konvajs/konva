@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <style>
@@ -9,7 +9,7 @@
     </style>
   </head>
   <body>
-    <canvas id="canvas"></div>
+    <canvas id="canvas"></canvas>
     <script src="http://www.html5canvastutorials.com/lib/stats/stats.js"></script>
     <script defer="defer">
       var lastTime = 0;
@@ -39,13 +39,13 @@
       var canvas = document.getElementById('canvas');
       canvas.width = width;
       canvas.height = height;
-  
+
       var ctx = canvas.getContext('2d');
 
       stats = new Stats();
 
       wabbitTexture = new Image();
-      wabbitTexture.onload = function() {
+      wabbitTexture.onload = function () {
         _handleTextureLoaded();
       };
       wabbitTexture.src = '../assets/bunny.png';
@@ -66,12 +66,11 @@
       count = startBunnyCount;
       counter.innerHTML = startBunnyCount + ' BUNNIES';
 
-
-      canvas.addEventListener('mousedown', function() {
+      canvas.addEventListener('mousedown', function () {
         isAdding = true;
       });
 
-      canvas.addEventListener('mouseup', function() {
+      canvas.addEventListener('mouseup', function () {
         isAdding = false;
       });
 
@@ -84,8 +83,8 @@
             x: 10,
             y: 10,
             speedX: Math.random() * 10,
-            speedY: Math.random() * 10 - 5
-          }
+            speedY: Math.random() * 10 - 5,
+          };
           bunnys.push(bunny);
         }
       }
@@ -108,8 +107,8 @@
               x: 10,
               y: 10,
               speedX: Math.random() * 10,
-              speedY: Math.random() * 10 - 5
-            }
+              speedY: Math.random() * 10 - 5,
+            };
             bunnys.push(bunny);
             count++;
           }
@@ -124,28 +123,27 @@
           bunny.speedY += gravity;
           if (bunny.x > maxX - wabbitTexture.width) {
             bunny.speedX *= -1;
-            bunny.x = (maxX - wabbitTexture.width);
+            bunny.x = maxX - wabbitTexture.width;
           } else if (bunny.x < minX) {
             bunny.speedX *= -1;
-            bunny.x = (minX);
+            bunny.x = minX;
           }
 
           if (bunny.y > maxY - wabbitTexture.height) {
             bunny.speedY *= -0.85;
-            bunny.y = (maxY - wabbitTexture.height);
+            bunny.y = maxY - wabbitTexture.height;
             if (Math.random() > 0.5) {
               bunny.speedY -= Math.random() * 6;
             }
           } else if (bunny.y < minY) {
             bunny.speedY = 0;
-            bunny.y = (minY);
+            bunny.y = minY;
           }
           ctx.save();
           ctx.transform(1, 0, 0, 1, bunny.x, bunny.y);
           ctx.drawImage(wabbitTexture, 0, 0);
           ctx.restore();
         }
-        
 
         requestAnimationFrame(update);
         stats.end();

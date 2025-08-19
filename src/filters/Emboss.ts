@@ -31,7 +31,7 @@ export const Emboss: Filter = function (imageData) {
     w = imageData.width,
     h = imageData.height,
     w4 = w * 4;
-  let  dirY = 0,
+  let dirY = 0,
     dirX = 0,
     y = h;
 

@@ -1413,7 +1413,6 @@ That changes are private and internal specific. They should not break most of `K
 Differences from last official `KineticJS` release
 
 - Bug Fixes
-
   - `strokeScaleEnabled = false` is disabled for text as I can not find a way to implement this
   - `strokeScaleEnabled = false` for Line now creates a correct hit graph
   - working "this-example" as name for nodes
