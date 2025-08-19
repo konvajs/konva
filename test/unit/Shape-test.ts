@@ -971,6 +971,9 @@ describe('Shape', function () {
     rect.strokeWidth(8);
     assert.equal(rect.strokeWidth(), 8);
 
+    rect.miterLimit(5);
+    assert.equal(rect.miterLimit(), 5);
+
     const f = () => {};
     rect.sceneFunc(f);
     assert.equal(rect.sceneFunc(), f);
@@ -2407,5 +2410,60 @@ describe('Shape', function () {
 
     const hitShape = layer.getIntersection({ x: 150, y: 150 });
     assert.equal(hitShape, null);
+  });
+
+  it('miterLimit with buffer canvas', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    // Sharp triangle with opacity to force buffer canvas usage
+    var triangle = new Konva.Shape({
+      x: 100,
+      y: 50,
+      sceneFunc: function (ctx, shape) {
+        ctx.beginPath();
+        ctx.moveTo(140, 5);
+        ctx.lineTo(0, 70);
+        ctx.lineTo(220, 70);
+        ctx.closePath();
+        ctx.fillStrokeShape(shape);
+      },
+      fill: 'yellow',
+      stroke: 'orange',
+      strokeWidth: 10,
+      lineJoin: 'miter',
+      miterLimit: 3,
+      opacity: 0.7, // Forces buffer canvas usage
+    });
+
+    layer.add(triangle);
+    stage.add(layer);
+
+    // Create expected result using native canvas with buffer approach
+    var canvas = createCanvas();
+    var context = canvas.getContext('2d');
+
+    // Draw on buffer first
+    context.beginPath();
+    context.translate(100, 50);
+    context.moveTo(140, 5);
+    context.lineTo(0, 70);
+    context.lineTo(220, 70);
+    context.closePath();
+    context.fillStyle = 'yellow';
+    context.strokeStyle = 'orange';
+    context.lineWidth = 10;
+    context.lineJoin = 'miter';
+    context.miterLimit = 3;
+    context.fill();
+    context.stroke();
+
+    // Apply opacity by drawing to final canvas
+    var finalCanvas = createCanvas();
+    var finalContext = finalCanvas.getContext('2d');
+    finalContext.globalAlpha = 0.7;
+    finalContext.drawImage(canvas, 0, 0);
+
+    compareLayerAndCanvas(layer, finalCanvas, 200);
   });
 });
