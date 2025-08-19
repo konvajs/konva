@@ -1911,7 +1911,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       attrs[key] = obj[key];
     }
 
-    const node = new (<any>this.constructor)(attrs);
+    const node = new (this.constructor as any)(attrs);
     // copy over listeners
     for (key in this.eventListeners) {
       allListeners = this.eventListeners[key];

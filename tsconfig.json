@@ -7,8 +7,8 @@
     "noUncheckedSideEffectImports": true,
     "rewriteRelativeImportExtensions": true,
     "isolatedModules": true,
+    "erasableSyntaxOnly": true,
     // ideally we want to enable erasableSyntaxOnly & verbatimModuleSyntax for true node interop
-    "erasableSyntaxOnly": false,
     "verbatimModuleSyntax": false,
     // "sourceMap": true,
     "noEmitOnError": true,

@@ -664,10 +664,10 @@ export class Context {
       this._context.setLineDash(segments);
     } else if ('mozDash' in this._context) {
       // verified that this works in firefox
-      (<any>this._context['mozDash']) = segments;
+      (this._context as any)['mozDash'] = segments;
     } else if ('webkitLineDash' in this._context) {
       // does not currently work for Safari
-      (<any>this._context['webkitLineDash']) = segments;
+      (this._context as any)['webkitLineDash'] = segments;
     }
 
     // no support for IE9 and IE10

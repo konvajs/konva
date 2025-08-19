@@ -529,7 +529,7 @@ export const Util = {
     const canvas = document.createElement('canvas');
     // on some environments canvas.style is readonly
     try {
-      (<any>canvas).style = canvas.style || {};
+      (canvas as any).style = canvas.style || {};
     } catch (e) {}
     return canvas;
   },
@@ -991,7 +991,7 @@ export const Util = {
   // very simplified version of Object.assign
   _assign<T, U>(target: T, source: U) {
     for (const key in source) {
-      (<any>target)[key] = source[key];
+      (target as any)[key] = source[key];
     }
     return target as T & U;
   },
