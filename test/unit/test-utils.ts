@@ -9,8 +9,8 @@ Konva.enableTrace = true;
 Konva.showWarnings = true;
 
 import { imagediff } from './imagediff.ts';
-import { Layer } from '../../src/Layer.ts';
-import { Stage } from '../../src/Stage.ts';
+import type { Layer } from '../../src/Layer.ts';
+import type { Stage } from '../../src/Stage.ts';
 
 // reset some data
 beforeEach(function () {

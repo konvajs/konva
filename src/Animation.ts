@@ -1,6 +1,6 @@
 import { glob } from './Global.ts';
-import { Layer } from './Layer.ts';
-import { IFrame, AnimationFn } from './types.ts';
+import type { Layer } from './Layer.ts';
+import type { IFrame, AnimationFn } from './types.ts';
 import { Util } from './Util.ts';
 
 const now = (function (): () => number {

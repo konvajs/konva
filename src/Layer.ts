@@ -1,14 +1,16 @@
 import { Util } from './Util.ts';
-import { Container, ContainerConfig } from './Container.ts';
+import type { ContainerConfig } from './Container.ts';
+import { Container } from './Container.ts';
 import { Node } from './Node.ts';
 import { Factory } from './Factory.ts';
 import { SceneCanvas, HitCanvas } from './Canvas.ts';
-import { Stage } from './Stage.ts';
+import type { Stage } from './Stage.ts';
 import { getBooleanValidator } from './Validators.ts';
 
-import { GetSet, Vector2d } from './types.ts';
-import { Group } from './Group.ts';
-import { Shape, shapes } from './Shape.ts';
+import type { GetSet, Vector2d } from './types.ts';
+import type { Group } from './Group.ts';
+import type { Shape } from './Shape.ts';
+import { shapes } from './Shape.ts';
 import { _registerNode } from './Global.ts';
 
 export interface LayerConfig extends ContainerConfig {

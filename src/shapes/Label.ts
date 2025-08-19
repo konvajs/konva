@@ -1,16 +1,17 @@
 import { Factory } from '../Factory.ts';
-import { Shape, ShapeConfig } from '../Shape.ts';
+import type { ShapeConfig } from '../Shape.ts';
+import { Shape } from '../Shape.ts';
 import { Group } from '../Group.ts';
-import { Context } from '../Context.ts';
-import { ContainerConfig } from '../Container.ts';
+import type { Context } from '../Context.ts';
+import type { ContainerConfig } from '../Container.ts';
 import {
   getNumberOrArrayOfNumbersValidator,
   getNumberValidator,
 } from '../Validators.ts';
 import { _registerNode } from '../Global.ts';
 
-import { GetSet } from '../types.ts';
-import { Text } from './Text.ts';
+import type { GetSet } from '../types.ts';
+import type { Text } from './Text.ts';
 
 export interface LabelConfig extends ContainerConfig {}
 

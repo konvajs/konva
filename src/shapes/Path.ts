@@ -1,13 +1,14 @@
 import { Factory } from '../Factory.ts';
 import { _registerNode } from '../Global.ts';
-import { Shape, ShapeConfig } from '../Shape.ts';
+import type { ShapeConfig } from '../Shape.ts';
+import { Shape } from '../Shape.ts';
 
 import {
   getCubicArcLength,
   getQuadraticArcLength,
   t2length,
 } from '../BezierFunctions.ts';
-import { GetSet, PathSegment } from '../types.ts';
+import type { GetSet, PathSegment } from '../types.ts';
 
 export interface PathConfig extends ShapeConfig {
   data?: string;

@@ -1,4 +1,4 @@
-import { Filter } from '../Node.ts';
+import type { Filter } from '../Node.ts';
 /**
  * Solarize Filter
  * Pixastic Lib - Solarize filter - v0.1.0

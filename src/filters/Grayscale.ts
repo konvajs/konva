@@ -1,4 +1,4 @@
-import { Filter } from '../Node.ts';
+import type { Filter } from '../Node.ts';
 
 /**
  * Grayscale Filter

@@ -1,11 +1,12 @@
 import { Factory } from '../Factory.ts';
-import { Context } from '../Context.ts';
-import { Shape, ShapeConfig } from '../Shape.ts';
+import type { Context } from '../Context.ts';
+import type { ShapeConfig } from '../Shape.ts';
+import { Shape } from '../Shape.ts';
 import { Animation } from '../Animation.ts';
 import { getNumberValidator } from '../Validators.ts';
 import { _registerNode } from '../Global.ts';
 
-import { GetSet } from '../types.ts';
+import type { GetSet } from '../types.ts';
 
 export interface SpriteConfig extends ShapeConfig {
   animation: string;

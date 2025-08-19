@@ -1,8 +1,8 @@
-import { KonvaEventObject } from './Node.ts';
+import type { KonvaEventObject } from './Node.ts';
 import { Konva } from './Global.ts';
 
-import { Shape } from './Shape.ts';
-import { Stage } from './Stage.ts';
+import type { Shape } from './Shape.ts';
+import type { Stage } from './Stage.ts';
 
 const Captures = new Map<number, Shape | Stage>();
 

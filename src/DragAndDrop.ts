@@ -1,7 +1,7 @@
-import { Container } from './Container.ts';
+import type { Container } from './Container.ts';
 import { Konva } from './Global.ts';
-import { Node } from './Node.ts';
-import { Vector2d } from './types.ts';
+import type { Node } from './Node.ts';
+import type { Vector2d } from './types.ts';
 import { Util } from './Util.ts';
 
 export const DD = {

@@ -46,11 +46,14 @@ export namespace Konva {
   export type Vector2d = import('./types.ts').Vector2d;
   export type Node = import('./Node.ts').Node;
   export type NodeConfig = import('./Node.ts').NodeConfig;
-  export type KonvaEventObject<EventType> = import('./Node.ts').KonvaEventObject<EventType>;
+  export type KonvaEventObject<EventType> =
+    import('./Node.ts').KonvaEventObject<EventType>;
 
-  export type KonvaPointerEvent = import('./PointerEvents.ts').KonvaPointerEvent;
+  export type KonvaPointerEvent =
+    import('./PointerEvents.ts').KonvaPointerEvent;
 
-  export type KonvaEventListener<This, EventType> = import('./Node.ts').KonvaEventListener<This, EventType>;
+  export type KonvaEventListener<This, EventType> =
+    import('./Node.ts').KonvaEventListener<This, EventType>;
 
   export type Container = import('./Container.ts').Container<Node>;
   export type ContainerConfig = import('./Container.ts').ContainerConfig;

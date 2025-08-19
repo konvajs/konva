@@ -4,12 +4,12 @@ import { Node } from '../Node.ts';
 import { Shape } from '../Shape.ts';
 import { Rect } from './Rect.ts';
 import { Group } from '../Group.ts';
-import { ContainerConfig } from '../Container.ts';
+import type { ContainerConfig } from '../Container.ts';
 import { Konva } from '../Global.ts';
 import { getBooleanValidator, getNumberValidator } from '../Validators.ts';
 import { _registerNode } from '../Global.ts';
 
-import { GetSet, IRect, Vector2d } from '../types.ts';
+import type { GetSet, IRect, Vector2d } from '../types.ts';
 
 export interface Box extends IRect {
   rotation: number;

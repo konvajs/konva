@@ -1,10 +1,11 @@
 import { Factory } from '../Factory.ts';
-import { Shape, ShapeConfig } from '../Shape.ts';
+import type { ShapeConfig } from '../Shape.ts';
+import { Shape } from '../Shape.ts';
 import { _registerNode } from '../Global.ts';
 
 import { Util } from '../Util.ts';
-import { GetSet } from '../types.ts';
-import { Context } from '../Context.ts';
+import type { GetSet } from '../types.ts';
+import type { Context } from '../Context.ts';
 import { getNumberOrArrayOfNumbersValidator } from '../Validators.ts';
 
 export interface RectConfig extends ShapeConfig {

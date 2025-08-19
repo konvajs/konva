@@ -1,13 +1,14 @@
-import { Canvas, HitCanvas, SceneCanvas } from './Canvas.ts';
-import { Container } from './Container.ts';
-import { Context } from './Context.ts';
+import type { Canvas } from './Canvas.ts';
+import { HitCanvas, SceneCanvas } from './Canvas.ts';
+import type { Container } from './Container.ts';
+import type { Context } from './Context.ts';
 import { DD } from './DragAndDrop.ts';
 import { Factory } from './Factory.ts';
 import { Konva } from './Global.ts';
-import { Layer } from './Layer.ts';
-import { Shape } from './Shape.ts';
-import { Stage } from './Stage.ts';
-import { GetSet, IRect, Vector2d } from './types.ts';
+import type { Layer } from './Layer.ts';
+import type { Shape } from './Shape.ts';
+import type { Stage } from './Stage.ts';
+import type { GetSet, IRect, Vector2d } from './types.ts';
 import { Transform, Util } from './Util.ts';
 import {
   getBooleanValidator,

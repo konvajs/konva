@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { Shape } from '../../src/Shape.ts';
+import type { Shape } from '../../src/Shape.ts';
 
 import {
   addStage,

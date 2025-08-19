@@ -1,10 +1,11 @@
 import { Factory } from '../Factory.ts';
-import { Shape, ShapeConfig } from '../Shape.ts';
+import type { ShapeConfig } from '../Shape.ts';
+import { Shape } from '../Shape.ts';
 import { Konva } from '../Global.ts';
-import { GetSet } from '../types.ts';
+import type { GetSet } from '../types.ts';
 import { getNumberValidator, getBooleanValidator } from '../Validators.ts';
 import { _registerNode } from '../Global.ts';
-import { Context } from '../Context.ts';
+import type { Context } from '../Context.ts';
 
 export interface ArcConfig extends ShapeConfig {
   angle: number;

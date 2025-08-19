@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { Line } from '../../src/shapes/Line.ts';
+import type { Line } from '../../src/shapes/Line.ts';
 
 import { addStage, Konva, cloneAndCompareLayer } from './test-utils.ts';
 

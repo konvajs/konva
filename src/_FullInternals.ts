@@ -96,7 +96,10 @@ export namespace Konva {
 
   export type KonvaPointerEvent = Core.KonvaPointerEvent;
 
-  export type KonvaEventListener<This, EventType> = Core.KonvaEventListener<This, EventType>;
+  export type KonvaEventListener<This, EventType> = Core.KonvaEventListener<
+    This,
+    EventType
+  >;
 
   export type Container = Core.Container;
   export type ContainerConfig = Core.ContainerConfig;

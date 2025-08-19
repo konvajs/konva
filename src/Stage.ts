@@ -1,11 +1,12 @@
 import { Util } from './Util.ts';
 import { Factory } from './Factory.ts';
-import { Container, ContainerConfig } from './Container.ts';
+import type { ContainerConfig } from './Container.ts';
+import { Container } from './Container.ts';
 import { Konva } from './Global.ts';
 import { SceneCanvas, HitCanvas } from './Canvas.ts';
-import { GetSet, Vector2d } from './types.ts';
-import { Shape } from './Shape.ts';
-import { Layer } from './Layer.ts';
+import type { GetSet, Vector2d } from './types.ts';
+import type { Shape } from './Shape.ts';
+import type { Layer } from './Layer.ts';
 import { DD } from './DragAndDrop.ts';
 import { _registerNode } from './Global.ts';
 import * as PointerEvents from './PointerEvents.ts';

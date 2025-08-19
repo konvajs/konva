@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { Transformer } from '../../src/shapes/Transformer.ts';
+import type { Transformer } from '../../src/shapes/Transformer.ts';
 import type { Rect } from '../../src/shapes/Rect.ts';
 import type { Shape } from '../../src/Shape.ts';
 

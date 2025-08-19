@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { Shape } from '../../src/Shape.js';
+import type { Shape } from '../../src/Shape.js';
 import { addStage, Konva, compareLayers, isNode } from './test-utils.ts';
 
 describe('Container', function () {

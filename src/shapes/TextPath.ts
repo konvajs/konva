@@ -1,13 +1,14 @@
 import { Util } from '../Util.ts';
 import { Factory } from '../Factory.ts';
-import { Context } from '../Context.ts';
-import { Shape, ShapeConfig } from '../Shape.ts';
+import type { Context } from '../Context.ts';
+import type { ShapeConfig } from '../Shape.ts';
+import { Shape } from '../Shape.ts';
 import { Path } from './Path.ts';
 import { Text, stringToArray } from './Text.ts';
 import { getNumberValidator } from '../Validators.ts';
 import { _registerNode } from '../Global.ts';
 
-import { GetSet, PathSegment, Vector2d } from '../types.ts';
+import type { GetSet, PathSegment, Vector2d } from '../types.ts';
 
 export interface TextPathConfig extends ShapeConfig {
   text?: string;

@@ -1,5 +1,6 @@
 import { Factory } from '../Factory.ts';
-import { Node, Filter } from '../Node.ts';
+import type { Filter } from '../Node.ts';
+import { Node } from '../Node.ts';
 import { getNumberValidator } from '../Validators.ts';
 
 Factory.addGetterSetter(

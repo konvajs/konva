@@ -1,5 +1,5 @@
-import { Node } from './Node.ts';
-import { GetSet } from './types.ts';
+import type { Node } from './Node.ts';
+import type { GetSet } from './types.ts';
 import { Util } from './Util.ts';
 import { getComponentValidator } from './Validators.ts';
 
