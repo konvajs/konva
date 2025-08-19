@@ -125,7 +125,7 @@ function toImageDataFromContext(context) {
 function toCanvas(object) {
   const data = toImageData(object),
     canvas = getCanvas(data.width, data.height),
-    context = canvas.getContext('2d');
+    context = canvas.getContext('2d')!;
 
   context.putImageData(data, 0, 0);
   return canvas;

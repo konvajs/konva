@@ -225,12 +225,12 @@ describe('Layer', function () {
     stage.add(layer);
 
     assert.equal(
-      layer.getIntersection({ x: 300, y: 100 }).id(),
+      layer.getIntersection({ x: 300, y: 100 })?.id(),
       'greenCircle',
       'shape should be greenCircle'
     );
     assert.equal(
-      layer.getIntersection({ x: 380, y: 100 }).id(),
+      layer.getIntersection({ x: 380, y: 100 })?.id(),
       'redCircle',
       'shape should be redCircle'
     );

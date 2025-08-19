@@ -10,12 +10,12 @@ import {
   simulateTouchEnd,
   simulatePointerMove,
   compareCanvases,
-  createCanvas,
   showHit,
   getContainer,
   isNode,
   isBrowser,
   Konva,
+  createCanvasAndContext,
 } from './test-utils.ts';
 
 describe('Stage', function () {
@@ -210,7 +210,7 @@ describe('Stage', function () {
     }
     var stage = addStage();
     var container = document.createElement('div');
-    var wrap = stage.container().parentNode;
+    var wrap = stage.container().parentNode!;
     wrap.appendChild(container);
 
     stage.container(container);
@@ -240,7 +240,7 @@ describe('Stage', function () {
     layer.draw();
 
     var container = document.createElement('div');
-    var wrap = stage.container().parentNode;
+    var wrap = stage.container().parentNode!;
     wrap.appendChild(container);
 
     var clone = stage.clone();
@@ -257,7 +257,7 @@ describe('Stage', function () {
     }
     var stage = addStage();
     var container = stage.container();
-    var parent = stage.content.parentElement;
+    var parent = stage.content.parentElement!;
 
     parent.removeChild(stage.content);
 
@@ -334,7 +334,7 @@ describe('Stage', function () {
     });
 
     stage.on('contentMousemove', function () {
-      var pos = stage.getPointerPosition();
+      var pos = stage.getPointerPosition()!;
       var shape = stage.getIntersection(pos);
       if (!shape) {
         //console.log(pos);
@@ -1367,10 +1367,9 @@ describe('Stage', function () {
       height: stage.height() + 20,
     });
 
-    var canvas = createCanvas();
+    const { canvas, context } = createCanvasAndContext();
     canvas.width = radius * 2;
     canvas.height = radius * 2;
-    var context = canvas.getContext('2d');
     context.beginPath();
     context.arc(radius, radius, radius, 0, 2 * Math.PI);
     context.fillStyle = 'black';

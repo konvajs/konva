@@ -6,7 +6,7 @@ import tiger from '../assets/tiger.ts';
 import {
   addStage,
   Konva,
-  createCanvas,
+  createCanvasAndContext,
   compareLayerAndCanvas,
   cloneAndCompareLayer,
   isNode,
@@ -196,8 +196,7 @@ describe('Path', function () {
 
     assert.equal(path.dataArray[1].command, 'L');
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     // stroke
     context.beginPath();
     context.moveTo(200, 100);
@@ -1099,7 +1098,7 @@ describe('Path', function () {
       ) as SVGPathElement;
       SVGPath.setAttribute('d', data);
       for (var i = 0; i < path.getLength(); i += 1) {
-        var p = path.getPointAtLength(i);
+        var p = path.getPointAtLength(i)!;
         var circle = new Konva.Circle({
           x: p.x,
           y: p.y,
@@ -1119,9 +1118,9 @@ describe('Path', function () {
         );
       }
     } else {
-      var points = [];
+      var points: { x: number; y: number }[] = [];
       for (var i = 0; i < path.getLength(); i += 20) {
-        var p = path.getPointAtLength(i);
+        var p = path.getPointAtLength(i)!;
         points.push(p);
         var circle = new Konva.Circle({
           x: p.x,
@@ -1185,7 +1184,7 @@ describe('Path', function () {
       ) as SVGPathElement;
       SVGPath.setAttribute('d', data);
       for (var i = 0.001; i < path.getLength(); i += 1) {
-        var p = path.getPointAtLength(i);
+        var p = path.getPointAtLength(i)!;
         var circle = new Konva.Circle({
           x: p.x + path.x(),
           y: p.y + path.y(),
@@ -1222,7 +1221,7 @@ describe('Path', function () {
       ) as SVGPathElement;
       SVGPath.setAttribute('d', data);
       for (var i = 0; i < path.getLength(); i += 1) {
-        var p = path.getPointAtLength(i);
+        var p = path.getPointAtLength(i)!;
         var circle = new Konva.Circle({
           x: p.x,
           y: p.y,
@@ -1262,7 +1261,7 @@ describe('Path', function () {
       ) as SVGPathElement;
       SVGPath.setAttribute('d', data);
       for (var i = 0; i < path.getLength(); i += 10) {
-        var p = path.getPointAtLength(i);
+        var p = path.getPointAtLength(i)!;
         var circle = new Konva.Circle({
           x: p.x,
           y: p.y,
@@ -1282,9 +1281,9 @@ describe('Path', function () {
         );
       }
     } else {
-      var points = [];
+      var points: { x: number; y: number }[] = [];
       for (var i = 0; i < path.getLength(); i += 500) {
-        var p = path.getPointAtLength(i);
+        var p = path.getPointAtLength(i)!;
         points.push(p);
         var circle = new Konva.Circle({
           x: p.x,

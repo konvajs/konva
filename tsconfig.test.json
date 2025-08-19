@@ -1,19 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "strict": false,
-    "noImplicitAny": false,
-    "allowJs": true,
-    "noEmit": true,
-    "checkJs": false,
-    "allowUnreachableCode": true,
-    "allowUnusedLabels": true,
-    "noFallthroughCasesInSwitch": false,
-    "noImplicitReturns": false,
-    "noImplicitThis": false,
-    "noPropertyAccessFromIndexSignature": false,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false
+    "noEmit": true
   },
   "include": ["src", "test"]
 }

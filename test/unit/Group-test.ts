@@ -38,7 +38,7 @@ describe('Group', function () {
         y: -15,
         width: 150,
         height: 150,
-      })
+      })!
       .offsetX(5)
       .offsetY(5);
 

@@ -57,7 +57,7 @@ describe('Blob', function () {
     layer.add(blob);
     stage.add(layer);
 
-    assert.equal(stage.findOne<Line>('Line').points().length, 8);
+    assert.equal(stage.findOne<Line>('Line')?.points().length, 8);
   });
 
   // ======================================================

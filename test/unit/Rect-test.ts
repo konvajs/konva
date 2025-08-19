@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import {
   addStage,
   Konva,
-  createCanvas,
+  createCanvasAndContext,
   compareLayerAndCanvas,
 } from './test-utils.ts';
 
@@ -120,8 +120,7 @@ describe('Rect', function () {
     layer.add(rect);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.beginPath();
     context.rect(200, 100, 100, 50);
     context.fillStyle = 'blue';
@@ -149,8 +148,7 @@ describe('Rect', function () {
     layer.add(rect);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.beginPath();
     context.rect(200, 100, 100, 50);
     context.lineWidth = 4;
@@ -175,8 +173,7 @@ describe('Rect', function () {
     layer.add(rect);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.beginPath();
     context.rect(200, 100, 100, 50);
     context.lineWidth = 2;
@@ -202,8 +199,7 @@ describe('Rect', function () {
     stage.add(layer);
 
     // as corner radius is much bigger we should have circe in the result
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.beginPath();
     context.arc(100, 100, 50, 0, Math.PI * 2);
     context.fillStyle = 'black';

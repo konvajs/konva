@@ -1550,7 +1550,7 @@ describe('MouseEvents', function () {
     stage.add(layer);
 
     // events array
-    var e = [];
+    var e: string[] = [];
 
     circle.on('click', function () {
       e.push('circle');

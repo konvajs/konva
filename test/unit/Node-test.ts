@@ -637,7 +637,7 @@ describe('Node', function () {
       id: 'myRect',
     });
 
-    var clicks = [];
+    var clicks: string[] = [];
 
     rect.on('click', function () {
       clicks.push(this.name());
@@ -719,8 +719,8 @@ describe('Node', function () {
     group.add(rect);
     group.add(text);
 
-    var clicks = [];
-    var taps = [];
+    var clicks: string[] = [];
+    var taps: string[] = [];
 
     group.on('click', function () {
       clicks.push(this.name());
@@ -1883,7 +1883,7 @@ describe('Node', function () {
     layer.add(circle);
     layer.draw();
 
-    var clicks = [];
+    var clicks: string[] = [];
 
     circle.on('click', function () {
       clicks.push('circle');
@@ -2057,7 +2057,7 @@ describe('Node', function () {
     layer.add(circle);
     layer.draw();
 
-    var clicks = [];
+    var clicks: string[] = [];
 
     circle.on('click', function () {
       clicks.push('circle');
@@ -2091,7 +2091,7 @@ describe('Node', function () {
     layer.add(circle);
     layer.draw();
 
-    var clicks = [];
+    var clicks: string[] = [];
 
     circle.on('click', function (e) {
       e.cancelBubble = true;
@@ -3318,7 +3318,7 @@ describe('Node', function () {
         width: 148,
         height: 148,
       })
-      .offset({
+      ?.offset({
         x: 74,
         y: 74,
       });
@@ -3834,7 +3834,7 @@ describe('Node', function () {
       y: 100,
     });
 
-    assert.equal(circle.getRelativePointerPosition().x, -50);
-    assert.equal(circle.getRelativePointerPosition().y, 0);
+    assert.equal(circle.getRelativePointerPosition()?.x, -50);
+    assert.equal(circle.getRelativePointerPosition()?.y, 0);
   });
 });

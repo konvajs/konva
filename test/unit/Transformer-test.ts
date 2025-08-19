@@ -1,6 +1,7 @@
 import { assert } from 'chai';
 import { Transformer } from '../../src/shapes/Transformer.ts';
 import type { Rect } from '../../src/shapes/Rect.ts';
+import type { Shape } from '../../src/Shape.ts';
 
 import {
   addStage,
@@ -12,13 +13,25 @@ import {
   assertAlmostEqual,
 } from './test-utils.ts';
 
-function simulateMouseDown(tr, pos) {
-  sd(tr.getStage(), pos);
+function simulateMouseDown(
+  tr: Transformer,
+  pos: { x: number; y: number; button?: number }
+) {
+  sd(tr.getStage()!, pos);
 }
 
-function simulateMouseMove(tr, pos) {
-  const stage = tr.getStage();
-  var top = (stage.content && stage.content.getBoundingClientRect().top) || 0;
+function simulateMouseMove(
+  tr: Transformer,
+  pos: {
+    target?: Shape | null;
+    x: number;
+    y: number;
+    button?: number;
+    altKey?: boolean;
+  }
+) {
+  const stage = tr.getStage()!;
+  const top = stage?.content?.getBoundingClientRect().top ?? 0;
   tr._handleMouseMove({
     ...pos,
     clientX: pos.x,
@@ -28,13 +41,13 @@ function simulateMouseMove(tr, pos) {
 }
 
 function simulateMouseUp(tr: Transformer, pos = { x: 0, y: 0 }) {
-  const stage = tr.getStage();
-  var top = (stage.content && stage.content.getBoundingClientRect().top) || 0;
+  const stage = tr.getStage()!;
+  const top = stage.content?.getBoundingClientRect().top ?? 0;
   tr._handleMouseUp({
     clientX: pos.x,
     clientY: pos.y + top,
   });
-  su(tr.getStage(), pos || { x: 1, y: 1 });
+  su(stage, pos || { x: 1, y: 1 });
 }
 
 describe('Transformer', function () {
@@ -68,7 +81,7 @@ describe('Transformer', function () {
     assert.equal(tr.height(), rect.height());
 
     // manual check of correct position of node
-    var handler = tr.findOne('.bottom-right');
+    var handler = tr.findOne('.bottom-right')!;
     var pos = handler.getAbsolutePosition();
     assert.equal(pos.x, rect.x() + rect.width());
     assert.equal(pos.y, rect.y() + rect.height());
@@ -431,7 +444,7 @@ describe('Transformer', function () {
     assert.equal(tr.x(), 100, 'second x');
     assert.equal(tr.width(), 200);
     // check visual
-    var pos = tr.findOne('.top-right').getAbsolutePosition();
+    var pos = tr.findOne('.top-right')!.getAbsolutePosition();
     assert.equal(pos.x, 300);
 
     stage.draw();
@@ -693,7 +706,7 @@ describe('Transformer', function () {
     assert.equal(tr.y(), rect.y());
     assert.equal(tr.width(), rect.width());
     assert.equal(tr.height(), rect.height());
-    assert.equal(tr.findOne('.back').width(), rect.width());
+    assert.equal(tr.findOne('.back')?.width(), rect.width());
   });
 
   it('add transformer for transformed rect', function () {
@@ -1391,7 +1404,7 @@ describe('Transformer', function () {
     layer.add(tr);
     layer.draw();
 
-    var anchor = tr.findOne('.top-right');
+    var anchor = tr.findOne('.top-right')!;
     var pos = anchor.getAbsolutePosition();
 
     simulateMouseDown(tr, {
@@ -1434,7 +1447,7 @@ describe('Transformer', function () {
 
     layer.draw();
 
-    var anchor = tr.findOne('.top-left');
+    var anchor = tr.findOne('.top-left')!;
     assertAlmostEqual(anchor.getAbsolutePosition().x, 20);
 
     simulateMouseDown(tr, {
@@ -2025,7 +2038,7 @@ describe('Transformer', function () {
     assert.equal(tr.height(), 100);
 
     // manual check position
-    var back = tr.findOne('.back');
+    var back = tr.findOne('.back')!;
     assert.equal(back.getAbsolutePosition().x, 0);
 
     layer.batchDraw();
@@ -2188,7 +2201,7 @@ describe('Transformer', function () {
     layer.add(tr);
     layer.draw();
 
-    var rotater = tr.findOne('.rotater');
+    var rotater = tr.findOne('.rotater')!;
     var pos = rotater.getAbsolutePosition();
 
     simulateMouseDown(tr, {
@@ -2724,7 +2737,7 @@ describe('Transformer', function () {
       x: 20,
       y: 20,
     });
-    assert.equal(shape.name(), 'top-left _anchor');
+    assert.equal(shape?.name(), 'top-left _anchor');
   });
 
   it('check rotator size on scaled transformer', function () {
@@ -2751,7 +2764,7 @@ describe('Transformer', function () {
     layer.add(tr);
     layer.draw();
 
-    var rotater = tr.findOne('.rotater');
+    var rotater = tr.findOne('.rotater')!;
     var pos = rotater.getAbsolutePosition();
 
     // pos.x === (x * scaleX - (height))
@@ -4874,7 +4887,7 @@ describe('Transformer', function () {
     });
     layer.add(tr);
     // manual check of correct position of node
-    var handler = tr.findOne<Rect>('.bottom-right');
+    var handler = tr.findOne<Rect>('.bottom-right')!;
     assert.equal(handler.fill(), 'white');
 
     tr.anchorStyleFunc((anchor) => {

@@ -49,7 +49,7 @@ export interface IFrame {
   frameRate: number;
 }
 
-export type AnimationFn = (frame?: IFrame) => boolean | void;
+export type AnimationFn = (frame: IFrame) => boolean | void;
 
 export enum KonvaNodeEvent {
   mouseover = 'mouseover',

@@ -47,7 +47,7 @@ describe('DragAndDropEvents', function () {
     var dragStart = false;
     var dragMove = false;
     var dragEnd = false;
-    var events = [];
+    var events: string[] = [];
 
     circle.on('dragstart', function () {
       dragStart = true;

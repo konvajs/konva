@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import {
   addStage,
   Konva,
-  createCanvas,
+  createCanvasAndContext,
   compareLayerAndCanvas,
   compareLayers,
 } from './test-utils.ts';
@@ -147,8 +147,7 @@ describe('Line', function () {
     layer.add(line);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
 
     context.save();
     context.lineJoin = 'round';

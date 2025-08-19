@@ -352,7 +352,7 @@ describe('Manual', function () {
         document.body.style.cursor = 'default';
       });
 
-      Konva.pixelRatio = undefined;
+      Konva.pixelRatio = 1;
       done();
     };
     imageObj.src = 'assets/lion.png';

@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import {
   addStage,
   Konva,
-  createCanvas,
+  createCanvasAndContext,
   compareLayerAndCanvas,
 } from './test-utils.ts';
 
@@ -99,8 +99,7 @@ describe('Ellipse', function () {
     layer.add(ellipse);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.save();
     context.beginPath();
     context.scale(1, 0.5);

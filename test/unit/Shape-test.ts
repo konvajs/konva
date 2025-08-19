@@ -5,7 +5,7 @@ import {
   simulateMouseDown,
   simulateMouseMove,
   simulateMouseUp,
-  createCanvas,
+  createCanvasAndContext,
   isBrowser,
   isNode,
   compareLayerAndCanvas,
@@ -500,8 +500,7 @@ describe('Shape', function () {
     assert.equal(rect.x(), 100);
     assert.equal(rect.y(), 50);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.globalAlpha = 0.5;
     // rect
     context.beginPath();
@@ -572,8 +571,7 @@ describe('Shape', function () {
     layer.add(rect);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.beginPath();
     context.rect(100, 50, 100, 50);
     context.closePath();
@@ -617,8 +615,7 @@ describe('Shape', function () {
     assert.equal(rect.x(), 100);
     assert.equal(rect.y(), 50);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.globalAlpha = 0.5;
     // rect
     context.beginPath();
@@ -665,8 +662,7 @@ describe('Shape', function () {
 
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.globalAlpha = 0.5;
     // stroke
     context.beginPath();
@@ -711,8 +707,7 @@ describe('Shape', function () {
     layer.add(rect);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.beginPath();
     context.rect(100, 50, 100, 50);
     context.closePath();
@@ -722,8 +717,7 @@ describe('Shape', function () {
     context.fill();
     context.stroke();
 
-    var c2 = createCanvas();
-    var ctx2 = c2.getContext('2d');
+    const { canvas: c2, context: ctx2 } = createCanvasAndContext();
     ctx2.shadowColor = 'grey';
     ctx2.shadowBlur = 10 * Konva.pixelRatio;
     ctx2.shadowOffsetX = 20 * Konva.pixelRatio;
@@ -774,8 +768,7 @@ describe('Shape', function () {
     layer.add(rect);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.globalAlpha = 0.3;
 
     // draw shadow
@@ -854,8 +847,7 @@ describe('Shape', function () {
     layer.add(text);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
 
     context.save();
     context.shadowColor = 'black';
@@ -1257,8 +1249,7 @@ describe('Shape', function () {
     layer.add(rect);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     // rect
     context.beginPath();
     context.rect(100, 100, 50, 50);
@@ -1303,8 +1294,7 @@ describe('Shape', function () {
     layer.add(rect);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     // rect
     context.beginPath();
     context.rect(50, 100, 50, 50);
@@ -1352,8 +1342,7 @@ describe('Shape', function () {
     layer.add(group);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     // rect
     context.beginPath();
     context.rect(100, 100, 50, 50);
@@ -1397,8 +1386,7 @@ describe('Shape', function () {
 
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.globalAlpha = 0.5;
     // stroke
     context.beginPath();
@@ -1441,8 +1429,7 @@ describe('Shape', function () {
 
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
 
     // stroke
     context.beginPath();
@@ -1455,8 +1442,7 @@ describe('Shape', function () {
     context.fill();
     context.stroke();
 
-    var canvas2 = createCanvas();
-    var context2 = canvas2.getContext('2d');
+    const { canvas: canvas2, context: context2 } = createCanvasAndContext();
     context2.globalAlpha = 0.5;
     context2.drawImage(canvas, 0, 0, canvas.width / 2, canvas.height / 2);
 
@@ -1652,8 +1638,7 @@ describe('Shape', function () {
     layer.add(rect);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.beginPath();
     context.rect(100, 50, 100, 50);
     context.closePath();
@@ -1980,9 +1965,9 @@ describe('Shape', function () {
       var oldCreate = ctx.createPattern;
 
       var callCount = 0;
-      ctx.createPattern = function () {
+      ctx.createPattern = function (...args) {
         callCount += 1;
-        return oldCreate.apply(this, arguments);
+        return oldCreate.apply(this, args);
       };
 
       layer.draw();
@@ -2078,9 +2063,9 @@ describe('Shape', function () {
     var oldCreate = ctx.createLinearGradient;
 
     var callCount = 0;
-    ctx.createLinearGradient = function () {
+    ctx.createLinearGradient = function (...args) {
       callCount += 1;
-      return oldCreate.apply(this, arguments);
+      return oldCreate.apply(this, args);
     };
 
     layer.draw();
@@ -2176,9 +2161,9 @@ describe('Shape', function () {
     var oldCreate = ctx.createRadialGradient;
 
     var callCount = 0;
-    ctx.createRadialGradient = function () {
+    ctx.createRadialGradient = function (...args) {
       callCount += 1;
-      return oldCreate.apply(this, arguments);
+      return oldCreate.apply(this, args);
     };
 
     layer.draw();
@@ -2349,8 +2334,7 @@ describe('Shape', function () {
     var layer = new Konva.Layer();
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var ctx = canvas.getContext('2d');
+    const { canvas, context: ctx } = createCanvasAndContext();
 
     var gradient = ctx.createLinearGradient(0, 75, 100, 75);
     gradient.addColorStop(0.0, 'rgba(255,255,255,1)');
@@ -2440,8 +2424,7 @@ describe('Shape', function () {
     stage.add(layer);
 
     // Create expected result using native canvas with buffer approach
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
 
     // Draw on buffer first
     context.beginPath();
@@ -2459,8 +2442,8 @@ describe('Shape', function () {
     context.stroke();
 
     // Apply opacity by drawing to final canvas
-    var finalCanvas = createCanvas();
-    var finalContext = finalCanvas.getContext('2d');
+    const { canvas: finalCanvas, context: finalContext } =
+      createCanvasAndContext();
     finalContext.globalAlpha = 0.7;
     finalContext.drawImage(canvas, 0, 0);
 
