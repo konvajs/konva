@@ -6,7 +6,7 @@ import {
   createCanvas,
   compareLayerAndCanvas,
   compareLayers,
-} from './test-utils';
+} from './test-utils.ts';
 
 describe('Line', function () {
   // ======================================================

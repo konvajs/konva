@@ -6,7 +6,7 @@ import {
   createCanvas,
   compareLayerAndCanvas,
   assertAlmostDeepEqual,
-} from './test-utils';
+} from './test-utils.ts';
 
 describe('Arc', function () {
   // ======================================================

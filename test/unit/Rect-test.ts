@@ -5,7 +5,7 @@ import {
   Konva,
   createCanvas,
   compareLayerAndCanvas,
-} from './test-utils';
+} from './test-utils.ts';
 
 describe('Rect', function () {
   // ======================================================

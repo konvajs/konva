@@ -1,4 +1,4 @@
-import KonvaModule from '../../src/index';
+import KonvaModule from '../../src/index.ts';
 export const Konva = KonvaModule;
 
 var TYPE_ARRAY = /\[object Array\]/i,

@@ -1,8 +1,8 @@
-import { Util } from './Util';
-import { Container, ContainerConfig } from './Container';
-import { _registerNode } from './Global';
-import { Node } from './Node';
-import { Shape } from './Shape';
+import { Util } from './Util.ts';
+import { Container, ContainerConfig } from './Container.ts';
+import { _registerNode } from './Global.ts';
+import { Node } from './Node.ts';
+import { Shape } from './Shape.ts';
 
 export interface GroupConfig extends ContainerConfig {}
 

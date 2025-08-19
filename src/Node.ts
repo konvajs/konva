@@ -1,19 +1,19 @@
-import { Canvas, HitCanvas, SceneCanvas } from './Canvas';
-import { Container } from './Container';
-import { Context } from './Context';
-import { DD } from './DragAndDrop';
-import { Factory } from './Factory';
-import { Konva } from './Global';
-import { Layer } from './Layer';
-import { Shape } from './Shape';
-import { Stage } from './Stage';
-import { GetSet, IRect, Vector2d } from './types';
-import { Transform, Util } from './Util';
+import { Canvas, HitCanvas, SceneCanvas } from './Canvas.ts';
+import { Container } from './Container.ts';
+import { Context } from './Context.ts';
+import { DD } from './DragAndDrop.ts';
+import { Factory } from './Factory.ts';
+import { Konva } from './Global.ts';
+import { Layer } from './Layer.ts';
+import { Shape } from './Shape.ts';
+import { Stage } from './Stage.ts';
+import { GetSet, IRect, Vector2d } from './types.ts';
+import { Transform, Util } from './Util.ts';
 import {
   getBooleanValidator,
   getNumberValidator,
   getStringValidator,
-} from './Validators';
+} from './Validators.ts';
 
 export type Filter = (this: Node, imageData: ImageData) => void;
 

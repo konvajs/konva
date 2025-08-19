@@ -1,7 +1,7 @@
-import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
-import { Util } from '../Util';
-import { getNumberValidator } from '../Validators';
+import { Factory } from '../Factory.ts';
+import { Node, Filter } from '../Node.ts';
+import { Util } from '../Util.ts';
+import { getNumberValidator } from '../Validators.ts';
 /**
  * Emboss Filter.
  * Pixastic Lib - Emboss filter - v0.1.0

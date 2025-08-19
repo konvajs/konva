@@ -1,21 +1,21 @@
-import { Konva } from './Global';
-import { Transform, Util } from './Util';
-import { Factory } from './Factory';
-import { Node, NodeConfig } from './Node';
+import { Konva } from './Global.ts';
+import { Transform, Util } from './Util.ts';
+import { Factory } from './Factory.ts';
+import { Node, NodeConfig } from './Node.ts';
 import {
   getNumberValidator,
   getNumberOrAutoValidator,
   getStringValidator,
   getBooleanValidator,
   getStringOrGradientValidator,
-} from './Validators';
+} from './Validators.ts';
 
-import { Context, SceneContext } from './Context';
-import { _registerNode } from './Global';
-import * as PointerEvents from './PointerEvents';
+import { Context, SceneContext } from './Context.ts';
+import { _registerNode } from './Global.ts';
+import * as PointerEvents from './PointerEvents.ts';
 
-import { GetSet, Vector2d } from './types';
-import { HitCanvas, SceneCanvas } from './Canvas';
+import { GetSet, Vector2d } from './types.ts';
+import { HitCanvas, SceneCanvas } from './Canvas.ts';
 
 // hack from here https://stackoverflow.com/questions/52667959/what-is-the-purpose-of-bivariancehack-in-typescript-types/52668133#52668133
 export type ShapeConfigHandler<TTarget> = {

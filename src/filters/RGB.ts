@@ -1,6 +1,6 @@
-import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
-import { RGBComponent } from '../Validators';
+import { Factory } from '../Factory.ts';
+import { Node, Filter } from '../Node.ts';
+import { RGBComponent } from '../Validators.ts';
 
 /**
  * RGB Filter

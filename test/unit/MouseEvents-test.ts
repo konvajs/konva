@@ -9,7 +9,7 @@ import {
   simulateTouchStart,
   simulateTouchEnd,
   isNode,
-} from './test-utils';
+} from './test-utils.ts';
 
 describe('MouseEvents', function () {
   // ======================================================

@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { Konva } from './test-utils';
+import { Konva } from './test-utils.ts';
 
 describe('Util', function () {
   it('test _prepareToStringify', function () {

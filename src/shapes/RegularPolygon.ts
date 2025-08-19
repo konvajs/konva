@@ -1,13 +1,13 @@
-import { Factory } from '../Factory';
-import { Shape, ShapeConfig } from '../Shape';
-import { GetSet, Vector2d } from '../types';
+import { Factory } from '../Factory.ts';
+import { Shape, ShapeConfig } from '../Shape.ts';
+import { GetSet, Vector2d } from '../types.ts';
 import {
   getNumberOrArrayOfNumbersValidator,
   getNumberValidator,
-} from '../Validators';
-import { _registerNode } from '../Global';
-import { Context } from '../Context';
-import { Util } from '../Util';
+} from '../Validators.ts';
+import { _registerNode } from '../Global.ts';
+import { Context } from '../Context.ts';
+import { Util } from '../Util.ts';
 
 export interface RegularPolygonConfig extends ShapeConfig {
   sides: number;

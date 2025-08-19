@@ -1,6 +1,6 @@
-import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
-import { getNumberValidator } from '../Validators';
+import { Factory } from '../Factory.ts';
+import { Node, Filter } from '../Node.ts';
+import { getNumberValidator } from '../Validators.ts';
 /**
  * Contrast Filter.
  * @function

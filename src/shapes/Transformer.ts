@@ -1,15 +1,15 @@
-import { Util, Transform } from '../Util';
-import { Factory } from '../Factory';
-import { Node } from '../Node';
-import { Shape } from '../Shape';
-import { Rect } from './Rect';
-import { Group } from '../Group';
-import { ContainerConfig } from '../Container';
-import { Konva } from '../Global';
-import { getBooleanValidator, getNumberValidator } from '../Validators';
-import { _registerNode } from '../Global';
+import { Util, Transform } from '../Util.ts';
+import { Factory } from '../Factory.ts';
+import { Node } from '../Node.ts';
+import { Shape } from '../Shape.ts';
+import { Rect } from './Rect.ts';
+import { Group } from '../Group.ts';
+import { ContainerConfig } from '../Container.ts';
+import { Konva } from '../Global.ts';
+import { getBooleanValidator, getNumberValidator } from '../Validators.ts';
+import { _registerNode } from '../Global.ts';
 
-import { GetSet, IRect, Vector2d } from '../types';
+import { GetSet, IRect, Vector2d } from '../types.ts';
 
 export interface Box extends IRect {
   rotation: number;

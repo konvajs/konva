@@ -1,46 +1,46 @@
 // we need to import core of the Konva and then extend it with all additional objects
 
-import { Konva as Core } from './_CoreInternals';
+import { Konva as Core } from './_CoreInternals.ts';
 
 // shapes
-import { Arc } from './shapes/Arc';
-import { Arrow } from './shapes/Arrow';
-import { Circle } from './shapes/Circle';
-import { Ellipse } from './shapes/Ellipse';
-import { Image } from './shapes/Image';
-import { Label, Tag } from './shapes/Label';
-import { Line } from './shapes/Line';
-import { Path } from './shapes/Path';
-import { Rect } from './shapes/Rect';
-import { RegularPolygon } from './shapes/RegularPolygon';
-import { Ring } from './shapes/Ring';
-import { Sprite } from './shapes/Sprite';
-import { Star } from './shapes/Star';
-import { Text } from './shapes/Text';
-import { TextPath } from './shapes/TextPath';
-import { Transformer } from './shapes/Transformer';
-import { Wedge } from './shapes/Wedge';
+import { Arc } from './shapes/Arc.ts';
+import { Arrow } from './shapes/Arrow.ts';
+import { Circle } from './shapes/Circle.ts';
+import { Ellipse } from './shapes/Ellipse.ts';
+import { Image } from './shapes/Image.ts';
+import { Label, Tag } from './shapes/Label.ts';
+import { Line } from './shapes/Line.ts';
+import { Path } from './shapes/Path.ts';
+import { Rect } from './shapes/Rect.ts';
+import { RegularPolygon } from './shapes/RegularPolygon.ts';
+import { Ring } from './shapes/Ring.ts';
+import { Sprite } from './shapes/Sprite.ts';
+import { Star } from './shapes/Star.ts';
+import { Text } from './shapes/Text.ts';
+import { TextPath } from './shapes/TextPath.ts';
+import { Transformer } from './shapes/Transformer.ts';
+import { Wedge } from './shapes/Wedge.ts';
 
 // filters
-import { Blur } from './filters/Blur';
-import { Brighten } from './filters/Brighten';
-import { Contrast } from './filters/Contrast';
-import { Emboss } from './filters/Emboss';
-import { Enhance } from './filters/Enhance';
-import { Grayscale } from './filters/Grayscale';
-import { HSL } from './filters/HSL';
-import { HSV } from './filters/HSV';
-import { Invert } from './filters/Invert';
-import { Kaleidoscope } from './filters/Kaleidoscope';
-import { Mask } from './filters/Mask';
-import { Noise } from './filters/Noise';
-import { Pixelate } from './filters/Pixelate';
-import { Posterize } from './filters/Posterize';
-import { RGB } from './filters/RGB';
-import { RGBA } from './filters/RGBA';
-import { Sepia } from './filters/Sepia';
-import { Solarize } from './filters/Solarize';
-import { Threshold } from './filters/Threshold';
+import { Blur } from './filters/Blur.ts';
+import { Brighten } from './filters/Brighten.ts';
+import { Contrast } from './filters/Contrast.ts';
+import { Emboss } from './filters/Emboss.ts';
+import { Enhance } from './filters/Enhance.ts';
+import { Grayscale } from './filters/Grayscale.ts';
+import { HSL } from './filters/HSL.ts';
+import { HSV } from './filters/HSV.ts';
+import { Invert } from './filters/Invert.ts';
+import { Kaleidoscope } from './filters/Kaleidoscope.ts';
+import { Mask } from './filters/Mask.ts';
+import { Noise } from './filters/Noise.ts';
+import { Pixelate } from './filters/Pixelate.ts';
+import { Posterize } from './filters/Posterize.ts';
+import { RGB } from './filters/RGB.ts';
+import { RGBA } from './filters/RGBA.ts';
+import { Sepia } from './filters/Sepia.ts';
+import { Solarize } from './filters/Solarize.ts';
+import { Threshold } from './filters/Threshold.ts';
 
 export const Konva = Core.Util._assign(Core, {
   Arc,

@@ -9,7 +9,7 @@ import {
   loadImage,
   isBrowser,
   compareCanvases,
-} from './test-utils';
+} from './test-utils.ts';
 
 export function getOffsetY(
   context: CanvasRenderingContext2D,

@@ -1,7 +1,7 @@
-import { Factory } from '../Factory';
-import { Util } from '../Util';
-import { Node, Filter } from '../Node';
-import { getNumberValidator } from '../Validators';
+import { Factory } from '../Factory.ts';
+import { Util } from '../Util.ts';
+import { Node, Filter } from '../Node.ts';
+import { getNumberValidator } from '../Validators.ts';
 
 /**
  * Pixelate Filter. Averages groups of pixels and redraws

@@ -1,11 +1,11 @@
-import { Factory } from '../Factory';
-import { Shape, ShapeConfig } from '../Shape';
-import { _registerNode } from '../Global';
+import { Factory } from '../Factory.ts';
+import { Shape, ShapeConfig } from '../Shape.ts';
+import { _registerNode } from '../Global.ts';
 
-import { Util } from '../Util';
-import { GetSet } from '../types';
-import { Context } from '../Context';
-import { getNumberOrArrayOfNumbersValidator } from '../Validators';
+import { Util } from '../Util.ts';
+import { GetSet } from '../types.ts';
+import { Context } from '../Context.ts';
+import { getNumberOrArrayOfNumbersValidator } from '../Validators.ts';
 
 export interface RectConfig extends ShapeConfig {
   cornerRadius?: number | number[];

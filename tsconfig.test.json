@@ -1,14 +1,10 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "target": "ES2015",
-    "noEmitOnError": false,
-    "moduleResolution": "node",
-    "lib": ["ES2015", "dom"],
-    "module": "ESNext",
-    "skipLibCheck": true,
+    "strict": false,
     "noImplicitAny": false,
     "allowJs": true,
-    "noEmit": false,
+    "noEmit": true,
     "checkJs": false,
     "allowUnreachableCode": true,
     "allowUnusedLabels": true,
@@ -17,9 +13,7 @@
     "noImplicitThis": false,
     "noPropertyAccessFromIndexSignature": false,
     "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "strict": false
+    "noUnusedParameters": false
   },
-  "include": ["../src/**/*.ts", "./**/*.ts"],
-  "exclude": ["../node_modules/**/*"]
+  "include": ["src", "test"]
 }

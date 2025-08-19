@@ -16,7 +16,7 @@ import {
   isNode,
   isBrowser,
   Konva,
-} from './test-utils';
+} from './test-utils.ts';
 
 describe('Stage', function () {
   // ======================================================

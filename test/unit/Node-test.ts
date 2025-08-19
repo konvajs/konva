@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { Shape } from '../../src/Shape';
+import { Shape } from '../../src/Shape.ts';
 
 import {
   addStage,
@@ -13,7 +13,7 @@ import {
   Konva,
   isBrowser,
   simulateMouseMove,
-} from './test-utils';
+} from './test-utils.ts';
 
 describe('Node', function () {
   // ======================================================

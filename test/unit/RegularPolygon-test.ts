@@ -7,7 +7,7 @@ import {
   assertAlmostEqual,
   createCanvas,
   compareLayerAndCanvas,
-} from './test-utils';
+} from './test-utils.ts';
 
 describe('RegularPolygon', function () {
   // ======================================================

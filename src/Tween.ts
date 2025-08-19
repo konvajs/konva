@@ -1,8 +1,8 @@
-import { Util } from './Util';
-import { Animation } from './Animation';
-import { Node, NodeConfig } from './Node';
-import { Konva } from './Global';
-import { Line } from './shapes/Line';
+import { Util } from './Util.ts';
+import { Animation } from './Animation.ts';
+import { Node, NodeConfig } from './Node.ts';
+import { Konva } from './Global.ts';
+import { Line } from './shapes/Line.ts';
 
 const blacklist = {
     node: 1,

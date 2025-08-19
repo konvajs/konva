@@ -1,8 +1,8 @@
-import { Container } from './Container';
-import { Konva } from './Global';
-import { Node } from './Node';
-import { Vector2d } from './types';
-import { Util } from './Util';
+import { Container } from './Container.ts';
+import { Konva } from './Global.ts';
+import { Node } from './Node.ts';
+import { Vector2d } from './types.ts';
+import { Util } from './Util.ts';
 
 export const DD = {
   get isDragging() {

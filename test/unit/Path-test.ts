@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 
-import worldMap from '../assets/worldMap';
-import tiger from '../assets/tiger';
+import worldMap from '../assets/worldMap.ts';
+import tiger from '../assets/tiger.ts';
 
 import {
   addStage,
@@ -12,7 +12,7 @@ import {
   isNode,
   assertAlmostDeepEqual,
   isBrowser,
-} from './test-utils';
+} from './test-utils.ts';
 
 describe('Path', function () {
   // ======================================================

@@ -1,10 +1,10 @@
-import { Factory } from '../Factory';
-import { Shape, ShapeConfig } from '../Shape';
-import { getNumberValidator } from '../Validators';
-import { _registerNode } from '../Global';
-import { Context } from '../Context';
+import { Factory } from '../Factory.ts';
+import { Shape, ShapeConfig } from '../Shape.ts';
+import { getNumberValidator } from '../Validators.ts';
+import { _registerNode } from '../Global.ts';
+import { Context } from '../Context.ts';
 
-import { GetSet, Vector2d } from '../types';
+import { GetSet, Vector2d } from '../types.ts';
 
 export interface EllipseConfig extends ShapeConfig {
   radiusX: number;

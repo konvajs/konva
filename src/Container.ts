@@ -1,10 +1,10 @@
-import { HitCanvas, SceneCanvas } from './Canvas';
-import { SceneContext } from './Context';
-import { Factory } from './Factory';
-import { Node, NodeConfig } from './Node';
-import { Shape } from './Shape';
-import { GetSet, IRect } from './types';
-import { getNumberValidator } from './Validators';
+import { HitCanvas, SceneCanvas } from './Canvas.ts';
+import { SceneContext } from './Context.ts';
+import { Factory } from './Factory.ts';
+import { Node, NodeConfig } from './Node.ts';
+import { Shape } from './Shape.ts';
+import { GetSet, IRect } from './types.ts';
+import { getNumberValidator } from './Validators.ts';
 
 export type ClipFuncOutput =
   | void

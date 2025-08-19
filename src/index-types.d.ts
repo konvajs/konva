@@ -7,25 +7,25 @@
 // so here we just need to define full API of Konva manually
 
 // filters
-import { Blur } from './filters/Blur';
-import { Brighten } from './filters/Brighten';
-import { Contrast } from './filters/Contrast';
-import { Emboss } from './filters/Emboss';
-import { Enhance } from './filters/Enhance';
-import { Grayscale } from './filters/Grayscale';
-import { HSL } from './filters/HSL';
-import { HSV } from './filters/HSV';
-import { Invert } from './filters/Invert';
-import { Kaleidoscope } from './filters/Kaleidoscope';
-import { Mask } from './filters/Mask';
-import { Noise } from './filters/Noise';
-import { Pixelate } from './filters/Pixelate';
-import { Posterize } from './filters/Posterize';
-import { RGB } from './filters/RGB';
-import { RGBA } from './filters/RGBA';
-import { Sepia } from './filters/Sepia';
-import { Solarize } from './filters/Solarize';
-import { Threshold } from './filters/Threshold';
+import { Blur } from './filters/Blur.ts';
+import { Brighten } from './filters/Brighten.ts';
+import { Contrast } from './filters/Contrast.ts';
+import { Emboss } from './filters/Emboss.ts';
+import { Enhance } from './filters/Enhance.ts';
+import { Grayscale } from './filters/Grayscale.ts';
+import { HSL } from './filters/HSL.ts';
+import { HSV } from './filters/HSV.ts';
+import { Invert } from './filters/Invert.ts';
+import { Kaleidoscope } from './filters/Kaleidoscope.ts';
+import { Mask } from './filters/Mask.ts';
+import { Noise } from './filters/Noise.ts';
+import { Pixelate } from './filters/Pixelate.ts';
+import { Posterize } from './filters/Posterize.ts';
+import { RGB } from './filters/RGB.ts';
+import { RGBA } from './filters/RGBA.ts';
+import { Sepia } from './filters/Sepia.ts';
+import { Solarize } from './filters/Solarize.ts';
+import { Threshold } from './filters/Threshold.ts';
 
 declare namespace Konva {
   export let enableTrace: number;
@@ -41,119 +41,121 @@ declare namespace Konva {
   export const isDragReady: () => boolean;
   export const getAngle: (angle: number) => number;
 
-  export type Vector2d = import('./types').Vector2d;
+  export type Vector2d = import('./types.ts').Vector2d;
 
-  export const Node: typeof import('./Node').Node;
-  export type Node = import('./Node').Node;
-  export type NodeConfig = import('./Node').NodeConfig;
+  export const Node: typeof import('./Node.ts').Node;
+  export type Node = import('./Node.ts').Node;
+  export type NodeConfig = import('./Node.ts').NodeConfig;
 
   export type KonvaEventObject<EventType> =
-    import('./Node').KonvaEventObject<EventType>;
+    import('./Node.ts').KonvaEventObject<EventType>;
 
-  export type KonvaPointerEvent = import('./PointerEvents').KonvaPointerEvent;
+  export type KonvaPointerEvent =
+    import('./PointerEvents.ts').KonvaPointerEvent;
 
   export type KonvaEventListener<This, EventType> =
-    import('./Node').KonvaEventListener<This, EventType>;
+    import('./Node.ts').KonvaEventListener<This, EventType>;
 
-  export const Container: typeof import('./Container').Container;
-  export type Container = import('./Container').Container<Node>;
-  export type ContainerConfig = import('./Container').ContainerConfig;
+  export const Container: typeof import('./Container.ts').Container;
+  export type Container = import('./Container.ts').Container<Node>;
+  export type ContainerConfig = import('./Container.ts').ContainerConfig;
 
-  export const Transform: typeof import('./Util').Transform;
-  export type Transform = import('./Util').Transform;
+  export const Transform: typeof import('./Util.ts').Transform;
+  export type Transform = import('./Util.ts').Transform;
 
-  export const Util: typeof import('./Util').Util;
+  export const Util: typeof import('./Util.ts').Util;
 
-  export const Context: typeof import('./Context').Context;
-  export type Context = import('./Context').Context;
+  export const Context: typeof import('./Context.ts').Context;
+  export type Context = import('./Context.ts').Context;
 
-  export const Stage: typeof import('./Stage').Stage;
-  export type Stage = import('./Stage').Stage;
-  export type StageConfig = import('./Stage').StageConfig;
-  export const stages: typeof import('./Stage').stages;
+  export const Stage: typeof import('./Stage.ts').Stage;
+  export type Stage = import('./Stage.ts').Stage;
+  export type StageConfig = import('./Stage.ts').StageConfig;
+  export const stages: typeof import('./Stage.ts').stages;
 
-  export const Layer: typeof import('./Layer').Layer;
-  export type Layer = import('./Layer').Layer;
-  export type LayerConfig = import('./Layer').LayerConfig;
+  export const Layer: typeof import('./Layer.ts').Layer;
+  export type Layer = import('./Layer.ts').Layer;
+  export type LayerConfig = import('./Layer.ts').LayerConfig;
 
-  export const FastLayer: typeof import('./FastLayer').FastLayer;
-  export type FastLayer = import('./FastLayer').FastLayer;
+  export const FastLayer: typeof import('./FastLayer.ts').FastLayer;
+  export type FastLayer = import('./FastLayer.ts').FastLayer;
 
-  export const Group: typeof import('./Group').Group;
-  export type Group = import('./Group').Group;
-  export type GroupConfig = import('./Group').GroupConfig;
+  export const Group: typeof import('./Group.ts').Group;
+  export type Group = import('./Group.ts').Group;
+  export type GroupConfig = import('./Group.ts').GroupConfig;
 
-  export const DD: typeof import('./DragAndDrop').DD;
+  export const DD: typeof import('./DragAndDrop.ts').DD;
 
-  export const Shape: typeof import('./Shape').Shape;
-  export type Shape = import('./Shape').Shape;
-  export type ShapeConfig = import('./Shape').ShapeConfig;
-  export const shapes: typeof import('./Shape').shapes;
+  export const Shape: typeof import('./Shape.ts').Shape;
+  export type Shape = import('./Shape.ts').Shape;
+  export type ShapeConfig = import('./Shape.ts').ShapeConfig;
+  export const shapes: typeof import('./Shape.ts').shapes;
 
-  export const Animation: typeof import('./Animation').Animation;
-  export type Animation = import('./Animation').Animation;
+  export const Animation: typeof import('./Animation.ts').Animation;
+  export type Animation = import('./Animation.ts').Animation;
 
-  export const Tween: typeof import('./Tween').Tween;
-  export type Tween = import('./Tween').Tween;
-  export type TweenConfig = import('./Tween').TweenConfig;
-  export const Easings: typeof import('./Tween').Easings;
+  export const Tween: typeof import('./Tween.ts').Tween;
+  export type Tween = import('./Tween.ts').Tween;
+  export type TweenConfig = import('./Tween.ts').TweenConfig;
+  export const Easings: typeof import('./Tween.ts').Easings;
 
-  export const Arc: typeof import('./shapes/Arc').Arc;
-  export type Arc = import('./shapes/Arc').Arc;
-  export type ArcConfig = import('./shapes/Arc').ArcConfig;
-  export const Arrow: typeof import('./shapes/Arrow').Arrow;
-  export type Arrow = import('./shapes/Arrow').Arrow;
-  export type ArrowConfig = import('./shapes/Arrow').ArrowConfig;
-  export const Circle: typeof import('./shapes/Circle').Circle;
-  export type Circle = import('./shapes/Circle').Circle;
-  export type CircleConfig = import('./shapes/Circle').CircleConfig;
-  export const Ellipse: typeof import('./shapes/Ellipse').Ellipse;
-  export type Ellipse = import('./shapes/Ellipse').Ellipse;
-  export type EllipseConfig = import('./shapes/Ellipse').EllipseConfig;
-  export const Image: typeof import('./shapes/Image').Image;
-  export type Image = import('./shapes/Image').Image;
-  export type ImageConfig = import('./shapes/Image').ImageConfig;
-  export const Label: typeof import('./shapes/Label').Label;
-  export type Label = import('./shapes/Label').Label;
-  export type LabelConfig = import('./shapes/Label').LabelConfig;
-  export const Tag: typeof import('./shapes/Label').Tag;
-  export type Tag = import('./shapes/Label').Tag;
-  export type TagConfig = import('./shapes/Label').TagConfig;
-  export const Line: typeof import('./shapes/Line').Line;
-  export type Line = import('./shapes/Line').Line;
-  export type LineConfig = import('./shapes/Line').LineConfig;
-  export const Path: typeof import('./shapes/Path').Path;
-  export type Path = import('./shapes/Path').Path;
-  export type PathConfig = import('./shapes/Path').PathConfig;
-  export const Rect: typeof import('./shapes/Rect').Rect;
-  export type Rect = import('./shapes/Rect').Rect;
-  export type RectConfig = import('./shapes/Rect').RectConfig;
-  export const RegularPolygon: typeof import('./shapes/RegularPolygon').RegularPolygon;
-  export type RegularPolygon = import('./shapes/RegularPolygon').RegularPolygon;
+  export const Arc: typeof import('./shapes/Arc.ts').Arc;
+  export type Arc = import('./shapes/Arc.ts').Arc;
+  export type ArcConfig = import('./shapes/Arc.ts').ArcConfig;
+  export const Arrow: typeof import('./shapes/Arrow.ts').Arrow;
+  export type Arrow = import('./shapes/Arrow.ts').Arrow;
+  export type ArrowConfig = import('./shapes/Arrow.ts').ArrowConfig;
+  export const Circle: typeof import('./shapes/Circle.ts').Circle;
+  export type Circle = import('./shapes/Circle.ts').Circle;
+  export type CircleConfig = import('./shapes/Circle.ts').CircleConfig;
+  export const Ellipse: typeof import('./shapes/Ellipse.ts').Ellipse;
+  export type Ellipse = import('./shapes/Ellipse.ts').Ellipse;
+  export type EllipseConfig = import('./shapes/Ellipse.ts').EllipseConfig;
+  export const Image: typeof import('./shapes/Image.ts').Image;
+  export type Image = import('./shapes/Image.ts').Image;
+  export type ImageConfig = import('./shapes/Image.ts').ImageConfig;
+  export const Label: typeof import('./shapes/Label.ts').Label;
+  export type Label = import('./shapes/Label.ts').Label;
+  export type LabelConfig = import('./shapes/Label.ts').LabelConfig;
+  export const Tag: typeof import('./shapes/Label.ts').Tag;
+  export type Tag = import('./shapes/Label.ts').Tag;
+  export type TagConfig = import('./shapes/Label.ts').TagConfig;
+  export const Line: typeof import('./shapes/Line.ts').Line;
+  export type Line = import('./shapes/Line.ts').Line;
+  export type LineConfig = import('./shapes/Line.ts').LineConfig;
+  export const Path: typeof import('./shapes/Path.ts').Path;
+  export type Path = import('./shapes/Path.ts').Path;
+  export type PathConfig = import('./shapes/Path.ts').PathConfig;
+  export const Rect: typeof import('./shapes/Rect.ts').Rect;
+  export type Rect = import('./shapes/Rect.ts').Rect;
+  export type RectConfig = import('./shapes/Rect.ts').RectConfig;
+  export const RegularPolygon: typeof import('./shapes/RegularPolygon.ts').RegularPolygon;
+  export type RegularPolygon =
+    import('./shapes/RegularPolygon.ts').RegularPolygon;
   export type RegularPolygonConfig =
-    import('./shapes/RegularPolygon').RegularPolygonConfig;
-  export const Ring: typeof import('./shapes/Ring').Ring;
-  export type Ring = import('./shapes/Ring').Ring;
-  export type RingConfig = import('./shapes/Ring').RingConfig;
-  export const Sprite: typeof import('./shapes/Sprite').Sprite;
-  export type Sprite = import('./shapes/Sprite').Sprite;
-  export type SpriteConfig = import('./shapes/Sprite').SpriteConfig;
-  export const Star: typeof import('./shapes/Star').Star;
-  export type Star = import('./shapes/Star').Star;
-  export type StarConfig = import('./shapes/Star').StarConfig;
-  export const Text: typeof import('./shapes/Text').Text;
-  export type Text = import('./shapes/Text').Text;
-  export type TextConfig = import('./shapes/Text').TextConfig;
-  export const TextPath: typeof import('./shapes/TextPath').TextPath;
-  export type TextPath = import('./shapes/TextPath').TextPath;
-  export type TextPathConfig = import('./shapes/TextPath').TextPathConfig;
-  export const Transformer: typeof import('./shapes/Transformer').Transformer;
-  export type Transformer = import('./shapes/Transformer').Transformer;
+    import('./shapes/RegularPolygon.ts').RegularPolygonConfig;
+  export const Ring: typeof import('./shapes/Ring.ts').Ring;
+  export type Ring = import('./shapes/Ring.ts').Ring;
+  export type RingConfig = import('./shapes/Ring.ts').RingConfig;
+  export const Sprite: typeof import('./shapes/Sprite.ts').Sprite;
+  export type Sprite = import('./shapes/Sprite.ts').Sprite;
+  export type SpriteConfig = import('./shapes/Sprite.ts').SpriteConfig;
+  export const Star: typeof import('./shapes/Star.ts').Star;
+  export type Star = import('./shapes/Star.ts').Star;
+  export type StarConfig = import('./shapes/Star.ts').StarConfig;
+  export const Text: typeof import('./shapes/Text.ts').Text;
+  export type Text = import('./shapes/Text.ts').Text;
+  export type TextConfig = import('./shapes/Text.ts').TextConfig;
+  export const TextPath: typeof import('./shapes/TextPath.ts').TextPath;
+  export type TextPath = import('./shapes/TextPath.ts').TextPath;
+  export type TextPathConfig = import('./shapes/TextPath.ts').TextPathConfig;
+  export const Transformer: typeof import('./shapes/Transformer.ts').Transformer;
+  export type Transformer = import('./shapes/Transformer.ts').Transformer;
   export type TransformerConfig =
-    import('./shapes/Transformer').TransformerConfig;
-  export const Wedge: typeof import('./shapes/Wedge').Wedge;
-  export type Wedge = import('./shapes/Wedge').Wedge;
-  export type WedgeConfig = import('./shapes/Wedge').WedgeConfig;
+    import('./shapes/Transformer.ts').TransformerConfig;
+  export const Wedge: typeof import('./shapes/Wedge.ts').Wedge;
+  export type Wedge = import('./shapes/Wedge.ts').Wedge;
+  export type WedgeConfig = import('./shapes/Wedge.ts').WedgeConfig;
 
   export const Filters: {
     Blur: typeof Blur;

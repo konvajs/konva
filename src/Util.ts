@@ -1,6 +1,6 @@
-import { Konva } from './Global';
-import { Context } from './Context';
-import { IRect, RGB, Vector2d } from './types';
+import { Konva } from './Global.ts';
+import { Context } from './Context.ts';
+import { IRect, RGB, Vector2d } from './types.ts';
 
 const NODE_ERROR = `Konva.js unsupported environment.
 

@@ -1,9 +1,10 @@
 // main entry for umd build for rollup
-import { Konva } from './_FullInternals';
+import { Konva } from './_FullInternals.ts';
 import * as Canvas from 'canvas';
 
 const canvas = Canvas['default'] || Canvas;
 
+// @ts-ignore
 global.DOMMatrix = canvas.DOMMatrix;
 
 const isNode = typeof global.document === 'undefined';

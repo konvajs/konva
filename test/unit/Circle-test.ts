@@ -6,7 +6,7 @@ import {
   createCanvas,
   compareLayerAndCanvas,
   loadImage,
-} from './test-utils';
+} from './test-utils.ts';
 
 describe('Circle', function () {
   // ======================================================

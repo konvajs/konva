@@ -1,9 +1,9 @@
-import { Util } from './Util';
-import { Konva } from './Global';
-import { Canvas } from './Canvas';
-import { Shape } from './Shape';
-import { IRect } from './types';
-import type { Node } from './Node';
+import { Util } from './Util.ts';
+import { Konva } from './Global.ts';
+import { Canvas } from './Canvas.ts';
+import { Shape } from './Shape.ts';
+import { IRect } from './types.ts';
+import type { Node } from './Node.ts';
 
 function simplifyArray(arr: Array<any>) {
   const retArr: Array<any> = [],

@@ -1,8 +1,9 @@
-import { Konva } from './_CoreInternals';
+import { Konva } from './_CoreInternals.ts';
 import * as Canvas from 'canvas';
 
 const canvas = Canvas['default'] || Canvas;
 
+// @ts-ignore
 global.DOMMatrix = canvas.DOMMatrix;
 
 Konva.Util['createCanvasElement'] = () => {

@@ -1,6 +1,6 @@
-import { Util } from './Util';
-import { SceneContext, HitContext, Context } from './Context';
-import { Konva } from './Global';
+import { Util } from './Util.ts';
+import { SceneContext, HitContext, Context } from './Context.ts';
+import { Konva } from './Global.ts';
 
 // calculate pixel ratio
 let _pixelRatio;

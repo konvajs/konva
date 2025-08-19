@@ -1,7 +1,7 @@
-import { Factory } from '../Factory';
-import { Filter, Node } from '../Node';
-import { Util } from '../Util';
-import { getNumberValidator } from '../Validators';
+import { Factory } from '../Factory.ts';
+import { Filter, Node } from '../Node.ts';
+import { Util } from '../Util.ts';
+import { getNumberValidator } from '../Validators.ts';
 
 /*
  * ToPolar Filter. Converts image data to polar coordinates. Performs

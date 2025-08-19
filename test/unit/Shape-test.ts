@@ -13,9 +13,9 @@ import {
   loadImage,
   Konva,
   compareCanvases,
-} from './test-utils';
+} from './test-utils.ts';
 
-import { getOffsetY } from './Text-test';
+import { getOffsetY } from './Text-test.ts';
 
 describe('Shape', function () {
   // ======================================================

@@ -6,7 +6,7 @@ import {
   simulatePointerDown,
   simulatePointerMove,
   simulatePointerUp,
-} from './test-utils';
+} from './test-utils.ts';
 
 describe.skip('PointerEvents', function () {
   // ======================================================

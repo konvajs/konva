@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { addStage, Konva, loadImage, showHit } from '../unit/test-utils';
+import { addStage, Konva, loadImage, showHit } from '../unit/test-utils.ts';
 
 describe('Manual', function () {
   // ======================================================

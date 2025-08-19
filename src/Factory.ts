@@ -1,7 +1,7 @@
-import { Node } from './Node';
-import { GetSet } from './types';
-import { Util } from './Util';
-import { getComponentValidator } from './Validators';
+import { Node } from './Node.ts';
+import { GetSet } from './types.ts';
+import { Util } from './Util.ts';
+import { getComponentValidator } from './Validators.ts';
 
 const GET = 'get';
 const SET = 'set';

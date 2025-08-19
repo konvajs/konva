@@ -1,4 +1,4 @@
-import { addStage, cloneAndCompareLayer, Konva } from './test-utils';
+import { addStage, cloneAndCompareLayer, Konva } from './test-utils.ts';
 import { assert } from 'chai';
 
 describe('Group', function () {

@@ -1,6 +1,6 @@
-import { Factory } from '../Factory';
-import { Node, Filter } from '../Node';
-import { getNumberValidator } from '../Validators';
+import { Factory } from '../Factory.ts';
+import { Node, Filter } from '../Node.ts';
+import { getNumberValidator } from '../Validators.ts';
 /**
  * Threshold Filter. Pushes any value above the mid point to
  *  the max and any value below the mid point to the min.

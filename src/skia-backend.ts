@@ -1,4 +1,4 @@
-import { Konva } from './_CoreInternals';
+import { Konva } from './_CoreInternals.ts';
 import { Canvas, DOMMatrix, Image } from 'skia-canvas';
 
 global.DOMMatrix = DOMMatrix as any;

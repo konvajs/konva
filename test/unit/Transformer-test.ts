@@ -1,6 +1,6 @@
 import { assert } from 'chai';
-import { Transformer } from '../../src/shapes/Transformer';
-import type { Rect } from '../../src/shapes/Rect';
+import { Transformer } from '../../src/shapes/Transformer.ts';
+import type { Rect } from '../../src/shapes/Rect.ts';
 
 import {
   addStage,
@@ -10,7 +10,7 @@ import {
   simulateMouseMove as sm,
   simulateMouseUp as su,
   assertAlmostEqual,
-} from './test-utils';
+} from './test-utils.ts';
 
 function simulateMouseDown(tr, pos) {
   sd(tr.getStage(), pos);

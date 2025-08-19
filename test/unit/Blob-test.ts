@@ -1,7 +1,7 @@
 import { assert } from 'chai';
-import { Line } from '../../src/shapes/Line';
+import { Line } from '../../src/shapes/Line.ts';
 
-import { addStage, Konva, cloneAndCompareLayer } from './test-utils';
+import { addStage, Konva, cloneAndCompareLayer } from './test-utils.ts';
 
 describe('Blob', function () {
   // ======================================================

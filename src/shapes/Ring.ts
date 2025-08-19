@@ -1,9 +1,9 @@
-import { Factory } from '../Factory';
-import { Shape, ShapeConfig } from '../Shape';
-import { GetSet } from '../types';
-import { getNumberValidator } from '../Validators';
-import { _registerNode } from '../Global';
-import { Context } from '../Context';
+import { Factory } from '../Factory.ts';
+import { Shape, ShapeConfig } from '../Shape.ts';
+import { GetSet } from '../types.ts';
+import { getNumberValidator } from '../Validators.ts';
+import { _registerNode } from '../Global.ts';
+import { Context } from '../Context.ts';
 
 export interface RingConfig extends ShapeConfig {
   innerRadius: number;

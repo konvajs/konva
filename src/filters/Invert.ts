@@ -1,4 +1,4 @@
-import { Filter } from '../Node';
+import { Filter } from '../Node.ts';
 /**
  * Invert Filter
  * @function

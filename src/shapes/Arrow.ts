@@ -1,10 +1,10 @@
-import { Factory } from '../Factory';
-import { Line, LineConfig } from './Line';
-import { GetSet } from '../types';
-import { getNumberValidator } from '../Validators';
-import { _registerNode } from '../Global';
-import { Path } from './Path';
-import { Context } from '../Context';
+import { Factory } from '../Factory.ts';
+import { Line, LineConfig } from './Line.ts';
+import { GetSet } from '../types.ts';
+import { getNumberValidator } from '../Validators.ts';
+import { _registerNode } from '../Global.ts';
+import { Path } from './Path.ts';
+import { Context } from '../Context.ts';
 
 export interface ArrowConfig extends LineConfig {
   points: number[];

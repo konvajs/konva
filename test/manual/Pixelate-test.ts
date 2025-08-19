@@ -1,5 +1,5 @@
-import { addStage, Konva, loadImage } from '../unit/test-utils';
-import { cloneAndCompareLayer } from '../unit/test-utils';
+import { addStage, Konva, loadImage } from '../unit/test-utils.ts';
+import { cloneAndCompareLayer } from '../unit/test-utils.ts';
 
 describe('Pixelate', function () {
   // ======================================================

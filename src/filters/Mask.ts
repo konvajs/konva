@@ -1,6 +1,6 @@
-import { Factory } from '../Factory';
-import { Filter, Node } from '../Node';
-import { getNumberValidator } from '../Validators';
+import { Factory } from '../Factory.ts';
+import { Filter, Node } from '../Node.ts';
+import { getNumberValidator } from '../Validators.ts';
 
 function pixelAt(idata, x: number, y: number) {
   let idx = (y * idata.width + x) * 4;
