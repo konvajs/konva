@@ -5142,7 +5142,7 @@ describe('Transformer', function () {
     );
   });
 
-  it.only('should handle transformation when node is not on stage (case for node destroy)', function () {
+  it('should handle transformation when node is not on stage (case for node destroy)', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
