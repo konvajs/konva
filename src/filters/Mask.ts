@@ -138,7 +138,17 @@ function dilateMask(mask, sw, sh) {
 }
 
 function smoothEdgeMask(mask, sw: number, sh: number) {
-  const weights = [1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9, 1 / 9];
+  const weights = [
+    1 / 9,
+    1 / 9,
+    1 / 9,
+    1 / 9,
+    1 / 9,
+    1 / 9,
+    1 / 9,
+    1 / 9,
+    1 / 9,
+  ];
   const side = Math.round(Math.sqrt(weights.length));
   const halfSide = Math.floor(side / 2);
 

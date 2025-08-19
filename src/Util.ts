@@ -1068,16 +1068,16 @@ export const Util = {
     );
     context.lineTo(xOrigin, yOrigin + topLeft);
     context.arc(
-        xOrigin + topLeft, 
-        yOrigin + topLeft, 
-        topLeft, 
-        Math.PI, 
-        (Math.PI * 3) / 2, 
-        false
+      xOrigin + topLeft,
+      yOrigin + topLeft,
+      topLeft,
+      Math.PI,
+      (Math.PI * 3) / 2,
+      false
     );
   },
   drawRoundedPolygonPath(
-    context: Context, 
+    context: Context,
     points: Vector2d[],
     sides: number,
     radius: number,
@@ -1088,8 +1088,8 @@ export const Util = {
       const prev = points[(i - 1 + sides) % sides];
       const curr = points[i];
       const next = points[(i + 1) % sides];
-      const vec1 = {x: curr.x - prev.x, y: curr.y - prev.y};
-      const vec2 = {x: next.x - curr.x, y: next.y - curr.y};
+      const vec1 = { x: curr.x - prev.x, y: curr.y - prev.y };
+      const vec2 = { x: next.x - curr.x, y: next.y - curr.y };
       const len1 = Math.hypot(vec1.x, vec1.y);
       const len2 = Math.hypot(vec2.x, vec2.y);
       let currCornerRadius;
@@ -1100,9 +1100,10 @@ export const Util = {
       }
       const maxCornerRadius = radius * Math.cos(Math.PI / sides);
       // cornerRadius creates perfect circle at 1/2 radius
-      currCornerRadius = maxCornerRadius * Math.min(1, (currCornerRadius / radius) * 2);
-      const normalVec1 = {x: vec1.x / len1, y: vec1.y / len1};
-      const normalVec2 = {x: vec2.x / len2, y: vec2.y / len2};
+      currCornerRadius =
+        maxCornerRadius * Math.min(1, (currCornerRadius / radius) * 2);
+      const normalVec1 = { x: vec1.x / len1, y: vec1.y / len1 };
+      const normalVec2 = { x: vec2.x / len2, y: vec2.y / len2 };
       const p1 = {
         x: curr.x - normalVec1.x * currCornerRadius,
         y: curr.y - normalVec1.y * currCornerRadius,
@@ -1118,5 +1119,5 @@ export const Util = {
       }
       context.arcTo(curr.x, curr.y, p2.x, p2.y, currCornerRadius);
     }
-  }
+  },
 };

@@ -97,7 +97,7 @@ export interface LineConfig extends ShapeConfig {
  */
 
 export class Line<
-  Config extends LineConfig = LineConfig
+  Config extends LineConfig = LineConfig,
 > extends Shape<Config> {
   constructor(config?: Config) {
     super(config);

@@ -188,7 +188,7 @@ function _clearRadialGradientCache(this: Node) {
  *});
  */
 export class Shape<
-  Config extends ShapeConfig = ShapeConfig
+  Config extends ShapeConfig = ShapeConfig,
 > extends Node<Config> {
   _centroid: boolean;
   colorKey: string;

@@ -247,11 +247,10 @@ describe('Arrow', function () {
     });
     layer.add(arrow);
 
-
     stage.add(layer);
 
     var rect = arrow.getClientRect({ skipStroke: true });
-    layer.add(new Konva.Rect({...rect, stroke: 'red' }));
+    layer.add(new Konva.Rect({ ...rect, stroke: 'red' }));
 
     assert.equal(rect.x, 50);
     assert.equal(rect.y, 40);

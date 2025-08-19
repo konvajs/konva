@@ -1,7 +1,10 @@
 import { Factory } from '../Factory';
 import { Shape, ShapeConfig } from '../Shape';
 import { GetSet, Vector2d } from '../types';
-import { getNumberOrArrayOfNumbersValidator, getNumberValidator } from '../Validators';
+import {
+  getNumberOrArrayOfNumbersValidator,
+  getNumberValidator,
+} from '../Validators';
 import { _registerNode } from '../Global';
 import { Context } from '../Context';
 import { Util } from '../Util';

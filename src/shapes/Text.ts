@@ -416,8 +416,8 @@ export class Text extends Shape<TextConfig> {
     const str = Util._isString(text)
       ? text
       : text === null || text === undefined
-      ? ''
-      : text + '';
+        ? ''
+        : text + '';
     this._setAttr(TEXT, str);
     return this;
   }

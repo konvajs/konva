@@ -225,10 +225,10 @@ describe('RegularPolygon', function () {
       cornerRadius: 25,
     });
     var resultCircleRadius = radius * Math.cos(Math.PI / sides);
-    
+
     layer.add(poly);
     stage.add(layer);
-   
+
     // corner radius creates perfect circle at 1/2 radius
     var canvas = createCanvas();
     var context = canvas.getContext('2d');

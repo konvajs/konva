@@ -2605,8 +2605,10 @@ describe('Container', function () {
     stage.scale({ x: 2, y: 2 });
     stage.draw();
 
-    var data = layer.getHitCanvas().getContext().getImageData(48, 100, 1, 1)
-      .data;
+    var data = layer
+      .getHitCanvas()
+      .getContext()
+      .getImageData(48, 100, 1, 1).data;
     var isTransparent = data[3] == 0;
     assert.equal(
       isTransparent,
