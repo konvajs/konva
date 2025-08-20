@@ -12,29 +12,32 @@
   ],
   "exports": {
     ".": {
+      "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
     },
     "./lib/*": {
+      "types": "./lib/*.d.ts",
       "default": "./lib/*.js"
     },
     "./lib/*.js": {
-      "import": "./lib/*.js",
-      "require": "./lib/*.js",
+      "types": "./lib/*.d.ts",
       "default": "./lib/*.js"
     },
     "./canvas-backend": {
+      "types": "./lib/canvas-backend.d.ts",
       "default": "./lib/canvas-backend.js"
     },
     "./skia-backend": {
+      "types": "./lib/skia-backend.d.ts",
       "default": "./lib/skia-backend.js"
     }
   },
   "main": "./lib/index.js",
-  "types": "./lib/index-types.d.ts",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "start": "npm run test:watch",
-    "compile": "npm run clean && npm run tsc && cp ./src/index-types.d.ts ./lib/index-types.d.ts && npm run rollup",
-    "build": "npm run compile && cp ./src/index-types.d.ts ./lib && gulp build",
+    "compile": "npm run clean && npm run tsc && npm run rollup",
+    "build": "npm run compile && gulp build",
     "fmt": "prettier --write .",
     "fmt:check": "prettier --check .",
     "test:import": "npm run build  && node ./test/import-test.cjs && node ./test/import-test.mjs",
