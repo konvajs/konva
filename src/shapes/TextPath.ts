@@ -236,7 +236,17 @@ export class TextPath extends Shape<TextPathConfig> {
     };
   }
   _setTextData() {
-    const { width, height } = this._getTextSize(this.attrs.text);
+    const charArr = stringToArray(this.text());
+    const chars: { char: string; width: number }[] = [];
+    let width = 0;
+    for (let i = 0; i < charArr.length; i++) {
+      chars.push({
+        char: charArr[i],
+        width: this._getTextSize(charArr[i]).width,
+      });
+      width += chars[i].width;
+    }
+    const { height } = this._getTextSize(this.attrs.text);
     this.textWidth = width;
     this.textHeight = height;
     this.glyphInfo = [];
@@ -263,26 +273,27 @@ export class TextPath extends Shape<TextPathConfig> {
       offset = Math.max(0, this.pathLength - textWidth);
     }
 
-    const charArr = stringToArray(this.text());
-
     // Algorithm for calculating glyph positions:
     // 1. Get the begging point of the glyph on the path using the offsetToGlyph,
     // 2. Get the ending point of the glyph on the path using the offsetToGlyph plus glyph width,
     // 3. Calculate the rotation, width, and midpoint of the glyph using the start and end points,
     // 4. Add glyph width to the offsetToGlyph and repeat
     let offsetToGlyph = offset;
-    for (let i = 0; i < charArr.length; i++) {
+    for (let i = 0; i < chars.length; i++) {
       const charStartPoint = this._getPointAtLength(offsetToGlyph);
       if (!charStartPoint) return;
 
-      let glyphWidth = this._getTextSize(charArr[i]).width + letterSpacing;
-      if (charArr[i] === ' ' && align === 'justify') {
+      const char = chars[i].char;
+      let glyphWidth = chars[i].width + letterSpacing;
+      if (char === ' ' && align === 'justify') {
         const numberOfSpaces = this.text().split(' ').length - 1;
         glyphWidth += (this.pathLength - textWidth) / numberOfSpaces;
       }
 
       const charEndPoint = this._getPointAtLength(offsetToGlyph + glyphWidth);
-      if (!charEndPoint) return;
+      if (!charEndPoint) {
+        return;
+      }
 
       const width = Path.getLineLength(
         charStartPoint.x,
@@ -295,7 +306,7 @@ export class TextPath extends Shape<TextPathConfig> {
       if (kerningFunc) {
         try {
           // getKerning is a user provided getter. Make sure it never breaks our logic
-          kern = kerningFunc(charArr[i - 1], charArr[i]) * this.fontSize();
+          kern = kerningFunc(chars[i - 1].char, char) * this.fontSize();
         } catch (e) {
           kern = 0;
         }

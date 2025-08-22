@@ -444,6 +444,54 @@ describe('TextPath', function () {
     );
   });
 
+  it('Text path with align right with custom font', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var textpath = new Konva.TextPath({
+      listening: false,
+      preventDefault: false,
+      data: 'M0,14.04 400,14.04',
+      fill: '#000',
+      text: 'Hello world',
+      x: 100,
+      y: 120,
+      width: 400,
+      height: 28.08,
+      fontFamily: 'Arial',
+      fontStyle: '500',
+      fontSize: 17.55,
+      lineHeight: 1.6,
+      align: 'right',
+    });
+
+    // in test we use arial, but we catched a case with specific font, I wasn't able to reproduce it with system font
+    // so let's mock it then
+    textpath._getTextSize = (char) => {
+      const widths = {
+        'Hello world': { width: 90.1029052734375, height: 28.08 },
+        H: { width: 11.839492797851562, height: 28.08 },
+        e: { width: 9.454055786132812, height: 28.08 },
+        l: { width: 5.1041259765625, height: 28.08 },
+        o: { width: 9.804855346679688, height: 28.08 },
+        ' ': { width: 4.34991455078125, height: 28.08 },
+        w: { width: 13.242691040039062, height: 28.08 },
+        r: { width: 7.2790985107421875, height: 28.08 },
+        d: { width: 10.085494995117188, height: 28.08 },
+      };
+      return widths[char] || { width: 5.1041259765625, height: 100 }; // Default to 'l' width if char not found
+    };
+    textpath._setTextData();
+
+    layer.add(textpath);
+    stage.add(layer);
+
+    assert.equal(
+      layer.getContext().getTrace(true),
+      'clearRect();save();transform();font;textBaseline;textAlign;save();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();restore();restore();'
+    );
+  });
+
   it('Text path with justify align', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
