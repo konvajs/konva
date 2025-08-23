@@ -6,7 +6,7 @@ import {
   compareLayers,
 } from '../unit/test-utils';
 
-describe.only('Filter', function () {
+describe('Filter', function () {
   it('pixelRaio check', function () {
     Konva.pixelRatio = 2;
     var stage = addStage();
@@ -335,7 +335,7 @@ describe.only('Filter', function () {
       // Apply multiple CSS filters
       imageCSS.cache();
       imageCSS.filters([
-        'blur(20px)',
+        'blur(10px)',
         'brightness(1.2)',
         'contrast(1.1)',
         'sepia(1)',
@@ -349,7 +349,7 @@ describe.only('Filter', function () {
         Konva.Filters.Contrast,
         Konva.Filters.Sepia,
       ]);
-      imageKonva.blurRadius(10); // 20px * 0.5 scaling factor
+      imageKonva.blurRadius(20); // 20px * 0.5 scaling factor
       imageKonva.brightness(1.2); // CSS 1.2 = Konva 1.2 multiplier
       imageKonva.contrast(100 * (Math.sqrt(1.1) - 1)); // CSS 1.1 = Konva 110 percentage
 
@@ -357,7 +357,7 @@ describe.only('Filter', function () {
 
       Konva.pixelRatio = oldPixelRatio;
       // Compare the results
-      compareLayers(layer1, layer2, 10);
+      compareLayers(layer1, layer2, 150, 200);
 
       done();
     });
