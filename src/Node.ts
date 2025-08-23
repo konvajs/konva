@@ -1,6 +1,6 @@
 import { Canvas, HitCanvas, SceneCanvas } from './Canvas';
 import { Container } from './Container';
-import { Context } from './Context';
+import { Context, isCSSFiltersSupported } from './Context';
 import { DD } from './DragAndDrop';
 import { Factory } from './Factory';
 import { Konva } from './Global';
@@ -15,7 +15,91 @@ import {
   getStringValidator,
 } from './Validators';
 
-export type Filter = (this: Node, imageData: ImageData) => void;
+export type FilterFunction = (this: Node, imageData: ImageData) => void;
+export type Filter = FilterFunction | string;
+type Filters = Array<FilterFunction | string>;
+
+// CSS filter parser for fallback to function filters
+function parseCSSFilters(cssFilter: string): FilterFunction {
+  // Parse common CSS filter functions and map to Konva filters
+  const filterRegex = /(\w+)\(([^)]+)\)/g;
+  let match;
+
+  while ((match = filterRegex.exec(cssFilter)) !== null) {
+    const [, filterName, filterValue] = match;
+
+    switch (filterName) {
+      case 'blur': {
+        const blurRadius = parseFloat(filterValue.replace('px', ''));
+        return function (imageData) {
+          // CSS blur uses standard deviation, Stack Blur uses radius
+          // Empirical testing shows CSS blur needs ~0.5 scaling for visual match
+          (this as any).blurRadius(blurRadius * 0.5);
+          // Access filters through dynamic import to avoid circular dependency
+          const KonvaFilters = (Konva as any).Filters;
+          if (KonvaFilters && KonvaFilters.Blur) {
+            KonvaFilters.Blur.call(this, imageData);
+          }
+        };
+      }
+
+      case 'brightness': {
+        const brightness = parseFloat(filterValue);
+        return function (imageData) {
+          (this as any).brightness(brightness); // CSS uses multiplier
+          const KonvaFilters = (Konva as any).Filters;
+          if (KonvaFilters && KonvaFilters.Brightness) {
+            KonvaFilters.Brightness.call(this, imageData);
+          }
+        };
+      }
+      case 'contrast': {
+        const contrast = parseFloat(filterValue);
+        return function (imageData) {
+          // Convert CSS contrast to Konva parameter using square root conversion
+          // to account for Konva's quadratic scaling: Math.pow((param + 100) / 100, 2)
+          const konvaContrast = 100 * (Math.sqrt(contrast) - 1);
+          (this as any).contrast(konvaContrast);
+          const KonvaFilters = (Konva as any).Filters;
+          if (KonvaFilters && KonvaFilters.Contrast) {
+            KonvaFilters.Contrast.call(this, imageData);
+          }
+        };
+      }
+      case 'grayscale': {
+        return function (imageData) {
+          const KonvaFilters = (Konva as any).Filters;
+          if (KonvaFilters && KonvaFilters.Grayscale) {
+            KonvaFilters.Grayscale.call(this, imageData);
+          }
+        };
+      }
+      case 'sepia': {
+        return function (imageData) {
+          const KonvaFilters = (Konva as any).Filters;
+          if (KonvaFilters && KonvaFilters.Sepia) {
+            KonvaFilters.Sepia.call(this, imageData);
+          }
+        };
+      }
+      case 'invert': {
+        return function (imageData) {
+          const KonvaFilters = (Konva as any).Filters;
+          if (KonvaFilters && KonvaFilters.Invert) {
+            KonvaFilters.Invert.call(this, imageData);
+          }
+        };
+      }
+      default:
+        Util.warn(
+          `CSS filter "${filterName}" is not supported in fallback mode. Consider using function filters for better compatibility.`
+        );
+        break;
+    }
+  }
+
+  return () => {};
+}
 
 type globalCompositeOperationType =
   | ''
@@ -73,7 +157,7 @@ export interface NodeConfig {
   dragBoundFunc?: (this: Node, pos: Vector2d) => Vector2d;
   preventDefault?: boolean;
   globalCompositeOperation?: globalCompositeOperationType;
-  filters?: Array<Filter>;
+  filters?: Filters;
 }
 
 // CONSTANTS
@@ -589,68 +673,97 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   _getCachedSceneCanvas() {
     let filters = this.filters(),
       cachedCanvas = this._getCanvasCache(),
-      sceneCanvas = cachedCanvas.scene,
-      filterCanvas = cachedCanvas.filter,
+      sceneCanvas = cachedCanvas.scene as Canvas,
+      filterCanvas = cachedCanvas.filter as Canvas,
       filterContext = filterCanvas.getContext(),
       len,
       imageData,
       n,
       filter;
 
-    if (filters) {
-      if (!this._filterUpToDate) {
-        const ratio = sceneCanvas.pixelRatio;
-        filterCanvas.setSize(
-          sceneCanvas.width / sceneCanvas.pixelRatio,
-          sceneCanvas.height / sceneCanvas.pixelRatio
-        );
-        try {
-          len = filters.length;
-          filterContext.clear();
+    if (!filters || filters.length === 0) {
+      return sceneCanvas;
+    }
 
-          // copy cached canvas onto filter context
-          filterContext.drawImage(
-            sceneCanvas._canvas,
-            0,
-            0,
-            sceneCanvas.getWidth() / ratio,
-            sceneCanvas.getHeight() / ratio
-          );
-          imageData = filterContext.getImageData(
-            0,
-            0,
-            filterCanvas.getWidth(),
-            filterCanvas.getHeight()
-          );
-
-          // apply filters to filter context
-          for (n = 0; n < len; n++) {
-            filter = filters[n];
-            if (typeof filter !== 'function') {
-              Util.error(
-                'Filter should be type of function, but got ' +
-                  typeof filter +
-                  ' instead. Please check correct filters'
-              );
-              continue;
-            }
-            filter.call(this, imageData);
-            filterContext.putImageData(imageData, 0, 0);
-          }
-        } catch (e: any) {
-          Util.error(
-            'Unable to apply filter. ' +
-              e.message +
-              ' This post my help you https://konvajs.org/docs/posts/Tainted_Canvas.html.'
-          );
-        }
-
-        this._filterUpToDate = true;
-      }
-
+    if (this._filterUpToDate) {
       return filterCanvas;
     }
-    return sceneCanvas;
+
+    let useNativeOnly = true;
+    for (let i = 0; i < filters.length; i++) {
+      const fallbackRequired =
+        typeof filters[i] === 'string' && !isCSSFiltersSupported();
+      if (fallbackRequired) {
+        Util.warn(
+          `CSS filter "${filters[i]}" is not supported in native mode.`
+        );
+      }
+      if (typeof filters[i] !== 'string' || !isCSSFiltersSupported()) {
+        useNativeOnly = false;
+        break;
+      }
+    }
+
+    const ratio = sceneCanvas.pixelRatio;
+    filterCanvas.setSize(
+      sceneCanvas.width / sceneCanvas.pixelRatio,
+      sceneCanvas.height / sceneCanvas.pixelRatio
+    );
+    if (useNativeOnly) {
+      const finalFilter = (filters as unknown as string[]).join(' ');
+      filterContext.save();
+      filterContext.setAttr('filter', finalFilter);
+      filterContext.drawImage(
+        sceneCanvas._canvas,
+        0,
+        0,
+        sceneCanvas.getWidth() / ratio,
+        sceneCanvas.getHeight() / ratio
+      );
+      filterContext.restore();
+      this._filterUpToDate = true;
+      return filterCanvas;
+    }
+
+    try {
+      len = filters.length;
+      filterContext.clear();
+
+      // copy cached canvas onto filter context
+      filterContext.drawImage(
+        sceneCanvas._canvas,
+        0,
+        0,
+        sceneCanvas.getWidth() / ratio,
+        sceneCanvas.getHeight() / ratio
+      );
+      imageData = filterContext.getImageData(
+        0,
+        0,
+        filterCanvas.getWidth(),
+        filterCanvas.getHeight()
+      );
+
+      // apply filters to filter context
+      for (n = 0; n < len; n++) {
+        filter = filters[n];
+        if (typeof filter === 'string') {
+          filter = parseCSSFilters(filter);
+        }
+        filter.call(this, imageData);
+        filterContext.putImageData(imageData, 0, 0);
+      }
+    } catch (e: any) {
+      Util.error(
+        'Unable to apply filter. ' +
+          e.message +
+          ' This post my help you https://konvajs.org/docs/posts/Tainted_Canvas.html.'
+      );
+    }
+
+    this._filterUpToDate = true;
+
+    return filterCanvas;
   }
   /**
    * bind events to the node. KonvaJS supports mouseover, mousemove,
@@ -2670,7 +2783,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   embossStrength: GetSet<number, this>;
   embossWhiteLevel: GetSet<number, this>;
   enhance: GetSet<number, this>;
-  filters: GetSet<Filter[], this>;
+  filters: GetSet<Filters, this>;
   position: GetSet<Vector2d, this>;
   absolutePosition: GetSet<Vector2d, this>;
   size: GetSet<{ width: number; height: number }, this>;
@@ -3225,25 +3338,30 @@ addGetterSetter(Node, 'filters', undefined, function (this: Node, val) {
   return val;
 });
 /**
- * get/set filters.  Filters are applied to cached canvases
+ * get/set filters. Supports function filters, CSS filter strings, or mixed arrays.
+ * CSS filters are applied using native browser performance when possible, function filters use ImageData manipulation.
+ * CSS filters automatically fall back to function filters in unsupported browsers.
  * @name Konva.Node#filters
  * @method
- * @param {Array} filters array of filters
+ * @param {Array} filters array of filter functions and/or CSS filter strings
  * @returns {Array}
  * @example
  * // get filters
  * var filters = node.filters();
  *
- * // set a single filter
- * node.cache();
- * node.filters([Konva.Filters.Blur]);
+ * // set CSS filters only (no caching required, uses native performance)
+ * node.filters(['blur(5px)', 'brightness(1.2)', 'contrast(1.5)']);
  *
- * // set multiple filters
+ * // set function filters only (caching required)
+ * node.cache();
+ * node.filters([Konva.Filters.Blur, Konva.Filters.Sepia, Konva.Filters.Invert]);
+ *
+ * // mix CSS and function filters (caching required, uses fallback strategy)
  * node.cache();
  * node.filters([
- *   Konva.Filters.Blur,
- *   Konva.Filters.Sepia,
- *   Konva.Filters.Invert
+ *   'blur(3px)',           // CSS filter
+ *   Konva.Filters.Invert,  // function filter
+ *   'brightness(1.5)'      // CSS filter
  * ]);
  */
 

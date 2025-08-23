@@ -23,6 +23,7 @@ import { Wedge } from './shapes/Wedge';
 
 // filters
 import { Blur } from './filters/Blur';
+import { Brightness } from './filters/Brightness';
 import { Brighten } from './filters/Brighten';
 import { Contrast } from './filters/Contrast';
 import { Emboss } from './filters/Emboss';
@@ -67,6 +68,7 @@ export const Konva = Core.Util._assign(Core, {
    */
   Filters: {
     Blur,
+    Brightness,
     Brighten,
     Contrast,
     Emboss,

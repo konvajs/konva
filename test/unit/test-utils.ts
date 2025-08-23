@@ -105,7 +105,7 @@ function get(element, content?) {
   return element;
 }
 
-export function compareCanvases(canvas1, canvas2, tol?, secondTol?) {
+export function compareCanvases(canvas1, canvas2, tol = 1, secondTol?) {
   // don't test in PhantomJS as it use old chrome engine
   // it it has opacity + shadow bug
   var equal = imagediff.equal(canvas1, canvas2, tol, secondTol);

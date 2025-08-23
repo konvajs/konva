@@ -8,6 +8,7 @@
 
 // filters
 import { Blur } from './filters/Blur';
+import { Brightness } from './filters/Brightness';
 import { Brighten } from './filters/Brighten';
 import { Contrast } from './filters/Contrast';
 import { Emboss } from './filters/Emboss';
@@ -157,6 +158,7 @@ declare namespace Konva {
 
   export const Filters: {
     Blur: typeof Blur;
+    Brightness: typeof Brightness;
     Brighten: typeof Brighten;
     Contrast: typeof Contrast;
     Emboss: typeof Emboss;

@@ -4,6 +4,8 @@ import { getNumberValidator } from '../Validators';
 
 /**
  * Brighten Filter.
+ * @deprecated Use {@link Konva.Filters.Brightness} instead for CSS-compatible behavior.
+ * This filter uses additive brightness adjustment (adds a constant value to RGB channels).
  * @function
  * @memberof Konva.Filters
  * @param {Object} imageData

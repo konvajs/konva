@@ -89,9 +89,37 @@ const CONTEXT_PROPERTIES = [
   'globalAlpha',
   'globalCompositeOperation',
   'imageSmoothingEnabled',
+  'filter',
 ] as const;
 
 const traceArrMax = 100;
+
+// Check if CSS filters are supported in the current browser
+let _cssFiltersSupported: boolean | null = null;
+export function isCSSFiltersSupported(): boolean {
+  if (_cssFiltersSupported !== null) {
+    return _cssFiltersSupported;
+  }
+
+  try {
+    const canvas = Util.createCanvasElement();
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      _cssFiltersSupported = false;
+      return false;
+    }
+
+    // Test if setting the filter property works
+    const originalFilter = ctx.filter;
+    ctx.filter = 'blur(1px)';
+    _cssFiltersSupported = ctx.filter === 'blur(1px)';
+    ctx.filter = originalFilter;
+    return _cssFiltersSupported;
+  } catch (e) {
+    _cssFiltersSupported = false;
+    return false;
+  }
+}
 
 interface ExtendedCanvasRenderingContext2D extends CanvasRenderingContext2D {
   letterSpacing: string;

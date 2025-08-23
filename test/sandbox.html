@@ -10,16 +10,136 @@
     <style>
       body {
         margin: 0;
-        width: 100vw;
-        height: 100vh;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background: #f0f0f0;
       }
-      body {
-        padding: 0;
-        margin: 0;
+
+      .main-container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .section {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .demo-container {
+        display: flex;
+        gap: 20px;
+        min-height: 400px;
+      }
+
+      .demo-section {
+        flex: 1;
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .default-filters {
+        border-top: 3px solid #e74c3c;
+      }
+      .custom-filters {
+        border-top: 3px solid #27ae60;
+      }
+
+      .controls {
+        background: rgba(255, 255, 255, 0.95);
+        top: 10px;
+        left: 10px;
+        padding: 15px;
+        border-radius: 8px;
+        border: 2px solid #ddd;
+        min-width: 250px;
+        max-height: 350px;
+        overflow-y: auto;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+      }
+
+      .control-group {
+        margin-bottom: 12px;
+      }
+
+      .control-group:last-child {
+        margin-bottom: 0;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+        font-size: 12px;
+      }
+
+      input[type='range'] {
+        width: 100%;
+        margin-bottom: 3px;
+      }
+
+      .value-display {
+        color: #666;
+        font-size: 12px;
+      }
+
+      .filter-buttons {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 15px;
+      }
+
+      button {
+        flex: 1;
+        padding: 8px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 11px;
+        transition: all 0.3s ease;
+      }
+
+      button.active {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .emboss-btn {
+        background: #3498db;
+        color: white;
+      }
+      .emboss-btn.active {
+        background: #2980b9;
+      }
+
+      .solarize-btn {
+        background: #f39c12;
+        color: white;
+      }
+      .solarize-btn.active {
+        background: #e67e22;
+      }
+
+      select {
+        width: 100%;
+        padding: 3px;
+        border-radius: 3px;
+        border: 1px solid #ddd;
+        font-size: 11px;
+      }
+
+      input[type='checkbox'] {
+        margin-right: 5px;
       }
     </style>
     <!-- <script src="https://cdn.rawgit.com/hammerjs/touchemulator/master/touch-emulator.js"></script> -->
-    <script src="https://unpkg.com/gifler@0.1.0/gifler.min.js"></script>
+    <!-- <script src="https://unpkg.com/gifler@0.1.0/gifler.min.js"></script> -->
     <script>
       // TouchEmulator();
     </script>
@@ -30,58 +150,451 @@
   </head>
 
   <body>
-    <div id="container"></div>
-    <textarea class="test" id="text">Hello</textarea>
+    <div class="main-container">
+      <h1 style="text-align: center; margin-bottom: 30px; color: #333">
+        Filter Comparison: Default vs Custom
+      </h1>
+
+      <div class="section">
+        <div class="demo-container">
+          <!-- Default Filters -->
+          <div class="demo-section default-filters">
+            <div
+              id="default-container"
+              style="width: 100%; height: 400px"
+            ></div>
+            <div class="controls">
+              <h3 style="margin: 0 0 10px 0; color: #e74c3c; font-size: 14px">
+                Default Konva Filters
+              </h3>
+
+              <div class="filter-buttons">
+                <button id="emboss-default" class="emboss-btn active">
+                  Emboss
+                </button>
+                <button id="solarize-default" class="solarize-btn">
+                  Solarize
+                </button>
+              </div>
+
+              <!-- Default Emboss Controls -->
+              <div id="emboss-controls-default">
+                <div class="control-group">
+                  <label for="emboss-strength-default"
+                    >Strength:
+                    <span
+                      id="emboss-strength-value-default"
+                      class="value-display"
+                      >0.5</span
+                    ></label
+                  >
+                  <input
+                    type="range"
+                    id="emboss-strength-default"
+                    min="0"
+                    max="1"
+                    value="0.5"
+                    step="0.1"
+                  />
+                </div>
+                <div class="control-group">
+                  <label for="emboss-white-default"
+                    >White Level:
+                    <span id="emboss-white-value-default" class="value-display"
+                      >0.5</span
+                    ></label
+                  >
+                  <input
+                    type="range"
+                    id="emboss-white-default"
+                    min="0"
+                    max="1"
+                    value="0.5"
+                    step="0.1"
+                  />
+                </div>
+                <div class="control-group">
+                  <label for="emboss-direction-default">Direction:</label>
+                  <select id="emboss-direction-default">
+                    <option value="top-left" selected>Top Left</option>
+                    <option value="top">Top</option>
+                    <option value="top-right">Top Right</option>
+                    <option value="right">Right</option>
+                    <option value="bottom-right">Bottom Right</option>
+                    <option value="bottom">Bottom</option>
+                    <option value="bottom-left">Bottom Left</option>
+                    <option value="left">Left</option>
+                  </select>
+                </div>
+                <div class="control-group">
+                  <label
+                    ><input type="checkbox" id="emboss-blend-default" /> Blend
+                    Mode</label
+                  >
+                </div>
+              </div>
+
+              <!-- Default Solarize Controls -->
+              <div id="solarize-controls-default" style="display: none">
+                <p style="color: #666; margin: 0; font-size: 12px">
+                  No parameters for default Solarize filter
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Custom Filters -->
+          <div class="demo-section custom-filters">
+            <div id="custom-container" style="width: 100%; height: 400px"></div>
+            <div class="controls">
+              <h3 style="margin: 0 0 10px 0; color: #27ae60; font-size: 14px">
+                Custom Implementations
+              </h3>
+
+              <div class="filter-buttons">
+                <button id="emboss-custom" class="emboss-btn active">
+                  Emboss
+                </button>
+                <button id="solarize-custom" class="solarize-btn">
+                  Solarize
+                </button>
+              </div>
+
+              <!-- Custom Emboss Controls -->
+              <div id="emboss-controls-custom">
+                <div class="control-group">
+                  <label for="emboss-strength-custom"
+                    >Strength:
+                    <span
+                      id="emboss-strength-value-custom"
+                      class="value-display"
+                      >1</span
+                    ></label
+                  >
+                  <input
+                    type="range"
+                    id="emboss-strength-custom"
+                    min="0"
+                    max="3"
+                    value="1"
+                    step="0.1"
+                  />
+                </div>
+              </div>
+
+              <!-- Custom Solarize Controls -->
+              <div id="solarize-controls-custom" style="display: none">
+                <div class="control-group">
+                  <label for="solarize-threshold-custom"
+                    >Threshold:
+                    <span
+                      id="solarize-threshold-value-custom"
+                      class="value-display"
+                      >128</span
+                    ></label
+                  >
+                  <input
+                    type="range"
+                    id="solarize-threshold-custom"
+                    min="0"
+                    max="255"
+                    value="128"
+                    step="1"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script type="module">
       import Konva from '../src/index.ts';
 
-      var width = window.innerWidth;
-      var height = window.innerHeight;
+      // ===============================
+      // Custom filter implementations
+      // ===============================
+      function solarizeImageData(imageData, threshold = 128) {
+        const d = imageData.data;
+        for (let i = 0; i < d.length; i += 4) {
+          const r = d[i],
+            g = d[i + 1],
+            b = d[i + 2];
+          // sRGB luma
+          const L = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+          if (L >= threshold) {
+            d[i] = 255 - r;
+            d[i + 1] = 255 - g;
+            d[i + 2] = 255 - b;
+          }
+        }
+        return imageData;
+      }
 
-      var stage = new Konva.Stage({
-        container: 'container',
-        width: width,
-        height: height,
+      function embossImageData(imageData, strength = 1) {
+        const { data, width, height } = imageData;
+        const src = new Uint8ClampedArray(data); // snapshot
+        const k = [-2, -1, 0, -1, 1, 1, 0, 1, 2]; // sum = 1
+
+        const clamp = (v) => (v < 0 ? 0 : v > 255 ? 255 : v);
+
+        // leave a 1px border unchanged for simplicity
+        for (let y = 1; y < height - 1; y++) {
+          for (let x = 1; x < width - 1; x++) {
+            let acc = 0;
+            // grayscale luminance convolution for the emboss look
+            for (let ky = -1; ky <= 1; ky++) {
+              for (let kx = -1; kx <= 1; kx++) {
+                const idx = ((y + ky) * width + (x + kx)) * 4;
+                const lum =
+                  0.2126 * src[idx] +
+                  0.7152 * src[idx + 1] +
+                  0.0722 * src[idx + 2];
+                acc += lum * k[(ky + 1) * 3 + (kx + 1)];
+              }
+            }
+            const out = clamp(acc * strength + 128); // bias to mid-gray
+            const o = (y * width + x) * 4;
+            data[o] = data[o + 1] = data[o + 2] = out;
+            data[o + 3] = src[o + 3]; // keep alpha
+          }
+        }
+        return imageData;
+      }
+
+      // Add custom properties
+      // Konva.Factory.addGetterSetter(Konva.Node, 'solarizeThreshold', 128);
+      // Konva.Factory.addGetterSetter(Konva.Node, 'embossStrengthCustom', 1);
+
+      const containerWidth = 400;
+      const containerHeight = 400;
+
+      // ===============================
+      // Default Filters Stage
+      // ===============================
+      const defaultStage = new Konva.Stage({
+        container: 'default-container',
+        width: containerWidth,
+        height: containerHeight,
       });
 
-      var layer = new Konva.Layer();
-      stage.add(layer);
+      const defaultLayer = new Konva.Layer();
+      defaultStage.add(defaultLayer);
 
-      const text = new Konva.Text({
-        text: 'Hello, how are you doing today? Would you like to start using konva.js',
-        width: 400,
-        fontSize: 50,
-        x: 100,
-        y: 100,
-        draggable: true,
+      // ===============================
+      // Custom Filters Stage
+      // ===============================
+      const customStage = new Konva.Stage({
+        container: 'custom-container',
+        width: containerWidth,
+        height: containerHeight,
       });
-      layer.add(text);
 
-      const anim = new Konva.Animation((frame) => {
-        text.charRenderFunc(({ char, index, context }) => {
-          const animationDuration = 4000;
-          const animationTime = frame.time % animationDuration;
-          const length = text.text().length;
-          const durationPerChar = animationDuration / length;
-          const localStartTime = index * durationPerChar;
-          const localTime = animationTime - localStartTime;
-          const inAnimation = localTime > 0;
-          if (!inAnimation) {
-            context.setAttr('globalAlpha', 0);
-            return;
-          }
-          const afterAnimation = localTime > durationPerChar;
-          if (afterAnimation) {
-            return;
-          }
-          const animationAlpha = Math.abs(localTime / durationPerChar);
-          const oldOpacity = context.globalAlpha;
-          context.setAttr('globalAlpha', oldOpacity * animationAlpha * 0.5);
-          context.translate(0, -15 + (localTime / durationPerChar) * 15);
+      const customLayer = new Konva.Layer();
+      customStage.add(customLayer);
+
+      // Load image and create both versions
+      const imageObj = new Image();
+      imageObj.onload = function () {
+        // Default filters image
+        const defaultImage = new Konva.Image({
+          image: imageObj,
+          x: 50,
+          y: 50,
+          width: 300,
+          height: 225,
+          draggable: true,
         });
-      }, layer);
-      anim.start();
+        defaultImage.cache({ pixelRatio: 2 });
+        defaultImage.filters([Konva.Filters.Emboss]);
+        defaultLayer.add(defaultImage);
+        defaultLayer.draw();
+
+        // Custom filters image
+        const customImage = new Konva.Image({
+          image: imageObj,
+          x: 50,
+          y: 50,
+          width: 300,
+          height: 225,
+          draggable: true,
+        });
+        customImage.cache({ pixelRatio: 2 });
+        customImage.filters([
+          (imageData) =>
+            embossImageData(
+              imageData,
+              parseFloat(
+                document.getElementById('emboss-strength-custom').value
+              )
+            ),
+        ]);
+        customLayer.add(customImage);
+        customLayer.draw();
+
+        // ===============================
+        // Control Logic
+        // ===============================
+
+        let currentDefaultFilter = 'emboss';
+        let currentCustomFilter = 'emboss';
+
+        function updateDefaultFilter() {
+          if (currentDefaultFilter === 'emboss') {
+            defaultImage.filters([Konva.Filters.Emboss]);
+            defaultImage.embossStrength(
+              parseFloat(
+                document.getElementById('emboss-strength-default').value
+              )
+            );
+            defaultImage.embossWhiteLevel(
+              parseFloat(document.getElementById('emboss-white-default').value)
+            );
+            defaultImage.embossDirection(
+              document.getElementById('emboss-direction-default').value
+            );
+            defaultImage.embossBlend(
+              document.getElementById('emboss-blend-default').checked
+            );
+          } else {
+            defaultImage.filters([Konva.Filters.Solarize]);
+          }
+          defaultLayer.batchDraw();
+        }
+
+        function updateCustomFilter() {
+          if (currentCustomFilter === 'emboss') {
+            customImage.filters([
+              (imageData) =>
+                embossImageData(
+                  imageData,
+                  parseFloat(
+                    document.getElementById('emboss-strength-custom').value
+                  )
+                ),
+            ]);
+          } else {
+            customImage.filters([
+              (imageData) =>
+                solarizeImageData(
+                  imageData,
+                  parseFloat(
+                    document.getElementById('solarize-threshold-custom').value
+                  )
+                ),
+            ]);
+          }
+          customLayer.batchDraw();
+        }
+
+        // Default filter button controls
+        document
+          .getElementById('emboss-default')
+          .addEventListener('click', () => {
+            currentDefaultFilter = 'emboss';
+            document.getElementById('emboss-default').classList.add('active');
+            document
+              .getElementById('solarize-default')
+              .classList.remove('active');
+            document.getElementById('emboss-controls-default').style.display =
+              'block';
+            document.getElementById('solarize-controls-default').style.display =
+              'none';
+            updateDefaultFilter();
+          });
+
+        document
+          .getElementById('solarize-default')
+          .addEventListener('click', () => {
+            currentDefaultFilter = 'solarize';
+            document.getElementById('solarize-default').classList.add('active');
+            document
+              .getElementById('emboss-default')
+              .classList.remove('active');
+            document.getElementById('solarize-controls-default').style.display =
+              'block';
+            document.getElementById('emboss-controls-default').style.display =
+              'none';
+            updateDefaultFilter();
+          });
+
+        // Custom filter button controls
+        document
+          .getElementById('emboss-custom')
+          .addEventListener('click', () => {
+            currentCustomFilter = 'emboss';
+            document.getElementById('emboss-custom').classList.add('active');
+            document
+              .getElementById('solarize-custom')
+              .classList.remove('active');
+            document.getElementById('emboss-controls-custom').style.display =
+              'block';
+            document.getElementById('solarize-controls-custom').style.display =
+              'none';
+            updateCustomFilter();
+          });
+
+        document
+          .getElementById('solarize-custom')
+          .addEventListener('click', () => {
+            currentCustomFilter = 'solarize';
+            document.getElementById('solarize-custom').classList.add('active');
+            document.getElementById('emboss-custom').classList.remove('active');
+            document.getElementById('solarize-controls-custom').style.display =
+              'block';
+            document.getElementById('emboss-controls-custom').style.display =
+              'none';
+            updateCustomFilter();
+          });
+
+        // Default emboss controls
+        document
+          .getElementById('emboss-strength-default')
+          .addEventListener('input', (e) => {
+            document.getElementById(
+              'emboss-strength-value-default'
+            ).textContent = e.target.value;
+            updateDefaultFilter();
+          });
+
+        document
+          .getElementById('emboss-white-default')
+          .addEventListener('input', (e) => {
+            document.getElementById('emboss-white-value-default').textContent =
+              e.target.value;
+            updateDefaultFilter();
+          });
+
+        document
+          .getElementById('emboss-direction-default')
+          .addEventListener('change', updateDefaultFilter);
+        document
+          .getElementById('emboss-blend-default')
+          .addEventListener('change', updateDefaultFilter);
+
+        // Custom filter controls
+        document
+          .getElementById('emboss-strength-custom')
+          .addEventListener('input', (e) => {
+            document.getElementById(
+              'emboss-strength-value-custom'
+            ).textContent = e.target.value;
+            updateCustomFilter();
+          });
+
+        document
+          .getElementById('solarize-threshold-custom')
+          .addEventListener('input', (e) => {
+            document.getElementById(
+              'solarize-threshold-value-custom'
+            ).textContent = e.target.value;
+            updateCustomFilter();
+          });
+      };
+
+      imageObj.crossOrigin = 'anonymous';
+      imageObj.src = 'https://konvajs.org/assets/darth-vader.jpg';
     </script>
   </body>
 </html>
