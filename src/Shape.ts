@@ -66,6 +66,7 @@ export interface ShapeConfig extends NodeConfig {
   strokeEnabled?: boolean;
   lineJoin?: LineJoin;
   lineCap?: LineCap;
+  miterLimit?: number;
   sceneFunc?: (con: Context, shape: Shape) => void;
   hitFunc?: (con: Context, shape: Shape) => void;
   shadowColor?: string;
@@ -187,7 +188,7 @@ function _clearRadialGradientCache(this: Node) {
  *});
  */
 export class Shape<
-  Config extends ShapeConfig = ShapeConfig
+  Config extends ShapeConfig = ShapeConfig,
 > extends Node<Config> {
   _centroid: boolean;
   colorKey: string;
@@ -637,6 +638,7 @@ export class Shape<
       bufferContext.clear();
       bufferContext.save();
       bufferContext._applyLineJoin(this);
+      bufferContext._applyMiterLimit(this);
       // layer might be undefined if we are using cache before adding to layer
       const o = this.getAbsoluteTransform(top).getMatrix();
       bufferContext.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
@@ -666,6 +668,7 @@ export class Shape<
       );
     } else {
       context._applyLineJoin(this);
+      context._applyMiterLimit(this);
 
       if (!cachingSelf) {
         const o = this.getAbsoluteTransform(top).getMatrix();
@@ -721,6 +724,7 @@ export class Shape<
     }
     context.save();
     context._applyLineJoin(this);
+    context._applyMiterLimit(this);
 
     const selfCache = this === top;
     if (!selfCache) {
@@ -839,6 +843,7 @@ export class Shape<
   hitFunc: GetSet<ShapeConfigHandler<this>, this>;
   lineCap: GetSet<LineCap, this>;
   lineJoin: GetSet<LineJoin, this>;
+  miterLimit: GetSet<number, this>;
   perfectDrawEnabled: GetSet<boolean, this>;
   sceneFunc: GetSet<ShapeConfigHandler<this>, this>;
   shadowColor: GetSet<string, this>;
@@ -1093,6 +1098,22 @@ Factory.addGetterSetter(Shape, 'lineCap');
  *
  * // set line cap
  * shape.lineCap('round');
+ */
+
+Factory.addGetterSetter(Shape, 'miterLimit');
+
+/**
+ * get/set miterLimit.
+ * @name Konva.Shape#miterLimit
+ * @method
+ * @param {Number} miterLimit
+ * @returns {Number}
+ * @example
+ * // get miter limit
+ * var miterLimit = shape.miterLimit();
+ *
+ * // set miter limit
+ * shape.miterLimit(10);
  */
 
 Factory.addGetterSetter(Shape, 'sceneFunc');

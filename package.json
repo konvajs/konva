@@ -35,6 +35,8 @@
     "start": "npm run test:watch",
     "compile": "npm run clean && npm run tsc && cp ./src/index-types.d.ts ./lib/index-types.d.ts && npm run rollup",
     "build": "npm run compile && cp ./src/index-types.d.ts ./lib && gulp build && node ./rename-imports.mjs",
+    "fmt": "prettier --write .",
+    "fmt:check": "prettier --check .",
     "test:import": "npm run build  && node ./test/import-test.cjs && node ./test/import-test.mjs",
     "test": "npm run test:browser && npm run test:node && npm run test:import",
     "test:build": "PARCEL_WORKER_BACKEND=process parcel build ./test/unit-tests.html --dist-dir ./test-build --target none --public-url ./ --no-source-maps",
@@ -100,6 +102,7 @@
     "mocha": "10.2.0",
     "mocha-headless-chrome": "^4.0.0",
     "parcel": "2.13.3",
+    "prettier": "^3.6.2",
     "process": "^0.11.10",
     "rollup": "^4.46.2",
     "rollup-plugin-typescript2": "^0.36.0",
@@ -116,7 +119,8 @@
     "html5"
   ],
   "prettier": {
-    "singleQuote": true
+    "singleQuote": true,
+    "trailingComma": "es5"
   },
   "bugs": {
     "url": "https://github.com/konvajs/konva/issues"

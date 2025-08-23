@@ -30,10 +30,10 @@ export const glob: any =
   typeof global !== 'undefined'
     ? global
     : typeof window !== 'undefined'
-    ? window
-    : typeof WorkerGlobalScope !== 'undefined'
-    ? self
-    : {};
+      ? window
+      : typeof WorkerGlobalScope !== 'undefined'
+        ? self
+        : {};
 
 export const Konva = {
   _global: glob,

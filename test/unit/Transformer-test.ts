@@ -3680,7 +3680,7 @@ describe('Transformer', function () {
     layer.draw();
     var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
-    assert.deepEqual(shape.getClientRect(), rect), 'change width';
+    (assert.deepEqual(shape.getClientRect(), rect), 'change width');
 
     shape.height(30);
     layer.draw();
@@ -3726,7 +3726,7 @@ describe('Transformer', function () {
     layer.draw();
     var rect = Konva.Util._assign({}, tr._getNodeRect());
     delete rect.rotation;
-    assert.deepEqual(shape.getClientRect(), rect), 'change data';
+    (assert.deepEqual(shape.getClientRect(), rect), 'change data');
   });
 
   it('make sure transformer events are not cloned', function () {

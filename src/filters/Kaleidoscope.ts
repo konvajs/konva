@@ -116,7 +116,8 @@ const FromPolar = function (src, dst, opt) {
       const dx = x - xMid;
       const dy = y - yMid;
       const radius = (Math.sqrt(dx * dx + dy * dy) * rSize) / rMax;
-      let theta = ((Math.atan2(dy, dx) * 180) / Math.PI + 360 + phaseShift) % 360;
+      let theta =
+        ((Math.atan2(dy, dx) * 180) / Math.PI + 360 + phaseShift) % 360;
       theta = (theta * tSize) / 360;
       x1 = Math.floor(theta);
       y1 = Math.floor(radius);

@@ -257,5 +257,5 @@ describe('Rect', function () {
       trace,
       'clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();moveTo(-100,-100);lineTo(-10,-100);arc(-10,-90,10,4.712,0,false);lineTo(0,-20);arc(-20,-20,20,0,1.571,false);lineTo(-70,0);arc(-70,-30,30,1.571,3.142,false);lineTo(-100,-100);arc(-100,-100,0,3.142,4.712,false);closePath();fillStyle=black;fill();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();moveTo(-100,-100);lineTo(-10,-100);arc(-10,-90,10,4.712,0,false);lineTo(0,-20);arc(-20,-20,20,0,1.571,false);lineTo(-70,0);arc(-70,-30,30,1.571,3.142,false);lineTo(-100,-100);arc(-100,-100,0,3.142,4.712,false);closePath();fillStyle=black;fill();restore();'
     );
-    });
+  });
 });

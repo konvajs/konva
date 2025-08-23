@@ -17,8 +17,7 @@
     "skipLibCheck": true,
     // probably we would never enable this one
     // because it's too strict, konva generates many functions on the runtime
-    "strictPropertyInitialization": false,
-    
+    "strictPropertyInitialization": false
   },
-  "include": ["./src/**/*.ts"],
+  "include": ["./src/**/*.ts"]
 }

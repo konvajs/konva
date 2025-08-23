@@ -66,7 +66,7 @@ At the current moment `Konva` doesn't work in IE11 directly. To make it work you
 
 # Debugging
 
-The Chrome inspector simply shows the canvas element.  To see the Konva objects and their details, install the konva-dev extension at https://github.com/konvajs/konva-devtool.
+The Chrome inspector simply shows the canvas element. To see the Konva objects and their details, install the konva-dev extension at https://github.com/konvajs/konva-devtool.
 
 # Loading and installing Konva
 

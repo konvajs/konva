@@ -2,7 +2,13 @@ import { Factory } from '../Factory';
 import { Node, Filter } from '../Node';
 import { getNumberValidator } from '../Validators';
 
-function remap(fromValue: number, fromMin: number, fromMax: number, toMin: number, toMax: number) {
+function remap(
+  fromValue: number,
+  fromMin: number,
+  fromMax: number,
+  toMin: number,
+  toMax: number
+) {
   // Compute the range of the data
   const fromRange = fromMax - fromMin,
     toRange = toMax - toMin;
