@@ -7,6 +7,16 @@ const canvas = Canvas['default'] || Canvas;
 // @ts-ignore
 global.DOMMatrix = canvas.DOMMatrix;
 
+(global as any).Path2D ??= class Path2D {
+  constructor(path: any) {
+    (this as any).path = path;
+  }
+
+  get [Symbol.toStringTag]() {
+    return `Path2D`;
+  }
+};
+
 Konva.Util['createCanvasElement'] = () => {
   const node = canvas.createCanvas(300, 300) as any;
   if (!node['style']) {
