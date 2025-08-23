@@ -538,6 +538,15 @@ export class Path extends Shape<PathConfig> {
             while (i < str.length && /[0-9.]/.test(str[i])) {
               s += str[i++];
             }
+            if (i < str.length && (str[i] === 'e' || str[i] === 'E')) {
+              s += str[i++];
+              if (str[i] === '-' || str[i] === '+') {
+                s += str[i++];
+              }
+              while (i < str.length && /[0-9]/.test(str[i])) {
+                s += str[i++];
+              }
+            }
             coords.push(s);
           }
         }
@@ -553,11 +562,6 @@ export class Path extends Shape<PathConfig> {
       const p: number[] = [];
 
       for (let j = 0, jlen = coords.length; j < jlen; j++) {
-        // extra case for merged flags
-        if (coords[j] === '00') {
-          p.push(0, 0);
-          continue;
-        }
         const parsed = parseFloat(coords[j]);
         if (!isNaN(parsed)) {
           p.push(parsed);
