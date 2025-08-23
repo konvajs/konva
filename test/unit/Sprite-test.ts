@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { addStage, Konva, loadImage } from './test-utils';
+import { addStage, Konva, loadImage } from './test-utils.ts';
 
 describe('Sprite', function () {
   // ======================================================

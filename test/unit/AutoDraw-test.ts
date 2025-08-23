@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { addStage, isNode, Konva } from './test-utils';
+import { addStage, isNode, Konva } from './test-utils.ts';
 
 describe('AutoDraw', function () {
   // ======================================================

@@ -1,6 +1,7 @@
-import { Factory } from '../Factory';
-import { Filter, Node } from '../Node';
-import { getNumberValidator } from '../Validators';
+import { Factory } from '../Factory.ts';
+import type { Filter } from '../Node.ts';
+import { Node } from '../Node.ts';
+import { getNumberValidator } from '../Validators.ts';
 
 /**
  * HSV Filter. Adjusts the hue, saturation and value

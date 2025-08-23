@@ -5,10 +5,10 @@ import {
   compareLayerAndCanvas,
   cloneAndCompareLayer,
   compareCanvases,
-  createCanvas,
+  createCanvasAndContext,
   loadImage,
   getPixelRatio,
-} from './test-utils';
+} from './test-utils.ts';
 
 describe('Caching', function () {
   it('cache simple rectangle', function () {
@@ -29,8 +29,7 @@ describe('Caching', function () {
     layer.add(rect);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.beginPath();
     context.rect(100, 50, 100, 50);
     context.closePath();
@@ -60,8 +59,7 @@ describe('Caching', function () {
     layer.add(rect);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.translate(100, 50);
     context.rotate(Math.PI / 4);
     context.beginPath();
@@ -93,8 +91,7 @@ describe('Caching', function () {
     layer.add(rect);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.beginPath();
     context.rect(100, 50, 100, 50);
     context.closePath();
@@ -125,8 +122,7 @@ describe('Caching', function () {
     layer.add(rect);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.globalAlpha = 0.3;
     context.beginPath();
     context.rect(100, 50, 100, 50);
@@ -209,8 +205,7 @@ describe('Caching', function () {
     layer.add(rect);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.beginPath();
     context.rect(100, 50, 100, 50);
     context.closePath();
@@ -244,8 +239,7 @@ describe('Caching', function () {
     layer.add(rect);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
 
     context.translate(100, 50);
     context.beginPath();
@@ -281,8 +275,7 @@ describe('Caching', function () {
     layer.add(rect);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
 
     context.translate(100, 50);
     context.beginPath();
@@ -346,8 +339,7 @@ describe('Caching', function () {
     layer.add(rect);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
 
     context.translate(50, 25);
     context.beginPath();
@@ -384,8 +376,7 @@ describe('Caching', function () {
     layer.add(group);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.beginPath();
     context.rect(100, 50, 100, 50);
     context.closePath();
@@ -461,8 +452,7 @@ describe('Caching', function () {
     layer.add(group);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
 
     // draw rect
     context.save();
@@ -574,8 +564,7 @@ describe('Caching', function () {
     layer.add(group);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
 
     // draw rect
     context.save();
@@ -630,8 +619,7 @@ describe('Caching', function () {
 
     assert.equal(circle._getCanvasCache(), undefined);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     // circle
     context.save();
     context.beginPath();
@@ -858,8 +846,7 @@ describe('Caching', function () {
     group.cache();
     layer.draw();
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.globalAlpha = 0.5;
     context.beginPath();
     context.rect(100, 50, 100, 50);
@@ -891,8 +878,7 @@ describe('Caching', function () {
     layer.visible(true);
     layer.draw();
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.beginPath();
     context.rect(100, 50, 100, 100);
     context.closePath();
@@ -960,8 +946,7 @@ describe('Caching', function () {
     layer.listening(true);
     layer.draw();
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.beginPath();
     context.rect(100, 50, 100, 100);
     context.closePath();
@@ -999,8 +984,7 @@ describe('Caching', function () {
     layer.visible(true);
     layer.draw();
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.globalAlpha = 0.5;
     context.beginPath();
     context.rect(100, 50, 100, 100);
@@ -1535,8 +1519,7 @@ describe('Caching', function () {
     assert.equal(hitCanvas._canvas.height, rect.height() * 0.2);
     assert.equal(hitCanvas.pixelRatio, 0.2);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.beginPath();
     context.rect(100, 50, 100, 100);
     context.closePath();

@@ -1,14 +1,15 @@
-import { Util } from '../Util';
-import { Factory } from '../Factory';
-import { Shape, ShapeConfig } from '../Shape';
-import { _registerNode } from '../Global';
+import { Util } from '../Util.ts';
+import { Factory } from '../Factory.ts';
+import type { ShapeConfig } from '../Shape.ts';
+import { Shape } from '../Shape.ts';
+import { _registerNode } from '../Global.ts';
 import {
   getNumberOrArrayOfNumbersValidator,
   getNumberValidator,
-} from '../Validators';
+} from '../Validators.ts';
 
-import { GetSet, IRect } from '../types';
-import { Context } from '../Context';
+import type { GetSet, IRect } from '../types.ts';
+import type { Context } from '../Context.ts';
 
 export interface ImageConfig extends ShapeConfig {
   image: CanvasImageSource | undefined;

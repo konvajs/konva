@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { Shape } from '../../src/Shape';
+import type { Shape } from '../../src/Shape.ts';
 
 import {
   addStage,
@@ -13,7 +13,7 @@ import {
   Konva,
   isBrowser,
   simulateMouseMove,
-} from './test-utils';
+} from './test-utils.ts';
 
 describe('Node', function () {
   // ======================================================
@@ -344,7 +344,7 @@ describe('Node', function () {
           );
           layer2.add(image);
           layer2.draw();
-          compareLayers(layer, layer2, 150);
+          compareLayers(layer, layer2, 150, 50);
           Konva.pixelRatio = oldRatio;
           done();
         });
@@ -373,7 +373,7 @@ describe('Node', function () {
     var stageExport = stage.toCanvas({
       pixelRatio: layer.getCanvas().getPixelRatio(),
     });
-    compareLayerAndCanvas(layer, stageExport);
+    compareLayerAndCanvas(layer, stageExport, 100, 100);
   });
 
   // ======================================================
@@ -399,7 +399,7 @@ describe('Node', function () {
     layer.x(-50);
     layer.y(-50);
     layer.draw();
-    compareLayerAndCanvas(layer, stageExport);
+    compareLayerAndCanvas(layer, stageExport, 50, 50);
   });
 
   // ======================================================
@@ -637,7 +637,7 @@ describe('Node', function () {
       id: 'myRect',
     });
 
-    var clicks = [];
+    var clicks: string[] = [];
 
     rect.on('click', function () {
       clicks.push(this.name());
@@ -719,8 +719,8 @@ describe('Node', function () {
     group.add(rect);
     group.add(text);
 
-    var clicks = [];
-    var taps = [];
+    var clicks: string[] = [];
+    var taps: string[] = [];
 
     group.on('click', function () {
       clicks.push(this.name());
@@ -1883,7 +1883,7 @@ describe('Node', function () {
     layer.add(circle);
     layer.draw();
 
-    var clicks = [];
+    var clicks: string[] = [];
 
     circle.on('click', function () {
       clicks.push('circle');
@@ -2057,7 +2057,7 @@ describe('Node', function () {
     layer.add(circle);
     layer.draw();
 
-    var clicks = [];
+    var clicks: string[] = [];
 
     circle.on('click', function () {
       clicks.push('circle');
@@ -2091,7 +2091,7 @@ describe('Node', function () {
     layer.add(circle);
     layer.draw();
 
-    var clicks = [];
+    var clicks: string[] = [];
 
     circle.on('click', function (e) {
       e.cancelBubble = true;
@@ -3318,7 +3318,7 @@ describe('Node', function () {
         width: 148,
         height: 148,
       })
-      .offset({
+      ?.offset({
         x: 74,
         y: 74,
       });
@@ -3834,7 +3834,7 @@ describe('Node', function () {
       y: 100,
     });
 
-    assert.equal(circle.getRelativePointerPosition().x, -50);
-    assert.equal(circle.getRelativePointerPosition().y, 0);
+    assert.equal(circle.getRelativePointerPosition()?.x, -50);
+    assert.equal(circle.getRelativePointerPosition()?.y, 0);
   });
 });

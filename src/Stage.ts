@@ -1,14 +1,15 @@
-import { Util } from './Util';
-import { Factory } from './Factory';
-import { Container, ContainerConfig } from './Container';
-import { Konva } from './Global';
-import { SceneCanvas, HitCanvas } from './Canvas';
-import { GetSet, Vector2d } from './types';
-import { Shape } from './Shape';
-import { Layer } from './Layer';
-import { DD } from './DragAndDrop';
-import { _registerNode } from './Global';
-import * as PointerEvents from './PointerEvents';
+import { Util } from './Util.ts';
+import { Factory } from './Factory.ts';
+import type { ContainerConfig } from './Container.ts';
+import { Container } from './Container.ts';
+import { Konva } from './Global.ts';
+import { SceneCanvas, HitCanvas } from './Canvas.ts';
+import type { GetSet, Vector2d } from './types.ts';
+import type { Shape } from './Shape.ts';
+import type { Layer } from './Layer.ts';
+import { DD } from './DragAndDrop.ts';
+import { _registerNode } from './Global.ts';
+import * as PointerEvents from './PointerEvents.ts';
 
 export interface StageConfig extends ContainerConfig {
   container?: HTMLDivElement | string;

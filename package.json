@@ -12,29 +12,32 @@
   ],
   "exports": {
     ".": {
+      "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
     },
     "./lib/*": {
+      "types": "./lib/*.d.ts",
       "default": "./lib/*.js"
     },
     "./lib/*.js": {
-      "import": "./lib/*.js",
-      "require": "./lib/*.js",
+      "types": "./lib/*.d.ts",
       "default": "./lib/*.js"
     },
     "./canvas-backend": {
+      "types": "./lib/canvas-backend.d.ts",
       "default": "./lib/canvas-backend.js"
     },
     "./skia-backend": {
+      "types": "./lib/skia-backend.d.ts",
       "default": "./lib/skia-backend.js"
     }
   },
   "main": "./lib/index.js",
-  "types": "./lib/index-types.d.ts",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "start": "npm run test:watch",
-    "compile": "npm run clean && npm run tsc && cp ./src/index-types.d.ts ./lib/index-types.d.ts && npm run rollup",
-    "build": "npm run compile && cp ./src/index-types.d.ts ./lib && gulp build && node ./rename-imports.mjs",
+    "compile": "npm run clean && npm run tsc && npm run rollup",
+    "build": "npm run compile && gulp build",
     "fmt": "prettier --write .",
     "fmt:check": "prettier --check .",
     "test:import": "npm run build  && node ./test/import-test.cjs && node ./test/import-test.mjs",
@@ -42,8 +45,8 @@
     "test:build": "PARCEL_WORKER_BACKEND=process parcel build ./test/unit-tests.html --dist-dir ./test-build --target none --public-url ./ --no-source-maps",
     "test:browser": "npm run test:build && mocha-headless-chrome -f ./test-build/unit-tests.html -a disable-web-security -a no-sandbox -a disable-setuid-sandbox",
     "test:watch": "rm -rf ./.parcel-cache && PARCEL_WORKERS=0  parcel serve ./test/unit-tests.html ./test/manual-tests.html ./test/sandbox.html ./test/text-paths.html ./test/bunnies.html",
-    "test:node:canvas": "rm -rf ./.test-temp && mkdir ./.test-temp && (tsc -p ./test/tsconfig.json --outDir ./.test-temp || true) && node ./rename-imports-test.mjs && mocha './.test-temp/test/unit/**/*.js' -r ./test/node-canvas-global-setup.mjs --exit && rm -rf ./.test-temp",
-    "test:node:skia": "rm -rf ./.test-temp && mkdir ./.test-temp && (tsc -p ./test/tsconfig.json --outDir ./.test-temp || true) && node ./rename-imports-test.mjs && mocha './.test-temp/test/unit/**/*.js' -r ./test/node-skia-global-setup.mjs --exit && rm -rf ./.test-temp",
+    "test:node:canvas": "mocha -r tsx -r ./test/node-canvas-global-setup.mjs --extension ts --recursive './test/unit/' --exit",
+    "test:node:skia": "mocha -r tsx -r ./test/node-skia-global-setup.mjs --extension ts --recursive './test/unit/' --exit",
     "test:node": "npm run test:node:canvas && npm run test:node:skia",
     "tsc": "tsc --removeComments",
     "rollup": "rollup -c",
@@ -85,7 +88,7 @@
     "@parcel/transformer-image": "2.15.4",
     "@size-limit/preset-big-lib": "^11.2.0",
     "@types/mocha": "^10.0.10",
-    "canvas": "^3.1.2",
+    "canvas": "^3.2.0",
     "chai": "5.2.1",
     "filehound": "^1.17.6",
     "gulp": "^5.0.1",
@@ -101,15 +104,16 @@
     "gulp-util": "^3.0.8",
     "mocha": "10.2.0",
     "mocha-headless-chrome": "^4.0.0",
-    "parcel": "2.13.3",
+    "parcel": "2.15.4",
     "prettier": "^3.6.2",
     "process": "^0.11.10",
-    "rollup": "^4.46.2",
+    "rollup": "^4.48.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "size-limit": "^11.2.0",
-    "skia-canvas": "^2.0.2",
+    "skia-canvas": "^3.0.4",
     "ts-mocha": "^11.1.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.4",
     "typescript": "^5.9.2"
   },
   "keywords": [

@@ -6,7 +6,7 @@ import {
   simulatePointerDown,
   simulatePointerMove,
   simulatePointerUp,
-} from './test-utils';
+} from './test-utils.ts';
 
 describe.skip('PointerEvents', function () {
   // ======================================================
@@ -163,7 +163,6 @@ describe.skip('PointerEvents', function () {
       x: 289,
       y: 10,
       pointerId: 0,
-      preventDefault: function () {},
     });
 
     assert.equal(otherDownCount, 1, '6) otherDownCount should be 1');
@@ -176,7 +175,6 @@ describe.skip('PointerEvents', function () {
       x: 289,
       y: 100,
       pointerId: 1,
-      preventDefault: function () {},
     });
 
     assert.equal(otherDownCount, 1, '7) otherDownCount should be 1');
@@ -189,7 +187,6 @@ describe.skip('PointerEvents', function () {
       x: 289,
       y: 10,
       pointerId: 2,
-      preventDefault: function () {},
     });
 
     assert.equal(otherDownCount, 1, '8) otherDownCount should be 1');
@@ -209,15 +206,15 @@ describe.skip('PointerEvents', function () {
       assert(pointermove, '9) pointermove should be true');
 
       simulatePointerUp(stage, {
+        x: 290,
+        y: 10,
         pointerId: 1,
-        preventDefault: function () {},
       });
 
       simulatePointerDown(stage, {
         x: 289,
         y: 10,
         pointerId: 1,
-        preventDefault: function () {},
       });
 
       assert(otherDownCount === 2, '10) otherDownCount should be 1');

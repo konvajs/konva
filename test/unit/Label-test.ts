@@ -1,6 +1,11 @@
 import { assert } from 'chai';
 
-import { addStage, Konva, cloneAndCompareLayer, isBrowser } from './test-utils';
+import {
+  addStage,
+  Konva,
+  cloneAndCompareLayer,
+  isBrowser,
+} from './test-utils.ts';
 
 describe('Label', function () {
   // ======================================================

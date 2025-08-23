@@ -163,11 +163,11 @@ export const Konva = {
    * @method
    * @memberof Konva
    */
-  isDragging() {
+  isDragging(): boolean {
     return Konva['DD'].isDragging;
   },
-  isTransforming() {
-    return Konva['Transformer']?.isTransforming();
+  isTransforming(): boolean {
+    return Konva['Transformer']?.isTransforming() ?? false;
   },
   /**
    * returns whether or not a drag and drop operation is ready, but may

@@ -1,15 +1,17 @@
-import { Util } from './Util';
-import { Container, ContainerConfig } from './Container';
-import { Node } from './Node';
-import { Factory } from './Factory';
-import { SceneCanvas, HitCanvas } from './Canvas';
-import { Stage } from './Stage';
-import { getBooleanValidator } from './Validators';
+import { Util } from './Util.ts';
+import type { ContainerConfig } from './Container.ts';
+import { Container } from './Container.ts';
+import { Node } from './Node.ts';
+import { Factory } from './Factory.ts';
+import { SceneCanvas, HitCanvas } from './Canvas.ts';
+import type { Stage } from './Stage.ts';
+import { getBooleanValidator } from './Validators.ts';
 
-import { GetSet, Vector2d } from './types';
-import { Group } from './Group';
-import { Shape, shapes } from './Shape';
-import { _registerNode } from './Global';
+import type { GetSet, Vector2d } from './types.ts';
+import type { Group } from './Group.ts';
+import type { Shape } from './Shape.ts';
+import { shapes } from './Shape.ts';
+import { _registerNode } from './Global.ts';
 
 export interface LayerConfig extends ContainerConfig {
   clearBeforeDraw?: boolean;

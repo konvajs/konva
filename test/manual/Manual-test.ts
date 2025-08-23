@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { addStage, Konva, loadImage, showHit } from '../unit/test-utils';
+import { addStage, Konva, loadImage, showHit } from '../unit/test-utils.ts';
 
 describe('Manual', function () {
   // ======================================================
@@ -352,7 +352,7 @@ describe('Manual', function () {
         document.body.style.cursor = 'default';
       });
 
-      Konva.pixelRatio = undefined;
+      Konva.pixelRatio = 1;
       done();
     };
     imageObj.src = 'assets/lion.png';

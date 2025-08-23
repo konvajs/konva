@@ -1,10 +1,11 @@
-import { Factory } from '../Factory';
-import { Context } from '../Context';
-import { Shape, ShapeConfig } from '../Shape';
-import { getNumberValidator } from '../Validators';
-import { _registerNode } from '../Global';
+import { Factory } from '../Factory.ts';
+import type { Context } from '../Context.ts';
+import type { ShapeConfig } from '../Shape.ts';
+import { Shape } from '../Shape.ts';
+import { getNumberValidator } from '../Validators.ts';
+import { _registerNode } from '../Global.ts';
 
-import { GetSet } from '../types';
+import type { GetSet } from '../types.ts';
 
 export interface StarConfig extends ShapeConfig {
   numPoints: number;

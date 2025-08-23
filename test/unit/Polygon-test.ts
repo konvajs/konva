@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { addStage, Konva } from './test-utils';
+import { addStage, Konva } from './test-utils.ts';
 
 describe('Polygon', function () {
   it('add polygon', function () {

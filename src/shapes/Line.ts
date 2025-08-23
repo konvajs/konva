@@ -1,10 +1,11 @@
-import { Factory } from '../Factory';
-import { _registerNode } from '../Global';
-import { Shape, ShapeConfig } from '../Shape';
-import { getNumberArrayValidator, getNumberValidator } from '../Validators';
+import { Factory } from '../Factory.ts';
+import { _registerNode } from '../Global.ts';
+import type { ShapeConfig } from '../Shape.ts';
+import { Shape } from '../Shape.ts';
+import { getNumberArrayValidator, getNumberValidator } from '../Validators.ts';
 
-import { Context } from '../Context';
-import { GetSet } from '../types';
+import type { Context } from '../Context.ts';
+import type { GetSet } from '../types.ts';
 
 function getControlPoints(
   x0: number,

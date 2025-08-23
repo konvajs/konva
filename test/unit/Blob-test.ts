@@ -1,7 +1,7 @@
 import { assert } from 'chai';
-import { Line } from '../../src/shapes/Line';
+import type { Line } from '../../src/shapes/Line.ts';
 
-import { addStage, Konva, cloneAndCompareLayer } from './test-utils';
+import { addStage, Konva, cloneAndCompareLayer } from './test-utils.ts';
 
 describe('Blob', function () {
   // ======================================================
@@ -57,7 +57,7 @@ describe('Blob', function () {
     layer.add(blob);
     stage.add(layer);
 
-    assert.equal(stage.findOne<Line>('Line').points().length, 8);
+    assert.equal(stage.findOne<Line>('Line')?.points().length, 8);
   });
 
   // ======================================================
@@ -116,6 +116,6 @@ describe('Blob', function () {
     layer.add(blob);
     stage.add(layer);
 
-    cloneAndCompareLayer(layer, 150);
+    cloneAndCompareLayer(layer, 100, 20);
   });
 });

@@ -8,7 +8,7 @@ import {
   simulateTouchStart,
   simulateTouchEnd,
   simulateTouchMove,
-} from './test-utils';
+} from './test-utils.ts';
 
 describe('DragAndDrop', function () {
   // ======================================================
