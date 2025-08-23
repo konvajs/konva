@@ -426,6 +426,17 @@ export class Shape<
     //   // this.getStrokeRadialGradientColorStops()
     // );
   }
+
+  /**
+   * get stroke scale enabled property
+   * @method
+   * @name Konva.Shape#getStrokeScaleEnabled  
+   * @returns {Boolean}
+   */
+  getStrokeScaleEnabled() {
+    return this.attrs.strokeScaleEnabled ?? true;
+  }
+
   hasHitStroke() {
     const width = this.hitStrokeWidth();
 

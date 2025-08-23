@@ -729,12 +729,6 @@ export class Text extends Shape<TextConfig> {
     this._addTextLine(lastLine.text + ELLIPSIS);
   }
 
-  // for text we can't disable stroke scaling
-  // if we do, the result will be unexpected
-  getStrokeScaleEnabled() {
-    return true;
-  }
-
   _useBufferCanvas() {
     const hasLine =
       this.textDecoration().indexOf('underline') !== -1 ||

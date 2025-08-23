@@ -1372,7 +1372,35 @@ describe('Text', function () {
     assert.equal(text.fill(), 'black');
   });
 
-  it('text with stoke and strokeScaleEnabled', function () {
+  it('strokeScaleEnabled should respect user setting', function () {
+    // Test that shows the current bug where getStrokeScaleEnabled() ignores strokeScaleEnabled setting
+    const textWithStrokeScaleDisabled = new Konva.Text({
+      text: 'test',
+      fontSize: 50,
+      stroke: 'red',
+      strokeWidth: 2,
+      strokeScaleEnabled: false,
+    });
+
+    const textWithStrokeScaleEnabled = new Konva.Text({
+      text: 'test',
+      fontSize: 50,
+      stroke: 'red',
+      strokeWidth: 2,
+      strokeScaleEnabled: true,
+    });
+
+    // The user's setting should be respected
+    assert.equal(textWithStrokeScaleDisabled.strokeScaleEnabled(), false);
+    assert.equal(textWithStrokeScaleEnabled.strokeScaleEnabled(), true);
+
+    // But getStrokeScaleEnabled should also respect the user's setting
+    // Currently this will fail because of the hardcoded override
+    assert.equal(textWithStrokeScaleDisabled.getStrokeScaleEnabled(), false, 'Text with strokeScaleEnabled:false should return false from getStrokeScaleEnabled()');
+    assert.equal(textWithStrokeScaleEnabled.getStrokeScaleEnabled(), true, 'Text with strokeScaleEnabled:true should return true from getStrokeScaleEnabled()');
+  });
+
+  it('text with stroke and strokeScaleEnabled true', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -1383,7 +1411,7 @@ describe('Text', function () {
       fill: 'black',
       text: 'text',
       stroke: 'red',
-      strokeScaleEnabled: false,
+      strokeScaleEnabled: true, // stroke should scale
       strokeWidth: 2,
       scaleX: 2,
     });
@@ -1401,6 +1429,31 @@ describe('Text', function () {
     context.miterLimit = 2;
     context.strokeText('text', 0, getOffsetY(context));
     compareLayerAndCanvas(layer, canvas);
+  });
+
+  it('text with stroke and strokeScaleEnabled false', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      fontSize: 50,
+      y: 50,
+      x: 50,
+      fill: 'black',
+      text: 'test',
+      stroke: 'red',
+      strokeScaleEnabled: false, // stroke should NOT scale
+      strokeWidth: 4,
+      scaleX: 2,
+    });
+    layer.add(text);
+    stage.add(layer);
+    layer.draw();
+    
+    // For this test, we just verify that the text respects the strokeScaleEnabled setting
+    // The main verification is already done in the previous test
+    assert.equal(text.getStrokeScaleEnabled(), false, 'getStrokeScaleEnabled should return false');
+    assert.equal(text.strokeScaleEnabled(), false, 'strokeScaleEnabled should return false');
   });
 
   it('text getSelfRect', function () {
