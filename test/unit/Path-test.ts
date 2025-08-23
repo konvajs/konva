@@ -60,6 +60,22 @@ describe('Path', function () {
     assert.equal(path.getClassName(), 'Path');
   });
 
+  it('parses arc without separators after flags', function () {
+    const path = new Konva.Path({
+      data: 'M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z',
+    });
+    const arc = path.dataArray[3];
+    assert.equal(arc.command, 'A');
+    assert.closeTo(arc.points[0], 12, 0.001);
+    assert.closeTo(arc.points[1], 10.5, 0.001);
+    assert.closeTo(arc.points[2], 7.5, 0.001);
+    assert.closeTo(arc.points[3], 7.5, 0.001);
+    assert.closeTo(arc.points[4], Math.PI, 0.001);
+    assert.closeTo(arc.points[5], Math.PI, 0.001);
+    assert.equal(arc.points[6], 0);
+    assert.equal(arc.points[7], 1);
+  });
+
   // ======================================================
   it('add path with line cap and line join', function () {
     var stage = addStage();

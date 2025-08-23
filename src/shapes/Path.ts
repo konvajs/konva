@@ -515,8 +515,36 @@ export class Path extends Shape<PathConfig> {
       str = str.slice(1);
 
       coords.length = 0;
-      while ((match = re.exec(str))) {
-        coords.push(match[0]);
+      if (c === 'a' || c === 'A') {
+        let i = 0;
+        while (i < str.length) {
+          // skip separators
+          while (i < str.length && (str[i] === ',' || str[i] === ' ')) {
+            i++;
+          }
+          if (i >= str.length) {
+            break;
+          }
+          const idx = coords.length % 7;
+          if (idx === 3 || idx === 4) {
+            // flags are single-digit values (0 or 1)
+            coords.push(str[i]);
+            i++;
+          } else {
+            let s = '';
+            if (str[i] === '-' || str[i] === '+') {
+              s += str[i++];
+            }
+            while (i < str.length && /[0-9.]/.test(str[i])) {
+              s += str[i++];
+            }
+            coords.push(s);
+          }
+        }
+      } else {
+        while ((match = re.exec(str))) {
+          coords.push(match[0]);
+        }
       }
 
       // while ((match = re.exec(str))) {
