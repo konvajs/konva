@@ -3,13 +3,13 @@ import { assert } from 'chai';
 import {
   addStage,
   Konva,
-  createCanvas,
+  createCanvasAndContext,
   compareLayerAndCanvas,
   compareLayers,
   loadImage,
   isBrowser,
   compareCanvases,
-} from './test-utils';
+} from './test-utils.ts';
 
 export function getOffsetY(
   context: CanvasRenderingContext2D,
@@ -18,7 +18,7 @@ export function getOffsetY(
 ) {
   const metrics = context.measureText('M') as any;
   fontSize =
-    fontSize || parseInt(context.font.split('px')[0].split(' ').pop(), 10);
+    fontSize || parseInt(context.font.split('px')[0].split(' ').pop()!, 10);
   lineHeight = lineHeight || 1;
 
   // Use the same fallbacks as Text.measureSize() for missing advanced metrics
@@ -166,8 +166,7 @@ describe('Text', function () {
     layer.add(text);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.textBaseline = 'alphabetic';
     context.font = 'normal normal 50px Arial';
     context.fillStyle = 'darkgrey';
@@ -193,8 +192,7 @@ describe('Text', function () {
     layer.add(text);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.textBaseline = 'alphabetic';
     context.font = 'normal normal 50px Arial';
 
@@ -224,8 +222,7 @@ describe('Text', function () {
     layer.add(text);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.textBaseline = 'alphabetic';
     context.font = 'normal normal 20px Arial';
     context.fillStyle = 'black';
@@ -254,8 +251,7 @@ describe('Text', function () {
     layer.add(text);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.textBaseline = 'middle';
     context.letterSpacing = '10px';
     context.font = 'normal normal 50px Arial';
@@ -1010,8 +1006,7 @@ describe('Text', function () {
     layer.add(text);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.translate(0, 80);
     context.lineWidth = 2;
     context.font = '80px Arial';
@@ -1395,8 +1390,7 @@ describe('Text', function () {
     layer.add(text);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.translate(50, 50);
     context.lineWidth = 2;
     context.font = '50px Arial';
@@ -1450,8 +1444,7 @@ describe('Text', function () {
     layer.add(text);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var ctx = canvas.getContext('2d');
+    const { canvas, context: ctx } = createCanvasAndContext();
 
     ctx.fillStyle = 'green';
     ctx.font = 'normal 50px Arial';
@@ -1490,8 +1483,7 @@ describe('Text', function () {
     layer.add(text);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var ctx = canvas.getContext('2d');
+    const { canvas, context: ctx } = createCanvasAndContext();
 
     ctx.fillStyle = 'green';
     ctx.font = 'normal 50px Arial';
@@ -1541,8 +1533,7 @@ describe('Text', function () {
     layer.add(text);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var ctx = canvas.getContext('2d');
+    const { canvas, context: ctx } = createCanvasAndContext();
 
     ctx.fillStyle = 'green';
     ctx.font = 'normal 50px Arial';
@@ -1669,14 +1660,13 @@ describe('Text', function () {
       layer.add(text);
       stage.add(layer);
 
-      var canvas = createCanvas();
-      var ctx = canvas.getContext('2d');
+      const { canvas, context: ctx } = createCanvasAndContext();
 
       ctx.fillStyle = 'green';
       ctx.font = 'normal normal 30px Arial';
       ctx.textBaseline = 'alphabetic';
 
-      var grd = ctx.createPattern(imageObj, 'repeat');
+      var grd = ctx.createPattern(imageObj, 'repeat')!;
       ctx.fillStyle = grd;
 
       ctx.fillText(text.text(), 0, getOffsetY(ctx));
@@ -1704,14 +1694,13 @@ describe('Text', function () {
       layer.add(text);
       stage.add(layer);
 
-      var canvas = createCanvas();
-      var ctx = canvas.getContext('2d');
+      const { canvas, context: ctx } = createCanvasAndContext();
 
       ctx.fillStyle = 'green';
       ctx.font = 'normal normal 30px Arial';
       ctx.textBaseline = 'alphabetic';
 
-      var grd = ctx.createPattern(imageObj, 'repeat');
+      var grd = ctx.createPattern(imageObj, 'repeat')!;
       const matrix = new (global as any).DOMMatrix([1, 0, 0, 1, -50, 0]);
       grd.setTransform(matrix);
 
@@ -1742,14 +1731,13 @@ describe('Text', function () {
       layer.add(text);
       stage.add(layer);
 
-      var canvas = createCanvas();
-      var ctx = canvas.getContext('2d');
+      const { canvas, context: ctx } = createCanvasAndContext();
 
       ctx.fillStyle = 'green';
       ctx.font = 'normal normal 30px Arial';
       ctx.textBaseline = 'alphabetic';
 
-      var grd = ctx.createPattern(imageObj, 'repeat');
+      var grd = ctx.createPattern(imageObj, 'repeat')!;
       const matrix = new (global as any).DOMMatrix([0.5, 0, 0, 0.5, 0, 0]);
 
       grd.setTransform(matrix);

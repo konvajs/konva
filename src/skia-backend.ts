@@ -1,10 +1,11 @@
-import { Konva } from './_CoreInternals';
-import { Canvas, DOMMatrix, Image } from 'skia-canvas';
+import { Konva } from './_CoreInternals.ts';
+// @ts-ignore
+import { Canvas, DOMMatrix, Image, Path2D } from 'skia-canvas';
 
 global.DOMMatrix = DOMMatrix as any;
 
-// @ts-ignore
-Canvas.prototype.toDataURL = Canvas.prototype.toDataURLSync;
+global.Path2D = Path2D as any;
+Path2D.prototype.toString = () => '[object Path2D]';
 
 Konva.Util['createCanvasElement'] = () => {
   const node = new Canvas(300, 300) as any;

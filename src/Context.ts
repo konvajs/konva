@@ -1,9 +1,9 @@
-import { Util } from './Util';
-import { Konva } from './Global';
-import { Canvas } from './Canvas';
-import { Shape } from './Shape';
-import { IRect } from './types';
-import type { Node } from './Node';
+import { Util } from './Util.ts';
+import { Konva } from './Global.ts';
+import type { Canvas } from './Canvas.ts';
+import type { Shape } from './Shape.ts';
+import type { IRect } from './types.ts';
+import type { Node } from './Node.ts';
 
 function simplifyArray(arr: Array<any>) {
   const retArr: Array<any> = [],
@@ -686,10 +686,10 @@ export class Context {
       this._context.setLineDash(segments);
     } else if ('mozDash' in this._context) {
       // verified that this works in firefox
-      (<any>this._context['mozDash']) = segments;
+      (this._context as any)['mozDash'] = segments;
     } else if ('webkitLineDash' in this._context) {
       // does not currently work for Safari
-      (<any>this._context['webkitLineDash']) = segments;
+      (this._context as any)['webkitLineDash'] = segments;
     }
 
     // no support for IE9 and IE10

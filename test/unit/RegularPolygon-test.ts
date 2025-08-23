@@ -5,9 +5,9 @@ import {
   Konva,
   cloneAndCompareLayer,
   assertAlmostEqual,
-  createCanvas,
+  createCanvasAndContext,
   compareLayerAndCanvas,
-} from './test-utils';
+} from './test-utils.ts';
 
 describe('RegularPolygon', function () {
   // ======================================================
@@ -230,8 +230,7 @@ describe('RegularPolygon', function () {
     stage.add(layer);
 
     // corner radius creates perfect circle at 1/2 radius
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.beginPath();
     context.arc(100, 100, resultCircleRadius, 0, Math.PI * 2);
     context.fillStyle = 'black';

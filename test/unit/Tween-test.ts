@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { addStage, Konva } from './test-utils';
+import { addStage, Konva } from './test-utils.ts';
 
 describe('Tween', function () {
   // ======================================================
@@ -153,7 +153,7 @@ describe('Tween', function () {
     stage.add(layer);
 
     var duration = 0.1;
-    var c = Konva.Util.colorToRGBA('rgba(0,255,0,0.5)');
+    var c = Konva.Util.colorToRGBA('rgba(0,255,0,0.5)')!;
     var endFill = 'rgba(' + c.r + ',' + c.g + ',' + c.b + ',' + c.a + ')';
     var midFill = 'rgba(128,128,0,0.75)';
 

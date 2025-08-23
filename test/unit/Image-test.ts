@@ -3,12 +3,12 @@ import { assert } from 'chai';
 import {
   addStage,
   Konva,
-  createCanvas,
   compareLayerAndCanvas,
   loadImage,
   isNode,
   isBrowser,
-} from './test-utils';
+  createCanvasAndContext,
+} from './test-utils.ts';
 
 describe('Image', function () {
   // ======================================================
@@ -305,8 +305,7 @@ describe('Image', function () {
         height: 100,
       });
 
-      var canvas = createCanvas();
-      var context = canvas.getContext('2d');
+      const { canvas, context } = createCanvasAndContext();
       context.drawImage(imageObj, 200, 60, 100, 100);
       compareLayerAndCanvas(layer, canvas, 10);
       done();
@@ -341,9 +340,13 @@ describe('Image', function () {
     var layer = new Konva.Layer();
     stage.add(layer);
     var src = 'non-existent.jpg';
-    Konva.Image.fromURL(src, null, function (e) {
-      done();
-    });
+    Konva.Image.fromURL(
+      src,
+      () => {},
+      function (e) {
+        done();
+      }
+    );
   });
 
   it('check zero values', function (done) {

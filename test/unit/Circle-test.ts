@@ -3,10 +3,10 @@ import { assert } from 'chai';
 import {
   addStage,
   Konva,
-  createCanvas,
+  createCanvasAndContext,
   compareLayerAndCanvas,
   loadImage,
-} from './test-utils';
+} from './test-utils.ts';
 
 describe('Circle', function () {
   // ======================================================
@@ -159,8 +159,7 @@ describe('Circle', function () {
     layer.add(group);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var ctx = canvas.getContext('2d');
+    const { canvas, context: ctx } = createCanvasAndContext();
 
     var start = { x: -35, y: -35 };
     var end = { x: 35, y: 35 };
@@ -306,8 +305,7 @@ describe('Circle', function () {
     layer.add(circle);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.beginPath();
     context.arc(100, 100, 50, 0, Math.PI * 2, false);
     context.closePath();

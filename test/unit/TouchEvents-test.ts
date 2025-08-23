@@ -6,7 +6,7 @@ import {
   simulateTouchStart,
   simulateTouchEnd,
   simulateTouchMove,
-} from './test-utils';
+} from './test-utils.ts';
 
 describe('TouchEvents', function () {
   // ======================================================
@@ -826,8 +826,8 @@ describe('TouchEvents', function () {
 
     stage.on('tap', function (e) {
       assert.equal(e.target, circle1);
-      assert.equal(stage.getPointerPosition().x, 100);
-      assert.equal(stage.getPointerPosition().y, 100);
+      assert.equal(stage.getPointerPosition()?.x, 100);
+      assert.equal(stage.getPointerPosition()?.y, 100);
       tap += 1;
     });
 

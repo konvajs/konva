@@ -1,19 +1,21 @@
-import { Canvas, HitCanvas, SceneCanvas } from './Canvas';
-import { Container } from './Container';
-import { Context, isCSSFiltersSupported } from './Context';
-import { DD } from './DragAndDrop';
-import { Factory } from './Factory';
-import { Konva } from './Global';
-import { Layer } from './Layer';
-import { Shape } from './Shape';
-import { Stage } from './Stage';
-import { GetSet, IRect, Vector2d } from './types';
-import { Transform, Util } from './Util';
+import type { Canvas } from './Canvas.ts';
+import { HitCanvas, SceneCanvas } from './Canvas.ts';
+import type { Container } from './Container.ts';
+import type { Context } from './Context.ts';
+import { isCSSFiltersSupported } from './Context.ts';
+import { DD } from './DragAndDrop.ts';
+import { Factory } from './Factory.ts';
+import { Konva } from './Global.ts';
+import type { Layer } from './Layer.ts';
+import type { Shape } from './Shape.ts';
+import type { Stage } from './Stage.ts';
+import type { GetSet, IRect, Vector2d } from './types.ts';
+import { Transform, Util } from './Util.ts';
 import {
   getBooleanValidator,
   getNumberValidator,
   getStringValidator,
-} from './Validators';
+} from './Validators.ts';
 
 export type FilterFunction = (this: Node, imageData: ImageData) => void;
 export type Filter = FilterFunction | string;
@@ -2026,7 +2028,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       attrs[key] = obj[key];
     }
 
-    const node = new (<any>this.constructor)(attrs);
+    const node = new (this.constructor as any)(attrs);
     // copy over listeners
     for (key in this.eventListeners) {
       allListeners = this.eventListeners[key];

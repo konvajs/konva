@@ -3,10 +3,10 @@ import { assert } from 'chai';
 import {
   addStage,
   Konva,
-  createCanvas,
+  createCanvasAndContext,
   compareLayerAndCanvas,
   assertAlmostDeepEqual,
-} from './test-utils';
+} from './test-utils.ts';
 
 describe('Arc', function () {
   // ======================================================
@@ -189,8 +189,7 @@ describe('Arc', function () {
     layer.add(arc);
     stage.add(layer);
 
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
+    const { canvas, context } = createCanvasAndContext();
     context.beginPath();
     context.arc(100, 100, 80, 0, Math.PI / 2, false);
     context.arc(100, 100, 50, Math.PI / 2, 0, true);

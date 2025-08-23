@@ -1,17 +1,18 @@
-import { Util } from '../Util';
-import { Context } from '../Context';
-import { Factory } from '../Factory';
-import { Shape, ShapeConfig } from '../Shape';
-import { Konva } from '../Global';
+import { Util } from '../Util.ts';
+import type { Context } from '../Context.ts';
+import { Factory } from '../Factory.ts';
+import type { ShapeConfig } from '../Shape.ts';
+import { Shape } from '../Shape.ts';
+import { Konva } from '../Global.ts';
 import {
   getNumberValidator,
   getStringValidator,
   getNumberOrAutoValidator,
   getBooleanValidator,
-} from '../Validators';
-import { _registerNode } from '../Global';
+} from '../Validators.ts';
+import { _registerNode } from '../Global.ts';
 
-import { GetSet } from '../types';
+import type { GetSet } from '../types.ts';
 
 export interface CharRenderProps {
   char: string;

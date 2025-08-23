@@ -1,4 +1,4 @@
-import { addStage, cloneAndCompareLayer, Konva } from './test-utils';
+import { addStage, cloneAndCompareLayer, Konva } from './test-utils.ts';
 import { assert } from 'chai';
 
 describe('Group', function () {
@@ -38,7 +38,7 @@ describe('Group', function () {
         y: -15,
         width: 150,
         height: 150,
-      })
+      })!
       .offsetX(5)
       .offsetY(5);
 
