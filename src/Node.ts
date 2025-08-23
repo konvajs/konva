@@ -44,7 +44,9 @@ function parseCSSFilters(cssFilter: string): FilterFunction {
       }
 
       case 'brightness': {
-        const brightness = parseFloat(filterValue);
+        const brightness = filterValue.includes('%')
+          ? parseFloat(filterValue) / 100
+          : parseFloat(filterValue);
         return function (imageData) {
           (this as any).brightness(brightness); // CSS uses multiplier
           const KonvaFilters = (Konva as any).Filters;
@@ -694,9 +696,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       const fallbackRequired =
         typeof filters[i] === 'string' && !isCSSFiltersSupported();
       if (fallbackRequired) {
-        Util.warn(
-          `CSS filter "${filters[i]}" is not supported in native mode.`
-        );
+        // Util.warn(
+        //   `CSS filter "${filters[i]}" is not supported in native mode.`
+        // );
       }
       if (typeof filters[i] !== 'string' || !isCSSFiltersSupported()) {
         useNativeOnly = false;

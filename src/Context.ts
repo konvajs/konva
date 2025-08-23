@@ -108,13 +108,7 @@ export function isCSSFiltersSupported(): boolean {
       _cssFiltersSupported = false;
       return false;
     }
-
-    // Test if setting the filter property works
-    const originalFilter = ctx.filter;
-    ctx.filter = 'blur(1px)';
-    _cssFiltersSupported = ctx.filter === 'blur(1px)';
-    ctx.filter = originalFilter;
-    return _cssFiltersSupported;
+    return !!ctx && 'filter' in ctx;
   } catch (e) {
     _cssFiltersSupported = false;
     return false;
