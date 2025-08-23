@@ -522,19 +522,77 @@ export class Path extends Shape<PathConfig> {
       // while ((match = re.exec(str))) {
       //   coords.push(match[0]);
       // }
-      const p: number[] = [];
+      let p: number[] = [];
+      // Track param position for A/a commands: 0..6 => rx, ry, psi, fa, fs, x, y
+      let arcParamIndex = c === 'A' || c === 'a' ? 0 : -1;
 
       for (let j = 0, jlen = coords.length; j < jlen; j++) {
+        const token = coords[j];
         // extra case for merged flags
-        if (coords[j] === '00') {
+        if (token === '00') {
           p.push(0, 0);
+          if (arcParamIndex >= 0) {
+            arcParamIndex += 2;
+            if (arcParamIndex >= 7) arcParamIndex -= 7;
+          }
           continue;
         }
-        const parsed = parseFloat(coords[j]);
-        if (!isNaN(parsed)) {
-          p.push(parsed);
+        if (arcParamIndex >= 0) {
+          // index-aware minimal handling for merged flags
+          if (arcParamIndex === 3) {
+            // expecting large-arc-flag; token may contain fa+fs(+x)
+            if (/^[01]{2}\d+(?:\.\d+)?$/.test(token)) {
+              p.push(parseInt(token[0], 10));
+              p.push(parseInt(token[1], 10));
+              p.push(parseFloat(token.slice(2)));
+              arcParamIndex += 3;
+              if (arcParamIndex >= 7) arcParamIndex -= 7;
+              continue;
+            }
+            if (token === '11' || token === '10' || token === '01') {
+              p.push(parseInt(token[0], 10));
+              p.push(parseInt(token[1], 10));
+              arcParamIndex += 2;
+              if (arcParamIndex >= 7) arcParamIndex -= 7;
+              continue;
+            }
+            if (token === '0' || token === '1') {
+              p.push(parseInt(token, 10));
+              arcParamIndex += 1;
+              if (arcParamIndex >= 7) arcParamIndex -= 7;
+              continue;
+            }
+          } else if (arcParamIndex === 4) {
+            // expecting sweep-flag; token may contain fs(+x)
+            if (/^[01]\d+(?:\.\d+)?$/.test(token)) {
+              p.push(parseInt(token[0], 10));
+              p.push(parseFloat(token.slice(1)));
+              arcParamIndex += 2;
+              if (arcParamIndex >= 7) arcParamIndex -= 7;
+              continue;
+            }
+            if (token === '0' || token === '1') {
+              p.push(parseInt(token, 10));
+              arcParamIndex += 1;
+              if (arcParamIndex >= 7) arcParamIndex -= 7;
+              continue;
+            }
+          }
+          const parsedArc = parseFloat(token);
+          if (!isNaN(parsedArc)) {
+            p.push(parsedArc);
+          } else {
+            p.push(0);
+          }
+          arcParamIndex += 1;
+          if (arcParamIndex >= 7) arcParamIndex -= 7;
         } else {
-          p.push(0);
+          const parsed = parseFloat(token);
+          if (!isNaN(parsed)) {
+            p.push(parsed);
+          } else {
+            p.push(0);
+          }
         }
       }
 
