@@ -487,7 +487,7 @@ describe('Path', function () {
     );
   });
 
-  it.only('parses arc without separators after flags', function () {
+  it('parses arc without separators after flags', function () {
     const stage = addStage();
     const layer = new Konva.Layer();
     stage.add(layer);
@@ -509,6 +509,98 @@ describe('Path', function () {
     assert.closeTo(arc.points[5], Math.PI, 0.001);
     assert.equal(arc.points[6], 0);
     assert.equal(arc.points[7], 1);
+  });
+
+  it('getPointAtLength regression around curvature', function () {
+    var stage = addStage({ draggable: true, scaleX: 1, scaleY: 1 });
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    const data =
+      'm 1633.8176,1077.4212 c 0,0 18.4277,-511.56464 -14.7423,-535.31585 -32.2488,-23.0917 -318.7995,-9.13506 -318.7995,-9.13506 H 830.3691 c 0,0 -182.43438,-54.81052 -189.80546,-129.7182 -3.97298,-40.37463 -16.58496,-164.43147 -16.58496,-164.43147 0,0 -60.81148,-89.5238 -180.59162,-95.00485 C 323.6069,138.33472 -4.4064367,134.68069 -4.4064367,134.68069';
+
+    var path = new Konva.Path({
+      stroke: 'red',
+      strokeWidth: 50,
+      data,
+    });
+    const path2 = new Path2D(data);
+    const customShape = new Konva.Shape({
+      stroke: 'blue',
+      strokeWidth: 50,
+      sceneFunc: function (context) {
+        context.beginPath();
+        context.stroke(path2);
+      },
+    });
+    layer.add(path);
+    layer.add(customShape);
+    stage.add(layer);
+
+    const lengths = [87.9549, 91.9549, 94.8549, 97.7549];
+    const colors = ['black', 'red', 'green', 'blue'];
+
+    if (isBrowser) {
+      const SVGPath = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'path'
+      ) as SVGPathElement;
+      SVGPath.setAttribute('d', data);
+
+      for (let idx = 0; idx < lengths.length; idx++) {
+        const len = lengths[idx];
+        const p = path.getPointAtLength(len)!;
+        const native = SVGPath.getPointAtLength(len);
+        // Should closely match the browser's native SVG implementation
+        assert(
+          Math.abs(p.x - native.x) <= 3,
+          'x: ' + p.x + ' native.x: ' + native.x
+        );
+        assert(
+          Math.abs(p.y - native.y) <= 3,
+          'y: ' + p.y + ' native.y: ' + native.y
+        );
+        // Visual marker
+        layer.add(
+          new Konva.Circle({
+            x: native.x,
+            y: native.y,
+            radius: 100,
+            fill: colors[idx] || 'black',
+            opacity: 0.5,
+            draggable: true,
+          })
+        );
+      }
+    } else {
+      // Node: just ensure points are valid numbers and reasonably continuous
+      const pts = lengths.map((len) => path.getPointAtLength(len)!);
+      pts.forEach((pt) => {
+        assert(!isNaN(pt.x) && !isNaN(pt.y));
+      });
+      // Visual markers for manual inspection if needed
+      for (let idx = 0; idx < pts.length; idx++) {
+        const p = pts[idx];
+        layer.add(
+          new Konva.Circle({
+            x: p.x,
+            y: p.y,
+            radius: 30,
+            fill: colors[idx],
+            scaleX: 0.1,
+            scaleY: 0.1,
+          })
+        );
+      }
+      // distances between successive points should be small (no big jumps)
+      const d01 = Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y);
+      const d12 = Math.hypot(pts[2].x - pts[1].x, pts[2].y - pts[1].y);
+      const d23 = Math.hypot(pts[3].x - pts[2].x, pts[3].y - pts[2].y);
+      assert(
+        d01 < 50 && d12 < 50 && d23 < 50,
+        'd01: ' + d01 + ' d12: ' + d12 + ' d23: ' + d23
+      );
+    }
   });
 
   // ======================================================
