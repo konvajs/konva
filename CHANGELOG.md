@@ -54,8 +54,17 @@ var text = new Konva.Text({
 });
 ```
 
+- Improved text positioning to match DOM/CSS rendering. To restore previous behaviour use `Konva.legacyTextRendering = true`;
+- Native filters support via `node.filters(['blur(10px)'])`. Native fitlers works MUCH faster if supported nativily (Chrome, Firefox). If there is no native support, Konva will automatially fallback to functional filter (on Safari). 
+- **New**: Added `Konva.Filters.Brightness` filter in replace of deprecated `Konva.Filters.Brighten` to better match with css filters logic.
 - Fixed corner radius render for `Konva.Rect` when negative width or height are used
 - Added `cornerRadius` support for `Konva.RegularPolygon`
+- **Performance**: Rewrote Emboss and Solarize filters for improved performance and usability
+- Fixed TextPath rendering on right align for some fonts
+- Fixed crash when node inside transformer was destroyed
+- Fixed mouseup + click events order when clicked on empty area of stage
+- Changed return type of `node.toImage()`
+- Added corner radius support for RegularPolygon shapes
 
 ## 9.3.22 (2025-07-08)
 
