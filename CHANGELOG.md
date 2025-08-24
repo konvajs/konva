@@ -62,10 +62,17 @@ var text = new Konva.Text({
 });
 ```
 
+- Native filters support via `node.filters(['blur(10px)'])`. Native fitlers works MUCH faster if supported nativily (Chrome, Firefox). If there is no native support, Konva will automatially fallback to functional filter (on Safari).
+
+```js
+node.filters(['blur(10px')]);
+node.cache();
+```
+
 - **New**: Added `Konva.Filters.Brightness` filter in replace of deprecated `Konva.Filters.Brighten` to better match with css filters logic.
 - Added `cornerRadius` support for `Konva.RegularPolygon`
 - Added `miterLimit` property support for `Konva.Shape` to control line join appearance
-- Native filters support via `node.filters(['blur(10px)'])`. Native fitlers works MUCH faster if supported nativily (Chrome, Firefox). If there is no native support, Konva will automatially fallback to functional filter (on Safari).
+
 
 ### Bug Fixes
 - Fixed corner radius render for `Konva.Rect` when negative width or height are used
