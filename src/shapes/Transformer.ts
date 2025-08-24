@@ -86,6 +86,7 @@ const TRANSFORM_CHANGE_STR = [
   'offsetYChange',
   'transformsEnabledChange',
   'strokeWidthChange',
+  'draggableChange',
 ];
 
 const ANGLES = {
@@ -348,10 +349,6 @@ export class Transformer extends Group {
         onChange
       );
       node.on(`absoluteTransformChange.${this._getEventNamespace()}`, onChange);
-      // Listen for draggable changes to update back shape
-      node.on(`draggableChange.${this._getEventNamespace()}`, () => {
-        this._updateBackDraggable();
-      });
       this._proxyDrag(node);
     });
     this._resetTransformCache();
@@ -360,7 +357,6 @@ export class Transformer extends Group {
     const elementsCreated = !!this.findOne('.top-left');
     if (elementsCreated) {
       this.update();
-      this._updateBackDraggable();
     }
     return this;
   }
@@ -616,24 +612,11 @@ export class Transformer extends Group {
     });
     this.add(anchor);
   }
-  _updateBackDraggable() {
-    const back = this.findOne('.back');
-    if (back) {
-      back.draggable(this._shouldBackBeDraggable());
-    }
-  }
-
-  _shouldBackBeDraggable() {
-    // Back should be draggable only if at least one attached node is draggable
-    return this.nodes().some(node => node.draggable());
-  }
-
   _createBack() {
     const back = new Shape({
       name: 'back',
       width: 0,
       height: 0,
-      draggable: this._shouldBackBeDraggable(),
       sceneFunc(ctx, shape) {
         const tr = shape.getParent() as Transformer;
         const padding = tr.padding();
@@ -1274,6 +1257,7 @@ export class Transformer extends Group {
       stroke: this.borderStroke(),
       strokeWidth: this.borderStrokeWidth(),
       dash: this.borderDash(),
+      draggable: this.nodes().some((node) => node.draggable()),
       x: 0,
       y: 0,
     });
