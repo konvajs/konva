@@ -86,6 +86,7 @@ const TRANSFORM_CHANGE_STR = [
   'offsetYChange',
   'transformsEnabledChange',
   'strokeWidthChange',
+  'draggableChange',
 ];
 
 const ANGLES = {
@@ -616,7 +617,6 @@ export class Transformer extends Group {
       name: 'back',
       width: 0,
       height: 0,
-      draggable: true,
       sceneFunc(ctx, shape) {
         const tr = shape.getParent() as Transformer;
         const padding = tr.padding();
@@ -1257,6 +1257,7 @@ export class Transformer extends Group {
       stroke: this.borderStroke(),
       strokeWidth: this.borderStrokeWidth(),
       dash: this.borderDash(),
+      draggable: this.nodes().some((node) => node.draggable()),
       x: 0,
       y: 0,
     });
