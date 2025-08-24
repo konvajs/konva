@@ -28,6 +28,8 @@ import Konva from 'konva';
 import 'konva/canvas-backend';
 ```
 
+Motivation of this change: I see more frequent usage of `konva` library in SSR environments such as `Next.js`. Loading "native canvas render" on this enviromemnt doesn't make much sense, because we don't do server-side rendering of canvas content. So dropping requirement to mess with native modules when you don't really need them will simplify setup and usage a lot!
+
 - Improved text positioning to match DOM/CSS rendering. To restore previous behaviour use `Konva.legacyTextRendering = true`. This should NOT break major part of the apps. But if you care about pixel-perfect position of text elements, that change may effect you.
 
 ### New Features
