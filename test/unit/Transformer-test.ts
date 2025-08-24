@@ -5193,4 +5193,168 @@ describe('Transformer', function () {
       y: 60,
     });
   });
+
+  it('should not be draggable via back area when all attached nodes are non-draggable', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: false,
+      width: 50,
+      height: 50,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+      shouldOverdrawWholeArea: true,
+    });
+    layer.add(tr);
+    layer.draw();
+
+    var back = tr.findOne('.back');
+    assert.notEqual(back, null, 'Back shape should exist');
+    assert.equal(back!.draggable(), false, 'Back should not be draggable when node is not draggable');
+
+    // Try to drag via back area - should not move
+    var initialX = rect.x();
+    var initialY = rect.y();
+    
+    simulateMouseDown(tr, {
+      x: 75, // center of the rect/back area
+      y: 75,
+    });
+    sm(stage, {
+      x: 85,
+      y: 85,
+    });
+    su(stage, {
+      x: 85,
+      y: 85,
+    });
+
+    assert.equal(rect.x(), initialX, 'Rect should not move when dragging back area of non-draggable node');
+    assert.equal(rect.y(), initialY, 'Rect should not move when dragging back area of non-draggable node');
+  });
+
+  it('should be draggable via back area when at least one attached node is draggable', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect1 = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: false,
+      width: 50,
+      height: 50,
+      fill: 'yellow',
+    });
+    layer.add(rect1);
+
+    var rect2 = new Konva.Rect({
+      x: 100,
+      y: 100,
+      draggable: true,
+      width: 50,
+      height: 50,
+      fill: 'red',
+    });
+    layer.add(rect2);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect1, rect2],
+      shouldOverdrawWholeArea: true,
+    });
+    layer.add(tr);
+    layer.draw();
+
+    var back = tr.findOne('.back');
+    assert.notEqual(back, null, 'Back shape should exist');
+    assert.equal(back!.draggable(), true, 'Back should be draggable when at least one node is draggable');
+  });
+
+  it('should update back draggable when node draggable property changes', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 50,
+      height: 50,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+      shouldOverdrawWholeArea: true,
+    });
+    layer.add(tr);
+    layer.draw();
+
+    var back = tr.findOne('.back');
+    assert.notEqual(back, null, 'Back shape should exist');
+    assert.equal(back!.draggable(), true, 'Back should initially be draggable');
+
+    // Change node to non-draggable
+    rect.draggable(false);
+    assert.equal(back!.draggable(), false, 'Back should become non-draggable when node becomes non-draggable');
+
+    // Change back to draggable
+    rect.draggable(true);
+    assert.equal(back!.draggable(), true, 'Back should become draggable when node becomes draggable');
+  });
+
+  it('should handle mixed draggable states correctly', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect1 = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 50,
+      height: 50,
+      fill: 'yellow',
+    });
+    layer.add(rect1);
+
+    var rect2 = new Konva.Rect({
+      x: 100,
+      y: 100,
+      draggable: false,
+      width: 50,
+      height: 50,
+      fill: 'red',
+    });
+    layer.add(rect2);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect1, rect2],
+      shouldOverdrawWholeArea: true,
+    });
+    layer.add(tr);
+    layer.draw();
+
+    var back = tr.findOne('.back');
+    assert.notEqual(back, null, 'Back shape should exist');
+    assert.equal(back!.draggable(), true, 'Back should be draggable when at least one node is draggable');
+
+    // Make both non-draggable
+    rect1.draggable(false);
+    assert.equal(back!.draggable(), false, 'Back should be non-draggable when all nodes are non-draggable');
+
+    // Make one draggable again
+    rect2.draggable(true);
+    assert.equal(back!.draggable(), true, 'Back should be draggable when at least one node is draggable');
+  });
 });
