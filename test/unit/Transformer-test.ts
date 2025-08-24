@@ -5218,12 +5218,16 @@ describe('Transformer', function () {
 
     var back = tr.findOne('.back');
     assert.notEqual(back, null, 'Back shape should exist');
-    assert.equal(back!.draggable(), false, 'Back should not be draggable when node is not draggable');
+    assert.equal(
+      back!.draggable(),
+      false,
+      'Back should not be draggable when node is not draggable'
+    );
 
     // Try to drag via back area - should not move
     var initialX = rect.x();
     var initialY = rect.y();
-    
+
     simulateMouseDown(tr, {
       x: 75, // center of the rect/back area
       y: 75,
@@ -5237,8 +5241,16 @@ describe('Transformer', function () {
       y: 85,
     });
 
-    assert.equal(rect.x(), initialX, 'Rect should not move when dragging back area of non-draggable node');
-    assert.equal(rect.y(), initialY, 'Rect should not move when dragging back area of non-draggable node');
+    assert.equal(
+      rect.x(),
+      initialX,
+      'Rect should not move when dragging back area of non-draggable node'
+    );
+    assert.equal(
+      rect.y(),
+      initialY,
+      'Rect should not move when dragging back area of non-draggable node'
+    );
   });
 
   it('should be draggable via back area when at least one attached node is draggable', function () {
@@ -5275,7 +5287,11 @@ describe('Transformer', function () {
 
     var back = tr.findOne('.back');
     assert.notEqual(back, null, 'Back shape should exist');
-    assert.equal(back!.draggable(), true, 'Back should be draggable when at least one node is draggable');
+    assert.equal(
+      back!.draggable(),
+      true,
+      'Back should be draggable when at least one node is draggable'
+    );
   });
 
   it('should update back draggable when node draggable property changes', function () {
@@ -5306,11 +5322,19 @@ describe('Transformer', function () {
 
     // Change node to non-draggable
     rect.draggable(false);
-    assert.equal(back!.draggable(), false, 'Back should become non-draggable when node becomes non-draggable');
+    assert.equal(
+      back!.draggable(),
+      false,
+      'Back should become non-draggable when node becomes non-draggable'
+    );
 
     // Change back to draggable
     rect.draggable(true);
-    assert.equal(back!.draggable(), true, 'Back should become draggable when node becomes draggable');
+    assert.equal(
+      back!.draggable(),
+      true,
+      'Back should become draggable when node becomes draggable'
+    );
   });
 
   it('should handle mixed draggable states correctly', function () {
@@ -5347,14 +5371,26 @@ describe('Transformer', function () {
 
     var back = tr.findOne('.back');
     assert.notEqual(back, null, 'Back shape should exist');
-    assert.equal(back!.draggable(), true, 'Back should be draggable when at least one node is draggable');
+    assert.equal(
+      back!.draggable(),
+      true,
+      'Back should be draggable when at least one node is draggable'
+    );
 
     // Make both non-draggable
     rect1.draggable(false);
-    assert.equal(back!.draggable(), false, 'Back should be non-draggable when all nodes are non-draggable');
+    assert.equal(
+      back!.draggable(),
+      false,
+      'Back should be non-draggable when all nodes are non-draggable'
+    );
 
     // Make one draggable again
     rect2.draggable(true);
-    assert.equal(back!.draggable(), true, 'Back should be draggable when at least one node is draggable');
+    assert.equal(
+      back!.draggable(),
+      true,
+      'Back should be draggable when at least one node is draggable'
+    );
   });
 });
