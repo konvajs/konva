@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 10.0.0-0 (2025-08-14)
 
+### Breaking Changes
+
 - **Breaking**: Konva module is fully migrated from CommonJS modules to ES modules. It may break some older bundlers and CommonJS environments. In CommonJS environment you have to use default property from require:
 
 ```js
@@ -25,6 +27,10 @@ npm install canvas
 import Konva from 'konva';
 import 'konva/canvas-backend';
 ```
+
+- Improved text positioning to match DOM/CSS rendering. To restore previous behaviour use `Konva.legacyTextRendering = true`. This should NOT break major part of the apps. But if you care about pixel-perfect position of text elements, that change may effect you.
+
+### New Features
 
 - Added new `skia` render backend for node.js:
 
@@ -54,17 +60,21 @@ var text = new Konva.Text({
 });
 ```
 
-- Improved text positioning to match DOM/CSS rendering. To restore previous behaviour use `Konva.legacyTextRendering = true`;
-- Native filters support via `node.filters(['blur(10px)'])`. Native fitlers works MUCH faster if supported nativily (Chrome, Firefox). If there is no native support, Konva will automatially fallback to functional filter (on Safari).
 - **New**: Added `Konva.Filters.Brightness` filter in replace of deprecated `Konva.Filters.Brighten` to better match with css filters logic.
-- Fixed corner radius render for `Konva.Rect` when negative width or height are used
 - Added `cornerRadius` support for `Konva.RegularPolygon`
-- **Performance**: Rewrote Emboss and Solarize filters for improved performance and usability
+- Added `miterLimit` property support for `Konva.Shape` to control line join appearance
+- Native filters support via `node.filters(['blur(10px)'])`. Native fitlers works MUCH faster if supported nativily (Chrome, Firefox). If there is no native support, Konva will automatially fallback to functional filter (on Safari).
+
+### Bug Fixes
+- Fixed corner radius render for `Konva.Rect` when negative width or height are used
 - Fixed TextPath rendering on right align for some fonts
 - Fixed crash when node inside transformer was destroyed
 - Fixed mouseup + click events order when clicked on empty area of stage
+- Fixed transformer drag behavior with non-draggable nodes
+
+### Technical Improvements
+- **Performance**: Rewrote Emboss and Solarize filters for improved performance and usability
 - Changed return type of `node.toImage()`
-- Added corner radius support for RegularPolygon shapes
 
 ## 9.3.22 (2025-07-08)
 
