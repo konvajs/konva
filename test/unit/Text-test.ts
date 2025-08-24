@@ -861,20 +861,52 @@ describe('Text', function () {
 
     if (Konva._renderBackend === 'web') {
       var trace =
-        'fillText(;,106.482,82);fillStyle=#555;fillText( ,116.549,82);fillStyle=#555;fillText(A,125.438,82);fillStyle=#555;fillText(n,139.776,82);fillStyle=#555;fillText(d,152.563,82);fillStyle=#555;fillText( ,166.525,82);fillStyle=#555;fillText(o,175.415,82);fillStyle=#555;fillText(n,188.201,82);fillStyle=#555;fillText(e,200.987,82);fillStyle=#555;fillText( ,214.95,82);fillStyle=#555;fillText(m,223.84,82);fillStyle=#555;fillText(a,240.502,82);fillStyle=#555;fillText(n,253.288,82);fillStyle=#555;fillText( ,267.251,82);fillStyle=#555;fillText(i,276.141,82);fillStyle=#555;fillText(n,284.251,82);fillStyle=#555;fillText( ,298.214,82);fillStyle=#555;fillText(h,307.104,82);fillStyle=#555;fillText(i,319.89,82);fillStyle=#555;fillText(s,328,82);restore();save();save();beginPath();moveTo(0,100);lineTo(250,100);stroke();restore();save();beginPath();moveTo(0,92);lineTo(250,92);stroke();restore();fillStyle=#555;fillText(t,0,96);fillStyle=#555;fillText(i,8.89,96);fillStyle=#555;fillText(m,17,96);fillStyle=#555;fillText(e,33.662,96);fillStyle=#555;fillText( ,46.448,96);fillStyle=#555;fillText(p,55.338,96);fillStyle=#555;fillText(l,68.124,96);fillStyle=#555;fillText(a,76.234,96);fillStyle=#555;fillText(y,89.021,96);fillStyle=#555;fillText(s,101.021,96);fillStyle=#555;fillText( ,113.021,96);fillStyle=#555;fillText(m,121.91,96);fillStyle=#555;fillText(a,138.572,96);fillStyle=#555;fillText(n,151.358,96);fillStyle=#555;fillText(y,164.145,96);fillStyle=#555;fillText( ,176.145,96);fillStyle=#555;fillText(p,185.034,96);fillStyle=#555;fillText(a,197.82,96);fillStyle=#555;fillText(r,210.606,96);fillStyle=#555;fillText(t,220.269,96);fillStyle=#555;fillText(s,229.158,96);fillStyle=#555;fillText(.,241.158,96);restore();restore();';
+        'fillText(n,139.776,82);fillStyle=#555;fillText(d,152.563,82);fillStyle=#555;fillText( ,166.525,82);fillStyle=#555;fillText(o,175.415,82);fillStyle=#555;fillText(n,188.201,82);fillStyle=#555;fillText(e,200.987,82);fillStyle=#555;fillText( ,214.95,82);fillStyle=#555;fillText(m,223.84,82);fillStyle=#555;fillText(a,240.502,82);fillStyle=#555;fillText(n,253.288,82);fillStyle=#555;fillText( ,267.251,82);fillStyle=#555;fillText(i,276.141,82);fillStyle=#555;fillText(n,284.251,82);fillStyle=#555;fillText( ,298.214,82);fillStyle=#555;fillText(h,307.104,82);fillStyle=#555;fillText(i,319.89,82);fillStyle=#555;fillText(s,328,82);save();beginPath();moveTo(0,78);lineTo(340,78);stroke();restore();restore();save();save();beginPath();moveTo(0,100);lineTo(250,100);stroke();restore();fillStyle=#555;fillText(t,0,96);fillStyle=#555;fillText(i,8.89,96);fillStyle=#555;fillText(m,17,96);fillStyle=#555;fillText(e,33.662,96);fillStyle=#555;fillText( ,46.448,96);fillStyle=#555;fillText(p,55.338,96);fillStyle=#555;fillText(l,68.124,96);fillStyle=#555;fillText(a,76.234,96);fillStyle=#555;fillText(y,89.021,96);fillStyle=#555;fillText(s,101.021,96);fillStyle=#555;fillText( ,113.021,96);fillStyle=#555;fillText(m,121.91,96);fillStyle=#555;fillText(a,138.572,96);fillStyle=#555;fillText(n,151.358,96);fillStyle=#555;fillText(y,164.145,96);fillStyle=#555;fillText( ,176.145,96);fillStyle=#555;fillText(p,185.034,96);fillStyle=#555;fillText(a,197.82,96);fillStyle=#555;fillText(r,210.606,96);fillStyle=#555;fillText(t,220.269,96);fillStyle=#555;fillText(s,229.158,96);fillStyle=#555;fillText(.,241.158,96);save();beginPath();moveTo(0,92);lineTo(250,92);stroke();restore();restore();restore();';
 
       assert.equal(layer.getContext().getTrace(), trace);
     } else if (Konva._renderBackend === 'node-canvas') {
       var trace =
-        'fillText(;,106.482,81.9);fillStyle=#555;fillText( ,116.703,81.9);fillStyle=#555;fillText(A,125.593,81.9);fillStyle=#555;fillText(n,139.931,81.9);fillStyle=#555;fillText(d,152.717,81.9);fillStyle=#555;fillText( ,166.834,81.9);fillStyle=#555;fillText(o,175.724,81.9);fillStyle=#555;fillText(n,188.51,81.9);fillStyle=#555;fillText(e,201.296,81.9);fillStyle=#555;fillText( ,215.414,81.9);fillStyle=#555;fillText(m,224.303,81.9);fillStyle=#555;fillText(a,240.965,81.9);fillStyle=#555;fillText(n,253.752,81.9);fillStyle=#555;fillText( ,267.869,81.9);fillStyle=#555;fillText(i,276.759,81.9);fillStyle=#555;fillText(n,284.869,81.9);fillStyle=#555;fillText( ,298.986,81.9);fillStyle=#555;fillText(h,307.876,81.9);fillStyle=#555;fillText(i,320.662,81.9);fillStyle=#555;fillText(s,328.772,81.9);restore();save();save();beginPath();moveTo(0,99.9);lineTo(250,99.9);stroke();restore();save();beginPath();moveTo(0,91.9);lineTo(250,91.9);stroke();restore();fillStyle=#555;fillText(t,0,95.9);fillStyle=#555;fillText(i,8.89,95.9);fillStyle=#555;fillText(m,17,95.9);fillStyle=#555;fillText(e,33.662,95.9);fillStyle=#555;fillText( ,46.448,95.9);fillStyle=#555;fillText(p,55.338,95.9);fillStyle=#555;fillText(l,68.124,95.9);fillStyle=#555;fillText(a,76.234,95.9);fillStyle=#555;fillText(y,89.021,95.9);fillStyle=#555;fillText(s,101.021,95.9);fillStyle=#555;fillText( ,113.021,95.9);fillStyle=#555;fillText(m,121.91,95.9);fillStyle=#555;fillText(a,138.572,95.9);fillStyle=#555;fillText(n,151.358,95.9);fillStyle=#555;fillText(y,164.145,95.9);fillStyle=#555;fillText( ,176.145,95.9);fillStyle=#555;fillText(p,185.034,95.9);fillStyle=#555;fillText(a,197.82,95.9);fillStyle=#555;fillText(r,210.606,95.9);fillStyle=#555;fillText(t,220.269,95.9);fillStyle=#555;fillText(s,229.158,95.9);fillStyle=#555;fillText(.,241.158,95.9);restore();restore();';
+        'fillText(n,139.931,81.9);fillStyle=#555;fillText(d,152.717,81.9);fillStyle=#555;fillText( ,166.834,81.9);fillStyle=#555;fillText(o,175.724,81.9);fillStyle=#555;fillText(n,188.51,81.9);fillStyle=#555;fillText(e,201.296,81.9);fillStyle=#555;fillText( ,215.414,81.9);fillStyle=#555;fillText(m,224.303,81.9);fillStyle=#555;fillText(a,240.965,81.9);fillStyle=#555;fillText(n,253.752,81.9);fillStyle=#555;fillText( ,267.869,81.9);fillStyle=#555;fillText(i,276.759,81.9);fillStyle=#555;fillText(n,284.869,81.9);fillStyle=#555;fillText( ,298.986,81.9);fillStyle=#555;fillText(h,307.876,81.9);fillStyle=#555;fillText(i,320.662,81.9);fillStyle=#555;fillText(s,328.772,81.9);save();beginPath();moveTo(0,77.9);lineTo(340,77.9);stroke();restore();restore();save();save();beginPath();moveTo(0,99.9);lineTo(250,99.9);stroke();restore();fillStyle=#555;fillText(t,0,95.9);fillStyle=#555;fillText(i,8.89,95.9);fillStyle=#555;fillText(m,17,95.9);fillStyle=#555;fillText(e,33.662,95.9);fillStyle=#555;fillText( ,46.448,95.9);fillStyle=#555;fillText(p,55.338,95.9);fillStyle=#555;fillText(l,68.124,95.9);fillStyle=#555;fillText(a,76.234,95.9);fillStyle=#555;fillText(y,89.021,95.9);fillStyle=#555;fillText(s,101.021,95.9);fillStyle=#555;fillText( ,113.021,95.9);fillStyle=#555;fillText(m,121.91,95.9);fillStyle=#555;fillText(a,138.572,95.9);fillStyle=#555;fillText(n,151.358,95.9);fillStyle=#555;fillText(y,164.145,95.9);fillStyle=#555;fillText( ,176.145,95.9);fillStyle=#555;fillText(p,185.034,95.9);fillStyle=#555;fillText(a,197.82,95.9);fillStyle=#555;fillText(r,210.606,95.9);fillStyle=#555;fillText(t,220.269,95.9);fillStyle=#555;fillText(s,229.158,95.9);fillStyle=#555;fillText(.,241.158,95.9);save();beginPath();moveTo(0,91.9);lineTo(250,91.9);stroke();restore();restore();restore();';
 
       assert.equal(layer.getContext().getTrace(), trace);
     } else {
       var trace =
-        'fillText(;,106.5,81.854);fillStyle=#555;fillText( ,116.722,81.854);fillStyle=#555;fillText(A,125.612,81.854);fillStyle=#555;fillText(n,139.952,81.854);fillStyle=#555;fillText(d,152.742,81.854);fillStyle=#555;fillText( ,166.864,81.854);fillStyle=#555;fillText(o,175.754,81.854);fillStyle=#555;fillText(n,188.544,81.854);fillStyle=#555;fillText(e,201.334,81.854);fillStyle=#555;fillText( ,215.456,81.854);fillStyle=#555;fillText(m,224.346,81.854);fillStyle=#555;fillText(a,241.006,81.854);fillStyle=#555;fillText(n,253.796,81.854);fillStyle=#555;fillText( ,267.918,81.854);fillStyle=#555;fillText(i,276.808,81.854);fillStyle=#555;fillText(n,284.918,81.854);fillStyle=#555;fillText( ,299.04,81.854);fillStyle=#555;fillText(h,307.93,81.854);fillStyle=#555;fillText(i,320.72,81.854);fillStyle=#555;fillText(s,328.83,81.854);restore();save();save();beginPath();moveTo(0,99.854);lineTo(250,99.854);stroke();restore();save();beginPath();moveTo(0,91.854);lineTo(250,91.854);stroke();restore();fillStyle=#555;fillText(t,0,95.854);fillStyle=#555;fillText(i,8.89,95.854);fillStyle=#555;fillText(m,17,95.854);fillStyle=#555;fillText(e,33.66,95.854);fillStyle=#555;fillText( ,46.45,95.854);fillStyle=#555;fillText(p,55.34,95.854);fillStyle=#555;fillText(l,68.13,95.854);fillStyle=#555;fillText(a,76.24,95.854);fillStyle=#555;fillText(y,89.03,95.854);fillStyle=#555;fillText(s,101.03,95.854);fillStyle=#555;fillText( ,113.03,95.854);fillStyle=#555;fillText(m,121.92,95.854);fillStyle=#555;fillText(a,138.58,95.854);fillStyle=#555;fillText(n,151.37,95.854);fillStyle=#555;fillText(y,164.16,95.854);fillStyle=#555;fillText( ,176.16,95.854);fillStyle=#555;fillText(p,185.05,95.854);fillStyle=#555;fillText(a,197.84,95.854);fillStyle=#555;fillText(r,210.63,95.854);fillStyle=#555;fillText(t,220.29,95.854);fillStyle=#555;fillText(s,229.18,95.854);fillStyle=#555;fillText(.,241.18,95.854);restore();restore();';
+        'fillText(n,139.952,81.854);fillStyle=#555;fillText(d,152.742,81.854);fillStyle=#555;fillText( ,166.864,81.854);fillStyle=#555;fillText(o,175.754,81.854);fillStyle=#555;fillText(n,188.544,81.854);fillStyle=#555;fillText(e,201.334,81.854);fillStyle=#555;fillText( ,215.456,81.854);fillStyle=#555;fillText(m,224.346,81.854);fillStyle=#555;fillText(a,241.006,81.854);fillStyle=#555;fillText(n,253.796,81.854);fillStyle=#555;fillText( ,267.918,81.854);fillStyle=#555;fillText(i,276.808,81.854);fillStyle=#555;fillText(n,284.918,81.854);fillStyle=#555;fillText( ,299.04,81.854);fillStyle=#555;fillText(h,307.93,81.854);fillStyle=#555;fillText(i,320.72,81.854);fillStyle=#555;fillText(s,328.83,81.854);save();beginPath();moveTo(0,77.854);lineTo(340,77.854);stroke();restore();restore();save();save();beginPath();moveTo(0,99.854);lineTo(250,99.854);stroke();restore();fillStyle=#555;fillText(t,0,95.854);fillStyle=#555;fillText(i,8.89,95.854);fillStyle=#555;fillText(m,17,95.854);fillStyle=#555;fillText(e,33.66,95.854);fillStyle=#555;fillText( ,46.45,95.854);fillStyle=#555;fillText(p,55.34,95.854);fillStyle=#555;fillText(l,68.13,95.854);fillStyle=#555;fillText(a,76.24,95.854);fillStyle=#555;fillText(y,89.03,95.854);fillStyle=#555;fillText(s,101.03,95.854);fillStyle=#555;fillText( ,113.03,95.854);fillStyle=#555;fillText(m,121.92,95.854);fillStyle=#555;fillText(a,138.58,95.854);fillStyle=#555;fillText(n,151.37,95.854);fillStyle=#555;fillText(y,164.16,95.854);fillStyle=#555;fillText( ,176.16,95.854);fillStyle=#555;fillText(p,185.05,95.854);fillStyle=#555;fillText(a,197.84,95.854);fillStyle=#555;fillText(r,210.63,95.854);fillStyle=#555;fillText(t,220.29,95.854);fillStyle=#555;fillText(s,229.18,95.854);fillStyle=#555;fillText(.,241.18,95.854);save();beginPath();moveTo(0,91.854);lineTo(250,91.854);stroke();restore();restore();restore();';
 
       assert.equal(layer.getContext().getTrace(), trace);
     }
+  });
+
+  it('text decoration with stroke', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      x: 50,
+      y: 50,
+      width: 800,
+      fontFamily: 'Microsoft Yahei',
+      verticalAlign: 'bottom',
+      lineHeight: 1,
+      text: 'ABCD123abcd中文',
+      fontSize: 80,
+      fill: 'red',
+      stroke: 'blue',
+      strokeWidth: 10,
+      draggable: true,
+      listening: true,
+      fillAfterStrokeEnabled: true,
+      textDecoration: 'line-through underline',
+    });
+    layer.add(text);
+    stage.add(layer);
+    stage.draw();
+
+    const trace = layer.getContext().getTrace(true);
+    assert.equal(
+      trace,
+      'clearRect();save();transform();font;textBaseline;textAlign;translate();save();save();beginPath();moveTo();lineTo();stroke();restore();lineWidth;strokeStyle;miterLimit;strokeText();fillStyle;fillText();save();beginPath();moveTo();lineTo();stroke();restore();restore();restore();clearRect();save();transform();font;textBaseline;textAlign;translate();save();save();beginPath();moveTo();lineTo();stroke();restore();lineWidth;strokeStyle;miterLimit;strokeText();fillStyle;fillText();save();beginPath();moveTo();lineTo();stroke();restore();restore();restore();'
+    );
   });
 
   // ======================================================
@@ -1037,7 +1069,7 @@ describe('Text', function () {
     stage.add(layer);
 
     var trace =
-      'clearRect();save();transform();font;textBaseline;textAlign;translate();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();restore();';
+      'clearRect();save();transform();font;textBaseline;textAlign;translate();save();fillStyle;fillText();save();beginPath();moveTo();lineTo();stroke();restore();restore();save();fillStyle;fillText();save();beginPath();moveTo();lineTo();stroke();restore();restore();restore();';
     assert.equal(layer.getContext().getTrace(true), trace);
   });
 
@@ -1058,7 +1090,7 @@ describe('Text', function () {
     stage.add(layer);
 
     var trace =
-      'clearRect();save();transform();font;textBaseline;textAlign;translate();save();save();beginPath();moveTo();lineTo();stroke();restore();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();save();save();beginPath();moveTo();lineTo();stroke();restore();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();restore();';
+      'clearRect();save();transform();font;textBaseline;textAlign;translate();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();save();beginPath();moveTo();lineTo();stroke();restore();restore();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();save();beginPath();moveTo();lineTo();stroke();restore();restore();restore();';
 
     assert.equal(layer.getContext().getTrace(true), trace);
   });
@@ -1086,17 +1118,17 @@ describe('Text', function () {
 
     if (Konva._renderBackend === 'web') {
       var trace =
-        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,87.5);lineTo(169,87.5);stroke();restore();save();beginPath();moveTo(0,47.5);lineTo(169,47.5);stroke();restore();fillStyle=[object CanvasGradient];fillText(hello,0,67.5);restore();save();save();beginPath();moveTo(0,167.5);lineTo(191,167.5);stroke();restore();save();beginPath();moveTo(0,127.5);lineTo(191,127.5);stroke();restore();fillStyle=[object CanvasGradient];fillText(world,0,147.5);restore();restore();';
+        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,87.5);lineTo(169,87.5);stroke();restore();fillStyle=[object CanvasGradient];fillText(hello,0,67.5);save();beginPath();moveTo(0,47.5);lineTo(169,47.5);stroke();restore();restore();save();save();beginPath();moveTo(0,167.5);lineTo(191,167.5);stroke();restore();fillStyle=[object CanvasGradient];fillText(world,0,147.5);save();beginPath();moveTo(0,127.5);lineTo(191,127.5);stroke();restore();restore();restore();';
 
       assert.equal(layer.getContext().getTrace(), trace);
     } else if (Konva._renderBackend === 'node-canvas') {
       var trace =
-        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,88);lineTo(169,88);stroke();restore();save();beginPath();moveTo(0,48);lineTo(169,48);stroke();restore();fillStyle=[object CanvasGradient];fillText(hello,0,68);restore();save();save();beginPath();moveTo(0,168);lineTo(191,168);stroke();restore();save();beginPath();moveTo(0,128);lineTo(191,128);stroke();restore();fillStyle=[object CanvasGradient];fillText(world,0,148);restore();restore();';
+        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,88);lineTo(169,88);stroke();restore();fillStyle=[object CanvasGradient];fillText(hello,0,68);save();beginPath();moveTo(0,48);lineTo(169,48);stroke();restore();restore();save();save();beginPath();moveTo(0,168);lineTo(191,168);stroke();restore();fillStyle=[object CanvasGradient];fillText(world,0,148);save();beginPath();moveTo(0,128);lineTo(191,128);stroke();restore();restore();restore();';
 
       assert.equal(layer.getContext().getTrace(), trace);
     } else {
       var trace =
-        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,87.734);lineTo(169,87.734);stroke();restore();save();beginPath();moveTo(0,47.734);lineTo(169,47.734);stroke();restore();fillStyle=[object Object];fillText(hello,0,67.734);restore();save();save();beginPath();moveTo(0,167.734);lineTo(191,167.734);stroke();restore();save();beginPath();moveTo(0,127.734);lineTo(191,127.734);stroke();restore();fillStyle=[object Object];fillText(world,0,147.734);restore();restore();';
+        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,87.734);lineTo(169,87.734);stroke();restore();fillStyle=[object Object];fillText(hello,0,67.734);save();beginPath();moveTo(0,47.734);lineTo(169,47.734);stroke();restore();restore();save();save();beginPath();moveTo(0,167.734);lineTo(191,167.734);stroke();restore();fillStyle=[object Object];fillText(world,0,147.734);save();beginPath();moveTo(0,127.734);lineTo(191,127.734);stroke();restore();restore();restore();';
 
       assert.equal(layer.getContext().getTrace(), trace);
     }
@@ -1125,17 +1157,17 @@ describe('Text', function () {
 
     if (Konva._renderBackend === 'web') {
       var trace =
-        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,87.5);lineTo(169,87.5);stroke();restore();save();beginPath();moveTo(0,47.5);lineTo(169,47.5);stroke();restore();fillStyle=[object CanvasGradient];fillText(hello,0,67.5);restore();save();save();beginPath();moveTo(0,167.5);lineTo(191,167.5);stroke();restore();save();beginPath();moveTo(0,127.5);lineTo(191,127.5);stroke();restore();fillStyle=[object CanvasGradient];fillText(world,0,147.5);restore();restore();';
+        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,87.5);lineTo(169,87.5);stroke();restore();fillStyle=[object CanvasGradient];fillText(hello,0,67.5);save();beginPath();moveTo(0,47.5);lineTo(169,47.5);stroke();restore();restore();save();save();beginPath();moveTo(0,167.5);lineTo(191,167.5);stroke();restore();fillStyle=[object CanvasGradient];fillText(world,0,147.5);save();beginPath();moveTo(0,127.5);lineTo(191,127.5);stroke();restore();restore();restore();';
 
       assert.equal(layer.getContext().getTrace(), trace);
     } else if (Konva._renderBackend === 'node-canvas') {
       var trace =
-        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,88);lineTo(169,88);stroke();restore();save();beginPath();moveTo(0,48);lineTo(169,48);stroke();restore();fillStyle=[object CanvasGradient];fillText(hello,0,68);restore();save();save();beginPath();moveTo(0,168);lineTo(191,168);stroke();restore();save();beginPath();moveTo(0,128);lineTo(191,128);stroke();restore();fillStyle=[object CanvasGradient];fillText(world,0,148);restore();restore();';
+        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,88);lineTo(169,88);stroke();restore();fillStyle=[object CanvasGradient];fillText(hello,0,68);save();beginPath();moveTo(0,48);lineTo(169,48);stroke();restore();restore();save();save();beginPath();moveTo(0,168);lineTo(191,168);stroke();restore();fillStyle=[object CanvasGradient];fillText(world,0,148);save();beginPath();moveTo(0,128);lineTo(191,128);stroke();restore();restore();restore();';
 
       assert.equal(layer.getContext().getTrace(), trace);
     } else {
       var trace =
-        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,87.734);lineTo(169,87.734);stroke();restore();save();beginPath();moveTo(0,47.734);lineTo(169,47.734);stroke();restore();fillStyle=[object Object];fillText(hello,0,67.734);restore();save();save();beginPath();moveTo(0,167.734);lineTo(191,167.734);stroke();restore();save();beginPath();moveTo(0,127.734);lineTo(191,127.734);stroke();restore();fillStyle=[object Object];fillText(world,0,147.734);restore();restore();';
+        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,87.734);lineTo(169,87.734);stroke();restore();fillStyle=[object Object];fillText(hello,0,67.734);save();beginPath();moveTo(0,47.734);lineTo(169,47.734);stroke();restore();restore();save();save();beginPath();moveTo(0,167.734);lineTo(191,167.734);stroke();restore();fillStyle=[object Object];fillText(world,0,147.734);save();beginPath();moveTo(0,127.734);lineTo(191,127.734);stroke();restore();restore();restore();';
 
       assert.equal(layer.getContext().getTrace(), trace);
     }

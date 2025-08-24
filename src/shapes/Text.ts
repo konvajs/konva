@@ -318,25 +318,7 @@ export class Text extends Shape<TextConfig> {
         context.stroke();
         context.restore();
       }
-      if (shouldLineThrough) {
-        context.save();
-        context.beginPath();
-        const yOffset = !Konva.legacyTextRendering
-          ? -Math.round(fontSize / 4)
-          : 0;
-        context.moveTo(lineTranslateX, translateY + lineTranslateY + yOffset);
-        const lineWidth =
-          align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
-        context.lineTo(
-          lineTranslateX + Math.round(lineWidth),
-          translateY + lineTranslateY + yOffset
-        );
-        context.lineWidth = fontSize / 15;
-        const gradient = this._getLinearGradient();
-        context.strokeStyle = gradient || fill;
-        context.stroke();
-        context.restore();
-      }
+      // draw line-through above the text content
 
       // As `letterSpacing` isn't supported on Safari, we use this polyfill.
       // The exception is for RTL text, which we rely on native as it cannot
@@ -397,6 +379,26 @@ export class Text extends Shape<TextConfig> {
         this._partialText = text;
 
         context.fillStrokeShape(this);
+      }
+      // draw line-through above the text content
+      if (shouldLineThrough) {
+        context.save();
+        context.beginPath();
+        const yOffset = !Konva.legacyTextRendering
+          ? -Math.round(fontSize / 4)
+          : 0;
+        context.moveTo(0, translateY + lineTranslateY + yOffset);
+        const lineWidth =
+          align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
+        context.lineTo(
+          Math.round(lineWidth),
+          translateY + lineTranslateY + yOffset
+        );
+        context.lineWidth = fontSize / 15;
+        const gradient = this._getLinearGradient();
+        context.strokeStyle = gradient || fill;
+        context.stroke();
+        context.restore();
       }
       context.restore();
       if (textArrLen > 1) {
