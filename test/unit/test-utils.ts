@@ -377,7 +377,7 @@ export function simulatePointerMove(stage: Stage, pos: SimulatedPointerEvent) {
   };
 
   stage._pointermove(evt as any);
-  // Konva.DD._drag(evt);
+  Konva.DD._drag(evt);
 }
 
 export function simulatePointerUp(stage: Stage, pos: SimulatedPointerEvent) {
@@ -390,9 +390,9 @@ export function simulatePointerUp(stage: Stage, pos: SimulatedPointerEvent) {
     type: 'pointerup',
   };
 
-  // Konva.DD._endDragBefore(evt);
+  Konva.DD._endDragBefore(evt);
   stage._pointerup(evt as any);
-  // Konva.DD._endDragAfter(evt);
+  Konva.DD._endDragAfter(evt);
 }
 
 function isClose(a, b) {

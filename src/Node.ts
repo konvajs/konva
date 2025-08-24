@@ -2665,7 +2665,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   _listenDrag() {
     this._dragCleanup();
 
-    this.on('mousedown.konva touchstart.konva', function (evt) {
+    this.on('mousedown.konva touchstart.konva pointerdown.konva', function (evt) {
       const shouldCheckButton = evt.evt['button'] !== undefined;
       const canDrag =
         !shouldCheckButton || Konva.dragButtons.indexOf(evt.evt['button']) >= 0;

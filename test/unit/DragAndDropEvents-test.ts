@@ -251,7 +251,7 @@ describe('DragAndDropEvents', function () {
   // should we save several pointers per shape?
   // doesn't sound good
   // switch to pointer only event handling?
-  it.skip('click should not occur after drag and drop', function (done) {
+  it('click should not occur after drag and drop - pointer events', function (done) {
     var stage = addStage();
     var layer = new Konva.Layer();
 
