@@ -45,9 +45,16 @@ import Konva from 'konva';
 import 'konva/skia-backend';
 ```
 
+- Native filters support via `node.filters(['blur(10px)'])`. Native fitlers works MUCH faster if supported nativily (Chrome, Firefox). If there is no native support, Konva will automatially fallback to functional filter (on Safari).
+
+```js
+node.filters(['blur(10px')]);
+node.cache();
+```
+
 - New property `charRenderFunc` for `Konva.Text` for controlling "per-character-render". May be useful any character animations:
 
-````js
+```js
 var text = new Konva.Text({
   x: 10,
   y: 10,
@@ -62,19 +69,12 @@ var text = new Konva.Text({
 });
 ```
 
-- Native filters support via `node.filters(['blur(10px)'])`. Native fitlers works MUCH faster if supported nativily (Chrome, Firefox). If there is no native support, Konva will automatially fallback to functional filter (on Safari).
-
-```js
-node.filters(['blur(10px')]);
-node.cache();
-```
-
 - **New**: Added `Konva.Filters.Brightness` filter in replace of deprecated `Konva.Filters.Brighten` to better match with css filters logic.
 - Added `cornerRadius` support for `Konva.RegularPolygon`
 - Added `miterLimit` property support for `Konva.Shape` to control line join appearance
 
-
 ### Bug Fixes
+
 - Fixed corner radius render for `Konva.Rect` when negative width or height are used
 - Fixed TextPath rendering on right align for some fonts
 - Fixed crash when node inside transformer was destroyed
@@ -82,6 +82,7 @@ node.cache();
 - Fixed transformer drag behavior with non-draggable nodes
 
 ### Technical Improvements
+
 - **Performance**: Rewrote Emboss and Solarize filters for improved performance and usability
 - Changed return type of `node.toImage()`
 
@@ -386,7 +387,7 @@ group.find('Shape').visible(false);
 
 // new code:
 group.find('Shape').forEach((shape) => shape.visible(false));
-````
+```
 
 - argument `selector` is removed from `node.getIntersection(pos)` API. I don't think you even knew about it.
 - `Konva.Util.extend` is removed.
