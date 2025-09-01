@@ -182,6 +182,42 @@ export class SceneCanvas extends Canvas {
   }
 }
 
+// function checks if canvas farbling is active
+// canvas farbling is a Browser security feature, it break konva internals
+function isCanvasFarblingActive() {
+  const c = Util.createCanvasElement();
+  c.width = 1;
+  c.height = 1;
+  const ctx = c.getContext('2d', {
+    willReadFrequently: true,
+  }) as CanvasRenderingContext2D;
+  ctx.clearRect(0, 0, 1, 1);
+  ctx.fillStyle = 'rgba(255,0,255,1)'; // clear #FF00FF, no alpha
+  ctx.fillRect(0, 0, 1, 1);
+  const d = ctx.getImageData(0, 0, 1, 1).data;
+  const exact = d[0] === 255 && d[1] === 0 && d[2] === 255 && d[3] === 255;
+  return !exact;
+}
+
+function isBraveBrowser() {
+  if (typeof navigator === 'undefined') {
+    return false;
+  }
+  // @ts-ignore
+  return navigator.brave?.isBrave() ?? false;
+}
+
+let warned = false;
+function checkHitCanvasSupport() {
+  if (isBraveBrowser() && isCanvasFarblingActive() && !warned) {
+    warned = true;
+    Util.error(
+      'Looks like you have "Brave shield" enabled in your browser. It breaks KonvaJS internals. Please disable it. You may need to ask your users to do the same.'
+    );
+  }
+  return isBraveBrowser() && isCanvasFarblingActive();
+}
+
 export class HitCanvas extends Canvas {
   hitCanvas = true;
   constructor(config: ICanvasConfig = { width: 0, height: 0 }) {
@@ -189,5 +225,6 @@ export class HitCanvas extends Canvas {
 
     this.context = new HitContext(this);
     this.setSize(config.width, config.height);
+    checkHitCanvasSupport();
   }
 }

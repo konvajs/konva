@@ -1052,8 +1052,8 @@ Factory.addGetterSetter(Text, 'textDecoration', '');
  * Note: per-character rendering may disable native kerning/ligatures.
  * @name Konva.Text#charRenderFunc
  * @method
- * @param {(props: {char: string, index: number, x: number, y: number, lineIndex: number, column: number, isLastInLine: boolean, width: number, context: Konva.Context}) => void} charRenderFunc
- * @returns {(props: CharRenderProps) => void}
+ * @param {Function} charRenderFunc
+ * @returns {Function}
  * @example
  * // apply small x-translation to every second character
  * text.charRenderFunc(function(props) {
