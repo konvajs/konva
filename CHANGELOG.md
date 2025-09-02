@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 10.0.0-1 (2025-09-02)
+
+- Brave detection and warning
+
 ## 10.0.0-0 (2025-08-14)
 
 ### Breaking Changes
