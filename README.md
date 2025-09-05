@@ -126,16 +126,20 @@ import { Blur } from 'konva/lib/filters/Blur';
 
 ### 4 NodeJS env
 
-In order to run `konva` in nodejs environment you also need to install `canvas` package manually. Konva will use it for 2d canvas API.
+In order to run `konva` in nodejs environment you also need to install `canvas` or `skia-canvas` package manually for rendering backend.
 
 ```bash
+# node-canvas backend
 npm install konva canvas
+# skia-canvas backend
+npm install konva skia-canvas
 ```
 
 Then you can use the same Konva API and all Konva demos will work just fine. You just don't need to use `container` attribute in your stage.
 
 ```js
 import Konva from 'konva';
+import 'konva/canvas-backend'; // or import 'konva/skia-backend';
 
 const stage = new Konva.Stage({
   width: 500,
