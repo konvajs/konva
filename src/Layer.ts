@@ -228,7 +228,7 @@ export class Layer extends Container<Group | Shape> {
     }
   }
   _toKonvaCanvas(config) {
-    config = config || {};
+    config = { ...config };
     config.width = config.width || this.getWidth();
     config.height = config.height || this.getHeight();
     config.x = config.x !== undefined ? config.x : this.x();

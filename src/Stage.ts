@@ -316,7 +316,7 @@ export class Stage extends Container<Layer> {
     return this.content;
   }
   _toKonvaCanvas(config) {
-    config = config || {};
+    config = { ...config };
 
     config.x = config.x || 0;
     config.y = config.y || 0;
