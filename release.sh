@@ -5,9 +5,6 @@ old_version="$(git describe --abbrev=0 --tags)"
 new_version=$1
 
 
-old_cdn="https://unpkg.com/konva@${old_version}/konva.js"
-new_cdn="https://unpkg.com/konva@${new_version}/konva.js"
-
 old_cdn_min="https://unpkg.com/konva@${old_version}/konva.min.js"
 new_cdn_min="https://unpkg.com/konva@${new_version}/konva.min.js"
 
@@ -59,7 +56,7 @@ git tag $1 >/dev/null
 cd ../konva
 git push >/dev/null
 git push --tags >/dev/null
-npm publish --tag next
+npm publish
 
 
 echo "DONE!"
