@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 10.0.1 (2025-09-09)
+
+- Fixed `line-through` render for center/right aligned text
+
 ## 10.0.0 (2025-09-07)
 
 ### Breaking Changes

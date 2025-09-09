@@ -387,11 +387,13 @@ export class Text extends Shape<TextConfig> {
         const yOffset = !Konva.legacyTextRendering
           ? -Math.round(fontSize / 4)
           : 0;
-        context.moveTo(0, translateY + lineTranslateY + yOffset);
+        const x = align === JUSTIFY ? 0 : lineTranslateX;
+        context.moveTo(x, translateY + lineTranslateY + yOffset);
         const lineWidth =
           align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
+
         context.lineTo(
-          Math.round(lineWidth),
+          x + Math.round(lineWidth),
           translateY + lineTranslateY + yOffset
         );
         context.lineWidth = fontSize / 15;

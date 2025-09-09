@@ -1095,6 +1095,29 @@ describe('Text', function () {
     assert.equal(layer.getContext().getTrace(true), trace);
   });
 
+  it('decoration with align', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      x: 10,
+      y: 10,
+      text: 'hello world',
+      fontSize: 40,
+      fill: 'black',
+      width: 300,
+      textDecoration: 'underline line-through',
+      align: 'center',
+    });
+    layer.add(text);
+    stage.add(layer);
+
+    var trace =
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 40px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();beginPath();moveTo(54,44);lineTo(245,44);stroke();restore();fillStyle=black;fillText(hello world,54,34);save();beginPath();moveTo(54,24);lineTo(245,24);stroke();restore();restore();restore();';
+
+    assert.equal(layer.getContext().getTrace(false, true), trace);
+  });
+
   it('text multi line with underline and strike and gradient', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
