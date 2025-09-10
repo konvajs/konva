@@ -395,12 +395,12 @@ export function simulatePointerUp(stage: Stage, pos: SimulatedPointerEvent) {
   // Konva.DD._endDragAfter(evt);
 }
 
-function isClose(a, b) {
-  return Math.abs(a - b) < 0.000001;
+function isClose(a, b, tol = 0.000001) {
+  return Math.abs(a - b) < tol;
 }
 
-export const assertAlmostEqual = function (val1, val2) {
-  if (!isClose(val1, val2)) {
+export const assertAlmostEqual = function (val1, val2, tol = 0.000001) {
+  if (!isClose(val1, val2, tol)) {
     throw new Error('Expected ' + val1 + ' to be almost equal to ' + val2);
   }
 };

@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 10.0.2 (2025-09-10)
+
+- Fixed internal calculations for `TextPath` to return correct width and height
+
 ## 10.0.1 (2025-09-09)
 
 - Fixed `line-through` render for center/right aligned text

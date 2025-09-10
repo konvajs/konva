@@ -4,7 +4,7 @@ import {
   addStage,
   Konva,
   cloneAndCompareLayer,
-  isBrowser,
+  assertAlmostEqual,
 } from './test-utils.ts';
 
 describe('TextPath', function () {
@@ -929,8 +929,34 @@ describe('TextPath', function () {
     layer.draw();
 
     var rect = textpath.getClientRect();
-    assert.equal(Math.round(rect.width), 299);
+    assert.equal(Math.round(rect.width), 298);
     assert.equal(Math.abs(Math.round(rect.height) - 171) < 2, true);
+  });
+
+  it('check path calculations', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    const textpath = new Konva.TextPath({
+      align: 'center',
+      data: 'M 26.549722364755468 144.8125 A 20.34375 20.34375 0 1 0 26.549722364755468 185.5 A 20.34375 20.34375 0 1 0 26.549722364755468 144.8125',
+      fill: 'black',
+      fontFamily: 'Arial',
+      fontSize: 7,
+      fontStyle: 'normal normal',
+      letterSpacing: 0,
+      text: '1234567890qwertyuiop[asdfhjkllzxncnm,../',
+      textBaseline: 'middle',
+      visible: true,
+      x: 0,
+      y: 0,
+    });
+    layer.add(textpath);
+
+    const box = textpath.getSelfRect();
+    assertAlmostEqual(box.width, 47, 1);
+    assertAlmostEqual(box.height, 47, 1);
   });
 
   it.skip('check vertical text path', function () {
