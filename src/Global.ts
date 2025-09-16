@@ -196,7 +196,7 @@ export const Konva = {
   _injectGlobal(Konva) {
     if (typeof glob.Konva !== 'undefined') {
       console.error(
-        'Severa Konva instances detected. It is not recommended to use multiple Konva instances in the same environment.'
+        'Several Konva instances detected. It is not recommended to use multiple Konva instances in the same environment.'
       );
     }
     glob.Konva = Konva;
