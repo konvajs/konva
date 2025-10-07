@@ -7,6 +7,7 @@ const canvas = Canvas['default'] || Canvas;
 // @ts-ignore
 global.DOMMatrix = canvas.DOMMatrix;
 
+// @ts-ignore
 (global as any).Path2D ??= class Path2D {
   constructor(path: any) {
     (this as any).path = path;

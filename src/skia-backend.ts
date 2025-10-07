@@ -2,8 +2,10 @@ import { Konva } from './_CoreInternals.ts';
 // @ts-ignore
 import { Canvas, DOMMatrix, Image, Path2D } from 'skia-canvas';
 
+// @ts-ignore
 global.DOMMatrix = DOMMatrix as any;
 
+// @ts-ignore
 global.Path2D = Path2D as any;
 Path2D.prototype.toString = () => '[object Path2D]';
 
