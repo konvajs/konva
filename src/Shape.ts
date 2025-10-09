@@ -26,7 +26,7 @@ export type ShapeConfigHandler<TTarget> = {
 export type LineJoin = 'round' | 'bevel' | 'miter';
 export type LineCap = 'butt' | 'round' | 'square';
 
-export interface ShapeConfig extends NodeConfig {
+export type ShapeConfig<Props extends Record<string, any> = {}> = NodeConfig<Props> & {
   fill?: string | CanvasGradient;
   fillPatternImage?: HTMLImageElement;
   fillPatternX?: number;

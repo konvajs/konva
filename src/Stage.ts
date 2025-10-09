@@ -154,7 +154,7 @@ export const stages: Stage[] = [];
  * });
  */
 
-export class Stage extends Container<Layer> {
+export class Stage extends Container<Layer, StageConfig> {
   content: HTMLDivElement;
   pointerPos: Vector2d | null;
   _pointerPositions: (Vector2d & { id?: number })[] = [];
