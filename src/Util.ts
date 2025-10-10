@@ -1121,3 +1121,5 @@ export const Util = {
     }
   },
 };
+
+export type AnyString<T> = T | (string & {})

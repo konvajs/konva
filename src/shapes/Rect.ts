@@ -8,7 +8,7 @@ import type { GetSet } from '../types.ts';
 import type { Context } from '../Context.ts';
 import { getNumberOrArrayOfNumbersValidator } from '../Validators.ts';
 
-export interface RectConfig extends ShapeConfig {
+export type RectConfig<Props extends Record<string, any> = {}> = ShapeConfig<Props> & {
   cornerRadius?: number | number[];
 }
 
@@ -30,7 +30,7 @@ export interface RectConfig extends ShapeConfig {
  *   strokeWidth: 5
  * });
  */
-export class Rect extends Shape<RectConfig> {
+export class Rect<Props extends Record<string, any> = {}> extends Shape<RectConfig<Props>> {
   _sceneFunc(context: Context) {
     const cornerRadius = this.cornerRadius(),
       width = this.width(),
