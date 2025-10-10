@@ -222,6 +222,20 @@ export type KonvaEventListener<This, EventType> = (
   ev: KonvaEventObject<EventType, This>
 ) => void;
 
+export type CanvasConfig = {
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
+  pixelRatio?: number;
+  imageSmoothingEnabled?: boolean;
+};
+
+export type ImageConfig = CanvasConfig & {
+  mimeType?: string;
+  quality?: number;
+};
+
 /**
  * Node constructor. Nodes are entities that can be transformed, layered,
  * and have bound events. The stage, layers, groups, and shapes all extend Node.
@@ -392,17 +406,13 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *   drawBorder: true
    * });
    */
-  cache(config?: {
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-    drawBorder?: boolean;
-    offset?: number;
-    pixelRatio?: number;
-    imageSmoothingEnabled?: boolean;
-    hitCanvasPixelRatio?: number;
-  }) {
+  cache(
+    config?: CanvasConfig & {
+      drawBorder?: boolean;
+      offset?: number;
+      hitCanvasPixelRatio?: number;
+    }
+  ) {
     const conf = config || {};
     let rect = {} as IRect;
 
@@ -2110,7 +2120,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @example
    * var canvas = node.toCanvas();
    */
-  toCanvas(config?) {
+  toCanvas(config?: CanvasConfig) {
     return this._toKonvaCanvas(config)._canvas;
   }
   /**
@@ -2136,16 +2146,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @param {Boolean} [config.imageSmoothingEnabled] set this to false if you want to disable imageSmoothing
    * @returns {String}
    */
-  toDataURL(config?: {
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-    pixelRatio?: number;
-    mimeType?: string;
-    quality?: number;
-    callback?: (str: string) => void;
-  }) {
+  toDataURL(
+    config?: ImageConfig & {
+      callback?: (url: string) => void;
+    }
+  ) {
     config = config || {};
     const mimeType = config.mimeType || null,
       quality = config.quality || null;
@@ -2186,16 +2191,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *   }
    * });
    */
-  toImage(config?: {
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-    pixelRatio?: number;
-    mimeType?: string;
-    quality?: number;
-    callback?: (img: HTMLImageElement) => void;
-  }) {
+  toImage(
+    config?: ImageConfig & {
+      callback?: (img: HTMLImageElement) => void;
+    }
+  ) {
     return new Promise<HTMLImageElement>((resolve, reject) => {
       try {
         const callback = config?.callback;
@@ -2230,16 +2230,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * var blob = await node.toBlob({});
    * @returns {Promise<Blob>}
    */
-  toBlob(config?: {
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-    pixelRatio?: number;
-    mimeType?: string;
-    quality?: number;
-    callback?: (blob: Blob | null) => void;
-  }) {
+  toBlob(
+    config?: ImageConfig & {
+      callback?: (blob: Blob | null) => void;
+    }
+  ) {
     return new Promise((resolve, reject) => {
       try {
         const callback = config?.callback;
