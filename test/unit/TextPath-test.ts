@@ -550,6 +550,58 @@ describe('TextPath', function () {
     assert.equal(layer.getContext().getTrace(true), trace);
   });
 
+  it('Text path with line-through', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var c = 'M10,10 C0,0 10,150 100,100 S300,150 400,50';
+
+    var textpath = new Konva.TextPath({
+      fill: 'black',
+      fontSize: 30,
+      fontFamily: 'Arial',
+      letterSpacing: 5,
+      text: 'All the worlds a stage.',
+      textDecoration: 'line-through',
+      data: c,
+      draggable: true,
+    });
+
+    layer.add(textpath);
+    stage.add(layer);
+
+    var trace =
+      'restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();stroke();restore();restore();';
+
+    assert.equal(layer.getContext().getTrace(true), trace);
+  });
+
+  it('Text path with underline and line-through', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var c = 'M10,10 C0,0 10,150 100,100 S300,150 400,50';
+
+    var textpath = new Konva.TextPath({
+      fill: 'orange',
+      fontSize: 10,
+      fontFamily: 'Arial',
+      letterSpacing: 5,
+      text: 'All the worlds a stage.',
+      textDecoration: 'underline line-through',
+      data: c,
+      draggable: true,
+    });
+
+    layer.add(textpath);
+    stage.add(layer);
+
+    var trace =
+      'restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();save();translate();rotate();lineTo();restore();stroke();restore();restore();';
+
+    assert.equal(layer.getContext().getTrace(true), trace);
+  });
+
   it('Text with baseline', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

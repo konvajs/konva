@@ -16,7 +16,13 @@ export interface TextPathConfig extends ShapeConfig {
   fontFamily?: string;
   fontSize?: number;
   fontStyle?: string;
+  fontVariant?: string;
+  align?: string;
   letterSpacing?: number;
+  textBaseline?: string;
+  textDecoration?: string;
+  kerningFunc?: (leftChar: string, rightChar: string) => number;
+  lineHeight?: number;
 }
 
 const EMPTY_STRING = '',
@@ -83,6 +89,7 @@ export class TextPath extends Shape<TextPathConfig> {
     rotation: number;
     p0: Vector2d;
     p1: Vector2d;
+    width: number;
   }>;
   partialText: string;
   pathLength: number;
@@ -143,7 +150,10 @@ export class TextPath extends Shape<TextPathConfig> {
     const fontSize = this.fontSize();
 
     const glyphInfo = this.glyphInfo;
-    if (textDecoration === 'underline') {
+    const hasUnderline = textDecoration.indexOf('underline') !== -1;
+    const hasLineThrough = textDecoration.indexOf('line-through') !== -1;
+
+    if (hasUnderline) {
       context.beginPath();
     }
     for (let i = 0; i < glyphInfo.length; i++) {
@@ -156,12 +166,13 @@ export class TextPath extends Shape<TextPathConfig> {
       this.partialText = glyphInfo[i].text;
 
       context.fillStrokeShape(this);
-      if (textDecoration === 'underline') {
+      if (hasUnderline) {
         if (i === 0) {
           context.moveTo(0, fontSize / 2 + 1);
         }
 
-        context.lineTo(fontSize, fontSize / 2 + 1);
+        console.log('underline log');
+        context.lineTo(glyphInfo[i].width, fontSize / 2 + 1);
       }
       context.restore();
 
@@ -174,7 +185,30 @@ export class TextPath extends Shape<TextPathConfig> {
       // context.lineTo(p1.x, p1.y);
       // context.stroke();
     }
-    if (textDecoration === 'underline') {
+    if (hasUnderline) {
+      context.strokeStyle = fill;
+      context.lineWidth = fontSize / 20;
+      console.log('underline log');
+      context.stroke();
+    }
+
+    if (hasLineThrough) {
+      context.beginPath();
+      for (let i = 0; i < glyphInfo.length; i++) {
+        context.save();
+
+        const p0 = glyphInfo[i].p0;
+
+        context.translate(p0.x, p0.y);
+        context.rotate(glyphInfo[i].rotation);
+
+        if (i === 0) {
+          context.moveTo(0, 0);
+        }
+
+        context.lineTo(glyphInfo[i].width, 0);
+        context.restore();
+      }
       context.strokeStyle = fill;
       context.lineWidth = fontSize / 20;
       context.stroke();
@@ -336,6 +370,7 @@ export class TextPath extends Shape<TextPathConfig> {
         rotation: rotation,
         p0: charStartPoint,
         p1: charEndPoint,
+        width: width,
       });
 
       offsetToGlyph += glyphWidth;
@@ -551,7 +586,7 @@ Factory.addGetterSetter(TextPath, 'fontVariant', NORMAL);
 Factory.addGetterSetter(TextPath, 'text', EMPTY_STRING);
 
 /**
- * get/set text decoration of a text.  Can be '' or 'underline'.
+ * get/set text decoration of a text.  Can be '', 'underline', 'line-through', or a combination like 'underline line-through'.
  * @name Konva.TextPath#textDecoration
  * @method
  * @param {String} textDecoration
@@ -562,6 +597,12 @@ Factory.addGetterSetter(TextPath, 'text', EMPTY_STRING);
  *
  * // underline text
  * shape.textDecoration('underline');
+ *
+ * // line-through text
+ * shape.textDecoration('line-through');
+ *
+ * // combine both
+ * shape.textDecoration('underline line-through');
  */
 Factory.addGetterSetter(TextPath, 'textDecoration', '');
 

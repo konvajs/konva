@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 10.0.3 (2025-10-21)
+
+- Add text decoration options to TextPath: support for 'line-through' and combined styles with 'underline'
+
 ## 10.0.2 (2025-09-10)
 
 - Fixed internal calculations for `TextPath` to return correct width and height
