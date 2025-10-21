@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://konvajs.org/android-chrome-192x192.png" alt="Konva logo" height="180" />
+  <img src="https://konvajs.org/img/icon.png" alt="Konva logo" height="60" />
 </p>
 
 <h1 align="center">Konva</h1>

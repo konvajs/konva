@@ -151,6 +151,9 @@ class TweenEngine {
 }
 
 export interface TweenConfig extends NodeConfig {
+  easing?: typeof Easings[keyof typeof Easings];
+  yoyo?: boolean;
+  onReset?: Function;
   onFinish?: Function;
   onUpdate?: Function;
   duration?: number;
@@ -419,7 +422,7 @@ export class Tween {
       // after tweening  points of line we need to set original end
       const attrs = Tween.attrs[node._id][this._id];
       if (attrs.points && attrs.points.trueEnd) {
-        node.setAttr('points', attrs.points.trueEnd);
+        node.setAttr('points' as any, attrs.points.trueEnd);
       }
 
       if (this.onFinish) {

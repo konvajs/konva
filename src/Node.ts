@@ -10,7 +10,7 @@ import type { Layer } from './Layer.ts';
 import type { Shape } from './Shape.ts';
 import type { Stage } from './Stage.ts';
 import type { GetSet, IRect, Vector2d } from './types.ts';
-import { Transform, Util } from './Util.ts';
+import { Transform, Util, type AnyString } from './Util.ts';
 import {
   getBooleanValidator,
   getNumberValidator,
@@ -134,9 +134,8 @@ type globalCompositeOperationType =
   | 'color'
   | 'luminosity';
 
-export interface NodeConfig {
-  // allow any custom attribute
-  [index: string]: any;
+// allow any custom attribute
+export type NodeConfig<Props extends Record<string, any> = {}> = Props & {
   x?: number;
   y?: number;
   width?: number;
@@ -222,6 +221,20 @@ export type KonvaEventListener<This, EventType> = (
   this: This,
   ev: KonvaEventObject<EventType, This>
 ) => void;
+
+export type CanvasConfig = {
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
+  pixelRatio?: number;
+  imageSmoothingEnabled?: boolean;
+};
+
+export type ImageConfig = CanvasConfig & {
+  mimeType?: string;
+  quality?: number;
+};
 
 /**
  * Node constructor. Nodes are entities that can be transformed, layered,
@@ -393,17 +406,13 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *   drawBorder: true
    * });
    */
-  cache(config?: {
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-    drawBorder?: boolean;
-    offset?: number;
-    pixelRatio?: number;
-    imageSmoothingEnabled?: boolean;
-    hitCanvasPixelRatio?: number;
-  }) {
+  cache(
+    config?: CanvasConfig & {
+      drawBorder?: boolean;
+      offset?: number;
+      hitCanvasPixelRatio?: number;
+    }
+  ) {
     const conf = config || {};
     let rect = {} as IRect;
 
@@ -1015,13 +1024,13 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @example
    * var x = node.getAttr('x');
    */
-  getAttr<T>(attr: string) {
-    const method = 'get' + Util._capitalize(attr);
+  getAttr<AttrConfig extends Config, K extends AnyString<keyof Config>>(attr: K): K extends keyof AttrConfig ? AttrConfig[K] : any {
+    const method = 'get' + Util._capitalize(attr as string);
     if (Util._isFunction((this as any)[method])) {
       return (this as any)[method]();
     }
     // otherwise get directly
-    return this.attrs[attr] as T | undefined;
+    return this.attrs[attr];
   }
   /**
    * get ancestors
@@ -1050,8 +1059,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @name Konva.Node#getAttrs
    * @returns {Object}
    */
-  getAttrs() {
-    return (this.attrs || {}) as Config & Record<string, any>;
+  getAttrs(): Config {
+    return (this.attrs || {});
   }
   /**
    * set multiple attrs at once using an object literal
@@ -1065,7 +1074,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *   fill: 'red'
    * });
    */
-  setAttrs(config: any) {
+  setAttrs(config?: Config) {
     this._batchTransformChanges(() => {
       let key, method;
       if (!config) {
@@ -1624,7 +1633,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @returns {Object}
    */
   toObject() {
-    let attrs = this.getAttrs() as any,
+    let attrs = this.getAttrs(),
       key,
       val,
       getter,
@@ -2111,7 +2120,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @example
    * var canvas = node.toCanvas();
    */
-  toCanvas(config?) {
+  toCanvas(config?: CanvasConfig) {
     return this._toKonvaCanvas(config)._canvas;
   }
   /**
@@ -2137,16 +2146,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @param {Boolean} [config.imageSmoothingEnabled] set this to false if you want to disable imageSmoothing
    * @returns {String}
    */
-  toDataURL(config?: {
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-    pixelRatio?: number;
-    mimeType?: string;
-    quality?: number;
-    callback?: (str: string) => void;
-  }) {
+  toDataURL(
+    config?: ImageConfig & {
+      callback?: (url: string) => void;
+    }
+  ) {
     config = config || {};
     const mimeType = config.mimeType || null,
       quality = config.quality || null;
@@ -2187,16 +2191,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *   }
    * });
    */
-  toImage(config?: {
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-    pixelRatio?: number;
-    mimeType?: string;
-    quality?: number;
-    callback?: (img: HTMLImageElement) => void;
-  }) {
+  toImage(
+    config?: ImageConfig & {
+      callback?: (img: HTMLImageElement) => void;
+    }
+  ) {
     return new Promise<HTMLImageElement>((resolve, reject) => {
       try {
         const callback = config?.callback;
@@ -2231,16 +2230,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * var blob = await node.toBlob({});
    * @returns {Promise<Blob>}
    */
-  toBlob(config?: {
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-    pixelRatio?: number;
-    mimeType?: string;
-    quality?: number;
-    callback?: (blob: Blob | null) => void;
-  }) {
+  toBlob(
+    config?: ImageConfig & {
+      callback?: (blob: Blob | null) => void;
+    }
+  ) {
     return new Promise((resolve, reject) => {
       try {
         const callback = config?.callback;
@@ -2405,8 +2399,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @example
    * node.setAttr('x', 5);
    */
-  setAttr(attr: string, val) {
-    const func = this[SET + Util._capitalize(attr)];
+  setAttr<AttrConfig extends Config, K extends AnyString<keyof Config>>(attr: K, val: K extends keyof AttrConfig ? AttrConfig[K] : any) {
+    const func = this[SET + Util._capitalize(attr as string)];
 
     if (Util._isFunction(func)) {
       func.call(this, val);
@@ -2422,7 +2416,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       drawNode?.batchDraw();
     }
   }
-  _setAttr(key: string, val) {
+  _setAttr<AttrConfig extends Config, K extends AnyString<keyof Config>>(key: K, val: K extends keyof AttrConfig ? AttrConfig[K] : any) {
     const oldVal = this.attrs[key];
     if (oldVal === val && !Util.isObject(val)) {
       return;
@@ -2878,7 +2872,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   }
 }
 
-interface AnimTo extends NodeConfig {
+interface AnimTo extends NodeConfig<Record<string, any>> {
   onFinish?: Function;
   onUpdate?: Function;
   duration?: number;
