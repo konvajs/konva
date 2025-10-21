@@ -170,8 +170,6 @@ export class TextPath extends Shape<TextPathConfig> {
         if (i === 0) {
           context.moveTo(0, fontSize / 2 + 1);
         }
-
-        console.log('underline log');
         context.lineTo(glyphInfo[i].width, fontSize / 2 + 1);
       }
       context.restore();
@@ -188,7 +186,6 @@ export class TextPath extends Shape<TextPathConfig> {
     if (hasUnderline) {
       context.strokeStyle = fill;
       context.lineWidth = fontSize / 20;
-      console.log('underline log');
       context.stroke();
     }
 
