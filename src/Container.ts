@@ -11,6 +11,7 @@ export type ClipFuncOutput =
   | void
   | [Path2D | CanvasFillRule]
   | [Path2D, CanvasFillRule];
+
 export interface ContainerConfig extends NodeConfig {
   clearBeforeDraw?: boolean;
   clipFunc?: (ctx: SceneContext) => ClipFuncOutput;
@@ -32,7 +33,7 @@ export interface ContainerConfig extends NodeConfig {
  */
 export abstract class Container<
   ChildType extends Node = Node,
-  Config extends ContainerConfig = ContainerConfig
+  Config extends ContainerConfig = ContainerConfig,
 > extends Node<Config> {
   children: Array<ChildType> = [];
 

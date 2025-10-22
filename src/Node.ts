@@ -135,7 +135,7 @@ type globalCompositeOperationType =
   | 'luminosity';
 
 // allow any custom attribute
-export type NodeConfig<Props extends Record<string, any> = {}> = Props & {
+export type NodeConfig = {
   x?: number;
   y?: number;
   width?: number;
@@ -161,7 +161,8 @@ export type NodeConfig<Props extends Record<string, any> = {}> = Props & {
   preventDefault?: boolean;
   globalCompositeOperation?: globalCompositeOperationType;
   filters?: Filters;
-}
+  [string: string]: any;
+};
 
 // CONSTANTS
 const ABSOLUTE_OPACITY = 'absoluteOpacity',
@@ -1024,7 +1025,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @example
    * var x = node.getAttr('x');
    */
-  getAttr<AttrConfig extends Config, K extends AnyString<keyof Config>>(attr: K): K extends keyof AttrConfig ? AttrConfig[K] : any {
+  getAttr<AttrConfig extends Config, K extends AnyString<keyof Config>>(
+    attr: K
+  ): K extends keyof AttrConfig ? AttrConfig[K] : any {
     const method = 'get' + Util._capitalize(attr as string);
     if (Util._isFunction((this as any)[method])) {
       return (this as any)[method]();
@@ -1060,7 +1063,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @returns {Object}
    */
   getAttrs(): Config {
-    return (this.attrs || {});
+    return this.attrs || {};
   }
   /**
    * set multiple attrs at once using an object literal
@@ -1663,7 +1666,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       delete attrs[key];
       defaultValue = getter ? getter.call(this) : null;
       // restore attr value
-      attrs[key] = val;
+      (attrs as any)[key] = val;
       if (defaultValue !== val) {
         (obj.attrs as any)[key] = val;
       }
@@ -2399,7 +2402,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @example
    * node.setAttr('x', 5);
    */
-  setAttr<AttrConfig extends Config, K extends AnyString<keyof Config>>(attr: K, val: K extends keyof AttrConfig ? AttrConfig[K] : any) {
+  setAttr<AttrConfig extends Config, K extends AnyString<keyof Config>>(
+    attr: K,
+    val: K extends keyof AttrConfig ? AttrConfig[K] : any
+  ) {
     const func = this[SET + Util._capitalize(attr as string)];
 
     if (Util._isFunction(func)) {
@@ -2416,7 +2422,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       drawNode?.batchDraw();
     }
   }
-  _setAttr<AttrConfig extends Config, K extends AnyString<keyof Config>>(key: K, val: K extends keyof AttrConfig ? AttrConfig[K] : any) {
+  _setAttr<AttrConfig extends Config, K extends AnyString<keyof Config>>(
+    key: K,
+    val: K extends keyof AttrConfig ? AttrConfig[K] : any
+  ) {
     const oldVal = this.attrs[key];
     if (oldVal === val && !Util.isObject(val)) {
       return;
@@ -2872,7 +2881,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   }
 }
 
-interface AnimTo extends NodeConfig<Record<string, any>> {
+interface AnimTo extends NodeConfig {
   onFinish?: Function;
   onUpdate?: Function;
   duration?: number;

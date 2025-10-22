@@ -26,7 +26,7 @@ export type ShapeConfigHandler<TTarget> = {
 export type LineJoin = 'round' | 'bevel' | 'miter';
 export type LineCap = 'butt' | 'round' | 'square';
 
-export type ShapeConfig<Props extends Record<string, any> = {}> = NodeConfig<Props> & {
+export type ShapeConfig = NodeConfig & {
   fill?: string | CanvasGradient;
   fillPatternImage?: HTMLImageElement;
   fillPatternX?: number;
@@ -82,7 +82,7 @@ export type ShapeConfig<Props extends Record<string, any> = {}> = NodeConfig<Pro
   dashOffset?: number;
   dashEnabled?: boolean;
   perfectDrawEnabled?: boolean;
-}
+};
 
 export interface ShapeGetClientRectConfig {
   skipTransform?: boolean;

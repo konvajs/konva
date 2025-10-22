@@ -8,9 +8,9 @@ import type { GetSet } from '../types.ts';
 import type { Context } from '../Context.ts';
 import { getNumberOrArrayOfNumbersValidator } from '../Validators.ts';
 
-export type RectConfig<Props extends Record<string, any> = {}> = ShapeConfig<Props> & {
+export type RectConfig = ShapeConfig & {
   cornerRadius?: number | number[];
-}
+};
 
 /**
  * Rect constructor
@@ -30,7 +30,7 @@ export type RectConfig<Props extends Record<string, any> = {}> = ShapeConfig<Pro
  *   strokeWidth: 5
  * });
  */
-export class Rect<Props extends Record<string, any> = {}> extends Shape<RectConfig<Props>> {
+export class Rect extends Shape<RectConfig> {
   _sceneFunc(context: Context) {
     const cornerRadius = this.cornerRadius(),
       width = this.width(),
