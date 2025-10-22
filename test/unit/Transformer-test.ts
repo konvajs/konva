@@ -3742,6 +3742,48 @@ describe('Transformer', function () {
     (assert.deepEqual(shape.getClientRect(), rect), 'change data');
   });
 
+  it('attrs change - image', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    // Create a small canvas to use as an image
+    var canvas1 = Konva.Util.createCanvasElement();
+    canvas1.width = 100;
+    canvas1.height = 100;
+
+    var shape = new Konva.Image({
+      x: 50,
+      y: 50,
+      image: canvas1,
+    });
+    layer.add(shape);
+
+    var tr = new Konva.Transformer({
+      nodes: [shape],
+    });
+    layer.add(tr);
+
+    // Check initial size
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect, 'initial image');
+    assert.equal(tr.width(), 100, 'initial width');
+    assert.equal(tr.height(), 100, 'initial height');
+
+    // Change to a larger image
+    var canvas2 = Konva.Util.createCanvasElement();
+    canvas2.width = 200;
+    canvas2.height = 150;
+    shape.image(canvas2);
+
+    var rect = Konva.Util._assign({}, tr._getNodeRect());
+    delete rect.rotation;
+    assert.deepEqual(shape.getClientRect(), rect, 'change image size');
+    assert.equal(tr.width(), 200, 'new width');
+    assert.equal(tr.height(), 150, 'new height');
+  });
+
   it('make sure transformer events are not cloned', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

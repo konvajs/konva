@@ -193,6 +193,7 @@ export class Image extends Shape<ImageConfig> {
 }
 
 Image.prototype.className = 'Image';
+Image.prototype._attrsAffectingSize = ['image'];
 _registerNode(Image);
 
 /**
