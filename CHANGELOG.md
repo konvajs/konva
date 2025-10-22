@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 10.0.5 (2025-10-22)
+
+- Simplify types to fix TS errors
+
 ## 10.0.4 (2025-10-21)
 
 - Remove logs
