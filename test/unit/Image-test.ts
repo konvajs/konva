@@ -396,6 +396,16 @@ describe('Image', function () {
     });
   });
 
+  it('test image client rect without image object attached', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    var image = new Konva.Image();
+    layer.add(image);
+    assert.equal(image.getClientRect().width, 0);
+    assert.equal(image.getClientRect().height, 0);
+  });
+
   it('corner radius with shadow', function (done) {
     // that will trigger buffer canvas
     loadImage('darth-vader.jpg', (imageObj) => {

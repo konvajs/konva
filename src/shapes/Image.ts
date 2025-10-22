@@ -43,7 +43,7 @@ export interface ImageConfig extends ShapeConfig {
 export class Image extends Shape<ImageConfig> {
   private _loadListener: () => void;
 
-  constructor(attrs: ImageConfig) {
+  constructor(attrs?: ImageConfig) {
     super(attrs);
     this._loadListener = () => {
       this._requestDraw();
@@ -147,10 +147,10 @@ export class Image extends Shape<ImageConfig> {
     context.fillStrokeShape(this);
   }
   getWidth() {
-    return this.attrs.width ?? (this.image() as any)?.width;
+    return this.attrs.width ?? (this.image() as any)?.width ?? 0;
   }
   getHeight() {
-    return this.attrs.height ?? (this.image() as any)?.height;
+    return this.attrs.height ?? (this.image() as any)?.height ?? 0;
   }
 
   /**

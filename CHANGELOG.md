@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 10.0.6 (2025-10-22)
+
+- Better `Image.getClientRect()` calculation if an instance has no image attached yet
+
 ## 10.0.5 (2025-10-22)
 
 - Simplify types to fix TS errors
