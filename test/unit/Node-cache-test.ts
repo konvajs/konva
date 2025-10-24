@@ -136,6 +136,7 @@ describe('Caching', function () {
     var stage = addStage();
 
     var layer = new Konva.Layer();
+    stage.add(layer);
 
     var rect = new Konva.Rect({
       x: 100,
@@ -147,13 +148,13 @@ describe('Caching', function () {
       stroke: 'black',
       strokeWidth: 10,
     });
-    rect.cache();
-    rect.opacity(0.3);
 
     layer.add(rect);
-    stage.add(layer);
+    rect.cache();
+    layer.draw();
 
-    cloneAndCompareLayer(layer, 100);
+    // important to NOT use tollerance, because opacity is sensative
+    cloneAndCompareLayer(layer, 1);
   });
 
   // skip, because opacity rendering of cached shape is different

@@ -658,8 +658,13 @@ export class Shape<
       if (hasShadow) {
         context._applyShadow(this);
       }
-      context._applyOpacity(this);
-      context._applyGlobalCompositeOperation(this);
+      // if we are caching self, we don't need to apply opacity and global composite operation
+      // because it will be applied in the cache
+      if (!cachingSelf) {
+        context._applyOpacity(this);
+        context._applyGlobalCompositeOperation(this);
+      }
+
       context.drawImage(
         bc._canvas,
         bc.x || 0,
