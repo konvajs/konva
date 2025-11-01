@@ -74,8 +74,8 @@ export class RegularPolygon extends Shape<RegularPolygonConfig> {
     const points = this._getPoints();
 
     let minX = points[0].x;
-    let maxX = points[0].y;
-    let minY = points[0].x;
+    let maxX = points[0].x;
+    let minY = points[0].y;
     let maxY = points[0].y;
     points.forEach((point) => {
       minX = Math.min(minX, point.x);
