@@ -1966,4 +1966,41 @@ describe('Text', function () {
       );
     }
   });
+
+  it('text decoration with letterSpacing and lineHeight', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      x: 10,
+      y: 10,
+      text: 'hello\nworld',
+      fontSize: 40,
+      fill: 'red',
+      letterSpacing: 5,
+      lineHeight: 2,
+      textDecoration: 'underline line-through',
+    });
+
+    layer.add(text);
+    stage.add(layer);
+
+    var trace = layer.getContext().getTrace(false, true);
+    if (Konva._renderBackend === 'web') {
+      assert.equal(
+        trace,
+        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 40px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,64);lineTo(110,64);stroke();restore();fillStyle=red;fillText(h,0,54);fillStyle=red;fillText(e,27,54);fillStyle=red;fillText(l,54,54);fillStyle=red;fillText(l,68,54);fillStyle=red;fillText(o,82,54);save();beginPath();moveTo(0,44);lineTo(110,44);stroke();restore();restore();save();save();beginPath();moveTo(0,144);lineTo(121,144);stroke();restore();fillStyle=red;fillText(w,0,134);fillStyle=red;fillText(o,33,134);fillStyle=red;fillText(r,61,134);fillStyle=red;fillText(l,79,134);fillStyle=red;fillText(d,93,134);save();beginPath();moveTo(0,124);lineTo(121,124);stroke();restore();restore();restore();'
+      );
+    } else if (Konva._renderBackend === 'node-canvas') {
+      assert.equal(
+        trace,
+        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 40px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,64);lineTo(110,64);stroke();restore();fillStyle=red;fillText(h,0,54);fillStyle=red;fillText(e,27,54);fillStyle=red;fillText(l,54,54);fillStyle=red;fillText(l,68,54);fillStyle=red;fillText(o,82,54);save();beginPath();moveTo(0,44);lineTo(110,44);stroke();restore();restore();save();save();beginPath();moveTo(0,144);lineTo(121,144);stroke();restore();fillStyle=red;fillText(w,0,134);fillStyle=red;fillText(o,33,134);fillStyle=red;fillText(r,61,134);fillStyle=red;fillText(l,79,134);fillStyle=red;fillText(d,93,134);save();beginPath();moveTo(0,124);lineTo(121,124);stroke();restore();restore();restore();'
+      );
+    } else {
+      assert.equal(
+        trace,
+        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 40px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,63);lineTo(110,63);stroke();restore();fillStyle=red;fillText(h,0,53);fillStyle=red;fillText(e,27,53);fillStyle=red;fillText(l,54,53);fillStyle=red;fillText(l,68,53);fillStyle=red;fillText(o,82,53);save();beginPath();moveTo(0,43);lineTo(110,43);stroke();restore();restore();save();save();beginPath();moveTo(0,143);lineTo(121,143);stroke();restore();fillStyle=red;fillText(w,0,133);fillStyle=red;fillText(o,33,133);fillStyle=red;fillText(r,61,133);fillStyle=red;fillText(l,79,133);fillStyle=red;fillText(d,93,133);save();beginPath();moveTo(0,123);lineTo(121,123);stroke();restore();restore();restore();'
+      );
+    }
+  });
 });

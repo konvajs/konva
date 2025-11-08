@@ -318,7 +318,9 @@ export class Text extends Shape<TextConfig> {
         context.stroke();
         context.restore();
       }
-      // draw line-through above the text content
+
+      // store the starting x position for line-through which is drawn after text
+      const lineThroughStartX = lineTranslateX;
 
       // As `letterSpacing` isn't supported on Safari, we use this polyfill.
       // The exception is for RTL text, which we rely on native as it cannot
@@ -380,6 +382,7 @@ export class Text extends Shape<TextConfig> {
 
         context.fillStrokeShape(this);
       }
+
       // draw line-through above the text content
       if (shouldLineThrough) {
         context.save();
@@ -387,7 +390,7 @@ export class Text extends Shape<TextConfig> {
         const yOffset = !Konva.legacyTextRendering
           ? -Math.round(fontSize / 4)
           : 0;
-        const x = align === JUSTIFY ? 0 : lineTranslateX;
+        const x = lineThroughStartX;
         context.moveTo(x, translateY + lineTranslateY + yOffset);
         const lineWidth =
           align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
@@ -402,6 +405,7 @@ export class Text extends Shape<TextConfig> {
         context.stroke();
         context.restore();
       }
+
       context.restore();
       if (textArrLen > 1) {
         translateY += lineHeightPx;
