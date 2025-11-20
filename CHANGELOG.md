@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 10.0.9 (2025-11-20)
+
+- Update hit detection system to handle canvas farbling. Hit detection should work better on Brave browser.
+
 ## 10.0.8 (2025-10-24)
 
 - Fixed opacity level when a cached shape has opacity, fill and stroke

@@ -31,14 +31,62 @@
       const layer = new Konva.Layer();
       stage.add(layer);
 
-      const circle = new Konva.Circle({
-        x: stage.width() / 2,
-        y: stage.height() / 2,
-        radius: 100,
-        fill: 'red',
-        draggable: true,
-      });
-      layer.add(circle);
+      // Given gridRows and gridCols, compute maximum possible radius and position circles
+      const gridRows = 200;
+      const gridCols = 200;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      // Calculate spacing and radius so circles fit entire window
+      // There are (gridCols - 1) spaces between centers horizontally, and (gridRows - 1) vertically
+      // The available width is "width", so (gridCols) circles and (gridCols-1) spaces between
+      // The diameter must fit: gridCols * diameter + (gridCols - 1) * gap <= width
+      // But to maximize, gap should equal to at least 0, so best layout is circles tangent
+
+      // So the max diameter horizontally is width / gridCols
+      // Likewise for vertical
+      const cellWidth = width / gridCols;
+      const cellHeight = height / gridRows;
+      const radius = Math.min(cellWidth, cellHeight) / 2;
+
+      const circles = [];
+
+      // Create grid of circles - centers in each cell's center
+      for (let row = 0; row < gridRows; row++) {
+        for (let col = 0; col < gridCols; col++) {
+          const cx = cellWidth * col + cellWidth / 2;
+          const cy = cellHeight * row + cellHeight / 2;
+          const c = new Konva.Circle({
+            x: cx,
+            y: cy,
+            radius: radius,
+            fill: Konva.Util.getRandomColor(),
+            id: `circle-${row}-${col}`,
+          });
+          circles.push({
+            node: c,
+            x: cx,
+            y: cy,
+            row,
+            col,
+          });
+          layer.add(c);
+        }
+      }
+      layer.draw();
+
+      // Test hits at each center
+      for (const cInfo of circles) {
+        const { node, x, y } = cInfo;
+        const hit = stage.getIntersection({ x, y });
+        if (hit !== node) {
+          const gotId = hit ? hit.id && hit.id() : null;
+          console.error(
+            `Hit test failed at (${x},${y}): expected id=${node.id()}, got id=${gotId}`
+          );
+        }
+      }
+      console.log('Hit test grid check complete.');
     </script>
   </body>
 </html>

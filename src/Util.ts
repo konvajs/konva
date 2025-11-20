@@ -446,6 +446,9 @@ const OBJECT_ARRAY = '[object Array]',
   RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/;
 let animQueue: Array<Function> = [];
 
+// Cache for canvas farbling detection
+let _isCanvasFarblingActive: boolean | null = null;
+
 const req =
   (typeof requestAnimationFrame !== 'undefined' && requestAnimationFrame) ||
   function (f) {
@@ -582,6 +585,84 @@ export const Util = {
       randColor = ZERO + randColor;
     }
     return HASH + randColor;
+  },
+  /**
+   * Check if canvas farbling is active (e.g., Brave browser fingerprinting protection)
+   * @method
+   * @memberof Konva.Util
+   * @returns {Boolean}
+   */
+  isCanvasFarblingActive() {
+    if (_isCanvasFarblingActive !== null) {
+      return _isCanvasFarblingActive;
+    }
+
+    if (typeof document === 'undefined') {
+      _isCanvasFarblingActive = false;
+      return false;
+    }
+
+    const c = this.createCanvasElement();
+    c.width = 1;
+    c.height = 1;
+    const ctx = c.getContext('2d', {
+      willReadFrequently: true,
+    }) as CanvasRenderingContext2D;
+    ctx.clearRect(0, 0, 1, 1);
+    ctx.fillStyle = 'rgba(255,0,255,1)'; // clear #FF00FF, no alpha
+    ctx.fillRect(0, 0, 1, 1);
+    const d = ctx.getImageData(0, 0, 1, 1).data;
+    const exact = d[0] === 255 && d[1] === 0 && d[2] === 255 && d[3] === 255;
+    _isCanvasFarblingActive = !exact;
+    this.releaseCanvas(c);
+    return _isCanvasFarblingActive;
+  },
+  /**
+   * Get a random color for hit detection (normalized if farbling is active)
+   * @method
+   * @memberof Konva.Util
+   * @returns {String} hex color string
+   */
+  getHitColor(): string {
+    const color = this.getRandomColor();
+    return this.isCanvasFarblingActive()
+      ? this.getSnappedHexColor(color)
+      : color;
+  },
+  /**
+   * Get hit color key from RGB values (normalized if farbling is active)
+   * @method
+   * @memberof Konva.Util
+   * @param {Number} r - red component (0-255)
+   * @param {Number} g - green component (0-255)
+   * @param {Number} b - blue component (0-255)
+   * @returns {String} hex color key string
+   */
+  getHitColorKey(r: number, g: number, b: number): string {
+    if (this.isCanvasFarblingActive()) {
+      r = Math.round(r / 5) * 5;
+      g = Math.round(g / 5) * 5;
+      b = Math.round(b / 5) * 5;
+    }
+    return HASH + this._rgbToHex(r, g, b);
+  },
+  /**
+   * Snap hex color values to end with 0 (normalize for canvas farbling)
+   * @method
+   * @memberof Konva.Util
+   * @param {String} hex - hex color string (e.g., "#ff00ff")
+   * @returns {String} normalized hex color string
+   */
+  getSnappedHexColor(hex: string): string {
+    const rgb = this._hexToRgb(hex);
+    return (
+      HASH +
+      this._rgbToHex(
+        Math.round(rgb.r / 5) * 5,
+        Math.round(rgb.g / 5) * 5,
+        Math.round(rgb.b / 5) * 5
+      )
+    );
   },
 
   /**
@@ -1122,4 +1203,4 @@ export const Util = {
   },
 };
 
-export type AnyString<T> = T | (string & {})
+export type AnyString<T> = T | (string & {});

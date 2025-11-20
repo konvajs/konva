@@ -203,10 +203,19 @@ export class Shape<
     super(config);
     // set colorKey
     let key: string;
+    let attempts = 0;
 
     while (true) {
-      key = Util.getRandomColor();
+      key = Util.getHitColor();
       if (key && !(key in shapes)) {
+        break;
+      }
+      attempts++;
+      if (attempts >= 10000) {
+        Util.warn(
+          'Failed to find a unique color key for a shape. Konva may work incorrectly. Most likely your browser is using canvas farbling. Consider disabling it.'
+        );
+        key = Util.getRandomColor();
         break;
       }
     }
