@@ -3,9 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 10.0.9 (2025-11-20)
+## 10.0.10 (2025-11-20)
 
 - Update hit detection system to handle canvas farbling. Hit detection should work better on Brave browser.
+
+## 10.0.9 (2025-11-08)
+
+- Fixed line-through rendering when letter spacing is used
 
 ## 10.0.8 (2025-10-24)
 
