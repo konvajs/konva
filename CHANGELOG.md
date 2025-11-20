@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 10.0.10 (2025-11-20)
 
-- Update hit detection system to handle canvas farbling. Hit detection should work better on Brave browser.
+- Update hit detection system to handle canvas farbling. Hit detection should work better on Brave browser. Thanks @wiverson to the idea and implementation idea.
 
 ## 10.0.9 (2025-11-08)
 
