@@ -46,7 +46,7 @@ interface ICanvasConfig {
  */
 export class Canvas {
   pixelRatio = 1;
-  _canvas: HTMLCanvasElement;
+  _canvas: HTMLCanvasElement | OffscreenCanvas;
   context: Context;
   width = 0;
   height = 0;
@@ -61,15 +61,22 @@ export class Canvas {
 
     this.pixelRatio = pixelRatio;
 
-    this._canvas = Util.createCanvasElement();
-    // set inline styles
-    this._canvas.style.padding = '0';
-    this._canvas.style.margin = '0';
-    this._canvas.style.border = '0';
-    this._canvas.style.background = 'transparent';
-    this._canvas.style.position = 'absolute';
-    this._canvas.style.top = '0';
-    this._canvas.style.left = '0';
+    this._canvas = this._createCanvas(conf);
+
+    if ('style' in this._canvas) {
+      // set inline styles
+      (this._canvas as HTMLCanvasElement).style.padding = '0';
+      (this._canvas as HTMLCanvasElement).style.margin = '0';
+      (this._canvas as HTMLCanvasElement).style.border = '0';
+      (this._canvas as HTMLCanvasElement).style.background = 'transparent';
+      (this._canvas as HTMLCanvasElement).style.position = 'absolute';
+      (this._canvas as HTMLCanvasElement).style.top = '0';
+      (this._canvas as HTMLCanvasElement).style.left = '0';
+    }
+  }
+
+  _createCanvas(config: ICanvasConfig): HTMLCanvasElement | OffscreenCanvas {
+    return Util.createCanvasElement();
   }
 
   /**
@@ -117,8 +124,11 @@ export class Canvas {
   }
   setWidth(width) {
     // take into account pixel ratio
+    // take into account pixel ratio
     this.width = this._canvas.width = width * this.pixelRatio;
-    this._canvas.style.width = width + 'px';
+    if ('style' in this._canvas) {
+      (this._canvas as HTMLCanvasElement).style.width = width + 'px';
+    }
 
     const pixelRatio = this.pixelRatio,
       _context = this.getContext()._context;
@@ -126,8 +136,11 @@ export class Canvas {
   }
   setHeight(height) {
     // take into account pixel ratio
+    // take into account pixel ratio
     this.height = this._canvas.height = height * this.pixelRatio;
-    this._canvas.style.height = height + 'px';
+    if ('style' in this._canvas) {
+      (this._canvas as HTMLCanvasElement).style.height = height + 'px';
+    }
     const pixelRatio = this.pixelRatio,
       _context = this.getContext()._context;
     _context.scale(pixelRatio, pixelRatio);
@@ -154,21 +167,24 @@ export class Canvas {
     try {
       // If this call fails (due to browser bug, like in Firefox 3.6),
       // then revert to previous no-parameter image/png behavior
-      return this._canvas.toDataURL(mimeType, quality);
+      // then revert to previous no-parameter image/png behavior
+      return (this._canvas as HTMLCanvasElement).toDataURL(mimeType, quality);
     } catch (e) {
       try {
-        return this._canvas.toDataURL();
+        return (this._canvas as HTMLCanvasElement).toDataURL();
       } catch (err: any) {
         Util.error(
           'Unable to get data URL. ' +
-            err.message +
-            ' For more info read https://konvajs.org/docs/posts/Tainted_Canvas.html.'
+          err.message +
+          ' For more info read https://konvajs.org/docs/posts/Tainted_Canvas.html.'
         );
         return '';
       }
     }
   }
+
 }
+
 
 export class SceneCanvas extends Canvas {
   constructor(
@@ -184,7 +200,11 @@ export class SceneCanvas extends Canvas {
 
 // function checks if canvas farbling is active
 // canvas farbling is a Browser security feature, it break konva internals
+let _isCanvasFarblingActive: boolean | undefined;
 function isCanvasFarblingActive() {
+  if (_isCanvasFarblingActive !== undefined) {
+    return _isCanvasFarblingActive;
+  }
   const c = Util.createCanvasElement();
   c.width = 1;
   c.height = 1;
@@ -192,39 +212,29 @@ function isCanvasFarblingActive() {
     willReadFrequently: true,
   }) as CanvasRenderingContext2D;
   ctx.clearRect(0, 0, 1, 1);
-  ctx.fillStyle = 'rgba(255,0,255,1)'; // clear #FF00FF, no alpha
+  ctx.fillStyle = '#010203';
   ctx.fillRect(0, 0, 1, 1);
-  const d = ctx.getImageData(0, 0, 1, 1).data;
-  const exact = d[0] === 255 && d[1] === 0 && d[2] === 255 && d[3] === 255;
-  return !exact;
-}
-
-function isBraveBrowser() {
-  if (typeof navigator === 'undefined') {
-    return false;
-  }
-  // @ts-ignore
-  return navigator.brave?.isBrave() ?? false;
-}
-
-let warned = false;
-function checkHitCanvasSupport() {
-  if (isBraveBrowser() && isCanvasFarblingActive() && !warned) {
-    warned = true;
-    Util.error(
-      'Looks like you have "Brave shield" enabled in your browser. It breaks KonvaJS internals. Please disable it. You may need to ask your users to do the same.'
+  const data = ctx.getImageData(0, 0, 1, 1).data;
+  const isFarbling = data[0] !== 1 || data[1] !== 2 || data[2] !== 3;
+  if (isFarbling) {
+    Util.warn(
+      'Konva: Canvas farbling is detected. Konva may not work correctly. You can try to disable it in browser settings.'
     );
   }
-  return isBraveBrowser() && isCanvasFarblingActive();
+  _isCanvasFarblingActive = isFarbling;
+  return isFarbling;
 }
 
 export class HitCanvas extends Canvas {
   hitCanvas = true;
   constructor(config: ICanvasConfig = { width: 0, height: 0 }) {
     super(config);
-
     this.context = new HitContext(this);
     this.setSize(config.width, config.height);
-    checkHitCanvasSupport();
+  }
+  _createCanvas(config: ICanvasConfig) {
+    return Util.createOffscreenCanvas(config.width || 0, config.height || 0);
   }
 }
+
+export { isCanvasFarblingActive };

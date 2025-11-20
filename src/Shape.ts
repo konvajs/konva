@@ -16,6 +16,7 @@ import { _registerNode } from './Global.ts';
 import * as PointerEvents from './PointerEvents.ts';
 
 import type { GetSet, Vector2d } from './types.ts';
+import { isCanvasFarblingActive } from './Canvas.ts';
 import type { HitCanvas, SceneCanvas } from './Canvas.ts';
 
 // hack from here https://stackoverflow.com/questions/52667959/what-is-the-purpose-of-bivariancehack-in-typescript-types/52668133#52668133
@@ -207,6 +208,12 @@ export class Shape<
     while (true) {
       key = Util.getRandomColor();
       if (key && !(key in shapes)) {
+        if (isCanvasFarblingActive()) {
+          const r = (parseInt(key.slice(1, 3), 16) & 0xfc).toString(16);
+          const g = (parseInt(key.slice(3, 5), 16) & 0xfc).toString(16);
+          const b = (parseInt(key.slice(5, 7), 16) & 0xfc).toString(16);
+          key = '#' + r + g + b;
+        }
         break;
       }
     }
@@ -284,13 +291,13 @@ export class Shape<
         const matrix =
           typeof DOMMatrix === 'undefined'
             ? {
-                a: m[0], // Horizontal scaling. A value of 1 results in no scaling.
-                b: m[1], // Vertical skewing.
-                c: m[2], // Horizontal skewing.
-                d: m[3],
-                e: m[4], // Horizontal translation (moving).
-                f: m[5], // Vertical translation (moving).
-              }
+              a: m[0], // Horizontal scaling. A value of 1 results in no scaling.
+              b: m[1], // Vertical skewing.
+              c: m[2], // Horizontal skewing.
+              d: m[3],
+              e: m[4], // Horizontal translation (moving).
+              f: m[5], // Vertical translation (moving).
+            }
             : new DOMMatrix(m);
 
         pattern.setTransform(matrix);

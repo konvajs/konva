@@ -530,8 +530,19 @@ export const Util = {
     // on some environments canvas.style is readonly
     try {
       (canvas as any).style = canvas.style || {};
-    } catch (e) {}
+    } catch (e) { }
     return canvas;
+  },
+  createOffscreenCanvas(width: number, height: number) {
+    ensureBrowser();
+    if (typeof OffscreenCanvas !== 'undefined') {
+      return new OffscreenCanvas(width, height);
+    } else {
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      return canvas;
+    }
   },
   createImageElement() {
     ensureBrowser();
@@ -1031,7 +1042,7 @@ export const Util = {
         topRight =
         bottomLeft =
         bottomRight =
-          Math.min(cornerRadius, width / 2, height / 2);
+        Math.min(cornerRadius, width / 2, height / 2);
     } else {
       topLeft = Math.min(cornerRadius[0] || 0, width / 2, height / 2);
       topRight = Math.min(cornerRadius[1] || 0, width / 2, height / 2);

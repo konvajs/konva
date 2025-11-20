@@ -143,7 +143,7 @@ interface ExtendedCanvasRenderingContext2D extends CanvasRenderingContext2D {
  */
 export class Context {
   canvas: Canvas;
-  _context: CanvasRenderingContext2D;
+  _context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
   traceArr: Array<string>;
 
   constructor(canvas: Canvas) {
@@ -815,7 +815,7 @@ type CanvasContextProps = Pick<
   (typeof CONTEXT_PROPERTIES)[number]
 >;
 
-export interface Context extends CanvasContextProps {}
+export interface Context extends CanvasContextProps { }
 
 CONTEXT_PROPERTIES.forEach(function (prop) {
   Object.defineProperty(Context.prototype, prop, {
@@ -978,7 +978,7 @@ export class HitContext extends Context {
     super(canvas);
     this._context = canvas._canvas.getContext('2d', {
       willReadFrequently: true,
-    }) as CanvasRenderingContext2D;
+    }) as CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
   }
   _fill(shape: Shape) {
     this.save();

@@ -26,6 +26,14 @@ Konva.Util['createCanvasElement'] = () => {
   return node;
 };
 
+Konva.Util['createOffscreenCanvas'] = (width, height) => {
+  const node = canvas.createCanvas(width, height) as any;
+  if (!node['style']) {
+    node['style'] = {};
+  }
+  return node;
+};
+
 // create image in Node env
 Konva.Util.createImageElement = () => {
   const node = new canvas.Image() as any;

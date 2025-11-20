@@ -3,7 +3,7 @@ import type { ContainerConfig } from './Container.ts';
 import { Container } from './Container.ts';
 import { Node } from './Node.ts';
 import { Factory } from './Factory.ts';
-import { SceneCanvas, HitCanvas } from './Canvas.ts';
+import { SceneCanvas, HitCanvas, isCanvasFarblingActive } from './Canvas.ts';
 import type { Stage } from './Stage.ts';
 import { getBooleanValidator } from './Validators.ts';
 
@@ -368,7 +368,13 @@ export class Layer extends Container<Group | Shape> {
 
     // fully opaque pixel
     if (p3 === 255) {
-      const colorKey = Util._rgbToHex(p[0], p[1], p[2]);
+      let colorKey = Util._rgbToHex(p[0], p[1], p[2]);
+      if (isCanvasFarblingActive()) {
+        const r = (p[0] & 0xfc).toString(16);
+        const g = (p[1] & 0xfc).toString(16);
+        const b = (p[2] & 0xfc).toString(16);
+        colorKey = '#' + r + g + b;
+      }
       const shape = shapes[HASH + colorKey];
       if (shape) {
         return {
