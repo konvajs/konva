@@ -603,17 +603,31 @@ export const Util = {
     }
 
     const c = this.createCanvasElement();
-    c.width = 1;
-    c.height = 1;
+    c.width = 10;
+    c.height = 10;
     const ctx = c.getContext('2d', {
       willReadFrequently: true,
     }) as CanvasRenderingContext2D;
-    ctx.clearRect(0, 0, 1, 1);
-    ctx.fillStyle = 'rgba(255,0,255,1)'; // clear #FF00FF, no alpha
-    ctx.fillRect(0, 0, 1, 1);
-    const d = ctx.getImageData(0, 0, 1, 1).data;
-    const exact = d[0] === 255 && d[1] === 0 && d[2] === 255 && d[3] === 255;
-    _isCanvasFarblingActive = !exact;
+    ctx.clearRect(0, 0, 10, 10);
+
+    ctx.fillStyle = '#282828'; // 40, 40, 40
+    ctx.fillRect(0, 0, 10, 10);
+
+    const d = ctx.getImageData(0, 0, 10, 10).data;
+    let isFarbling = false;
+    for (let i = 0; i < 100; i++) {
+      if (
+        d[i * 4] !== 40 ||
+        d[i * 4 + 1] !== 40 ||
+        d[i * 4 + 2] !== 40 ||
+        d[i * 4 + 3] !== 255
+      ) {
+        isFarbling = true;
+        break;
+      }
+    }
+
+    _isCanvasFarblingActive = isFarbling;
     this.releaseCanvas(c);
     return _isCanvasFarblingActive;
   },
