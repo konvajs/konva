@@ -41,7 +41,7 @@ type Value<T extends Constructor, U extends Attr<T>> = ExtractGetSet<
 /**
  * A function that validates a value.
  */
-type ValidatorFunc<T> = (val: ExtractGetSet<T>, attr: string) => T;
+type ValidatorFunc<T> = (val: T, attr: string) => T;
 
 /**
  * Extracts the "components" (keys) of a GetSet value. The value must be an object.
