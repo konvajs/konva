@@ -56,6 +56,43 @@ function expandPoints(p, tension) {
   return allPoints;
 }
 
+function getBezierExtremaPoints(points) {
+  const axisPoints = [
+    [points[0], points[2], points[4], points[6]],
+    [points[1], points[3], points[5], points[7]],
+  ];
+  const extremaTs: number[] = [];
+
+  for (const axis of axisPoints) {
+    const a = -3 * axis[0] + 9 * axis[1] - 9 * axis[2] + 3 * axis[3];
+    if (a !== 0) {
+      const b = 6 * axis[0] - 12 * axis[1] + 6 * axis[2];
+      const c = -3 * axis[0] + 3 * axis[1];
+
+      const discriminant = b * b - 4 * a * c;
+      if (discriminant >= 0) {
+        const d = Math.sqrt(discriminant);
+        extremaTs.push((-b + d) / (2 * a));
+        extremaTs.push((-b - d) / (2 * a));
+      }
+    }
+  }
+
+  return extremaTs
+    .filter((t) => t > 0 && t < 1)
+    .flatMap((t) =>
+      axisPoints.map((axis) => {
+        const mt = 1 - t;
+        return (
+          mt * mt * mt * axis[0] +
+          3 * mt * mt * t * axis[1] +
+          3 * mt * t * t * axis[2] +
+          t * t * t * axis[3]
+        );
+      })
+    );
+}
+
 export interface LineConfig extends ShapeConfig {
   points?:
     | number[]
@@ -256,6 +293,14 @@ export class Line<
         points[0],
         points[1],
         ...this._getTensionPoints(),
+        points[points.length - 2],
+        points[points.length - 1],
+      ];
+    } else if (this.bezier()) {
+      points = [
+        points[0],
+        points[1],
+        ...getBezierExtremaPoints(this.points()),
         points[points.length - 2],
         points[points.length - 1],
       ];

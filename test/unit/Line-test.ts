@@ -456,6 +456,68 @@ describe('Line', function () {
     assert.equal(client.height, 2, 'check height');
   });
 
+  it('getClientRect with bezier', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var line = new Konva.Line({
+      x: 0,
+      y: 0,
+      points: [25, 5, -47.7791, 20, 107.7837, 35, 25, 50],
+      bezier: true,
+      stroke: '#0f0',
+    });
+    layer.add(line);
+    layer.draw();
+
+    var client = line.getClientRect();
+
+    assert.equal(Math.round(client.x), 4, 'check x');
+    assert.equal(Math.round(client.y), 4, 'check y');
+    assert.equal(Math.round(client.width), 47, 'check width');
+    assert.equal(Math.round(client.height), 47, 'check height');
+
+    line.points([5, 25, 20, -47.7791, 35, 107.7837, 50, 25]);
+    client = line.getClientRect();
+
+    assert.equal(Math.round(client.x), 4, 'check x');
+    assert.equal(Math.round(client.y), 4, 'check y');
+    assert.equal(Math.round(client.width), 47, 'check width');
+    assert.equal(Math.round(client.height), 47, 'check height');
+  });
+
+  it('getClientRect with linear bezier', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var line = new Konva.Line({
+      x: 0,
+      y: 0,
+      points: [5, 5, 20, 5, 35, 5, 50, 5],
+      bezier: true,
+      stroke: '#0f0',
+    });
+    layer.add(line);
+    layer.draw();
+
+    var client = line.getClientRect();
+
+    assert.equal(Math.round(client.x), 4, 'check x');
+    assert.equal(Math.round(client.y), 4, 'check y');
+    assert.equal(Math.round(client.width), 47, 'check width');
+    assert.equal(Math.round(client.height), 2, 'check height');
+
+    line.points([5, 5, 5, 20, 5, 35, 5, 50]);
+    client = line.getClientRect();
+
+    assert.equal(Math.round(client.x), 4, 'check x');
+    assert.equal(Math.round(client.y), 4, 'check y');
+    assert.equal(Math.round(client.width), 2, 'check width');
+    assert.equal(Math.round(client.height), 47, 'check height');
+  });
+
   it('line caching', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
