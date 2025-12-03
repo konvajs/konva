@@ -27,10 +27,10 @@ function detectBrowser() {
 declare const WorkerGlobalScope: any;
 
 export const glob: any =
-  // @ts-ignore 
+  // @ts-ignore
   typeof global !== 'undefined'
-    // @ts-ignore
-    ? global
+    ? // @ts-ignore
+      global
     : typeof window !== 'undefined'
       ? window
       : typeof WorkerGlobalScope !== 'undefined'
