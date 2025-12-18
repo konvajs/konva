@@ -452,7 +452,7 @@ let _isCanvasFarblingActive: boolean | null = null;
 const req =
   (typeof requestAnimationFrame !== 'undefined' && requestAnimationFrame) ||
   function (f) {
-    setTimeout(f, 60);
+    setTimeout(f, 16);  // 60fps ≈ 16.67ms per frame
   };
 /**
  * @namespace Util
