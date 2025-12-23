@@ -2021,10 +2021,6 @@ describe('Text', function () {
     layer.add(text);
     stage.add(layer);
 
-    console.log(layer.getContext().getTrace());
-    console.log(layer.getContext().getTrace(true));
-    console.log(layer.getContext().getTrace(true, true));
-
     const trace = layer.getContext().getTrace();
 
     if (Konva._renderBackend === 'web') {
