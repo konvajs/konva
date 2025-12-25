@@ -2503,31 +2503,24 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   static protoListenerMap = new Map<string, any>();
 
   _getProtoListeners(eventType) {
-   const { nodeType } = this;
-    let listeners = Node.protoListenerMap.get(nodeType);
-    // if no cache for listeners, we need to pre calculate it
-    if (!listeners) {
-      listeners = {};
+    const { nodeType } = this;
+    const allListeners = Node.protoListenerMap.get(nodeType) || {};
+    let events = allListeners?.[eventType];
+    if (events === undefined) {
+      //recalculate cache
+      events = [];
       let obj = Object.getPrototypeOf(this);
       while (obj) {
-        if (!obj.eventListeners) {
-          obj = Object.getPrototypeOf(obj);
-          continue;
-        }
-        if (obj.hasOwnProperty('eventListeners')) {
-          for (var event in obj.eventListeners) {
-            const newEvents = obj.eventListeners[event];
-            const oldEvents = listeners[event] || [];
-  
-            listeners[event] = newEvents.concat(oldEvents);
-          }
-        }
+        const hierarchyEvents = obj.eventListeners?.[eventType] ?? [];
+        events.push(...hierarchyEvents);
         obj = Object.getPrototypeOf(obj);
       }
-      Node.protoListenerMap.set(nodeType, listeners);
+      // update cache
+      allListeners[eventType] = events;
+      Node.protoListenerMap.set(nodeType, allListeners);
     }
 
-    return listeners[eventType];
+    return events;
   }
   _fire(eventType, evt) {
     evt = evt || {};
