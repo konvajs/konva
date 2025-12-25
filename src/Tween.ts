@@ -151,7 +151,7 @@ class TweenEngine {
 }
 
 export interface TweenConfig extends NodeConfig {
-  easing?: typeof Easings[keyof typeof Easings];
+  easing?: (typeof Easings)[keyof typeof Easings];
   yoyo?: boolean;
   onReset?: Function;
   onFinish?: Function;

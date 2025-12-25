@@ -2003,4 +2003,41 @@ describe('Text', function () {
       );
     }
   });
+
+  it('text with underline offset', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      x: 10,
+      y: 10,
+      text: 'hello\nworld',
+      fontSize: 80,
+      fill: 'red',
+      textDecoration: 'underline',
+      underlineOffset: 16,
+    });
+
+    layer.add(text);
+    stage.add(layer);
+
+    const trace = layer.getContext().getTrace();
+
+    if (Konva._renderBackend === 'web') {
+      assert.equal(
+        trace,
+        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,83.5);lineTo(169,83.5);stroke();restore();fillStyle=red;fillText(hello,0,67.5);restore();save();save();beginPath();moveTo(0,163.5);lineTo(191,163.5);stroke();restore();fillStyle=red;fillText(world,0,147.5);restore();restore();'
+      );
+    } else if (Konva._renderBackend === 'node-canvas') {
+      assert.equal(
+        trace,
+        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,84);lineTo(169,84);stroke();restore();fillStyle=red;fillText(hello,0,68);restore();save();save();beginPath();moveTo(0,164);lineTo(191,164);stroke();restore();fillStyle=red;fillText(world,0,148);restore();restore();'
+      );
+    } else {
+      assert.equal(
+        trace,
+        'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();beginPath();moveTo(0,83.734);lineTo(169,83.734);stroke();restore();fillStyle=red;fillText(hello,0,67.734);restore();save();save();beginPath();moveTo(0,163.734);lineTo(191,163.734);stroke();restore();fillStyle=red;fillText(world,0,147.734);restore();restore();'
+      );
+    }
+  });
 });

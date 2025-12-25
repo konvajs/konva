@@ -70,6 +70,7 @@ export interface TextConfig extends ShapeConfig {
   fontStyle?: string;
   fontVariant?: string;
   textDecoration?: string;
+  underlineOffset?: number;
   align?: string;
   verticalAlign?: string;
   padding?: number;
@@ -183,6 +184,7 @@ function checkDefaultFill(config?: TextConfig) {
  * @param {String} [config.fontStyle] can be 'normal', 'italic', or 'bold', '500' or even 'italic bold'.  'normal' is the default.
  * @param {String} [config.fontVariant] can be normal or small-caps.  Default is normal
  * @param {String} [config.textDecoration] can be line-through, underline or empty string. Default is empty string.
+ * @param {String} [config.underlineOffset] offset for underline line. Default is calculated based on font size.
  * @param {String} config.text
  * @param {String} [config.align] can be left, center, right or justify
  * @param {String} [config.verticalAlign] can be top, middle or bottom
@@ -239,6 +241,7 @@ export class Text extends Shape<TextConfig> {
       charRenderFunc = this.charRenderFunc(),
       fill = this.fill(),
       textDecoration = this.textDecoration(),
+      underlineOffset = this.underlineOffset(),
       shouldUnderline = textDecoration.indexOf('underline') !== -1,
       shouldLineThrough = textDecoration.indexOf('line-through') !== -1,
       n;
@@ -299,9 +302,11 @@ export class Text extends Shape<TextConfig> {
         context.save();
         context.beginPath();
 
-        const yOffset = !Konva.legacyTextRendering
-          ? Math.round(fontSize / 4)
-          : Math.round(fontSize / 2);
+        const yOffset =
+          underlineOffset ??
+          (!Konva.legacyTextRendering
+            ? Math.round(fontSize / 4)
+            : Math.round(fontSize / 2));
         const x = lineTranslateX;
         const y = translateY + lineTranslateY + yOffset;
         context.moveTo(x, y);
@@ -765,6 +770,7 @@ export class Text extends Shape<TextConfig> {
   padding: GetSet<number, this>;
   lineHeight: GetSet<number, this>;
   textDecoration: GetSet<string, this>;
+  underlineOffset: GetSet<number, this>;
   text: GetSet<string, this>;
   wrap: GetSet<string, this>;
   ellipsis: GetSet<boolean, this>;
@@ -1051,6 +1057,26 @@ Factory.addGetterSetter(Text, 'text', '', getStringValidator());
  */
 
 Factory.addGetterSetter(Text, 'textDecoration', '');
+
+/**
+ * get/set text underline decoration offset. Offset for underline line. Default is calculated based on font size.
+ * @name Konva.Text#underlineOffset
+ * @method
+ * @param {Number} underlineOffset
+ * @returns {Number}
+ * @example
+ * // get underline offset
+ * var underlineOffset = text.underlineOffset();
+ *
+ * // set underline offset
+ * text.underlineOffset(5);
+ */
+Factory.addGetterSetter(
+  Text,
+  'underlineOffset',
+  undefined,
+  getNumberValidator()
+);
 
 /**
  * get/set per-character render hook. The callback is invoked for each grapheme before drawing.
