@@ -2500,8 +2500,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
   }
 
+  static protoListenerMap = new Map<string, any>();
+
   _getProtoListeners(eventType) {
-    const allListeners = this._cache.get(ALL_LISTENERS) ?? {};
+    const { nodeType } = this;
+    const allListeners = Node.protoListenerMap.get(nodeType) || {};
     let events = allListeners?.[eventType];
     if (events === undefined) {
       //recalculate cache
@@ -2514,7 +2517,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       }
       // update cache
       allListeners[eventType] = events;
-      this._cache.set(ALL_LISTENERS, allListeners);
+      Node.protoListenerMap.set(nodeType, allListeners);
     }
 
     return events;
