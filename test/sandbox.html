@@ -21,6 +21,7 @@
     <div id="container"></div>
     <script type="module">
       import Konva from '../src/index.ts';
+      Konva.autoDrawEnabled = false;
 
       const stage = new Konva.Stage({
         container: 'container',
@@ -41,8 +42,8 @@
       // throw new Error('test');
 
       // Given gridRows and gridCols, compute maximum possible radius and position circles
-      const gridRows = 200;
-      const gridCols = 200;
+      const gridRows = 1000;
+      const gridCols = 1000;
       const width = window.innerWidth;
       const height = window.innerHeight;
 
@@ -61,6 +62,7 @@
       const circles = [];
 
       // Create grid of circles - centers in each cell's center
+      console.time('create grid of circles');
       for (let row = 0; row < gridRows; row++) {
         for (let col = 0; col < gridCols; col++) {
           const cx = cellWidth * col + cellWidth / 2;
@@ -82,20 +84,8 @@
           layer.add(c);
         }
       }
-      layer.draw();
 
-      // Test hits at each center
-      for (const cInfo of circles) {
-        const { node, x, y } = cInfo;
-        const hit = stage.getIntersection({ x, y });
-        if (hit !== node) {
-          const gotId = hit ? hit.id && hit.id() : null;
-          console.error(
-            `Hit test failed at (${x},${y}): expected id=${node.id()}, got id=${gotId}`
-          );
-        }
-      }
-      console.log('Hit test grid check complete.');
+      console.timeEnd('create grid of circles');
     </script>
   </body>
 </html>
