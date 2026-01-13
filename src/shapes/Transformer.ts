@@ -16,6 +16,7 @@ export interface Box extends IRect {
 }
 
 export interface TransformerConfig extends ContainerConfig {
+  nodes?: Array<Node>;
   resizeEnabled?: boolean;
   rotateEnabled?: boolean;
   rotateLineVisible?: boolean;
@@ -37,7 +38,6 @@ export interface TransformerConfig extends ContainerConfig {
   centeredScaling?: boolean;
   enabledAnchors?: Array<string>;
   flipEnabled?: boolean;
-  node?: Rect;
   ignoreStroke?: boolean;
   boundBoxFunc?: (oldBox: Box, newBox: Box) => Box;
   useSingleNodeRotation?: boolean;
