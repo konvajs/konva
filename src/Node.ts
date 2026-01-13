@@ -354,8 +354,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    */
   clearCache() {
     if (this._cache.has(CANVAS)) {
-      const { scene, filter, hit, buffer } = this._cache.get(CANVAS);
-      Util.releaseCanvas(scene, filter, hit, buffer);
+      const { scene, filter, hit } = this._cache.get(CANVAS);
+      Util.releaseCanvas(scene._canvas, filter._canvas, hit._canvas);
       this._cache.delete(CANVAS);
     }
 
@@ -548,11 +548,14 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       sceneContext.restore();
     }
 
+    // Release buffer canvas immediately - it's only needed during initial cache drawing
+    // This significantly reduces memory usage for cached nodes
+    Util.releaseCanvas(bufferCanvas._canvas);
+
     this._cache.set(CANVAS, {
       scene: cachedSceneCanvas,
       filter: cachedFilterCanvas,
       hit: cachedHitCanvas,
-      buffer: bufferCanvas,
       x: x,
       y: y,
     });
