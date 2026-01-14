@@ -645,7 +645,16 @@ export class Shape<
       stage = this.getStage();
       const bc = bufferCanvas || stage.bufferCanvas;
       const bufferContext = bc.getContext();
-      bufferContext.clear();
+      // When caching, the buffer canvas may have a translation applied.
+      // We need to reset the transform before clearing to ensure the entire canvas is cleared.
+      if (bufferCanvas) {
+        bufferContext.save();
+        bufferContext.setTransform(1, 0, 0, 1, 0, 0);
+        bufferContext.clearRect(0, 0, bc.width, bc.height);
+        bufferContext.restore();
+      } else {
+        bufferContext.clear();
+      }
       bufferContext.save();
       bufferContext._applyLineJoin(this);
       bufferContext._applyMiterLimit(this);
