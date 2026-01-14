@@ -3,9 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 10.0.1? (2026-01-??)
+## 10.1.0 (2026-01-14)
 
+- Added underline offset option and related test for Text Annotation
 - Fixed large memory usage on cache
+- Fix bounding box calculation for bezier lines
+- Fixed cached render with buffer canvas is used
 
 ## 10.0.12 (2025-11-21)
 
