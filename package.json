@@ -1,6 +1,6 @@
 {
   "name": "konva",
-  "version": "10.1.0",
+  "version": "10.2.0",
   "description": "HTML5 2d canvas library.",
   "author": "Anton Lavrenov",
   "type": "module",
