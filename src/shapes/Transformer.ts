@@ -626,12 +626,7 @@ export class Transformer extends Group {
         const height = shape.height();
 
         ctx.beginPath();
-        ctx.rect(
-          -padding,
-          -padding,
-          width + padding * 2,
-          height + padding * 2
-        );
+        ctx.rect(-padding, -padding, width + padding * 2, height + padding * 2);
 
         if (tr.rotateEnabled() && tr.rotateLineVisible()) {
           // Calculate rotation line position based on rotateAnchorAngle
