@@ -32,60 +32,25 @@
       const layer = new Konva.Layer();
       stage.add(layer);
 
-      // const circle = new Konva.Circle({
-      //   x: 100,
-      //   y: 100,
-      //   radius: 10,
-      //   fill: 'red',
-      // });
-      // layer.add(circle);
-      // throw new Error('test');
+      const text = new Konva.Text({
+        x: 100,
+        y: 100,
+        text: 'Hello, world!',
+        fontSize: 20,
+        fontFamily: 'Arial',
+        fill: 'black',
+      });
+      layer.add(text);
 
-      // Given gridRows and gridCols, compute maximum possible radius and position circles
-      const gridRows = 1000;
-      const gridCols = 1000;
-      const width = window.innerWidth;
-      const height = window.innerHeight;
+      const transformer = new Konva.Transformer({
+        nodes: [text],
+      });
+      layer.add(transformer);
 
-      // Calculate spacing and radius so circles fit entire window
-      // There are (gridCols - 1) spaces between centers horizontally, and (gridRows - 1) vertically
-      // The available width is "width", so (gridCols) circles and (gridCols-1) spaces between
-      // The diameter must fit: gridCols * diameter + (gridCols - 1) * gap <= width
-      // But to maximize, gap should equal to at least 0, so best layout is circles tangent
-
-      // So the max diameter horizontally is width / gridCols
-      // Likewise for vertical
-      const cellWidth = width / gridCols;
-      const cellHeight = height / gridRows;
-      const radius = Math.min(cellWidth, cellHeight) / 2;
-
-      const circles = [];
-
-      // Create grid of circles - centers in each cell's center
-      console.time('create grid of circles');
-      for (let row = 0; row < gridRows; row++) {
-        for (let col = 0; col < gridCols; col++) {
-          const cx = cellWidth * col + cellWidth / 2;
-          const cy = cellHeight * row + cellHeight / 2;
-          const c = new Konva.Circle({
-            x: cx,
-            y: cy,
-            radius: radius,
-            fill: Konva.Util.getRandomColor(),
-            id: `circle-${row}-${col}`,
-          });
-          circles.push({
-            node: c,
-            x: cx,
-            y: cy,
-            row,
-            col,
-          });
-          layer.add(c);
-        }
-      }
-
-      console.timeEnd('create grid of circles');
+      const anim = new Konva.Animation((frame) => {
+        transformer.rotateAnchorAngle(frame.time * 0.01);
+      }, layer);
+      anim.start();
     </script>
   </body>
 </html>

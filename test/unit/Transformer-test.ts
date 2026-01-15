@@ -5435,4 +5435,151 @@ describe('Transformer', function () {
       'Back should be draggable when at least one node is draggable'
     );
   });
+
+  // ======================================================
+  // rotateAnchorAngle tests
+  // ======================================================
+
+  it('rotateAnchorAngle positions rotater correctly at different angles', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+    });
+    layer.add(tr);
+    layer.draw();
+
+    var rotater = tr.findOne('.rotater')!;
+    var offset = tr.rotateAnchorOffset();
+
+    // 0 degrees (default): top-center
+    assertAlmostEqual(rotater.x(), 50);
+    assertAlmostEqual(rotater.y(), -offset);
+
+    // 90 degrees: middle-right
+    tr.rotateAnchorAngle(90);
+    assertAlmostEqual(rotater.x(), 100 + offset);
+    assertAlmostEqual(rotater.y(), 50);
+
+    // 180 degrees: bottom-center
+    tr.rotateAnchorAngle(180);
+    assertAlmostEqual(rotater.x(), 50);
+    assertAlmostEqual(rotater.y(), 100 + offset);
+
+    // -90 degrees: middle-left
+    tr.rotateAnchorAngle(-90);
+    assertAlmostEqual(rotater.x(), -offset);
+    assertAlmostEqual(rotater.y(), 50);
+  });
+
+  it('drag rotation works with rotateAnchorAngle at 90 (right side)', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    // Position rect so rotater at right side stays within stage bounds (578x200)
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+      rotateAnchorAngle: 90,
+    });
+    layer.add(tr);
+    layer.draw();
+
+    var rotater = tr.findOne('.rotater')!;
+    var pos = rotater.getAbsolutePosition();
+
+    simulateMouseDown(tr, { x: pos.x, y: pos.y });
+    simulateMouseMove(tr, { x: pos.x - 100, y: pos.y + 100 });
+    simulateMouseUp(tr, { x: pos.x - 100, y: pos.y + 100 });
+
+    assert.equal(rect.rotation(), 90);
+  });
+
+  it('drag rotation works with rotateAnchorAngle at -90 (left side)', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    // Position rect so rotater at left side stays within stage bounds
+    var rect = new Konva.Rect({
+      x: 150,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+      rotateAnchorAngle: -90,
+    });
+    layer.add(tr);
+    layer.draw();
+
+    var rotater = tr.findOne('.rotater')!;
+    var pos = rotater.getAbsolutePosition();
+
+    simulateMouseDown(tr, { x: pos.x, y: pos.y });
+    simulateMouseMove(tr, { x: pos.x + 100, y: pos.y - 100 });
+    simulateMouseUp(tr, { x: pos.x + 100, y: pos.y - 100 });
+
+    assert.equal(rect.rotation(), 90);
+  });
+
+  it('drag rotation works with rotateAnchorAngle at 180 (bottom)', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    // Position rect so rotater at bottom stays within stage bounds (height=200)
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 10,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+      rotateAnchorAngle: 180,
+    });
+    layer.add(tr);
+    layer.draw();
+
+    var rotater = tr.findOne('.rotater')!;
+    var pos = rotater.getAbsolutePosition();
+
+    simulateMouseDown(tr, { x: pos.x, y: pos.y });
+    simulateMouseMove(tr, { x: pos.x - 100, y: pos.y - 100 });
+    simulateMouseUp(tr, { x: pos.x - 100, y: pos.y - 100 });
+
+    assertAlmostEqual(rect.rotation(), 90);
+  });
 });

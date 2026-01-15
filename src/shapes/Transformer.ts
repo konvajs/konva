@@ -23,6 +23,7 @@ export interface TransformerConfig extends ContainerConfig {
   rotationSnaps?: Array<number>;
   rotationSnapTolerance?: number;
   rotateAnchorOffset?: number;
+  rotateAnchorAngle?: number;
   rotateAnchorCursor?: string;
   borderEnabled?: boolean;
   borderStroke?: string;
@@ -55,6 +56,7 @@ const EVENTS_NAME = 'tr-konva';
 const ATTR_CHANGE_LIST = [
   'resizeEnabledChange',
   'rotateAnchorOffsetChange',
+  'rotateAnchorAngleChange',
   'rotateEnabledChange',
   'enabledAnchorsChange',
   'anchorSizeChange',
@@ -620,19 +622,54 @@ export class Transformer extends Group {
       sceneFunc(ctx, shape) {
         const tr = shape.getParent() as Transformer;
         const padding = tr.padding();
+        const width = shape.width();
+        const height = shape.height();
+
         ctx.beginPath();
         ctx.rect(
           -padding,
           -padding,
-          shape.width() + padding * 2,
-          shape.height() + padding * 2
+          width + padding * 2,
+          height + padding * 2
         );
-        ctx.moveTo(shape.width() / 2, -padding);
+
         if (tr.rotateEnabled() && tr.rotateLineVisible()) {
-          ctx.lineTo(
-            shape.width() / 2,
-            -tr.rotateAnchorOffset() * Util._sign(shape.height()) - padding
-          );
+          // Calculate rotation line position based on rotateAnchorAngle
+          const rotateAnchorAngle = tr.rotateAnchorAngle();
+          const rotateAnchorOffset = tr.rotateAnchorOffset();
+          const rad = Util.degToRad(rotateAnchorAngle);
+          // Direction vector (0 degrees = up/top)
+          const dirX = Math.sin(rad);
+          const dirY = -Math.cos(rad);
+
+          // Center of the box
+          const cx = width / 2;
+          const cy = height / 2;
+
+          // Find intersection with box edge
+          let t = Infinity;
+          if (dirY < 0) {
+            t = Math.min(t, -cy / dirY);
+          } else if (dirY > 0) {
+            t = Math.min(t, (height - cy) / dirY);
+          }
+          if (dirX < 0) {
+            t = Math.min(t, -cx / dirX);
+          } else if (dirX > 0) {
+            t = Math.min(t, (width - cx) / dirX);
+          }
+
+          // Edge point (start of line)
+          const edgeX = cx + dirX * t;
+          const edgeY = cy + dirY * t;
+
+          // End point with offset
+          const sign = Util._sign(height);
+          const endX = edgeX + dirX * rotateAnchorOffset * sign;
+          const endY = edgeY + dirY * rotateAnchorOffset * sign;
+
+          ctx.moveTo(edgeX, edgeY);
+          ctx.lineTo(endX, endY);
         }
 
         ctx.fillStrokeShape(shape);
@@ -739,8 +776,10 @@ export class Transformer extends Group {
       x = anchorNode.x() - attrs.width / 2;
       y = -anchorNode.y() + attrs.height / 2;
 
-      // hor angle is changed?
-      let delta = Math.atan2(-y, x) + Math.PI / 2;
+      // Calculate angle from center to current anchor position
+      // Offset by rotateAnchorAngle so we measure rotation from the anchor's starting position
+      const rotateAnchorAngleRad = Konva.getAngle(this.rotateAnchorAngle());
+      let delta = Math.atan2(-y, x) + Math.PI / 2 - rotateAnchorAngleRad;
 
       if (attrs.height < 0) {
         delta -= Math.PI;
@@ -1244,9 +1283,47 @@ export class Transformer extends Group {
       visible: resizeEnabled && enabledAnchors.indexOf('bottom-right') >= 0,
     });
 
+    // Calculate rotation anchor position based on rotateAnchorAngle
+    const rotateAnchorAngle = this.rotateAnchorAngle();
+    const rotateAnchorOffset = this.rotateAnchorOffset();
+    const rad = Util.degToRad(rotateAnchorAngle);
+    // Direction vector (0 degrees = up/top)
+    const dirX = Math.sin(rad);
+    const dirY = -Math.cos(rad);
+
+    // Center of the box
+    const cx = width / 2;
+    const cy = height / 2;
+
+    // Find intersection with box edge
+    // Calculate time to hit each edge from center
+    let t = Infinity;
+
+    // Handle each direction
+    if (dirY < 0) {
+      // Moving up, check top edge (y = 0)
+      t = Math.min(t, -cy / dirY);
+    } else if (dirY > 0) {
+      // Moving down, check bottom edge (y = height)
+      t = Math.min(t, (height - cy) / dirY);
+    }
+    if (dirX < 0) {
+      // Moving left, check left edge (x = 0)
+      t = Math.min(t, -cx / dirX);
+    } else if (dirX > 0) {
+      // Moving right, check right edge (x = width)
+      t = Math.min(t, (width - cx) / dirX);
+    }
+
+    // Edge point
+    const edgeX = cx + dirX * t;
+    const edgeY = cy + dirY * t;
+
+    // Final position with offset (accounting for height sign and padding)
+    const sign = Util._sign(height);
     this._batchChangeChild('.rotater', {
-      x: width / 2,
-      y: -this.rotateAnchorOffset() * Util._sign(height) - padding,
+      x: edgeX + dirX * rotateAnchorOffset * sign,
+      y: edgeY + dirY * rotateAnchorOffset * sign - padding * dirY,
       visible: this.rotateEnabled(),
     });
 
@@ -1332,6 +1409,7 @@ export class Transformer extends Group {
   rotateEnabled: GetSet<boolean, this>;
   rotateLineVisible: GetSet<boolean, this>;
   rotateAnchorOffset: GetSet<number, this>;
+  rotateAnchorAngle: GetSet<number, this>;
   rotationSnapTolerance: GetSet<number, this>;
   rotateAnchorCursor: GetSet<string, this>;
   padding: GetSet<number, this>;
@@ -1511,6 +1589,30 @@ Factory.addGetterSetter(
   Transformer,
   'rotateAnchorOffset',
   50,
+  getNumberValidator()
+);
+
+/**
+ * get/set the angle (in degrees) of the rotation anchor position around the bounding box.
+ * 0 = top-center (default), 90 = middle-right, 180 = bottom-center, -90 = middle-left
+ * @name Konva.Transformer#rotateAnchorAngle
+ * @method
+ * @param {Number} angle
+ * @returns {Number}
+ * @example
+ * // get
+ * var rotateAnchorAngle = transformer.rotateAnchorAngle();
+ *
+ * // set rotation anchor to the right side
+ * transformer.rotateAnchorAngle(90);
+ *
+ * // set rotation anchor to the bottom
+ * transformer.rotateAnchorAngle(180);
+ */
+Factory.addGetterSetter(
+  Transformer,
+  'rotateAnchorAngle',
+  0,
   getNumberValidator()
 );
 
