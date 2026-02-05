@@ -2579,6 +2579,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       },
       dragStatus: 'ready',
       pointerId,
+      startEvent: evt,
     });
   }
 
@@ -2599,7 +2600,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       {
         type: 'dragstart',
         target: this,
-        evt: evt && evt.evt,
+        evt: (elem.startEvent && elem.startEvent.evt) || (evt && evt.evt),
       },
       bubbleEvent
     );
