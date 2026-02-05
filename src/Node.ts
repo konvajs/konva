@@ -846,14 +846,25 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   on<K extends keyof NodeEventMap>(
     evtStr: K,
     handler: KonvaEventListener<this, NodeEventMap[K]>
-  ) {
+  ): this;
+  on<K extends keyof NodeEventMap>(
+    evtStr: K,
+    selector: string,
+    handler: KonvaEventListener<Node, NodeEventMap[K]>
+  ): this;
+  on(...args: any[]): this {
+    const evtStr = args[0];
+    const selectorOrHandler = args[1];
+    const handler = args[2];
     if (this._cache) {
       this._cache.delete(ALL_LISTENERS);
     }
 
-    if (arguments.length === 3) {
-      return this._delegate.apply(this, arguments as any);
+    if (args.length === 3) {
+      return this._delegate.apply(this, args as any);
     }
+    
+    const actualHandler = selectorOrHandler;
     const events = (evtStr as string).split(SPACE);
 
     /*
@@ -872,7 +883,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         this.eventListeners[baseEvent] = [];
       }
 
-      this.eventListeners[baseEvent].push({ name, handler });
+      this.eventListeners[baseEvent].push({ name, handler: actualHandler });
     }
 
     return this;
@@ -966,6 +977,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         handler.call(targets[i], evt as any);
       }
     });
+    return this;
   }
   /**
    * remove a node from parent, but don't destroy. You can reuse the node later.
@@ -2902,7 +2914,7 @@ Node.prototype._attrsAffectingSize = [];
 // attache events listeners once into prototype
 // that way we don't spend too much time on making an new instance
 Node.prototype.eventListeners = {};
-Node.prototype.on.call(Node.prototype, TRANSFORM_CHANGE_STR, function () {
+Node.prototype.on(TRANSFORM_CHANGE_STR, function () {
   if (this._batchingTransformChange) {
     this._needClearTransformCache = true;
     return;
@@ -2911,13 +2923,13 @@ Node.prototype.on.call(Node.prototype, TRANSFORM_CHANGE_STR, function () {
   this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
 });
 
-Node.prototype.on.call(Node.prototype, 'visibleChange.konva', function () {
+Node.prototype.on('visibleChange.konva', function () {
   this._clearSelfAndDescendantCache(VISIBLE);
 });
-Node.prototype.on.call(Node.prototype, 'listeningChange.konva', function () {
+Node.prototype.on('listeningChange.konva', function () {
   this._clearSelfAndDescendantCache(LISTENING);
 });
-Node.prototype.on.call(Node.prototype, 'opacityChange.konva', function () {
+Node.prototype.on('opacityChange.konva', function () {
   this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
 });
 

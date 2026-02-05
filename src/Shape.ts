@@ -905,32 +905,27 @@ Shape.prototype.nodeType = 'Shape';
 _registerNode(Shape);
 
 Shape.prototype.eventListeners = {};
-Shape.prototype.on.call(
-  Shape.prototype,
+Shape.prototype.on(
   'shadowColorChange.konva shadowBlurChange.konva shadowOffsetChange.konva shadowOpacityChange.konva shadowEnabledChange.konva',
   _clearHasShadowCache
 );
 
-Shape.prototype.on.call(
-  Shape.prototype,
+Shape.prototype.on(
   'shadowColorChange.konva shadowOpacityChange.konva shadowEnabledChange.konva',
   _clearGetShadowRGBACache
 );
 
-Shape.prototype.on.call(
-  Shape.prototype,
+Shape.prototype.on(
   'fillPriorityChange.konva fillPatternImageChange.konva fillPatternRepeatChange.konva fillPatternScaleXChange.konva fillPatternScaleYChange.konva fillPatternOffsetXChange.konva fillPatternOffsetYChange.konva fillPatternXChange.konva fillPatternYChange.konva fillPatternRotationChange.konva',
   _clearFillPatternCache
 );
 
-Shape.prototype.on.call(
-  Shape.prototype,
+Shape.prototype.on(
   'fillPriorityChange.konva fillLinearGradientColorStopsChange.konva fillLinearGradientStartPointXChange.konva fillLinearGradientStartPointYChange.konva fillLinearGradientEndPointXChange.konva fillLinearGradientEndPointYChange.konva',
   _clearLinearGradientCache
 );
 
-Shape.prototype.on.call(
-  Shape.prototype,
+Shape.prototype.on(
   'fillPriorityChange.konva fillRadialGradientColorStopsChange.konva fillRadialGradientStartPointXChange.konva fillRadialGradientStartPointYChange.konva fillRadialGradientEndPointXChange.konva fillRadialGradientEndPointYChange.konva fillRadialGradientStartRadiusChange.konva fillRadialGradientEndRadiusChange.konva',
   _clearRadialGradientCache
 );
