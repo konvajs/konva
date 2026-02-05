@@ -863,8 +863,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (args.length === 3) {
       return this._delegate.apply(this, args as any);
     }
-    
-    const actualHandler = selectorOrHandler;
+
     const events = (evtStr as string).split(SPACE);
 
     /*
@@ -883,7 +882,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         this.eventListeners[baseEvent] = [];
       }
 
-      this.eventListeners[baseEvent].push({ name, handler: actualHandler });
+      this.eventListeners[baseEvent].push({ name, handler: selectorOrHandler });
     }
 
     return this;
