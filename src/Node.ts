@@ -2579,6 +2579,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       },
       dragStatus: 'ready',
       pointerId,
+      startEvent: evt,
     });
   }
 
@@ -2599,7 +2600,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       {
         type: 'dragstart',
         target: this,
-        evt: evt && evt.evt,
+        // Use the stored start event if available (from mousedown/touchstart),
+        // otherwise fall back to the provided event (when startDrag is called programmatically)
+        evt: (elem.startEvent && elem.startEvent.evt) || (evt && evt.evt),
       },
       bubbleEvent
     );

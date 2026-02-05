@@ -30,6 +30,7 @@ export const DD = {
       startPointerPos: Vector2d;
       offset: Vector2d;
       pointerId?: number;
+      startEvent?: any;
       // when we just put pointer down on a node
       // it will create drag element
       dragStatus: 'ready' | 'dragging' | 'stopped';
