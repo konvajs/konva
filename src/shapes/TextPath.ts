@@ -28,6 +28,11 @@ export interface TextPathConfig extends ShapeConfig {
 const EMPTY_STRING = '',
   NORMAL = 'normal';
 
+// Tolerance in pixels for floating-point precision when comparing glyph
+// offsets to path length. Prevents the last character from being silently
+// dropped when the accumulated offset is within rounding error of path end.
+const GLYPH_PATH_PRECISION = 0.001;
+
 function _fillFunc(this: TextPath, context) {
   context.fillText(this.partialText, 0, 0);
 }
@@ -329,7 +334,7 @@ export class TextPath extends Shape<TextPathConfig> {
       // getTextWidth() is used to set an exactly-fitting path length.
       const charEndPoint = this._getPointAtLength(
         charEndLength > this.pathLength &&
-          charEndLength - this.pathLength < 0.001
+          charEndLength - this.pathLength < GLYPH_PATH_PRECISION
           ? this.pathLength
           : charEndLength
       );
