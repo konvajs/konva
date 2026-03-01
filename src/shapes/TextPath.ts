@@ -322,7 +322,17 @@ export class TextPath extends Shape<TextPathConfig> {
         glyphWidth += (this.pathLength - textWidth) / numberOfSpaces;
       }
 
-      const charEndPoint = this._getPointAtLength(offsetToGlyph + glyphWidth);
+      const charEndLength = offsetToGlyph + glyphWidth;
+      // Clamp the glyph end to the path length to handle floating-point precision
+      // when the accumulated offset is within rounding error of the path end.
+      // This prevents the last character from being silently dropped when
+      // getTextWidth() is used to set an exactly-fitting path length.
+      const charEndPoint = this._getPointAtLength(
+        charEndLength > this.pathLength &&
+          charEndLength - this.pathLength < 0.001
+          ? this.pathLength
+          : charEndLength
+      );
       if (!charEndPoint) {
         return;
       }
