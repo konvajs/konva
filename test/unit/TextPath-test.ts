@@ -1040,9 +1040,11 @@ describe('TextPath', function () {
   });
 
   it('should render last character when accumulated glyph offset slightly exceeds path length', function () {
-    // Simulates the floating-point precision case where the sum of individual glyph
-    // widths accumulates to be very slightly larger than the path length. This can
-    // happen in real browsers where canvas measureText has subtle precision differences.
+    // The mock _getTextSize returns charWidth=10 for any input (individual char or full string),
+    // so the sum of individual widths (width) = 30 and the full-string measurement = 10,
+    // giving kerningAdjustment = 20.
+    // The path is set to 30 - 1e-10, and the last char's endpoint (30) overshoots by 1e-10,
+    // which is within the kerningAdjustment tolerance — so it should be clamped and rendered.
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -1052,7 +1054,7 @@ describe('TextPath', function () {
     const numChars = text.length; // 3
     const totalWidth = charWidth * numChars; // 30
 
-    // Path is very slightly shorter than the total text width (simulates float precision issue)
+    // Path is very slightly shorter than the total per-char text width
     const pathLength = totalWidth - 1e-10;
 
     const textpath = new Konva.TextPath({

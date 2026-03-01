@@ -28,11 +28,6 @@ export interface TextPathConfig extends ShapeConfig {
 const EMPTY_STRING = '',
   NORMAL = 'normal';
 
-// Tolerance in pixels for floating-point precision when comparing glyph
-// offsets to path length. Prevents the last character from being silently
-// dropped when the accumulated offset is within rounding error of path end.
-const GLYPH_PATH_PRECISION = 0.001;
-
 function _fillFunc(this: TextPath, context) {
   context.fillText(this.partialText, 0, 0);
 }
@@ -283,7 +278,7 @@ export class TextPath extends Shape<TextPathConfig> {
       });
       width += chars[i].width;
     }
-    const { height } = this._getTextSize(this.attrs.text);
+    const { width: fullTextWidth, height } = this._getTextSize(this.attrs.text);
     this.textWidth = width;
     this.textHeight = height;
     this.glyphInfo = [];
@@ -295,6 +290,13 @@ export class TextPath extends Shape<TextPathConfig> {
     const letterSpacing = this.letterSpacing();
     const align = this.align();
     const kerningFunc = this.kerningFunc();
+
+    // The sum of individual character widths can exceed the whole-string width
+    // due to kerning (browsers place adjacent glyphs closer together than the
+    // individual measurements suggest). This difference is the maximum amount
+    // by which the accumulated glyph offset can legitimately overshoot the
+    // path length when the path is sized to match the visually-measured text.
+    const kerningAdjustment = Math.max(0, width - fullTextWidth);
 
     // defines the width of the text on a straight line
     const textWidth = Math.max(
@@ -328,13 +330,13 @@ export class TextPath extends Shape<TextPathConfig> {
       }
 
       const charEndLength = offsetToGlyph + glyphWidth;
-      // Clamp the glyph end to the path length to handle floating-point precision
-      // when the accumulated offset is within rounding error of the path end.
-      // This prevents the last character from being silently dropped when
-      // getTextWidth() is used to set an exactly-fitting path length.
+      // When the path length is sized to match the visually-measured (kerned)
+      // text width, the accumulated per-glyph offset can exceed pathLength by
+      // up to kerningAdjustment pixels. Clamp to pathLength in that case so
+      // the last character is not silently dropped.
       const charEndPoint = this._getPointAtLength(
         charEndLength > this.pathLength &&
-          charEndLength - this.pathLength < GLYPH_PATH_PRECISION
+          charEndLength - this.pathLength <= kerningAdjustment
           ? this.pathLength
           : charEndLength
       );
