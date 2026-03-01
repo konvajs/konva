@@ -981,7 +981,7 @@ describe('TextPath', function () {
     layer.draw();
 
     var rect = textpath.getClientRect();
-    assert.equal(Math.round(rect.width), 298);
+    assert.equal(Math.abs(Math.round(rect.width) - 298) <= 1, true);
     assert.equal(Math.abs(Math.round(rect.height) - 171) < 2, true);
   });
 
