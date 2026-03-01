@@ -278,7 +278,7 @@ export class TextPath extends Shape<TextPathConfig> {
       });
       width += chars[i].width;
     }
-    const { height } = this._getTextSize(this.attrs.text);
+    const { width: fullTextWidth, height } = this._getTextSize(this.attrs.text);
     this.textWidth = width;
     this.textHeight = height;
     this.glyphInfo = [];
@@ -290,6 +290,13 @@ export class TextPath extends Shape<TextPathConfig> {
     const letterSpacing = this.letterSpacing();
     const align = this.align();
     const kerningFunc = this.kerningFunc();
+
+    // The sum of individual character widths can exceed the whole-string width
+    // due to kerning (browsers place adjacent glyphs closer together than the
+    // individual measurements suggest). This difference is the maximum amount
+    // by which the accumulated glyph offset can legitimately overshoot the
+    // path length when the path is sized to match the visually-measured text.
+    const kerningAdjustment = Math.max(0, width - fullTextWidth);
 
     // defines the width of the text on a straight line
     const textWidth = Math.max(
@@ -322,7 +329,17 @@ export class TextPath extends Shape<TextPathConfig> {
         glyphWidth += (this.pathLength - textWidth) / numberOfSpaces;
       }
 
-      const charEndPoint = this._getPointAtLength(offsetToGlyph + glyphWidth);
+      const charEndLength = offsetToGlyph + glyphWidth;
+      // When the path length is sized to match the visually-measured (kerned)
+      // text width, the accumulated per-glyph offset can exceed pathLength by
+      // up to kerningAdjustment pixels. Clamp to pathLength in that case so
+      // the last character is not silently dropped.
+      const charEndPoint = this._getPointAtLength(
+        charEndLength > this.pathLength &&
+          charEndLength - this.pathLength <= kerningAdjustment
+          ? this.pathLength
+          : charEndLength
+      );
       if (!charEndPoint) {
         return;
       }
