@@ -65,7 +65,7 @@ export abstract class Container<
    * @name Konva.Container#hasChildren
    * @returns {Boolean}
    */
-  hasChildren() {
+  override hasChildren() {
     return this.getChildren().length > 0;
   }
   /**
@@ -143,7 +143,7 @@ export abstract class Container<
     // chainable
     return this;
   }
-  destroy() {
+  override destroy() {
     if (this.hasChildren()) {
       this.destroyChildren();
     }
@@ -257,7 +257,7 @@ export abstract class Container<
     return false;
   }
   // extenders
-  toObject() {
+  override toObject() {
     const obj = Node.prototype.toObject.call(this);
 
     obj.children = [];
@@ -275,7 +275,7 @@ export abstract class Container<
    * @name Konva.Container#isAncestorOf
    * @param {Konva.Node} node
    */
-  isAncestorOf(node: Node) {
+  override isAncestorOf(node: Node) {
     let parent = node.getParent();
     while (parent) {
       if (parent._id === this._id) {
@@ -286,7 +286,7 @@ export abstract class Container<
 
     return false;
   }
-  clone(obj?: any) {
+  override clone(obj?: any) {
     // call super method
     const node = Node.prototype.clone.call(this, obj);
 
@@ -319,7 +319,7 @@ export abstract class Container<
 
     return arr;
   }
-  _clearSelfAndDescendantCache(attr?: string) {
+  override _clearSelfAndDescendantCache(attr?: string) {
     super._clearSelfAndDescendantCache(attr);
     // skip clearing if node is cached with canvas
     // for performance reasons !!!
@@ -433,7 +433,7 @@ export abstract class Container<
     }
   }
 
-  getClientRect(
+  override getClientRect(
     config: {
       skipTransform?: boolean;
       skipShadow?: boolean;

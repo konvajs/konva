@@ -62,7 +62,7 @@ export class Arc extends Shape<ArcConfig> {
     this.outerRadius(height / 2);
   }
 
-  getSelfRect() {
+  override getSelfRect() {
     const innerRadius = this.innerRadius();
     const outerRadius = this.outerRadius();
     const clockwise = this.clockwise();

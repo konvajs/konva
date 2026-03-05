@@ -477,7 +477,7 @@ export class Shape<
     return p[3] > 0;
   }
 
-  destroy() {
+  override destroy() {
     Node.prototype.destroy.call(this);
     delete shapes[this.colorKey];
     delete (this as any).colorKey;
@@ -549,7 +549,7 @@ export class Shape<
       height: size.height,
     };
   }
-  getClientRect(config: ShapeGetClientRectConfig = {}) {
+  override getClientRect(config: ShapeGetClientRectConfig = {}) {
     // if we have a cached parent, it will use cached transform matrix
     // but we don't want to that
     let hasCachedParent = false;
@@ -822,8 +822,8 @@ export class Shape<
     PointerEvents.releaseCapture(pointerId, this);
   }
 
-  draggable: GetSet<boolean, this>;
-  embossBlend: GetSet<boolean, this>;
+  override draggable: GetSet<boolean, this>;
+  override embossBlend: GetSet<boolean, this>;
 
   dash: GetSet<number[], this>;
   dashEnabled: GetSet<boolean, this>;

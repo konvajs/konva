@@ -990,7 +990,7 @@ export class Transformer extends Group {
   _handleMouseUp(e) {
     this._removeEvents(e);
   }
-  getAbsoluteTransform() {
+  override getAbsoluteTransform() {
     return this.getTransform();
   }
   _removeEvents(e?) {
@@ -1366,7 +1366,7 @@ export class Transformer extends Group {
       }
     }
   }
-  destroy() {
+  override destroy() {
     if (this.getStage() && this._cursorChange) {
       this.getStage()!.content && (this.getStage()!.content.style.cursor = '');
     }
@@ -1377,16 +1377,16 @@ export class Transformer extends Group {
   }
   // do not work as a container
   // we will recreate inner nodes manually
-  toObject() {
+  override toObject() {
     return Node.prototype.toObject.call(this);
   }
 
   // overwrite clone to NOT use method from Container
-  clone(obj?: any) {
+  override clone(obj?: any) {
     const node = Node.prototype.clone.call(this, obj);
     return node as this;
   }
-  getClientRect() {
+  override getClientRect() {
     if (this.nodes().length > 0) {
       return super.getClientRect();
     } else {

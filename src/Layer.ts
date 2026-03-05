@@ -116,7 +116,7 @@ export class Layer extends Container<Group | Shape> {
     return this;
   }
   // extend Node.prototype.setZIndex
-  setZIndex(index: number) {
+  override setZIndex(index: number) {
     super.setZIndex(index);
     const stage = this.getStage();
     if (stage && stage.content) {
@@ -133,7 +133,7 @@ export class Layer extends Container<Group | Shape> {
     }
     return this;
   }
-  moveToTop() {
+  override moveToTop() {
     Node.prototype.moveToTop.call(this);
     const stage = this.getStage();
     if (stage && stage.content) {
@@ -142,7 +142,7 @@ export class Layer extends Container<Group | Shape> {
     }
     return true;
   }
-  moveUp() {
+  override moveUp() {
     const moved = Node.prototype.moveUp.call(this);
     if (!moved) {
       return false;
@@ -164,7 +164,7 @@ export class Layer extends Container<Group | Shape> {
     return true;
   }
   // extend Node.prototype.moveDown
-  moveDown() {
+  override moveDown() {
     if (Node.prototype.moveDown.call(this)) {
       const stage = this.getStage();
       if (stage) {
@@ -182,7 +182,7 @@ export class Layer extends Container<Group | Shape> {
     return false;
   }
   // extend Node.prototype.moveToBottom
-  moveToBottom() {
+  override moveToBottom() {
     if (Node.prototype.moveToBottom.call(this)) {
       const stage = this.getStage();
       if (stage) {
@@ -199,10 +199,11 @@ export class Layer extends Container<Group | Shape> {
     }
     return false;
   }
-  getLayer() {
+  override getLayer() {
     return this;
   }
-  remove() {
+  
+  override remove() {
     const _canvas = this.getNativeCanvasElement();
 
     Node.prototype.remove.call(this);
@@ -212,10 +213,10 @@ export class Layer extends Container<Group | Shape> {
     }
     return this;
   }
-  getStage() {
+  override getStage() {
     return this.parent as Stage;
   }
-  setSize({ width, height }) {
+  override setSize({ width, height }) {
     this.canvas.setSize(width, height);
     this.hitCanvas.setSize(width, height);
     this._setSmoothEnabled();
@@ -227,7 +228,7 @@ export class Layer extends Container<Group | Shape> {
       Util.throw('You may only add groups and shapes to a layer.');
     }
   }
-  _toKonvaCanvas(config) {
+  override _toKonvaCanvas(config) {
     config = { ...config };
     config.width = config.width || this.getWidth();
     config.height = config.height || this.getHeight();
@@ -388,7 +389,7 @@ export class Layer extends Container<Group | Shape> {
     // empty pixel
     return {};
   }
-  drawScene(can?: SceneCanvas, top?: Node, bufferCanvas?: SceneCanvas) {
+  override drawScene(can?: SceneCanvas, top?: Node, bufferCanvas?: SceneCanvas) {
     const layer = this.getLayer(),
       canvas = can || (layer && layer.getCanvas());
 
@@ -408,7 +409,7 @@ export class Layer extends Container<Group | Shape> {
 
     return this;
   }
-  drawHit(can?: HitCanvas, top?: Node) {
+  override drawHit(can?: HitCanvas, top?: Node) {
     const layer = this.getLayer(),
       canvas = can || (layer && layer.hitCanvas);
 
@@ -472,7 +473,7 @@ export class Layer extends Container<Group | Shape> {
     }
   }
 
-  destroy(): this {
+  override destroy(): this {
     Util.releaseCanvas(
       this.getNativeCanvasElement(),
       this.getHitCanvas()._canvas

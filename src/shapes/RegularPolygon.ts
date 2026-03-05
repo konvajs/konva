@@ -70,7 +70,7 @@ export class RegularPolygon extends Shape<RegularPolygonConfig> {
     }
     return points;
   }
-  getSelfRect() {
+  override getSelfRect() {
     const points = this._getPoints();
 
     let minX = points[0].x;

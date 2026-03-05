@@ -75,12 +75,12 @@ export class Image extends Shape<ImageConfig> {
       image['removeEventListener']('load', this._loadListener);
     }
   }
-  destroy() {
+  override destroy() {
     this._removeImageLoad(this.image());
     super.destroy();
     return this;
   }
-  _useBufferCanvas() {
+  override _useBufferCanvas() {
     const hasCornerRadius = !!this.cornerRadius();
     const hasShadow = this.hasShadow();
     if (hasCornerRadius && hasShadow) {

@@ -278,7 +278,7 @@ export class Line<
     return this.getSelfRect().height;
   }
   // overload size detection
-  getSelfRect() {
+  override getSelfRect() {
     let points = this.points();
     if (points.length < 4) {
       return {

@@ -373,7 +373,7 @@ export class TextPath extends Shape<TextPathConfig> {
       offsetToGlyph += glyphWidth;
     }
   }
-  getSelfRect() {
+  override getSelfRect() {
     if (!this.glyphInfo.length) {
       return {
         x: 0,
@@ -411,7 +411,7 @@ export class TextPath extends Shape<TextPathConfig> {
       height: maxY - minY + fontSize,
     };
   }
-  destroy(): this {
+  override destroy(): this {
     Util.releaseCanvas(this.dummyCanvas);
     return super.destroy();
   }

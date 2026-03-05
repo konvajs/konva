@@ -748,7 +748,7 @@ export class Text extends Shape<TextConfig> {
     return true;
   }
 
-  _useBufferCanvas() {
+  override _useBufferCanvas() {
     const hasLine =
       this.textDecoration().indexOf('underline') !== -1 ||
       this.textDecoration().indexOf('line-through') !== -1;

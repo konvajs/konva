@@ -860,7 +860,7 @@ export class SceneContext extends Context {
       shape._fillFunc(this);
     }
   }
-  _fill(shape) {
+  override _fill(shape) {
     const hasColor = shape.fill(),
       fillPriority = shape.getFillPriority();
 
@@ -913,7 +913,7 @@ export class SceneContext extends Context {
       this.setAttr('strokeStyle', grd);
     }
   }
-  _stroke(shape) {
+  override _stroke(shape) {
     const dash = shape.dash(),
       // ignore strokeScaleEnabled for Text
       strokeScaleEnabled = shape.getStrokeScaleEnabled();
@@ -980,18 +980,18 @@ export class HitContext extends Context {
       willReadFrequently: true,
     }) as CanvasRenderingContext2D;
   }
-  _fill(shape: Shape) {
+  override _fill(shape: Shape) {
     this.save();
     this.setAttr('fillStyle', shape.colorKey);
     shape._fillFuncHit(this);
     this.restore();
   }
-  strokeShape(shape: Shape) {
+  override strokeShape(shape: Shape) {
     if (shape.hasHitStroke()) {
       this._stroke(shape);
     }
   }
-  _stroke(shape) {
+  override _stroke(shape) {
     if (shape.hasHitStroke()) {
       // ignore strokeScaleEnabled for Text
       const strokeScaleEnabled = shape.getStrokeScaleEnabled();

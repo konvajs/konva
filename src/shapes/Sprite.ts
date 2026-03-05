@@ -152,7 +152,7 @@ export class Sprite extends Shape<SpriteConfig> {
     context.fillShape(this);
   }
 
-  _useBufferCanvas() {
+  override _useBufferCanvas() {
     return super._useBufferCanvas(true);
   }
 
