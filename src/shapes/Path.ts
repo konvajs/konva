@@ -109,7 +109,7 @@ export class Path extends Shape<PathConfig> {
       context.fillStrokeShape(this);
     }
   }
-  getSelfRect() {
+  override getSelfRect() {
     let points: Array<number> = [];
     this.dataArray.forEach(function (data) {
       if (data.command === 'A') {

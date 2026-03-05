@@ -289,7 +289,7 @@ export class Tag extends Shape<TagConfig> {
     context.closePath();
     context.fillStrokeShape(this);
   }
-  getSelfRect() {
+  override getSelfRect() {
     let x = 0,
       y = 0,
       pointerWidth = this.pointerWidth(),

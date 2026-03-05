@@ -42,7 +42,7 @@ export interface ArrowConfig extends LineConfig {
  * });
  */
 export class Arrow extends Line<ArrowConfig> {
-  _sceneFunc(ctx: Context) {
+  override _sceneFunc(ctx: Context) {
     super._sceneFunc(ctx);
     const PI2 = Math.PI * 2;
     const points = this.points();
@@ -148,7 +148,7 @@ export class Arrow extends Line<ArrowConfig> {
     }
   }
 
-  getSelfRect() {
+  override getSelfRect() {
     const lineRect = super.getSelfRect();
     const offset = this.pointerWidth() / 2;
     return {

@@ -241,7 +241,7 @@ export class Stage extends Container<Layer, StageConfig> {
     }
     return this;
   }
-  shouldDrawHit() {
+  override shouldDrawHit() {
     return true;
   }
 
@@ -259,7 +259,7 @@ export class Stage extends Container<Layer, StageConfig> {
     }
     return this;
   }
-  clone(obj?) {
+  override clone(obj?) {
     if (!obj) {
       obj = {};
     }
@@ -268,7 +268,7 @@ export class Stage extends Container<Layer, StageConfig> {
     return Container.prototype.clone.call(this, obj) as this;
   }
 
-  destroy() {
+  override destroy() {
     super.destroy();
 
     const content = this.content;
@@ -309,13 +309,13 @@ export class Stage extends Container<Layer, StageConfig> {
   getPointersPositions() {
     return this._pointerPositions;
   }
-  getStage() {
+  override getStage() {
     return this;
   }
   getContent() {
     return this.content;
   }
-  _toKonvaCanvas(config) {
+  override _toKonvaCanvas(config) {
     config = { ...config };
 
     config.x = config.x || 0;
@@ -399,7 +399,7 @@ export class Stage extends Container<Layer, StageConfig> {
       layer.draw();
     });
   }
-  add(layer: Layer, ...rest) {
+  override add(layer: Layer, ...rest) {
     if (arguments.length > 1) {
       for (let i = 0; i < arguments.length; i++) {
         this.add(arguments[i]);
@@ -428,10 +428,10 @@ export class Stage extends Container<Layer, StageConfig> {
     // chainable
     return this;
   }
-  getParent() {
+  override getParent() {
     return null;
   }
-  getLayer() {
+  override getLayer() {
     return null;
   }
 
@@ -944,13 +944,13 @@ export class Stage extends Container<Layer, StageConfig> {
     this._resizeDOM();
   }
   // currently cache function is now working for stage, because stage has no its own canvas element
-  cache() {
+  override cache() {
     Util.warn(
       'Cache function is not allowed for stage. You may use cache only for layers, groups and shapes.'
     );
     return this;
   }
-  clearCache() {
+  override clearCache() {
     return this;
   }
   /**
