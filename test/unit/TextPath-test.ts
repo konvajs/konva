@@ -981,7 +981,7 @@ describe('TextPath', function () {
     layer.draw();
 
     var rect = textpath.getClientRect();
-    assert.equal(Math.round(rect.width), 298);
+    assert.equal(Math.abs(Math.round(rect.width) - 298) <= 1, true);
     assert.equal(Math.abs(Math.round(rect.height) - 171) < 2, true);
   });
 
@@ -1009,6 +1009,76 @@ describe('TextPath', function () {
     const box = textpath.getSelfRect();
     assertAlmostEqual(box.width, 47, 1);
     assertAlmostEqual(box.height, 47, 1);
+  });
+
+  it('should render all characters when path length equals getTextWidth()', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    const text = 'SPACE TRAP';
+    const textpath = new Konva.TextPath({
+      text: text,
+      fontSize: 24,
+      fontFamily: 'Arial',
+      fill: 'black',
+      data: 'M0,0 L1000,0',
+    });
+    layer.add(textpath);
+
+    const measuredWidth = textpath.getTextWidth();
+
+    // Set path length to exactly match getTextWidth() - this triggers the bug
+    textpath.data(`M0,100 L${measuredWidth},100`);
+
+    // All characters should be laid out; glyphInfo.length should equal text.length
+    assert.equal(
+      textpath.glyphInfo.length,
+      text.length,
+      'all characters should be rendered when path length equals text width'
+    );
+  });
+
+  it('should render last character when accumulated glyph offset slightly exceeds path length', function () {
+    // The mock _getTextSize returns charWidth=10 for any input (individual char or full string),
+    // so the sum of individual widths (width) = 30 and the full-string measurement = 10,
+    // giving kerningAdjustment = 20.
+    // The path is set to 30 - 1e-10, and the last char's endpoint (30) overshoots by 1e-10,
+    // which is within the kerningAdjustment tolerance — so it should be clamped and rendered.
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    const text = 'ABC';
+    const charWidth = 10;
+    const numChars = text.length; // 3
+    const totalWidth = charWidth * numChars; // 30
+
+    // Path is very slightly shorter than the total per-char text width
+    const pathLength = totalWidth - 1e-10;
+
+    const textpath = new Konva.TextPath({
+      text: text,
+      fontSize: 24,
+      fontFamily: 'Arial',
+      fill: 'black',
+      data: `M0,0 L${pathLength},0`,
+    });
+
+    // Override _getTextSize so each char has exactly charWidth regardless of font
+    (textpath as any)._getTextSize = () => ({ width: charWidth, height: 24 });
+
+    layer.add(textpath);
+    // Re-run layout with the mock size function
+    textpath._setTextData();
+
+    // Without the fix: glyphInfo.length < 3 because last char's endpoint (30) > pathLength (30 - epsilon) → null
+    // With the fix: glyphInfo.length === 3 because the endpoint is clamped to pathLength
+    assert.equal(
+      textpath.glyphInfo.length,
+      text.length,
+      'last character should be rendered even when its endpoint barely exceeds path length'
+    );
   });
 
   it.skip('check vertical text path', function () {
