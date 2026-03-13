@@ -982,6 +982,13 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     // we can have drag element but that is not dragged yet
     // so just clear it
     DD._dragElements.delete(this._id);
+    // also remove any dragging descendants, otherwise they'll
+    // have a broken parent chain and crash on getStage()
+    DD._dragElements.forEach((elem, key) => {
+      if (this.isAncestorOf(elem.node)) {
+        DD._dragElements.delete(key);
+      }
+    });
     this._remove();
     return this;
   }

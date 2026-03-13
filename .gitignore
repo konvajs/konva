@@ -21,6 +21,7 @@ out.png
 cmj
 .test-temp
 .history
+.claude
 
 # Numerous always-ignore extensions
 *.diff

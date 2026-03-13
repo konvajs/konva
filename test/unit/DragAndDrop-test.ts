@@ -501,6 +501,41 @@ describe('DragAndDrop', function () {
     assert(Konva.isDragging() === false);
   });
 
+  it('removing parent container while dragging nested node should not throw', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var group = new Konva.Group();
+    var circle = new Konva.Circle({
+      x: stage.width() / 2,
+      y: stage.height() / 2,
+      radius: 70,
+      fill: 'green',
+      draggable: true,
+    });
+    group.add(circle);
+    layer.add(group);
+    stage.add(layer);
+
+    // Start dragging
+    simulateMouseDown(stage, { x: 291, y: 112 });
+    simulateMouseMove(stage, { x: 311, y: 112 });
+
+    assert.equal(circle.isDragging(), true, 'circle should be dragging');
+
+    // layer.remove() only checks if the layer itself is dragging,
+    // not its descendants — the circle stays in DD._dragElements
+    // with a broken parent chain (no stage reference)
+    layer.remove();
+
+    // the circle is still registered as dragging but has no stage
+    assert.equal(circle.getStage(), null, 'circle should have no stage after parent removal');
+
+    // this triggers DD._endDragBefore which crashes accessing null stage
+    simulateMouseUp(stage, { x: 311, y: 112 });
+
+    assert(Konva.isDragging() === false);
+  });
+
   it('drag start should trigger before movement', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
