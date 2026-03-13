@@ -155,6 +155,81 @@ describe('DragAndDrop', function () {
   });
 
   // ======================================================
+  it('dragstart event should have correct button value for right-click drag', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    // Enable right-click dragging
+    Konva.dragButtons = [0, 2];
+
+    var circle = new Konva.Circle({
+      x: stage.width() / 2,
+      y: stage.height() / 2,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle',
+      draggable: true,
+    });
+
+    var dragStartButton = null;
+
+    circle.on('dragstart', function (e) {
+      dragStartButton = e.evt.button;
+    });
+
+    layer.add(circle);
+    stage.add(layer);
+
+    // Test with right-click (button 2)
+    simulateMouseDown(stage, {
+      x: 291,
+      y: 112,
+      button: 2,
+    });
+
+    simulateMouseMove(stage, {
+      x: 311,
+      y: 112,
+    });
+
+    assert.equal(dragStartButton, 2, 'dragstart event should have button=2 for right-click');
+    assert(circle.isDragging(), 'circle should be dragging');
+
+    simulateMouseUp(stage, {
+      x: 311,
+      y: 112,
+      button: 2,
+    });
+
+    // Test with left-click (button 0)
+    dragStartButton = null;
+
+    simulateMouseDown(stage, {
+      x: 291,
+      y: 112,
+      button: 0,
+    });
+
+    simulateMouseMove(stage, {
+      x: 311,
+      y: 112,
+    });
+
+    assert.equal(dragStartButton, 0, 'dragstart event should have button=0 for left-click');
+
+    simulateMouseUp(stage, {
+      x: 311,
+      y: 112,
+      button: 0,
+    });
+
+    // Reset to default
+    Konva.dragButtons = [0];
+  });
+
+  // ======================================================
   it('changing draggable on mousedown should take effect', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
