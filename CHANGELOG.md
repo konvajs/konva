@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 10.2.1 (2026-03-13)
+
+- Fix possible crash
+
 ## 10.2.0 (2026-01-15)
 
 - Added `rotateAnchorAngle` property to `Transformer` to control the position of the rotation anchor around the bounding box
