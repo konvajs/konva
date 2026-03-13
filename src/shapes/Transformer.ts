@@ -256,6 +256,7 @@ export class Transformer extends Group {
   sin: number;
   cos: number;
   _cursorChange: boolean;
+  _elementsCreated = false;
 
   static isTransforming = () => {
     return activeTransformersCount > 0;
@@ -573,6 +574,7 @@ export class Transformer extends Group {
     });
 
     this._createAnchor('rotater');
+    this._elementsCreated = true;
   }
   _createAnchor(name) {
     const anchor = new Rect({
@@ -1374,6 +1376,19 @@ export class Transformer extends Group {
     this.detach();
     this._removeEvents();
     return this;
+  }
+  // Transformer manages its own internal children (anchors, back shape).
+  // Adding external nodes as children can cause infinite recursion because
+  // the Transformer's absoluteTransform depends on nodes' transforms.
+  // Use tr.nodes([node]) to attach nodes instead.
+  add(...children: any[]) {
+    if (this._elementsCreated) {
+      Util.error(
+        'You cannot add external nodes to the Transformer. Use tr.nodes([node]) instead.'
+      );
+      return this;
+    }
+    return super.add(...children);
   }
   // do not work as a container
   // we will recreate inner nodes manually

@@ -5582,4 +5582,36 @@ describe('Transformer', function () {
 
     assertAlmostEqual(rect.rotation(), 90);
   });
+
+  it('should not allow adding external nodes as children of Transformer', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+    });
+    layer.add(tr);
+    layer.draw();
+
+    // Internal anchors should exist (were added during construction)
+    assert.ok(tr.findOne('.top-left'));
+    assert.ok(tr.findOne('.back'));
+
+    // Adding external node to transformer should be blocked
+    var rect2 = new Konva.Rect({ width: 50, height: 50 });
+    tr.add(rect2);
+
+    // rect2 should NOT become a child of the transformer
+    assert.notEqual(rect2.getParent(), tr);
+  });
 });
