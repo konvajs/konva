@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 10.2.2 (2026-03-13)
+
 ## 10.2.1 (2026-03-13)
 
 - Fix possible crash
