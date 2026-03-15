@@ -157,18 +157,20 @@ export const DD = {
       }
     });
   },
+  _attachListeners: function (targetWindow: Window) {
+    targetWindow.addEventListener('mouseup', DD._endDragBefore, true);
+    targetWindow.addEventListener('touchend', DD._endDragBefore, true);
+    targetWindow.addEventListener('touchcancel', DD._endDragBefore, true);
+
+    targetWindow.addEventListener('mousemove', DD._drag);
+    targetWindow.addEventListener('touchmove', DD._drag);
+
+    targetWindow.addEventListener('mouseup', DD._endDragAfter, false);
+    targetWindow.addEventListener('touchend', DD._endDragAfter, false);
+    targetWindow.addEventListener('touchcancel', DD._endDragAfter, false);
+  },
 };
 
 if (Konva.isBrowser) {
-  window.addEventListener('mouseup', DD._endDragBefore, true);
-  window.addEventListener('touchend', DD._endDragBefore, true);
-  // add touchcancel to fix this: https://github.com/konvajs/konva/issues/1843
-  window.addEventListener('touchcancel', DD._endDragBefore, true);
-
-  window.addEventListener('mousemove', DD._drag);
-  window.addEventListener('touchmove', DD._drag);
-
-  window.addEventListener('mouseup', DD._endDragAfter, false);
-  window.addEventListener('touchend', DD._endDragAfter, false);
-  window.addEventListener('touchcancel', DD._endDragAfter, false);
+  DD._attachListeners(window);
 }
