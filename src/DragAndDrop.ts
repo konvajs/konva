@@ -82,6 +82,10 @@ export const DD = {
     });
     // call dragmove only after ALL positions are changed
     nodesToFireEvents.forEach((node) => {
+      // node may have been destroyed during a previous dragmove handler
+      if (!node.getStage()) {
+        return;
+      }
       node.fire(
         'dragmove',
         {

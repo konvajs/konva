@@ -611,6 +611,37 @@ describe('DragAndDrop', function () {
     assert(Konva.isDragging() === false);
   });
 
+  it('destroying group with transformer during drag should not throw', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var group = new Konva.Group();
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      width: 100,
+      height: 100,
+      fill: 'red',
+      draggable: true,
+      dragDistance: 0,
+    });
+    var tr = new Konva.Transformer({ nodes: [rect] });
+    group.add(rect);
+    group.add(tr);
+    layer.add(group);
+    stage.add(layer);
+
+    rect.on('dragmove', () => {
+      group.destroy();
+    });
+
+    simulateMouseDown(stage, { x: 80, y: 80 });
+    simulateMouseMove(stage, { x: 90, y: 90 });
+    simulateMouseMove(stage, { x: 100, y: 100 });
+    simulateMouseUp(stage, { x: 100, y: 100 });
+
+    assert.equal(Konva.DD._dragElements.size, 0);
+  });
+
   it('drag start should trigger before movement', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
