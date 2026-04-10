@@ -2040,6 +2040,42 @@ describe('Node', function () {
   });
 
   // ======================================================
+  it('should not skip listeners when array is mutated during dispatch', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle({
+      x: stage.width() / 2,
+      y: stage.height() / 2,
+      radius: 70,
+      fill: 'green',
+    });
+    stage.add(layer);
+    layer.add(circle);
+
+    var handlerACalled = false;
+    var handlerBCalled = false;
+
+    // Handler A removes itself and re-adds, simulating react-konva reconciliation
+    var handlerA = function () {
+      handlerACalled = true;
+      circle.off('custom', handlerA);
+      circle.on('custom', handlerA);
+    };
+
+    var handlerB = function () {
+      handlerBCalled = true;
+    };
+
+    circle.on('custom', handlerA);
+    circle.on('custom', handlerB);
+
+    circle.fire('custom');
+
+    assert.equal(handlerACalled, true, 'handler A should have been called');
+    assert.equal(handlerBCalled, true, 'handler B should have been called');
+  });
+
+  // ======================================================
   it('simulate event bubble', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

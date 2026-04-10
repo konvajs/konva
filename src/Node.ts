@@ -2550,17 +2550,28 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     const topListeners = this._getProtoListeners(eventType);
     if (topListeners) {
-      for (let i = 0; i < topListeners.length; i++) {
-        topListeners[i].handler.call(this, evt);
+      const list = topListeners.slice();
+      for (let i = 0; i < list.length; i++) {
+        list[i].handler.call(this, evt);
       }
     }
 
-    // it is important to iterate over self listeners without cache
-    // because events can be added/removed while firing
+    // snapshot prevents skipping listeners when a handler mutates the array
+    // (e.g. off + on for the same event), but we also need to fire listeners
+    // added during dispatch (e.g. draggable(true) inside mousedown)
     const selfListeners = this.eventListeners[eventType];
     if (selfListeners) {
-      for (let i = 0; i < selfListeners.length; i++) {
-        selfListeners[i].handler.call(this, evt);
+      const list = selfListeners.slice();
+      const origLen = list.length;
+      for (let i = 0; i < list.length; i++) {
+        list[i].handler.call(this, evt);
+      }
+      // fire any listeners appended during dispatch
+      const liveListeners = this.eventListeners[eventType];
+      if (liveListeners) {
+        for (let i = origLen; i < liveListeners.length; i++) {
+          liveListeners[i].handler.call(this, evt);
+        }
       }
     }
   }
