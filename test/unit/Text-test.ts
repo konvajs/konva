@@ -2040,4 +2040,38 @@ describe('Text', function () {
       );
     }
   });
+
+  it.only('text with shadow and opacity=0 should be fully transparent', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      x: 10,
+      y: 10,
+      text: 'Hello World!',
+      fontSize: 50,
+      fill: 'black',
+      shadowColor: 'black',
+      shadowBlur: 10,
+      shadowOffsetX: 5,
+      shadowOffsetY: 5,
+      opacity: 0,
+    });
+
+    layer.add(text);
+    stage.add(layer);
+
+    // sample a pixel in the middle of where text would be rendered
+    var ratio = layer.canvas.pixelRatio;
+    var data = layer
+      .getContext()
+      .getImageData(Math.round(50 * ratio), Math.round(30 * ratio), 1, 1).data;
+
+    // alpha should be 0 (fully transparent)
+    assert.equal(
+      data[3],
+      0,
+      'pixel should be fully transparent when opacity is 0'
+    );
+  });
 });

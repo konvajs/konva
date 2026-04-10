@@ -124,6 +124,44 @@ const AUTO = 'auto',
   // cached variables
   attrChangeListLen = ATTR_CHANGE_LIST.length;
 
+// Safari on macOS renders text shadow even when globalAlpha is 0.
+// This feature check detects that bug so we can work around it with a buffer canvas.
+// Not covered by automated tests (our CI doesn't run Safari).
+// Once Safari fixes the issue this check can be removed.
+let _shadowOpacityBuggy: boolean | null = null;
+function hasShadowOpacityBug(): boolean {
+  if (_shadowOpacityBuggy !== null) {
+    return _shadowOpacityBuggy;
+  }
+  _shadowOpacityBuggy = false;
+  try {
+    const c = document.createElement('canvas');
+    c.width = 10;
+    c.height = 10;
+    const ctx = c.getContext(CONTEXT_2D);
+    if (ctx) {
+      ctx.globalAlpha = 0;
+      ctx.shadowColor = 'black';
+      ctx.shadowBlur = 5;
+      ctx.shadowOffsetX = 5;
+      ctx.shadowOffsetY = 5;
+      ctx.fillStyle = 'black';
+      ctx.font = '10px Arial';
+      ctx.fillText('X', 0, 10);
+      const data = ctx.getImageData(0, 0, 10, 10).data;
+      for (let i = 3; i < data.length; i += 4) {
+        if (data[i] > 0) {
+          _shadowOpacityBuggy = true;
+          break;
+        }
+      }
+    }
+  } catch (e) {
+    // no-op (SSR or restricted canvas)
+  }
+  return _shadowOpacityBuggy;
+}
+
 function normalizeFontFamily(fontFamily: string) {
   return fontFamily
     .split(',')
@@ -754,6 +792,9 @@ export class Text extends Shape<TextConfig> {
       this.textDecoration().indexOf('line-through') !== -1;
     const hasShadow = this.hasShadow();
     if (hasLine && hasShadow) {
+      return true;
+    }
+    if (hasShadow && this.getAbsoluteOpacity() !== 1 && hasShadowOpacityBug()) {
       return true;
     }
     return super._useBufferCanvas();
