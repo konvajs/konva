@@ -20,7 +20,7 @@ export default {
     // Compile TypeScript files
     typescript({
       useTsconfigDeclarationDir: true,
-      abortOnError: false,
+      abortOnError: true,
       removeComments: false,
       tsconfigOverride: {
         compilerOptions: {
