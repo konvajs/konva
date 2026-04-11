@@ -103,7 +103,7 @@
     "gulp-uglify-es": "^3.0.0",
     "gulp-util": "^3.0.8",
     "mocha": "^10",
-    "mocha-headless-chrome": "^4.0.0",
+    "mocha-headless-chrome": "^5.1.0",
     "parcel": "2.15.4",
     "prettier": "^3.7.4",
     "process": "^0.11.10",
