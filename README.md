@@ -4,10 +4,14 @@
 
 <h1 align="center">Konva</h1>
 
-[![Financial Contributors on Open Collective](https://opencollective.com/konva/all/badge.svg?label=financial+contributors)](https://opencollective.com/konva)
+<p align="center"><strong>Build interactive graphics, editors, and diagrams for the web.</strong></p>
+
+[![npm downloads](https://img.shields.io/npm/dw/konva.svg)](https://www.npmjs.com/package/konva)
 [![npm version](https://badge.fury.io/js/konva.svg)](http://badge.fury.io/js/konva)
-[![Build Status](https://github.com/konvajs/konva/actions/workflows/test-browser.yml/badge.svg)](https://github.com/konvajs/konva/actions/workflows/test-browser.ym)
-[![Build Status](https://github.com/konvajs/konva/actions/workflows/test-node.yml/badge.svg)](https://github.com/konvajs/konva/actions/workflows/test-node.ym)[![CDNJS version](https://img.shields.io/cdnjs/v/konva.svg)](https://cdnjs.com/libraries/konva)
+[![Financial Contributors on Open Collective](https://opencollective.com/konva/all/badge.svg?label=financial+contributors)](https://opencollective.com/konva)
+[![Build Status](https://github.com/konvajs/konva/actions/workflows/test-browser.yml/badge.svg)](https://github.com/konvajs/konva/actions/workflows/test-browser.yml)
+[![Build Status](https://github.com/konvajs/konva/actions/workflows/test-node.yml/badge.svg)](https://github.com/konvajs/konva/actions/workflows/test-node.yml)
+[![CDNJS version](https://img.shields.io/cdnjs/v/konva.svg)](https://cdnjs.com/libraries/konva)
 
 Konva is an HTML5 Canvas JavaScript framework that enables high performance animations, transitions, node nesting, layering, filtering, caching, event handling for desktop and mobile applications, and much more.
 
@@ -15,9 +19,11 @@ You can draw things onto the stage, add event listeners to them, move them, scal
 
 This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github.com/ericdrowell/KineticJS).
 
-- **Visit:** The [Home Page](http://konvajs.org/) and follow on [Twitter](https://twitter.com/lavrton)
-- **Discover:** [Tutorials](http://konvajs.org/docs/index.html), [API Documentation](http://konvajs.org/api/Konva.html)
-- **Help:** [StackOverflow](http://stackoverflow.com/questions/tagged/konvajs), [Discord Chat](https://discord.gg/8FqZwVT)
+- **Visit:** The [Home Page](https://konvajs.org/) and follow on [Twitter](https://twitter.com/lavrton)
+- **Discover:** [Tutorials](https://konvajs.org/docs/index.html), [API Documentation](https://konvajs.org/api/Konva.html)
+- **Try it:** [Canvas Editor](https://konvajs.org/docs/sandbox/Canvas_Editor.html), [Free Drawing](https://konvajs.org/docs/sandbox/Free_Drawing.html), [Image Crop](https://konvajs.org/docs/sandbox/Canvas_Crop_Image.html), [Window Frame Designer](https://konvajs.org/docs/sandbox/Window_Frame_Designer.html), and [more demos](https://konvajs.org/docs/sandbox.html)
+- **Used by:** [Polotno](https://polotno.com/?utm_source=konvajs) (design editor SDK) and many others — see the full showcase on the [home page](https://konvajs.org/)
+- **Help:** [StackOverflow](https://stackoverflow.com/questions/tagged/konvajs), [Discord Chat](https://discord.gg/8FqZwVT)
 
 # Quick Look
 
