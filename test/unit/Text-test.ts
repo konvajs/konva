@@ -2041,7 +2041,7 @@ describe('Text', function () {
     }
   });
 
-  it.only('text with shadow and opacity=0 should be fully transparent', function () {
+  it('text with shadow and opacity=0 should be fully transparent', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
 
