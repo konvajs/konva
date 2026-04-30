@@ -21,6 +21,7 @@ export interface TextPathConfig extends ShapeConfig {
   letterSpacing?: number;
   textBaseline?: string;
   textDecoration?: string;
+  direction?: string;
   kerningFunc?: (leftChar: string, rightChar: string) => number;
   lineHeight?: number;
 }
@@ -109,7 +110,7 @@ export class TextPath extends Shape<TextPathConfig> {
 
     // update text data for certain attr changes
     this.on(
-      'textChange.konva alignChange.konva letterSpacingChange.konva kerningFuncChange.konva fontSizeChange.konva fontFamilyChange.konva',
+      'textChange.konva alignChange.konva letterSpacingChange.konva kerningFuncChange.konva fontSizeChange.konva fontFamilyChange.konva directionChange.konva',
       this._setTextData
     );
 
@@ -269,6 +270,15 @@ export class TextPath extends Shape<TextPathConfig> {
   }
   _setTextData() {
     const charArr = stringToArray(this.text());
+    // For RTL scripts (Hebrew, Arabic, …) the path is still walked left to
+    // right by glyph index, so we lay glyphs out in reversed logical order.
+    // A reader scanning the path right-to-left then sees the text in its
+    // intended reading order. This does not perform full Unicode bidi or
+    // Arabic cursive shaping — those need a real shaping engine — but it
+    // makes pure RTL strings render in the right direction.
+    if (this.direction() === 'rtl') {
+      charArr.reverse();
+    }
     const chars: { char: string; width: number }[] = [];
     let width = 0;
     for (let i = 0; i < charArr.length; i++) {
@@ -445,6 +455,7 @@ export class TextPath extends Shape<TextPathConfig> {
   kerningFunc: GetSet<(leftChar: string, rightChar: string) => number, this>;
   textBaseline: GetSet<string, this>;
   textDecoration: GetSet<string, this>;
+  direction: GetSet<string, this>;
 }
 
 TextPath.prototype._fillFunc = _fillFunc;
@@ -636,3 +647,26 @@ Factory.addGetterSetter(TextPath, 'textDecoration', '');
  * });
  */
 Factory.addGetterSetter(TextPath, 'kerningFunc', undefined);
+
+/**
+ * get/set text direction.  Can be 'inherit', 'ltr' or 'rtl'.  Default is 'inherit'.
+ *
+ * Setting `'rtl'` reverses the per-glyph layout order along the path, so
+ * Hebrew/Arabic strings read correctly when scanned right-to-left. This is a
+ * pragmatic fix limited by canvas TextPath rendering: each glyph is still
+ * drawn independently, so Arabic cursive joining and full Unicode bidi
+ * reordering of mixed-direction text are not supported. For best results,
+ * pair `direction: 'rtl'` with `align: 'right'` so the text starts at the
+ * end of the path.
+ * @name Konva.TextPath#direction
+ * @method
+ * @param {String} direction
+ * @returns {String}
+ * @example
+ * // get direction
+ * var direction = textpath.direction();
+ *
+ * // set direction
+ * textpath.direction('rtl');
+ */
+Factory.addGetterSetter(TextPath, 'direction', 'inherit');

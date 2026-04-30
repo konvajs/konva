@@ -1081,6 +1081,68 @@ describe('TextPath', function () {
     );
   });
 
+  it('renders RTL text in reversed visual order along the path', function () {
+    // Konva renders TextPath glyph-by-glyph along the path in logical order,
+    // which displays Hebrew/Arabic backwards to a native reader. Setting
+    // direction='rtl' should reverse the per-glyph layout so the text reads
+    // correctly when scanned right-to-left along the path.
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    // "שלום" — Hebrew for "hello". Logical (source) order: ש, ל, ו, ם.
+    // For a path drawn left-to-right with direction='rtl', the leftmost
+    // glyph on the path should be the *last* logical character (ם), so a
+    // Hebrew reader scanning right-to-left sees ש first.
+    var hebrew = 'שלום';
+
+    var ltrPath = new Konva.TextPath({
+      text: hebrew,
+      fontSize: 24,
+      fontFamily: 'Arial',
+      data: 'M0,50 L400,50',
+    });
+    layer.add(ltrPath);
+
+    var rtlPath = new Konva.TextPath({
+      text: hebrew,
+      fontSize: 24,
+      fontFamily: 'Arial',
+      direction: 'rtl',
+      data: 'M0,100 L400,100',
+    });
+    layer.add(rtlPath);
+
+    assert.equal(
+      ltrPath.glyphInfo.length,
+      4,
+      'LTR layout should produce 4 glyphs'
+    );
+    assert.equal(
+      rtlPath.glyphInfo.length,
+      4,
+      'RTL layout should produce 4 glyphs'
+    );
+
+    // Sanity check: default (LTR) keeps logical order.
+    assert.equal(ltrPath.glyphInfo[0].text, 'ש');
+    assert.equal(ltrPath.glyphInfo[3].text, 'ם');
+
+    // RTL layout: glyphs are placed along the path in reversed logical order.
+    assert.equal(
+      rtlPath.glyphInfo[0].text,
+      'ם',
+      'first glyph on RTL path should be the last logical char'
+    );
+    assert.equal(rtlPath.glyphInfo[1].text, 'ו');
+    assert.equal(rtlPath.glyphInfo[2].text, 'ל');
+    assert.equal(rtlPath.glyphInfo[3].text, 'ש');
+
+    // direction is exposed as a getter/setter
+    assert.equal(rtlPath.direction(), 'rtl');
+    assert.equal(ltrPath.direction(), 'inherit');
+  });
+
   it.skip('check vertical text path', function () {
     var stage = addStage();
 

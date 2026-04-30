@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 10.3.0 (2026-04-30)
+
+- Added `direction` property to `TextPath` shape for better RTL support
+
 ## 10.2.5 (2026-04-11)
 
 - Fixed transparent text with shadow render in Safari
