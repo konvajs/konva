@@ -609,18 +609,22 @@ export class Text extends Shape<TextConfig> {
          * break the line into multiple fitting lines
          */
         while (line.length > 0) {
+          // Compute the grapheme array once per iteration. `line` is constant
+          // within this block (only reassigned at the bottom), so calling
+          // `stringToArray(line)` inside the binary search and again afterwards
+          // is redundant and makes resize O(N·logN) on long text.
+          const lineArray = stringToArray(line);
           /*
            * use binary search to find the longest substring that
            * that would fit in the specified width
            */
           let low = 0,
-            high = stringToArray(line).length, // Convert to array for proper emoji handling
+            high = lineArray.length, // Convert to array for proper emoji handling
             match = '',
             matchWidth = 0;
           while (low < high) {
             const mid = (low + high) >>> 1,
               // Convert array indices to string
-              lineArray = stringToArray(line),
               substr = lineArray.slice(0, mid + 1).join(''),
               substrWidth = this._getTextWidth(substr);
 
@@ -652,7 +656,6 @@ export class Text extends Shape<TextConfig> {
             // a fitting substring was found
             if (wrapAtWord) {
               // try to find a space or dash where wrapping could be done
-              const lineArray = stringToArray(line);
               const matchArray = stringToArray(match);
               const nextChar = lineArray[matchArray.length];
               const nextIsSpaceOrDash = nextChar === SPACE || nextChar === DASH;
@@ -691,8 +694,7 @@ export class Text extends Shape<TextConfig> {
               break;
             }
 
-            // Convert remaining text using array operations
-            const lineArray = stringToArray(line);
+            // Reuse the cached `lineArray` to compute the remaining text.
             line = lineArray.slice(low).join('').trimLeft();
 
             if (line.length > 0) {
