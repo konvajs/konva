@@ -1038,6 +1038,21 @@ export class Transformer extends Group {
     }
   }
   _fitNodesInto(newAttrs, evt?) {
+    // Perf: suspend autoDraw for the WHOLE method (covers early-return
+    // update() paths AND boundBoxFunc invocation) so per-attr _setAttr
+    // writes don't each trigger _requestDraw -> getLayer parent-chain
+    // walks. The try/finally below restores the flag on every path,
+    // including exception. We issue batchDraw per affected layer at the end.
+    const prevAutoDraw = Konva.autoDrawEnabled;
+    Konva.autoDrawEnabled = false;
+    try {
+      return this._fitNodesIntoImpl(newAttrs, evt);
+    } finally {
+      Konva.autoDrawEnabled = prevAutoDraw;
+    }
+  }
+
+  _fitNodesIntoImpl(newAttrs, evt?) {
     const oldAttrs = this._getNodeRect();
 
     const minSize = 1;
@@ -1161,63 +1176,54 @@ export class Transformer extends Group {
     // [delta transform] = [new transform] * [old transform inverted]
     const delta = newTr.multiply(oldTr.invert());
 
-    // Perf:
-    // - dedupe layers across nodes so we batchDraw each layer once, not per
-    //   node (was O(N)).
-    // - suspend autoDraw while we write attrs — every _setAttr would otherwise
-    //   trigger _requestDraw -> getLayer (parent-chain walk) per attr per node.
-    //   We issue one batchDraw per affected layer at the end below.
+    // Perf: dedupe layers across nodes so we batchDraw each layer once, not
+    // per node (was O(N)). autoDraw suspension is handled by _fitNodesInto's
+    // outer try/finally so per-attr _setAttr writes don't trigger _requestDraw.
     const layersToDraw = new Set<any>();
-    const prevAutoDraw = Konva.autoDrawEnabled;
-    Konva.autoDrawEnabled = false;
-    try {
-      this._nodes.forEach((node) => {
-        // check to close this issue: https://github.com/konvajs/konva/issues/1957
-        // a node can be destroyed during the transformation
-        // probably a developer must remove it from transformer
-        if (!node.getStage()) {
-          // do we need a helping message?
-          // Util.error(
-          //   'Node is not attached to the stage. This is not allowed. Please attach the node to the stage before transforming. If node was destroyed, make sure to remove it from transformer.'
-          // );
-          return;
-        }
-        // for each node we have the same [delta transform]
-        // the equations is
-        // [delta transform] * [parent transform] * [old local transform] = [parent transform] * [new local transform]
-        // and we need to find [new local transform]
-        // [new local] = [parent inverted] * [delta] * [parent] * [old local]
-        const parentTransform = node.getParent()!.getAbsoluteTransform();
-        const localTransform = node.getTransform().copy();
-        // skip offset:
-        localTransform.translate(node.offsetX(), node.offsetY());
+    this._nodes.forEach((node) => {
+      // check to close this issue: https://github.com/konvajs/konva/issues/1957
+      // a node can be destroyed during the transformation
+      // probably a developer must remove it from transformer
+      if (!node.getStage()) {
+        // do we need a helping message?
+        // Util.error(
+        //   'Node is not attached to the stage. This is not allowed. Please attach the node to the stage before transforming. If node was destroyed, make sure to remove it from transformer.'
+        // );
+        return;
+      }
+      // for each node we have the same [delta transform]
+      // the equations is
+      // [delta transform] * [parent transform] * [old local transform] = [parent transform] * [new local transform]
+      // and we need to find [new local transform]
+      // [new local] = [parent inverted] * [delta] * [parent] * [old local]
+      const parentTransform = node.getParent()!.getAbsoluteTransform();
+      const localTransform = node.getTransform().copy();
+      // skip offset:
+      localTransform.translate(node.offsetX(), node.offsetY());
 
-        const newLocalTransform = new Transform();
-        newLocalTransform
-          .multiply(parentTransform.copy().invert())
-          .multiply(delta)
-          .multiply(parentTransform)
-          .multiply(localTransform);
+      const newLocalTransform = new Transform();
+      newLocalTransform
+        .multiply(parentTransform.copy().invert())
+        .multiply(delta)
+        .multiply(parentTransform)
+        .multiply(localTransform);
 
-        const attrs = newLocalTransform.decompose();
-        node.setAttrs(attrs);
-        const layer = node.getLayer();
-        if (layer) {
-          layersToDraw.add(layer);
-        }
-      });
-      this.rotation(Util._getRotation(newAttrs.rotation));
-      // trigger transform event AFTER we update rotation
-      this._nodes.forEach((node) => {
-        this._fire('transform', { evt: evt, target: node });
-        node._fire('transform', { evt: evt, target: node });
-      });
-      this._resetTransformCache();
-      this.update();
-      layersToDraw.add(this.getLayer());
-    } finally {
-      Konva.autoDrawEnabled = prevAutoDraw;
-    }
+      const attrs = newLocalTransform.decompose();
+      node.setAttrs(attrs);
+      const layer = node.getLayer();
+      if (layer) {
+        layersToDraw.add(layer);
+      }
+    });
+    this.rotation(Util._getRotation(newAttrs.rotation));
+    // trigger transform event AFTER we update rotation
+    this._nodes.forEach((node) => {
+      this._fire('transform', { evt: evt, target: node });
+      node._fire('transform', { evt: evt, target: node });
+    });
+    this._resetTransformCache();
+    this.update();
+    layersToDraw.add(this.getLayer());
     layersToDraw.forEach((layer) => layer && layer.batchDraw());
   }
   // Perf: dedupe update() calls fired from per-node listeners during an
