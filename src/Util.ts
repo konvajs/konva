@@ -454,7 +454,6 @@ const req =
   function (f) {
     setTimeout(f, 16); // 60fps ≈ 16.67ms per frame
   };
-// Perf: cache for Util._capitalize (see below)
 const capitalizeCache = new Map<string, string>();
 
 /**
@@ -945,8 +944,7 @@ export const Util = {
   _getRotation(radians: number) {
     return Konva.angleDeg ? Util.radToDeg(radians) : radians;
   },
-  // Perf: memoized — called per-attr per setAttrs (e.g. Transformer with many
-  // attached nodes); the input set is small and bounded by attr names.
+  // Memoized — called per-attr per setAttrs; input vocabulary is bounded.
   _capitalize(str: string) {
     const cached = capitalizeCache.get(str);
     if (cached !== undefined) return cached;

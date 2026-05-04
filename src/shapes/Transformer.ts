@@ -331,28 +331,20 @@ export class Transformer extends Group {
     }
     this._nodes.forEach((node) => {
       const onChange = () => {
-        // Perf: while we are mid-transform, _fitNodesInto writes to every node
-        // and each setAttrs fan-outs ~6 *Change events per node. Doing the cache
-        // reset here would be O(N * events) per resize step; _fitNodesInto already
-        // calls _resetTransformCache + update once at the end, so skip here.
-        if (this._transforming) {
-          return;
-        }
+        // Perf: skip during anchor drag — _fitNodesInto does the final
+        // _resetTransformCache + update itself, so per-attr fan-out here is
+        // pure waste (was O(N*events) per resize step).
+        if (this._transforming) return;
         if (this.nodes().length === 1 && this.useSingleNodeRotation()) {
           this.rotation(this.nodes()[0].getAbsoluteRotation());
         }
-
-        // _resetTransformCache stays synchronous: it's O(1) per call and
-        // sync reads of transformer bounds (tr.x() etc.) need fresh data.
+        // Cache reset stays synchronous so sync reads of tr.x() etc. are fresh.
         this._resetTransformCache();
         if (!this.isDragging()) {
-          // Perf: batch update() via microtask. When an ancestor (e.g. the
-          // Stage) moves, _clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM)
-          // walks every descendant and fires absoluteTransformChange — so this
-          // listener fires once PER attached node per ancestor change. Calling
-          // update() each time is O(N) (it walks all nodes via __getNodeRect),
-          // making stage-drag with N attached nodes O(N^2) per frame. The
-          // microtask runs before paint, so visuals stay correct.
+          // Perf: an ancestor cascade (e.g. stage drag) fires
+          // absoluteTransformChange on every attached node — without batching,
+          // update() runs once per node and each call walks all N nodes via
+          // __getNodeRect, giving O(N^2) per drag frame.
           this._scheduleUpdate();
         }
       };
@@ -1038,21 +1030,19 @@ export class Transformer extends Group {
     }
   }
   _fitNodesInto(newAttrs, evt?) {
-    // Perf: suspend autoDraw for the WHOLE method (covers early-return
-    // update() paths AND boundBoxFunc invocation) so per-attr _setAttr
-    // writes don't each trigger _requestDraw -> getLayer parent-chain
-    // walks. The try/finally below restores the flag on every path,
-    // including exception. We issue batchDraw per affected layer at the end.
+    // Perf: suspend autoDraw for the whole method so per-attr _setAttr writes
+    // don't each trigger _requestDraw -> getLayer parent-chain walks.
+    // batchDraw per affected layer is issued at the end.
     const prevAutoDraw = Konva.autoDrawEnabled;
     Konva.autoDrawEnabled = false;
     try {
-      return this._fitNodesIntoImpl(newAttrs, evt);
+      return this._doFitNodesInto(newAttrs, evt);
     } finally {
       Konva.autoDrawEnabled = prevAutoDraw;
     }
   }
 
-  _fitNodesIntoImpl(newAttrs, evt?) {
+  _doFitNodesInto(newAttrs, evt?) {
     const oldAttrs = this._getNodeRect();
 
     const minSize = 1;
@@ -1176,9 +1166,8 @@ export class Transformer extends Group {
     // [delta transform] = [new transform] * [old transform inverted]
     const delta = newTr.multiply(oldTr.invert());
 
-    // Perf: dedupe layers across nodes so we batchDraw each layer once, not
-    // per node (was O(N)). autoDraw suspension is handled by _fitNodesInto's
-    // outer try/finally so per-attr _setAttr writes don't trigger _requestDraw.
+    // Perf: collect unique affected layers and batchDraw each once at the end
+    // (was once per node — O(N)).
     const layersToDraw = new Set<any>();
     this._nodes.forEach((node) => {
       // check to close this issue: https://github.com/konvajs/konva/issues/1957
@@ -1226,19 +1215,17 @@ export class Transformer extends Group {
     layersToDraw.add(this.getLayer());
     layersToDraw.forEach((layer) => layer && layer.batchDraw());
   }
-  // Perf: dedupe update() calls fired from per-node listeners during an
-  // absoluteTransform cascade (e.g. Stage drag). When inside a cascade we
-  // queue a single update to run when the cascade ends; outside a cascade
-  // (e.g. a single setAttrs on one node) we run synchronously so reads of
-  // the transformer state remain consistent without microtask flushing.
+  // Inside an absoluteTransform cascade, queue a single update to run when
+  // the cascade ends; outside a cascade, run synchronously so reads of
+  // transformer state stay consistent.
   _scheduleUpdate() {
     if (this._updateScheduled) return;
     this._updateScheduled = true;
     Node._runAfterAbsTransformCascade(() => {
       this._updateScheduled = false;
-      if (!this._nodes || !this._nodes.length) return;
-      if (this._transforming) return;
-      if (this.isDragging()) return;
+      if (!this._nodes?.length || this._transforming || this.isDragging()) {
+        return;
+      }
       this.update();
     });
   }

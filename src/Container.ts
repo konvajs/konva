@@ -320,31 +320,22 @@ export abstract class Container<
     return arr;
   }
   _clearSelfAndDescendantCache(attr?: string) {
-    // Perf: track depth of an absoluteTransform cascade so listeners (e.g.
-    // Konva.Transformer) can defer work until the entire subtree has been
-    // invalidated. See Node._runAfterAbsTransformCascade. When the outermost
-    // call returns, flush queued callbacks. try/finally ensures flush even on
-    // exception so we never leak depth state.
+    // Perf: bracket absoluteTransform cascades with a depth counter so
+    // Node._runAfterAbsTransformCascade can defer work until the outermost
+    // walk returns. try/finally so depth/flush survive listener exceptions.
     const isAbsTransform = attr === 'absoluteTransform';
     if (isAbsTransform) Node._absTransformCascadeDepth++;
     try {
       super._clearSelfAndDescendantCache(attr);
-      // skip clearing if node is cached with canvas
-      // for performance reasons !!!
-      if (this.isCached()) {
-        return;
-      }
+      // skip clearing if node is cached with canvas (perf)
+      if (this.isCached()) return;
       this.children?.forEach(function (node) {
         node._clearSelfAndDescendantCache(attr);
       });
     } finally {
-      if (isAbsTransform) {
-        Node._absTransformCascadeDepth--;
-        if (
-          Node._absTransformCascadeDepth === 0 &&
-          Node._pendingAfterCascade.length
-        ) {
-          const callbacks = Node._pendingAfterCascade;
+      if (isAbsTransform && --Node._absTransformCascadeDepth === 0) {
+        const callbacks = Node._pendingAfterCascade;
+        if (callbacks.length) {
           Node._pendingAfterCascade = [];
           for (let i = 0; i < callbacks.length; i++) callbacks[i]();
         }
