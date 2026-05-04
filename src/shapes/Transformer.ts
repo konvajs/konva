@@ -257,6 +257,7 @@ export class Transformer extends Group {
   cos: number;
   _cursorChange: boolean;
   _elementsCreated = false;
+  _updateScheduled = false;
 
   static isTransforming = () => {
     return activeTransformersCount > 0;
@@ -330,13 +331,29 @@ export class Transformer extends Group {
     }
     this._nodes.forEach((node) => {
       const onChange = () => {
+        // Perf: while we are mid-transform, _fitNodesInto writes to every node
+        // and each setAttrs fan-outs ~6 *Change events per node. Doing the cache
+        // reset here would be O(N * events) per resize step; _fitNodesInto already
+        // calls _resetTransformCache + update once at the end, so skip here.
+        if (this._transforming) {
+          return;
+        }
         if (this.nodes().length === 1 && this.useSingleNodeRotation()) {
           this.rotation(this.nodes()[0].getAbsoluteRotation());
         }
 
+        // _resetTransformCache stays synchronous: it's O(1) per call and
+        // sync reads of transformer bounds (tr.x() etc.) need fresh data.
         this._resetTransformCache();
-        if (!this._transforming && !this.isDragging()) {
-          this.update();
+        if (!this.isDragging()) {
+          // Perf: batch update() via microtask. When an ancestor (e.g. the
+          // Stage) moves, _clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM)
+          // walks every descendant and fires absoluteTransformChange — so this
+          // listener fires once PER attached node per ancestor change. Calling
+          // update() each time is O(N) (it walks all nodes via __getNodeRect),
+          // making stage-drag with N attached nodes O(N^2) per frame. The
+          // microtask runs before paint, so visuals stay correct.
+          this._scheduleUpdate();
         }
       };
       if (node._attrsAffectingSize.length) {
@@ -1144,47 +1161,80 @@ export class Transformer extends Group {
     // [delta transform] = [new transform] * [old transform inverted]
     const delta = newTr.multiply(oldTr.invert());
 
-    this._nodes.forEach((node) => {
-      // check to close this issue: https://github.com/konvajs/konva/issues/1957
-      // a node can be destroyed during the transformation
-      // probably a developer must remove it from transformer
-      if (!node.getStage()) {
-        // do we need a helping message?
-        // Util.error(
-        //   'Node is not attached to the stage. This is not allowed. Please attach the node to the stage before transforming. If node was destroyed, make sure to remove it from transformer.'
-        // );
-        return;
-      }
-      // for each node we have the same [delta transform]
-      // the equations is
-      // [delta transform] * [parent transform] * [old local transform] = [parent transform] * [new local transform]
-      // and we need to find [new local transform]
-      // [new local] = [parent inverted] * [delta] * [parent] * [old local]
-      const parentTransform = node.getParent()!.getAbsoluteTransform();
-      const localTransform = node.getTransform().copy();
-      // skip offset:
-      localTransform.translate(node.offsetX(), node.offsetY());
+    // Perf:
+    // - dedupe layers across nodes so we batchDraw each layer once, not per
+    //   node (was O(N)).
+    // - suspend autoDraw while we write attrs — every _setAttr would otherwise
+    //   trigger _requestDraw -> getLayer (parent-chain walk) per attr per node.
+    //   We issue one batchDraw per affected layer at the end below.
+    const layersToDraw = new Set<any>();
+    const prevAutoDraw = Konva.autoDrawEnabled;
+    Konva.autoDrawEnabled = false;
+    try {
+      this._nodes.forEach((node) => {
+        // check to close this issue: https://github.com/konvajs/konva/issues/1957
+        // a node can be destroyed during the transformation
+        // probably a developer must remove it from transformer
+        if (!node.getStage()) {
+          // do we need a helping message?
+          // Util.error(
+          //   'Node is not attached to the stage. This is not allowed. Please attach the node to the stage before transforming. If node was destroyed, make sure to remove it from transformer.'
+          // );
+          return;
+        }
+        // for each node we have the same [delta transform]
+        // the equations is
+        // [delta transform] * [parent transform] * [old local transform] = [parent transform] * [new local transform]
+        // and we need to find [new local transform]
+        // [new local] = [parent inverted] * [delta] * [parent] * [old local]
+        const parentTransform = node.getParent()!.getAbsoluteTransform();
+        const localTransform = node.getTransform().copy();
+        // skip offset:
+        localTransform.translate(node.offsetX(), node.offsetY());
 
-      const newLocalTransform = new Transform();
-      newLocalTransform
-        .multiply(parentTransform.copy().invert())
-        .multiply(delta)
-        .multiply(parentTransform)
-        .multiply(localTransform);
+        const newLocalTransform = new Transform();
+        newLocalTransform
+          .multiply(parentTransform.copy().invert())
+          .multiply(delta)
+          .multiply(parentTransform)
+          .multiply(localTransform);
 
-      const attrs = newLocalTransform.decompose();
-      node.setAttrs(attrs);
-      node.getLayer()?.batchDraw();
+        const attrs = newLocalTransform.decompose();
+        node.setAttrs(attrs);
+        const layer = node.getLayer();
+        if (layer) {
+          layersToDraw.add(layer);
+        }
+      });
+      this.rotation(Util._getRotation(newAttrs.rotation));
+      // trigger transform event AFTER we update rotation
+      this._nodes.forEach((node) => {
+        this._fire('transform', { evt: evt, target: node });
+        node._fire('transform', { evt: evt, target: node });
+      });
+      this._resetTransformCache();
+      this.update();
+      layersToDraw.add(this.getLayer());
+    } finally {
+      Konva.autoDrawEnabled = prevAutoDraw;
+    }
+    layersToDraw.forEach((layer) => layer && layer.batchDraw());
+  }
+  // Perf: dedupe update() calls fired from per-node listeners during an
+  // absoluteTransform cascade (e.g. Stage drag). When inside a cascade we
+  // queue a single update to run when the cascade ends; outside a cascade
+  // (e.g. a single setAttrs on one node) we run synchronously so reads of
+  // the transformer state remain consistent without microtask flushing.
+  _scheduleUpdate() {
+    if (this._updateScheduled) return;
+    this._updateScheduled = true;
+    Node._runAfterAbsTransformCascade(() => {
+      this._updateScheduled = false;
+      if (!this._nodes || !this._nodes.length) return;
+      if (this._transforming) return;
+      if (this.isDragging()) return;
+      this.update();
     });
-    this.rotation(Util._getRotation(newAttrs.rotation));
-    // trigger transform event AFTER we update rotation
-    this._nodes.forEach((node) => {
-      this._fire('transform', { evt: evt, target: node });
-      node._fire('transform', { evt: evt, target: node });
-    });
-    this._resetTransformCache();
-    this.update();
-    this.getLayer()!.batchDraw();
   }
   /**
    * force update of Konva.Transformer.

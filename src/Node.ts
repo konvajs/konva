@@ -344,6 +344,26 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       this.fire('absoluteTransformChange');
     }
   }
+
+  // Perf: When an ancestor (e.g. Stage) moves, _clearSelfAndDescendantCache(
+  // ABSOLUTE_TRANSFORM) walks every descendant synchronously and fires
+  // absoluteTransformChange on each. Listeners attached to many sibling
+  // descendants (notably Konva.Transformer with N attached nodes) would each
+  // trigger expensive recomputation O(N^2) per drag frame.
+  //
+  // We expose a synchronous depth counter so listeners can detect they are
+  // inside a cascade and defer work until it ends. See Container's override
+  // for where the counter is incremented/decremented and pending callbacks
+  // are flushed.
+  static _absTransformCascadeDepth = 0;
+  static _pendingAfterCascade: Array<() => void> = [];
+  static _runAfterAbsTransformCascade(cb: () => void) {
+    if (Node._absTransformCascadeDepth > 0) {
+      Node._pendingAfterCascade.push(cb);
+    } else {
+      cb();
+    }
+  }
   /**
    * clear cached canvas
    * @method
@@ -2530,10 +2550,25 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (events === undefined) {
       //recalculate cache
       events = [];
+      // Perf+correctness: dedupe handlers as we walk the prototype chain.
+      // Subclasses that don't define their own `eventListeners` (e.g. Stage,
+      // Container, Group) inherit the parent's via the prototype chain — so
+      // walking Stage→Container→Node would otherwise see Node.prototype's
+      // eventListeners three times and push the same handler three times.
+      // That made every ancestor-level *Change event invoke the proto
+      // listener N times where N is the chain depth, multiplying the cost
+      // of e.g. _clearSelfAndDescendantCache cascades.
+      const seen = new Set();
       let obj = Object.getPrototypeOf(this);
       while (obj) {
         const hierarchyEvents = obj.eventListeners?.[eventType] ?? [];
-        events.push(...hierarchyEvents);
+        for (let i = 0; i < hierarchyEvents.length; i++) {
+          const entry = hierarchyEvents[i];
+          if (!seen.has(entry)) {
+            seen.add(entry);
+            events.push(entry);
+          }
+        }
         obj = Object.getPrototypeOf(obj);
       }
       // update cache
@@ -2550,9 +2585,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     const topListeners = this._getProtoListeners(eventType);
     if (topListeners) {
-      const list = topListeners.slice();
-      for (let i = 0; i < list.length; i++) {
-        list[i].handler.call(this, evt);
+      // Perf: do NOT slice — proto listeners are wired up at module load
+      // (see Node.prototype.on(...) calls) and never mutated at runtime,
+      // so the defensive copy is pure allocation overhead. Hot path: every
+      // *Change event during a Transformer resize iterates this list.
+      for (let i = 0; i < topListeners.length; i++) {
+        topListeners[i].handler.call(this, evt);
       }
     }
 
