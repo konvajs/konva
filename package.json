@@ -117,6 +117,18 @@
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
+  "peerDependencies": {
+    "canvas": "^3.0.0",
+    "skia-canvas": "^3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "canvas": {
+      "optional": true
+    },
+    "skia-canvas": {
+      "optional": true
+    }
+  },
   "keywords": [
     "canvas",
     "animations",
