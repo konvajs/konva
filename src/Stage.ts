@@ -241,6 +241,12 @@ export class Stage extends Container<Layer, StageConfig> {
     }
     return this;
   }
+  setWindow(win){
+    if (win) {
+      DD._attachListeners(win);
+    }
+    return this;
+  }
   shouldDrawHit() {
     return true;
   }
