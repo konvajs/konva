@@ -251,7 +251,11 @@ export class Path extends Shape<PathConfig> {
     }
 
     if (i === ii) {
-      points = dataArray[i - 1].points.slice(-2);
+      let j = i - 1;
+      while (j > 0 && dataArray[j].points.length < 2) {
+        j--;
+      }
+      points = dataArray[j].points.slice(-2);
       return {
         x: points[0],
         y: points[1],
