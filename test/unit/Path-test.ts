@@ -604,6 +604,23 @@ describe('Path', function () {
   });
 
   // ======================================================
+  it('getPointAtLength returns a valid point past the end of a closed path', function () {
+    var path = new Konva.Path({
+      data: 'M0,0 L100,0 L100,100 z',
+    });
+
+    var total = path.getLength();
+
+    // a length past the end of the path (e.g. from floating point drift while
+    // animating along the path) must still return a real point, as it does for
+    // open paths, not { x: undefined, y: undefined }
+    var point = path.getPointAtLength(total + 500);
+
+    assert.equal(point.x, 100);
+    assert.equal(point.y, 100);
+  });
+
+  // ======================================================
   it('Tiger (RAWR!)', function () {
     this.timeout(5000);
     var stage = addStage();
