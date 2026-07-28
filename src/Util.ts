@@ -747,7 +747,7 @@ export const Util = {
       r: c[0],
       g: c[1],
       b: c[2],
-      a: 1,
+      a: c.length > 3 ? c[3] : 1,
     };
   },
   // Parse rgb(n, n, n)

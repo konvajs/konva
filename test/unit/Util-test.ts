@@ -113,6 +113,22 @@ describe('Util', function () {
     });
   });
 
+  it('colorToRGBA() - named color transparent keeps its alpha', function () {
+    assert.deepEqual(Konva.Util.colorToRGBA('transparent'), {
+      r: 255,
+      g: 255,
+      b: 255,
+      a: 0,
+    });
+
+    assert.deepEqual(Konva.Util.colorToRGBA('red'), {
+      r: 255,
+      g: 0,
+      b: 0,
+      a: 1,
+    });
+  });
+
   it('make sure Transform is exported', () => {
     assert.equal(!!Konva.Transform, true);
   });
