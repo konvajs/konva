@@ -74,6 +74,28 @@ describe('Util', function () {
       b: 255,
       a: 1,
     });
+
+    assert.deepEqual(Konva.Util.colorToRGBA('rgb(25%, 50%, 100%)'), {
+      r: 63.75,
+      g: 127.5,
+      b: 255,
+      a: 1,
+    });
+
+    assert.deepEqual(Konva.Util.colorToRGBA('rgb(0, 128, 255)'), {
+      r: 0,
+      g: 128,
+      b: 255,
+      a: 1,
+    });
+
+    // a percentage is allowed to be fractional
+    assert.deepEqual(Konva.Util.colorToRGBA('rgba(10.5%, 0%, 0%, 25.5%)'), {
+      r: 26.775,
+      g: 0,
+      b: 0,
+      a: 0.255,
+    });
   });
 
   it('colorToRGBA() - from hex color string with percentage to RGBA conversion!', function () {

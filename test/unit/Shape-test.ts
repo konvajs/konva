@@ -1300,6 +1300,15 @@ describe('Shape', function () {
     assert.equal(circle.getShadowRGBA(), undefined);
   });
 
+  it('shadow color as rgb() with percentages', function () {
+    var circle = new Konva.Circle({
+      fill: 'green',
+      radius: 50,
+      shadowColor: 'rgb(100%, 0%, 0%)',
+    });
+    assert.equal(circle.getShadowRGBA(), 'rgba(255,0,0,1)');
+  });
+
   it('scale should also effect shadow offset', function () {
     var stage = addStage();
 
