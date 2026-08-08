@@ -518,6 +518,66 @@ describe('Line', function () {
     assert.equal(Math.round(client.height), 47, 'check height');
   });
 
+  it('getSelfRect with multi-segment bezier', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    // Two cubic segments (2 + 6*2 = 14 points): the first bulges down to
+    // y=150, the second bulges down further to y=125 relative to the
+    // shape (checked against a raw canvas render of the same path below).
+    var line = new Konva.Line({
+      x: 0,
+      y: 0,
+      points: [0, 50, 0, 150, 100, 150, 100, 50, 100, 50, 200, 150, 300, 50],
+      bezier: true,
+      stroke: 'red',
+    });
+    layer.add(line);
+    layer.draw();
+
+    var rect = line.getSelfRect();
+
+    // Before the fix, getBezierExtremaPoints only looked at the first 8
+    // points (points[0..7]) and treated everything as one cubic segment,
+    // so multi-segment beziers collapsed to a degenerate box.
+    assert.notEqual(rect.height, 0, 'height must not collapse to 0');
+    assert.equal(rect.width, 300, 'width spans both segments');
+
+    // Ground truth: render the identical path to a raw canvas and measure
+    // the actual drawn pixel extent.
+    var raw = createCanvasAndContext();
+    raw.context.beginPath();
+    raw.context.moveTo(0, 50);
+    raw.context.bezierCurveTo(0, 150, 100, 150, 100, 50);
+    raw.context.bezierCurveTo(100, 50, 200, 150, 300, 50);
+    raw.context.stroke();
+
+    var imgData = raw.context.getImageData(
+      0,
+      0,
+      raw.canvas.width,
+      raw.canvas.height
+    );
+    var minY = Infinity,
+      maxY = -Infinity;
+    for (var y = 0; y < raw.canvas.height; y++) {
+      for (var x = 0; x < raw.canvas.width; x++) {
+        var idx = (y * raw.canvas.width + x) * 4;
+        if (imgData.data[idx + 3] > 0) {
+          minY = Math.min(minY, y / Konva.pixelRatio);
+          maxY = Math.max(maxY, y / Konva.pixelRatio);
+        }
+      }
+    }
+
+    assert.equal(
+      rect.y + rect.height,
+      maxY,
+      'getSelfRect max Y matches the real rendered pixel extent'
+    );
+  });
+
   it('line caching', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

@@ -57,40 +57,57 @@ function expandPoints(p, tension) {
 }
 
 function getBezierExtremaPoints(points) {
-  const axisPoints = [
-    [points[0], points[2], points[4], points[6]],
-    [points[1], points[3], points[5], points[7]],
-  ];
-  const extremaTs: number[] = [];
+  const extrema: number[] = [];
 
-  for (const axis of axisPoints) {
-    const a = -3 * axis[0] + 9 * axis[1] - 9 * axis[2] + 3 * axis[3];
-    if (a !== 0) {
+  // points[0], points[1] is the starting point; every subsequent group of
+  // 6 values is one cubic bezier segment (cp1x, cp1y, cp2x, cp2y, x, y),
+  // whose start is the previous segment's end point (matching the layout
+  // Line#_sceneFunc feeds to context.bezierCurveTo in a loop).
+  for (let n = 0; n + 7 < points.length; n += 6) {
+    const axisPoints = [
+      [points[n], points[n + 2], points[n + 4], points[n + 6]],
+      [points[n + 1], points[n + 3], points[n + 5], points[n + 7]],
+    ];
+    const extremaTs: number[] = [];
+
+    for (const axis of axisPoints) {
+      const a = -3 * axis[0] + 9 * axis[1] - 9 * axis[2] + 3 * axis[3];
       const b = 6 * axis[0] - 12 * axis[1] + 6 * axis[2];
       const c = -3 * axis[0] + 3 * axis[1];
 
-      const discriminant = b * b - 4 * a * c;
-      if (discriminant >= 0) {
-        const d = Math.sqrt(discriminant);
-        extremaTs.push((-b + d) / (2 * a));
-        extremaTs.push((-b - d) / (2 * a));
+      if (a !== 0) {
+        const discriminant = b * b - 4 * a * c;
+        if (discriminant >= 0) {
+          const d = Math.sqrt(discriminant);
+          extremaTs.push((-b + d) / (2 * a));
+          extremaTs.push((-b - d) / (2 * a));
+        }
+      } else if (b !== 0) {
+        // The quadratic derivative degenerates to linear (common for
+        // symmetric control points); solve b*t + c = 0 instead of
+        // silently dropping this axis's extremum.
+        extremaTs.push(-c / b);
       }
     }
+
+    extrema.push(
+      ...extremaTs
+        .filter((t) => t > 0 && t < 1)
+        .flatMap((t) =>
+          axisPoints.map((axis) => {
+            const mt = 1 - t;
+            return (
+              mt * mt * mt * axis[0] +
+              3 * mt * mt * t * axis[1] +
+              3 * mt * t * t * axis[2] +
+              t * t * t * axis[3]
+            );
+          })
+        )
+    );
   }
 
-  return extremaTs
-    .filter((t) => t > 0 && t < 1)
-    .flatMap((t) =>
-      axisPoints.map((axis) => {
-        const mt = 1 - t;
-        return (
-          mt * mt * mt * axis[0] +
-          3 * mt * mt * t * axis[1] +
-          3 * mt * t * t * axis[2] +
-          t * t * t * axis[3]
-        );
-      })
-    );
+  return extrema;
 }
 
 export interface LineConfig extends ShapeConfig {
