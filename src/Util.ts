@@ -456,6 +456,16 @@ const req =
   };
 const capitalizeCache = new Map<string, string>();
 
+// Parse one rgb()/rgba() component, which may be written as a percentage.
+// 100% is 1 for the alpha channel and 255 for the color channels.
+const parseColorComponent = (value: string, isAlpha: boolean) => {
+  if (value.slice(-1) === '%') {
+    const fraction = parseFloat(value) / 100;
+    return isAlpha ? fraction : fraction * 255;
+  }
+  return Number(value);
+};
+
 /**
  * @namespace Util
  * @memberof Konva
@@ -754,7 +764,9 @@ export const Util = {
   _rgbColorToRGBA(str: string) {
     if (str.indexOf('rgb(') === 0) {
       str = str.match(/rgb\(([^)]+)\)/)![1];
-      const parts = str.split(/ *, */).map(Number);
+      const parts = str
+        .split(/ *, */)
+        .map((n) => parseColorComponent(n, false));
       return {
         r: parts[0],
         g: parts[1],
@@ -767,12 +779,9 @@ export const Util = {
   _rgbaColorToRGBA(str: string) {
     if (str.indexOf('rgba(') === 0) {
       str = str.match(/rgba\(([^)]+)\)/)![1]!;
-      const parts = str.split(/ *, */).map((n, index) => {
-        if (n.slice(-1) === '%') {
-          return index === 3 ? parseInt(n) / 100 : (parseInt(n) / 100) * 255;
-        }
-        return Number(n);
-      });
+      const parts = str
+        .split(/ *, */)
+        .map((n, index) => parseColorComponent(n, index === 3));
       return {
         r: parts[0],
         g: parts[1],
