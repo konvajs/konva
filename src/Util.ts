@@ -836,10 +836,14 @@ export const Util = {
   },
   // Code adapted from https://github.com/Qix-/color-convert/blob/master/conversions.js#L244
   _hslColorToRGBA(str: string) {
-    // Check hsl() format
-    if (/hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.test(str)) {
+    // Check hsl() format. Hue may be a non-integer (CSS Color 4 allows any
+    // number), and whitespace is allowed around the parens/commas.
+    const match = /hsl\(\s*([\d.]+)\s*,\s*([\d.]+)%\s*,\s*([\d.]+)%\s*\)/.exec(
+      str
+    );
+    if (match) {
       // Extract h, s, l
-      const [_, ...hsl] = /hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.exec(str)!;
+      const [_, ...hsl] = match;
 
       const h = Number(hsl[0]) / 360;
       const s = Number(hsl[1]) / 100;

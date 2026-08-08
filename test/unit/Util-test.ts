@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { Konva } from './test-utils.ts';
+import { addStage, Konva } from './test-utils.ts';
 
 describe('Util', function () {
   it('test _prepareToStringify', function () {
@@ -43,6 +43,51 @@ describe('Util', function () {
       g: 204,
       b: 255,
       a: 1,
+    });
+  });
+
+  it('colorToRGBA() - HSL with a non-integer hue or extra whitespace', function () {
+    // CSS Color 4 allows a non-integer hue and whitespace around the
+    // commas/parens; colorToRGBA must not silently fail to parse these.
+    assert.deepEqual(Konva.Util.colorToRGBA('hsl(96.5, 48%, 59%)'), {
+      r: 140,
+      g: 201,
+      b: 100,
+      a: 1,
+    });
+
+    assert.deepEqual(Konva.Util.colorToRGBA('hsl( 96 , 48% , 59% )'), {
+      r: 140,
+      g: 201,
+      b: 100,
+      a: 1,
+    });
+  });
+
+  it('Tween can animate a color to/from an HSL color with a non-integer hue', function () {
+    // Regression: colorToRGBA() previously returned undefined for a
+    // non-integer hue, which made Tween's color diff throw
+    // "Cannot read properties of undefined (reading 'r')".
+    const stage = addStage();
+    const rect = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: 10,
+      height: 10,
+      fill: 'hsl(120, 50%, 50%)',
+    });
+    const layer = new Konva.Layer();
+    layer.add(rect);
+    stage.add(layer);
+
+    const tween = new Konva.Tween({
+      node: rect,
+      duration: 1,
+      fill: 'hsl(240.5, 50%, 50%)',
+    });
+
+    assert.doesNotThrow(() => {
+      tween.seek(0.5);
     });
   });
 
