@@ -323,6 +323,24 @@ describe('Line', function () {
     assert.equal(Math.round(client.height), 147, 'check height');
   });
 
+  it('getSelfRect with tension on a closed line with coincident points', function () {
+    // regression test: consecutive duplicate points on a closed, tensioned
+    // line made the wrap-around control points divide by zero (0/0), which
+    // propagated NaN into the tension points and the bounding rect.
+    var line = new Konva.Line({
+      points: [7, 7, 7, 7, 50, 50, 7, 7],
+      closed: true,
+      tension: 0.5,
+    });
+
+    var rect = line.getSelfRect();
+
+    assert.equal(isNaN(rect.x), false, 'x should not be NaN');
+    assert.equal(isNaN(rect.y), false, 'y should not be NaN');
+    assert.equal(isNaN(rect.width), false, 'width should not be NaN');
+    assert.equal(isNaN(rect.height), false, 'height should not be NaN');
+  });
+
   it('getClientRect with tension 2', function () {
     var stage = addStage();
     stage.draggable(true);

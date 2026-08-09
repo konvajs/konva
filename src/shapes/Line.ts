@@ -252,8 +252,22 @@ export class Line<
         p[0],
         p[1],
         tension
-      ),
-      middle = expandPoints(p, tension),
+      );
+
+    if (isNaN(firstControlPoints[0])) {
+      firstControlPoints[0] = p[0];
+      firstControlPoints[1] = p[1];
+      firstControlPoints[2] = p[0];
+      firstControlPoints[3] = p[1];
+    }
+    if (isNaN(lastControlPoints[0])) {
+      lastControlPoints[0] = p[len - 2];
+      lastControlPoints[1] = p[len - 1];
+      lastControlPoints[2] = p[len - 2];
+      lastControlPoints[3] = p[len - 1];
+    }
+
+    const middle = expandPoints(p, tension),
       tp = [firstControlPoints[2], firstControlPoints[3]]
         .concat(middle)
         .concat([
