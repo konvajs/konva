@@ -17,16 +17,17 @@ function getControlPoints(
   t: number
 ) {
   const d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2)),
-    d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)),
+    dSum = d01 + d12;
 
   // all three points are the same, so the control points collapse into that
   // point. Without this the divisions below are 0 / 0 = NaN.
-  if (d01 + d12 === 0) {
+  if (dSum === 0) {
     return [x1, y1, x1, y1];
   }
 
-  const fa = (t * d01) / (d01 + d12),
-    fb = (t * d12) / (d01 + d12),
+  const fa = (t * d01) / dSum,
+    fb = (t * d12) / dSum,
     p1x = x1 - fa * (x2 - x0),
     p1y = y1 - fa * (y2 - y0),
     p2x = x1 + fb * (x2 - x0),
