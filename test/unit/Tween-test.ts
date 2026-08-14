@@ -135,6 +135,27 @@ describe('Tween', function () {
     }, 60);
   });
 
+  it('tween to a color it can not parse tells which color it is', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle({
+      x: 100,
+      y: stage.height() / 2,
+      radius: 70,
+      fill: 'red',
+    });
+    layer.add(circle);
+    stage.add(layer);
+
+    assert.throws(function () {
+      new Konva.Tween({
+        node: circle,
+        duration: 0.1,
+        fill: 'rgb(a, b, c)',
+      });
+    }, /can not tween the color "rgb\(a, b, c\)"/);
+  });
+
   it('color tweening', function (done) {
     var stage = addStage();
 

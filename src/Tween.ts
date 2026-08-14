@@ -18,6 +18,19 @@ const blacklist = {
   colorAttrs = ['fill', 'stroke', 'shadowColor'];
 let idCounter = 0;
 
+// the diff below reads r/g/b/a directly, so a color we can not parse must fail
+// with its own message instead of "Cannot read properties of undefined"
+function colorToRGBA(color: string) {
+  return (
+    Util.colorToRGBA(color) ||
+    Util.throw(
+      'can not tween the color "' +
+        color +
+        '", because it is not a valid color.'
+    )
+  );
+}
+
 class TweenEngine {
   prop: string;
   propFunc: Function;
@@ -310,8 +323,8 @@ export class Tween {
           if (n % 2 === 0) {
             diff.push(end[n] - start[n]);
           } else {
-            const startRGBA = Util.colorToRGBA(start[n])!;
-            endRGBA = Util.colorToRGBA(end[n]);
+            const startRGBA = colorToRGBA(start[n]);
+            endRGBA = colorToRGBA(end[n]);
             start[n] = startRGBA;
             diff.push({
               r: endRGBA.r - startRGBA.r,
@@ -327,8 +340,8 @@ export class Tween {
         }
       }
     } else if (colorAttrs.indexOf(key) !== -1) {
-      start = Util.colorToRGBA(start);
-      endRGBA = Util.colorToRGBA(end);
+      start = colorToRGBA(start);
+      endRGBA = colorToRGBA(end);
       diff = {
         r: endRGBA.r - start.r,
         g: endRGBA.g - start.g,
