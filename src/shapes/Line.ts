@@ -17,8 +17,15 @@ function getControlPoints(
   t: number
 ) {
   const d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2)),
-    d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)),
-    fa = (t * d01) / (d01 + d12),
+    d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+
+  // all three points are the same, so the control points collapse into that
+  // point. Without this the divisions below are 0 / 0 = NaN.
+  if (d01 + d12 === 0) {
+    return [x1, y1, x1, y1];
+  }
+
+  const fa = (t * d01) / (d01 + d12),
     fb = (t * d12) / (d01 + d12),
     p1x = x1 - fa * (x2 - x0),
     p1y = y1 - fa * (y2 - y0),
@@ -252,22 +259,8 @@ export class Line<
         p[0],
         p[1],
         tension
-      );
-
-    if (isNaN(firstControlPoints[0])) {
-      firstControlPoints[0] = p[0];
-      firstControlPoints[1] = p[1];
-      firstControlPoints[2] = p[0];
-      firstControlPoints[3] = p[1];
-    }
-    if (isNaN(lastControlPoints[0])) {
-      lastControlPoints[0] = p[len - 2];
-      lastControlPoints[1] = p[len - 1];
-      lastControlPoints[2] = p[len - 2];
-      lastControlPoints[3] = p[len - 1];
-    }
-
-    const middle = expandPoints(p, tension),
+      ),
+      middle = expandPoints(p, tension),
       tp = [firstControlPoints[2], firstControlPoints[3]]
         .concat(middle)
         .concat([

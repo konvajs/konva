@@ -324,21 +324,30 @@ describe('Line', function () {
   });
 
   it('getSelfRect with tension on a closed line with coincident points', function () {
-    // regression test: consecutive duplicate points on a closed, tensioned
-    // line made the wrap-around control points divide by zero (0/0), which
-    // propagated NaN into the tension points and the bounding rect.
+    // regression test: three coincident points in a row (the wrap-around
+    // counts) made getControlPoints divide 0 by 0, which propagated NaN into
+    // the tension points and the bounding rect.
     var line = new Konva.Line({
       points: [7, 7, 7, 7, 50, 50, 7, 7],
       closed: true,
       tension: 0.5,
     });
 
-    var rect = line.getSelfRect();
+    assert.deepEqual(line.getSelfRect(), {
+      x: 7,
+      y: 7,
+      width: 43,
+      height: 43,
+    });
 
-    assert.equal(isNaN(rect.x), false, 'x should not be NaN');
-    assert.equal(isNaN(rect.y), false, 'y should not be NaN');
-    assert.equal(isNaN(rect.width), false, 'width should not be NaN');
-    assert.equal(isNaN(rect.height), false, 'height should not be NaN');
+    // the same shape collapsed into a single point
+    var dot = new Konva.Line({
+      points: [5, 5, 5, 5, 5, 5],
+      closed: true,
+      tension: 0.5,
+    });
+
+    assert.deepEqual(dot.getSelfRect(), { x: 5, y: 5, width: 0, height: 0 });
   });
 
   it('getClientRect with tension 2', function () {
