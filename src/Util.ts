@@ -291,7 +291,6 @@ const OBJECT_ARRAY = '[object Array]',
   ZERO = '0',
   KONVA_WARNING = 'Konva warning: ',
   KONVA_ERROR = 'Konva error: ',
-  RGB_PAREN = 'rgb(',
   COLORS = {
     aliceblue: [240, 248, 255],
     antiquewhite: [250, 235, 215],
@@ -316,7 +315,7 @@ const OBJECT_ARRAY = '[object Array]',
     cyan: [0, 255, 255],
     darkblue: [0, 0, 139],
     darkcyan: [0, 139, 139],
-    darkgoldenrod: [184, 132, 11],
+    darkgoldenrod: [184, 134, 11],
     darkgray: [169, 169, 169],
     darkgreen: [0, 100, 0],
     darkgrey: [169, 169, 169],
@@ -339,7 +338,7 @@ const OBJECT_ARRAY = '[object Array]',
     dimgrey: [105, 105, 105],
     dodgerblue: [30, 144, 255],
     firebrick: [178, 34, 34],
-    floralwhite: [255, 255, 240],
+    floralwhite: [255, 250, 240],
     forestgreen: [34, 139, 34],
     fuchsia: [255, 0, 255],
     gainsboro: [220, 220, 220],
@@ -409,7 +408,7 @@ const OBJECT_ARRAY = '[object Array]',
     peachpuff: [255, 218, 185],
     peru: [205, 133, 63],
     pink: [255, 192, 203],
-    plum: [221, 160, 203],
+    plum: [221, 160, 221],
     powderblue: [176, 224, 230],
     purple: [128, 0, 128],
     rebeccapurple: [102, 51, 153],
@@ -425,9 +424,9 @@ const OBJECT_ARRAY = '[object Array]',
     silver: [192, 192, 192],
     skyblue: [135, 206, 235],
     slateblue: [106, 90, 205],
-    slategray: [119, 128, 144],
-    slategrey: [119, 128, 144],
-    snow: [255, 255, 250],
+    slategray: [112, 128, 144],
+    slategrey: [112, 128, 144],
+    snow: [255, 250, 250],
     springgreen: [0, 255, 127],
     steelblue: [70, 130, 180],
     tan: [210, 180, 140],
@@ -441,9 +440,8 @@ const OBJECT_ARRAY = '[object Array]',
     white: [255, 255, 255],
     whitesmoke: [245, 245, 245],
     yellow: [255, 255, 0],
-    yellowgreen: [154, 205, 5],
-  },
-  RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/;
+    yellowgreen: [154, 205, 50],
+  };
 let animQueue: Array<Function> = [];
 
 // Cache for canvas farbling detection
@@ -456,14 +454,50 @@ const req =
   };
 const capitalizeCache = new Map<string, string>();
 
-// Parse one rgb()/rgba() component, which may be written as a percentage.
-// 100% is 1 for the alpha channel and 255 for the color channels.
-const parseColorComponent = (value: string, isAlpha: boolean) => {
-  if (value.slice(-1) === '%') {
-    const fraction = parseFloat(value) / 100;
-    return isAlpha ? fraction : fraction * 255;
+// Split the components of rgb()/hsl(). CSS separates them with commas (legacy
+// syntax), or with spaces and a slash before the alpha (CSS Color 4 syntax),
+// but never with both. Keep the two apart, so that a space inside a
+// comma-separated color adds no component. A component the user left empty
+// stays as "", which then fails the color.
+const splitColorComponents = (str: string) => {
+  const components = str.trim();
+  return components.indexOf(',') === -1
+    ? components.split(/\s*\/\s*|\s+/)
+    : components.split(/\s*,\s*/);
+};
+
+// A CSS number: "50", "-0.5", ".5", "1e2". Everything else, from "50abc" to
+// "0x10" and "1.2.3", is not a number and makes the color fail.
+const NUMBER_SOURCE = '[+-]?(?:\\d+\\.?\\d*|\\.\\d+)(?:e[+-]?\\d+)?';
+
+// A component is a number with an optional "%" sign.
+const COLOR_COMPONENT_REGEX = new RegExp(`^(${NUMBER_SOURCE})(%?)$`, 'i');
+
+// Parse one color component. 100% is `max`: 255 for the color channels of
+// rgb(), 1 for the alpha, 100 for the saturation and the lightness of hsl().
+const parseColorComponent = (value: string, max: number) => {
+  const match = COLOR_COMPONENT_REGEX.exec(value);
+  if (!match) {
+    return NaN;
   }
-  return Number(value);
+  return match[2] ? (Number(match[1]) / 100) * max : Number(match[1]);
+};
+
+// parseInt() stops at the first character it can not read, so "#0g0000" would
+// give a valid black instead of failing. The hex parsers test the shape first.
+const HEX_COLOR_REGEX = /^#[0-9a-f]+$/i;
+
+// Keep a fraction in [0, 1]. NaN stays NaN, so a bad value still fails.
+const clamp01 = (value: number) => Math.min(Math.max(value, 0), 1);
+
+// The hue of hsl() is the same number, with a CSS Color 4 angle unit
+// instead of the "%" sign. No unit means degrees.
+const HUE_REGEX = new RegExp(`^(${NUMBER_SOURCE})(deg|grad|rad|turn)?$`, 'i');
+const HUE_UNITS: Record<string, number> = {
+  deg: 1,
+  grad: 0.9,
+  rad: DEG180_OVER_PI,
+  turn: 360,
 };
 
 /**
@@ -703,49 +737,29 @@ export const Util = {
    * var rgb = Konva.Util.getRGB('rgb(0,0,255)');
    */
   getRGB(color: string): RGB {
-    let rgb;
-    // color string
-    if (color in COLORS) {
-      rgb = COLORS[color as keyof typeof COLORS];
-      return {
-        r: rgb[0],
-        g: rgb[1],
-        b: rgb[2],
-      };
-    } else if (color[0] === HASH) {
-      // hex
-      return this._hexToRgb(color.substring(1));
-    } else if (color.substr(0, 4) === RGB_PAREN) {
-      // rgb string
-      rgb = RGB_REGEX.exec(color.replace(/ /g, '')) as RegExpExecArray;
-      return {
-        r: parseInt(rgb[1], 10),
-        g: parseInt(rgb[2], 10),
-        b: parseInt(rgb[3], 10),
-      };
-    } else {
-      // default
-      return {
-        r: 0,
-        g: 0,
-        b: 0,
-      };
-    }
+    // black for a color we can not parse
+    const { r = 0, g = 0, b = 0 } = Util.colorToRGBA(color) ?? {};
+    return { r, g, b };
   },
   // convert any color string to RGBA object
   // from https://github.com/component/color-parser
   colorToRGBA(str: string) {
-    str = str || 'black';
-    return (
+    // a CSS custom property keeps the space after the colon,
+    // so "--brand: #ff0000" gives us " #ff0000"
+    str = (str || '').trim() || 'black';
+    const color =
       Util._namedColorToRBA(str) ||
       Util._hex3ColorToRGBA(str) ||
       Util._hex4ColorToRGBA(str) ||
       Util._hex6ColorToRGBA(str) ||
       Util._hex8ColorToRGBA(str) ||
       Util._rgbColorToRGBA(str) ||
-      Util._rgbaColorToRGBA(str) ||
-      Util._hslColorToRGBA(str)
-    );
+      Util._hslColorToRGBA(str);
+    // a NaN component stays invisible until it reaches the canvas and drops the
+    // shape, so a color we can not fully parse must fail as a whole
+    if (color && [color.r, color.g, color.b, color.a].every(Util._isNumber)) {
+      return color;
+    }
   },
   // Parse named css color. Like "green"
   _namedColorToRBA(str: string) {
@@ -760,39 +774,26 @@ export const Util = {
       a: c.length > 3 ? c[3] : 1,
     };
   },
-  // Parse rgb(n, n, n)
+  // Parse rgb(n, n, n), rgba(n, n, n, n) and rgb(n n n / n)
   _rgbColorToRGBA(str: string) {
-    if (str.indexOf('rgb(') === 0) {
-      str = str.match(/rgb\(([^)]+)\)/)![1];
-      const parts = str
-        .split(/ *, */)
-        .map((n) => parseColorComponent(n, false));
-      return {
-        r: parts[0],
-        g: parts[1],
-        b: parts[2],
-        a: 1,
-      };
+    const match = /^rgba?\(([^)]*)\)$/i.exec(str);
+    if (!match) {
+      return;
     }
-  },
-  // Parse rgba(n, n, n, n)
-  _rgbaColorToRGBA(str: string) {
-    if (str.indexOf('rgba(') === 0) {
-      str = str.match(/rgba\(([^)]+)\)/)![1]!;
-      const parts = str
-        .split(/ *, */)
-        .map((n, index) => parseColorComponent(n, index === 3));
-      return {
-        r: parts[0],
-        g: parts[1],
-        b: parts[2],
-        a: parts[3],
-      };
+    const parts = splitColorComponents(match[1]);
+    if (parts.length < 3 || parts.length > 4) {
+      return;
     }
+    return {
+      r: parseColorComponent(parts[0], 255),
+      g: parseColorComponent(parts[1], 255),
+      b: parseColorComponent(parts[2], 255),
+      a: parts.length > 3 ? parseColorComponent(parts[3], 1) : 1,
+    };
   },
   // Parse #nnnnnnnn
   _hex8ColorToRGBA(str: string) {
-    if (str[0] === '#' && str.length === 9) {
+    if (str.length === 9 && HEX_COLOR_REGEX.test(str)) {
       return {
         r: parseInt(str.slice(1, 3), 16),
         g: parseInt(str.slice(3, 5), 16),
@@ -803,7 +804,7 @@ export const Util = {
   },
   // Parse #nnnnnn
   _hex6ColorToRGBA(str: string) {
-    if (str[0] === '#' && str.length === 7) {
+    if (str.length === 7 && HEX_COLOR_REGEX.test(str)) {
       return {
         r: parseInt(str.slice(1, 3), 16),
         g: parseInt(str.slice(3, 5), 16),
@@ -814,7 +815,7 @@ export const Util = {
   },
   // Parse #nnnn
   _hex4ColorToRGBA(str: string) {
-    if (str[0] === '#' && str.length === 5) {
+    if (str.length === 5 && HEX_COLOR_REGEX.test(str)) {
       return {
         r: parseInt(str[1] + str[1], 16),
         g: parseInt(str[2] + str[2], 16),
@@ -825,7 +826,7 @@ export const Util = {
   },
   // Parse #nnn
   _hex3ColorToRGBA(str: string) {
-    if (str[0] === '#' && str.length === 4) {
+    if (str.length === 4 && HEX_COLOR_REGEX.test(str)) {
       return {
         r: parseInt(str[1] + str[1], 16),
         g: parseInt(str[2] + str[2], 16),
@@ -835,73 +836,72 @@ export const Util = {
     }
   },
   // Code adapted from https://github.com/Qix-/color-convert/blob/master/conversions.js#L244
+  // Parse hsl(h, s%, l%), hsla(h, s%, l%, n) and hsl(h s% l% / n)
   _hslColorToRGBA(str: string) {
-    // Check hsl() format. Hue may be a non-integer (CSS Color 4 allows any
-    // number), and whitespace is allowed around the parens/commas.
-    const match = /hsl\(\s*([\d.]+)\s*,\s*([\d.]+)%\s*,\s*([\d.]+)%\s*\)/.exec(
-      str
-    );
-    if (match) {
-      // Extract h, s, l
-      const [_, ...hsl] = match;
-
-      const h = Number(hsl[0]) / 360;
-      const s = Number(hsl[1]) / 100;
-      const l = Number(hsl[2]) / 100;
-
-      let t2;
-      let t3;
-      let val;
-
-      if (s === 0) {
-        val = l * 255;
-        return {
-          r: Math.round(val),
-          g: Math.round(val),
-          b: Math.round(val),
-          a: 1,
-        };
-      }
-
-      if (l < 0.5) {
-        t2 = l * (1 + s);
-      } else {
-        t2 = l + s - l * s;
-      }
-
-      const t1 = 2 * l - t2;
-
-      const rgb = [0, 0, 0];
-      for (let i = 0; i < 3; i++) {
-        t3 = h + (1 / 3) * -(i - 1);
-        if (t3 < 0) {
-          t3++;
-        }
-
-        if (t3 > 1) {
-          t3--;
-        }
-
-        if (6 * t3 < 1) {
-          val = t1 + (t2 - t1) * 6 * t3;
-        } else if (2 * t3 < 1) {
-          val = t2;
-        } else if (3 * t3 < 2) {
-          val = t1 + (t2 - t1) * (2 / 3 - t3) * 6;
-        } else {
-          val = t1;
-        }
-
-        rgb[i] = val * 255;
-      }
-
-      return {
-        r: Math.round(rgb[0]),
-        g: Math.round(rgb[1]),
-        b: Math.round(rgb[2]),
-        a: 1,
-      };
+    const match = /^hsla?\(([^)]*)\)$/i.exec(str);
+    if (!match) {
+      return;
     }
+    const parts = splitColorComponents(match[1]);
+    if (parts.length < 3 || parts.length > 4) {
+      return;
+    }
+    // a hue we can not parse gives a gray color instead of a NaN one,
+    // so colorToRGBA() can not catch it at the end
+    const hue = HUE_REGEX.exec(parts[0]);
+    if (!hue) {
+      return;
+    }
+    const unit = hue[2];
+    const degrees = Number(hue[1]) * (unit ? HUE_UNITS[unit.toLowerCase()] : 1);
+    if (!isFinite(degrees)) {
+      return;
+    }
+    // the hue is an angle, so keep it in [0, 360) to also accept
+    // negative angles and angles over one full turn
+    const h = (((degrees % 360) + 360) % 360) / 360;
+    // the saturation and the lightness are percentages of 1, written with or
+    // without the "%" sign, so read them out of 100 and then scale them down.
+    // CSS keeps them in [0, 1]; out of that range the math gives a negative
+    // channel, which the canvas can not read at all.
+    const s = clamp01(parseColorComponent(parts[1], 100) / 100);
+    const l = clamp01(parseColorComponent(parts[2], 100) / 100);
+    const a = parts.length > 3 ? parseColorComponent(parts[3], 1) : 1;
+
+    const t2 = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const t1 = 2 * l - t2;
+
+    const rgb = [0, 0, 0];
+    for (let i = 0; i < 3; i++) {
+      let t3 = h + (1 / 3) * -(i - 1);
+      if (t3 < 0) {
+        t3++;
+      }
+
+      if (t3 > 1) {
+        t3--;
+      }
+
+      let val;
+      if (6 * t3 < 1) {
+        val = t1 + (t2 - t1) * 6 * t3;
+      } else if (2 * t3 < 1) {
+        val = t2;
+      } else if (3 * t3 < 2) {
+        val = t1 + (t2 - t1) * (2 / 3 - t3) * 6;
+      } else {
+        val = t1;
+      }
+
+      rgb[i] = val * 255;
+    }
+
+    return {
+      r: Math.round(rgb[0]),
+      g: Math.round(rgb[1]),
+      b: Math.round(rgb[2]),
+      a,
+    };
   },
   /**
    * check intersection of two client rectangles
@@ -965,7 +965,7 @@ export const Util = {
     capitalizeCache.set(str, out);
     return out;
   },
-  throw(str: string) {
+  throw(str: string): never {
     throw new Error(KONVA_ERROR + str);
   },
   error(str: string) {
