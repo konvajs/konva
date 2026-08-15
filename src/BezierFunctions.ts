@@ -825,6 +825,43 @@ export const t2length = (
   return t;
 };
 
+const quadraticAt = (p0: number, p1: number, p2: number, t: number) => {
+  const mt = 1 - t;
+  return mt * mt * p0 + 2 * mt * t * p1 + t * t * p2;
+};
+
+/**
+ * Points where a quadratic bezier segment reaches its highest or lowest value
+ * on one of the two axes, as a flat [x, y, x, y, ...] list. The two end points
+ * are not included, because the caller knows them already.
+ */
+export const getQuadraticExtremaPoints = (
+  x0: number,
+  y0: number,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number
+) => {
+  const extrema: number[] = [];
+
+  for (const axis of [
+    [x0, x1, x2],
+    [y0, y1, y2],
+  ]) {
+    // the derivative of the quadratic is linear, so it has one root. A straight
+    // segment makes the denominator 0, and the division then gives a value that
+    // is not in the range below.
+    const t = (axis[0] - axis[1]) / (axis[0] - 2 * axis[1] + axis[2]);
+
+    if (t > 0 && t < 1) {
+      extrema.push(quadraticAt(x0, x1, x2, t), quadraticAt(y0, y1, y2, t));
+    }
+  }
+
+  return extrema;
+};
+
 const cubicAt = (p0: number, p1: number, p2: number, p3: number, t: number) => {
   const mt = 1 - t;
   return (

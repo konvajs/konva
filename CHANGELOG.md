@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Improved `Transformer` performance with many attached nodes
 - Improved `Text` performance when a long text is resized
 - `Path.getSelfRect()` now solves the bounds of a cubic segment exactly instead of sampling it at 100 points. Reported boxes get slightly larger and more accurate, and the calculation is about 9 times faster
+- `Path.getSelfRect()` now also solves the bounds of a quadratic segment (`Q`, `q`, `T` and `t`) exactly, instead of using the box around its control points. Reported boxes get smaller and tighter
 - A tween of a color that Konva can not parse now throws a clear error
 - Fixed several wrong named color values: `darkgoldenrod`, `floralwhite`, `plum`, `slategray`, `slategrey`, `snow` and `yellowgreen`
 - Fixed the alpha of the named color `transparent`, so a tween to or from it fades again

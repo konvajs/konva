@@ -7,6 +7,7 @@ import {
   getCubicArcLength,
   getCubicExtremaPoints,
   getQuadraticArcLength,
+  getQuadraticExtremaPoints,
   t2length,
 } from '../BezierFunctions.ts';
 import type { GetSet, PathSegment } from '../types.ts';
@@ -171,8 +172,24 @@ export class Path extends Shape<PathConfig> {
             data.points[5]
           )
         );
+      } else if (data.command === 'Q') {
+        // same as 'C'. Note that 'q', 'T' and 't' are all normalised to 'Q' by
+        // the parser, so this one branch covers every quadratic segment
+        points.push(
+          data.start.x,
+          data.start.y,
+          data.points[2],
+          data.points[3],
+          ...getQuadraticExtremaPoints(
+            data.start.x,
+            data.start.y,
+            data.points[0],
+            data.points[1],
+            data.points[2],
+            data.points[3]
+          )
+        );
       } else {
-        // TODO: how can we calculate bezier curves better?
         points = points.concat(data.points);
       }
     });

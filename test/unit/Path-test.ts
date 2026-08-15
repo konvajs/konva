@@ -1642,6 +1642,27 @@ describe('Path', function () {
     });
   });
 
+  it('getSelfRect is exact for a quadratic segment', function () {
+    // the peak is at t = 0.5, which is half way to the control point. The
+    // bounds used to be the box around the control points, which gave a
+    // height of 100 for the first path and 200 for the second
+    assert.deepEqual(
+      new Konva.Path({ data: 'M0,0 Q50,-100 100,0' }).getSelfRect(),
+      {
+        x: 0,
+        y: -50,
+        width: 100,
+        height: 50,
+      }
+    );
+
+    // T reflects the previous control point, and the parser turns it into a Q
+    assert.deepEqual(
+      new Konva.Path({ data: 'M0,0 Q50,-100 100,0 T200,0' }).getSelfRect(),
+      { x: 0, y: -50, width: 200, height: 100 }
+    );
+  });
+
   it('getClientRect of another complex path', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
