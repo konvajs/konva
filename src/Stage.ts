@@ -832,7 +832,7 @@ export class Stage extends Container<Layer, StageConfig> {
    * is triggered outside of the stage, but you still want to use Konva methods to get pointers position.
    * @method
    * @name Konva.Stage#setPointersPositions
-   * @param {Object} event Event object
+   * @param {Object} evt Event object
    * @example
    *
    * window.addEventListener('mousemove', (e) => {
