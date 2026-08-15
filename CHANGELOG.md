@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 10.3.1 (2026-08-14)
 
 - Added `hsla()` support and the space-separated CSS Color 4 syntax to `Konva.Util.colorToRGBA()`
 - Declared `canvas` and `skia-canvas` as optional peer dependencies, so the node backends resolve under strict package managers
