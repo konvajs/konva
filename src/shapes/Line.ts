@@ -1,4 +1,7 @@
-import { getCubicExtremaPoints } from '../BezierFunctions.ts';
+import {
+  getCubicExtremaPoints,
+  getQuadraticExtremaPoints,
+} from '../BezierFunctions.ts';
 import { Factory } from '../Factory.ts';
 import { _registerNode } from '../Global.ts';
 import type { ShapeConfig } from '../Shape.ts';
@@ -149,10 +152,81 @@ export class Line<
     );
   }
 
+  _hasTension() {
+    return this.tension() !== 0 && this.points().length > 4;
+  }
+  /**
+   * Report every curve segment of a line with a tension, in draw order. Both
+   * the scene function and the bounding rect read the shape through this, so
+   * that they can not disagree about which curve the line is.
+   *
+   * The handlers take plain numbers, because this runs on every frame.
+   */
+  _eachTensionSegment(
+    onQuadratic: (
+      x0: number,
+      y0: number,
+      cpx: number,
+      cpy: number,
+      x: number,
+      y: number
+    ) => void,
+    onCubic: (
+      x0: number,
+      y0: number,
+      cp1x: number,
+      cp1y: number,
+      cp2x: number,
+      cp2y: number,
+      x: number,
+      y: number
+    ) => void
+  ) {
+    const points = this.points(),
+      length = points.length,
+      closed = this.closed(),
+      tp = this.getTensionPoints(),
+      len = tp.length;
+
+    let x0 = points[0],
+      y0 = points[1],
+      // a closed line has a curve on both sides of the first point, so it
+      // starts on a full cubic. An open one is capped by a quadratic instead
+      n = closed ? 0 : 4;
+
+    if (!closed) {
+      onQuadratic(x0, y0, tp[0], tp[1], tp[2], tp[3]);
+      x0 = tp[2];
+      y0 = tp[3];
+    }
+
+    while (n < len - 2) {
+      const cp1x = tp[n++],
+        cp1y = tp[n++],
+        cp2x = tp[n++],
+        cp2y = tp[n++],
+        x = tp[n++],
+        y = tp[n++];
+
+      onCubic(x0, y0, cp1x, cp1y, cp2x, cp2y, x, y);
+      x0 = x;
+      y0 = y;
+    }
+
+    if (!closed) {
+      onQuadratic(
+        x0,
+        y0,
+        tp[len - 2],
+        tp[len - 1],
+        points[length - 2],
+        points[length - 1]
+      );
+    }
+  }
   _sceneFunc(context: Context) {
     const points = this.points(),
       length = points.length,
-      tension = this.tension(),
       closed = this.closed(),
       bezier = this.bezier();
 
@@ -165,34 +239,12 @@ export class Line<
     context.moveTo(points[0], points[1]);
 
     // tension
-    if (tension !== 0 && length > 4) {
-      const tp = this.getTensionPoints();
-      const len = tp.length;
-      n = closed ? 0 : 4;
-
-      if (!closed) {
-        context.quadraticCurveTo(tp[0], tp[1], tp[2], tp[3]);
-      }
-
-      while (n < len - 2) {
-        context.bezierCurveTo(
-          tp[n++],
-          tp[n++],
-          tp[n++],
-          tp[n++],
-          tp[n++],
-          tp[n++]
-        );
-      }
-
-      if (!closed) {
-        context.quadraticCurveTo(
-          tp[len - 2],
-          tp[len - 1],
-          points[length - 2],
-          points[length - 1]
-        );
-      }
+    if (this._hasTension()) {
+      this._eachTensionSegment(
+        (_x0, _y0, cpx, cpy, x, y) => context.quadraticCurveTo(cpx, cpy, x, y),
+        (_x0, _y0, cp1x, cp1y, cp2x, cp2y, x, y) =>
+          context.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)
+      );
     } else if (bezier) {
       // no tension but bezier
       n = 2;
@@ -290,14 +342,27 @@ export class Line<
         height: 0,
       };
     }
-    if (this.tension() !== 0) {
-      points = [
-        points[0],
-        points[1],
-        ...this._getTensionPoints(),
-        points[points.length - 2],
-        points[points.length - 1],
-      ];
+    if (this._hasTension()) {
+      // the two end points of every segment, plus the points where it turns
+      // back on either axis. Together they are the exact bounds of the curve
+      const bounds = [points[0], points[1]];
+
+      this._eachTensionSegment(
+        (x0, y0, cpx, cpy, x, y) =>
+          bounds.push(
+            x,
+            y,
+            ...getQuadraticExtremaPoints(x0, y0, cpx, cpy, x, y)
+          ),
+        (x0, y0, cp1x, cp1y, cp2x, cp2y, x, y) =>
+          bounds.push(
+            x,
+            y,
+            ...getCubicExtremaPoints(x0, y0, cp1x, cp1y, cp2x, cp2y, x, y)
+          )
+      );
+
+      points = bounds;
     } else if (this.bezier()) {
       // no trailing point here: the extrema already carry the end point of
       // every segment that is drawn. Adding the last pair of the array back

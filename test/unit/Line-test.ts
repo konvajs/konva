@@ -317,10 +317,12 @@ describe('Line', function () {
 
     stage.add(layer);
 
-    assert.equal(Math.round(client.x), 56, 'check x');
+    // the box used to be the one around the tension control points, which
+    // started 12px to the left of anything that gets drawn
+    assert.equal(Math.round(client.x), 69, 'check x');
     assert.equal(Math.round(client.y), 74, 'check y');
-    assert.equal(Math.round(client.width), 245, 'check width');
-    assert.equal(Math.round(client.height), 147, 'check height');
+    assert.equal(Math.round(client.width), 232, 'check width');
+    assert.equal(Math.round(client.height), 131, 'check height');
   });
 
   it('getSelfRect with tension on a closed line with coincident points', function () {
