@@ -545,6 +545,68 @@ describe('Line', function () {
     assert.equal(Math.round(client.height), 47, 'check height');
   });
 
+  it('getSelfRect with multi-segment bezier', function () {
+    // every expected rect below was checked against the curve sampled at
+    // 20000 steps per segment
+
+    function selfRect(points) {
+      return new Konva.Line({ points: points, bezier: true }).getSelfRect();
+    }
+
+    // two cubic segments. Before the fix only points[0..7] were read, so
+    // every segment after the first was invisible to the bounds
+    assert.deepEqual(
+      selfRect([0, 50, 0, 150, 100, 150, 100, 50, 100, 50, 200, 150, 300, 50]),
+      { x: 0, y: 50, width: 300, height: 75 }
+    );
+
+    // one segment with a symmetric pair of control points. The second
+    // derivative coefficient is 0 here, which used to drop the axis
+    assert.deepEqual(selfRect([0, 50, 0, 150, 100, 150, 100, 50]), {
+      x: 0,
+      y: 50,
+      width: 100,
+      height: 75,
+    });
+
+    // the same shape on fractional coordinates. The coefficient is now
+    // -5.7e-14 instead of 0, so a test for exactly 0 does not catch it
+    assert.deepEqual(selfRect([0, 50.4, 0, 150.4, 100, 150.4, 100, 50.4]), {
+      x: 0,
+      y: 50.4,
+      width: 100,
+      height: 75,
+    });
+
+    // the highest point of the curve is the joint between the two
+    // segments, where neither side has a zero derivative
+    assert.deepEqual(
+      selfRect([0, 100, 0, 100, 50, 0, 50, 0, 50, 0, 100, 100, 100, 100]),
+      { x: 0, y: 0, width: 100, height: 100 }
+    );
+
+    // a point count that is not 2 + 6 * n. The trailing 4 values are a
+    // partial segment that _sceneFunc never draws, so they must not widen
+    // the rect. Only the first segment counts here
+    assert.deepEqual(
+      selfRect([0, 0, 10, 100, 20, 100, 30, 0, 500, 500, 600, 600]),
+      {
+        x: 0,
+        y: 0,
+        width: 30,
+        height: 75,
+      }
+    );
+
+    // too short for even one segment, so nothing is drawn at all
+    assert.deepEqual(selfRect([5, 5, 90, 90]), {
+      x: 5,
+      y: 5,
+      width: 0,
+      height: 0,
+    });
+  });
+
   it('line caching', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

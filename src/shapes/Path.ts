@@ -5,6 +5,7 @@ import { Shape } from '../Shape.ts';
 
 import {
   getCubicArcLength,
+  getCubicExtremaPoints,
   getQuadraticArcLength,
   t2length,
 } from '../BezierFunctions.ts';
@@ -152,10 +153,14 @@ export class Path extends Shape<PathConfig> {
           }
         }
       } else if (data.command === 'C') {
-        // Approximates by breaking curve into 100 line segments
-        for (let t = 0.0; t <= 1; t += 0.01) {
-          const point = Path.getPointOnCubicBezier(
-            t,
+        // the two end points, plus the points where the curve turns back on
+        // either axis. Together they are the exact bounds of the segment
+        points.push(
+          data.start.x,
+          data.start.y,
+          data.points[4],
+          data.points[5],
+          ...getCubicExtremaPoints(
             data.start.x,
             data.start.y,
             data.points[0],
@@ -164,9 +169,8 @@ export class Path extends Shape<PathConfig> {
             data.points[3],
             data.points[4],
             data.points[5]
-          );
-          points.push(point.x, point.y);
-        }
+          )
+        );
       } else {
         // TODO: how can we calculate bezier curves better?
         points = points.concat(data.points);
