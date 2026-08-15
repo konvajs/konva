@@ -1363,7 +1363,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * get absolute position of a node. That function can be used to calculate absolute position, but relative to any ancestor
    * @method
    * @name Konva.Node#getAbsolutePosition
-   * @param {Object} Ancestor optional ancestor node
+   * @param {Object} [top] optional ancestor node
    * @returns {Konva.Node}
    * @example
    *
@@ -2898,7 +2898,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *  and setImage() methods
    * @method
    * @memberof Konva.Node
-   * @param {String|Object} json string or object
+   * @param {String|Object} data string or object
    * @param {Element} [container] optional container dom element used only if you're
    *  creating a stage node
    */
