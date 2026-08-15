@@ -323,6 +323,33 @@ describe('Line', function () {
     assert.equal(Math.round(client.height), 147, 'check height');
   });
 
+  it('getSelfRect with tension on a closed line with coincident points', function () {
+    // regression test: three coincident points in a row (the wrap-around
+    // counts) made getControlPoints divide 0 by 0, which propagated NaN into
+    // the tension points and the bounding rect.
+    var line = new Konva.Line({
+      points: [7, 7, 7, 7, 50, 50, 7, 7],
+      closed: true,
+      tension: 0.5,
+    });
+
+    assert.deepEqual(line.getSelfRect(), {
+      x: 7,
+      y: 7,
+      width: 43,
+      height: 43,
+    });
+
+    // the same shape collapsed into a single point
+    var dot = new Konva.Line({
+      points: [5, 5, 5, 5, 5, 5],
+      closed: true,
+      tension: 0.5,
+    });
+
+    assert.deepEqual(dot.getSelfRect(), { x: 5, y: 5, width: 0, height: 0 });
+  });
+
   it('getClientRect with tension 2', function () {
     var stage = addStage();
     stage.draggable(true);

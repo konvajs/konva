@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+- Fixed `NaN` bounding rect on a closed `Line` with a tension and coincident points
+
 ## 10.3.0 (2026-04-30)
 
 - Added `direction` property to `TextPath` shape for better RTL support
