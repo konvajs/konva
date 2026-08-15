@@ -78,24 +78,28 @@ function getBezierExtremaPoints(points) {
     ];
     const extremaTs: number[] = [];
 
+    // the end point of the segment. It is a joint with the next segment, and
+    // the curve can reach its highest or lowest value there without the
+    // derivative below going to zero on either side.
+    extrema.push(points[n + 6], points[n + 7]);
+
     for (const axis of axisPoints) {
+      // the derivative of the cubic is a * t * t + b * t + c
       const a = -3 * axis[0] + 9 * axis[1] - 9 * axis[2] + 3 * axis[3];
       const b = 6 * axis[0] - 12 * axis[1] + 6 * axis[2];
       const c = -3 * axis[0] + 3 * axis[1];
+      const discriminant = b * b - 4 * a * c;
 
-      if (a !== 0) {
-        const discriminant = b * b - 4 * a * c;
-        if (discriminant >= 0) {
-          const d = Math.sqrt(discriminant);
-          extremaTs.push((-b + d) / (2 * a));
-          extremaTs.push((-b - d) / (2 * a));
-        }
-      } else if (b !== 0) {
-        // The quadratic derivative degenerates to linear (common for
-        // symmetric control points); solve b*t + c = 0 instead of
-        // silently dropping this axis's extremum.
-        extremaTs.push(-c / b);
+      if (discriminant < 0) {
+        continue;
       }
+
+      // stable form of the quadratic formula. The plain (-b +- d) / (2 * a)
+      // loses the root that stays finite when a is zero or near zero, which
+      // is what a symmetric pair of control points gives. Roots that are not
+      // finite fall out in the filter below.
+      const q = -(b + (b < 0 ? -1 : 1) * Math.sqrt(discriminant)) / 2;
+      extremaTs.push(q / a, c / q);
     }
 
     extrema.push(

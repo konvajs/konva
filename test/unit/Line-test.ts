@@ -546,62 +546,43 @@ describe('Line', function () {
   });
 
   it('getSelfRect with multi-segment bezier', function () {
-    var stage = addStage();
-    var layer = new Konva.Layer();
-    stage.add(layer);
+    // every expected rect below was checked against the curve sampled at
+    // 20000 steps per segment
 
-    // Two cubic segments (2 + 6*2 = 14 points): the first bulges down to
-    // y=150, the second bulges down further to y=125 relative to the
-    // shape (checked against a raw canvas render of the same path below).
-    var line = new Konva.Line({
-      x: 0,
-      y: 0,
-      points: [0, 50, 0, 150, 100, 150, 100, 50, 100, 50, 200, 150, 300, 50],
-      bezier: true,
-      stroke: 'red',
-    });
-    layer.add(line);
-    layer.draw();
-
-    var rect = line.getSelfRect();
-
-    // Before the fix, getBezierExtremaPoints only looked at the first 8
-    // points (points[0..7]) and treated everything as one cubic segment,
-    // so multi-segment beziers collapsed to a degenerate box.
-    assert.notEqual(rect.height, 0, 'height must not collapse to 0');
-    assert.equal(rect.width, 300, 'width spans both segments');
-
-    // Ground truth: render the identical path to a raw canvas and measure
-    // the actual drawn pixel extent.
-    var raw = createCanvasAndContext();
-    raw.context.beginPath();
-    raw.context.moveTo(0, 50);
-    raw.context.bezierCurveTo(0, 150, 100, 150, 100, 50);
-    raw.context.bezierCurveTo(100, 50, 200, 150, 300, 50);
-    raw.context.stroke();
-
-    var imgData = raw.context.getImageData(
-      0,
-      0,
-      raw.canvas.width,
-      raw.canvas.height
-    );
-    var minY = Infinity,
-      maxY = -Infinity;
-    for (var y = 0; y < raw.canvas.height; y++) {
-      for (var x = 0; x < raw.canvas.width; x++) {
-        var idx = (y * raw.canvas.width + x) * 4;
-        if (imgData.data[idx + 3] > 0) {
-          minY = Math.min(minY, y / Konva.pixelRatio);
-          maxY = Math.max(maxY, y / Konva.pixelRatio);
-        }
-      }
+    function selfRect(points) {
+      return new Konva.Line({ points: points, bezier: true }).getSelfRect();
     }
 
-    assert.equal(
-      rect.y + rect.height,
-      maxY,
-      'getSelfRect max Y matches the real rendered pixel extent'
+    // two cubic segments. Before the fix only points[0..7] were read, so
+    // every segment after the first was invisible to the bounds
+    assert.deepEqual(
+      selfRect([0, 50, 0, 150, 100, 150, 100, 50, 100, 50, 200, 150, 300, 50]),
+      { x: 0, y: 50, width: 300, height: 75 }
+    );
+
+    // one segment with a symmetric pair of control points. The second
+    // derivative coefficient is 0 here, which used to drop the axis
+    assert.deepEqual(selfRect([0, 50, 0, 150, 100, 150, 100, 50]), {
+      x: 0,
+      y: 50,
+      width: 100,
+      height: 75,
+    });
+
+    // the same shape on fractional coordinates. The coefficient is now
+    // -5.7e-14 instead of 0, so a test for exactly 0 does not catch it
+    assert.deepEqual(selfRect([0, 50.4, 0, 150.4, 100, 150.4, 100, 50.4]), {
+      x: 0,
+      y: 50.4,
+      width: 100,
+      height: 75,
+    });
+
+    // the highest point of the curve is the joint between the two
+    // segments, where neither side has a zero derivative
+    assert.deepEqual(
+      selfRect([0, 100, 0, 100, 50, 0, 50, 0, 50, 0, 100, 100, 100, 100]),
+      { x: 0, y: 0, width: 100, height: 100 }
     );
   });
 
