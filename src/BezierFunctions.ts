@@ -824,3 +824,60 @@ export const t2length = (
 
   return t;
 };
+
+const cubicAt = (p0: number, p1: number, p2: number, p3: number, t: number) => {
+  const mt = 1 - t;
+  return (
+    mt * mt * mt * p0 +
+    3 * mt * mt * t * p1 +
+    3 * mt * t * t * p2 +
+    t * t * t * p3
+  );
+};
+
+/**
+ * Points where a cubic bezier segment reaches its highest or lowest value on
+ * one of the two axes, as a flat [x, y, x, y, ...] list. The two end points
+ * are not included, because the caller knows them already.
+ */
+export const getCubicExtremaPoints = (
+  x0: number,
+  y0: number,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  x3: number,
+  y3: number
+) => {
+  const extrema: number[] = [];
+
+  for (const axis of [
+    [x0, x1, x2, x3],
+    [y0, y1, y2, y3],
+  ]) {
+    // the derivative of the cubic is a * t * t + b * t + c
+    const a = -3 * axis[0] + 9 * axis[1] - 9 * axis[2] + 3 * axis[3];
+    const b = 6 * axis[0] - 12 * axis[1] + 6 * axis[2];
+    const c = -3 * axis[0] + 3 * axis[1];
+    const discriminant = b * b - 4 * a * c;
+
+    if (discriminant < 0) {
+      continue;
+    }
+
+    // stable form of the quadratic formula. The plain (-b +- d) / (2 * a)
+    // loses the root that stays finite when a is zero or near zero, which is
+    // what a symmetric pair of control points gives. Roots that are not
+    // finite fall out of the range test below.
+    const q = -(b + (b < 0 ? -1 : 1) * Math.sqrt(discriminant)) / 2;
+
+    for (const t of [q / a, c / q]) {
+      if (t > 0 && t < 1) {
+        extrema.push(cubicAt(x0, x1, x2, x3, t), cubicAt(y0, y1, y2, y3, t));
+      }
+    }
+  }
+
+  return extrema;
+};

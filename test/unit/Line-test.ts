@@ -584,6 +584,27 @@ describe('Line', function () {
       selfRect([0, 100, 0, 100, 50, 0, 50, 0, 50, 0, 100, 100, 100, 100]),
       { x: 0, y: 0, width: 100, height: 100 }
     );
+
+    // a point count that is not 2 + 6 * n. The trailing 4 values are a
+    // partial segment that _sceneFunc never draws, so they must not widen
+    // the rect. Only the first segment counts here
+    assert.deepEqual(
+      selfRect([0, 0, 10, 100, 20, 100, 30, 0, 500, 500, 600, 600]),
+      {
+        x: 0,
+        y: 0,
+        width: 30,
+        height: 75,
+      }
+    );
+
+    // too short for even one segment, so nothing is drawn at all
+    assert.deepEqual(selfRect([5, 5, 90, 90]), {
+      x: 5,
+      y: 5,
+      width: 0,
+      height: 0,
+    });
   });
 
   it('line caching', function () {

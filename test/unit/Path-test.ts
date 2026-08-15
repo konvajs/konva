@@ -1628,6 +1628,20 @@ describe('Path', function () {
     });
   });
 
+  it('getSelfRect is exact for a cubic segment', function () {
+    // this curve turns back at t = 1/3. The bounds used to be taken by
+    // sampling the segment every 0.01, which steps over that point and
+    // reported a height of 133.3233 instead
+    var path = new Konva.Path({ data: 'M0,0 C0,300 100,0 100,0' });
+
+    assert.deepEqual(path.getSelfRect(), {
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 133.33333333333334,
+    });
+  });
+
   it('getClientRect of another complex path', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -1656,9 +1670,9 @@ describe('Path', function () {
 
     assertAlmostDeepEqual(rect, {
       x: 49,
-      y: 49.7086649,
+      y: 49.70793864538701,
       width: 215,
-      height: 71.3826701999,
+      height: 71.38412270922598,
     });
   });
 
@@ -1688,10 +1702,10 @@ describe('Path', function () {
     layer.draw();
 
     assertAlmostDeepEqual(rect, {
-      x: 48.981379,
-      y: 48.996825,
-      width: 42.84717526,
-      height: 48.057550000000006,
+      x: 48.981353024874736,
+      y: 48.99662974578204,
+      width: 42.84725158174207,
+      height: 48.05774955642776,
     });
   });
 

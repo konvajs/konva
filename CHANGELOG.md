@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Declared `canvas` and `skia-canvas` as optional peer dependencies, so the node backends resolve under strict package managers
 - Improved `Transformer` performance with many attached nodes
 - Improved `Text` performance when a long text is resized
+- `Path.getSelfRect()` now solves the bounds of a cubic segment exactly instead of sampling it at 100 points. Reported boxes get slightly larger and more accurate, and the calculation is about 9 times faster
 - A tween of a color that Konva can not parse now throws a clear error
 - Fixed several wrong named color values: `darkgoldenrod`, `floralwhite`, `plum`, `slategray`, `slategrey`, `snow` and `yellowgreen`
 - Fixed the alpha of the named color `transparent`, so a tween to or from it fades again
@@ -18,6 +19,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed `Arc.getSelfRect()` for a zero-degree clockwise arc and for any full-turn angle
 - Fixed `Path.getPointAtLength()` returning `undefined` past the end of a closed path
 - Fixed `NaN` bounding rect on a closed `Line` with a tension and coincident points
+- Fixed `getSelfRect()` on a `Line` with `bezier: true`, which read only the first curve segment and could report a box of zero height
 - Fixed the `ValidatorFunc` type used by custom `Factory` validators
 
 ## 10.3.0 (2026-04-30)

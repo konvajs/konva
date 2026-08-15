@@ -1,3 +1,4 @@
+import { getCubicExtremaPoints } from '../BezierFunctions.ts';
 import { Factory } from '../Factory.ts';
 import { _registerNode } from '../Global.ts';
 import type { ShapeConfig } from '../Shape.ts';
@@ -72,50 +73,22 @@ function getBezierExtremaPoints(points) {
   // whose start is the previous segment's end point (matching the layout
   // Line#_sceneFunc feeds to context.bezierCurveTo in a loop).
   for (let n = 0; n + 7 < points.length; n += 6) {
-    const axisPoints = [
-      [points[n], points[n + 2], points[n + 4], points[n + 6]],
-      [points[n + 1], points[n + 3], points[n + 5], points[n + 7]],
-    ];
-    const extremaTs: number[] = [];
-
     // the end point of the segment. It is a joint with the next segment, and
     // the curve can reach its highest or lowest value there without the
-    // derivative below going to zero on either side.
-    extrema.push(points[n + 6], points[n + 7]);
-
-    for (const axis of axisPoints) {
-      // the derivative of the cubic is a * t * t + b * t + c
-      const a = -3 * axis[0] + 9 * axis[1] - 9 * axis[2] + 3 * axis[3];
-      const b = 6 * axis[0] - 12 * axis[1] + 6 * axis[2];
-      const c = -3 * axis[0] + 3 * axis[1];
-      const discriminant = b * b - 4 * a * c;
-
-      if (discriminant < 0) {
-        continue;
-      }
-
-      // stable form of the quadratic formula. The plain (-b +- d) / (2 * a)
-      // loses the root that stays finite when a is zero or near zero, which
-      // is what a symmetric pair of control points gives. Roots that are not
-      // finite fall out in the filter below.
-      const q = -(b + (b < 0 ? -1 : 1) * Math.sqrt(discriminant)) / 2;
-      extremaTs.push(q / a, c / q);
-    }
-
+    // derivative going to zero on either side.
     extrema.push(
-      ...extremaTs
-        .filter((t) => t > 0 && t < 1)
-        .flatMap((t) =>
-          axisPoints.map((axis) => {
-            const mt = 1 - t;
-            return (
-              mt * mt * mt * axis[0] +
-              3 * mt * mt * t * axis[1] +
-              3 * mt * t * t * axis[2] +
-              t * t * t * axis[3]
-            );
-          })
-        )
+      points[n + 6],
+      points[n + 7],
+      ...getCubicExtremaPoints(
+        points[n],
+        points[n + 1],
+        points[n + 2],
+        points[n + 3],
+        points[n + 4],
+        points[n + 5],
+        points[n + 6],
+        points[n + 7]
+      )
     );
   }
 
@@ -326,15 +299,11 @@ export class Line<
         points[points.length - 1],
       ];
     } else if (this.bezier()) {
-      points = [
-        points[0],
-        points[1],
-        ...getBezierExtremaPoints(this.points()),
-        points[points.length - 2],
-        points[points.length - 1],
-      ];
-    } else {
-      points = this.points();
+      // no trailing point here: the extrema already carry the end point of
+      // every segment that is drawn. Adding the last pair of the array back
+      // would include a control point of a trailing partial segment, which
+      // _sceneFunc never draws.
+      points = [points[0], points[1], ...getBezierExtremaPoints(points)];
     }
     let minX = points[0];
     let maxX = points[0];
