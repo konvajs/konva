@@ -143,7 +143,7 @@ const FromPolar = function (src, dst, opt) {
 
 // create a temporary canvas for working - shared between multiple calls
 
-/*
+/**
  * Kaleidoscope Filter.
  * @function
  * @name Kaleidoscope
