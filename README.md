@@ -7,15 +7,15 @@
 <p align="center"><strong>Build interactive graphics, editors, and diagrams for the web.</strong></p>
 
 [![npm downloads](https://img.shields.io/npm/dw/konva.svg)](https://www.npmjs.com/package/konva)
-[![npm version](https://badge.fury.io/js/konva.svg)](http://badge.fury.io/js/konva)
+[![npm version](https://badge.fury.io/js/konva.svg)](https://badge.fury.io/js/konva)
 [![Financial Contributors on Open Collective](https://opencollective.com/konva/all/badge.svg?label=financial+contributors)](https://opencollective.com/konva)
 [![Build Status](https://github.com/konvajs/konva/actions/workflows/test-browser.yml/badge.svg)](https://github.com/konvajs/konva/actions/workflows/test-browser.yml)
 [![Build Status](https://github.com/konvajs/konva/actions/workflows/test-node.yml/badge.svg)](https://github.com/konvajs/konva/actions/workflows/test-node.yml)
 [![CDNJS version](https://img.shields.io/cdnjs/v/konva.svg)](https://cdnjs.com/libraries/konva)
 
-Konva is an HTML5 Canvas JavaScript framework that enables high performance animations, transitions, node nesting, layering, filtering, caching, event handling for desktop and mobile applications, and much more.
+Konva is an open-source 2D canvas framework for interactive graphics. Its scene graph gives each shape its own events, drag behavior, transforms, animation, cache, and export controls.
 
-You can draw things onto the stage, add event listeners to them, move them, scale them, and rotate them independently from other shapes to support high performance animations, even if your application uses thousands of shapes. Served hot with a side of awesomeness.
+Use Konva for design editors, whiteboards, diagrams, annotations, maps, and other visual tools. Konva is MIT licensed and does not require a license key.
 
 This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github.com/ericdrowell/KineticJS).
 
@@ -24,51 +24,41 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
 - **Try it:** [Canvas Editor](https://konvajs.org/docs/sandbox/Canvas_Editor.html), [Free Drawing](https://konvajs.org/docs/sandbox/Free_Drawing.html), [Image Crop](https://konvajs.org/docs/sandbox/Canvas_Crop_Image.html), [Window Frame Designer](https://konvajs.org/docs/sandbox/Window_Frame_Designer.html), and [more demos](https://konvajs.org/docs/sandbox.html)
 - **Used by:** [Polotno](https://polotno.com/?utm_source=konvajs) (design editor SDK) and many others — see the full showcase on the [home page](https://konvajs.org/)
 - **Help:** [StackOverflow](https://stackoverflow.com/questions/tagged/konvajs), [Discord Chat](https://discord.gg/8FqZwVT)
+- **Support the project:** [Star Konva on GitHub](https://github.com/konvajs/konva)
+
+[![A Konva Transformer around a selected image](https://konvajs.org/assets/demos/image-resize-min.png)](https://konvajs.org/docs/select_and_transform/Basic_demo.html)
+
+## Framework integrations
+
+| Framework | Package | Documentation |
+|---|---|---|
+| React | [`react-konva`](https://www.npmjs.com/package/react-konva) | [React guide](https://konvajs.org/docs/react/index.html) |
+| Vue | [`vue-konva`](https://www.npmjs.com/package/vue-konva) | [Vue guide](https://konvajs.org/docs/vue/index.html) |
+| Svelte | [`svelte-konva`](https://www.npmjs.com/package/svelte-konva) | [Svelte guide](https://konvajs.org/docs/svelte/index.html) |
+| Angular | [`ng2-konva`](https://www.npmjs.com/package/ng2-konva) | [Angular guide](https://konvajs.org/docs/angular/index.html) |
 
 # Quick Look
 
-```html
-<script src="https://unpkg.com/konva@10.0.0-1/konva.min.js"></script>
-<div id="container"></div>
-<script>
-  var stage = new Konva.Stage({
-    container: 'container',
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
+```javascript
+import Konva from 'konva';
 
-  // add canvas element
-  var layer = new Konva.Layer();
-  stage.add(layer);
+const container = document.createElement('div');
+document.body.appendChild(container);
 
-  // create shape
-  var box = new Konva.Rect({
-    x: 50,
-    y: 50,
-    width: 100,
-    height: 50,
-    fill: '#00D2FF',
-    stroke: 'black',
-    strokeWidth: 4,
-    draggable: true,
-  });
-  layer.add(box);
+const stage = new Konva.Stage({ container, width: 600, height: 400 });
+const layer = new Konva.Layer();
+const box = new Konva.Rect({
+  x: 50, y: 50, width: 120, height: 80,
+  fill: '#00a8e8', draggable: true,
+});
 
-  // add cursor styling
-  box.on('mouseover', function () {
-    document.body.style.cursor = 'pointer';
-  });
-  box.on('mouseout', function () {
-    document.body.style.cursor = 'default';
-  });
-</script>
+layer.add(box);
+stage.add(layer);
 ```
 
 # Browsers support
 
-Konva works in all modern mobile and desktop browsers. A browser need to be capable to run javascript code from ES2015 spec. For older browsers you may need polyfills for missing functions.
-
-At the current moment `Konva` doesn't work in IE11 directly. To make it work you just need to provide some polyfills such as `Array.prototype.find`, `String.prototype.trimLeft`, `String.prototype.trimRight`, `Array.from`.
+Konva works in modern mobile and desktop browsers that support ES2015.
 
 # Debugging
 
@@ -81,13 +71,13 @@ Konva supports UMD loading. So you can use all possible variants to load the fra
 ### Load Konva via classical `<script>` tag from CDN:
 
 ```html
-<script src="https://unpkg.com/konva@10.0.0-1/konva.min.js"></script>
+<script src="https://unpkg.com/konva@10/konva.min.js"></script>
 ```
 
 ### Install with npm:
 
 ```bash
-npm install konva --save
+npm install konva
 ```
 
 ```javascript
