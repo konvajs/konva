@@ -4,6 +4,27 @@ import type { Node } from './Node.ts';
 import type { Vector2d } from './types.ts';
 import { Util } from './Util.ts';
 
+type DragElement = {
+  node: Node;
+  startPointerPos: Vector2d;
+  offset: Vector2d;
+  pointerId?: number;
+  startEvent?: any;
+  // when we just put pointer down on a node
+  // it will create drag element
+  dragStatus: 'ready' | 'dragging' | 'stopped';
+};
+
+class DragElementMap extends Map<number, DragElement> {
+  set(key: number, elem: DragElement) {
+    const ownerWindow =
+      elem.node.getStage()?.content?.ownerDocument?.defaultView;
+    DD._listenToWindow(ownerWindow);
+
+    return super.set(key, elem);
+  }
+}
+
 export const DD = {
   get isDragging() {
     let flag = false;
@@ -23,22 +44,28 @@ export const DD = {
     });
     return node;
   },
-  _dragElements: new Map<
-    number,
-    {
-      node: Node;
-      startPointerPos: Vector2d;
-      offset: Vector2d;
-      pointerId?: number;
-      startEvent?: any;
-      // when we just put pointer down on a node
-      // it will create drag element
-      dragStatus: 'ready' | 'dragging' | 'stopped';
-      // dragStarted: boolean;
-      // isDragging: boolean;
-      // dragStopped: boolean;
+  _dragElements: new DragElementMap(),
+  _listeningWindows: new WeakSet<Window>(),
+
+  _listenToWindow(win?: Window | null) {
+    if (!win || DD._listeningWindows.has(win)) {
+      return;
     }
-  >(),
+
+    win.addEventListener('mouseup', DD._endDragBefore, true);
+    win.addEventListener('touchend', DD._endDragBefore, true);
+    // add touchcancel to fix this: https://github.com/konvajs/konva/issues/1843
+    win.addEventListener('touchcancel', DD._endDragBefore, true);
+
+    win.addEventListener('mousemove', DD._drag);
+    win.addEventListener('touchmove', DD._drag);
+
+    win.addEventListener('mouseup', DD._endDragAfter, false);
+    win.addEventListener('touchend', DD._endDragAfter, false);
+    win.addEventListener('touchcancel', DD._endDragAfter, false);
+
+    DD._listeningWindows.add(win);
+  },
 
   // methods
   _drag(evt) {
@@ -164,15 +191,5 @@ export const DD = {
 };
 
 if (Konva.isBrowser) {
-  window.addEventListener('mouseup', DD._endDragBefore, true);
-  window.addEventListener('touchend', DD._endDragBefore, true);
-  // add touchcancel to fix this: https://github.com/konvajs/konva/issues/1843
-  window.addEventListener('touchcancel', DD._endDragBefore, true);
-
-  window.addEventListener('mousemove', DD._drag);
-  window.addEventListener('touchmove', DD._drag);
-
-  window.addEventListener('mouseup', DD._endDragAfter, false);
-  window.addEventListener('touchend', DD._endDragAfter, false);
-  window.addEventListener('touchcancel', DD._endDragAfter, false);
+  DD._listenToWindow(window);
 }
