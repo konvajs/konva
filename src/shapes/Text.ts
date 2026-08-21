@@ -71,6 +71,9 @@ export interface TextConfig extends ShapeConfig {
   fontVariant?: string;
   textDecoration?: string;
   underlineOffset?: number;
+  textDecorationColor?: string;
+  textDecorationWidth?: number;
+  textDecorationStyle?: string;
   align?: string;
   verticalAlign?: string;
   padding?: number;
@@ -280,6 +283,9 @@ export class Text extends Shape<TextConfig> {
       fill = this.fill(),
       textDecoration = this.textDecoration(),
       underlineOffset = this.underlineOffset(),
+      textDecorationColor = this.textDecorationColor(),
+      textDecorationWidth = this.textDecorationWidth(),
+      textDecorationStyle = this.textDecorationStyle(),
       shouldUnderline = textDecoration.indexOf('underline') !== -1,
       shouldLineThrough = textDecoration.indexOf('line-through') !== -1,
       n;
@@ -347,19 +353,56 @@ export class Text extends Shape<TextConfig> {
             : Math.round(fontSize / 2));
         const x = lineTranslateX;
         const y = translateY + lineTranslateY + yOffset;
-        context.moveTo(x, y);
-        const lineWidth =
+        const decoLineWidth =
           align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
-        context.lineTo(x + Math.round(lineWidth), y);
+        const lw = textDecorationWidth || fontSize / 15;
+        context.lineWidth = lw;
 
-        // I have no idea what is real ratio
-        // just /15 looks good enough
-        context.lineWidth = fontSize / 15;
+        if (textDecorationColor) {
+          context.strokeStyle = textDecorationColor;
+        } else {
+          const gradient = this._getLinearGradient();
+          context.strokeStyle = gradient || fill;
+        }
 
-        const gradient = this._getLinearGradient();
-        context.strokeStyle = gradient || fill;
-        context.stroke();
-        context.restore();
+        if (textDecorationStyle === 'dashed') {
+          context.setLineDash([lw * 3, lw * 2]);
+        } else if (textDecorationStyle === 'dotted') {
+          context.setLineDash([lw, lw * 1.5]);
+          context.lineCap = 'round';
+        } else if (textDecorationStyle === 'wavy') {
+          // Draw a sine wave instead of a straight line
+          const step = Math.max(lw * 2, 4);
+          const amp = Math.max(lw, 1.5);
+          context.moveTo(x, y);
+          for (let wx = x; wx <= x + Math.round(decoLineWidth); wx += step) {
+            const mid = wx + step / 2;
+            const end = Math.min(wx + step, x + Math.round(decoLineWidth));
+            context.quadraticCurveTo(mid, y - amp, end, y);
+            wx += step;
+            if (wx > x + Math.round(decoLineWidth)) break;
+            const mid2 = wx + step / 2;
+            const end2 = Math.min(wx + step, x + Math.round(decoLineWidth));
+            context.quadraticCurveTo(mid2, y + amp, end2, y);
+          }
+          context.stroke();
+          context.restore();
+        } else if (textDecorationStyle === 'double') {
+          const gap = lw * 2;
+          context.moveTo(x, y);
+          context.lineTo(x + Math.round(decoLineWidth), y);
+          context.moveTo(x, y + gap);
+          context.lineTo(x + Math.round(decoLineWidth), y + gap);
+          context.stroke();
+          context.restore();
+        }
+
+        if (textDecorationStyle !== 'wavy' && textDecorationStyle !== 'double') {
+          context.moveTo(x, y);
+          context.lineTo(x + Math.round(decoLineWidth), y);
+          context.stroke();
+          context.restore();
+        }
       }
 
       // store the starting x position for line-through which is drawn after text
@@ -434,17 +477,35 @@ export class Text extends Shape<TextConfig> {
           ? -Math.round(fontSize / 4)
           : 0;
         const x = lineThroughStartX;
-        context.moveTo(x, translateY + lineTranslateY + yOffset);
-        const lineWidth =
+        const ltY = translateY + lineTranslateY + yOffset;
+        const ltLineWidth =
           align === JUSTIFY && !lastLine ? totalWidth - padding * 2 : width;
+        const ltLw = textDecorationWidth || fontSize / 15;
+        context.lineWidth = ltLw;
 
-        context.lineTo(
-          x + Math.round(lineWidth),
-          translateY + lineTranslateY + yOffset
-        );
-        context.lineWidth = fontSize / 15;
-        const gradient = this._getLinearGradient();
-        context.strokeStyle = gradient || fill;
+        if (textDecorationColor) {
+          context.strokeStyle = textDecorationColor;
+        } else {
+          const gradient = this._getLinearGradient();
+          context.strokeStyle = gradient || fill;
+        }
+
+        if (textDecorationStyle === 'dashed') {
+          context.setLineDash([ltLw * 3, ltLw * 2]);
+        } else if (textDecorationStyle === 'dotted') {
+          context.setLineDash([ltLw, ltLw * 1.5]);
+          context.lineCap = 'round';
+        }
+
+        context.moveTo(x, ltY);
+        context.lineTo(x + Math.round(ltLineWidth), ltY);
+
+        if (textDecorationStyle === 'double') {
+          const gap = ltLw * 2;
+          context.moveTo(x, ltY + gap);
+          context.lineTo(x + Math.round(ltLineWidth), ltY + gap);
+        }
+
         context.stroke();
         context.restore();
       }
@@ -814,6 +875,9 @@ export class Text extends Shape<TextConfig> {
   lineHeight: GetSet<number, this>;
   textDecoration: GetSet<string, this>;
   underlineOffset: GetSet<number, this>;
+  textDecorationColor: GetSet<string, this>;
+  textDecorationWidth: GetSet<number, this>;
+  textDecorationStyle: GetSet<string, this>;
   text: GetSet<string, this>;
   wrap: GetSet<string, this>;
   ellipsis: GetSet<boolean, this>;
@@ -1120,6 +1184,59 @@ Factory.addGetterSetter(
   undefined,
   getNumberValidator()
 );
+
+/**
+ * get/set text decoration color. When set, underline and line-through decorations
+ * use this color instead of the text fill color.
+ * @name Konva.Text#textDecorationColor
+ * @method
+ * @param {String} textDecorationColor
+ * @returns {String}
+ * @example
+ * // get text decoration color
+ * var color = text.textDecorationColor();
+ *
+ * // set text decoration color
+ * text.textDecorationColor('#18A0FB');
+ */
+Factory.addGetterSetter(Text, 'textDecorationColor', '');
+
+/**
+ * get/set text decoration line width. When set, underline and line-through use
+ * this width instead of the default (fontSize / 15).
+ * @name Konva.Text#textDecorationWidth
+ * @method
+ * @param {Number} textDecorationWidth
+ * @returns {Number}
+ * @example
+ * // get text decoration width
+ * var width = text.textDecorationWidth();
+ *
+ * // set text decoration width
+ * text.textDecorationWidth(2);
+ */
+Factory.addGetterSetter(
+  Text,
+  'textDecorationWidth',
+  undefined,
+  getNumberValidator()
+);
+
+/**
+ * get/set text decoration style. Can be 'solid' (default), 'dashed', 'dotted',
+ * 'double', or 'wavy'. Applies to both underline and line-through decorations.
+ * @name Konva.Text#textDecorationStyle
+ * @method
+ * @param {String} textDecorationStyle
+ * @returns {String}
+ * @example
+ * // get text decoration style
+ * var style = text.textDecorationStyle();
+ *
+ * // set wavy underline (e.g. for spell-check)
+ * text.textDecorationStyle('wavy');
+ */
+Factory.addGetterSetter(Text, 'textDecorationStyle', '');
 
 /**
  * get/set per-character render hook. The callback is invoked for each grapheme before drawing.
