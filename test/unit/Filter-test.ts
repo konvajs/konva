@@ -457,6 +457,43 @@ describe('Filter', function () {
     assert.equal(rect._filterUpToDate, false);
   });
 
+  it('RGBA blends the configured color with the source pixels', function () {
+    for (const { fill, tint, expected } of [
+      {
+        fill: '#2a6511',
+        tint: [242, 193, 168, 0.33],
+        expected: [108, 131, 67, 255],
+      },
+      {
+        fill: '#e4d526',
+        tint: [175, 98, 37, 0.79],
+        expected: [186, 122, 37, 255],
+      },
+    ]) {
+      const rect = new Konva.Rect({
+        width: 1,
+        height: 1,
+        fill,
+        red: tint[0],
+        green: tint[1],
+        blue: tint[2],
+        alpha: tint[3],
+        filters: [Konva.Filters.RGBA],
+      });
+      try {
+        rect.cache({ pixelRatio: 1 });
+        assert.deepEqual(
+          Array.from(
+            rect.toCanvas().getContext('2d')!.getImageData(0, 0, 1, 1).data
+          ),
+          expected
+        );
+      } finally {
+        rect.destroy();
+      }
+    }
+  });
+
   it('HSL and HSV hue wraps around below -360 and above 360', function () {
     [Konva.Filters.HSL, Konva.Filters.HSV].forEach((filter) => {
       var results = [-400, -40, 320, 680].map((hue) => {
@@ -637,6 +674,57 @@ describe('Filter', function () {
       const data = pixels([40, 140, 200, 255]);
       Konva.Filters.Threshold.call(rect, data);
       assert.deepEqual(Array.from(data.data.slice(0, 4)), [0, 255, 255, 255]);
+    } finally {
+      rect.destroy();
+    }
+  });
+
+  it('Mask keeps pixels at threshold zero and uses its default when unset', function () {
+    const rect = new Konva.Rect({
+      width: 20,
+      height: 20,
+      fill: '#f0f0f0',
+      filters: [Konva.Filters.Mask],
+      threshold: 0,
+    });
+    try {
+      rect.cache({ pixelRatio: 1 });
+      const pixel = () =>
+        Array.from(
+          rect.toCanvas().getContext('2d')!.getImageData(10, 10, 1, 1).data
+        );
+      assert.deepEqual(pixel(), [240, 240, 240, 255]);
+      rect.threshold(undefined);
+      assert.deepEqual(pixel(), [0, 0, 0, 0]);
+    } finally {
+      rect.destroy();
+    }
+  });
+
+  it('Kaleidoscope renders equivalent angles identically', function () {
+    const rect = new Konva.Rect({
+      width: 64,
+      height: 64,
+      fillLinearGradientStartPoint: { x: 0, y: 0 },
+      fillLinearGradientEndPoint: { x: 64, y: 64 },
+      fillLinearGradientColorStops: [0, 'red', 0.5, 'green', 1, 'blue'],
+      filters: [Konva.Filters.Kaleidoscope],
+    });
+    try {
+      rect.cache({ pixelRatio: 1 });
+      const render = (angle: number) => {
+        rect.kaleidoscopeAngle(angle);
+        return rect.toCanvas().getContext('2d')!.getImageData(0, 0, 64, 64)
+          .data;
+      };
+      const expected = render(315);
+      for (const angle of [-405, -45, 675]) {
+        const actual = render(angle);
+        assert.isTrue(
+          actual.every((value, i) => value === expected[i]),
+          `angle ${angle} matches 315 degrees`
+        );
+      }
     } finally {
       rect.destroy();
     }

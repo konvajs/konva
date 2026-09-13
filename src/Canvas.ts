@@ -76,7 +76,7 @@ export class Canvas {
    * @name Konva.Canvas#getPixelRatio
    * @returns {Number} pixel ratio
    * @example
-   * var pixelRatio = layer.getCanvas.getPixelRatio();
+   * var pixelRatio = layer.getCanvas().getPixelRatio();
    */
   getPixelRatio() {
     return this.pixelRatio;

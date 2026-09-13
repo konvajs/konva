@@ -2201,7 +2201,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   ) {
     config = config || {};
     const mimeType = config.mimeType || null,
-      quality = config.quality || null;
+      quality = config.quality ?? null;
     const url = this._toKonvaCanvas(config).toDataURL(mimeType, quality);
     if (config.callback) {
       config.callback(url);

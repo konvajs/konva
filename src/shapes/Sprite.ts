@@ -182,12 +182,8 @@ export class Sprite extends Shape<SpriteConfig> {
     }
     const layer = this.getLayer();
 
-    /*
-     * animation object has no executable function because
-     *  the updates are done with a fixed FPS with the setInterval
-     *  below.  The anim object only needs the layer reference for
-     *  redraw
-     */
+    // The interval advances frames; the animation callback requests a redraw
+    // only when a frame has changed.
     this.anim.setLayers(layer);
     this._setInterval();
     this.anim.start();

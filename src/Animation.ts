@@ -13,8 +13,8 @@ const now: () => number = glob.performance?.now
  * @memberof Konva
  * @param {AnimationFn} func function executed on each animation frame.  The function is passed a frame object, which contains
  *  timeDiff, lastTime, time, and frameRate properties.  The timeDiff property is the number of milliseconds that have passed
- *  since the last animation frame. The time property is the time in milliseconds that elapsed from the moment the animation started
- *  to the current animation frame. The lastTime property is a `time` value from the previous frame.  The frameRate property is the current frame rate in frames / second.
+ *  since the last animation frame. The time property accumulates elapsed animation time in milliseconds across stop/start calls, excluding paused time.
+ *  The lastTime property is the current frame's clock timestamp in milliseconds. The frameRate property is the current frame rate in frames / second.
  *  Return false from function, if you don't need to redraw layer/layers on some frames.
  * @param {Konva.Layer|Array} [layers] layer(s) to be redrawn on each animation frame. Can be a layer, an array of layers, or null.
  *  Not specifying a node will result in no redraw.

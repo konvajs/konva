@@ -3,30 +3,12 @@ import KonvaModule from '../../src/index.ts';
 
 export const Konva = KonvaModule;
 
-// import * as canvas from 'canvas';
-
 Konva.enableTrace = true;
 Konva.showWarnings = true;
 
 import { imagediff } from './imagediff.ts';
 import type { Layer } from '../../src/Layer.ts';
 import type { Stage } from '../../src/Stage.ts';
-
-// clear after test
-afterEach(function () {
-  var isFailed = this.currentTest?.state === 'failed';
-  var isManual = this.currentTest?.parent?.title === 'Manual';
-
-  if (!isFailed && !isManual) {
-    // destroy() removes the stage from Konva.stages, so iterate over a copy
-    Konva.stages.slice().forEach(function (stage) {
-      stage.destroy();
-    });
-    if (Konva.DD._dragElements.size) {
-      throw 'Why drag elements are not cleaned?';
-    }
-  }
-});
 
 export const isNode = typeof global.document === 'undefined';
 export const isBrowser = !isNode;
@@ -94,8 +76,6 @@ function get(element, content?) {
 }
 
 export function compareCanvases(canvas1, canvas2, tol = 1, secondTol?) {
-  // don't test in PhantomJS as it use old chrome engine
-  // it it has opacity + shadow bug
   var equal = imagediff.equal(canvas1, canvas2, tol, secondTol);
   if (!equal) {
     const diff = imagediff.diff(canvas1, canvas2);

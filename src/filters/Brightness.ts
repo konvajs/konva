@@ -1,4 +1,6 @@
 import type { Filter } from '../Node.ts';
+// The shared brightness accessor is registered by Brighten.
+import './Brighten.ts';
 
 /**
  * Brightness Filter.
@@ -26,6 +28,3 @@ export const Brightness: Filter = function (imageData) {
     data[i + 2] = Math.min(255, data[i + 2] * brightness);
   }
 };
-
-// Note: brightness property is already defined in Brighten.ts
-// This filter reuses the existing brightness property but with CSS-compatible behavior

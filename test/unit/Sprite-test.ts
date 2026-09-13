@@ -19,10 +19,6 @@ describe('Sprite', function () {
             0, 0, 49, 109, 52, 0, 49, 109, 105, 0, 49, 109, 158, 0, 49, 109,
             210, 0, 49, 109, 262, 0, 49, 109,
           ],
-          kicking: [
-            0, 109, 45, 98, 45, 109, 45, 98, 95, 109, 63, 98, 156, 109, 70, 98,
-            229, 109, 60, 98, 287, 109, 41, 98,
-          ],
         },
         frameRate: 10,
         draggable: true,
@@ -41,21 +37,6 @@ describe('Sprite', function () {
       var trace = layer.hitCanvas.getContext().getTrace();
 
       assert.equal(trace.indexOf(sprite.colorKey) >= 0, true);
-
-      sprite.start();
-
-      // kick once
-      setTimeout(function () {
-        sprite.animation('kicking');
-        sprite.on('indexChange', function (evt) {
-          if (evt['newVal'] === 0 && this.animation() === 'kicking') {
-            sprite.animation('standing');
-          }
-        });
-      }, 2000);
-      setTimeout(function () {
-        sprite.stop();
-      }, 3000);
 
       done();
     });

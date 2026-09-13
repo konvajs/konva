@@ -45,12 +45,11 @@ function backgroundMask(idata, threshold) {
   const rgbv_so = pixelAt(idata, 0, idata.height - 1);
   const rgbv_se = pixelAt(idata, idata.width - 1, idata.height - 1);
 
-  const thres = threshold || 10;
   if (
-    rgbDistance(rgbv_no, rgbv_ne) < thres &&
-    rgbDistance(rgbv_ne, rgbv_se) < thres &&
-    rgbDistance(rgbv_se, rgbv_so) < thres &&
-    rgbDistance(rgbv_so, rgbv_no) < thres
+    rgbDistance(rgbv_no, rgbv_ne) < threshold &&
+    rgbDistance(rgbv_ne, rgbv_se) < threshold &&
+    rgbDistance(rgbv_se, rgbv_so) < threshold &&
+    rgbDistance(rgbv_so, rgbv_no) < threshold
   ) {
     // Mean color
     const mean = rgbMean([rgbv_ne, rgbv_no, rgbv_se, rgbv_so]);
@@ -63,7 +62,7 @@ function backgroundMask(idata, threshold) {
         idata.data[i * 4 + 1],
         idata.data[i * 4 + 2],
       ]);
-      mask[i] = d < thres ? 0 : 255;
+      mask[i] = d < threshold ? 0 : 255;
     }
 
     return mask;

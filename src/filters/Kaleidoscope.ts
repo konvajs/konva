@@ -162,7 +162,7 @@ export const Kaleidoscope: Filter = function (imageData) {
   let x, y, xoff, i, r, g, b, a, srcPos, dstPos;
   let power = Math.round(this.kaleidoscopePower());
   const angle = Math.round(this.kaleidoscopeAngle());
-  const offset = Math.floor((xSize * (angle % 360)) / 360);
+  const offset = Math.floor((xSize * (((angle % 360) + 360) % 360)) / 360);
 
   if (power < 1) {
     return;

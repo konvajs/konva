@@ -54,7 +54,7 @@ const ATTR_CHANGE_LIST = [
  *   stroke: '#333',
  *   shadowColor: 'black',
  *   shadowBlur: 10,
- *   shadowOffset: [10, 10],
+ *   shadowOffset: { x: 10, y: 10 },
  *   shadowOpacity: 0.2,
  *   lineJoin: 'round',
  *   pointerDirection: 'up',

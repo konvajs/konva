@@ -378,9 +378,8 @@ export class Text extends Shape<TextConfig> {
       // store the starting x position for line-through which is drawn after text
       const lineThroughStartX = lineTranslateX;
 
-      // As `letterSpacing` isn't supported on Safari, we use this polyfill.
-      // The exception is for RTL text, which we rely on native as it cannot
-      // be supported otherwise.
+      // Render graphemes separately for spacing, justification and callbacks.
+      // Keep RTL text in one native run to preserve shaping.
       if (
         direction !== RTL &&
         (letterSpacing !== 0 || align === JUSTIFY || charRenderFunc)
@@ -1144,7 +1143,7 @@ Factory.addGetterSetter(
 );
 
 /**
- * get/set per-character render hook. The callback is invoked for each grapheme before drawing.
+ * get/set per-character render hook. The callback is invoked for each grapheme before drawing, except for RTL text.
  * It can mutate the provided context (e.g. translate, rotate, change styles) and should return void.
  * Note: per-character rendering may disable native kerning/ligatures.
  * @name Konva.Text#charRenderFunc

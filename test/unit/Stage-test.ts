@@ -1392,7 +1392,7 @@ describe('Stage', function () {
     assert.equal(stage.toDataURL() === stageDataUrl, false);
   });
 
-  it('toDataURL works as toCanvas', function () {
+  it('toDataURL matches native encoding, including JPEG quality zero', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     var circle = new Konva.Circle({
@@ -1405,6 +1405,12 @@ describe('Stage', function () {
     stage.add(layer);
 
     assert.equal(stage.toDataURL(), stage.toCanvas().toDataURL());
+    for (const quality of [0, 0.5, 1]) {
+      assert.equal(
+        stage.toDataURL({ mimeType: 'image/jpeg', quality }),
+        stage.toCanvas().toDataURL('image/jpeg', quality)
+      );
+    }
   });
 
   it('toDataURL should no relate on stage size', function () {

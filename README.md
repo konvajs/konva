@@ -133,7 +133,7 @@ npm install konva canvas
 npm install konva skia-canvas
 ```
 
-Then you can use the same Konva API and all Konva demos will work just fine. You just don't need to use `container` attribute in your stage.
+Use the same scene graph API for server-side rendering and omit the stage's `container` attribute. DOM events require a browser, and canvas feature support depends on the selected backend.
 
 ```js
 import Konva from 'konva';
@@ -143,7 +143,7 @@ const stage = new Konva.Stage({
   width: 500,
   height: 500,
 });
-// then all regular Konva code will work
+// Add shapes and export the stage with the usual Konva drawing API.
 ```
 
 # Backers
@@ -172,11 +172,11 @@ Konva uses Mocha for testing.
 - While developing it is easy to use `npm start`. Just run it and go to [http://localhost:1234/unit-tests.html](http://localhost:1234/unit-tests.html). The watcher will rebuild the bundle on any change.
 
 Konva is covered with hundreds of tests and well over a thousand assertions.
-Konva uses TDD (test driven development) which means that every new feature or bug fix is accompanied with at least one new test.
+For each feature or bug fix, write a failing test first, implement the behavior, then verify that the test passes (test-driven development).
 
 ## Generate documentation
 
-Run `npx gulp api` which will build the documentation files and place them in the `api` folder.
+Run `npm run build`, then `npx gulp api` to generate documentation from the current bundle in the `api` folder.
 
 # Pull Requests
 

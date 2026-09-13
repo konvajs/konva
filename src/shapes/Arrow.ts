@@ -216,7 +216,7 @@ Factory.addGetterSetter(Arrow, 'pointerWidth', 10, getNumberValidator());
  * get/set pointerAtBeginning
  * @name Konva.Arrow#pointerAtBeginning
  * @method
- * @param {Number} Should pointer displayed at beginning of arrow. The default is false.
+ * @param {Boolean} pointerAtBeginning Whether to draw a pointer at the beginning of the arrow. The default is false.
  * @returns {Boolean}
  * @example
  * // get value
@@ -231,7 +231,7 @@ Factory.addGetterSetter(Arrow, 'pointerAtBeginning', false);
  * get/set pointerAtEnding
  * @name Konva.Arrow#pointerAtEnding
  * @method
- * @param {Number} Should pointer displayed at ending of arrow. The default is true.
+ * @param {Boolean} pointerAtEnding Whether to draw a pointer at the end of the arrow. The default is true.
  * @returns {Boolean}
  * @example
  * // get value

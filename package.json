@@ -48,8 +48,8 @@
     "test:build": "rimraf ./.parcel-cache && PARCEL_WORKER_BACKEND=process parcel build ./test/unit-tests.html --dist-dir ./test-build --target none --public-url ./ --no-source-maps",
     "test:browser": "npm run test:build && mocha-headless-chrome -f ./test-build/unit-tests.html -a disable-web-security -a no-sandbox -a disable-setuid-sandbox",
     "test:watch": "rimraf ./.parcel-cache && PARCEL_WORKERS=0  parcel serve ./test/unit-tests.html ./test/manual-tests.html ./test/sandbox.html ./test/text-paths.html ./test/bunnies.html",
-    "test:node:canvas": "mocha -r tsx -r ./test/node-canvas-global-setup.mjs --extension ts --recursive './test/unit/'",
-    "test:node:skia": "mocha -r tsx -r ./test/node-skia-global-setup.mjs --extension ts --recursive './test/unit/'",
+    "test:node:canvas": "mocha -r tsx -r ./test/node-canvas-global-setup.mjs --file ./test/setup.ts --extension ts --recursive './test/unit/'",
+    "test:node:skia": "mocha -r tsx -r ./test/node-skia-global-setup.mjs --file ./test/setup.ts --extension ts --recursive './test/unit/'",
     "test:node": "npm run test:node:canvas && npm run test:node:skia",
     "tsc": "tsc",
     "rollup": "rollup -c",
@@ -110,6 +110,7 @@
     "rollup-plugin-typescript2": "^0.37.0",
     "size-limit": "^11.2.0",
     "skia-canvas": "^3.0.4",
+    "stats.js": "0.17.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },

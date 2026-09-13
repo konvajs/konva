@@ -11,8 +11,7 @@
   <body>
     <div id="container"></div>
     <script src="../../konva.js"></script>
-    <!-- <script src="https://unpkg.com/konva@^7/konva.min.js"></script> -->
-    <script src="http://www.html5canvastutorials.com/lib/stats/stats.js"></script>
+    <script src="../../node_modules/stats.js/build/stats.min.js"></script>
     <script defer="defer">
       var lastTime = 0;
 
@@ -37,6 +36,7 @@
       var counter;
 
       Konva.pixelRatio = 1;
+      Konva.autoDrawEnabled = false;
 
       var stage = new Konva.Stage({
         container: 'container',

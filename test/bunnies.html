@@ -10,11 +10,10 @@
   </head>
   <body>
     <div id="container"></div>
-    <script src="http://www.html5canvastutorials.com/lib/stats/stats.js"></script>
+    <script src="../node_modules/stats.js/build/stats.min.js"></script>
     <script type="module">
       import Konva from '../src/index.ts';
       Konva.isUnminified = false;
-      // Konva.autoDrawEnabled = trye;
       var lastTime = 0;
 
       var width = window.innerWidth;

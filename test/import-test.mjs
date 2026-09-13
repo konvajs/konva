@@ -8,6 +8,7 @@ function equal(val1, val2, message) {
 import Konva from 'konva/lib/Core.js';
 import 'konva/canvas-backend';
 import { Rect } from 'konva/lib/shapes/Rect.js';
+import { Brightness } from 'konva/lib/filters/Brightness.js';
 
 equal(Rect !== undefined, true, 'Rect is defined');
 
@@ -16,3 +17,20 @@ equal(Konva.Rect, Rect, 'Rect is injected');
 // just do a simple action
 const stage = new Konva.Stage();
 stage.toDataURL();
+
+const rect = new Rect({
+  width: 2,
+  height: 2,
+  fill: '#804020',
+  filters: [Brightness],
+});
+rect.brightness(1.5);
+rect.cache({ pixelRatio: 1 });
+equal(
+  Array.from(
+    rect.toCanvas().getContext('2d').getImageData(0, 0, 1, 1).data
+  ).join(','),
+  '192,96,48,255',
+  'Brightness works in a minimal import'
+);
+rect.destroy();

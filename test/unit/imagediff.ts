@@ -1,23 +1,16 @@
-import KonvaModule from '../../src/index.ts';
-export const Konva = KonvaModule;
+import Konva from '../../src/index.ts';
 
-var TYPE_ARRAY = /\[object Array\]/i,
-  TYPE_CANVAS = /\[object (Canvas|HTMLCanvasElement)\]/i,
-  TYPE_NODE_CANVAS = /\[object (Canvas|HTMLCanvasElement)\]/i,
+var TYPE_CANVAS = /\[object (Canvas|HTMLCanvasElement)\]/i,
   TYPE_CONTEXT = /\[object CanvasRenderingContext2D\]/i,
   TYPE_IMAGE = /\[object (Image|HTMLImageElement)\]/i,
   TYPE_IMAGE_DATA = /\[object ImageData\]/i,
   UNDEFINED = 'undefined';
 
 // Creation
-function getCanvas(width?, height?) {
-  return Konva.Util.createCanvasElement();
-}
-
 let singleCanvas;
 function getSingleCanvas() {
   if (!singleCanvas) {
-    singleCanvas = getCanvas();
+    singleCanvas = Konva.Util.createCanvasElement();
   }
   return singleCanvas;
 }
@@ -50,37 +43,11 @@ function isImageData(object) {
     typeof object.data !== UNDEFINED
   );
 }
-function isImageType(object) {
-  return (
-    isImage(object) ||
-    isCanvas(object) ||
-    isContext(object) ||
-    isImageData(object)
-  );
-}
 function isType(object, type) {
   return typeof object === 'object' && !!object.toString().match(type);
 }
 
 // Type Conversion
-function copyImageData(imageData) {
-  const height = imageData.height,
-    width = imageData.width,
-    data = imageData.data;
-
-  const canvas = getSingleCanvas();
-  const context = canvas.getContext('2d');
-  canvas.width = width;
-  canvas.height = height;
-  const newImageData = context.getImageData(0, 0, width, height);
-  const newData = newImageData.data;
-
-  for (let i = imageData.data.length; i--; ) {
-    newData[i] = data[i];
-  }
-
-  return newImageData;
-}
 function toImageData(object) {
   if (isImage(object)) {
     return toImageDataFromImage(object);
@@ -122,15 +89,6 @@ function toImageDataFromContext(context) {
     width = canvas.width;
   return context.getImageData(0, 0, width, height);
 }
-function toCanvas(object) {
-  const data = toImageData(object),
-    canvas = getCanvas(data.width, data.height),
-    context = canvas.getContext('2d')!;
-
-  context.putImageData(data, 0, 0);
-  return canvas;
-}
-
 // ImageData Equality Operators
 function equalWidth(a, b) {
   return a.width === b.width;
@@ -142,7 +100,7 @@ function equalDimensions(a, b) {
   return equalHeight(a, b) && equalWidth(a, b);
 }
 
-export function equal(a, b, tolerance, secondTol) {
+function equal(a, b, tolerance, secondTol) {
   const aData = a.data,
     bData = b.data,
     length = aData.length;
@@ -248,79 +206,13 @@ function diffUnequal(a, b, options) {
   return c;
 }
 
-// Validation
-function checkType(...args) {
-  for (let i = 0; i < args.length; i++) {
-    if (!isImageType(args[i])) {
-      // throw {
-      //   name: 'ImageTypeError',
-      //   message: 'Submitted object was not an image.',
-      // };
-    }
-  }
-}
-
-// function formatImageDiffEqualHtmlReport(actual, expected) {
-//   var div = get('div', '<span>Expected to be equal.'),
-//     a = get('div', '<div>Actual:</div>'),
-//     b = get('div', '<div>Expected:</div>'),
-//     c = get('div', '<div>Diff:</div>'),
-//     diff = imagediff.diff(actual, expected),
-//     canvas = getCanvas(),
-//     context;
-
-//   canvas.height = diff.height;
-//   canvas.width = diff.width;
-
-//   div.style.overflow = 'hidden';
-//   a.style.float = 'left';
-//   b.style.float = 'left';
-//   c.style.float = 'left';
-
-//   context = canvas.getContext('2d');
-//   context.putImageData(diff, 0, 0);
-
-//   a.appendChild(toCanvas(actual));
-//   b.appendChild(toCanvas(expected));
-//   c.appendChild(canvas);
-
-//   div.appendChild(a);
-//   div.appendChild(b);
-//   div.appendChild(c);
-
-//   return div.innerHTML;
-// }
-
-// function formatImageDiffEqualTextReport(actual, expected) {
-//   return 'Expected to be equal.';
-// }
-
 export const imagediff = {
-  createCanvas: getCanvas,
-  createImageData: getImageData,
-
-  isImage: isImage,
-  isCanvas: isCanvas,
-  isContext: isContext,
-  isImageData: isImageData,
-  isImageType: isImageType,
-
-  toImageData: function (object) {
-    checkType(object);
-    if (isImageData(object)) {
-      return copyImageData(object);
-    }
-    return toImageData(object);
-  },
-
   equal: function (a, b, tolerance, secondTol) {
-    checkType(a, b);
     a = toImageData(a);
     b = toImageData(b);
     return equal(a, b, tolerance, secondTol);
   },
   diff: function (a, b, options?) {
-    checkType(a, b);
     a = toImageData(a);
     b = toImageData(b);
     return diff(a, b, options);
