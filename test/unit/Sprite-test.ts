@@ -61,107 +61,53 @@ describe('Sprite', function () {
     });
   });
 
-  // ======================================================
-  it('don`t update layer too many times', function (done) {
-    loadImage('scorpion-sprite.png', (imageObj) => {
-      var stage = addStage();
-      var layer = new Konva.Layer();
-
-      var sprite = new Konva.Sprite({
-        x: 200,
-        y: 50,
-        image: imageObj,
-        animation: 'standing',
-        animations: {
-          standing: [
-            0, 0, 49, 109, 52, 0, 49, 109, 105, 0, 49, 109, 158, 0, 49, 109,
-            210, 0, 49, 109, 262, 0, 49, 109,
-          ],
-        },
-        frameRate: 5,
-        draggable: true,
-        shadowColor: 'black',
-        shadowBlur: 3,
-        shadowOffset: { x: 3, y: 1 },
-        shadowOpacity: 0.3,
-      });
-
-      layer.add(sprite);
+  for (const count of [1, 2]) {
+    it(`${count} running sprites redraw their layer only when frames change`, async function () {
+      const image = await new Promise<HTMLImageElement>((resolve) =>
+        loadImage('scorpion-sprite.png', resolve)
+      );
+      const stage = addStage();
+      const layer = new Konva.Layer();
       stage.add(layer);
-
-      var oldDraw = layer.draw;
-      var updateCount = 0;
-      layer.draw = function () {
-        updateCount++;
-        oldDraw.call(layer);
-        return layer;
+      const sprites = Array.from(
+        { length: count },
+        () =>
+          new Konva.Sprite({
+            image,
+            animation: 'standing',
+            animations: { standing: [0, 0, 49, 109, 52, 0, 49, 109] },
+            // Advance frames explicitly during this test, before the next timed frame.
+            frameRate: 1 / 60,
+          })
+      );
+      const autoDraw = Konva.autoDrawEnabled;
+      Konva.autoDrawEnabled = false;
+      const advanceDrawing = async () => {
+        for (let i = 0; i < 3; i++) {
+          await new Promise<void>((resolve) =>
+            Konva.Util.requestAnimFrame(resolve)
+          );
+        }
       };
-
-      sprite.start();
-      setTimeout(function () {
-        sprite.stop();
-        assert.equal(updateCount < 7, true);
-        done();
-      }, 1000);
+      try {
+        layer.add(...sprites);
+        sprites.forEach((sprite) => sprite.start());
+        await advanceDrawing();
+        let draws = 0;
+        layer.on('draw', () => draws++);
+        await advanceDrawing();
+        assert.equal(draws, 0, 'unchanged frames do not redraw');
+        sprites.forEach((sprite) => sprite.frameIndex(1));
+        await advanceDrawing();
+        assert.equal(draws, 1, 'frame changes share one layer redraw');
+        await advanceDrawing();
+        assert.equal(draws, 1, 'redrawing stops after the changed frames');
+      } finally {
+        sprites.forEach((sprite) => sprite.stop());
+        Konva.autoDrawEnabled = autoDraw;
+      }
     });
-  });
-
-  // ======================================================
-  it('don`t update layer too many times 2', function (done) {
-    loadImage('scorpion-sprite.png', (imageObj) => {
-      var stage = addStage();
-      var layer = new Konva.Layer();
-
-      var sprite = new Konva.Sprite({
-        x: 200,
-        y: 50,
-        image: imageObj,
-        animation: 'standing',
-        animations: {
-          standing: [
-            0, 0, 49, 109, 52, 0, 49, 109, 105, 0, 49, 109, 158, 0, 49, 109,
-            210, 0, 49, 109, 262, 0, 49, 109,
-          ],
-        },
-        frameRate: 5,
-      });
-
-      var sprite2 = new Konva.Sprite({
-        x: 200,
-        y: 50,
-        image: imageObj,
-        animation: 'standing',
-        animations: {
-          standing: [
-            0, 0, 49, 109, 52, 0, 49, 109, 105, 0, 49, 109, 158, 0, 49, 109,
-            210, 0, 49, 109, 262, 0, 49, 109,
-          ],
-        },
-        frameRate: 20,
-      });
-
-      layer.add(sprite).add(sprite2);
-      stage.add(layer);
-
-      var oldDraw = layer.draw;
-      var updateCount = 0;
-      layer.draw = function () {
-        updateCount++;
-        oldDraw.call(layer);
-        return layer;
-      };
-
-      sprite.start();
-      sprite2.start();
-      setTimeout(function () {
-        sprite.stop();
-        sprite2.stop();
-        assert.equal(updateCount > 15, true);
-        assert.equal(updateCount < 27, true);
-        done();
-      }, 1000);
-    });
-  });
+  }
 
   it('check is sprite running', function (done) {
     loadImage('scorpion-sprite.png', (imageObj) => {
