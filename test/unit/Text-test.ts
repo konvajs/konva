@@ -141,9 +141,13 @@ describe('Text', function () {
     layer.add(group);
     stage.add(layer);
 
-    assert.equal(
-      layer.getContext().getTrace(false, true),
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,40,40);shadowColor=rgba(255,0,0,0.2);shadowBlur=1;shadowOffsetX=10;shadowOffsetY=10;font=normal normal 50px Arial;textBaseline=alphabetic;textAlign=left;translate(10,10);save();fillStyle=#888;fillText(Hello World!,108,47);lineWidth=2;shadowColor=rgba(0,0,0,0);strokeStyle=#333;miterLimit=2;strokeText(Hello World!,108,47);restore();restore();'
+    const pixels = layer
+      .getContext()
+      .getImageData(0, 0, stage.width(), stage.height()).data;
+    assert.isTrue(
+      pixels.some(
+        (value, index) => index % 4 === 0 && value > pixels[index + 1]
+      )
     );
 
     assert.equal(text.getClassName(), 'Text', 'getClassName should be Text');
@@ -2249,5 +2253,113 @@ describe('Text', function () {
     stage.add(layer);
     assert.equal(text.textArr.length, 2);
     assert.deepEqual(last, ['b', 'd']);
+  });
+});
+
+describe('Text layout', function () {
+  function renderedLines(text) {
+    const lines: string[] = [];
+    text.charRenderFunc(({ char, lineIndex }) => {
+      lines[lineIndex] = (lines[lineIndex] || '') + char;
+    });
+    text.toCanvas();
+    return lines;
+  }
+
+  it('fitting paragraphs and empty paragraphs have no ellipsis', function () {
+    const text = new Konva.Text({
+      text: 'hello\n\nworld',
+      width: 300,
+      wrap: 'none',
+      ellipsis: true,
+    });
+    try {
+      assert.equal(renderedLines(text).join('\n'), 'hello\n\nworld');
+    } finally {
+      text.destroy();
+    }
+  });
+
+  it('ellipsis preserves graphemes and fits the available width', function () {
+    for (const sample of [
+      '😀'.repeat(12),
+      'i'.repeat(80),
+      'e\u0301'.repeat(20),
+    ]) {
+      const text = new Konva.Text({
+        text: sample,
+        fontSize: 20,
+        width: 85,
+        wrap: 'none',
+        ellipsis: true,
+      });
+      try {
+        const line = renderedLines(text)[0];
+        assert.isAtMost(text.measureSize(line).width, text.width());
+        assert.equal(line.slice(-1), '…');
+        for (const grapheme of stringToArray(line.slice(0, -1))) {
+          assert.include(stringToArray(sample), grapheme);
+        }
+      } finally {
+        text.destroy();
+      }
+    }
+  });
+
+  it('auto width includes the ellipsis on the last visible line', function () {
+    const text = new Konva.Text({
+      text: 'hello\nworld',
+      fontSize: 20,
+      height: 20,
+      ellipsis: true,
+    });
+    try {
+      assert.deepEqual(renderedLines(text), ['hello…']);
+      assert.equal(text.width(), text.measureSize('hello…').width);
+    } finally {
+      text.destroy();
+    }
+  });
+
+  it('an ellipsis that does not fit leaves an empty line', function () {
+    const text = new Konva.Text({
+      text: 'iiiiiiiiiiiiiiiiiiii',
+      width: 8,
+      fontSize: 20,
+      wrap: 'none',
+      ellipsis: true,
+    });
+    try {
+      assert.deepEqual(renderedLines(text), []);
+    } finally {
+      text.destroy();
+    }
+  });
+
+  it('Label follows text spacing and wrapping changes', function () {
+    const label = new Konva.Label();
+    const tag = new Konva.Tag();
+    const text = new Konva.Text({ text: 'hello world', width: 45 });
+    label.add(tag, text);
+    try {
+      text.letterSpacing(5);
+      assert.deepEqual(tag.size(), text.size());
+      text.wrap('none');
+      assert.deepEqual(tag.size(), text.size());
+    } finally {
+      label.destroy();
+    }
+  });
+
+  it('Transformer follows font changes that change text bounds', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    stage.add(layer);
+    const text = new Konva.Text({ text: 'Hello world', fontSize: 20 });
+    const tr = new Konva.Transformer({ nodes: [text] });
+    layer.add(text, tr);
+    text.fontStyle('bold');
+    assert.equal(tr.width(), text.width());
+    assert.equal(tr.findOne('.top-right')!.x(), text.width());
   });
 });

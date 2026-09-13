@@ -58,21 +58,26 @@ export class Image extends Shape<ImageConfig> {
   }
   _setImageLoad() {
     const image = this.image() as any;
-    // check is image is already loaded
+    // Check whether the image or the first video frame is already loaded.
     if (image && image.complete) {
       return;
     }
-    // check is video is already loaded
-    if (image && image.readyState === 4) {
+    if (image && image.readyState >= 2) {
       return;
     }
     if (image && image['addEventListener']) {
-      image['addEventListener']('load', this._loadListener);
+      image['addEventListener'](
+        'videoWidth' in image ? 'loadeddata' : 'load',
+        this._loadListener
+      );
     }
   }
   _removeImageLoad(image: any) {
     if (image && image['removeEventListener']) {
-      image['removeEventListener']('load', this._loadListener);
+      image['removeEventListener'](
+        'videoWidth' in image ? 'loadeddata' : 'load',
+        this._loadListener
+      );
     }
   }
   destroy() {
@@ -81,6 +86,7 @@ export class Image extends Shape<ImageConfig> {
     return this;
   }
   _useBufferCanvas() {
+    if (this.attrs.perfectDrawEnabled === false) return false;
     const hasCornerRadius = !!this.cornerRadius();
     const hasShadow = this.hasShadow();
     if (hasCornerRadius && hasShadow) {
@@ -141,11 +147,24 @@ export class Image extends Shape<ImageConfig> {
     context.closePath();
     context.fillStrokeShape(this);
   }
+  toObject() {
+    const object = super.toObject();
+    // The source image is not serialized, so its natural size is not a default
+    // that a restored node can recover.
+    for (const dimension of ['width', 'height'] as const) {
+      if (this.attrs[dimension] !== undefined) {
+        object.attrs[dimension] = this.attrs[dimension];
+      }
+    }
+    return object;
+  }
   getWidth() {
-    return this.attrs.width ?? (this.image() as any)?.width ?? 0;
+    const image = this.image() as any;
+    return this.attrs.width ?? image?.videoWidth ?? image?.width ?? 0;
   }
   getHeight() {
-    return this.attrs.height ?? (this.image() as any)?.height ?? 0;
+    const image = this.image() as any;
+    return this.attrs.height ?? image?.videoHeight ?? image?.height ?? 0;
   }
 
   /**

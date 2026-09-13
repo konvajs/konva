@@ -23,88 +23,78 @@ export type FilterFunction = (this: Node, imageData: ImageData) => void;
 export type Filter = FilterFunction | string;
 type Filters = Array<FilterFunction | string>;
 
-// CSS filter parser for fallback to function filters
+// CSS filter parser for fallback to function filters.
 function parseCSSFilters(cssFilter: string): FilterFunction {
-  // Parse common CSS filter functions and map to Konva filters
-  const filterRegex = /(\w+)\(([^)]+)\)/g;
+  const steps: { name: string; value: number }[] = [];
+  const filterRegex = /(\w+)\(([^)]*)\)/g;
   let match;
-
   while ((match = filterRegex.exec(cssFilter)) !== null) {
-    const [, filterName, filterValue] = match;
-
-    switch (filterName) {
-      case 'blur': {
-        const blurRadius = parseFloat(filterValue.replace('px', ''));
-        return function (imageData) {
-          // CSS blur uses standard deviation, Stack Blur uses radius
-          // Empirical testing shows CSS blur needs ~0.5 scaling for visual match
-          (this as any).blurRadius(blurRadius * 0.5);
-          // Access filters through dynamic import to avoid circular dependency
-          const KonvaFilters = (Konva as any).Filters;
-          if (KonvaFilters && KonvaFilters.Blur) {
-            KonvaFilters.Blur.call(this, imageData);
-          }
-        };
-      }
-
-      case 'brightness': {
-        const brightness = filterValue.includes('%')
-          ? parseFloat(filterValue) / 100
-          : parseFloat(filterValue);
-        return function (imageData) {
-          (this as any).brightness(brightness); // CSS uses multiplier
-          const KonvaFilters = (Konva as any).Filters;
-          if (KonvaFilters && KonvaFilters.Brightness) {
-            KonvaFilters.Brightness.call(this, imageData);
-          }
-        };
-      }
-      case 'contrast': {
-        const contrast = parseFloat(filterValue);
-        return function (imageData) {
-          // Convert CSS contrast to Konva parameter using square root conversion
-          // to account for Konva's quadratic scaling: Math.pow((param + 100) / 100, 2)
-          const konvaContrast = 100 * (Math.sqrt(contrast) - 1);
-          (this as any).contrast(konvaContrast);
-          const KonvaFilters = (Konva as any).Filters;
-          if (KonvaFilters && KonvaFilters.Contrast) {
-            KonvaFilters.Contrast.call(this, imageData);
-          }
-        };
-      }
-      case 'grayscale': {
-        return function (imageData) {
-          const KonvaFilters = (Konva as any).Filters;
-          if (KonvaFilters && KonvaFilters.Grayscale) {
-            KonvaFilters.Grayscale.call(this, imageData);
-          }
-        };
-      }
-      case 'sepia': {
-        return function (imageData) {
-          const KonvaFilters = (Konva as any).Filters;
-          if (KonvaFilters && KonvaFilters.Sepia) {
-            KonvaFilters.Sepia.call(this, imageData);
-          }
-        };
-      }
-      case 'invert': {
-        return function (imageData) {
-          const KonvaFilters = (Konva as any).Filters;
-          if (KonvaFilters && KonvaFilters.Invert) {
-            KonvaFilters.Invert.call(this, imageData);
-          }
-        };
-      }
-      default:
-        Util.warn(
-          `CSS filter "${filterName}" is not supported in fallback mode. Consider using function filters for better compatibility.`
-        );
-        break;
+    const [, name, argument] = match;
+    if (
+      ![
+        'blur',
+        'brightness',
+        'contrast',
+        'grayscale',
+        'sepia',
+        'invert',
+      ].includes(name)
+    ) {
+      Util.warn(
+        `CSS filter "${name}" is not supported in fallback mode. Consider using function filters for better compatibility.`
+      );
+      continue;
     }
+    const value =
+      argument.trim() === ''
+        ? name === 'blur'
+          ? 0
+          : 1
+        : parseFloat(argument) / (argument.includes('%') ? 100 : 1);
+    steps.push({ name, value });
   }
 
-  return () => {};
+  return function (imageData) {
+    for (const { name, value } of steps) {
+      if (['grayscale', 'sepia', 'invert'].includes(name)) {
+        const amount = Math.min(1, Math.max(0, value));
+        const data = imageData.data;
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i],
+            g = data[i + 1],
+            b = data[i + 2];
+          let red, green, blue;
+          if (name === 'grayscale') {
+            red = green = blue = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+          } else if (name === 'sepia') {
+            red = 0.393 * r + 0.769 * g + 0.189 * b;
+            green = 0.349 * r + 0.686 * g + 0.168 * b;
+            blue = 0.272 * r + 0.534 * g + 0.131 * b;
+          } else {
+            red = 255 - r;
+            green = 255 - g;
+            blue = 255 - b;
+          }
+          // CSS interpolates the color matrix before clamping the result.
+          data[i] = r + (red - r) * amount;
+          data[i + 1] = g + (green - g) * amount;
+          data[i + 2] = b + (blue - b) * amount;
+        }
+        continue;
+      }
+      const filter = (Konva as any).Filters?.[Util._capitalize(name)];
+      if (!filter) continue;
+
+      // Supply filter parameters without setters or changes to the node.
+      const context = Object.create(this);
+      context.attrs = { ...this.attrs };
+      if (name === 'blur') context.attrs.blurRadius = value * 0.5;
+      if (name === 'brightness') context.attrs.brightness = value;
+      if (name === 'contrast')
+        context.attrs.contrast = 100 * (Math.sqrt(value) - 1);
+      filter.call(context, imageData);
+    }
+  };
 }
 
 type globalCompositeOperationType =
@@ -1684,10 +1674,14 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       defaultValue = getter ? getter.call(this) : null;
       // restore attr value
       (attrs as any)[key] = val;
-      if (defaultValue !== val) {
-        (obj.attrs as any)[key] = Util.isObject(val)
-          ? Util._prepareToStringify(val)
-          : val;
+      // Shared filter parameters can distinguish an explicit value from unset.
+      if (defaultValue !== val || key === 'brightness' || key === 'threshold') {
+        (obj.attrs as any)[key] =
+          key === 'filters' && Util._isArray(val)
+            ? val.filter((filter) => typeof filter === 'string')
+            : Util.isObject(val)
+              ? Util._prepareToStringify(val)
+              : val;
       }
     }
 
@@ -2145,8 +2139,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @param {Number} [config.width] width of canvas section
    * @param {Number} [config.height] height of canvas section
    * @param {Number} [config.pixelRatio] pixelRatio of output canvas. Default is 1.
-   * You can use that property to increase quality of the image, for example for super hight quality exports
-   * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
+   * Higher pixel ratios increase export resolution. Cached nodes keep their cache resolution.
+   * Rebuild caches at the export pixel ratio to preserve detail.
+   * The pixel ratio multiplies the dimensions of the exported image.
    * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
    * @param {Boolean} [config.imageSmoothingEnabled] set this to false if you want to disable imageSmoothing
    * @example
@@ -2172,8 +2167,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
    *  is very high quality
    * @param {Number} [config.pixelRatio] pixelRatio of output image url. Default is 1.
-   * You can use that property to increase quality of the image, for example for super hight quality exports
-   * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
+   * Higher pixel ratios increase export resolution. Cached nodes keep their cache resolution.
+   * Rebuild caches at the export pixel ratio to preserve detail.
+   * The pixel ratio multiplies the dimensions of the exported image.
    * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
    * @param {Boolean} [config.imageSmoothingEnabled] set this to false if you want to disable imageSmoothing
    * @returns {String}
@@ -2211,8 +2207,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
    *  is very high quality
    * @param {Number} [config.pixelRatio] pixelRatio of output image. Default is 1.
-   * You can use that property to increase quality of the image, for example for super hight quality exports
-   * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
+   * Higher pixel ratios increase export resolution. Cached nodes keep their cache resolution.
+   * Rebuild caches at the export pixel ratio to preserve detail.
+   * The pixel ratio multiplies the dimensions of the exported image.
    * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
    * @param {Boolean} [config.imageSmoothingEnabled] set this to false if you want to disable imageSmoothing
    * @return {Promise<Image>}
@@ -2232,10 +2229,14 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       try {
         const callback = config?.callback;
         if (callback) delete config.callback;
-        Util._urlToImage(this.toDataURL(config as any), function (img) {
-          resolve(img);
-          callback?.(img);
-        });
+        Util._urlToImage(
+          this.toDataURL(config as any),
+          function (img) {
+            resolve(img);
+            callback?.(img);
+          },
+          reject
+        );
       } catch (err) {
         reject(err);
       }
@@ -2254,8 +2255,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    * @param {Number} [config.width] width of canvas section
    * @param {Number} [config.height] height of canvas section
    * @param {Number} [config.pixelRatio] pixelRatio of output canvas. Default is 1.
-   * You can use that property to increase quality of the image, for example for super hight quality exports
-   * or usage on retina (or similar) displays. pixelRatio will be used to multiply the size of exported image.
+   * Higher pixel ratios increase export resolution. Cached nodes keep their cache resolution.
+   * Rebuild caches at the export pixel ratio to preserve detail.
+   * The pixel ratio multiplies the dimensions of the exported image.
    * If you export to 500x500 size with pixelRatio = 2, then produced image will have size 1000x1000.
    * @param {Boolean} [config.imageSmoothingEnabled] set this to false if you want to disable imageSmoothing
    * @example
@@ -2618,7 +2620,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         y: pos.y - ap.y,
       },
       dragStatus: 'ready',
-      pointerId,
+      pointerId: pointerId ?? ('id' in pos ? pos.id : undefined),
       startEvent: evt,
     });
   }
@@ -2728,7 +2730,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       if (!canDrag) {
         return;
       }
-      if (this.isDragging()) {
+      if (DD._dragElements.has(this._id)) {
         return;
       }
 
@@ -2913,12 +2915,13 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
 
     if (!Konva[className]) {
+      const fallback = children ? 'Group' : 'Shape';
       Util.warn(
         'Can not find a node with class name "' +
           className +
-          '". Fallback to "Shape".'
+          `". Fallback to "${fallback}".`
       );
-      className = 'Shape';
+      className = fallback;
     }
 
     const Class = Konva[className];
@@ -2954,6 +2957,13 @@ Node.prototype.on('visibleChange.konva', function () {
 });
 Node.prototype.on('listeningChange.konva', function () {
   this._clearSelfAndDescendantCache(LISTENING);
+  for (let parent = this.getParent(); parent; parent = parent.getParent()) {
+    const cache = parent._getCanvasCache();
+    if (cache?.hit) {
+      Util.releaseCanvas(cache.hit._canvas);
+      cache.hit = null;
+    }
+  }
 });
 Node.prototype.on('opacityChange.konva', function () {
   this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);

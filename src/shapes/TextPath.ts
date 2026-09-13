@@ -435,7 +435,18 @@ TextPath.prototype._strokeFunc = _strokeFunc;
 TextPath.prototype._fillFuncHit = _fillFunc;
 TextPath.prototype._strokeFuncHit = _strokeFunc;
 TextPath.prototype.className = 'TextPath';
-TextPath.prototype._attrsAffectingSize = ['text', 'fontSize', 'data'];
+TextPath.prototype._attrsAffectingSize = [
+  'text',
+  'fontSize',
+  'data',
+  'align',
+  'letterSpacing',
+  'kerningFunc',
+  'fontFamily',
+  'fontStyle',
+  'fontVariant',
+  'direction',
+];
 _registerNode(TextPath);
 
 TextPath.prototype.on('dataChange.konva', function () {
@@ -444,7 +455,10 @@ TextPath.prototype.on('dataChange.konva', function () {
 });
 // update text data for certain attr changes
 TextPath.prototype.on(
-  'textChange.konva alignChange.konva letterSpacingChange.konva kerningFuncChange.konva fontSizeChange.konva fontFamilyChange.konva fontStyleChange.konva fontVariantChange.konva directionChange.konva',
+  TextPath.prototype._attrsAffectingSize
+    .filter((attr) => attr !== 'data')
+    .map((attr) => attr + 'Change.konva')
+    .join(' '),
   function () {
     this._setTextData();
   }

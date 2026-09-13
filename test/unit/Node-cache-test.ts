@@ -970,8 +970,7 @@ describe('Caching', function () {
     assert.equal(stage.getIntersection({ x: 150, y: 100 }), rect);
   });
 
-  // hard to fix
-  it.skip('even if parent is not visible cache should be created - test for group', function () {
+  it('even if parent is not visible cache should be created - test for group', function () {
     var stage = addStage();
 
     var layer = new Konva.Layer({
@@ -1750,16 +1749,17 @@ describe('Caching', function () {
   });
 
   it('cache() buffer canvas is never larger than the cache and is released', function () {
-    // fill + stroke + opacity forces the buffer canvas path
-    var rect = new Konva.Rect({
+    // An image with rounded corners and a shadow needs the buffer during caching.
+    var rect = new Konva.Image({
+      image: undefined,
       x: 5000,
       y: 4000,
       width: 100,
       height: 100,
       fill: 'red',
-      stroke: 'black',
-      strokeWidth: 4,
-      opacity: 0.5,
+      cornerRadius: 10,
+      shadowColor: 'black',
+      shadowBlur: 2,
     });
 
     const allocations = collectCanvasAllocations(() => rect.cache());
@@ -1938,5 +1938,49 @@ describe('Caching', function () {
     var data = layer.getContext().getImageData(34, 10, 1, 1).data;
     assert.deepEqual(Array.from(data.slice(0, 3)), [0, 255, 255]);
     assert.isAbove(data[3], 100);
+  });
+});
+
+describe('Cache', function () {
+  it('a cache below a hidden ancestor still excludes hidden descendants', function () {
+    const stage = addStage(),
+      layer = new Konva.Layer({ visible: false });
+    stage.add(layer);
+    const group = new Konva.Group();
+    layer.add(group);
+    group.add(new Konva.Rect({ width: 30, height: 30, fill: 'red' }));
+    const hidden = new Konva.Group({ visible: false });
+    hidden.add(new Konva.Rect({ width: 30, height: 30, fill: 'blue' }));
+    group.add(hidden);
+    group.cache();
+    layer.visible(true);
+    layer.draw();
+    assert.deepEqual(
+      Array.from(layer.getContext().getImageData(10, 10, 1, 1).data),
+      [255, 0, 0, 255]
+    );
+  });
+
+  it('listening changes rebuild cached hit graphs through nested groups', function () {
+    const stage = addStage(),
+      layer = new Konva.Layer();
+    stage.add(layer);
+    const outer = new Konva.Group(),
+      inner = new Konva.Group();
+    layer.add(outer);
+    outer.add(inner);
+    const bottom = new Konva.Rect({ width: 40, height: 40, fill: 'red' });
+    const top = bottom.clone({ fill: 'blue' });
+    inner.add(bottom, top);
+    inner.cache();
+    outer.cache();
+    layer.draw();
+    assert.isTrue(stage.getIntersection({ x: 10, y: 10 }) === top);
+    top.listening(false);
+    layer.draw();
+    assert.isTrue(stage.getIntersection({ x: 10, y: 10 }) === bottom);
+    top.listening(true);
+    layer.draw();
+    assert.isTrue(stage.getIntersection({ x: 10, y: 10 }) === top);
   });
 });

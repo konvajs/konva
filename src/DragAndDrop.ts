@@ -30,11 +30,12 @@ export const DD = {
   },
   justDragged: false,
   get node() {
-    // return first dragging node
     let node: Node | undefined;
-    DD._dragElements.forEach((elem) => {
+    for (const elem of DD._dragElements.values()) {
+      if (elem.dragStatus === 'dragging') return elem.node;
       node = elem.node;
-    });
+    }
+    // isDragReady() also uses this getter before movement starts.
     return node;
   },
   _dragElements: new Map<number, DragElement>(),

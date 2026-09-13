@@ -137,3 +137,78 @@ describe('Context', function () {
     });
   });
 });
+
+describe('Stroke rendering', function () {
+  it('disabling stroke shadows preserves a fill drawn after the stroke', function () {
+    const stage = addStage(),
+      layer = new Konva.Layer();
+    stage.add(layer);
+    layer.add(
+      new Konva.Rect({
+        x: 20,
+        y: 20,
+        width: 20,
+        height: 20,
+        fill: 'red',
+        stroke: 'blue',
+        shadowColor: 'black',
+        shadowOffsetX: 40,
+        shadowForStrokeEnabled: false,
+        fillAfterStrokeEnabled: true,
+        perfectDrawEnabled: false,
+      })
+    );
+    layer.draw();
+    assert.deepEqual(
+      Array.from(layer.getContext().getImageData(70, 30, 1, 1).data),
+      [0, 0, 0, 255]
+    );
+  });
+
+  it('an unscaled gradient stroke stays in the shape coordinate space', function () {
+    const stage = addStage(),
+      layer = new Konva.Layer();
+    stage.add(layer);
+    layer.add(
+      new Konva.Rect({
+        x: 100,
+        y: 40,
+        width: 100,
+        height: 40,
+        strokeWidth: 10,
+        strokeScaleEnabled: false,
+        strokeLinearGradientStartPoint: { x: 0, y: 0 },
+        strokeLinearGradientEndPoint: { x: 100, y: 0 },
+        strokeLinearGradientColorStops: [0, 'red', 1, 'blue'],
+      })
+    );
+    layer.draw();
+    const pixel = layer.getContext().getImageData(110, 40, 1, 1).data;
+    assert.isAbove(pixel[0], 200);
+    assert.isBelow(pixel[2], 40);
+  });
+  it('an unscaled diagonal gradient preserves colors under nonuniform scaling', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    stage.add(layer);
+    layer.add(
+      new Konva.Rect({
+        x: 30,
+        y: 30,
+        width: 100,
+        height: 100,
+        scaleX: 2,
+        strokeWidth: 10,
+        strokeScaleEnabled: false,
+        strokeLinearGradientStartPoint: { x: 0, y: 0 },
+        strokeLinearGradientEndPoint: { x: 100, y: 100 },
+        strokeLinearGradientColorStops: [0, 'red', 1, 'blue'],
+      })
+    );
+    layer.draw();
+    const pixel = layer.getContext().getImageData(130, 30, 1, 1).data;
+    assert.closeTo(pixel[0], 190, 1);
+    assert.closeTo(pixel[2], 65, 1);
+    assert.equal(pixel[3], 255);
+  });
+});

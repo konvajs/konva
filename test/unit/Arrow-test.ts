@@ -1,6 +1,11 @@
 import { assert } from 'chai';
 
-import { addStage, Konva, cloneAndCompareLayer } from './test-utils.ts';
+import {
+  addStage,
+  Konva,
+  cloneAndCompareLayer,
+  assertAlmostDeepEqual,
+} from './test-utils.ts';
 
 describe('Arrow', function () {
   // ======================================================
@@ -257,5 +262,84 @@ describe('Arrow', function () {
     assert.equal(rect.y, 40);
     assert.equal(rect.width, 100);
     assert.equal(rect.height, 20);
+  });
+});
+
+describe('Arrow bounds', function () {
+  it('vertical and short arrows include their complete heads', function () {
+    const arrow = new Konva.Arrow({
+      points: [0, 0, 0, 100],
+      pointerLength: 20,
+      pointerWidth: 20,
+    });
+    try {
+      assertAlmostDeepEqual(arrow.getSelfRect(), {
+        x: -10,
+        y: 0,
+        width: 20,
+        height: 100,
+      });
+      arrow.points([0, 0, 5, 0]);
+      assertAlmostDeepEqual(arrow.getSelfRect(), {
+        x: -15,
+        y: -10,
+        width: 20,
+        height: 20,
+      });
+      arrow.pointerAtEnding(false);
+      assertAlmostDeepEqual(arrow.getSelfRect(), {
+        x: 0,
+        y: 0,
+        width: 5,
+        height: 0,
+      });
+    } finally {
+      arrow.destroy();
+    }
+  });
+
+  it('caching a vertical arrow preserves the head', function () {
+    const stage = addStage(),
+      layer = new Konva.Layer();
+    stage.add(layer);
+    const arrow = new Konva.Arrow({
+      x: 60,
+      y: 30,
+      points: [0, 0, 0, 100],
+      pointerWidth: 40,
+      pointerLength: 30,
+      fill: 'red',
+      stroke: 'red',
+    });
+    layer.add(arrow);
+    layer.draw();
+    arrow.cache();
+    layer.draw();
+    for (const x of [45, 75]) {
+      assert.deepEqual(
+        Array.from(layer.getContext().getImageData(x, 105, 1, 1).data),
+        [255, 0, 0, 255]
+      );
+    }
+  });
+
+  it('a short final quadratic segment keeps the head on its incoming direction', function () {
+    const arrow = new Konva.Arrow({
+      points: [0, 0, 100, 100, 101, 100],
+      tension: 0.5,
+      pointerLength: 30,
+      fill: 'red',
+    });
+    const stage = addStage(),
+      layer = new Konva.Layer();
+    stage.add(layer);
+    layer.add(arrow);
+    layer.draw();
+    // The final segment approaches (101, 100) from (100, 100): its head faces right.
+    assert.deepEqual(
+      Array.from(layer.getContext().getImageData(80, 100, 1, 1).data),
+      [255, 0, 0, 255]
+    );
+    assert.equal(layer.getContext().getImageData(110, 110, 1, 1).data[3], 0);
   });
 });

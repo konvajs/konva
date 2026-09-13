@@ -1684,3 +1684,20 @@ describe('Stage', function () {
     assert.equal(dblclicks, 0);
   });
 });
+
+describe('Stage lifecycle', function () {
+  it('getPointerPosition returns null after leaving the stage', function () {
+    const stage = addStage();
+    stage._pointerleave({ type: 'mouseleave', clientX: 600, clientY: 20 });
+    assert.isNull(stage.getPointerPosition());
+  });
+
+  it('destroy removes content from an already detached container', function () {
+    if (isNode) return;
+    const stage = addStage();
+    const container = stage.container();
+    container.remove();
+    stage.destroy();
+    assert.equal(container.children.length, 0);
+  });
+});

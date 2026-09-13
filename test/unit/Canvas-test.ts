@@ -131,3 +131,31 @@ describe('Canvas', function () {
     }
   });
 });
+
+describe('Canvas export errors', function () {
+  it('toDataURL throws when both encoding attempts fail', function () {
+    const canvas = new SceneCanvas({ width: 1, height: 1 });
+    const error = new Error('tainted canvas');
+    canvas._canvas.toDataURL = () => {
+      throw error;
+    };
+    try {
+      assert.throws(() => canvas.toDataURL('image/png', 1), 'tainted canvas');
+    } finally {
+      Konva.Util.releaseCanvas(canvas._canvas);
+    }
+  });
+});
+
+describe('Canvas smoothing', function () {
+  it('resizing and changing pixel ratio preserve layer smoothing', function () {
+    const stage = addStage(),
+      layer = new Konva.Layer({ imageSmoothingEnabled: false });
+    stage.add(layer);
+    layer.getCanvas().setPixelRatio(2);
+    assert.isFalse(layer.getContext().imageSmoothingEnabled);
+    layer.getCanvas().setSize(100, 100);
+    assert.isFalse(layer.getContext().imageSmoothingEnabled);
+    assert.isFalse(layer.hitCanvas.getContext().imageSmoothingEnabled);
+  });
+});

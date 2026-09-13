@@ -485,7 +485,7 @@ describe('TouchEvents', function () {
     // Don't need to check event stack here, the pointers moved so no tap is fired
   });
 
-  it.skip('letting go of two fingers quickly should not fire dbltap', function () {
+  it('letting go of two fingers quickly should not fire dbltap', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);

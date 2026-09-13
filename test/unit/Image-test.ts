@@ -441,3 +441,50 @@ describe('Image', function () {
     });
   });
 });
+
+describe('Video image', function () {
+  it('video dimensions and loadeddata work without explicit dimensions', async function () {
+    // A media element is an external boundary; no video decoder is needed here.
+    class Video extends EventTarget {
+      width = 0;
+      height = 0;
+      videoWidth = 0;
+      videoHeight = 0;
+      readyState = 0;
+    }
+    const video = new Video();
+    const stage = addStage(),
+      layer = new Konva.Layer();
+    stage.add(layer);
+    const image = new Konva.Image({ image: video as any, visible: false });
+    layer.add(image);
+    const previous = Konva.autoDrawEnabled;
+    Konva.autoDrawEnabled = true;
+    const nextFrame = () =>
+      new Promise<void>((resolve) => Konva.Util.requestAnimFrame(resolve));
+    let draws = 0;
+    try {
+      await nextFrame();
+      layer.on('draw', () => {
+        draws++;
+      });
+      video.videoWidth = 320;
+      video.videoHeight = 180;
+      video.readyState = 2;
+      video.dispatchEvent(new Event('loadeddata'));
+      await nextFrame();
+      assert.equal(draws, 1);
+      assert.deepEqual(image.size(), { width: 320, height: 180 });
+      image.width(50);
+      assert.equal(image.width(), 50);
+      image.image(undefined);
+      await nextFrame();
+      const before = draws;
+      video.dispatchEvent(new Event('loadeddata'));
+      await nextFrame();
+      assert.equal(draws, before);
+    } finally {
+      Konva.autoDrawEnabled = previous;
+    }
+  });
+});

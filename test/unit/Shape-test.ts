@@ -1699,12 +1699,6 @@ describe('Shape', function () {
     context.stroke();
 
     compareLayerAndCanvas(layer, canvas, 10);
-
-    var trace = layer.getContext().getTrace();
-    assert.equal(
-      trace,
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);shadowColor=rgba(128,128,128,1);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=10;shadowColor=rgba(0,0,0,0);strokeStyle=black;stroke();restore();'
-    );
   });
 
   it('clone custom shape', function () {

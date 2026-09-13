@@ -192,7 +192,7 @@ function smoothEdgeMask(mask, sw: number, sh: number) {
  */
 export const Mask: Filter = function (imageData) {
   // Detect pixels close to the background color
-  const threshold = this.threshold();
+  const threshold = this.attrs.threshold ?? 10;
   let mask = backgroundMask(imageData, threshold);
   if (mask) {
     // Erode
@@ -214,7 +214,7 @@ export const Mask: Filter = function (imageData) {
 Factory.addGetterSetter(
   Node,
   'threshold',
-  0,
+  0.5,
   getNumberValidator(),
   Factory.afterSetFilter
 );

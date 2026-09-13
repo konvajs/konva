@@ -315,9 +315,7 @@ export class Stage extends Container<Layer, StageConfig> {
     });
 
     const content = this.content;
-    if (content && Util._isInDocument(content)) {
-      this.container().removeChild(content);
-    }
+    content?.parentNode?.removeChild(content);
     const index = stages.indexOf(this);
     if (index > -1) {
       stages.splice(index, 1);
@@ -589,6 +587,7 @@ export class Stage extends Container<Layer, StageConfig> {
     }
     this.pointerPos = null;
     this._pointerPositions = [];
+    this._changedPointerPositions = [];
   }
   _pointerdown(evt: TouchEvent | MouseEvent | PointerEvent) {
     const events = getEventsMap(evt.type);
@@ -740,6 +739,8 @@ export class Stage extends Container<Layer, StageConfig> {
     const listenClick = Konva['_' + eventType + 'ListenClick'] && !wasDragged;
     const clickStartShape = this[eventType + 'ClickStartShape'];
     const clickEndShape = this[eventType + 'ClickEndShape'];
+    const inDblClickWindow = Konva['_' + eventType + 'InDblClickWindow'];
+    let clickWindowUpdated = false;
     const processedShapesIds = {};
     let skipPointerUpTrigger = false;
     this._changedPointerPositions.forEach((pos) => {
@@ -756,20 +757,25 @@ export class Stage extends Container<Layer, StageConfig> {
 
       const pointerId = pos.id;
       const event = { evt: evt, pointerId };
-
-      let fireDblClick = false;
-      if (Konva['_' + eventType + 'InDblClickWindow']) {
-        fireDblClick = true;
+      const clickTarget = shape && shape.isListening() ? shape : null;
+      const fireDblClick =
+        listenClick &&
+        inDblClickWindow &&
+        (clickEndShape || null) === clickTarget;
+      const canClick =
+        listenClick && (!clickTarget || clickStartShape === clickTarget);
+      // Several touches can share a release event. Update the window once,
+      // and only consume it for a second click on the same target.
+      if (canClick && !clickWindowUpdated) {
+        clickWindowUpdated = true;
         clearTimeout(this['_' + eventType + 'DblTimeout']);
-      } else if (!wasDragged) {
-        // don't set inDblClickWindow after dragging
-        Konva['_' + eventType + 'InDblClickWindow'] = true;
-        clearTimeout(this['_' + eventType + 'DblTimeout']);
+        Konva['_' + eventType + 'InDblClickWindow'] = !fireDblClick;
+        if (!fireDblClick) {
+          this['_' + eventType + 'DblTimeout'] = setTimeout(() => {
+            Konva['_' + eventType + 'InDblClickWindow'] = false;
+          }, Konva.dblClickWindow);
+        }
       }
-
-      this['_' + eventType + 'DblTimeout'] = setTimeout(function () {
-        Konva['_' + eventType + 'InDblClickWindow'] = false;
-      }, Konva.dblClickWindow);
 
       if (shape && shape.isListening()) {
         skipPointerUpTrigger = true;

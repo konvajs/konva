@@ -310,3 +310,56 @@ describe('Arc', function () {
     compareLayers(layer, layer2, 10);
   });
 });
+
+describe('Arc bounds', function () {
+  it('negative and multi-turn angles have the bounds of the rendered sweep', function () {
+    const arc = new Konva.Arc({ innerRadius: 20, outerRadius: 40, angle: -90 });
+    try {
+      assertAlmostDeepEqual(arc.getSelfRect(), {
+        x: -40,
+        y: -40,
+        width: 80,
+        height: 80,
+      });
+      arc.angle(450);
+      assertAlmostDeepEqual(arc.getSelfRect(), {
+        x: -40,
+        y: -40,
+        width: 80,
+        height: 80,
+      });
+      arc.clockwise(true);
+      arc.angle(-90);
+      assertAlmostDeepEqual(arc.getSelfRect(), {
+        x: 0,
+        y: -40,
+        width: 40,
+        height: 40,
+      });
+    } finally {
+      arc.destroy();
+    }
+  });
+
+  it('clockwise bounds respect radians mode', function () {
+    const previous = Konva.angleDeg;
+    Konva.angleDeg = false;
+    const arc = new Konva.Arc({
+      innerRadius: 20,
+      outerRadius: 40,
+      angle: -Math.PI / 2,
+      clockwise: true,
+    });
+    try {
+      assertAlmostDeepEqual(arc.getSelfRect(), {
+        x: 0,
+        y: -40,
+        width: 40,
+        height: 40,
+      });
+    } finally {
+      arc.destroy();
+      Konva.angleDeg = previous;
+    }
+  });
+});

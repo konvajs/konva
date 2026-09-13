@@ -6085,3 +6085,176 @@ describe('Transformer', function () {
     assert.equal(tr.borderEnabled(), false);
   });
 });
+
+describe('Transformer', function () {
+  function setup(config = {}) {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    stage.add(layer);
+    const rect = new Konva.Rect({
+      x: 60,
+      y: 60,
+      width: 100,
+      height: 80,
+      fill: 'red',
+    });
+    layer.add(rect);
+    const tr = new Konva.Transformer({ nodes: [rect], ...config });
+    layer.add(tr);
+    layer.draw();
+    return { stage, layer, rect, tr };
+  }
+
+  it('callbacks redraw changes on other layers', async function () {
+    const { stage, rect, tr } = setup();
+    const guides = new Konva.Layer();
+    stage.add(guides);
+    const guide = new Konva.Rect({ width: 10, height: 10, fill: 'blue' });
+    guides.add(guide);
+    const previous = Konva.autoDrawEnabled;
+    Konva.autoDrawEnabled = true;
+    const changeGuide = () => {
+      guide.x(30);
+    };
+    tr.boundBoxFunc((oldBox, newBox) => {
+      changeGuide();
+      return newBox;
+    });
+    rect.on('scaleXChange transform', changeGuide);
+    try {
+      await new Promise<void>((resolve) =>
+        Konva.Util.requestAnimFrame(resolve)
+      );
+      simulateMouseDown(tr, { x: 160, y: 140 });
+      simulateMouseMove(tr, { x: 180, y: 156 });
+      simulateMouseUp(tr);
+      await new Promise<void>((resolve) =>
+        Konva.Util.requestAnimFrame(resolve)
+      );
+      assert.deepEqual(
+        Array.from(guides.getContext().getImageData(35, 5, 1, 1).data),
+        [0, 0, 255, 255]
+      );
+    } finally {
+      Konva.autoDrawEnabled = previous;
+    }
+  });
+
+  it('a duplicate selection applies the transform once', function () {
+    const { rect, tr } = setup();
+    tr.nodes([rect, rect]);
+    simulateMouseDown(tr, { x: 160, y: 140 });
+    simulateMouseMove(tr, { x: 260, y: 220 });
+    simulateMouseUp(tr);
+    assertAlmostEqual(rect.scaleX(), 2);
+    assertAlmostEqual(rect.scaleY(), 2);
+    assert.deepEqual(tr.nodes(), [rect]);
+  });
+
+  it('rejecting a Transformer ancestor keeps other valid selections', function () {
+    const { layer, rect, tr } = setup();
+    tr.nodes([layer, rect]);
+    assert.deepEqual(tr.nodes(), [rect]);
+  });
+
+  it('a selected ancestor covers its selected descendants', function () {
+    const { layer, rect, tr } = setup();
+    const group = new Konva.Group();
+    layer.add(group);
+    group.add(rect);
+    tr.nodes([rect, group]);
+    simulateMouseDown(tr, { x: 160, y: 140 });
+    simulateMouseMove(tr, { x: 260, y: 220 });
+    simulateMouseUp(tr);
+    assert.deepEqual(rect.scale(), { x: 1, y: 1 });
+    assertAlmostEqual(group.scaleX(), 2);
+    assertAlmostEqual(group.scaleY(), 2);
+  });
+
+  it('rotation anchor padding points outward at every cardinal angle', function () {
+    const { tr } = setup({ padding: 10, rotateAnchorOffset: 30 });
+    for (const [angle, x, y] of [
+      [0, 50, -40],
+      [90, 140, 40],
+      [180, 50, 120],
+      [-90, -40, 40],
+    ]) {
+      tr.rotateAnchorAngle(angle);
+      const anchor = tr.findOne('.rotater')!;
+      assertAlmostEqual(anchor.x(), x);
+      assertAlmostEqual(anchor.y(), y);
+    }
+  });
+
+  it('rotation picks the nearest snap rather than the last snap', function () {
+    const { tr, rect } = setup({
+      rotationSnaps: [0, 15],
+      rotationSnapTolerance: 10,
+    });
+    const anchor = tr.findOne('.rotater')!;
+    const start = anchor.getAbsolutePosition();
+    const angle = Math.PI / 30;
+    simulateMouseDown(tr, start);
+    simulateMouseMove(tr, {
+      x: 110 + 90 * Math.sin(angle),
+      y: 100 - 90 * Math.cos(angle),
+    });
+    simulateMouseUp(tr);
+    assertAlmostEqual(rect.rotation(), 0);
+  });
+
+  it('ignored mouse buttons do not start a transform', function () {
+    const { tr, rect } = setup();
+    const previous = Konva.dragButtons;
+    Konva.dragButtons = [0];
+    let started = 0;
+    rect.on('transformstart', () => started++);
+    try {
+      simulateMouseDown(tr, { x: 160, y: 140, button: 2 });
+      simulateMouseUp(tr);
+      assert.equal(started, 0);
+    } finally {
+      Konva.dragButtons = previous;
+    }
+  });
+
+  it('whole-area hit testing works with the border disabled', function () {
+    const { stage, rect, tr } = setup({
+      borderEnabled: false,
+      shouldOverdrawWholeArea: true,
+    });
+    rect.fill(undefined);
+    stage.draw();
+    assert.strictEqual(
+      stage.getIntersection({ x: 110, y: 100 }),
+      tr.findOne('.back')
+    );
+  });
+
+  it('detach redraws the old anchors away', async function () {
+    const { stage, tr } = setup();
+    await new Promise<void>((resolve) => Konva.Util.requestAnimFrame(resolve));
+    const position = { x: 57, y: 57 };
+    assert.strictEqual(
+      stage.getIntersection(position),
+      tr.findOne('.top-left')
+    );
+    tr.detach();
+    await new Promise<void>((resolve) => Konva.Util.requestAnimFrame(resolve));
+    assert.isNull(stage.getIntersection(position));
+  });
+
+  it('anchor hover events keep the active transform cursor', function () {
+    if (isNode) return;
+    const { stage, tr } = setup();
+    const anchor = tr.findOne('.bottom-right')!;
+    anchor.fire('mouseenter');
+    const cursor = stage.content.style.cursor;
+    simulateMouseDown(tr, anchor.getAbsolutePosition());
+    anchor.fire('mouseout');
+    tr.findOne('.rotater')!.fire('mouseenter');
+    const activeCursor = stage.content.style.cursor;
+    simulateMouseUp(tr);
+    assert.equal(activeCursor, cursor);
+  });
+});

@@ -1,4 +1,4 @@
-import { Util } from './Util.ts';
+import { Transform, Util } from './Util.ts';
 import { Konva } from './Global.ts';
 import type { Canvas } from './Canvas.ts';
 import type { Shape } from './Shape.ts';
@@ -890,9 +890,28 @@ export class SceneContext extends Context {
     }
   }
   _strokeLinearGradient(shape) {
-    const start = shape.getStrokeLinearGradientStartPoint(),
-      end = shape.getStrokeLinearGradientEndPoint(),
-      colorStops = shape.getStrokeLinearGradientColorStops(),
+    let start = shape.getStrokeLinearGradientStartPoint(),
+      end = shape.getStrokeLinearGradientEndPoint();
+    if (!shape.getStrokeScaleEnabled()) {
+      const { a, b, c, d, e, f } = this._context.getTransform();
+      const transform = new Transform([a, b, c, d, e, f]);
+      const ratio = this.canvas.getPixelRatio();
+      const dx = end.x - start.x;
+      const dy = end.y - start.y;
+      // Gradient colors follow the inverse-transposed direction. Transforming
+      // the endpoints alone distorts them under skew or nonuniform scaling.
+      const nx = d * dx - b * dy;
+      const ny = a * dy - c * dx;
+      const lengthSquared = nx * nx + ny * ny;
+      const scale = lengthSquared
+        ? ((dx * dx + dy * dy) * (a * d - b * c)) / lengthSquared
+        : 0;
+      start = transform.point(start);
+      end = { x: start.x + nx * scale, y: start.y + ny * scale };
+      start = { x: start.x / ratio, y: start.y / ratio };
+      end = { x: end.x / ratio, y: end.y / ratio };
+    }
+    const colorStops = shape.getStrokeLinearGradientColorStops(),
       grd = this.createLinearGradient(start.x, start.y, end.x, end.y);
 
     if (colorStops) {
@@ -910,8 +929,6 @@ export class SceneContext extends Context {
 
     if (!strokeScaleEnabled) {
       this.save();
-      const pixelRatio = this.getCanvas().getPixelRatio();
-      this.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
     }
 
     this._applyLineCap(shape);
@@ -922,7 +939,9 @@ export class SceneContext extends Context {
 
     this.setAttr('lineWidth', shape.strokeWidth());
 
-    if (!shape.getShadowForStrokeEnabled()) {
+    const shadowColor = this.shadowColor;
+    const shadowForStrokeEnabled = shape.getShadowForStrokeEnabled();
+    if (!shadowForStrokeEnabled) {
       this.setAttr('shadowColor', 'rgba(0,0,0,0)');
     }
 
@@ -933,10 +952,21 @@ export class SceneContext extends Context {
       this.setAttr('strokeStyle', shape.stroke());
     }
 
-    shape._strokeFunc(this);
-
+    // Resolve the gradient in local coordinates before drawing an unscaled stroke.
     if (!strokeScaleEnabled) {
-      this.restore();
+      const pixelRatio = this.getCanvas().getPixelRatio();
+      this.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    }
+
+    try {
+      shape._strokeFunc(this);
+    } finally {
+      if (!shadowForStrokeEnabled) {
+        this.setAttr('shadowColor', shadowColor);
+      }
+      if (!strokeScaleEnabled) {
+        this.restore();
+      }
     }
   }
   _applyShadow(shape) {

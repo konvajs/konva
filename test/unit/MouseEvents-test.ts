@@ -2432,3 +2432,41 @@ describe('MouseEvents', function () {
     assert.equal(clicks, 1, 'clicks not triggered');
   });
 });
+
+describe('Click', function () {
+  it('four fast clicks produce two double-clicks', function () {
+    const stage = addStage();
+    let clicks = 0,
+      doubles = 0;
+    stage.on('click', () => clicks++);
+    stage.on('dblclick', () => doubles++);
+    for (let i = 0; i < 4; i++) {
+      simulateMouseDown(stage, { x: 250, y: 150 });
+      simulateMouseUp(stage, { x: 250, y: 150 });
+    }
+    assert.equal(clicks, 4);
+    assert.equal(doubles, 2);
+  });
+
+  it('a drag release on the stage does not produce a double-click', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    const rect = new Konva.Rect({
+      width: 40,
+      height: 40,
+      fill: 'red',
+      draggable: true,
+    });
+    stage.add(layer);
+    layer.add(rect);
+    layer.draw();
+    let doubles = 0;
+    stage.on('dblclick', () => doubles++);
+    simulateMouseDown(stage, { x: 200, y: 150 });
+    simulateMouseUp(stage, { x: 200, y: 150 });
+    simulateMouseDown(stage, { x: 10, y: 10 });
+    simulateMouseMove(stage, { x: 30, y: 30 });
+    simulateMouseUp(stage, { x: 200, y: 150 });
+    assert.equal(doubles, 0);
+  });
+});

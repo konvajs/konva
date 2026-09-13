@@ -471,3 +471,133 @@ describe('Filter', function () {
     });
   });
 });
+
+describe('Filter', function () {
+  function pixels(rgba: number[], width = 3, height = 3) {
+    const data = Konva.Util.createCanvasElement()
+      .getContext('2d')!
+      .createImageData(width, height);
+    for (let i = 0; i < data.data.length; i += 4) data.data.set(rgba, i);
+    return data;
+  }
+
+  it('Brightness defaults to identity and keeps an explicit zero', function () {
+    const rect = new Konva.Rect();
+    try {
+      const data = pixels([120, 80, 40, 255]);
+      Konva.Filters.Brightness.call(rect, data);
+      assert.deepEqual(Array.from(data.data.slice(0, 4)), [120, 80, 40, 255]);
+      rect.brightness(0);
+      Konva.Filters.Brightness.call(rect, data);
+      assert.deepEqual(Array.from(data.data.slice(0, 4)), [0, 0, 0, 255]);
+    } finally {
+      rect.destroy();
+    }
+  });
+
+  it('Threshold has its documented default even with Mask imported', function () {
+    const rect = new Konva.Rect();
+    try {
+      assert.equal(rect.threshold(), 0.5);
+      const data = pixels([40, 140, 200, 255]);
+      Konva.Filters.Threshold.call(rect, data);
+      assert.deepEqual(Array.from(data.data.slice(0, 4)), [0, 255, 255, 255]);
+    } finally {
+      rect.destroy();
+    }
+  });
+
+  it('Emboss processes borders and one-pixel images', function () {
+    const rect = new Konva.Rect();
+    try {
+      for (const [width, height] of [
+        [3, 3],
+        [1, 3],
+        [3, 1],
+        [1, 1],
+      ]) {
+        const data = pixels([200, 40, 80, 128], width, height);
+        Konva.Filters.Emboss.call(rect, data);
+        for (let i = 0; i < data.data.length; i += 4) {
+          assert.deepEqual(
+            Array.from(data.data.slice(i, i + 4)),
+            [128, 128, 128, 128]
+          );
+        }
+      }
+    } finally {
+      rect.destroy();
+    }
+  });
+
+  it('CSS fallback applies a chain without changing node attributes', function () {
+    const rect = new Konva.Rect({
+      width: 10,
+      height: 10,
+      fill: 'rgb(80,40,20)',
+      brightness: 0.6,
+    });
+    try {
+      let changes = 0;
+      rect.on('brightnessChange', () => changes++);
+      rect.filters([
+        'brightness(200%) invert(1)',
+        function () {
+          assert.equal(this.brightness(), 0.6);
+        },
+      ]);
+      rect.cache();
+      const canvas = rect.toCanvas({ x: 0, y: 0, width: 10, height: 10 });
+      assert.deepEqual(
+        Array.from(canvas.getContext('2d')!.getImageData(5, 5, 1, 1).data),
+        [95, 175, 215, 255]
+      );
+      assert.equal(rect.brightness(), 0.6);
+      assert.equal(changes, 0);
+    } finally {
+      rect.destroy();
+    }
+  });
+
+  it('CSS fallback honors zero and partial amounts', function () {
+    for (const [filter, expected] of [
+      ['grayscale(0) sepia(0) invert(0) contrast(100%)', [80, 40, 20, 255]],
+      ['invert(50%)', [128, 128, 128, 255]],
+    ] as const) {
+      const rect = new Konva.Rect({
+        width: 10,
+        height: 10,
+        fill: 'rgb(80,40,20)',
+        filters: [filter, function () {}],
+      });
+      try {
+        rect.cache();
+        const canvas = rect.toCanvas({ x: 0, y: 0, width: 10, height: 10 });
+        assert.deepEqual(
+          Array.from(canvas.getContext('2d')!.getImageData(5, 5, 1, 1).data),
+          Array.from(expected)
+        );
+      } finally {
+        rect.destroy();
+      }
+    }
+  });
+  it('partial sepia blends before clipping bright channels', function () {
+    const rect = new Konva.Rect({
+      width: 10,
+      height: 10,
+      fill: 'rgb(200,200,200)',
+      filters: ['sepia(50%)', function () {}],
+    });
+    try {
+      rect.cache();
+      const canvas = rect.toCanvas();
+      assert.deepEqual(
+        Array.from(canvas.getContext('2d')!.getImageData(5, 5, 1, 1).data),
+        [235, 220, 194, 255]
+      );
+    } finally {
+      rect.destroy();
+    }
+  });
+});

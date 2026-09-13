@@ -4119,3 +4119,116 @@ describe('Node', function () {
     assert.equal(rect.getAttr('stops')[0].offset, 0);
   });
 });
+
+describe('Serialization and export', function () {
+  it('toImage rejects an asynchronous image load failure', async function () {
+    const createImage = Konva.Util.createImageElement;
+    const rect = new Konva.Rect({ width: 10, height: 10, fill: 'red' });
+    let image: any;
+    Konva.Util.createImageElement = () => (image = {});
+    try {
+      const result = rect.toImage();
+      assert.isFunction(image.onerror);
+      image.onerror(new Error('image load failed'));
+      const error = await result.then(
+        () => null,
+        (error) => error
+      );
+      assert.instanceOf(error, Error);
+      assert.include(error.message, 'image load failed');
+    } finally {
+      Konva.Util.createImageElement = createImage;
+      rect.destroy();
+    }
+  });
+
+  it('function filters are omitted while CSS filters still round-trip', function () {
+    const rect = new Konva.Rect({ filters: [Konva.Filters.Blur, 'invert(1)'] });
+    const restored = Konva.Node.create(rect.toJSON());
+    try {
+      assert.deepEqual(restored.filters(), ['invert(1)']);
+      assert.deepEqual(rect.filters(), [Konva.Filters.Blur, 'invert(1)']);
+    } finally {
+      rect.destroy();
+      restored.destroy();
+    }
+  });
+
+  it('an unknown container class preserves its children', function () {
+    let restored;
+    try {
+      restored = Konva.Node.create({
+        className: 'UnregisteredGroup',
+        attrs: {},
+        children: [{ className: 'Rect', attrs: { width: 20 } }],
+      });
+      assert.equal(restored.getClassName(), 'Group');
+      assert.equal(restored.getChildren()[0].width(), 20);
+    } finally {
+      restored?.destroy();
+    }
+  });
+
+  it('image dimensions equal to the source size survive serialization', function () {
+    const source = Konva.Util.createCanvasElement();
+    source.width = 100;
+    source.height = 50;
+    const image = new Konva.Image({ image: source, width: 100, height: 50 });
+    const restored = Konva.Node.create(image.toJSON());
+    try {
+      assert.deepEqual(restored.size(), { width: 100, height: 50 });
+    } finally {
+      image.destroy();
+      restored.destroy();
+      Konva.Util.releaseCanvas(source);
+    }
+  });
+  it('explicit zero brightness survives a JSON round trip', function () {
+    const rect = new Konva.Rect({
+      width: 10,
+      height: 10,
+      fill: 'red',
+      brightness: 0,
+    });
+    const restored = Konva.Node.create(rect.toJSON());
+    try {
+      restored.filters([Konva.Filters.Brightness]);
+      restored.cache();
+      assert.deepEqual(
+        Array.from(
+          restored.toCanvas().getContext('2d')!.getImageData(5, 5, 1, 1).data
+        ),
+        [0, 0, 0, 255]
+      );
+    } finally {
+      rect.destroy();
+      restored.destroy();
+    }
+  });
+
+  it('an explicit Mask threshold survives a JSON round trip', function () {
+    const group = new Konva.Group({ threshold: 0.5 });
+    group.add(
+      new Konva.Rect({ width: 10, height: 10, fill: 'rgb(100,100,100)' })
+    );
+    group.add(
+      new Konva.Rect({ width: 1, height: 1, fill: 'rgb(102,100,100)' })
+    );
+    const restored = Konva.Node.create(group.toJSON());
+    try {
+      for (const node of [group, restored]) {
+        node.filters([Konva.Filters.Mask]);
+        node.cache({ x: 0, y: 0, width: 10, height: 10 });
+        assert.deepEqual(
+          Array.from(
+            node.toCanvas().getContext('2d')!.getImageData(5, 5, 1, 1).data
+          ),
+          [100, 100, 100, 255]
+        );
+      }
+    } finally {
+      group.destroy();
+      restored.destroy();
+    }
+  });
+});

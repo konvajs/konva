@@ -61,6 +61,7 @@ const ATTR_CHANGE_LIST = [
   'enabledAnchorsChange',
   'anchorSizeChange',
   'borderEnabledChange',
+  'shouldOverdrawWholeAreaChange',
   'borderStrokeChange',
   'borderStrokeWidthChange',
   'borderDashChange',
@@ -194,13 +195,15 @@ function rotateAroundCenter(shape: Box, deltaRad: number) {
 
 function getSnap(snaps: Array<number>, newRotationRad: number, tol: number) {
   let snapped = newRotationRad;
+  let nearest = tol;
   for (let i = 0; i < snaps.length; i++) {
     const angle = Konva.getAngle(snaps[i]);
 
     const absDiff = Math.abs(angle - newRotationRad) % (Math.PI * 2);
     const dif = Math.min(absDiff, Math.PI * 2 - absDiff);
 
-    if (dif < tol) {
+    if (dif < nearest) {
+      nearest = dif;
       snapped = angle;
     }
   }
@@ -354,15 +357,21 @@ export class Transformer extends Group {
       this.detach();
     }
 
-    const filteredNodes = nodes.filter((node) => {
+    const selected = new Set(nodes);
+    for (const node of selected) {
       // check if ancestor of the transformer
       if (node.isAncestorOf(this)) {
         Util.error(
           'Konva.Transformer cannot be an a child of the node you are trying to attach'
         );
-        return false;
+        selected.delete(node);
       }
-
+    }
+    const filteredNodes = Array.from(selected).filter((node) => {
+      // Transform a selected subtree once, through its selected ancestor.
+      for (let parent = node.getParent(); parent; parent = parent.getParent()) {
+        if (selected.has(parent)) return false;
+      }
       return true;
     });
 
@@ -489,6 +498,7 @@ export class Transformer extends Group {
     }
     this._nodes = [];
     this._resetTransformCache();
+    this.getLayer()?.batchDraw();
   }
   /**
    * bind events to the Transformer. You can use events: `transform`, `transformstart`, `transformend`, `dragstart`, `dragmove`, `dragend`
@@ -660,6 +670,7 @@ export class Transformer extends Group {
 
     // add hover styling
     anchor.on('mouseenter', () => {
+      if (this.isTransforming()) return;
       const rad = Konva.getAngle(this.rotation());
       const rotateCursor = this.rotateAnchorCursor();
       const cursor = getCursor(name, rad, rotateCursor);
@@ -668,9 +679,10 @@ export class Transformer extends Group {
       this._cursorChange = true;
     });
     anchor.on('mouseout', () => {
+      this._cursorChange = false;
+      if (this.isTransforming()) return;
       anchor.getStage()!.content &&
         (anchor.getStage()!.content.style.cursor = '');
-      this._cursorChange = false;
     });
     this.add(anchor);
   }
@@ -681,6 +693,7 @@ export class Transformer extends Group {
       height: 0,
       sceneFunc(ctx, shape) {
         const tr = shape.getParent() as Transformer;
+        if (!tr.borderEnabled()) return;
         const padding = tr.padding();
         const width = shape.width();
         const height = shape.height();
@@ -719,9 +732,8 @@ export class Transformer extends Group {
           const edgeY = cy + dirY * t;
 
           // End point with offset
-          const sign = Util._sign(height);
-          const endX = edgeX + dirX * rotateAnchorOffset * sign;
-          const endY = edgeY + dirY * rotateAnchorOffset * sign;
+          const endX = edgeX + dirX * (rotateAnchorOffset + padding);
+          const endY = edgeY + dirY * (rotateAnchorOffset + padding);
 
           ctx.moveTo(edgeX, edgeY);
           ctx.lineTo(endX, endY);
@@ -765,6 +777,8 @@ export class Transformer extends Group {
     });
   }
   _handleMouseDown(e) {
+    if (e.evt.button !== undefined && !Konva.dragButtons.includes(e.evt.button))
+      return;
     // do nothing if we already transforming
     // that is possible to trigger with multitouch
     if (this._transforming) {
@@ -848,10 +862,6 @@ export class Transformer extends Group {
       // Offset by rotateAnchorAngle so we measure rotation from the anchor's starting position
       const rotateAnchorAngleRad = Konva.getAngle(this.rotateAnchorAngle());
       let delta = Math.atan2(-y, x) + Math.PI / 2 - rotateAnchorAngleRad;
-
-      if (attrs.height < 0) {
-        delta -= Math.PI;
-      }
 
       const oldRotation = Konva.getAngle(this.rotation());
       const newRotation = oldRotation + delta;
@@ -1093,6 +1103,8 @@ export class Transformer extends Group {
   _removeEvents(e?) {
     if (this._transforming) {
       this._transforming = false;
+      const content = this.getStage()?.content;
+      if (content && !this._cursorChange) content.style.cursor = '';
       const win = this._transformWindow;
       this._transformWindow = null;
       if (win) {
@@ -1119,16 +1131,11 @@ export class Transformer extends Group {
     }
   }
   _fitNodesInto(newAttrs, evt?, anchorProjected = false) {
-    // Perf: suspend autoDraw for the whole method so per-attr _setAttr writes
-    // don't each trigger _requestDraw -> getLayer parent-chain walks.
-    // batchDraw per affected layer is issued at the end.
-    const prevAutoDraw = Konva.autoDrawEnabled;
-    Konva.autoDrawEnabled = false;
+    // Defer our own bounds updates while preserving drawing in user callbacks.
     this._fitting = true;
     try {
       return this._doFitNodesInto(newAttrs, evt, anchorProjected);
     } finally {
-      Konva.autoDrawEnabled = prevAutoDraw;
       this._fitting = false;
     }
   }
@@ -1506,18 +1513,16 @@ export class Transformer extends Group {
     const edgeX = cx + dirX * t;
     const edgeY = cy + dirY * t;
 
-    // Final position with offset (accounting for height sign and padding)
-    const sign = Util._sign(height);
     this._anchors['rotater'].setAttrs({
-      x: edgeX + dirX * rotateAnchorOffset * sign,
-      y: edgeY + dirY * rotateAnchorOffset * sign - padding * dirY,
+      x: edgeX + dirX * (rotateAnchorOffset + padding),
+      y: edgeY + dirY * (rotateAnchorOffset + padding),
       visible: this.rotateEnabled(),
     });
 
     this._back.setAttrs({
       width: width,
       height: height,
-      visible: this.borderEnabled(),
+      visible: this.borderEnabled() || this.shouldOverdrawWholeArea(),
       stroke: this.borderStroke(),
       strokeWidth: this.borderStrokeWidth(),
       dash: this.borderDash(),

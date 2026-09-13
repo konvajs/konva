@@ -287,7 +287,7 @@ describe('TransformerPerfInvariants', function () {
 
   // ---------- Group 4: _fitNodesInto invariants ----------
 
-  it('Konva.autoDrawEnabled is restored after _fitNodesInto, even on exception', function () {
+  it('Konva.autoDrawEnabled stays unchanged in callbacks, even on exception', function () {
     const stage = addStage();
     const layer = new Konva.Layer();
     stage.add(layer);
@@ -323,8 +323,8 @@ describe('TransformerPerfInvariants', function () {
     assert.isNotNull(caught, 'exception must propagate');
     assert.equal(
       observedDuring,
-      false,
-      'autoDraw must be suspended during _fitNodesInto'
+      true,
+      'user callbacks keep the caller draw setting'
     );
     assert.equal(
       Konva.autoDrawEnabled,

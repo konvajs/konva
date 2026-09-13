@@ -354,8 +354,8 @@ export abstract class Container<
       cachedCanvas = this._getCanvasCache(),
       cachedSceneCanvas = cachedCanvas && cachedCanvas.scene;
 
-    const caching = canvas && canvas.isCache;
-    if (!this.isVisible() && !caching) {
+    const caching = top === this;
+    if (!(top ? this._isVisible(top) : this.isVisible()) && !caching) {
       return this;
     }
 

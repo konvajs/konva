@@ -68,8 +68,8 @@ export class Arc extends Shape<ArcConfig> {
     const clockwise = this.clockwise();
 
     // canvas draws a full circle for any non-zero full-turn end angle regardless
-    // of direction, and nothing for angle 0. The 360 - angle flip below maps both
-    // onto the same value, so handle exact full turns before the trig formula.
+    // of direction, and nothing for angle 0. Keep exact turns distinct from
+    // the modulo-normalized partial sweep below.
     const rawAngle = Konva.getAngle(this.angle());
     if (rawAngle % (Math.PI * 2) === 0) {
       return rawAngle !== 0
@@ -82,7 +82,9 @@ export class Arc extends Shape<ArcConfig> {
         : { x: innerRadius, y: 0, width: outerRadius - innerRadius, height: 0 };
     }
 
-    const angle = Konva.getAngle(clockwise ? 360 - this.angle() : this.angle());
+    const turn = Math.PI * 2;
+    const sweep = clockwise ? -rawAngle : rawAngle;
+    const angle = sweep >= turn ? turn : ((sweep % turn) + turn) % turn;
 
     const boundLeftRatio = Math.cos(Math.min(angle, Math.PI));
     const boundRightRatio = 1;

@@ -43,60 +43,17 @@ export interface ArrowConfig extends LineConfig {
 export class Arrow extends Line<ArrowConfig> {
   _sceneFunc(ctx: Context) {
     super._sceneFunc(ctx);
-    const PI2 = Math.PI * 2;
     const points = this.points();
-
-    let tp = points;
-    const fromTension = this.tension() !== 0 && points.length > 4;
-    if (fromTension) {
-      tp = this.getTensionPoints();
-    }
-    const length = this.pointerLength();
-
     const n = points.length;
-
-    let dx, dy;
-    if (fromTension) {
-      const lp = [
-        tp[tp.length - 4],
-        tp[tp.length - 3],
-        tp[tp.length - 2],
-        tp[tp.length - 1],
-        points[n - 2],
-        points[n - 1],
-      ];
-      const lastLength = Path.calcLength(
-        tp[tp.length - 4],
-        tp[tp.length - 3],
-        'C',
-        lp
-      );
-      const previous = Path.getPointOnQuadraticBezier(
-        Math.min(1, 1 - length / lastLength),
-        lp[0],
-        lp[1],
-        lp[2],
-        lp[3],
-        lp[4],
-        lp[5]
-      );
-
-      dx = points[n - 2] - previous.x;
-      dy = points[n - 1] - previous.y;
-    } else {
-      dx = points[n - 2] - points[n - 4];
-      dy = points[n - 1] - points[n - 3];
-    }
-
-    const radians = (Math.atan2(dy, dx) + PI2) % PI2;
-
+    if (n < 4) return;
+    const length = this.pointerLength();
     const width = this.pointerWidth();
 
     if (this.pointerAtEnding()) {
       ctx.save();
       ctx.beginPath();
       ctx.translate(points[n - 2], points[n - 1]);
-      ctx.rotate(radians);
+      ctx.rotate(this._getPointerAngle(false));
       ctx.moveTo(0, 0);
       ctx.lineTo(-length, width / 2);
       ctx.lineTo(-length, -width / 2);
@@ -109,15 +66,7 @@ export class Arrow extends Line<ArrowConfig> {
       ctx.save();
       ctx.beginPath();
       ctx.translate(points[0], points[1]);
-      if (fromTension) {
-        dx = (tp[0] + tp[2]) / 2 - points[0];
-        dy = (tp[1] + tp[3]) / 2 - points[1];
-      } else {
-        dx = points[2] - points[0];
-        dy = points[3] - points[1];
-      }
-
-      ctx.rotate((Math.atan2(-dy, -dx) + PI2) % PI2);
+      ctx.rotate(this._getPointerAngle(true));
       ctx.moveTo(0, 0);
       ctx.lineTo(-length, width / 2);
       ctx.lineTo(-length, -width / 2);
@@ -125,6 +74,48 @@ export class Arrow extends Line<ArrowConfig> {
       ctx.restore();
       this.__fillStroke(ctx);
     }
+  }
+
+  _getPointerAngle(atBeginning: boolean) {
+    const points = this.points();
+    const n = points.length;
+    const fromTension = this.tension() !== 0 && n > 4;
+    let dx, dy;
+    if (atBeginning) {
+      const tp = fromTension ? this.getTensionPoints() : points;
+      dx = (fromTension ? (tp[0] + tp[2]) / 2 : points[2]) - points[0];
+      dy = (fromTension ? (tp[1] + tp[3]) / 2 : points[3]) - points[1];
+      dx = -dx;
+      dy = -dy;
+    } else if (fromTension) {
+      const tp = this.getTensionPoints();
+      const x = tp[tp.length - 4],
+        y = tp[tp.length - 3];
+      const controlX = tp[tp.length - 2],
+        controlY = tp[tp.length - 1];
+      const lastLength = Path.calcLength(x, y, 'Q', [
+        controlX,
+        controlY,
+        points[n - 2],
+        points[n - 1],
+      ]);
+      const previous = Path.getPointOnQuadraticBezier(
+        lastLength ? Math.max(0, 1 - this.pointerLength() / lastLength) : 0,
+        x,
+        y,
+        controlX,
+        controlY,
+        points[n - 2],
+        points[n - 1]
+      );
+      dx = points[n - 2] - previous.x;
+      dy = points[n - 1] - previous.y;
+    } else {
+      dx = points[n - 2] - points[n - 4];
+      dy = points[n - 1] - points[n - 3];
+    }
+    const turn = Math.PI * 2;
+    return (Math.atan2(dy, dx) + turn) % turn;
   }
 
   __fillStroke(ctx: Context) {
@@ -149,13 +140,29 @@ export class Arrow extends Line<ArrowConfig> {
 
   getSelfRect() {
     const lineRect = super.getSelfRect();
-    const offset = this.pointerWidth() / 2;
-    return {
-      x: lineRect.x,
-      y: lineRect.y - offset,
-      width: lineRect.width,
-      height: lineRect.height + offset * 2,
-    };
+    const points = this.points();
+    if (points.length < 4) return lineRect;
+    let minX = lineRect.x,
+      minY = lineRect.y;
+    let maxX = minX + lineRect.width,
+      maxY = minY + lineRect.height;
+    for (const beginning of [false, true]) {
+      if (!(beginning ? this.pointerAtBeginning() : this.pointerAtEnding()))
+        continue;
+      const index = beginning ? 0 : points.length - 2;
+      const angle = this._getPointerAngle(beginning);
+      const cos = Math.cos(angle),
+        sin = Math.sin(angle);
+      const x = points[index] - this.pointerLength() * cos;
+      const y = points[index + 1] - this.pointerLength() * sin;
+      const dx = Math.abs((this.pointerWidth() * sin) / 2);
+      const dy = Math.abs((this.pointerWidth() * cos) / 2);
+      minX = Math.min(minX, x - dx);
+      minY = Math.min(minY, y - dy);
+      maxX = Math.max(maxX, x + dx);
+      maxY = Math.max(maxY, y + dy);
+    }
+    return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
   }
 
   pointerLength: GetSet<number, this>;
@@ -165,6 +172,13 @@ export class Arrow extends Line<ArrowConfig> {
 }
 
 Arrow.prototype.className = 'Arrow';
+Arrow.prototype._attrsAffectingSize = [
+  ...Line.prototype._attrsAffectingSize,
+  'pointerLength',
+  'pointerWidth',
+  'pointerAtBeginning',
+  'pointerAtEnding',
+];
 _registerNode(Arrow);
 
 /**

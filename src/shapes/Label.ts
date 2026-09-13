@@ -12,18 +12,13 @@ import {
 import { _registerNode } from '../Global.ts';
 
 import type { GetSet } from '../types.ts';
-import type { Text } from './Text.ts';
+import { Text } from './Text.ts';
 
 export interface LabelConfig extends ContainerConfig {}
 
 // constants
 const ATTR_CHANGE_LIST = [
-    'fontFamily',
-    'fontSize',
-    'fontStyle',
-    'padding',
-    'lineHeight',
-    'text',
+    ...Text.prototype._attrsAffectingSize,
     'width',
     'height',
     'pointerDirection',

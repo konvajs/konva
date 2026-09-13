@@ -594,7 +594,6 @@ export class Text extends Shape<TextConfig> {
   _setTextData() {
     let lines = this.text().split('\n'),
       fontSize = +this.fontSize(),
-      textWidth = 0,
       lineHeightPx = this.lineHeight() * fontSize,
       width = this.attrs.width,
       height = this.attrs.height,
@@ -640,14 +639,11 @@ export class Text extends Shape<TextConfig> {
             currentHeightPx + lineHeightPx > maxHeightPx
               ? additionalWidth
               : 0;
-          // width of the longest fitting prefix found so far
-          let matchWidth = 0;
           const fits = (end: number) => {
             const width = this._getTextWidth(text(end), end - start);
             if (width + extraWidth > maxWidth) {
               return false;
             }
-            matchWidth = width;
             return true;
           };
           /*
@@ -682,7 +678,13 @@ export class Text extends Shape<TextConfig> {
             // without the ellipsis check, like a paragraph that never wrapped
             this._addTextLine(text(length));
             currentHeightPx += lineHeightPx;
-            textWidth = Math.max(textWidth, matchWidth);
+            if (
+              fixedHeight &&
+              currentHeightPx + lineHeightPx > maxHeightPx &&
+              i < max - 1
+            ) {
+              this._tryToAddEllipsisToLastLine();
+            }
             break;
           }
           if (wrapAtWord && !isBreak(graphemes[low])) {
@@ -693,11 +695,9 @@ export class Text extends Shape<TextConfig> {
             }
             if (wrapIndex >= start) {
               low = wrapIndex + 1;
-              matchWidth = this._getTextWidth(text(low), low - start);
             }
           }
           this._addTextLine(text(low).trimRight());
-          textWidth = Math.max(textWidth, matchWidth);
           currentHeightPx += lineHeightPx;
 
           if (this._shouldHandleEllipsis(currentHeightPx)) {
@@ -718,8 +718,11 @@ export class Text extends Shape<TextConfig> {
         // element width is automatically adjusted to max line width
         this._addTextLine(line);
         currentHeightPx += lineHeightPx;
-        textWidth = Math.max(textWidth, lineWidth);
-        if (this._shouldHandleEllipsis(currentHeightPx) && i < max - 1) {
+        if (
+          fixedHeight &&
+          currentHeightPx + lineHeightPx > maxHeightPx &&
+          i < max - 1
+        ) {
           this._tryToAddEllipsisToLastLine();
         }
       }
@@ -732,11 +735,10 @@ export class Text extends Shape<TextConfig> {
       }
     }
     this.textHeight = fontSize;
-    // var maxTextWidth = 0;
-    // for(var j = 0; j < this.textArr.length; j++) {
-    //     maxTextWidth = Math.max(maxTextWidth, this.textArr[j].width);
-    // }
-    this.textWidth = textWidth;
+    this.textWidth = this.textArr.reduce(
+      (width, line) => Math.max(width, line.width),
+      0
+    );
   }
 
   /**
@@ -774,15 +776,17 @@ export class Text extends Shape<TextConfig> {
       return;
     }
 
+    let text = lastLine.text + ELLIPSIS;
     if (fixedWidth) {
-      const haveSpace = this._getTextWidth(lastLine.text + ELLIPSIS) < maxWidth;
-      if (!haveSpace) {
-        lastLine.text = lastLine.text.slice(0, lastLine.text.length - 3);
+      const graphemes = stringToArray(lastLine.text);
+      while (graphemes.length && this._getTextWidth(text) > maxWidth) {
+        graphemes.pop();
+        text = graphemes.join('') + ELLIPSIS;
       }
+      if (this._getTextWidth(text) > maxWidth) text = '';
     }
-
-    this.textArr.splice(this.textArr.length - 1, 1);
-    this._addTextLine(lastLine.text + ELLIPSIS);
+    lastLine.text = text;
+    lastLine.width = this._getTextWidth(text);
   }
 
   // for text we can't disable stroke scaling
@@ -792,6 +796,7 @@ export class Text extends Shape<TextConfig> {
   }
 
   _useBufferCanvas() {
+    if (this.attrs.perfectDrawEnabled === false) return false;
     const hasLine =
       this.textDecoration().indexOf('underline') !== -1 ||
       this.textDecoration().indexOf('line-through') !== -1;
@@ -829,14 +834,9 @@ export class Text extends Shape<TextConfig> {
 Text.prototype._fillFunc = _fillFunc;
 Text.prototype._strokeFunc = _strokeFunc;
 Text.prototype.className = TEXT_UPPER;
-Text.prototype._attrsAffectingSize = [
-  'text',
-  'fontSize',
-  'padding',
-  'wrap',
-  'lineHeight',
-  'letterSpacing',
-];
+Text.prototype._attrsAffectingSize = ATTR_CHANGE_LIST.filter(
+  (attr) => attr !== 'width' && attr !== 'height'
+);
 _registerNode(Text);
 
 // update text data for certain attr changes

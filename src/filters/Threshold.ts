@@ -35,7 +35,7 @@ Factory.addGetterSetter(
   Factory.afterSetFilter
 );
 /**
- * get/set threshold. With {@link Konva.Filters.Threshold} it is a value between 0 and 1. With {@link Konva.Filters.Mask} it is the colour distance to the background, 0 to 255, default 10.
+ * get/set threshold. With {@link Konva.Filters.Threshold} it is a value between 0 and 1, default 0.5. With {@link Konva.Filters.Mask} it is the colour distance to the background, 0 to 255, default 10.
  * @name threshold
  * @method
  * @memberof Konva.Node.prototype

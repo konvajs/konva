@@ -128,6 +128,8 @@ export class Canvas {
     width = width || 0;
     height = height || 0;
     const pixelRatio = this.pixelRatio;
+    const context = this.getContext()._context;
+    const imageSmoothingEnabled = context.imageSmoothingEnabled;
     this._logicalWidth = width;
     this._logicalHeight = height;
     // take into account pixel ratio. Assigning a dimension reallocates the
@@ -136,7 +138,8 @@ export class Canvas {
     this.height = this._canvas.height = this._bitmapSize(height);
     this._canvas.style.width = width + 'px';
     this._canvas.style.height = height + 'px';
-    this.getContext()._context.scale(pixelRatio, pixelRatio);
+    context.scale(pixelRatio, pixelRatio);
+    context.imageSmoothingEnabled = imageSmoothingEnabled;
   }
   // setSize() re-allocates and clears the canvas even for the same size,
   // so lazily sized canvases use this to stay untouched when nothing changed
@@ -158,8 +161,7 @@ export class Canvas {
    */
   toDataURL(mimeType, quality) {
     try {
-      // If this call fails (due to browser bug, like in Firefox 3.6),
-      // then revert to previous no-parameter image/png behavior
+      // If the requested encoding fails, retry with the default PNG encoding.
       return this._canvas.toDataURL(mimeType, quality);
     } catch (e) {
       try {
@@ -170,7 +172,7 @@ export class Canvas {
             err.message +
             ' For more info read https://konvajs.org/docs/posts/Tainted_Canvas.html.'
         );
-        return '';
+        throw err;
       }
     }
   }
@@ -194,6 +196,7 @@ export class HitCanvas extends Canvas {
     super(config);
 
     this.context = new HitContext(this);
+    this.context.imageSmoothingEnabled = false;
     this.setSize(config.width, config.height);
   }
 }

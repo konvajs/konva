@@ -2,6 +2,7 @@ import { assert } from 'chai';
 import {
   addStage,
   Konva,
+  isNode,
   simulateMouseDown,
   simulateMouseMove,
   simulateMouseUp,
@@ -1631,5 +1632,97 @@ describe('DragAndDrop', function () {
     circle.off('dragend');
     simulateMouseUp(stage, { x: 150, y: 150 });
     assert.equal(circle.isDragging(), false);
+  });
+});
+
+describe('Drag ownership', function () {
+  it('the active drag controls whether native touch movement is prevented', function () {
+    for (const preventDefault of [true, false]) {
+      const stage = addStage(),
+        layer = new Konva.Layer();
+      stage.add(layer);
+      const active = new Konva.Rect({
+        width: 40,
+        height: 40,
+        fill: 'red',
+        draggable: true,
+        preventDefault,
+      });
+      const ready = active.clone({ x: 100, preventDefault: !preventDefault });
+      layer.add(active, ready);
+      layer.draw();
+      const first = { id: 1, x: 10, y: 10 },
+        second = { id: 2, x: 110, y: 10 };
+      simulateTouchStart(stage, [first], [first]);
+      active.startDrag();
+      simulateTouchStart(stage, [first, second], [second]);
+      const top = isNode ? 0 : stage.content.getBoundingClientRect().top;
+      const event = Object.assign(
+        new Event('touchmove', { cancelable: true }),
+        {
+          touches: [
+            { identifier: 1, clientX: 20, clientY: 10 + top },
+            { identifier: 2, clientX: 110, clientY: 10 + top },
+          ],
+          changedTouches: [{ identifier: 1, clientX: 20, clientY: 10 + top }],
+        }
+      );
+      if (isNode) stage._pointermove(event);
+      else stage.content.dispatchEvent(event);
+      assert.equal(event.defaultPrevented, preventDefault);
+      simulateTouchEnd(stage, [], [first, second]);
+      stage.destroy();
+    }
+  });
+
+  it('a second touch does not replace a ready drag pointer', function () {
+    const stage = addStage(),
+      layer = new Konva.Layer();
+    stage.add(layer);
+    const rect = new Konva.Rect({
+      width: 50,
+      height: 50,
+      fill: 'red',
+      draggable: true,
+    });
+    layer.add(rect);
+    layer.draw();
+    const first = { id: 1, x: 10, y: 10 },
+      second = { id: 2, x: 30, y: 30 };
+    simulateTouchStart(stage, [first], [first]);
+    simulateTouchStart(stage, [first, second], [second]);
+    simulateTouchMove(
+      stage,
+      [{ ...first, x: 20 }, second],
+      [{ ...first, x: 20 }]
+    );
+    assert.equal(rect.x(), 10);
+    simulateTouchEnd(stage, [], [{ ...first, x: 20 }, second]);
+  });
+
+  it('startDrag without an event keeps the pointer used for its offset', function () {
+    const stage = addStage(),
+      layer = new Konva.Layer();
+    stage.add(layer);
+    const rect = new Konva.Rect({ width: 50, height: 50, fill: 'red' });
+    layer.add(rect);
+    layer.draw();
+    const first = { id: 1, x: 10, y: 10 },
+      second = { id: 2, x: 100, y: 100 };
+    simulateTouchStart(stage, [first, second], [first, second]);
+    rect.startDrag();
+    simulateTouchMove(
+      stage,
+      [first, { ...second, x: 110 }],
+      [{ ...second, x: 110 }]
+    );
+    assert.equal(rect.x(), 0);
+    simulateTouchMove(
+      stage,
+      [{ ...first, x: 20 }, second],
+      [{ ...first, x: 20 }]
+    );
+    assert.equal(rect.x(), 10);
+    simulateTouchEnd(stage, [], [{ ...first, x: 20 }, second]);
   });
 });

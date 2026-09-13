@@ -621,11 +621,20 @@ export const Util = {
   /*
    * arg can be an image object or image data
    */
-  _urlToImage(url: string, callback: Function) {
+  _urlToImage(
+    url: string,
+    callback: Function,
+    onError?: (error: Error) => void
+  ) {
     // if arg is a string, then it's a data url
     const imageObj = Util.createImageElement();
     imageObj.onload = function () {
       callback(imageObj);
+    };
+    imageObj.onerror = (event) => {
+      onError?.(
+        event instanceof Error ? event : new Error('Unable to load image.')
+      );
     };
     imageObj.src = url;
   },

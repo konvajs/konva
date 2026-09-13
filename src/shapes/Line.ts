@@ -383,7 +383,7 @@ export class Line<
 }
 
 Line.prototype.className = 'Line';
-Line.prototype._attrsAffectingSize = ['points', 'bezier', 'tension'];
+Line.prototype._attrsAffectingSize = ['points', 'bezier', 'tension', 'closed'];
 _registerNode(Line);
 
 // add getters setters

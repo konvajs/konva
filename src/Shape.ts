@@ -472,7 +472,8 @@ export class Shape<
     }
     const hasFill = forceFill || this.hasFill();
     const hasStroke = this.hasStroke();
-    const isTransparent = this.getAbsoluteOpacity() !== 1;
+    const isTransparent =
+      !this._isUnderCache && this.getAbsoluteOpacity() !== 1;
 
     if (hasFill && hasStroke && isTransparent) {
       return true;
@@ -580,7 +581,7 @@ export class Shape<
 
     const cachingSelf = top === this;
 
-    if (!this.isVisible() && !cachingSelf) {
+    if (!(top ? this._isVisible(top) : this.isVisible()) && !cachingSelf) {
       return this;
     }
     // if node is cached we just need to draw from cache
