@@ -2641,6 +2641,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       },
       dragStatus: 'ready',
       pointerId: pointerId ?? ('id' in pos ? pos.id : undefined),
+      pointerEventType: evt?.evt?.type
+        ? Util._getEventType(evt.evt.type)
+        : stage._pointerEventType,
       startEvent: evt,
     });
   }
@@ -2661,6 +2664,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       return;
     }
     elem.dragStatus = 'dragging';
+    this.getStage()?._cancelClick(elem.pointerId, elem.pointerEventType);
     this.fire(
       'dragstart',
       {

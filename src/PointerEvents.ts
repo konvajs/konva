@@ -4,7 +4,7 @@ import { Konva } from './Global.ts';
 import type { Shape } from './Shape.ts';
 import type { Stage } from './Stage.ts';
 
-const Captures = new Map<number, Shape | Stage>();
+const Captures = new Map<number, { shape: Shape | Stage; stage: Stage }>();
 
 // we may use this module for capturing touch events too
 // so make sure we don't do something super specific to pointer
@@ -14,8 +14,11 @@ export interface KonvaPointerEvent extends KonvaEventObject<PointerEvent> {
   pointerId: number;
 }
 
-export function getCapturedShape(pointerId: number) {
-  return Captures.get(pointerId);
+export function getCapturedShape(pointerId: number, stage?: Stage) {
+  const capture = Captures.get(pointerId);
+  return capture && (!stage || capture.stage === stage)
+    ? capture.shape
+    : undefined;
 }
 
 export function createEvent(evt: PointerEvent): KonvaPointerEvent {
@@ -26,7 +29,7 @@ export function createEvent(evt: PointerEvent): KonvaPointerEvent {
 }
 
 export function hasPointerCapture(pointerId: number, shape: Shape | Stage) {
-  return Captures.get(pointerId) === shape;
+  return Captures.get(pointerId)?.shape === shape;
 }
 
 export function setPointerCapture(pointerId: number, shape: Shape | Stage) {
@@ -35,7 +38,8 @@ export function setPointerCapture(pointerId: number, shape: Shape | Stage) {
   const stage = shape.getStage();
   if (!stage) return;
 
-  Captures.set(pointerId, shape);
+  // Native capture belongs to this stage even if the shape is reparented.
+  Captures.set(pointerId, { shape, stage });
 
   if (SUPPORT_POINTER_EVENTS) {
     // capture on the DOM level too, so the stage keeps receiving the events
@@ -55,22 +59,22 @@ export function setPointerCapture(pointerId: number, shape: Shape | Stage) {
   }
 }
 
-// a destroyed node must not keep receiving the events of its pointer
+// Destroying either the captured node or its native stage ends capture.
 export function releaseCapturesOf(node: Node) {
-  Captures.forEach((shape, pointerId) => {
-    if (shape === node) {
+  Captures.forEach(({ shape, stage }, pointerId) => {
+    if (shape === node || stage === node) {
       releaseCapture(pointerId);
     }
   });
 }
 
 export function releaseCapture(pointerId: number, target?: Shape | Stage) {
-  const shape = Captures.get(pointerId);
+  const capture = Captures.get(pointerId);
 
   // a node can only release its own capture
-  if (!shape || (target && shape !== target)) return;
+  if (!capture || (target && capture.shape !== target)) return;
 
-  const stage = shape.getStage();
+  const { shape, stage } = capture;
 
   Captures.delete(pointerId);
 

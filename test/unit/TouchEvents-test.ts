@@ -2,6 +2,7 @@ import { assert } from 'chai';
 
 import {
   addStage,
+  isNode,
   Konva,
   simulateTouchStart,
   simulateTouchEnd,
@@ -9,6 +10,222 @@ import {
 } from './test-utils.ts';
 
 describe('TouchEvents', function () {
+  for (const cancel of [false, true]) {
+    it(`${cancel ? 'cancelling' : 'releasing'} an old touch does not send hover exits into a new stage`, function () {
+      const first = addStage();
+      const second = addStage();
+      const firstLayer = new Konva.Layer();
+      const secondLayer = new Konva.Layer();
+      first.add(firstLayer);
+      second.add(secondLayer);
+      const rect = new Konva.Rect({ width: 100, height: 100, fill: 'red' });
+      firstLayer.add(rect);
+      first.draw();
+      const point = { x: 20, y: 20, id: 1 };
+      simulateTouchStart(first, [point]);
+      simulateTouchMove(first, [point]);
+      rect.moveTo(secondLayer);
+      first.draw();
+      second.draw();
+      const exits: string[] = [];
+      second.on('touchout touchleave', (e) => exits.push(e.type));
+      rect.on('touchout touchleave', (e) => exits.push(e.type));
+      if (cancel) {
+        first._pointercancel({
+          type: 'touchcancel',
+          touches: [],
+          changedTouches: [
+            {
+              identifier: 1,
+              clientX: 20,
+              clientY:
+                20 + (isNode ? 0 : first.content.getBoundingClientRect().top),
+            },
+          ],
+        } as any);
+      } else {
+        simulateTouchEnd(first, [], [point]);
+      }
+      assert.deepEqual(exits, []);
+    });
+  }
+
+  for (const cancel of [false, true]) {
+    it(`${cancel ? 'cancelling' : 'releasing'} a touch ends only its own hover`, function () {
+      const stage = addStage();
+      const layer = new Konva.Layer();
+      const rect = new Konva.Rect({ width: 100, height: 100, fill: 'red' });
+      stage.add(layer);
+      layer.add(rect);
+      layer.draw();
+      const calls: string[] = [];
+      rect.on('touchenter touchout touchleave', (e) =>
+        calls.push(`${e.type}:${e.pointerId}`)
+      );
+      const first = { x: 20, y: 20, id: 1 };
+      const second = { x: 40, y: 40, id: 2 };
+      simulateTouchStart(stage, [first, second]);
+      simulateTouchMove(stage, [first, second]);
+      if (cancel) {
+        const top = isNode ? 0 : stage.content.getBoundingClientRect().top;
+        const touch = (pos) => ({
+          identifier: pos.id,
+          clientX: pos.x,
+          clientY: pos.y + top,
+        });
+        stage._pointercancel({
+          type: 'touchcancel',
+          touches: [touch(second)],
+          changedTouches: [touch(first)],
+        } as any);
+      } else {
+        simulateTouchEnd(stage, [second], [first]);
+      }
+      assert.deepEqual(calls, [
+        'touchenter:1',
+        'touchenter:2',
+        'touchout:1',
+        'touchleave:1',
+      ]);
+      simulateTouchMove(stage, [second]);
+      simulateTouchEnd(stage, [], [second]);
+      assert.deepEqual(calls, [
+        'touchenter:1',
+        'touchenter:2',
+        'touchout:1',
+        'touchleave:1',
+        'touchout:2',
+        'touchleave:2',
+      ]);
+    });
+  }
+
+  it('shared movement pairs hover entry and exit for each touch', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    const rect = new Konva.Rect({ width: 100, height: 100, fill: 'red' });
+    stage.add(layer);
+    layer.add(rect);
+    layer.draw();
+    const calls: string[] = [];
+    let moves = 0;
+    rect.on('touchenter touchleave', (e) =>
+      calls.push(`${e.type}:${e.pointerId}`)
+    );
+    rect.on('touchmove', () => moves++);
+    const touches = [
+      { x: 20, y: 20, id: 1 },
+      { x: 40, y: 40, id: 2 },
+    ];
+    simulateTouchStart(stage, touches);
+    simulateTouchMove(stage, touches);
+    const outside = touches.map((touch) => ({ ...touch, x: 150 }));
+    simulateTouchMove(stage, outside);
+    simulateTouchEnd(stage, [], outside);
+    assert.deepEqual(calls, [
+      'touchenter:1',
+      'touchenter:2',
+      'touchleave:1',
+      'touchleave:2',
+    ]);
+    assert.equal(moves, 1);
+  });
+
+  for (const draggedFirst of [true, false]) {
+    it(`a shared release keeps the other touch's tap when the dragged touch is ${draggedFirst ? 'first' : 'last'}`, function () {
+      const stage = addStage();
+      const layer = new Konva.Layer();
+      const rect = new Konva.Rect({
+        width: 200,
+        height: 40,
+        fill: 'red',
+        draggable: true,
+      });
+      stage.add(layer);
+      layer.add(rect);
+      layer.draw();
+      const taps: number[] = [];
+      let ends = 0;
+      rect.on('tap', (e) => taps.push(e.pointerId));
+      rect.on('touchend', () => ends++);
+      const first = { x: 20, y: 20, id: 1 };
+      const second = { x: 100, y: 20, id: 2 };
+      simulateTouchStart(stage, [first], [first]);
+      simulateTouchStart(stage, [first, second], [second]);
+      const moved = { ...first, x: 30 };
+      simulateTouchMove(stage, [moved, second], [moved]);
+      simulateTouchEnd(
+        stage,
+        [],
+        draggedFirst ? [moved, second] : [second, moved]
+      );
+      assert.deepEqual(taps, [2]);
+      assert.equal(ends, 1);
+    });
+  }
+
+  for (const separateStages of [false, true]) {
+    it(`a drag does not cancel another touch's tap with separateStages=${separateStages}`, function () {
+      const firstStage = addStage();
+      const secondStage = separateStages ? addStage() : firstStage;
+      const firstLayer = new Konva.Layer();
+      const secondLayer = separateStages ? new Konva.Layer() : firstLayer;
+      firstStage.add(firstLayer);
+      if (separateStages) secondStage.add(secondLayer);
+      const dragged = new Konva.Rect({
+        width: 40,
+        height: 40,
+        fill: 'red',
+        draggable: true,
+      });
+      const tapped = new Konva.Rect({
+        x: 100,
+        width: 40,
+        height: 40,
+        fill: 'blue',
+      });
+      firstLayer.add(dragged);
+      secondLayer.add(tapped);
+      firstStage.draw();
+      secondStage.draw();
+      const taps: string[] = [];
+      dragged.on('tap', () => taps.push('dragged'));
+      tapped.on('tap', () => taps.push('tapped'));
+      const a = { x: 20, y: 20, id: 1 };
+      const moved = { ...a, x: 40 };
+      const b = { x: 120, y: 20, id: 2 };
+      simulateTouchStart(firstStage, [a], [a]);
+      simulateTouchMove(firstStage, [moved], [moved]);
+      simulateTouchStart(secondStage, separateStages ? [b] : [moved, b], [b]);
+      simulateTouchEnd(firstStage, separateStages ? [] : [b], [moved]);
+      simulateTouchEnd(secondStage, [], [b]);
+      assert.deepEqual(taps, ['tapped']);
+    });
+  }
+  it('interleaved touches keep their own tap targets', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    stage.add(layer);
+    const first = new Konva.Rect({ width: 40, height: 40, fill: 'red' });
+    const second = new Konva.Rect({
+      x: 60,
+      width: 40,
+      height: 40,
+      fill: 'blue',
+    });
+    layer.add(first, second);
+    layer.draw();
+    const taps: string[] = [];
+    first.on('tap', (e) => taps.push(`first:${e.pointerId}`));
+    second.on('tap', (e) => taps.push(`second:${e.pointerId}`));
+    const a = { x: 20, y: 20, id: 1 };
+    const b = { x: 80, y: 20, id: 2 };
+    simulateTouchStart(stage, [a], [a]);
+    simulateTouchStart(stage, [a, b], [b]);
+    simulateTouchEnd(stage, [b], [a]);
+    simulateTouchEnd(stage, [], [b]);
+    assert.deepEqual(taps, ['first:1', 'second:2']);
+  });
   // ======================================================
   it('touchstart touchend touchmove tap dbltap', function (done) {
     var stage = addStage();
@@ -61,9 +278,6 @@ describe('TouchEvents', function () {
 
     layer.add(circle);
     stage.add(layer);
-
-    // reset inDoubleClickWindow
-    Konva._touchInDblClickWindow = false;
 
     // touchstart circle
     simulateTouchStart(stage, [{ x: 289, y: 100, id: 0 }]);
@@ -460,11 +674,11 @@ describe('TouchEvents', function () {
     );
     assert.equal(touchEnd, 1);
     assert.equal(stageTouchEnd, 1);
-    assert.equal(stageTap, 1, 'one tap should be fired');
+    assert.equal(stageTap, 2, 'each completed touch fires its own tap');
 
     assert.equal(
       stageEventStack.join(' '),
-      'touchstart touchstart touchstart touchend tap',
+      'touchstart touchstart touchstart touchend tap tap',
       'should fire tap after touchend'
     );
 
@@ -481,7 +695,7 @@ describe('TouchEvents', function () {
     assert.equal(touchEnd, 2);
     assert.equal(touchEnd2, 1);
     assert.equal(stageTouchEnd, 3);
-    assert.equal(stageTap, 1, 'still one tap should be fired');
+    assert.equal(stageTap, 2, 'repeated touchend does not create another tap');
     // Don't need to check event stack here, the pointers moved so no tap is fired
   });
 

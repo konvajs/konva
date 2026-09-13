@@ -7,9 +7,469 @@ import {
   simulatePointerDown,
   simulatePointerMove,
   simulatePointerUp,
+  simulateTouchStart,
+  simulateTouchMove,
+  simulateTouchEnd,
+  simulateMouseMove,
+  simulateMouseUp,
+  simulateMouseDown,
 } from './test-utils.ts';
 
 describe('PointerEvents', function () {
+  it('dragging with two held mouse buttons cancels the original native pointer click', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    const rect = new Konva.Rect({
+      width: 100,
+      height: 100,
+      fill: 'red',
+      draggable: true,
+    });
+    stage.add(layer);
+    layer.add(rect);
+    layer.draw();
+    const clicks: string[] = [];
+    stage.on('click pointerclick', (e) => clicks.push(e.type));
+    simulateMouseDown(stage, { x: 20, y: 20 });
+    const secondButton = {
+      clientX: 20,
+      clientY: 20 + (isNode ? 0 : stage.content.getBoundingClientRect().top),
+      button: 2,
+      buttons: 3,
+    };
+    simulatePointerMove(stage, { x: 20, y: 20 });
+    stage._pointerdown({ ...secondButton, type: 'mousedown' } as MouseEvent);
+    simulateMouseMove(stage, { x: 30, y: 20 });
+    const release = {
+      ...secondButton,
+      clientX: 30,
+      type: 'mouseup',
+      buttons: 1,
+    };
+    simulatePointerMove(stage, { x: 30, y: 20 });
+    Konva.DD._endDragBefore(release);
+    stage._pointerup(release);
+    Konva.DD._endDragAfter(release);
+    simulateMouseUp(stage, { x: 30, y: 20 });
+    assert.deepEqual(clicks, []);
+  });
+
+  for (const { move, hover } of [
+    { move: false, hover: false },
+    { move: true, hover: false },
+    { move: false, hover: true },
+  ]) {
+    it(`a programmatic drag cancels clicks ${move ? 'with' : 'without'} movement${hover ? ' after hovering' : ''}`, function () {
+      const stage = addStage();
+      const layer = new Konva.Layer();
+      const rect = new Konva.Rect({ width: 40, height: 40, fill: 'red' });
+      stage.add(layer);
+      layer.add(rect);
+      layer.draw();
+      const clicks: string[] = [];
+      stage.on('click pointerclick', (e) => clicks.push(e.type));
+      if (hover) simulateMouseMove(stage, { x: 20, y: 20 });
+      rect.startDrag();
+      simulateMouseDown(stage, { x: 20, y: 20 });
+      if (move) simulateMouseMove(stage, { x: 30, y: 20 });
+      simulateMouseUp(stage, { x: move ? 30 : 20, y: 20 });
+      assert.deepEqual(
+        rect.position(),
+        move ? { x: 30, y: 20 } : { x: 0, y: 0 }
+      );
+      assert.deepEqual(clicks, []);
+    });
+  }
+
+  for (const hover of ['none', 'mouse', 'pointer']) {
+    it(`a programmatic drag cancels a native click without compatibility mouse events after ${hover} hover`, function () {
+      const stage = addStage();
+      const layer = new Konva.Layer();
+      const rect = new Konva.Rect({ width: 40, height: 40, fill: 'red' });
+      stage.add(layer);
+      layer.add(rect);
+      layer.draw();
+      const clicks: string[] = [];
+      stage.on('pointerclick', (e) => clicks.push(e.type));
+      if (hover === 'mouse') simulateMouseMove(stage, { x: 20, y: 20 });
+      if (hover === 'pointer') simulatePointerMove(stage, { x: 20, y: 20 });
+      rect.startDrag();
+      simulatePointerDown(stage, { x: 20, y: 20 });
+      simulatePointerUp(stage, { x: 20, y: 20 });
+      assert.isTrue(rect.isDragging());
+      rect.stopDrag();
+      assert.deepEqual(clicks, []);
+    });
+  }
+
+  it('delivers deferred hover exits after a drag leaves and reenters the stage', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    const rect = new Konva.Rect({
+      width: 40,
+      height: 40,
+      fill: 'red',
+      draggable: true,
+    });
+    stage.add(layer);
+    layer.add(rect);
+    layer.draw();
+    const calls: string[] = [];
+    rect.on(
+      'mouseenter mouseout mouseleave pointerenter pointerout pointerleave',
+      (e) => calls.push(e.type)
+    );
+    simulateMouseMove(stage, { x: 20, y: 20 });
+    simulateMouseDown(stage, { x: 20, y: 20 });
+    simulateMouseMove(stage, { x: 30, y: 20 });
+    simulateMouseMove(stage, { x: 600, y: 20 });
+    const outside = {
+      clientX: 600,
+      clientY: 20 + (isNode ? 0 : stage.content.getBoundingClientRect().top),
+    };
+    stage._pointerleave({ ...outside, type: 'pointerleave', pointerId: 1 });
+    stage._pointerleave({ ...outside, type: 'mouseleave' });
+    assert.deepEqual(calls, ['pointerenter', 'mouseenter']);
+    const release = { ...outside, type: 'mouseup' };
+    Konva.DD._endDragBefore(release);
+    Konva.DD._endDragAfter(release);
+    simulateMouseMove(stage, { x: 200, y: 20 });
+    assert.deepEqual(calls, [
+      'pointerenter',
+      'mouseenter',
+      'pointerout',
+      'pointerleave',
+      'mouseout',
+      'mouseleave',
+    ]);
+  });
+
+  it('stopping a pending mouse drag cancels both click event families', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    const rect = new Konva.Rect({
+      width: 40,
+      height: 40,
+      fill: 'red',
+      draggable: true,
+    });
+    stage.add(layer);
+    layer.add(rect);
+    layer.draw();
+    const clicks: string[] = [];
+    stage.on('click pointerclick', (e) => clicks.push(e.type));
+    simulateMouseDown(stage, { x: 20, y: 20 });
+    rect.stopDrag();
+    simulateMouseUp(stage, { x: 20, y: 20 });
+    assert.deepEqual(clicks, []);
+  });
+
+  it('native pointer cancellation also cancels the associated touch tap', function () {
+    const stage = addStage();
+    const taps: number[] = [];
+    stage.on('tap', (e) => taps.push(e.pointerId));
+    const touch = { x: 20, y: 20, id: 0, pointerId: 10, pointerType: 'touch' };
+    simulatePointerDown(stage, touch);
+    simulateTouchStart(stage, [touch], [touch]);
+    stage._pointercancel({
+      type: 'pointercancel',
+      pointerId: 10,
+    } as PointerEvent);
+    simulateTouchEnd(stage, [], [touch]);
+    assert.deepEqual(taps, []);
+  });
+
+  it('a mouse drag suppresses its native click when compatibility coordinates are rounded', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    stage.add(layer);
+    layer.add(
+      new Konva.Rect({ width: 40, height: 40, fill: 'red', draggable: true })
+    );
+    layer.draw();
+    const clicks: string[] = [];
+    stage.on('click pointerclick', (e) => clicks.push(e.type));
+    simulatePointerDown(stage, { x: 20.5, y: 20.5 });
+    stage._pointerdown({
+      type: 'mousedown',
+      clientX: 20,
+      clientY: 20 + (isNode ? 0 : stage.content.getBoundingClientRect().top),
+    } as MouseEvent);
+    simulateMouseMove(stage, { x: 40, y: 20 });
+    simulateMouseUp(stage, { x: 40, y: 20 });
+    assert.deepEqual(clicks, []);
+  });
+
+  it('ending a drag preserves a new touch at the original press position', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    stage.add(layer);
+    layer.add(
+      new Konva.Rect({ width: 40, height: 40, fill: 'red', draggable: true })
+    );
+    layer.draw();
+    const clicks: number[] = [];
+    stage.on('pointerclick', (e) => clicks.push(e.pointerId));
+    const first = { x: 20, y: 20, id: 0, pointerId: 10, pointerType: 'touch' };
+    const moved = { ...first, x: 80 };
+    const second = { ...first, id: 1, pointerId: 11 };
+    simulatePointerDown(stage, first);
+    simulateTouchStart(stage, [first], [first]);
+    simulatePointerMove(stage, moved);
+    simulateTouchMove(stage, [moved], [moved]);
+    simulatePointerDown(stage, second);
+    simulateTouchStart(stage, [moved, second], [second]);
+    simulatePointerUp(stage, moved);
+    simulateTouchEnd(stage, [second], [moved]);
+    simulatePointerUp(stage, second);
+    simulateTouchEnd(stage, [], [second]);
+    assert.deepEqual(clicks, [11]);
+  });
+
+  it('leaving and reentering a stage preserves an active press', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    const rect = new Konva.Rect({ width: 40, height: 40, fill: 'red' });
+    stage.add(layer);
+    layer.add(rect);
+    layer.draw();
+    const calls: string[] = [];
+    rect.on('pointerenter pointerleave pointerclick', (e) =>
+      calls.push(e.type)
+    );
+    const pointer = { x: 20, y: 20, pointerId: 1 };
+    simulatePointerMove(stage, pointer);
+    simulatePointerDown(stage, pointer);
+    stage._pointerleave({ type: 'pointerleave', pointerId: 1 });
+    simulatePointerMove(stage, pointer);
+    simulatePointerUp(stage, pointer);
+    assert.deepEqual(calls, [
+      'pointerenter',
+      'pointerleave',
+      'pointerenter',
+      'pointerclick',
+    ]);
+  });
+
+  for (const drag of [false, true]) {
+    it(`a touch pointer leaves its hovered shape after ${drag ? 'dragging' : 'a tap'}`, function () {
+      const stage = addStage();
+      const layer = new Konva.Layer();
+      const rect = new Konva.Rect({
+        width: 40,
+        height: 40,
+        fill: 'red',
+        draggable: drag,
+      });
+      stage.add(layer);
+      layer.add(rect);
+      layer.draw();
+      const calls: string[] = [];
+      rect.on('pointerup pointerout pointerleave', (e) => calls.push(e.type));
+      const pointer = {
+        x: 20,
+        y: 20,
+        id: 0,
+        pointerId: 1,
+        pointerType: 'touch',
+      };
+      simulatePointerMove(stage, pointer);
+      simulatePointerDown(stage, pointer);
+      simulateTouchStart(stage, [pointer], [pointer]);
+      if (drag) {
+        pointer.x = 30;
+        simulatePointerMove(stage, pointer);
+        simulateTouchMove(stage, [pointer], [pointer]);
+        assert.isTrue(rect.isDragging());
+      }
+      simulatePointerUp(stage, pointer);
+      stage._pointerleave({
+        type: 'pointerleave',
+        pointerId: 1,
+        pointerType: 'touch',
+      });
+      simulateTouchEnd(stage, [], [pointer]);
+      assert.deepEqual(calls, ['pointerup', 'pointerout', 'pointerleave']);
+    });
+  }
+
+  it('preserves pointer ID zero in events and capture', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    const rect = new Konva.Rect({ width: 40, height: 40, fill: 'red' });
+    stage.add(layer);
+    layer.add(rect);
+    layer.draw();
+    const calls: number[] = [];
+    rect.on('pointerdown', () => rect.setPointerCapture(0));
+    rect.on('pointerdown pointermove pointerup', (e) =>
+      calls.push(e.pointerId)
+    );
+    simulatePointerDown(stage, { x: 20, y: 20, pointerId: 0 });
+    simulatePointerMove(stage, { x: 80, y: 80, pointerId: 0 });
+    simulatePointerUp(stage, { x: 80, y: 80, pointerId: 0 });
+    assert.deepEqual(calls, [0, 0, 0]);
+    assert.isFalse(rect.hasPointerCapture(0));
+  });
+
+  it('a touch drag suppresses its native pointer click and preserves another touch click', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    const dragged = new Konva.Rect({
+      width: 40,
+      height: 40,
+      fill: 'red',
+      draggable: true,
+    });
+    const tapped = new Konva.Rect({
+      x: 100,
+      width: 40,
+      height: 40,
+      fill: 'blue',
+    });
+    stage.add(layer);
+    layer.add(dragged, tapped);
+    layer.draw();
+    const clicks: number[] = [];
+    stage.on('pointerclick', (e) => clicks.push(e.pointerId));
+    const first = { x: 20, y: 20, id: 0, pointerId: 10, pointerType: 'touch' };
+    const second = {
+      x: 120,
+      y: 20,
+      id: 1,
+      pointerId: 11,
+      pointerType: 'touch',
+    };
+    const moved = { ...first, x: 40 };
+    simulatePointerDown(stage, first);
+    simulateTouchStart(stage, [first], [first]);
+    simulatePointerDown(stage, second);
+    simulateTouchStart(stage, [first, second], [second]);
+    simulatePointerMove(stage, moved);
+    simulateTouchMove(stage, [moved, second], [moved]);
+    simulatePointerUp(stage, moved);
+    simulateTouchEnd(stage, [second], [moved]);
+    simulatePointerUp(stage, second);
+    simulateTouchEnd(stage, [], [second]);
+    assert.deepEqual(clicks, [11]);
+  });
+
+  for (const touchId of [1, 999]) {
+    it(`a touch drag with identifier ${touchId} preserves mouse movement and clicks`, function () {
+      const stage = addStage();
+      const layer = new Konva.Layer();
+      const dragged = new Konva.Rect({
+        width: 40,
+        height: 40,
+        fill: 'red',
+        draggable: true,
+      });
+      const clicked = new Konva.Rect({
+        x: 100,
+        width: 40,
+        height: 40,
+        fill: 'blue',
+      });
+      stage.add(layer);
+      layer.add(dragged, clicked);
+      layer.draw();
+      const clicks: string[] = [];
+      clicked.on('click pointerclick', (e) => clicks.push(e.type));
+      const touch = {
+        x: 20,
+        y: 20,
+        id: touchId,
+        pointerId: 10,
+        pointerType: 'touch',
+      };
+      const moved = { ...touch, x: 40 };
+      simulatePointerDown(stage, touch);
+      simulateTouchStart(stage, [touch], [touch]);
+      simulatePointerMove(stage, moved);
+      simulateTouchMove(stage, [moved], [moved]);
+      simulateMouseMove(stage, { x: 120, y: 20 });
+      simulateMouseDown(stage, { x: 120, y: 20 });
+      simulateMouseUp(stage, { x: 120, y: 20 });
+      assert.isTrue(dragged.isDragging());
+      assert.deepEqual(dragged.position(), { x: 20, y: 0 });
+      simulatePointerUp(stage, moved);
+      simulateTouchEnd(stage, [], [moved]);
+      assert.deepEqual(clicks, ['pointerclick', 'click']);
+    });
+  }
+
+  it('cancelling one pointer clears its gesture and preserves another pointer', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    const rect = new Konva.Rect({ width: 100, height: 100, fill: 'red' });
+    stage.add(layer);
+    layer.add(rect);
+    layer.draw();
+    const clicks: number[] = [];
+    const enters: number[] = [];
+    rect.on('pointerclick', (e) => clicks.push(e.pointerId));
+    rect.on('pointerenter', (e) => enters.push(e.pointerId));
+    const first = { x: 20, y: 20, pointerId: 1 };
+    const second = { x: 40, y: 40, pointerId: 2 };
+    simulatePointerMove(stage, first);
+    simulatePointerDown(stage, first);
+    rect.setPointerCapture(1);
+    simulatePointerDown(stage, second);
+    stage._pointercancel({
+      type: 'pointercancel',
+      pointerId: 1,
+    } as PointerEvent);
+    assert.isFalse(rect.hasPointerCapture(1));
+    stage._pointerleave({ type: 'pointerleave', pointerId: 1 });
+    simulatePointerMove(stage, first);
+    simulatePointerUp(stage, first);
+    simulatePointerUp(stage, second);
+    assert.deepEqual(enters, [1, 1]);
+    assert.deepEqual(clicks, [2]);
+  });
+
+  it('a late capture loss on one stage preserves capture on another stage', function () {
+    const first = addStage();
+    const second = addStage();
+    first.setPointerCapture(1);
+    second.setPointerCapture(1);
+    first._lostpointercapture({ pointerId: 1 } as PointerEvent);
+    assert.isTrue(second.hasPointerCapture(1));
+    second._lostpointercapture({ pointerId: 1 } as PointerEvent);
+    assert.isFalse(second.hasPointerCapture(1));
+  });
+
+  it('hover targets belong to each pointer', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    stage.add(layer);
+    const first = new Konva.Rect({ width: 40, height: 40, fill: 'red' });
+    const second = new Konva.Rect({
+      x: 60,
+      width: 40,
+      height: 40,
+      fill: 'blue',
+    });
+    layer.add(first, second);
+    layer.draw();
+    const calls: string[] = [];
+    first.on('pointerover pointerout pointermove', (e) =>
+      calls.push(`first:${e.type}:${e.pointerId}`)
+    );
+    second.on('pointerover pointerout pointermove', (e) =>
+      calls.push(`second:${e.type}:${e.pointerId}`)
+    );
+    simulatePointerMove(stage, { x: 20, y: 20, pointerId: 1 });
+    simulatePointerMove(stage, { x: 80, y: 20, pointerId: 2 });
+    simulatePointerMove(stage, { x: 21, y: 20, pointerId: 1 });
+    assert.deepEqual(calls, [
+      'first:pointerover:1',
+      'first:pointermove:1',
+      'second:pointerover:2',
+      'second:pointermove:2',
+      'first:pointermove:1',
+    ]);
+  });
   // ======================================================
   it('pointerdown pointerup pointermove', function (done) {
     var stage = addStage();
@@ -105,124 +565,40 @@ describe('PointerEvents', function () {
   });
 
   // ======================================================
-  it.skip('pointer capture', function (done) {
-    var stage = addStage();
-    var layer = new Konva.Layer();
-    var circle = new Konva.Circle({
-      x: stage.width() / 2,
-      y: stage.height() / 2,
-      radius: 70,
-      fill: 'red',
-      stroke: 'black',
-      strokeWidth: 4,
-    });
-
-    var circle2 = new Konva.Circle({
-      x: stage.width() / 2,
-      y: 20,
-      radius: 20,
-      fill: 'red',
-      stroke: 'black',
-      strokeWidth: 4,
-    });
-
-    // mobile events
-    var downCount = 0;
-    var otherDownCount = 0;
-
-    var pointerup = false;
-    var pointermove = false;
-
-    circle2.on('pointerdown', function () {
-      otherDownCount++;
-    });
-
-    circle.on('pointerdown', function (event) {
-      downCount++;
-      this.setPointerCapture(event['pointerId']);
-    });
-
-    circle.on('pointerup', function (evt) {
-      assert(
-        this.hasPointerCapture(evt['pointerId']),
-        'circle released capture'
-      );
-      pointerup = true;
-    });
-
-    circle.on('pointermove', function (evt) {
-      assert(this.hasPointerCapture(evt['pointerId']), 'circle has capture');
-      pointermove = true;
-    });
-
-    layer.add(circle);
-    layer.add(circle2);
+  it('capture routes only the captured pointer and ends on release', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
     stage.add(layer);
-
-    // on circle 2 to confirm it works
-    simulatePointerDown(stage, {
-      x: 289,
-      y: 10,
-      pointerId: 0,
+    const first = new Konva.Rect({ width: 40, height: 40, fill: 'red' });
+    const second = new Konva.Rect({
+      x: 60,
+      width: 40,
+      height: 40,
+      fill: 'blue',
     });
-
-    assert.equal(otherDownCount, 1, '6) otherDownCount should be 1');
-    assert(downCount === 0, '6) downCount should be 0');
-    assert(!pointermove, '6) pointermove should be false');
-    assert(!pointerup, '6) pointerup should be false');
-
-    // on circle with capture
-    simulatePointerDown(stage, {
-      x: 289,
-      y: 100,
-      pointerId: 1,
-    });
-
-    assert.equal(otherDownCount, 1, '7) otherDownCount should be 1');
-    assert(downCount === 1, '7) downCount should be 1');
-    assert(!pointermove, '7) pointermove should be false');
-    assert(!pointerup, '7) pointerup should be true');
-
-    // second pointerdown
-    simulatePointerDown(stage, {
-      x: 289,
-      y: 10,
-      pointerId: 2,
-    });
-
-    assert.equal(otherDownCount, 1, '8) otherDownCount should be 1');
-    assert(downCount === 2, '8) pointerdown should be 2');
-    assert(!pointermove, '8) pointermove should be false');
-    assert(!pointerup, '8) pointerup should be true');
-
-    setTimeout(function () {
-      // pointermove over circle 2
-      simulatePointerMove(stage, {
-        x: 290,
-        y: 10,
-        pointerId: 1,
-      });
-
-      assert(otherDownCount === 1, '9) otherDownCount should be 1');
-      assert(pointermove, '9) pointermove should be true');
-
-      simulatePointerUp(stage, {
-        x: 290,
-        y: 10,
-        pointerId: 1,
-      });
-
-      simulatePointerDown(stage, {
-        x: 289,
-        y: 10,
-        pointerId: 1,
-      });
-
-      assert(otherDownCount === 2, '10) otherDownCount should be 1');
-      assert(pointerup, '10) pointerup should be true');
-
-      done();
-    }, 17);
+    layer.add(first, second);
+    layer.draw();
+    const calls: string[] = [];
+    first.on('pointerdown', (e) => first.setPointerCapture(e.pointerId));
+    first.on('pointermove pointerup', (e) =>
+      calls.push(`first:${e.type}:${e.pointerId}`)
+    );
+    second.on('pointerdown pointermove', (e) =>
+      calls.push(`second:${e.type}:${e.pointerId}`)
+    );
+    simulatePointerDown(stage, { x: 20, y: 20, pointerId: 1 });
+    simulatePointerDown(stage, { x: 80, y: 20, pointerId: 2 });
+    simulatePointerMove(stage, { x: 80, y: 20, pointerId: 1 });
+    simulatePointerUp(stage, { x: 80, y: 20, pointerId: 1 });
+    assert.isFalse(first.hasPointerCapture(1));
+    simulatePointerMove(stage, { x: 80, y: 20, pointerId: 1 });
+    simulatePointerUp(stage, { x: 80, y: 20, pointerId: 2 });
+    assert.deepEqual(calls, [
+      'second:pointerdown:2',
+      'first:pointermove:1',
+      'first:pointerup:1',
+      'second:pointermove:1',
+    ]);
   });
 });
 
@@ -231,6 +607,74 @@ describe('PointerEvents', function () {
 // the stage keeps receiving the pointer's events outside of its bounds — like
 // pointer capture on plain HTML elements
 describe('PointerEvents capture wiring', function () {
+  it('a captured shape moved between stages stays the same hover target', function () {
+    const first = addStage();
+    const second = addStage();
+    const firstLayer = new Konva.Layer();
+    const secondLayer = new Konva.Layer();
+    first.add(firstLayer);
+    second.add(secondLayer);
+    const rect = new Konva.Rect({ width: 100, height: 100, fill: 'red' });
+    firstLayer.add(rect);
+    const calls: string[] = [];
+    rect.on('pointerenter pointermove', (e) => calls.push(e.type));
+    rect.setPointerCapture(1);
+    simulatePointerMove(first, { x: 20, y: 20 });
+    rect.moveTo(secondLayer);
+    simulatePointerMove(first, { x: 30, y: 20 });
+    simulatePointerMove(first, { x: 35, y: 20 });
+    assert.deepEqual(calls, [
+      'pointerenter',
+      'pointermove',
+      'pointermove',
+      'pointermove',
+    ]);
+    rect.releaseCapture(1);
+  });
+
+  it('destroying the native capture stage releases a shape moved elsewhere', function () {
+    const first = addStage();
+    const second = addStage();
+    const firstLayer = new Konva.Layer();
+    const secondLayer = new Konva.Layer();
+    first.add(firstLayer);
+    second.add(secondLayer);
+    const rect = new Konva.Rect({ width: 40, height: 40, fill: 'red' });
+    firstLayer.add(rect);
+    rect.setPointerCapture(1);
+    rect.moveTo(secondLayer);
+    first.destroy();
+    assert.isFalse(rect.hasPointerCapture(1));
+    assert.equal(rect.getStage(), second);
+  });
+
+  for (const detach of [false, true]) {
+    it(`capture loss uses the original stage after a shape is ${detach ? 'detached' : 'moved to another stage'}`, function () {
+      const first = addStage();
+      const second = addStage();
+      const firstLayer = new Konva.Layer();
+      const secondLayer = new Konva.Layer();
+      first.add(firstLayer);
+      second.add(secondLayer);
+      const rect = new Konva.Rect({ width: 40, height: 40, fill: 'red' });
+      firstLayer.add(rect);
+      const released: string[] = [];
+      if (!isNode) {
+        first.content.releasePointerCapture = () => released.push('first');
+        second.content.releasePointerCapture = () => released.push('second');
+      }
+      rect.setPointerCapture(1);
+      if (detach) rect.remove();
+      else rect.moveTo(secondLayer);
+      second._lostpointercapture({ pointerId: 1 } as PointerEvent);
+      assert.isTrue(rect.hasPointerCapture(1));
+      first._lostpointercapture({ pointerId: 1 } as PointerEvent);
+      assert.isFalse(rect.hasPointerCapture(1));
+      if (!isNode) assert.deepEqual(released, ['first']);
+      rect.destroy();
+    });
+  }
+
   it('setPointerCapture captures and releases on the stage container', function () {
     if (isNode) {
       // no DOM pointer capture in node environments

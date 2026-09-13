@@ -240,50 +240,39 @@ describe('Sprite', function () {
     });
   });
 
-  // need fix.
-  it.skip('can change frame rate on fly', function (done) {
-    loadImage('scorpion-sprite.png', (imageObj) => {
-      var stage = addStage();
-      var layer = new Konva.Layer();
-
-      var sprite = new Konva.Sprite({
-        x: 200,
-        y: 50,
-        image: imageObj,
-        animation: 'standing',
-        animations: {
-          standing: [
-            0, 0, 49, 109, 52, 0, 49, 109, 105, 0, 49, 109, 158, 0, 49, 109,
-            210, 0, 49, 109, 262, 0, 49, 109,
-          ],
-        },
-        frameRate: 50,
-        draggable: true,
-        shadowColor: 'black',
-        shadowBlur: 3,
-        shadowOffset: { x: 3, y: 1 },
-        shadowOpacity: 0.3,
-      });
-
-      layer.add(sprite);
-      stage.add(layer);
-      assert.equal(sprite.frameRate(), 50);
-      setTimeout(function () {
-        sprite.frameRate(100);
-        assert.equal(sprite.frameRate(), 100);
-        assert.equal(sprite.anim.isRunning(), false, '1');
-      }, 23);
-
-      setTimeout(function () {
-        sprite.start();
-        sprite.frameRate(52);
-        assert.equal(sprite.anim.isRunning(), true);
-        // for this moment should tick more than 2 times
-        // make sure that sprite is not restating after set frame rate
-        assert.equal(sprite.frameIndex() > 2, true, '2');
-        done();
-      }, 68);
+  it('changing frame rate preserves playback and the current frame', async function () {
+    const sprite = new Konva.Sprite({
+      image: Konva.Util.createImageElement(),
+      animation: 'play',
+      animations: { play: [0, 0, 1, 1, 1, 0, 1, 1, 2, 0, 1, 1, 3, 0, 1, 1] },
+      frameIndex: 1,
+      frameRate: 100,
     });
+    const nextFrame = () =>
+      new Promise<void>((resolve) => {
+        sprite.on('frameIndexChange.test', () => {
+          sprite.off('frameIndexChange.test');
+          resolve();
+        });
+      });
+    try {
+      sprite.frameRate(50);
+      assert.isFalse(sprite.isRunning());
+      const started = nextFrame();
+      sprite.start();
+      await started;
+      assert.equal(sprite.frameIndex(), 2);
+      sprite.frameRate(100);
+      assert.isTrue(sprite.isRunning());
+      assert.equal(sprite.frameIndex(), 2);
+      await nextFrame();
+      assert.equal(sprite.frameIndex(), 3);
+      sprite.stop();
+      sprite.frameRate(25);
+      assert.isFalse(sprite.isRunning());
+    } finally {
+      sprite.destroy();
+    }
   });
 
   it('destroy stops the frame interval', function (done) {

@@ -16,6 +16,17 @@ export interface StageConfig extends ContainerConfig {
   eventBatchFunc?: (callback: () => void) => void;
 }
 
+type Click = { shape: Shape | null; time: number };
+type EventType = 'mouse' | 'touch' | 'pointer';
+type PointerState = {
+  targetShape?: Shape;
+  downPosition?: Vector2d;
+  pointerType?: string;
+  relatedPointer?: PointerState;
+  clickStartShape?: Shape | null;
+  lastClick?: Click;
+};
+
 // CONSTANTS
 const STAGE = 'Stage',
   STRING = 'string',
@@ -103,18 +114,8 @@ const EVENTS_MAP = {
   },
 };
 
-const getEventType = (type) => {
-  if (type.indexOf('pointer') >= 0) {
-    return 'pointer';
-  }
-  if (type.indexOf('touch') >= 0) {
-    return 'touch';
-  }
-  return 'mouse';
-};
-
 const getEventsMap = (eventType: string) => {
-  const type = getEventType(eventType);
+  const type = Util._getEventType(eventType);
   if (type === 'pointer') {
     return Konva.pointerEventsEnabled && EVENTS_MAP.pointer;
   }
@@ -181,22 +182,12 @@ export class Stage extends Container<Layer, StageConfig> {
   pointerPos: Vector2d | null;
   _pointerPositions: (Vector2d & { id?: number })[] = [];
   _changedPointerPositions: (Vector2d & { id: number })[] = [];
+  _pointerEventType?: EventType;
+  _pointerStates = new Map<string, PointerState>();
+  _lastClicks: Partial<Record<EventType, Click>> = {};
 
   bufferCanvas: SceneCanvas;
   bufferHitCanvas: HitCanvas;
-  _mouseTargetShape: Shape;
-  _touchTargetShape: Shape;
-  _pointerTargetShape: Shape;
-  _mouseClickStartShape: Shape;
-  _touchClickStartShape: Shape;
-  _pointerClickStartShape: Shape;
-  _mouseClickEndShape: Shape;
-  _touchClickEndShape: Shape;
-  _pointerClickEndShape: Shape;
-
-  _mouseDblTimeout: any;
-  _touchDblTimeout: any;
-  _pointerDblTimeout: any;
 
   constructor(config: StageConfig) {
     super(checkNoClip(config));
@@ -307,12 +298,8 @@ export class Stage extends Container<Layer, StageConfig> {
 
   destroy() {
     super.destroy();
-    // a pending double-click timer is what closes the global double-click
-    // window, so close the window when the timer goes
-    ['mouse', 'touch', 'pointer'].forEach((type) => {
-      clearTimeout(this['_' + type + 'DblTimeout']);
-      Konva['_' + type + 'InDblClickWindow'] = false;
-    });
+    this._pointerStates.clear();
+    this._lastClicks = {};
 
     const content = this.content;
     content?.parentNode?.removeChild(content);
@@ -545,34 +532,58 @@ export class Stage extends Container<Layer, StageConfig> {
       });
     }
   }
-  _getTargetShape(evenType) {
-    let shape: Shape | null = this[evenType + 'targetShape'];
-    if (shape && !shape.getStage()) {
-      shape = null;
+  _pointerEventsEnabled() {
+    if (Konva.hitOnDragEnabled) return true;
+    for (const { node, dragStatus } of DD._dragElements.values()) {
+      if (dragStatus === 'dragging' && node.getStage() === this) return false;
     }
-    return shape;
+    return !this.getLayers().some((layer) =>
+      Konva['Transformer']?._isLayerTransforming(layer)
+    );
+  }
+  _cancelClick(pointerId: number | undefined, eventType?: EventType) {
+    const types = eventType ? [eventType] : ['mouse', 'touch', 'pointer'];
+    for (const type of types) {
+      const state = this._pointerStates.get(`${type}:${pointerId}`);
+      if (!state) continue;
+      state.clickStartShape = undefined;
+      if (state.relatedPointer)
+        state.relatedPointer.clickStartShape = undefined;
+    }
   }
   _pointerleave(evt) {
     const events = getEventsMap(evt.type);
-    const eventType = getEventType(evt.type);
+    const eventType = Util._getEventType(evt.type);
 
     if (!events) {
       return;
     }
     this.setPointersPositions(evt);
 
-    const targetShape = this._getTargetShape(eventType);
+    const pointerId = this._changedPointerPositions[0]?.id;
+    const key = `${eventType}:${pointerId}`;
+    const state = this._pointerStates.get(key);
+    const targetShape =
+      state?.targetShape?.getStage() === this ? state.targetShape : undefined;
+    // A released touch will not return to deliver a deferred hover exit.
     const eventsEnabled =
-      !(Konva.isDragging() || Konva.isTransforming()) || Konva.hitOnDragEnabled;
+      this._pointerEventsEnabled() ||
+      (evt.pointerType === 'touch' && !state?.downPosition);
+    if (eventsEnabled) {
+      if (state?.clickStartShape !== undefined) {
+        state.targetShape = undefined;
+      } else {
+        this._pointerStates.delete(key);
+      }
+    }
     if (targetShape && eventsEnabled) {
-      targetShape._fireAndBubble(events.pointerout, { evt: evt });
-      targetShape._fireAndBubble(events.pointerleave, { evt: evt });
+      targetShape._fireAndBubble(events.pointerout, { evt, pointerId });
+      targetShape._fireAndBubble(events.pointerleave, { evt, pointerId });
       this._fire(events.pointerleave, {
         evt: evt,
         target: this,
         currentTarget: this,
       });
-      this[eventType + 'targetShape'] = null;
     } else if (eventsEnabled) {
       this._fire(events.pointerleave, {
         evt: evt,
@@ -588,10 +599,11 @@ export class Stage extends Container<Layer, StageConfig> {
     this.pointerPos = null;
     this._pointerPositions = [];
     this._changedPointerPositions = [];
+    this._pointerEventType = undefined;
   }
   _pointerdown(evt: TouchEvent | MouseEvent | PointerEvent) {
     const events = getEventsMap(evt.type);
-    const eventType = getEventType(evt.type);
+    const eventType = Util._getEventType(evt.type);
 
     if (!events) {
       return;
@@ -601,22 +613,72 @@ export class Stage extends Container<Layer, StageConfig> {
     let triggeredOnShape = false;
     this._changedPointerPositions.forEach((pos) => {
       const shape = this.getIntersection(pos);
-      DD.justDragged = false;
-      // probably we are staring a click
-      Konva['_' + eventType + 'ListenClick'] = true;
+      const key = `${eventType}:${pos.id}`;
+      const state: PointerState = {
+        targetShape: this._pointerStates.get(key)?.targetShape,
+        clickStartShape: shape && shape.isListening() ? shape : null,
+        lastClick: this._lastClicks[eventType],
+        downPosition: pos,
+        pointerType: (evt as PointerEvent).pointerType,
+      };
+      // A native pointerdown precedes its compatibility mouse/touch event.
+      // Keep that association for the press: IDs can differ, and mouse
+      // coordinates can be rounded by the browser.
+      this._pointerStates.delete(key);
+      if (eventType !== 'pointer') {
+        for (const [pointerKey, pointer] of [
+          ...this._pointerStates,
+        ].reverse()) {
+          if (
+            !pointerKey.startsWith('pointer:') ||
+            !pointer.downPosition ||
+            (eventType === 'touch' && pointer.relatedPointer)
+          )
+            continue;
+          const matches =
+            eventType === 'mouse'
+              ? pointer.pointerType !== 'touch'
+              : pointer.pointerType === 'touch' &&
+                pointer.downPosition.x === pos.x &&
+                pointer.downPosition.y === pos.y;
+          if (matches) {
+            state.relatedPointer = pointer;
+            pointer.relatedPointer = state;
+            if (pointer.clickStartShape === undefined)
+              state.clickStartShape = undefined;
+            break;
+          }
+        }
+      }
+      this._pointerStates.set(key, state);
+      for (const elem of DD._dragElements.values()) {
+        if (
+          elem.dragStatus === 'dragging' &&
+          (elem.pointerId === undefined ||
+            (elem.pointerEventType === eventType &&
+              elem.pointerId === pos.id) ||
+            (elem.pointerEventType === 'mouse' &&
+              eventType === 'pointer' &&
+              state.pointerType !== 'touch')) &&
+          elem.node.getStage() === this
+        ) {
+          // Drag movement uses the compatibility mouse/touch pointer.
+          if (elem.pointerId === undefined && eventType !== 'pointer') {
+            elem.pointerId = pos.id;
+            elem.pointerEventType = eventType;
+          }
+          this._cancelClick(pos.id, eventType);
+        }
+      }
 
       // no shape detected? do nothing
       if (!shape || !shape.isListening()) {
-        this[eventType + 'ClickStartShape'] = undefined;
         return;
       }
 
       if (Konva.capturePointerEventsEnabled) {
         shape.setPointerCapture(pos.id);
       }
-
-      // save where we started the click
-      this[eventType + 'ClickStartShape'] = shape;
 
       shape._fireAndBubble(events.pointerdown, {
         evt: evt,
@@ -643,7 +705,7 @@ export class Stage extends Container<Layer, StageConfig> {
   }
   _pointermove(evt: TouchEvent | MouseEvent | PointerEvent) {
     const events = getEventsMap(evt.type);
-    const eventType = getEventType(evt.type);
+    const eventType = Util._getEventType(evt.type);
     if (!events) {
       return;
     }
@@ -652,43 +714,49 @@ export class Stage extends Container<Layer, StageConfig> {
     const isTouchPointer =
       (evt as any).type.indexOf('touch') >= 0 ||
       (evt as any).pointerType === 'touch';
-    if (
-      Konva.isDragging() &&
-      DD.node!.preventDefault() &&
-      evt.cancelable &&
-      isTouchPointer
-    ) {
-      evt.preventDefault();
+    if (evt.cancelable && isTouchPointer) {
+      for (const { node, dragStatus } of DD._dragElements.values()) {
+        if (
+          dragStatus === 'dragging' &&
+          node.getStage() === this &&
+          node.preventDefault()
+        ) {
+          evt.preventDefault();
+          break;
+        }
+      }
     }
     this.setPointersPositions(evt);
 
-    const eventsEnabled =
-      !(Konva.isDragging() || Konva.isTransforming()) || Konva.hitOnDragEnabled;
+    const eventsEnabled = this._pointerEventsEnabled();
     if (!eventsEnabled) {
       return;
     }
 
     const processedShapesIds = {};
     let triggeredOnShape = false;
-    const targetShape = this._getTargetShape(eventType);
     this._changedPointerPositions.forEach((pos) => {
+      const key = `${eventType}:${pos.id}`;
+      let state = this._pointerStates.get(key);
+      if (!state) {
+        state = {};
+        this._pointerStates.set(key, state);
+      }
       const shape = (PointerEvents.getCapturedShape(pos.id) ||
         this.getIntersection(pos)) as Shape;
+      const targetShape =
+        state.targetShape === shape || state.targetShape?.getStage() === this
+          ? state.targetShape
+          : undefined;
       const pointerId = pos.id;
       const event = { evt: evt, pointerId };
 
       const differentTarget = targetShape !== shape;
+      state.targetShape = shape && shape.isListening() ? shape : undefined;
 
       if (differentTarget && targetShape) {
         targetShape._fireAndBubble(events.pointerout, { ...event }, shape);
         targetShape._fireAndBubble(events.pointerleave, { ...event }, shape);
-      }
-
-      if (shape) {
-        if (processedShapesIds[shape._id]) {
-          return;
-        }
-        processedShapesIds[shape._id] = true;
       }
 
       if (shape && shape.isListening()) {
@@ -696,9 +764,11 @@ export class Stage extends Container<Layer, StageConfig> {
         if (differentTarget) {
           shape._fireAndBubble(events.pointerover, { ...event }, targetShape);
           shape._fireAndBubble(events.pointerenter, { ...event }, targetShape);
-          this[eventType + 'targetShape'] = shape;
         }
-        shape._fireAndBubble(events.pointermove, { ...event });
+        if (!processedShapesIds[shape._id]) {
+          processedShapesIds[shape._id] = true;
+          shape._fireAndBubble(events.pointermove, { ...event });
+        }
       } else {
         if (targetShape) {
           this._fire(events.pointerover, {
@@ -707,7 +777,6 @@ export class Stage extends Container<Layer, StageConfig> {
             currentTarget: this,
             pointerId,
           });
-          this[eventType + 'targetShape'] = null;
         }
       }
     });
@@ -723,76 +792,66 @@ export class Stage extends Container<Layer, StageConfig> {
   }
   _pointerup(evt) {
     const events = getEventsMap(evt.type);
-    const eventType = getEventType(evt.type);
+    const eventType = Util._getEventType(evt.type);
 
     if (!events) {
       return;
     }
     this.setPointersPositions(evt);
-    // the mouse/touch families get their "listen click" flags reset by
-    // DD._endDragBefore, but native "pointerup" fires before the
-    // "mouseup"/"touchend" that ends the drag, so for the pointer family the
-    // flags are still set — check the live drag state as well, otherwise
-    // "pointerclick" fires after a drag while "click" does not (issue #1756)
-    const wasDragged =
-      DD.justDragged || (eventType === 'pointer' && Konva.isDragging());
-    const listenClick = Konva['_' + eventType + 'ListenClick'] && !wasDragged;
-    const clickStartShape = this[eventType + 'ClickStartShape'];
-    const clickEndShape = this[eventType + 'ClickEndShape'];
-    const inDblClickWindow = Konva['_' + eventType + 'InDblClickWindow'];
-    let clickWindowUpdated = false;
     const processedShapesIds = {};
     let skipPointerUpTrigger = false;
     this._changedPointerPositions.forEach((pos) => {
+      const key = `${eventType}:${pos.id}`;
+      const state = this._pointerStates.get(key);
+      const listenClick = state?.clickStartShape !== undefined;
+      const clickStartShape = state?.clickStartShape;
+      if (state?.targetShape && eventType !== 'touch') {
+        this._pointerStates.set(key, { targetShape: state.targetShape });
+      } else {
+        this._pointerStates.delete(key);
+      }
       const shape = (PointerEvents.getCapturedShape(pos.id) ||
         this.getIntersection(pos)) as Shape;
 
+      const alreadyReleased = shape && processedShapesIds[shape._id];
       if (shape) {
         shape.releaseCapture(pos.id);
-        if (processedShapesIds[shape._id]) {
-          return;
-        }
         processedShapesIds[shape._id] = true;
       }
 
       const pointerId = pos.id;
       const event = { evt: evt, pointerId };
       const clickTarget = shape && shape.isListening() ? shape : null;
-      const fireDblClick =
-        listenClick &&
-        inDblClickWindow &&
-        (clickEndShape || null) === clickTarget;
+      const lastClick = this._lastClicks[eventType];
       const canClick =
         listenClick && (!clickTarget || clickStartShape === clickTarget);
-      // Several touches can share a release event. Update the window once,
-      // and only consume it for a second click on the same target.
-      if (canClick && !clickWindowUpdated) {
-        clickWindowUpdated = true;
-        clearTimeout(this['_' + eventType + 'DblTimeout']);
-        Konva['_' + eventType + 'InDblClickWindow'] = !fireDblClick;
-        if (!fireDblClick) {
-          this['_' + eventType + 'DblTimeout'] = setTimeout(() => {
-            Konva['_' + eventType + 'InDblClickWindow'] = false;
-          }, Konva.dblClickWindow);
-        }
+      const fireDblClick =
+        canClick &&
+        lastClick &&
+        state?.lastClick === lastClick &&
+        lastClick.shape === clickTarget &&
+        Date.now() - lastClick.time < Konva.dblClickWindow;
+      if (canClick) {
+        this._lastClicks[eventType] = fireDblClick
+          ? undefined
+          : { shape: clickTarget, time: Date.now() };
       }
 
       if (shape && shape.isListening()) {
         skipPointerUpTrigger = true;
-        this[eventType + 'ClickEndShape'] = shape;
-        shape._fireAndBubble(events.pointerup, { ...event });
+        if (!alreadyReleased) {
+          shape._fireAndBubble(events.pointerup, { ...event });
+        }
 
         // detect if click or double click occurred
         if (listenClick && clickStartShape === shape) {
           shape._fireAndBubble(events.pointerclick, { ...event });
 
-          if (fireDblClick && clickEndShape && clickEndShape === shape) {
+          if (fireDblClick) {
             shape._fireAndBubble(events.pointerdblclick, { ...event });
           }
         }
       } else {
-        this[eventType + 'ClickEndShape'] = null;
-
         if (!skipPointerUpTrigger) {
           this._fire(events.pointerup, {
             evt: evt,
@@ -821,6 +880,10 @@ export class Stage extends Container<Layer, StageConfig> {
           });
         }
       }
+      if (eventType === 'touch' && state?.targetShape?.getStage() === this) {
+        state.targetShape._fireAndBubble(events.pointerout, { ...event });
+        state.targetShape._fireAndBubble(events.pointerleave, { ...event });
+      }
     });
 
     if (!skipPointerUpTrigger) {
@@ -831,8 +894,6 @@ export class Stage extends Container<Layer, StageConfig> {
         pointerId: this._changedPointerPositions[0].id,
       });
     }
-
-    Konva['_' + eventType + 'ListenClick'] = false;
 
     // always call preventDefault for desktop events because some browsers
     // try to drag and drop the canvas element
@@ -876,6 +937,15 @@ export class Stage extends Container<Layer, StageConfig> {
     this.setPointersPositions(evt);
     const events = getEventsMap(evt.type);
     this._changedPointerPositions.forEach((pos) => {
+      const eventType = Util._getEventType(evt.type);
+      const key = `${eventType}:${pos.id}`;
+      this._cancelClick(pos.id, eventType);
+      const targetShape = this._pointerStates.get(key)?.targetShape;
+      if (targetShape && eventType !== 'touch') {
+        this._pointerStates.set(key, { targetShape });
+      } else {
+        this._pointerStates.delete(key);
+      }
       const shape =
         PointerEvents.getCapturedShape(pos.id) || this.getIntersection(pos);
       const event = { evt, pointerId: pos.id };
@@ -891,11 +961,18 @@ export class Stage extends Container<Layer, StageConfig> {
         });
       }
       PointerEvents.releaseCapture(pos.id);
+      if (events && eventType === 'touch' && targetShape?.getStage() === this) {
+        targetShape._fireAndBubble(events.pointerout, { ...event });
+        targetShape._fireAndBubble(events.pointerleave, { ...event });
+      }
     });
   }
 
   _lostpointercapture(evt: PointerEvent) {
-    PointerEvents.releaseCapture(evt.pointerId);
+    const captured = PointerEvents.getCapturedShape(evt.pointerId, this);
+    if (captured) {
+      PointerEvents.releaseCapture(evt.pointerId);
+    }
   }
 
   /**
@@ -920,6 +997,7 @@ export class Stage extends Container<Layer, StageConfig> {
 
     // touch events
     if (evt.touches !== undefined) {
+      this._pointerEventType = 'touch';
       // touchlist has not support for map method
       // so we have to iterate
       this._pointerPositions = [];
@@ -944,6 +1022,8 @@ export class Stage extends Container<Layer, StageConfig> {
       );
     } else {
       // mouse events
+      this._pointerEventType =
+        evt.pointerId === undefined ? 'mouse' : 'pointer';
       x = (evt.clientX - contentPosition.left) / contentPosition.scaleX;
       y = (evt.clientY - contentPosition.top) / contentPosition.scaleY;
       this.pointerPos = {

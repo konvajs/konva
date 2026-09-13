@@ -1170,10 +1170,14 @@ export const Util = {
     }
     return target as T & U;
   },
+  _getEventType(type: string): 'mouse' | 'touch' | 'pointer' {
+    if (type.indexOf('pointer') >= 0) return 'pointer';
+    if (type.indexOf('touch') >= 0) return 'touch';
+    return 'mouse';
+  },
   _getFirstPointerId(evt) {
     if (!evt.touches) {
-      // try to use pointer id or fake id
-      return evt.pointerId || 999;
+      return evt.pointerId ?? 999;
     } else {
       return evt.changedTouches[0].identifier;
     }

@@ -3512,39 +3512,6 @@ describe('Transformer', function () {
     assert.deepEqual(tr.size(), { width: 60, height: 60 });
   });
 
-  it.skip('check calculations when the size = 0', function () {
-    var stage = addStage();
-    var layer = new Konva.Layer();
-    stage.add(layer);
-
-    var rect = new Konva.Rect({
-      x: 50,
-      y: 50,
-      draggable: true,
-      // can we fit from empty width?
-      width: 0,
-      height: 100,
-      fill: 'yellow',
-    });
-    layer.add(rect);
-
-    var tr = new Konva.Transformer({
-      nodes: [rect],
-    });
-    layer.add(tr);
-    layer.draw();
-
-    tr._fitNodesInto({
-      x: 50,
-      y: 50,
-      width: 100,
-      height: 100,
-      rotation: 0,
-    });
-    layer.draw();
-    assert.equal(rect.scaleX(), 1);
-  });
-
   it('attrs change - arc', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -4865,44 +4832,6 @@ describe('Transformer', function () {
     assert.equal(callCount, 1);
   });
 
-  // we don't support height = 0
-  it.skip('try to transform zero size shape', function () {
-    var stage = addStage();
-    var layer = new Konva.Layer();
-    stage.add(layer);
-
-    var shape = new Konva.Line({
-      x: stage.width() / 4,
-      y: stage.height() / 4,
-      points: [0, 0, 200, 0],
-      fill: 'black',
-      stroke: 'black',
-      strokeWidth: 4,
-      draggable: true,
-    });
-    layer.add(shape);
-
-    var tr = new Konva.Transformer({
-      nodes: [shape],
-      enabledAnchors: ['middle-left', 'middle-right'],
-      ignoreStroke: true,
-    });
-    layer.add(tr);
-
-    layer.draw();
-
-    simulateMouseDown(tr, {
-      x: stage.width() / 2,
-      y: stage.height() / 2,
-    });
-    simulateMouseDown(tr, {
-      x: stage.width() / 2 + 100,
-      y: stage.height() / 2,
-    });
-    simulateMouseUp(tr);
-    assert.equal(shape.scaleX(), 0.5);
-  });
-
   it('check transform cache', function () {
     var stage = addStage({ scaleX: 0.5, scaleY: 0.5 });
     var layer = new Konva.Layer();
@@ -5847,31 +5776,36 @@ describe('Transformer', function () {
     assert.equal(anchor.offsetX(), 15);
   });
 
-  it('resizing a node with a zero-size box does not write NaN into it', function () {
-    var stage = addStage();
-    var layer = new Konva.Layer();
-    stage.add(layer);
-    var rect = new Konva.Rect({
-      x: 50,
-      y: 50,
-      width: 0,
-      height: 100,
-      fill: 'red',
+  for (const flatLine of [false, true]) {
+    it(`resizing a ${flatLine ? 'horizontal line' : 'zero-width rectangle'} leaves its degenerate geometry unchanged`, function () {
+      const stage = addStage();
+      const layer = new Konva.Layer();
+      stage.add(layer);
+      const shape = flatLine
+        ? new Konva.Line({
+            x: 50,
+            y: 50,
+            points: [0, 0, 200, 0],
+            stroke: 'black',
+            strokeWidth: 4,
+          })
+        : new Konva.Rect({ x: 50, y: 50, width: 0, height: 100, fill: 'red' });
+      const tr = new Konva.Transformer({
+        nodes: [shape],
+        ignoreStroke: true,
+        enabledAnchors: ['middle-left', 'middle-right'],
+      });
+      layer.add(shape, tr);
+      layer.draw();
+      const before = shape.toObject();
+      const anchor = tr.findOne('.middle-right')!.getAbsolutePosition();
+      simulateMouseDown(tr, anchor);
+      simulateMouseMove(tr, { x: anchor.x + 40, y: anchor.y });
+      simulateMouseUp(tr, { x: anchor.x + 40, y: anchor.y });
+      assert.deepEqual(shape.toObject(), before);
+      assert.isTrue(Object.values(tr.getClientRect()).every(Number.isFinite));
     });
-    layer.add(rect);
-    var tr = new Konva.Transformer({ nodes: [rect] });
-    layer.add(tr);
-    layer.draw();
-
-    simulateMouseDown(tr, { x: 50, y: 100 });
-    simulateMouseMove(tr, { x: 80, y: 100 });
-    simulateMouseUp(tr, { x: 80, y: 100 });
-
-    ['x', 'y', 'scaleX', 'scaleY', 'rotation'].forEach((attr) => {
-      assert.isTrue(isFinite(rect[attr]()), attr + ' is finite');
-    });
-    assert.isTrue(isFinite(tr.getClientRect().width));
-  });
+  }
 
   it('follows a node change made between two pointer moves', async function () {
     var stage = addStage();

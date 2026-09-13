@@ -460,7 +460,7 @@ export class Layer extends Container<Group | Shape> {
     DD._dragElements.forEach((elem) => {
       if (
         elem.dragStatus === 'dragging' &&
-        (elem.node.nodeType === 'Stage' || elem.node.getLayer() === this)
+        (elem.node === this.getStage() || elem.node.getLayer() === this)
       ) {
         underDrag = true;
       }

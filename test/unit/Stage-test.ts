@@ -21,6 +21,79 @@ import {
 } from './test-utils.ts';
 
 describe('Stage', function () {
+  it('double-click history expires at the configured time window', function () {
+    const stage = addStage();
+    let doubles = 0;
+    stage.on('dblclick', () => doubles++);
+    const originalNow = Date.now;
+    let now = originalNow();
+    Date.now = () => now;
+    const click = () => {
+      simulateMouseDown(stage, { x: 10, y: 10 });
+      simulateMouseUp(stage, { x: 10, y: 10 });
+    };
+    try {
+      click();
+      now += Konva.dblClickWindow;
+      click();
+      assert.equal(doubles, 0);
+      now += Konva.dblClickWindow - 1;
+      click();
+      assert.equal(doubles, 1);
+    } finally {
+      Date.now = originalNow;
+    }
+  });
+
+  for (const dragStage of [false, true]) {
+    it(`dragging a ${dragStage ? 'stage' : 'shape'} preserves hit drawing and hover on another stage`, function () {
+      const first = addStage();
+      const second = addStage();
+      const firstLayer = new Konva.Layer();
+      const secondLayer = new Konva.Layer();
+      first.add(firstLayer);
+      second.add(secondLayer);
+      const dragged = new Konva.Rect({
+        width: 40,
+        height: 40,
+        fill: 'red',
+        draggable: !dragStage,
+      });
+      const hovered = new Konva.Rect({ width: 40, height: 40, fill: 'blue' });
+      firstLayer.add(dragged);
+      secondLayer.add(hovered);
+      first.draggable(dragStage);
+      first.draw();
+      second.draw();
+      const calls: string[] = [];
+      hovered.on('pointerenter pointermove', (e) => calls.push(e.type));
+      simulateTouchStart(first, [{ x: 20, y: 20, id: 1 }]);
+      simulateTouchMove(first, [{ x: 40, y: 20, id: 1 }]);
+      assert.isTrue((dragStage ? first : dragged).isDragging());
+      second.draw();
+      simulatePointerMove(second, { x: 20, y: 20, pointerId: 2 });
+      assert.deepEqual(calls, ['pointerenter', 'pointermove']);
+      simulateTouchEnd(first, [], [{ x: 40, y: 20, id: 1 }]);
+    });
+  }
+
+  it('click history belongs to each stage and survives another stage being destroyed', function () {
+    const first = addStage();
+    const second = addStage();
+    const doubles = [0, 0];
+    first.on('dblclick', () => doubles[0]++);
+    second.on('dblclick', () => doubles[1]++);
+    const click = (stage) => {
+      simulateMouseDown(stage, { x: 10, y: 10 });
+      simulateMouseUp(stage, { x: 10, y: 10 });
+    };
+    click(first);
+    click(second);
+    assert.deepEqual(doubles, [0, 0]);
+    second.destroy();
+    click(first);
+    assert.deepEqual(doubles, [1, 0]);
+  });
   // ======================================================
   it('instantiate stage with id', function () {
     if (isNode) {
@@ -1653,27 +1726,12 @@ describe('Stage', function () {
     assert.deepEqual(Array.from(pixel), [255, 0, 0, 255]);
   });
 
-  it('destroy() clears the double-click timers', function () {
-    var stage = addStage();
-    var layer = new Konva.Layer();
-    stage.add(layer);
-
-    simulateMouseDown(stage, { x: 10, y: 10 });
-    simulateMouseUp(stage, { x: 10, y: 10 });
-    assert.isDefined(stage._mouseDblTimeout);
-
-    var cleared = countCalls(globalThis, 'clearTimeout', () => stage.destroy());
-    assert.isAtLeast(cleared, 3);
-  });
-
   it('destroy() closes the double-click window it opened', function () {
     var stage = addStage();
     stage.add(new Konva.Layer());
     simulateMouseDown(stage, { x: 10, y: 10 });
     simulateMouseUp(stage, { x: 10, y: 10 });
-    assert.equal(Konva._mouseInDblClickWindow, true);
     stage.destroy();
-    assert.equal(Konva._mouseInDblClickWindow, false);
 
     var stage2 = addStage();
     stage2.add(new Konva.Layer());

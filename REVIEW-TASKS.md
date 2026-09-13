@@ -8,7 +8,6 @@ This is a follow-up list, not a release checklist. Remaining work needs a behavi
 ## Remaining correctness work
 
 - **Clipped container bounds:** `src/Container.ts` reports child bounds without intersecting the container's clip. Rectangular clips could have tighter bounds, but callback clips have no declared bounds. Define the intended `getClientRect()` behavior first.
-- **Pointer state:** `src/Stage.ts` and `src/Global.ts` share click and hover state by event family. Interleaved touches and multiple stages can still interfere. Fixing this requires per-pointer and per-stage state, outside this cleanup's architecture constraint.
 - **Mirrored transforms:** `src/Util.ts` can represent an X flip as rotation plus a Y flip. Shadow offsets and Transformer scale signs follow that decomposition. A matrix has multiple valid decompositions; define compatible flip and shadow semantics before changing the preferred signs.
 - **Stroke joins at cache edges:** large miter joins can extend outside the generic stroke padding in `src/Shape.ts`. Arrow head geometry is now included in its bounds, but thick pointed strokes can still need explicit cache padding.
 
@@ -26,6 +25,8 @@ These are not required to keep the current architecture clean.
 
 ## Decisions — do not re-raise
 
+- The six skipped tests were reviewed. Sprite frame-rate changes, pointer capture and vertical TextPath bounds have active behavior tests. Zero-size Transformer geometry keeps the existing resize no-op behavior, covered by active tests. The inactive mirrored-shadow fixture was removed; the mirrored-transform decision above remains open.
+- Click and hover state belongs to each stage and pointer. Sequential taps can use different touch IDs; overlapping contacts do not form a double-tap. Drag hit suppression applies to the affected stage; `hitOnDragEnabled` keeps its existing role within that stage.
 - Web is the primary target. Avoid Node-only workarounds in shared rendering code. Gradient style getters after `save()` / `restore()` have known Node backend limitations; Konva delegates canvas state to the backend.
 - Filter lengths use node coordinates. High-DPI caches preserve blur radius, pixelation size and CSS lengths; custom filters keep full-resolution ImageData and receive the cache pixel ratio as a second argument. CSS fallback blur remains an approximation of native blur.
 - Non-scaling stroke bounds use the drawing canvas as their reference. Local bounds convert that padding into local units. Cached strokes are baked into the bitmap and scale with it.

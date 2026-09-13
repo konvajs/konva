@@ -10,6 +10,7 @@ type DragElement = {
   startPointerPos: Vector2d;
   offset: Vector2d;
   pointerId?: number;
+  pointerEventType?: Stage['_pointerEventType'];
   // the last bounded position, to skip a move to the same place
   lastPos?: Vector2d;
   startEvent?: any;
@@ -28,7 +29,6 @@ export const DD = {
     });
     return flag;
   },
-  justDragged: false,
   get node() {
     let node: Node | undefined;
     for (const elem of DD._dragElements.values()) {
@@ -100,11 +100,21 @@ export const DD = {
         stage.setPointersPositions(evt);
         positioned.add(stage);
       }
+      if (
+        elem.pointerEventType &&
+        elem.pointerEventType !== stage._pointerEventType
+      ) {
+        return;
+      }
 
       // it is possible that user call startDrag without any event
       // it that case we need to detect first movable pointer and attach it into the node
       if (elem.pointerId === undefined) {
         elem.pointerId = Util._getFirstPointerId(evt);
+        elem.pointerEventType = stage._pointerEventType;
+        if (elem.dragStatus === 'dragging') {
+          stage._cancelClick(elem.pointerId, elem.pointerEventType);
+        }
       }
       const pos = stage._changedPointerPositions.find(
         (pos) => pos.id === elem.pointerId
@@ -169,6 +179,13 @@ export const DD = {
         stage.setPointersPositions(evt);
         positioned.add(stage);
       }
+      if (
+        evt &&
+        elem.pointerEventType &&
+        elem.pointerEventType !== Util._getEventType(evt.type)
+      ) {
+        return;
+      }
 
       // a drag started without an event (node.startDrag()) that has not
       // moved yet has no pointer: any release ends it
@@ -186,13 +203,7 @@ export const DD = {
         DD._dragElements.delete(key);
       } else {
         // if a node is stopped manually we still need to reset events:
-        DD.justDragged = true;
-        Konva._mouseListenClick = false;
-        Konva._touchListenClick = false;
-        // for real pointer input this reset comes too late — "pointerup" fired
-        // before this handler — so Stage._pointerup also checks the live drag
-        // state for the pointer family (issue #1756)
-        Konva._pointerListenClick = false;
+        stage._cancelClick(elem.pointerId, elem.pointerEventType);
         elem.dragStatus = 'stopped';
 
         // a node that has not moved needs no redraw

@@ -1144,28 +1144,34 @@ describe('TextPath', function () {
     assert.equal(ltrPath.direction(), 'inherit');
   });
 
-  it.skip('check vertical text path', function () {
-    var stage = addStage();
-
-    var layer = new Konva.Layer();
-    stage.add(layer);
-
-    var textpath = new Konva.TextPath({
-      x: -280,
-      y: -190,
+  it('vertical text bounds contain the rendered glyphs', function () {
+    const text = new Konva.TextPath({
       fill: 'black',
-      fontSize: 10,
+      fontSize: 20,
       fontFamily: 'Arial',
-      align: 'right',
-      text: '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&',
-      data: 'M 283 383 L 283 187',
+      text: '&'.repeat(80),
+      data: 'M 50 190 L 50 10',
     });
-    layer.add(textpath);
-    layer.draw();
-
-    var rect = textpath.getClientRect();
-
-    assert.equal(rect.height, 200, 'check height');
+    try {
+      const bounds = text.getClientRect();
+      const pixels = text
+        .toCanvas({ x: 0, y: 0, width: 100, height: 200, pixelRatio: 1 })
+        .getContext('2d')!
+        .getImageData(0, 0, 100, 200).data;
+      let visible = 0;
+      for (let y = 0; y < 200; y++)
+        for (let x = 0; x < 100; x++) {
+          if (!pixels[(y * 100 + x) * 4 + 3]) continue;
+          visible++;
+          assert.isAtLeast(x, Math.floor(bounds.x));
+          assert.isBelow(x, Math.ceil(bounds.x + bounds.width));
+          assert.isAtLeast(y, Math.floor(bounds.y));
+          assert.isBelow(y, Math.ceil(bounds.y + bounds.height));
+        }
+      assert.isAbove(visible, 0);
+    } finally {
+      text.destroy();
+    }
   });
 
   it('does not allocate a measurement canvas per instance', function () {

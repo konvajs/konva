@@ -12,23 +12,10 @@ import { imagediff } from './imagediff.ts';
 import type { Layer } from '../../src/Layer.ts';
 import type { Stage } from '../../src/Stage.ts';
 
-// reset some data
-beforeEach(function () {
-  Konva._mouseInDblClickWindow = false;
-  Konva._touchInDblClickWindow = false;
-  Konva._pointerInDblClickWindow = false;
-});
-
 // clear after test
 afterEach(function () {
   var isFailed = this.currentTest?.state === 'failed';
   var isManual = this.currentTest?.parent?.title === 'Manual';
-
-  Konva.stages.forEach(function (stage) {
-    clearTimeout(stage._mouseDblTimeout);
-    clearTimeout(stage._touchDblTimeout);
-    clearTimeout(stage._pointerDblTimeout);
-  });
 
   if (!isFailed && !isManual) {
     // destroy() removes the stage from Konva.stages, so iterate over a copy
@@ -292,7 +279,7 @@ export function simulateTouchStart(stage, pos, changed?) {
       {
         clientX: pos.x,
         clientY: pos.y + top,
-        id: 0,
+        identifier: 0,
       },
     ];
   }
@@ -329,7 +316,7 @@ export function simulateTouchMove(stage, pos, changed?) {
       {
         clientX: pos.x,
         clientY: pos.y + top,
-        id: 0,
+        identifier: 0,
       },
     ];
   }
@@ -367,7 +354,7 @@ export function simulateTouchEnd(stage, pos, changed?) {
       {
         clientX: pos.x,
         clientY: pos.y + top,
-        id: 0,
+        identifier: 0,
       },
     ];
   }
@@ -387,6 +374,7 @@ type SimulatedPointerEvent = {
   y: number;
   button?: number;
   pointerId?: number;
+  pointerType?: string;
 };
 export function simulatePointerDown(stage: Stage, pos: SimulatedPointerEvent) {
   var top = isNode ? 0 : stage.content.getBoundingClientRect().top;
@@ -394,7 +382,8 @@ export function simulatePointerDown(stage: Stage, pos: SimulatedPointerEvent) {
     clientX: pos.x,
     clientY: pos.y + top,
     button: pos.button || 0,
-    pointerId: pos.pointerId || 1,
+    pointerId: pos.pointerId ?? 1,
+    pointerType: pos.pointerType ?? 'mouse',
     type: 'pointerdown',
   } as any);
 }
@@ -405,7 +394,8 @@ export function simulatePointerMove(stage: Stage, pos: SimulatedPointerEvent) {
     clientX: pos.x,
     clientY: pos.y + top,
     button: pos.button || 0,
-    pointerId: pos.pointerId || 1,
+    pointerId: pos.pointerId ?? 1,
+    pointerType: pos.pointerType ?? 'mouse',
     type: 'pointermove',
   };
 
@@ -419,7 +409,8 @@ export function simulatePointerUp(stage: Stage, pos: SimulatedPointerEvent) {
     clientX: pos.x,
     clientY: pos.y + top,
     button: pos.button || 0,
-    pointerId: pos.pointerId || 1,
+    pointerId: pos.pointerId ?? 1,
+    pointerType: pos.pointerType ?? 'mouse',
     type: 'pointerup',
   };
 

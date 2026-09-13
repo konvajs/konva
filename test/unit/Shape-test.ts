@@ -1318,51 +1318,6 @@ describe('Shape', function () {
     );
   });
 
-  // a negative scale should flip the shadow offset as well, see #1942
-  it.skip('scale should also effect shadow offset - negative scale', function () {
-    var stage = addStage();
-
-    var layer = new Konva.Layer();
-
-    var rect = new Konva.Rect({
-      x: 100,
-      y: 100,
-      width: 100,
-      height: 100,
-      scaleX: -0.5,
-      scaleY: 0.5,
-      fill: 'green',
-      shadowColor: 'black',
-      shadowBlur: 10,
-      shadowOffset: { x: 10, y: 10 },
-    });
-
-    layer.add(rect);
-    stage.add(layer);
-
-    const { canvas, context } = createCanvasAndContext();
-    // rect
-    context.beginPath();
-    context.rect(50, 100, 50, 50);
-    context.closePath();
-
-    context.fillStyle = 'green';
-    context.shadowColor = 'rgba(0,0,0,1)';
-    context.shadowBlur = 10;
-    context.shadowOffsetX = -5 * Konva.pixelRatio;
-    context.shadowOffsetY = 5 * Konva.pixelRatio;
-    context.fill();
-
-    compareLayerAndCanvas(layer, canvas, 150);
-
-    // var trace = layer.getContext().getTrace();
-
-    // assert.equal(
-    //   trace,
-    //   'clearRect(0,0,578,200);save();transform(-0.5,0,0,0.5,100,100);save();shadowColor=rgba(0,0,0,1);shadowBlur=10;shadowOffsetX=-5;shadowOffsetY=5;beginPath();rect(0,0,100,100);closePath();fillStyle=green;fill();restore();restore();'
-    // );
-  });
-
   it('scale of parent container should also effect shadow offset', function () {
     var stage = addStage();
 

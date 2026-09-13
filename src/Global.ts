@@ -81,12 +81,6 @@ export const Konva = {
    */
   capturePointerEventsEnabled: false,
 
-  _mouseListenClick: false,
-  _touchListenClick: false,
-  _pointerListenClick: false,
-  _mouseInDblClickWindow: false,
-  _touchInDblClickWindow: false,
-  _pointerInDblClickWindow: false,
   _renderBackend: 'web', // web, node-canvas, skia-canvas
   /**
    * Use legacy text rendering. with "middle" baseline by default.
