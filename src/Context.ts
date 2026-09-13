@@ -813,17 +813,8 @@ export class SceneContext extends Context {
       willReadFrequently,
     }) as CanvasRenderingContext2D;
   }
-  _fillColor(shape: Shape) {
-    const fill = shape.fill();
-
-    this.setAttr('fillStyle', fill);
-    shape._fillFunc(this);
-  }
-  _fillPattern(shape: Shape) {
-    // `imageSmoothingEnabled` (set on the layer/context) controls pattern
-    // smoothing in the browser. node-canvas ignores it for pattern fills and
-    // instead exposes a non-standard `patternQuality` property, so mirror the
-    // current smoothing setting onto it to keep both backends consistent.
+  _getFillPattern(shape: Shape) {
+    // node-canvas exposes pattern smoothing through patternQuality.
     const context = this._context as CanvasRenderingContext2D & {
       patternQuality?: string;
     };
@@ -832,61 +823,30 @@ export class SceneContext extends Context {
         ? 'good'
         : 'nearest';
     }
-    this.setAttr('fillStyle', shape._getFillPattern());
-    shape._fillFunc(this);
+    return shape._getFillPattern();
   }
-  _fillLinearGradient(shape: Shape) {
-    const grd = shape._getLinearGradient();
-
-    if (grd) {
-      this.setAttr('fillStyle', grd);
+  _getFillStyle(shape: Shape) {
+    const color = shape.fill();
+    const priority = shape.fillPriority();
+    if (color && priority === 'color') return color;
+    const pattern = shape.fillPatternImage();
+    if (pattern && priority === 'pattern') return this._getFillPattern(shape);
+    const linear = shape.fillLinearGradientColorStops();
+    if (linear && priority === 'linear-gradient')
+      return shape._getLinearGradient();
+    const radial = shape.fillRadialGradientColorStops();
+    if (radial && priority === 'radial-gradient')
+      return shape._getRadialGradient();
+    if (color) return color;
+    if (pattern) return this._getFillPattern(shape);
+    if (linear) return shape._getLinearGradient();
+    if (radial) return shape._getRadialGradient();
+  }
+  _fill(shape: Shape) {
+    const style = this._getFillStyle(shape);
+    if (style !== undefined) {
+      this.setAttr('fillStyle', style);
       shape._fillFunc(this);
-    }
-  }
-  _fillRadialGradient(shape: Shape) {
-    const grd = shape._getRadialGradient();
-    if (grd) {
-      this.setAttr('fillStyle', grd);
-      shape._fillFunc(this);
-    }
-  }
-  _fill(shape) {
-    const hasColor = shape.fill(),
-      fillPriority = shape.getFillPriority();
-
-    // priority fills
-    if (hasColor && fillPriority === 'color') {
-      this._fillColor(shape);
-      return;
-    }
-
-    const hasPattern = shape.getFillPatternImage();
-    if (hasPattern && fillPriority === 'pattern') {
-      this._fillPattern(shape);
-      return;
-    }
-
-    const hasLinearGradient = shape.getFillLinearGradientColorStops();
-    if (hasLinearGradient && fillPriority === 'linear-gradient') {
-      this._fillLinearGradient(shape);
-      return;
-    }
-
-    const hasRadialGradient = shape.getFillRadialGradientColorStops();
-    if (hasRadialGradient && fillPriority === 'radial-gradient') {
-      this._fillRadialGradient(shape);
-      return;
-    }
-
-    // now just try and fill with whatever is available
-    if (hasColor) {
-      this._fillColor(shape);
-    } else if (hasPattern) {
-      this._fillPattern(shape);
-    } else if (hasLinearGradient) {
-      this._fillLinearGradient(shape);
-    } else if (hasRadialGradient) {
-      this._fillRadialGradient(shape);
     }
   }
   _strokeLinearGradient(shape) {
@@ -922,6 +882,13 @@ export class SceneContext extends Context {
       this.setAttr('strokeStyle', grd);
     }
   }
+  _applyStrokeStyle(shape: Shape) {
+    if (shape.strokeLinearGradientColorStops()) {
+      this._strokeLinearGradient(shape);
+    } else {
+      this.setAttr('strokeStyle', shape.stroke());
+    }
+  }
   _stroke(shape) {
     const dash = shape.dash(),
       // ignore strokeScaleEnabled for Text
@@ -945,12 +912,7 @@ export class SceneContext extends Context {
       this.setAttr('shadowColor', 'rgba(0,0,0,0)');
     }
 
-    const hasLinearGradient = shape.getStrokeLinearGradientColorStops();
-    if (hasLinearGradient) {
-      this._strokeLinearGradient(shape);
-    } else {
-      this.setAttr('strokeStyle', shape.stroke());
-    }
+    this._applyStrokeStyle(shape);
 
     // Resolve the gradient in local coordinates before drawing an unscaled stroke.
     if (!strokeScaleEnabled) {

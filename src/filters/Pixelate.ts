@@ -18,8 +18,8 @@ import { getNumberValidator } from '../Validators.ts';
  * node.pixelSize(10);
  */
 
-export const Pixelate: Filter = function (imageData) {
-  let pixelSize = Math.ceil(this.pixelSize()),
+export const Pixelate: Filter = function (imageData, pixelRatio = 1) {
+  let pixelSize = Math.ceil(this.pixelSize() * pixelRatio),
     width = imageData.width,
     height = imageData.height,
     //pixelsPerBin = pixelSize * pixelSize,

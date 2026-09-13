@@ -90,6 +90,10 @@ const TRANSFORM_CHANGE_STR = [
   'offsetYChange',
   'transformsEnabledChange',
   'strokeWidthChange',
+  'strokeChange',
+  'strokeLinearGradientColorStopsChange',
+  'strokeScaleEnabledChange',
+  'strokeEnabledChange',
   'draggableChange',
 ];
 
@@ -320,7 +324,10 @@ export class Transformer extends Group {
     this.update = this.update.bind(this);
 
     // update transformer data for certain attr changes
-    this.on(ATTR_CHANGE_LIST, this.update);
+    this.on(ATTR_CHANGE_LIST, (event) => {
+      if (event.type === 'ignoreStrokeChange') this._resetTransformCache();
+      this.update();
+    });
 
     if (this.getNode()) {
       this.update();
@@ -573,8 +580,11 @@ export class Transformer extends Group {
         bounds.width !== width ||
         bounds.height !== height
       ) {
+        let trans = node.getAbsoluteTransform();
+        const [a, b, c, d] = trans.getMatrix();
+        const collapsed = a * d - b * c === 0;
         const box = node.getClientRect({
-          skipTransform: true,
+          skipTransform: !collapsed,
           skipShadow: true,
           skipStroke: ignoreStroke,
         });
@@ -584,7 +594,7 @@ export class Transformer extends Group {
           { x: box.x + box.width, y: box.y + box.height },
           { x: box.x, y: box.y + box.height },
         ];
-        const trans = node.getAbsoluteTransform();
+        if (collapsed) trans = new Transform();
         bounds = {
           rotation,
           ignoreStroke,

@@ -52,10 +52,9 @@ export const Emboss: Filter = function (imageData) {
   const SCALE = (128 / 1020) * strength; // ≈0.1255 * strength
 
   // Precompute luminance (Rec.709)
-  const src = new Uint8ClampedArray(data); // snapshot
   const lum = new Float32Array(w * h);
   for (let p = 0, i = 0; i < data.length; i += 4, p++) {
-    lum[p] = 0.2126 * src[i] + 0.7152 * src[i + 1] + 0.0722 * src[i + 2];
+    lum[p] = 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2];
   }
 
   // Sobel kernels (flattened)
@@ -86,14 +85,12 @@ export const Emboss: Filter = function (imageData) {
       if (blend) {
         // Add the emboss "relief" around chosen bias to original RGB
         const delta = outGray - bias; // symmetric around whiteLevel
-        data[o] = clamp8(src[o] + delta);
-        data[o + 1] = clamp8(src[o + 1] + delta);
-        data[o + 2] = clamp8(src[o + 2] + delta);
-        data[o + 3] = src[o + 3];
+        data[o] = clamp8(data[o] + delta);
+        data[o + 1] = clamp8(data[o + 1] + delta);
+        data[o + 2] = clamp8(data[o + 2] + delta);
       } else {
         // Grayscale embossed output
         data[o] = data[o + 1] = data[o + 2] = outGray;
-        data[o + 3] = src[o + 3];
       }
     }
   }

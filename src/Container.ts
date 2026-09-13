@@ -320,14 +320,14 @@ export abstract class Container<
     // Perf: bracket absoluteTransform cascades with a depth counter so
     // Node._runAfterAbsTransformCascade can defer work until the outermost
     // walk returns. try/finally so depth/flush survive listener exceptions.
-    const isAbsTransform = attr === 'absoluteTransform';
+    const isAbsTransform = attr === undefined || attr === 'absoluteTransform';
     if (isAbsTransform) Node._absTransformCascadeDepth++;
     try {
       super._clearSelfAndDescendantCache(attr);
       // a cached container is drawn from its bitmap, so its descendants keep
       // their transform caches while it moves (perf); Node.getAbsoluteTransform
       // skips those caches under a cached ancestor
-      if (isAbsTransform && this.isCached()) return;
+      if (attr === 'absoluteTransform' && this.isCached()) return;
       this.children?.forEach(function (node) {
         node._clearSelfAndDescendantCache(attr);
       });
@@ -446,6 +446,9 @@ export abstract class Container<
   getClientRect(config: GetClientRectConfig = {}): IRect {
     const skipTransform = config.skipTransform;
     const relativeTo = config.relativeTo;
+    const [a, b, c, d] = this.getAbsoluteTransform().getMatrix();
+    // A zero scale cannot project local padding for a non-scaling stroke.
+    const measureTransformed = !skipTransform && a * d - b * c === 0;
 
     let minX, minY, maxX, maxY;
     let selfRect = {
@@ -462,7 +465,7 @@ export abstract class Container<
       }
 
       const rect = child.getClientRect({
-        relativeTo: that,
+        relativeTo: measureTransformed ? relativeTo : that,
         skipShadow: config.skipShadow,
         skipStroke: config.skipStroke,
       });
@@ -506,7 +509,7 @@ export abstract class Container<
       };
     }
 
-    if (!skipTransform) {
+    if (!skipTransform && !measureTransformed) {
       return this._transformedRect(selfRect, relativeTo);
     }
     return selfRect;

@@ -3484,52 +3484,32 @@ describe('Transformer', function () {
     assert.equal(rect.height(), 100);
   });
 
-  it.skip('transformer should skip scale on stroke if strokeScaleEnabled = false', function () {
-    var stage = addStage();
-    var layer = new Konva.Layer();
+  it('Transformer follows non-scaling stroke bounds and ignoreStroke', function () {
+    const stage = addStage(),
+      layer = new Konva.Layer();
     stage.add(layer);
-
-    var rect = new Konva.Rect({
+    const rect = new Konva.Rect({
       x: 50,
       y: 50,
-      draggable: true,
       width: 10,
       height: 10,
       scaleX: 10,
       scaleY: 10,
-      fill: 'yellow',
-      strokeWidth: 10,
       stroke: 'red',
+      strokeWidth: 10,
       strokeScaleEnabled: false,
     });
     layer.add(rect);
-
-    var tr = new Konva.Transformer({
-      nodes: [rect],
-      ignoreStroke: true,
-    });
+    const tr = new Konva.Transformer({ nodes: [rect] });
     layer.add(tr);
-    layer.draw();
-
-    assert.equal(tr.x(), 50);
-    assert.equal(tr.y(), 50);
-
-    assert.equal(tr.width(), 100);
-    assert.equal(tr.height(), 100);
-
-    tr._fitNodesInto({
-      x: 50,
-      y: 50,
-      width: 100,
-      height: 100,
-      rotation: 0,
-    });
-
-    assert.equal(rect.x(), 50);
-    assert.equal(rect.y(), 50);
-
-    assert.equal(rect.width(), 100);
-    assert.equal(rect.height(), 100);
+    assert.deepEqual(tr.position(), { x: 45, y: 45 });
+    assert.deepEqual(tr.size(), { width: 110, height: 110 });
+    tr.ignoreStroke(true);
+    assert.deepEqual(tr.position(), { x: 50, y: 50 });
+    assert.deepEqual(tr.size(), { width: 100, height: 100 });
+    tr.ignoreStroke(false);
+    rect.scale({ x: 5, y: 5 });
+    assert.deepEqual(tr.size(), { width: 60, height: 60 });
   });
 
   it.skip('check calculations when the size = 0', function () {
@@ -6256,5 +6236,63 @@ describe('Transformer', function () {
     const activeCursor = stage.content.style.cursor;
     simulateMouseUp(tr);
     assert.equal(activeCursor, cursor);
+  });
+  it('Transformer updates when stroke scaling or stroke visibility changes', function () {
+    const { rect, tr } = setup();
+    rect.setAttrs({ stroke: 'blue', strokeWidth: 10, scaleX: 2, scaleY: 2 });
+    assert.deepEqual(tr.size(), { width: 220, height: 180 });
+    rect.strokeScaleEnabled(false);
+    assert.deepEqual(tr.size(), { width: 210, height: 170 });
+    rect.strokeEnabled(false);
+    assert.deepEqual(tr.size(), { width: 200, height: 160 });
+    rect.strokeEnabled(true);
+    rect.stroke(undefined);
+    assert.deepEqual(tr.size(), { width: 200, height: 160 });
+    rect.strokeLinearGradientColorStops([0, 'red', 1, 'blue']);
+    assert.deepEqual(tr.size(), { width: 210, height: 170 });
+  });
+  it('Transformer includes non-scaling strokes on collapsed nodes and groups', function () {
+    const { rect, tr, stage } = setup({ useSingleNodeRotation: false });
+    rect.setAttrs({
+      stroke: 'blue',
+      strokeWidth: 10,
+      strokeScaleEnabled: false,
+      scaleX: 0,
+      scaleY: 2,
+    });
+    assert.deepEqual(tr.size(), { width: 10, height: 170 });
+    const group = new Konva.Group({ scaleX: 0, scaleY: 2 });
+    stage.getLayers()[0].add(group);
+    rect.moveTo(group);
+    rect.scale({ x: 1, y: 1 });
+    tr.nodes([group]);
+    assert.deepEqual(tr.size(), { width: 10, height: 170 });
+  });
+
+  it('Transformer follows stroke bounds when a shape or ancestor cache changes', function () {
+    const { rect, tr, stage } = setup();
+    rect.setAttrs({
+      width: 20,
+      height: 20,
+      stroke: 'blue',
+      strokeWidth: 10,
+      strokeScaleEnabled: false,
+      scaleX: 2,
+      scaleY: 2,
+    });
+    assert.deepEqual(tr.size(), { width: 50, height: 50 });
+    rect.cache();
+    assert.deepEqual(tr.size(), { width: 60, height: 60 });
+    rect.clearCache();
+    assert.deepEqual(tr.size(), { width: 50, height: 50 });
+
+    const group = new Konva.Group({ scaleX: 2, scaleY: 2 });
+    stage.getLayers()[0].add(group);
+    rect.moveTo(group);
+    assert.deepEqual(tr.size(), { width: 90, height: 90 });
+    group.cache();
+    assert.deepEqual(tr.size(), { width: 100, height: 100 });
+    group.clearCache();
+    assert.deepEqual(tr.size(), { width: 90, height: 90 });
   });
 });

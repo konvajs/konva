@@ -473,6 +473,141 @@ describe('Filter', function () {
 });
 
 describe('Filter', function () {
+  for (const [name, filters] of [
+    ['Blur', [Konva.Filters.Blur]],
+    ['CSS blur', ['blur(8px)']],
+    ['mixed CSS blur', ['blur(16px)', function () {}]],
+  ] as const) {
+    it(`${name} keeps its visual radius across cache pixel ratios`, function () {
+      const rect = new Konva.Rect({
+        x: 30,
+        y: 10,
+        width: 40,
+        height: 60,
+        fill: 'red',
+        blurRadius: 8,
+        filters: [...filters],
+      });
+      try {
+        const profiles = [1, 2, 3].map((pixelRatio) => {
+          rect.cache({ x: -30, y: -10, width: 100, height: 80, pixelRatio });
+          const context = rect
+            .toCanvas({ x: 0, y: 0, width: 100, height: 80, pixelRatio: 1 })
+            .getContext('2d')!;
+          return [18, 22, 26, 30, 34, 38].map(
+            (x) => context.getImageData(x, 40, 1, 1).data[3]
+          );
+        });
+        for (const profile of profiles.slice(1))
+          assertAlmostDeepEqual(profile, profiles[0], 8);
+      } finally {
+        rect.destroy();
+      }
+    });
+  }
+
+  it('native CSS shadow offsets scale without changing colors or percentages', function () {
+    if (!('filter' in Konva.Util.createCanvasElement().getContext('2d')!))
+      this.skip();
+    const filters = [
+      'drop-shadow(20px 0px 0px rgb(0, 0, 255)) brightness(50%)',
+    ];
+    const rect = new Konva.Rect({
+      x: 10,
+      y: 10,
+      width: 10,
+      height: 10,
+      fill: 'red',
+      filters,
+    });
+    try {
+      for (const pixelRatio of [1, 2, 3]) {
+        rect.cache({ x: -10, y: -10, width: 60, height: 30, pixelRatio });
+        const context = rect
+          .toCanvas({ x: 0, y: 0, width: 60, height: 30, pixelRatio: 1 })
+          .getContext('2d')!;
+        assertAlmostDeepEqual(
+          Array.from(context.getImageData(15, 15, 1, 1).data),
+          [128, 0, 0, 255],
+          2
+        );
+        assertAlmostDeepEqual(
+          Array.from(context.getImageData(35, 15, 1, 1).data),
+          [0, 0, 128, 255],
+          2
+        );
+        assert.deepEqual(rect.filters(), filters);
+      }
+    } finally {
+      rect.destroy();
+    }
+  });
+
+  it('large Blur radii remain visible and keep their size at high DPI', function () {
+    const rect = new Konva.Rect({
+      x: 200,
+      width: 200,
+      height: 10,
+      fill: 'red',
+      filters: [Konva.Filters.Blur],
+    });
+    try {
+      for (const blurRadius of [120, 200]) {
+        rect.blurRadius(blurRadius);
+        const profiles = [1, 3].map((pixelRatio) => {
+          rect.cache({ x: -200, y: 0, width: 600, height: 10, pixelRatio });
+          const context = rect
+            .toCanvas({ x: 0, y: 0, width: 600, height: 10, pixelRatio: 1 })
+            .getContext('2d')!;
+          return [120, 160, 200, 240, 280].map(
+            (x) => context.getImageData(x, 5, 1, 1).data[3]
+          );
+        });
+        assert.isAbove(profiles[0][4], 200);
+        assertAlmostDeepEqual(profiles[1], profiles[0], 4);
+      }
+    } finally {
+      rect.destroy();
+    }
+  });
+
+  it('Pixelate keeps block size while custom filters receive full-resolution pixels', function () {
+    const group = new Konva.Group({ pixelSize: 8 });
+    group.add(new Konva.Rect({ width: 4, height: 8, fill: 'red' }));
+    group.add(new Konva.Rect({ x: 4, width: 12, height: 8, fill: 'blue' }));
+    try {
+      for (const pixelRatio of [1, 2, 3]) {
+        let called = false;
+        group.filters([
+          Konva.Filters.Pixelate,
+          function (data, ratio) {
+            assert.strictEqual(this, group);
+            assert.equal(ratio, pixelRatio);
+            assert.equal(data.width, 16 * pixelRatio);
+            assert.equal(data.height, 8 * pixelRatio);
+            called = true;
+          },
+        ]);
+        group.cache({ x: 0, y: 0, width: 16, height: 8, pixelRatio });
+        const context = group
+          .toCanvas({ x: 0, y: 0, width: 16, height: 8, pixelRatio: 1 })
+          .getContext('2d')!;
+        assert.isTrue(called);
+        for (const x of [1, 6])
+          assert.deepEqual(
+            Array.from(context.getImageData(x, 4, 1, 1).data),
+            [128, 0, 128, 255]
+          );
+        assert.deepEqual(
+          Array.from(context.getImageData(12, 4, 1, 1).data),
+          [0, 0, 255, 255]
+        );
+      }
+    } finally {
+      group.destroy();
+    }
+  });
+
   function pixels(rgba: number[], width = 3, height = 3) {
     const data = Konva.Util.createCanvasElement()
       .getContext('2d')!
@@ -598,6 +733,24 @@ describe('Filter', function () {
       );
     } finally {
       rect.destroy();
+    }
+  });
+  it('Emboss blending preserves source colors and alpha at image edges', function () {
+    const node = new Konva.Rect({
+      embossDirection: 'left',
+      embossStrength: 0.1,
+      embossBlend: true,
+    });
+    try {
+      const image = pixels([20, 40, 60, 71], 2, 1);
+      image.data.set([30, 50, 70, 137], 4);
+      Konva.Filters.Emboss.call(node, image);
+      assert.deepEqual(
+        Array.from(image.data),
+        [25, 45, 65, 71, 35, 55, 75, 137]
+      );
+    } finally {
+      node.destroy();
     }
   });
 });

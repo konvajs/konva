@@ -1,6 +1,7 @@
 import { assert } from 'chai';
 
 import {
+  assertAlmostDeepEqual,
   addStage,
   simulateMouseDown,
   simulateMouseMove,
@@ -2541,5 +2542,147 @@ describe('Shape', function () {
     });
     assert.equal(errors, 1);
     assert.deepEqual(shape.dash(), [5, 5]);
+  });
+});
+
+describe('Non-scaling stroke bounds', function () {
+  it('rotated and reflected bounds contain the constant-width stroke', function () {
+    const rect = new Konva.Rect({
+      x: 100,
+      y: 100,
+      width: 20,
+      height: 10,
+      scaleX: -2,
+      scaleY: 3,
+      rotation: 90,
+      stroke: 'red',
+      strokeWidth: 10,
+      strokeScaleEnabled: false,
+    });
+    try {
+      assertAlmostDeepEqual(rect.getClientRect(), {
+        x: 65,
+        y: 55,
+        width: 40,
+        height: 50,
+      });
+      rect.setAttrs({ rotation: 35, skewX: 0.4 });
+      const bounds = rect.getClientRect();
+      const data = rect
+        .toCanvas({ x: 0, y: 0, width: 200, height: 200 })
+        .getContext('2d')!
+        .getImageData(0, 0, 200, 200).data;
+      let visible = 0;
+      for (let y = 0; y < 200; y++)
+        for (let x = 0; x < 200; x++) {
+          if (data[(y * 200 + x) * 4 + 3] < 20) continue;
+          visible++;
+          assert.isAtLeast(x, Math.floor(bounds.x));
+          assert.isBelow(x, Math.ceil(bounds.x + bounds.width));
+          assert.isAtLeast(y, Math.floor(bounds.y));
+          assert.isBelow(y, Math.ceil(bounds.y + bounds.height));
+        }
+      assert.isAbove(visible, 0);
+    } finally {
+      rect.destroy();
+    }
+  });
+  it('bounds include the rendered stroke under a scaled ancestor', function () {
+    const group = new Konva.Group({ x: 50, y: 50, scaleX: 10, scaleY: 5 });
+    const rect = new Konva.Rect({
+      width: 10,
+      height: 20,
+      stroke: 'red',
+      strokeWidth: 10,
+      strokeScaleEnabled: false,
+    });
+    group.add(rect);
+    try {
+      assert.deepEqual(rect.getClientRect(), {
+        x: 45,
+        y: 45,
+        width: 110,
+        height: 110,
+      });
+      assert.deepEqual(rect.getClientRect({ skipTransform: true }), {
+        x: -0.5,
+        y: -1,
+        width: 11,
+        height: 22,
+      });
+      assert.deepEqual(rect.getClientRect({ relativeTo: group }), {
+        x: -0.5,
+        y: -1,
+        width: 11,
+        height: 22,
+      });
+    } finally {
+      group.destroy();
+    }
+  });
+  it('a collapsed shape still exports its visible non-scaling stroke', function () {
+    const rect = new Konva.Rect({
+      x: 40,
+      y: 40,
+      width: 20,
+      height: 20,
+      scaleX: 0,
+      scaleY: 2,
+      stroke: 'red',
+      strokeWidth: 10,
+      strokeScaleEnabled: false,
+    });
+    try {
+      const bounds = rect.getClientRect();
+      assert.isAtMost(bounds.x, 35);
+      assert.isAtLeast(bounds.x + bounds.width, 45);
+      const canvas = rect.toCanvas();
+      assert.isAbove(canvas.width, 0);
+      const reference = Konva.Util.createCanvasElement();
+      reference.width = canvas.width;
+      reference.height = canvas.height;
+      const context = reference.getContext('2d')!;
+      context.setTransform(0, 0, 0, 2, 40 - bounds.x, 40 - bounds.y);
+      context.beginPath();
+      context.rect(0, 0, 20, 20);
+      context.setTransform(1, 0, 0, 1, 0, 0);
+      context.lineWidth = 10;
+      context.strokeStyle = 'red';
+      context.stroke();
+      assert.deepEqual(
+        canvas.getContext('2d')!.getImageData(0, 0, canvas.width, canvas.height)
+          .data,
+        context.getImageData(0, 0, canvas.width, canvas.height).data
+      );
+    } finally {
+      rect.destroy();
+    }
+  });
+
+  it('a collapsed ancestor keeps finite bounds and the visible stroke width', function () {
+    const group = new Konva.Group({ x: 40, y: 40, scaleX: 0, scaleY: 2 });
+    const rect = new Konva.Rect({
+      width: 20,
+      height: 20,
+      stroke: 'red',
+      strokeWidth: 10,
+      strokeScaleEnabled: false,
+    });
+    group.add(rect);
+    try {
+      assert.deepEqual(group.getClientRect(), {
+        x: 35,
+        y: 35,
+        width: 10,
+        height: 50,
+      });
+      assert.isTrue(
+        Object.values(rect.getClientRect({ relativeTo: group })).every(
+          Number.isFinite
+        )
+      );
+    } finally {
+      group.destroy();
+    }
   });
 });

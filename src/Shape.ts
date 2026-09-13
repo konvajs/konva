@@ -532,9 +532,41 @@ export class Shape<
 
     const applyStroke = !config.skipStroke && this.hasStroke();
     const strokeWidth: number = (applyStroke && this.strokeWidth()) || 0;
+    let strokeWidthX = strokeWidth;
+    let strokeWidthY = strokeWidth;
+    let collapsedStroke: Transform | undefined;
+    if (strokeWidth && !this.strokeScaleEnabled()) {
+      // Strokes are constant in the canvas they are drawn into. A cached
+      // ancestor supplies that coordinate space until its bitmap is rebuilt.
+      let top: Node | null = this;
+      while (top && !top.isCached() && !top._isUnderCache) top = top.parent;
+      const [a, b, c, d] = this.getAbsoluteTransform(top).getMatrix();
+      const determinant = Math.abs(a * d - b * c);
+      if (determinant) {
+        strokeWidthX *= Math.hypot(c, d) / determinant;
+        strokeWidthY *= Math.hypot(a, b) / determinant;
+      } else if (!skipTransform) {
+        // A collapsed path can still draw a stroke after the context resets
+        // its transform. Expand in the destination space in this case.
+        strokeWidthX = strokeWidthY = 0;
+        collapsedStroke = top
+          ? top.getAbsoluteTransform().copy()
+          : new Transform();
+        if (relativeTo) {
+          const relativeTransform = relativeTo.getAbsoluteTransform();
+          const [a, b, c, d] = relativeTransform.getMatrix();
+          // A collapsed ancestor has no inverse. Its local bounds can only
+          // describe the uncollapsed stroke; world bounds are measured directly.
+          collapsedStroke =
+            a * d - b * c
+              ? relativeTransform.copy().invert().multiply(collapsedStroke)
+              : new Transform();
+        }
+      }
+    }
 
-    const fillAndStrokeWidth = fillRect.width + strokeWidth;
-    const fillAndStrokeHeight = fillRect.height + strokeWidth;
+    const fillAndStrokeWidth = fillRect.width + strokeWidthX;
+    const fillAndStrokeHeight = fillRect.height + strokeWidthY;
 
     const applyShadow = !config.skipShadow && this.hasShadow();
     const shadowOffsetX = applyShadow ? this.shadowOffsetX() : 0;
@@ -552,16 +584,26 @@ export class Shape<
       width: width,
       height: height,
       x:
-        -(strokeWidth / 2 + blurRadius) +
+        -(strokeWidthX / 2 + blurRadius) +
         Math.min(shadowOffsetX, 0) +
         fillRect.x,
       y:
-        -(strokeWidth / 2 + blurRadius) +
+        -(strokeWidthY / 2 + blurRadius) +
         Math.min(shadowOffsetY, 0) +
         fillRect.y,
     };
     if (!skipTransform) {
-      return this._transformedRect(rect, relativeTo);
+      const transformed = this._transformedRect(rect, relativeTo);
+      if (collapsedStroke) {
+        const [a, b, c, d] = collapsedStroke.getMatrix();
+        const x = (strokeWidth * Math.hypot(a, c)) / 2;
+        const y = (strokeWidth * Math.hypot(b, d)) / 2;
+        transformed.x -= x;
+        transformed.y -= y;
+        transformed.width += x * 2;
+        transformed.height += y * 2;
+      }
+      return transformed;
     }
     return rect;
   }

@@ -19,7 +19,12 @@ import {
   getStringValidator,
 } from './Validators.ts';
 
-export type FilterFunction = (this: Node, imageData: ImageData) => void;
+// ImageData uses backing pixels; pixelRatio converts node lengths to pixels.
+export type FilterFunction = (
+  this: Node,
+  imageData: ImageData,
+  pixelRatio?: number
+) => void;
 export type Filter = FilterFunction | string;
 type Filters = Array<FilterFunction | string>;
 
@@ -54,7 +59,7 @@ function parseCSSFilters(cssFilter: string): FilterFunction {
     steps.push({ name, value });
   }
 
-  return function (imageData) {
+  return function (imageData, pixelRatio = 1) {
     for (const { name, value } of steps) {
       if (['grayscale', 'sepia', 'invert'].includes(name)) {
         const amount = Math.min(1, Math.max(0, value));
@@ -92,7 +97,7 @@ function parseCSSFilters(cssFilter: string): FilterFunction {
       if (name === 'brightness') context.attrs.brightness = value;
       if (name === 'contrast')
         context.attrs.contrast = 100 * (Math.sqrt(value) - 1);
-      filter.call(context, imageData);
+      filter.call(context, imageData, pixelRatio);
     }
   };
 }
@@ -373,7 +378,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   _clearSelfAndDescendantCache(attr?: string) {
     this._clearCache(attr);
     // trigger clear cache, so transformer can use it
-    if (attr === ABSOLUTE_TRANSFORM) {
+    if (attr === undefined || attr === ABSOLUTE_TRANSFORM) {
       this.fire('absoluteTransformChange');
     }
   }
@@ -467,10 +472,13 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       conf.width === undefined ||
       conf.height === undefined
     ) {
+      const wasUnderCache = this._isUnderCache;
+      this._isUnderCache = true;
       rect = this.getClientRect({
         skipTransform: true,
         relativeTo: this.getParent() || undefined,
       });
+      this._isUnderCache = wasUnderCache;
     }
     let width = Math.ceil(conf.width || rect.width),
       height = Math.ceil(conf.height || rect.height),
@@ -572,6 +580,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       y: y,
     };
 
+    // Entering cache space changes non-scaling stroke bounds for descendants.
+    this._clearSelfAndDescendantCache();
     this._requestDraw();
 
     return this;
@@ -619,6 +629,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   /**
    * Return client rectangle {x, y, width, height} of node. This rectangle also include all styling (strokes, shadows, etc).
    * The purpose of the method is similar to getBoundingClientRect API of the DOM.
+   * Non-scaling stroke padding is converted from its drawing canvas to the requested coordinates.
+   * Cached strokes use the cache's coordinates; their pixels scale with the cached bitmap.
    * @method
    * @name Konva.Node#getClientRect
    * @param {Object} config
@@ -749,7 +761,15 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       sceneCanvas._logicalHeight
     );
     if (useNativeOnly) {
-      const finalFilter = (filters as unknown as string[]).join(' ');
+      // Canvas filters use backing-pixel coordinates, independent of the CTM.
+      // Scale length tokens, leaving colors, percentages and URL references alone.
+      const finalFilter = (filters as string[])
+        .join(' ')
+        .replace(
+          /url\((?:[^()"']|"[^"]*"|'[^']*')*\)|"[^"]*"|'[^']*'|([-+]?(?:\d*\.)?\d+(?:e[-+]?\d+)?)(px|em|rem|ex|ch|cap|ic|lh|rlh|vw|vh|vmin|vmax|cm|mm|q|in|pt|pc)\b/gi,
+          (token, value, unit) =>
+            value === undefined ? token : `${Number(value) * ratio}${unit}`
+        );
       filterContext.clear();
       filterContext.save();
       filterContext.setAttr('filter', finalFilter);
@@ -790,7 +810,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         if (typeof filter === 'string') {
           filter = parseCSSFilters(filter);
         }
-        filter.call(this, imageData);
+        filter.call(this, imageData, ratio);
       }
       filterContext.putImageData(imageData, 0, 0);
     } catch (e: any) {
@@ -3408,6 +3428,8 @@ addGetterSetter(Node, 'filters', undefined, function (this: Node, val) {
  * get/set filters. Supports function filters, CSS filter strings, or mixed arrays.
  * CSS filters are applied using native browser performance when possible, function filters use ImageData manipulation.
  * CSS filters automatically fall back to function filters in unsupported browsers.
+ * Blur radii, pixelation sizes and CSS lengths use node coordinates, independent of cache pixelRatio.
+ * Custom filters receive (imageData, pixelRatio). ImageData contains full-resolution backing pixels.
  * @name Konva.Node#filters
  * @method
  * @param {Array} filters array of filter functions and/or CSS filter strings
@@ -3416,7 +3438,8 @@ addGetterSetter(Node, 'filters', undefined, function (this: Node, val) {
  * // get filters
  * var filters = node.filters();
  *
- * // set CSS filters only (no caching required, uses native performance)
+ * // set CSS filters only (caching required, uses native performance)
+ * node.cache();
  * node.filters(['blur(5px)', 'brightness(1.2)', 'contrast(1.5)']);
  *
  * // set function filters only (caching required)

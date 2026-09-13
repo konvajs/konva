@@ -100,7 +100,7 @@ function premultiply(channel: number, alpha: number) {
   return alpha === 255 ? channel : (channel * alpha) / 255;
 }
 
-// the stack sums overflow 32-bit integers above this radius
+// Preserve the maximum logical radius; high-DPI caches need larger kernels.
 const MAX_RADIUS = 180;
 
 function filterGaussBlurRGBA(imageData, radius) {
@@ -135,8 +135,11 @@ function filterGaussBlurRGBA(imageData, radius) {
     radiusPlus1 = radius + 1,
     sumFactor = (radiusPlus1 * (radiusPlus1 + 1)) / 2,
     stackStart = new BlurStack(),
-    mul_sum = mul_table[radius],
-    shg_sum = shg_table[radius];
+    // Use floating-point normalization to avoid 32-bit overflow at high DPI.
+    normalization =
+      radius <= MAX_RADIUS
+        ? mul_table[radius] / 2 ** shg_table[radius]
+        : 1 / (radiusPlus1 * radiusPlus1);
 
   let stackEnd = null,
     stack = stackStart,
@@ -209,10 +212,10 @@ function filterGaussBlurRGBA(imageData, radius) {
     stackIn = stackStart;
     stackOut = stackEnd;
     for (let x = 0; x < width; x++) {
-      pixels[yi] = (r_sum * mul_sum) >> shg_sum;
-      pixels[yi + 1] = (g_sum * mul_sum) >> shg_sum;
-      pixels[yi + 2] = (b_sum * mul_sum) >> shg_sum;
-      pixels[yi + 3] = (a_sum * mul_sum) >> shg_sum;
+      pixels[yi] = Math.floor(r_sum * normalization);
+      pixels[yi + 1] = Math.floor(g_sum * normalization);
+      pixels[yi + 2] = Math.floor(b_sum * normalization);
+      pixels[yi + 3] = Math.floor(a_sum * normalization);
 
       r_sum -= r_out_sum;
       g_sum -= g_out_sum;
@@ -316,12 +319,12 @@ function filterGaussBlurRGBA(imageData, radius) {
     stackOut = stackEnd;
     for (let y = 0; y < height; y++) {
       p = yi << 2;
-      pixels[p + 3] = pa = (a_sum * mul_sum) >> shg_sum;
+      pixels[p + 3] = pa = Math.floor(a_sum * normalization);
       if (pa > 0) {
         pa = 255 / pa;
-        pixels[p] = ((r_sum * mul_sum) >> shg_sum) * pa;
-        pixels[p + 1] = ((g_sum * mul_sum) >> shg_sum) * pa;
-        pixels[p + 2] = ((b_sum * mul_sum) >> shg_sum) * pa;
+        pixels[p] = Math.floor(r_sum * normalization) * pa;
+        pixels[p + 1] = Math.floor(g_sum * normalization) * pa;
+        pixels[p + 2] = Math.floor(b_sum * normalization) * pa;
       } else {
         pixels[p] = pixels[p + 1] = pixels[p + 2] = 0;
       }
@@ -376,8 +379,10 @@ function filterGaussBlurRGBA(imageData, radius) {
  * node.filters([Konva.Filters.Blur]);
  * node.blurRadius(10);
  */
-export const Blur: Filter = function Blur(imageData) {
-  const radius = Math.min(Math.round(this.blurRadius()), MAX_RADIUS);
+export const Blur: Filter = function Blur(imageData, pixelRatio = 1) {
+  const radius = Math.round(
+    Math.min(this.blurRadius(), MAX_RADIUS) * pixelRatio
+  );
 
   if (radius > 0) {
     filterGaussBlurRGBA(imageData, radius);

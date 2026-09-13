@@ -1983,4 +1983,42 @@ describe('Cache', function () {
     layer.draw();
     assert.isTrue(stage.getIntersection({ x: 10, y: 10 }) === top);
   });
+  it('non-scaling strokes are not clipped when caching a scaled shape or group', function () {
+    for (const cacheGroup of [false, true]) {
+      const group = new Konva.Group({ scaleX: 2, scaleY: 2 });
+      const rect = new Konva.Rect({
+        x: 10,
+        y: 10,
+        width: 20,
+        height: 20,
+        scaleX: 2,
+        scaleY: 2,
+        stroke: 'red',
+        strokeWidth: 10,
+        strokeScaleEnabled: false,
+      });
+      group.add(rect);
+      try {
+        const node = cacheGroup ? group : rect;
+        node.cache();
+        node.scale({ x: 1, y: 1 });
+        const canvas = node.toCanvas({
+          x: -10,
+          y: -10,
+          width: 100,
+          height: 100,
+        });
+        const x = cacheGroup ? 6 : 12;
+        const y = cacheGroup ? 30 : 40;
+        assert.deepEqual(
+          Array.from(
+            canvas.getContext('2d')!.getImageData(x + 10, y + 10, 1, 1).data
+          ),
+          [255, 0, 0, 255]
+        );
+      } finally {
+        group.destroy();
+      }
+    }
+  });
 });

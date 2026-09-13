@@ -1,5 +1,5 @@
 import { Util } from '../Util.ts';
-import type { Context } from '../Context.ts';
+import type { Context, SceneContext } from '../Context.ts';
 import { Factory } from '../Factory.ts';
 import type { ShapeConfig } from '../Shape.ts';
 import { Shape } from '../Shape.ts';
@@ -257,7 +257,7 @@ export class Text extends Shape<TextConfig> {
     this._setTextData();
   }
 
-  _sceneFunc(context: Context) {
+  _sceneFunc(context: SceneContext) {
     const textArr = this.textArr,
       textArrLen = textArr.length;
 
@@ -316,6 +316,14 @@ export class Text extends Shape<TextConfig> {
     }
 
     context.translate(padding, alignY + padding);
+
+    // Start the callback with the same fill that normal drawing would use.
+    // Assigning that color again then needs no override, including black.
+    if (charRenderFunc) {
+      const style = context._getFillStyle(this);
+      if (style !== undefined) context.fillStyle = style;
+      if (this.hasStroke()) context._applyStrokeStyle(this);
+    }
 
     // context styles entering the loop, used to detect styles set by
     // charRenderFunc; every character is drawn inside save()/restore(),

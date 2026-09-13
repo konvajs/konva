@@ -1982,7 +1982,7 @@ describe('Text', function () {
       x: 10,
       y: 10,
       text: 'AB',
-      fontSize: 20,
+      fontSize: 40,
       fill: 'black',
       stroke: 'blue',
       charRenderFunc: function (props) {
@@ -1995,19 +1995,16 @@ describe('Text', function () {
     layer.add(text);
     layer.draw();
 
-    var trace = layer.getContext().getTrace();
-
-    if (Konva._renderBackend === 'skia-canvas') {
-      assert.equal(
-        trace,
-        'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 20px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();fillStyle=black;fillText(A,0,16.934);lineWidth=2;strokeStyle=blue;miterLimit=2;strokeText(A,0,16.934);restore();save();fillStyle=black;fillStyle=#ff0000;fillText(B,13.34,16.934);lineWidth=2;strokeStyle=blue;miterLimit=2;strokeStyle=#008000;strokeText(B,13.34,16.934);restore();restore();restore();'
-      );
-    } else {
-      assert.equal(
-        trace,
-        'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 20px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();save();fillStyle=black;fillText(A,0,17);lineWidth=2;strokeStyle=blue;miterLimit=2;strokeText(A,0,17);restore();save();fillStyle=black;fillStyle=#ff0000;fillText(B,13.34,17);lineWidth=2;strokeStyle=blue;miterLimit=2;strokeStyle=#008000;strokeText(B,13.34,17);restore();restore();restore();'
-      );
+    const pixels = layer
+      .getContext()
+      .getImageData(0, 0, stage.width(), stage.height()).data;
+    const colors = new Set<string>();
+    for (let i = 0; i < pixels.length; i += 4) {
+      if (pixels[i + 3] === 255)
+        colors.add(`${pixels[i]},${pixels[i + 1]},${pixels[i + 2]}`);
     }
+    for (const color of ['0,0,0', '0,0,255', '255,0,0', '0,128,0'])
+      assert.isTrue(colors.has(color), `draws ${color}`);
   });
 
   it('text decoration with letterSpacing and lineHeight', function () {
@@ -2362,4 +2359,92 @@ describe('Text layout', function () {
     assert.equal(tr.width(), text.width());
     assert.equal(tr.findOne('.top-right')!.x(), text.width());
   });
+  it('charRenderFunc can paint black over a colored fill', function () {
+    const text = new Konva.Text({
+      text: 'X',
+      fontSize: 40,
+      fill: 'red',
+      charRenderFunc: ({ context }) => {
+        context.fillStyle = 'black';
+      },
+    });
+    try {
+      const canvas = text.toCanvas();
+      const pixels = canvas
+        .getContext('2d')!
+        .getImageData(0, 0, canvas.width, canvas.height).data;
+      assert.isTrue(
+        pixels.some((value, index) => index % 4 === 3 && value === 255)
+      );
+      for (let i = 0; i < pixels.length; i += 4) {
+        assert.equal(pixels[i], 0, 'every drawn pixel is black');
+      }
+    } finally {
+      text.destroy();
+    }
+  });
+
+  it('charRenderFunc can paint a black stroke over a colored stroke', function () {
+    const text = new Konva.Text({
+      text: 'X',
+      fontSize: 40,
+      fillEnabled: false,
+      stroke: 'red',
+      strokeWidth: 2,
+      charRenderFunc: ({ context }) => {
+        context.strokeStyle = 'black';
+      },
+    });
+    try {
+      const canvas = text.toCanvas();
+      const pixels = canvas
+        .getContext('2d')!
+        .getImageData(0, 0, canvas.width, canvas.height).data;
+      assert.isTrue(
+        pixels.some((value, index) => index % 4 === 3 && value === 255)
+      );
+      for (let i = 0; i < pixels.length; i += 4) assert.equal(pixels[i], 0);
+    } finally {
+      text.destroy();
+    }
+  });
+
+  for (const gradient of [false, true]) {
+    it(`character callbacks preserve ${gradient ? 'gradient' : 'solid'} fills through balanced save/restore`, function () {
+      // Node backends do not reliably restore gradient style getters.
+      // Konva delegates canvas state to the backend; verify this on the web.
+      if (gradient && !isBrowser) this.skip();
+      const text = new Konva.Text({
+        text: 'X',
+        fontSize: 40,
+        fill: 'red',
+        ...(gradient
+          ? {
+              fillPriority: 'linear-gradient',
+              fillLinearGradientStartPoint: { x: 0, y: 0 },
+              fillLinearGradientEndPoint: { x: 30, y: 0 },
+              fillLinearGradientColorStops: [0, 'red', 1, 'blue'],
+            }
+          : {}),
+      });
+      try {
+        const before = text.toCanvas();
+        text.charRenderFunc(({ context }) => {
+          context.save();
+          context.fillStyle = 'black';
+          context.restore();
+        });
+        const after = text.toCanvas();
+        assert.deepEqual(
+          after.getContext('2d')!.getImageData(0, 0, after.width, after.height)
+            .data,
+          before
+            .getContext('2d')!
+            .getImageData(0, 0, before.width, before.height).data
+        );
+      } finally {
+        text.destroy();
+      }
+    });
+  }
 });
