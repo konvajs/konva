@@ -110,7 +110,10 @@ export class TextPath extends Shape<TextPathConfig> {
   _getTextPathLength() {
     return Path.getPathLength(this.dataArray);
   }
-  _getPointAtLength(length: number) {
+  _getPointAtLength(
+    length: number,
+    cursor?: { index: number; offset: number }
+  ) {
     // if path is not defined yet, do nothing
     if (!this.attrs.data) {
       return null;
@@ -122,7 +125,7 @@ export class TextPath extends Shape<TextPathConfig> {
       return null;
     }
 
-    return Path.getPointAtLengthOfDataArray(length, this.dataArray);
+    return Path.getPointAtLengthOfDataArray(length, this.dataArray, cursor);
   }
 
   _readDataAttribute() {
@@ -288,6 +291,8 @@ export class TextPath extends Shape<TextPathConfig> {
 
     const letterSpacing = this.letterSpacing();
     const align = this.align();
+    const numberOfSpaces =
+      align === 'justify' ? this.text().split(' ').length - 1 : 0;
     const kerningFunc = this.kerningFunc();
 
     // The sum of individual character widths can exceed the whole-string width
@@ -317,14 +322,19 @@ export class TextPath extends Shape<TextPathConfig> {
     // 3. Calculate the rotation, width, and midpoint of the glyph using the start and end points,
     // 4. Add glyph width to the offsetToGlyph and repeat
     let offsetToGlyph = offset;
+    // Keep the original boundary selection across gaps between subpaths.
+    const cursor = this.dataArray.some(
+      (segment, index) => index > 0 && segment.command === 'M'
+    )
+      ? undefined
+      : { index: 0, offset: 0 };
     for (let i = 0; i < chars.length; i++) {
-      const charStartPoint = this._getPointAtLength(offsetToGlyph);
+      const charStartPoint = this._getPointAtLength(offsetToGlyph, cursor);
       if (!charStartPoint) return;
 
       const char = chars[i].char;
       let glyphWidth = chars[i].width + letterSpacing;
       if (char === ' ' && align === 'justify') {
-        const numberOfSpaces = this.text().split(' ').length - 1;
         glyphWidth += (this.pathLength - textWidth) / numberOfSpaces;
       }
 
@@ -337,7 +347,8 @@ export class TextPath extends Shape<TextPathConfig> {
         charEndLength > this.pathLength &&
           charEndLength - this.pathLength <= kerningAdjustment
           ? this.pathLength
-          : charEndLength
+          : charEndLength,
+        cursor
       );
       if (!charEndPoint) {
         return;

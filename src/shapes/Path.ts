@@ -133,7 +133,7 @@ export class Path extends Shape<PathConfig> {
     return this.getSelfRect().height;
   }
   getSelfRect() {
-    let points: Array<number> = [];
+    const points: Array<number> = [];
     this.dataArray.forEach(function (data) {
       if (data.command === 'A') {
         // Approximates by breaking curve into line segments
@@ -211,7 +211,7 @@ export class Path extends Shape<PathConfig> {
           )
         );
       } else {
-        points = points.concat(data.points);
+        points.push(...data.points);
       }
     });
     return Util._getPointsRect(points);
@@ -254,18 +254,36 @@ export class Path extends Shape<PathConfig> {
     return pathLength;
   }
 
-  static getPointAtLengthOfDataArray(length: number, dataArray: PathSegment[]) {
+  // The optional cursor is for sequential lookups within one continuous subpath.
+  static getPointAtLengthOfDataArray(
+    length: number,
+    dataArray: PathSegment[],
+    cursor?: { index: number; offset: number }
+  ) {
     let points: number[],
-      i = 0,
+      i = cursor?.index ?? 0,
+      offset = cursor?.offset ?? 0,
       ii = dataArray.length;
 
     if (!ii) {
       return null;
     }
 
+    // Negative spacing can move a text glyph back into an earlier segment.
+    while (i > 0 && length <= offset) {
+      offset -= dataArray[--i].pathLength;
+    }
+    length -= offset;
     while (i < ii && length > dataArray[i].pathLength) {
-      length -= dataArray[i].pathLength;
+      const segmentLength = dataArray[i].pathLength;
+      length -= segmentLength;
+      offset += segmentLength;
       ++i;
+    }
+
+    if (cursor && i < ii) {
+      cursor.index = i;
+      cursor.offset = offset;
     }
 
     if (i === ii) {
@@ -538,7 +556,7 @@ export class Path extends Shape<PathConfig> {
         coords.push(match[0]);
       }
 
-      let p: number[] = [];
+      const p: number[] = [];
       // Track param position for A/a commands: 0..6 => rx, ry, psi, fa, fs, x, y
       let arcParamIndex = c === 'A' || c === 'a' ? 0 : -1;
 
@@ -562,10 +580,15 @@ export class Path extends Shape<PathConfig> {
         }
       }
 
-      while (p.length > 0) {
+      let pIndex = 0;
+      while (pIndex < p.length) {
         // z takes no numbers, and a command with too few of them ("L20"
         // with no y) is dropped rather than parsed into a NaN segment
-        if (p.length < PARAM_COUNT[c.toLowerCase()] || c === 'z' || c === 'Z') {
+        if (
+          p.length - pIndex < PARAM_COUNT[c.toLowerCase()] ||
+          c === 'z' ||
+          c === 'Z'
+        ) {
           break;
         }
 
@@ -581,20 +604,20 @@ export class Path extends Shape<PathConfig> {
         switch (c) {
           // Note: Keep the lineTo's above the moveTo's in this switch
           case 'l':
-            cpx += p.shift()!;
-            cpy += p.shift()!;
+            cpx += p[pIndex++];
+            cpy += p[pIndex++];
             cmd = 'L';
             points.push(cpx, cpy);
             break;
           case 'L':
-            cpx = p.shift()!;
-            cpy = p.shift()!;
+            cpx = p[pIndex++];
+            cpy = p[pIndex++];
             points.push(cpx, cpy);
             break;
           // Note: lineTo handlers need to be above this point
           case 'm':
-            const dx = p.shift()!;
-            const dy = p.shift()!;
+            const dx = p[pIndex++];
+            const dy = p[pIndex++];
             cpx += dx;
             cpy += dy;
             cmd = 'M';
@@ -614,8 +637,8 @@ export class Path extends Shape<PathConfig> {
             // subsequent points are treated as relative lineTo
             break;
           case 'M':
-            cpx = p.shift()!;
-            cpy = p.shift()!;
+            cpx = p[pIndex++];
+            cpy = p[pIndex++];
             cmd = 'M';
             points.push(cpx, cpy);
             c = 'L';
@@ -623,40 +646,40 @@ export class Path extends Shape<PathConfig> {
             break;
 
           case 'h':
-            cpx += p.shift()!;
+            cpx += p[pIndex++];
             cmd = 'L';
             points.push(cpx, cpy);
             break;
           case 'H':
-            cpx = p.shift()!;
+            cpx = p[pIndex++];
             cmd = 'L';
             points.push(cpx, cpy);
             break;
           case 'v':
-            cpy += p.shift()!;
+            cpy += p[pIndex++];
             cmd = 'L';
             points.push(cpx, cpy);
             break;
           case 'V':
-            cpy = p.shift()!;
+            cpy = p[pIndex++];
             cmd = 'L';
             points.push(cpx, cpy);
             break;
           case 'C':
-            points.push(p.shift()!, p.shift()!, p.shift()!, p.shift()!);
-            cpx = p.shift()!;
-            cpy = p.shift()!;
+            points.push(p[pIndex++], p[pIndex++], p[pIndex++], p[pIndex++]);
+            cpx = p[pIndex++];
+            cpy = p[pIndex++];
             points.push(cpx, cpy);
             break;
           case 'c':
             points.push(
-              cpx + p.shift()!,
-              cpy + p.shift()!,
-              cpx + p.shift()!,
-              cpy + p.shift()!
+              cpx + p[pIndex++],
+              cpy + p[pIndex++],
+              cpx + p[pIndex++],
+              cpy + p[pIndex++]
             );
-            cpx += p.shift()!;
-            cpy += p.shift()!;
+            cpx += p[pIndex++];
+            cpy += p[pIndex++];
             cmd = 'C';
             points.push(cpx, cpy);
             break;
@@ -668,9 +691,9 @@ export class Path extends Shape<PathConfig> {
               ctlPtx = cpx + (cpx - prevCmd.points[2]);
               ctlPty = cpy + (cpy - prevCmd.points[3]);
             }
-            points.push(ctlPtx, ctlPty, p.shift()!, p.shift()!);
-            cpx = p.shift()!;
-            cpy = p.shift()!;
+            points.push(ctlPtx, ctlPty, p[pIndex++], p[pIndex++]);
+            cpx = p[pIndex++];
+            cpy = p[pIndex++];
             cmd = 'C';
             points.push(cpx, cpy);
             break;
@@ -682,22 +705,22 @@ export class Path extends Shape<PathConfig> {
               ctlPtx = cpx + (cpx - prevCmd.points[2]);
               ctlPty = cpy + (cpy - prevCmd.points[3]);
             }
-            points.push(ctlPtx, ctlPty, cpx + p.shift()!, cpy + p.shift()!);
-            cpx += p.shift()!;
-            cpy += p.shift()!;
+            points.push(ctlPtx, ctlPty, cpx + p[pIndex++], cpy + p[pIndex++]);
+            cpx += p[pIndex++];
+            cpy += p[pIndex++];
             cmd = 'C';
             points.push(cpx, cpy);
             break;
           case 'Q':
-            points.push(p.shift()!, p.shift()!);
-            cpx = p.shift()!;
-            cpy = p.shift()!;
+            points.push(p[pIndex++], p[pIndex++]);
+            cpx = p[pIndex++];
+            cpy = p[pIndex++];
             points.push(cpx, cpy);
             break;
           case 'q':
-            points.push(cpx + p.shift()!, cpy + p.shift()!);
-            cpx += p.shift()!;
-            cpy += p.shift()!;
+            points.push(cpx + p[pIndex++], cpy + p[pIndex++]);
+            cpx += p[pIndex++];
+            cpy += p[pIndex++];
             cmd = 'Q';
             points.push(cpx, cpy);
             break;
@@ -709,8 +732,8 @@ export class Path extends Shape<PathConfig> {
               ctlPtx = cpx + (cpx - prevCmd.points[0]);
               ctlPty = cpy + (cpy - prevCmd.points[1]);
             }
-            cpx = p.shift()!;
-            cpy = p.shift()!;
+            cpx = p[pIndex++];
+            cpy = p[pIndex++];
             cmd = 'Q';
             points.push(ctlPtx, ctlPty, cpx, cpy);
             break;
@@ -722,26 +745,26 @@ export class Path extends Shape<PathConfig> {
               ctlPtx = cpx + (cpx - prevCmd.points[0]);
               ctlPty = cpy + (cpy - prevCmd.points[1]);
             }
-            cpx += p.shift()!;
-            cpy += p.shift()!;
+            cpx += p[pIndex++];
+            cpy += p[pIndex++];
             cmd = 'Q';
             points.push(ctlPtx, ctlPty, cpx, cpy);
             break;
           case 'A':
           case 'a':
-            rx = p.shift()!;
-            ry = p.shift()!;
-            psi = p.shift()!;
-            fa = p.shift()!;
-            fs = p.shift()!;
+            rx = p[pIndex++];
+            ry = p[pIndex++];
+            psi = p[pIndex++];
+            fa = p[pIndex++];
+            fs = p[pIndex++];
             x1 = cpx;
             y1 = cpy;
             if (c === 'a') {
-              cpx += p.shift()!;
-              cpy += p.shift()!;
+              cpx += p[pIndex++];
+              cpy += p[pIndex++];
             } else {
-              cpx = p.shift()!;
-              cpy = p.shift()!;
+              cpx = p[pIndex++];
+              cpy = p[pIndex++];
             }
             cmd = 'A';
             // per SVG, an arc between coincident end points is omitted

@@ -1626,6 +1626,22 @@ describe('Path', function () {
     });
   });
 
+  it('cubic lengths and halfway points match analytic curves', function () {
+    for (const data of [
+      'M0 0 C0 100 100 100 100 0',
+      'M100 0 C100 100 0 100 0 0',
+    ]) {
+      const path = new Konva.Path({ data });
+      assert.closeTo(path.getLength(), 200, 1e-9);
+      assertAlmostDeepEqual(path.getPointAtLength(100), { x: 50, y: 75 });
+      path.destroy();
+    }
+    const point = new Konva.Path({ data: 'M10 20 C10 20 10 20 10 20' });
+    assert.equal(point.getLength(), 0);
+    assert.deepEqual(point.getPointAtLength(0), { x: 10, y: 20 });
+    point.destroy();
+  });
+
   it('getSelfRect is exact for a cubic segment', function () {
     // this curve turns back at t = 1/3. The bounds used to be taken by
     // sampling the segment every 0.01, which steps over that point and
@@ -2020,6 +2036,22 @@ describe('Path', function () {
       path.getPointAtLength(350);
     });
     assert.equal(calls, 0);
+  });
+
+  it('long compressed polylines retain their bounds and endpoint', function () {
+    const points = Array.from({ length: 10000 }, (_, i) => `${i + 1} ${i + 1}`);
+    const path = new Konva.Path({ data: 'M0 0 L' + points.join(' ') });
+    assert.deepEqual(path.getSelfRect(), {
+      x: 0,
+      y: 0,
+      width: 10000,
+      height: 10000,
+    });
+    assertAlmostDeepEqual(path.getPointAtLength(path.getLength()), {
+      x: 10000,
+      y: 10000,
+    });
+    path.destroy();
   });
 
   it('width() and height() of a path are its bounds, like a line', function () {

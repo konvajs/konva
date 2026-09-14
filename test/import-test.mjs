@@ -9,6 +9,12 @@ import Konva from 'konva/lib/Core.js';
 import 'konva/canvas-backend';
 import { Rect } from 'konva/lib/shapes/Rect.js';
 import { Brightness } from 'konva/lib/filters/Brightness.js';
+import {
+  tValues,
+  cValues,
+  binomialCoefficients,
+  getCubicArcLength,
+} from 'konva/lib/BezierFunctions.js';
 
 equal(Rect !== undefined, true, 'Rect is defined');
 
@@ -34,3 +40,25 @@ equal(
   'Brightness works in a minimal import'
 );
 rect.destroy();
+
+// Deep imports retain the full quadrature tables, including unused orders.
+for (const order of [2, 20, 24]) {
+  equal(tValues[order].length, order, `Order ${order} abscissae are exported`);
+  equal(cValues[order].length, order, `Order ${order} weights are exported`);
+  equal(
+    Math.abs(cValues[order].reduce((sum, value) => sum + value, 0) - 2) < 1e-12,
+    true,
+    `Order ${order} integrates a constant over [-1, 1]`
+  );
+}
+equal(
+  binomialCoefficients[3].join(','),
+  '1,3,3,1',
+  'Binomial coefficients remain exported'
+);
+equal(
+  Math.abs(getCubicArcLength([0, 0, 100, 100], [0, 100, 100, 0], 1) - 200) <
+    1e-9,
+  true,
+  'The deep cubic length export matches the analytic curve'
+);

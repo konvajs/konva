@@ -1,7 +1,6 @@
 import { Factory } from '../Factory.ts';
 import type { Filter } from '../Node.ts';
 import { Node } from '../Node.ts';
-import { Util } from '../Util.ts';
 import { getNumberValidator } from '../Validators.ts';
 
 /*
@@ -35,7 +34,7 @@ const ToPolar = function (src, dst, opt) {
   const rad = Math.sqrt(x * x + y * y);
   rMax = rad > rMax ? rad : rMax;
 
-  // We'll be uisng y as the radius, and x as the angle (theta=t)
+  // We'll be using y as the radius, and x as the angle (theta=t)
   const rSize = ySize,
     tSize = xSize;
 
@@ -138,11 +137,6 @@ const FromPolar = function (src, dst, opt) {
   }
 };
 
-//Konva.Filters.ToPolar = Util._FilterWrapDoubleBuffer(ToPolar);
-//Konva.Filters.FromPolar = Util._FilterWrapDoubleBuffer(FromPolar);
-
-// create a temporary canvas for working - shared between multiple calls
-
 /**
  * Kaleidoscope Filter.
  * @function
@@ -168,15 +162,12 @@ export const Kaleidoscope: Filter = function (imageData) {
     return;
   }
 
-  // Work with our shared buffer canvas
-  const tempCanvas = Util.createCanvasElement();
-  tempCanvas.width = xSize;
-  tempCanvas.height = ySize;
-  const scratchData = tempCanvas
-    .getContext('2d')!
-    .getImageData(0, 0, xSize, ySize);
-  Util.releaseCanvas(tempCanvas);
-  // Convert thhe original to polar coordinates
+  const scratchData = {
+    width: xSize,
+    height: ySize,
+    data: new Uint8ClampedArray(xSize * ySize * 4),
+  };
+  // Convert the original to polar coordinates.
   ToPolar(imageData, scratchData, {
     polarCenterX: xSize / 2,
     polarCenterY: ySize / 2,

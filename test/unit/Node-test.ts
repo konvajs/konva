@@ -3911,6 +3911,23 @@ describe('Node', function () {
     assert.deepEqual(rect.position(), { x: 5, y: 5 });
   });
 
+  it('setAttrs notifies descendants once after all transform changes', function () {
+    const group = new Konva.Group();
+    const rect = new Konva.Rect({ x: 5, y: 10 });
+    group.add(rect);
+    const positions: { x: number; y: number }[] = [];
+    rect.on('absoluteTransformChange', () => {
+      positions.push(rect.getAbsolutePosition());
+    });
+
+    group.setAttrs({ position: { x: 10, y: 20 }, scaleX: 2, scaleY: 3 });
+
+    assert.deepEqual(positions, [{ x: 20, y: 50 }]);
+    group.x(15);
+    assert.deepEqual(positions[1], { x: 25, y: 50 });
+    group.destroy();
+  });
+
   it('a throwing setter inside setAttrs() does not freeze the transform cache', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

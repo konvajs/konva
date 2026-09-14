@@ -5,6 +5,7 @@ import {
   Konva,
   cloneAndCompareLayer,
   assertAlmostEqual,
+  assertAlmostDeepEqual,
   countCalls,
 } from './test-utils.ts';
 
@@ -523,6 +524,79 @@ describe('TextPath', function () {
       'rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();restore();restore();';
 
     assert.equal(layer.getContext().getTrace(true), trace);
+  });
+
+  it('justification fills the path after the number of spaces changes', function () {
+    const text = new Konva.TextPath({
+      text: 'A B C',
+      fontFamily: 'monospace',
+      fontSize: 20,
+      align: 'justify',
+      data: 'M0 0 H300',
+    });
+    for (const value of ['A B C', 'A B C D', 'A B']) {
+      text.text(value);
+      assert.equal(text.glyphInfo.length, value.length);
+      assert.closeTo(text.glyphInfo[value.length - 1].p1.x, 300, 1e-6);
+    }
+    text.text('AB');
+    assert.equal(text.glyphInfo.length, 2);
+    assert.isBelow(text.glyphInfo[1].p1.x, 300);
+    text.destroy();
+  });
+
+  it('glyph layout is unchanged by collinear path segments', function () {
+    const text = new Konva.TextPath({
+      text: 'Wi Wi Wi',
+      fontFamily: 'Arial',
+      fontSize: 20,
+    });
+    const segments =
+      'M0 0 ' +
+      Array.from({ length: 150 }, (_, i) => `H${(i + 1) * 2}`).join(' ');
+    for (const align of ['left', 'center', 'right', 'justify']) {
+      for (const letterSpacing of [0, 5, -8]) {
+        text.setAttrs({ align, letterSpacing, data: 'M0 0 H300' });
+        const expected = text.glyphInfo;
+        text.data(segments);
+        assert.equal(text.glyphInfo.length, expected.length);
+        text.glyphInfo.forEach((glyph, i) => {
+          assert.equal(glyph.text, expected[i].text);
+          assertAlmostDeepEqual(glyph.p0, expected[i].p0, 1e-6);
+          assertAlmostDeepEqual(glyph.p1, expected[i].p1, 1e-6);
+          assert.closeTo(glyph.rotation, expected[i].rotation, 1e-6);
+        });
+      }
+    }
+    text.destroy();
+  });
+
+  it('glyph endpoints agree with path lookups at discontinuous joins', function () {
+    const prefix = 'M0 0 l2 2 l1 1 l5 5';
+    const path = new Konva.Path({ data: prefix });
+    const joinLength = path.getLength();
+    path.data(prefix + ' M100 100 L200 100');
+    const measure = new Konva.Text({ fontSize: 20 });
+    for (const value of ['AA', 'Wi']) {
+      const text = new Konva.TextPath({
+        text: value,
+        fontSize: 20,
+        data: path.data(),
+      });
+      text.letterSpacing(joinLength / 2 - text.getTextWidth() / 2);
+      let distance = 0;
+      for (let i = 0; i < value.length; i++) {
+        measure.text(value[i]);
+        distance += measure.getTextWidth() + text.letterSpacing();
+        assertAlmostDeepEqual(
+          text.glyphInfo[i].p1,
+          path.getPointAtLength(distance)
+        );
+      }
+      text.destroy();
+    }
+    measure.destroy();
+    path.destroy();
   });
 
   it('Text path with underline', function () {

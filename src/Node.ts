@@ -1333,6 +1333,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   // for performance reasons, lets batch transform reset
   // so it work faster
   _batchTransformChanges(func) {
+    if (this._batchingTransformChange) {
+      func();
+      return;
+    }
     this._batchingTransformChange = true;
     try {
       func();
