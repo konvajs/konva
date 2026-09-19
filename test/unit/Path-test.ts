@@ -1447,7 +1447,7 @@ describe('Path', function () {
 
       assert.deepEqual(points, [
         { x: 100, y: 250 },
-        { x: 88.81046942782544, y: 261.92616969480423 },
+        { x: 88.81046942782547, y: 261.9261696948044 },
         { x: 296.43785000464806, y: 105.03863655128791 },
         { x: 207.8940154719443, y: 414.51579926777714 },
         { x: 410.1260983224354, y: 202.53685229970446 },
@@ -2061,6 +2061,19 @@ describe('Path', function () {
   it('getPointAtLength past the end of a path ending with an arc returns the end point', function () {
     var path = new Konva.Path({ data: 'M0,0 A10,10 0 0 1 20,0' });
     assertAlmostDeepEqual(path.getPointAtLength(1000), { x: 20, y: 0 }, 0.01);
+  });
+
+  it('a quadratic whose control point sits on the chord has the length of the chord', function () {
+    // the closed form used to divide by the squared second derivative, which
+    // is float noise for a collinear control point
+    [
+      'M0 0 Q100 0 200.0000000000001 0',
+      'M0 0 Q100.00000000001 0 200 0',
+    ].forEach((data) => {
+      var path = new Konva.Path({ data });
+      assert.closeTo(path.getLength(), 200, 0.001, data);
+      assertAlmostDeepEqual(path.getPointAtLength(100), { x: 100, y: 0 }, 0.01);
+    });
   });
 
   it('getPointAtLength walks an elliptical arc by distance, not by angle', function () {
