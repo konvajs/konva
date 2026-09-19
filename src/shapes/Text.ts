@@ -199,15 +199,13 @@ function _strokeFunc(this: Text, context: Context) {
 function checkDefaultFill(config?: TextConfig) {
   config = config || {};
 
-  // set default color to black
-  if (
-    !config.fillLinearGradientColorStops &&
-    !config.fillRadialGradientColorStops &&
-    !config.fillPatternImage
-  ) {
-    config.fill = config.fill || 'black';
-  }
-  return config;
+  // set default color to black, without mutating the caller's config
+  const hasFill =
+    config.fill ||
+    config.fillLinearGradientColorStops ||
+    config.fillRadialGradientColorStops ||
+    config.fillPatternImage;
+  return hasFill ? config : { ...config, fill: 'black' };
 }
 
 /**
@@ -252,6 +250,8 @@ export class Text extends Shape<TextConfig> {
 
   textWidth: number;
   textHeight: number;
+  // distance from the line box center to the baseline, see _setTextData
+  _baselineShift = 0;
   constructor(config?: TextConfig) {
     super(checkDefaultFill(config));
     this._setTextData();
@@ -275,14 +275,10 @@ export class Text extends Shape<TextConfig> {
       totalWidth = this.getWidth(),
       letterSpacing = this.letterSpacing(),
       charRenderFunc = this.charRenderFunc(),
-      fill = this.fill(),
       textDecoration = this.textDecoration(),
-      underlineOffset = this.underlineOffset(),
       shouldUnderline = textDecoration.indexOf('underline') !== -1,
       shouldLineThrough = textDecoration.indexOf('line-through') !== -1,
       n;
-
-    direction = direction === INHERIT ? context.direction : direction;
 
     let translateY = lineHeightPx / 2;
     let baseline = MIDDLE;
@@ -298,8 +294,12 @@ export class Text extends Shape<TextConfig> {
       translateY = (ascent - descent) / 2 + lineHeightPx / 2;
     }
 
-    if (direction === RTL) {
+    if (direction !== INHERIT) {
       context.setAttr('direction', direction);
+    } else {
+      // 'inherit' resolves to the direction the canvas already has, so that
+      // an inherited rtl still takes the single native run below
+      direction = context.direction;
     }
 
     context.setAttr('font', this._getContextFont());
@@ -355,11 +355,7 @@ export class Text extends Shape<TextConfig> {
         context.save();
         context.beginPath();
 
-        const yOffset =
-          underlineOffset ??
-          (!Konva.legacyTextRendering
-            ? Math.round(fontSize / 4)
-            : Math.round(fontSize / 2));
+        const yOffset = this._getUnderlineOffset();
         const x = lineTranslateX;
         const y = translateY + lineTranslateY + yOffset;
         context.moveTo(x, y);
@@ -369,8 +365,7 @@ export class Text extends Shape<TextConfig> {
 
         context.lineWidth = getDecorationLineWidth(fontSize);
 
-        const gradient = this._getLinearGradient();
-        context.strokeStyle = gradient || fill;
+        context.strokeStyle = context._getFillStyle(this)!;
         context.stroke();
         context.restore();
       }
@@ -384,7 +379,6 @@ export class Text extends Shape<TextConfig> {
         direction !== RTL &&
         (letterSpacing !== 0 || align === JUSTIFY || charRenderFunc)
       ) {
-        //   var words = text.split(' ');
         const spacesNumber = text.split(' ').length - 1;
         const array = stringToArray(text);
         for (let li = 0; li < array.length; li++) {
@@ -392,10 +386,6 @@ export class Text extends Shape<TextConfig> {
           // skip justify for the last line
           if (letter === ' ' && !lastLine && align === JUSTIFY) {
             lineTranslateX += (totalWidth - padding * 2 - width) / spacesNumber;
-            // context.translate(
-            //   Math.floor((totalWidth - padding * 2 - width) / spacesNumber),
-            //   0
-            // );
           }
           this._partialTextX = lineTranslateX;
           this._partialTextY = translateY + lineTranslateY;
@@ -465,8 +455,7 @@ export class Text extends Shape<TextConfig> {
           translateY + lineTranslateY + yOffset
         );
         context.lineWidth = getDecorationLineWidth(fontSize);
-        const gradient = this._getLinearGradient();
-        context.strokeStyle = gradient || fill;
+        context.strokeStyle = context._getFillStyle(this)!;
         context.stroke();
         context.restore();
       }
@@ -476,6 +465,37 @@ export class Text extends Shape<TextConfig> {
         translateY += lineHeightPx;
       }
     }
+  }
+  _getUnderlineOffset() {
+    return (
+      this.underlineOffset() ??
+      Math.round(this.fontSize() / (!Konva.legacyTextRendering ? 4 : 2))
+    );
+  }
+  getSelfRect() {
+    const rect = super.getSelfRect();
+    const lines = this.textArr.length;
+    if (!lines || this.textDecoration().indexOf('underline') === -1) {
+      return rect;
+    }
+    // the underline of the last line is drawn below the text block
+    const fontSize = this.fontSize(),
+      lineHeightPx = this.lineHeight() * fontSize,
+      padding = this.padding(),
+      verticalAlign = this.verticalAlign(),
+      blockHeight = lines * lineHeightPx + padding * 2;
+    let bottom = lines * lineHeightPx - lineHeightPx / 2 + padding;
+    if (!Konva.legacyTextRendering) {
+      bottom += this._baselineShift;
+    }
+    if (verticalAlign === MIDDLE) {
+      bottom += (rect.height - blockHeight) / 2;
+    } else if (verticalAlign === BOTTOM) {
+      bottom += rect.height - blockHeight;
+    }
+    bottom += this._getUnderlineOffset() + getDecorationLineWidth(fontSize) / 2;
+    rect.height = Math.max(rect.height, bottom);
+    return rect;
   }
   _hitFunc(context: Context) {
     const width = this.getWidth(),
@@ -616,8 +636,24 @@ export class Text extends Shape<TextConfig> {
       wrapAtWord = wrap !== CHAR && shouldWrap,
       shouldAddEllipsis = this.ellipsis();
 
+    // measured here so getSelfRect, which runs per drag frame, needs no
+    // measureText of its own
+    const sample = this.measureSize('M');
+    this._baselineShift =
+      (sample.fontBoundingBoxAscent - sample.fontBoundingBoxDescent) / 2;
+
     this.textArr = [];
-    getDummyContext().font = this._getContextFont();
+    const dummyContext = getDummyContext();
+    dummyContext.font = this._getContextFont();
+    // the per-character draw path (same condition as in _sceneFunc) advances
+    // by unkerned glyph widths, so measure the line the same way
+    dummyContext.fontKerning =
+      this.direction() !== RTL &&
+      (this.letterSpacing() !== 0 ||
+        this.align() === JUSTIFY ||
+        !!this.charRenderFunc())
+        ? 'none'
+        : 'auto';
     const additionalWidth = shouldAddEllipsis
       ? this._getTextWidth(ELLIPSIS)
       : 0;
@@ -834,16 +870,18 @@ export class Text extends Shape<TextConfig> {
   ellipsis: GetSet<boolean, this>;
   charRenderFunc: GetSet<null | ((props: CharRenderProps) => void), this>;
   // 'auto' resets the fixed size; the getters return the measured size
-  width: GetSet<number, this, number | 'auto'>;
-  height: GetSet<number, this, number | 'auto'>;
+  width: GetSet<number, this, number | 'auto' | null | undefined>;
+  height: GetSet<number, this, number | 'auto' | null | undefined>;
 }
 
 Text.prototype._fillFunc = _fillFunc;
 Text.prototype._strokeFunc = _strokeFunc;
 Text.prototype.className = TEXT_UPPER;
+// the decoration attrs are not in ATTR_CHANGE_LIST: they change the bounds
+// through getSelfRect, but need no relayout
 Text.prototype._attrsAffectingSize = ATTR_CHANGE_LIST.filter(
   (attr) => attr !== 'width' && attr !== 'height'
-);
+).concat(['textDecoration', 'underlineOffset']);
 _registerNode(Text);
 
 // update text data for certain attr changes

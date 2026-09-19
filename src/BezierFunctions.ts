@@ -707,42 +707,24 @@ export const getCubicArcLength = (xs: number[], ys: number[], t: number) => {
   return z * sum;
 };
 
-export const getQuadraticArcLength = (
-  xs: number[],
-  ys: number[],
-  t: number
-) => {
-  if (t === undefined) {
-    t = 1;
-  }
-  const ax = xs[0] - 2 * xs[1] + xs[2];
-  const ay = ys[0] - 2 * ys[1] + ys[2];
-  const bx = 2 * xs[1] - 2 * xs[0];
-  const by = 2 * ys[1] - 2 * ys[0];
-
-  const A = 4 * (ax * ax + ay * ay);
-  const B = 4 * (ax * bx + ay * by);
-  const C = bx * bx + by * by;
-
-  if (A === 0) {
-    return (
-      t * Math.sqrt(Math.pow(xs[2] - xs[0], 2) + Math.pow(ys[2] - ys[0], 2))
-    );
-  }
-  const b = B / (2 * A);
-  const c = C / A;
-  const u = t + b;
-  const k = c - b * b;
-
-  const uuk = u * u + k > 0 ? Math.sqrt(u * u + k) : 0;
-  const bbk = b * b + k > 0 ? Math.sqrt(b * b + k) : 0;
-  const term =
-    b + Math.sqrt(b * b + k) !== 0
-      ? k * Math.log(Math.abs((u + uuk) / (b + bbk)))
-      : 0;
-
-  return (Math.sqrt(A) / 2) * (u * uuk - b * bbk + term);
-};
+// a quadratic elevated to a cubic is the same curve, and the cubic quadrature
+// is stable where the closed form for a quadratic cancels itself out
+export const getQuadraticArcLength = (xs: number[], ys: number[], t = 1) =>
+  getCubicArcLength(
+    [
+      xs[0],
+      xs[0] + (2 / 3) * (xs[1] - xs[0]),
+      xs[2] + (2 / 3) * (xs[1] - xs[2]),
+      xs[2],
+    ],
+    [
+      ys[0],
+      ys[0] + (2 / 3) * (ys[1] - ys[0]),
+      ys[2] + (2 / 3) * (ys[1] - ys[2]),
+      ys[2],
+    ],
+    t
+  );
 
 function BFunc(xs: number[], ys: number[], t: number) {
   // Interpolate the three derivative control points of a cubic curve.

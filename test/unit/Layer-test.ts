@@ -653,6 +653,23 @@ describe('Layer', function () {
     assert.equal(layer.getIntersection({ x: 170, y: 100 }), null);
   });
 
+  it('remove() detaches both layer canvases, also from a detached container', function () {
+    if (isNode) {
+      return;
+    }
+    var stage = addStage();
+    stage.container().remove();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    stage.add(new Konva.Layer());
+    layer.toggleHitCanvas();
+
+    layer.remove();
+
+    assert.equal(stage.content.children.length, 1);
+    assert.equal(layer.getHitCanvas()._canvas.parentNode, null);
+  });
+
   it('size() of a layer warns and does not resize its canvas, like width() and height()', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

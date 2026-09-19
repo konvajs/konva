@@ -416,7 +416,7 @@ describe('TextPath', function () {
 
     assert.equal(
       layer.getContext().getTrace(true),
-      'clearRect();save();transform();font;textBaseline;textAlign;save();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();restore();restore();save();transform();beginPath();moveTo();translate();rotate();scale();arc();scale();rotate();translate();lineWidth;strokeStyle;stroke();restore();'
+      'clearRect();save();transform();font;textBaseline;textAlign;save();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();restore();restore();save();transform();beginPath();moveTo();ellipse();lineWidth;strokeStyle;stroke();restore();'
     );
   });
 
@@ -449,6 +449,26 @@ describe('TextPath', function () {
       layer.getContext().getTrace(true),
       'restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();save();translate();rotate();fillStyle;fillText();restore();restore();restore();'
     );
+  });
+
+  it('Text path with align right keeps the last glyph with letter spacing', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var textpath = new Konva.TextPath({
+      fill: 'black',
+      fontSize: 20,
+      fontFamily: 'Arial',
+      text: 'abc',
+      align: 'right',
+      letterSpacing: 10,
+      data: 'M0 0 H200',
+    });
+    layer.add(textpath);
+
+    assert.equal(textpath.glyphInfo.length, 3);
+    assertAlmostEqual(textpath.glyphInfo[2].p1.x, 200);
   });
 
   it('Text path with align right with custom font', function () {
@@ -583,11 +603,13 @@ describe('TextPath', function () {
         fontSize: 20,
         data: path.data(),
       });
-      text.letterSpacing(joinLength / 2 - text.getTextWidth() / 2);
+      text.letterSpacing(joinLength - text.getTextWidth());
       let distance = 0;
       for (let i = 0; i < value.length; i++) {
         measure.text(value[i]);
-        distance += measure.getTextWidth() + text.letterSpacing();
+        distance +=
+          measure.getTextWidth() +
+          (i < value.length - 1 ? text.letterSpacing() : 0);
         assertAlmostDeepEqual(
           text.glyphInfo[i].p1,
           path.getPointAtLength(distance)
@@ -835,6 +857,54 @@ describe('TextPath', function () {
 
     layer.draw();
     assert.equal(called, true);
+  });
+
+  it('kerning accumulates along the path', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var fontSize = 50;
+    var kern = -0.2 * fontSize;
+    var textpath = new Konva.TextPath({
+      text: 'AVA',
+      fontSize: fontSize,
+      fontFamily: 'Arial',
+      data: 'M0,0 L300,0',
+      kerningFunc: function () {
+        return -0.2;
+      },
+    });
+    layer.add(textpath);
+
+    var glyphs = textpath.glyphInfo;
+    assert.equal(glyphs.length, 3);
+    assertAlmostEqual(glyphs[1].p0.x, glyphs[0].p1.x + kern);
+    assertAlmostEqual(glyphs[2].p0.x, glyphs[1].p1.x + kern);
+    assertAlmostEqual(glyphs[2].p1.x, textpath.getTextWidth());
+  });
+
+  it('kerning keeps glyphs on a vertical path', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var textpath = new Konva.TextPath({
+      text: 'AV',
+      fontSize: 50,
+      fontFamily: 'Arial',
+      data: 'M0,0 L0,300',
+      kerningFunc: function () {
+        return -0.2;
+      },
+    });
+    layer.add(textpath);
+
+    assert.equal(textpath.glyphInfo[1].p0.x, 0);
+    assertAlmostEqual(
+      textpath.glyphInfo[1].p0.y,
+      textpath.glyphInfo[0].p1.y - 0.2 * 50
+    );
   });
 
   it('linear gradient for path', function () {

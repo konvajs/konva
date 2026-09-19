@@ -335,6 +335,24 @@ describe('Image', function () {
     });
   });
 
+  it('fromURL calls back once when the image source is swapped', function (done) {
+    loadImage('darth-vader.jpg', (img) => {
+      loadImage('lion.png', (other) => {
+        let calls = 0;
+        Konva.Image.fromURL(img.src, function (image) {
+          calls++;
+          if (calls === 1) {
+            (image.image() as HTMLImageElement).src = other.src;
+            setTimeout(() => {
+              assert.equal(calls, 1);
+              done();
+            }, 50);
+          }
+        });
+      });
+    });
+  });
+
   it('check loading failure', function (done) {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -394,6 +412,68 @@ describe('Image', function () {
 
       done();
     });
+  });
+
+  it('src assigned after creation redraws the image', async function () {
+    // A fresh `new Image()` with no src already reports complete === true.
+    class Img extends EventTarget {
+      complete = true;
+      width = 0;
+      height = 0;
+    }
+    const img = new Img();
+    const stage = addStage(),
+      layer = new Konva.Layer();
+    stage.add(layer);
+    const image = new Konva.Image({ image: img as any, visible: false });
+    layer.add(image);
+    const previous = Konva.autoDrawEnabled;
+    Konva.autoDrawEnabled = true;
+    const nextFrame = () =>
+      new Promise<void>((resolve) => Konva.Util.requestAnimFrame(resolve));
+    let draws = 0;
+    try {
+      await nextFrame();
+      layer.on('draw', () => {
+        draws++;
+      });
+      img.width = 320;
+      img.height = 180;
+      img.dispatchEvent(new Event('load'));
+      await nextFrame();
+      assert.equal(draws, 1);
+      assert.deepEqual(image.size(), { width: 320, height: 180 });
+    } finally {
+      Konva.autoDrawEnabled = previous;
+    }
+  });
+
+  it('does not listen on an element that is already loaded', function () {
+    class Counting extends EventTarget {
+      listeners = 0;
+      addEventListener(type: string, listener: any) {
+        this.listeners++;
+        super.addEventListener(type, listener);
+      }
+    }
+    class Img extends Counting {
+      complete = true;
+      src = 'http://example.com/image.png';
+    }
+    class Video extends Counting {
+      videoWidth = 10;
+      readyState = 2;
+    }
+    const stage = addStage(),
+      layer = new Konva.Layer();
+    stage.add(layer);
+    const img = new Img();
+    const video = new Video();
+    // a removed node is reusable, so a listener here would pin it forever
+    layer.add(new Konva.Image({ image: img as any }));
+    layer.add(new Konva.Image({ image: video as any }));
+    assert.equal(img.listeners, 0);
+    assert.equal(video.listeners, 0);
   });
 
   it('test image client rect without image object attached', function () {

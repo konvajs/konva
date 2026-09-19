@@ -485,7 +485,7 @@ describe('Path', function () {
     var trace = layer.getContext().getTrace();
     assert.equal(
       trace,
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(100,350);lineTo(150,325);translate(175,312.5);rotate(-0.524);scale(1,1);arc(0,0,27.951,-3.082,0.06,0);scale(1,1);rotate(0.524);translate(-175,-312.5);lineTo(250,275);translate(275,262.5);rotate(-0.524);scale(0.5,1);arc(0,0,55.826,-3.112,0.03,0);scale(2,1);rotate(0.524);translate(-275,-262.5);lineTo(350,225);translate(375,212.5);rotate(-0.524);scale(0.333,1);arc(0,0,83.719,-3.122,0.02,0);scale(3,1);rotate(0.524);translate(-375,-212.5);lineTo(450,175);translate(475,162.5);rotate(-0.524);scale(0.25,1);arc(0,0,111.615,-3.127,0.015,0);scale(4,1);rotate(0.524);translate(-475,-162.5);lineTo(550,125);fillStyle=none;fill();lineWidth=1;strokeStyle=#999;stroke();restore();'
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(100,350);lineTo(150,325);ellipse(175,312.5,27.951,27.951,-0.524,-3.082,0.06,false);lineTo(250,275);ellipse(275,262.5,27.913,55.826,-0.524,-3.112,0.03,false);lineTo(350,225);ellipse(375,212.5,27.906,83.719,-0.524,-3.122,0.02,false);lineTo(450,175);ellipse(475,162.5,27.904,111.615,-0.524,-3.127,0.015,false);lineTo(550,125);fillStyle=none;fill();lineWidth=1;strokeStyle=#999;stroke();restore();'
     );
   });
 
@@ -611,15 +611,28 @@ describe('Path', function () {
       data: 'M0,0 L100,0 L100,100 z',
     });
 
+    // z is a line back to the start of the subpath, so it has a length
     var total = path.getLength();
+    assert.closeTo(total, 100 + 100 + Math.SQRT2 * 100, 0.001);
 
     // a length past the end of the path (e.g. from floating point drift while
     // animating along the path) must still return a real point, as it does for
     // open paths, not { x: undefined, y: undefined }
     var point = path.getPointAtLength(total + 500);
 
-    assert.equal(point.x, 100);
-    assert.equal(point.y, 100);
+    assertAlmostDeepEqual(point, { x: 0, y: 0 }, 0.001);
+  });
+
+  // ======================================================
+  it('a command after a close starts from the start of the subpath', function () {
+    var path = new Konva.Path({
+      data: 'M0,0 L100,0 L100,100 z l10,10',
+    });
+
+    var last = path.dataArray[path.dataArray.length - 1];
+    assert.equal(last.command, 'L');
+    assertAlmostDeepEqual(last.start, { x: 0, y: 0 }, 0.001);
+    assert.deepEqual(last.points, [10, 10]);
   });
 
   // ======================================================
@@ -1267,6 +1280,8 @@ describe('Path', function () {
         layer.add(circle);
       }
 
+      // the arc is walked by distance, so these match native SVG
+      // getPointAtLength, which the browser branch above checks directly
       assert.deepEqual(points, [
         { x: 300, y: 10 },
         { x: 290.28714137642737, y: 27.483145522430753 },
@@ -1274,29 +1289,29 @@ describe('Path', function () {
         { x: 270.86142412928206, y: 62.44943656729226 },
         { x: 261.1485655057094, y: 79.93258208972301 },
         { x: 251.4357068821368, y: 97.41572761215377 },
-        { x: 230.89220826660141, y: 87.23996356219386 },
-        { x: 207.0639321224534, y: 74.08466390481559 },
-        { x: 182.87529785963875, y: 63.52674972743341 },
-        { x: 159.56025996483157, y: 56.104820499018956 },
-        { x: 138.30820744216845, y: 52.197497135977514 },
-        { x: 120.20328854394192, y: 52.00410710518156 },
-        { x: 106.16910423342256, y: 55.53451596967142 },
-        { x: 96.92159177720502, y: 62.60862410865827 },
-        { x: 92.93250205472883, y: 72.86555428606191 },
-        { x: 94.40533374670959, y: 85.78206137467119 },
-        { x: 101.26495209131289, y: 100.69922508568548 },
-        { x: 113.1614217949117, y: 116.85606400569954 },
-        { x: 129.4878585660311, y: 133.42835616090537 },
-        { x: 149.41138859764925, y: 149.5706857234721 },
-        { x: 159.20708002085948, y: 133.28578227257518 },
-        { x: 175.70922506338707, y: 122.12331879451641 },
-        { x: 194.54023110281022, y: 115.8217874339532 },
-        { x: 214.49689229486697, y: 112.87738914026215 },
-        { x: 234.43408471752622, y: 112.8041356036109 },
-        { x: 254.393697539885, y: 115.58176060030762 },
-        { x: 273.2842746667944, y: 121.665139873788 },
-        { x: 290.0188216211262, y: 132.52155112831736 },
-        { x: 299.8957407073753, y: 149.50043318120942 },
+        { x: 235.92510028718505, y: 90.39315756211901 },
+        { x: 218.7356077357843, y: 80.17586133490904 },
+        { x: 200.90122910118424, y: 71.13120405276122 },
+        { x: 182.47148363895423, y: 63.374309080503465 },
+        { x: 163.47286441692802, y: 57.14423637813226 },
+        { x: 143.93693807279504, y: 52.914995189759 },
+        { x: 124.00607218925613, y: 51.717632909475824 },
+        { x: 104.68315458530958, y: 56.25995033736416 },
+        { x: 93.10115374372668, y: 71.62139821767187 },
+        { x: 96.32573001019375, y: 91.10066740832622 },
+        { x: 106.3743976167464, y: 108.34418826232 },
+        { x: 119.30155219423301, y: 123.58560006535754 },
+        { x: 133.86676150999602, y: 137.2789466311765 },
+        { x: 149.5554638745445, y: 149.6759893551617 },
+        { x: 159.20708002085954, y: 133.28578227257506 },
+        { x: 175.70922506338712, y: 122.12331879451634 },
+        { x: 194.54023110281042, y: 115.8217874339532 },
+        { x: 214.49689229486708, y: 112.87738914026212 },
+        { x: 234.43408471752633, y: 112.8041356036109 },
+        { x: 254.39369753988512, y: 115.58176060030763 },
+        { x: 273.2842746667945, y: 121.66513987378802 },
+        { x: 290.0188216211262, y: 132.5215511283174 },
+        { x: 299.89574070737524, y: 149.50043318120947 },
       ]);
     }
   });
@@ -1432,7 +1447,7 @@ describe('Path', function () {
 
       assert.deepEqual(points, [
         { x: 100, y: 250 },
-        { x: 88.81046942782544, y: 261.92616969480423 },
+        { x: 88.81046942782547, y: 261.9261696948044 },
         { x: 296.43785000464806, y: 105.03863655128791 },
         { x: 207.8940154719443, y: 414.51579926777714 },
         { x: 410.1260983224354, y: 202.53685229970446 },
@@ -1619,9 +1634,9 @@ describe('Path', function () {
     layer.draw();
 
     assertAlmostDeepEqual(rect, {
-      x: 8.6440882161882,
+      x: 8.64407532627729,
       y: 65.75902834,
-      width: 94.74182356762,
+      width: 94.74184934744542,
       height: 55.4919433,
     });
   });
@@ -1900,8 +1915,38 @@ describe('Path', function () {
     assertAlmostDeepEqual(
       path.getSelfRect(),
       { x: minX, y: minY, width: maxX - minX, height: maxY - minY },
-      0.5
+      0.05
     );
+  });
+
+  it('getSelfRect of an arc includes its end point', function () {
+    // a sweep shorter than the old sampling step used to produce an empty rect
+    assertAlmostDeepEqual(
+      new Konva.Path({ data: 'M0 0 A1000 1000 0 0 1 5 0' }).getSelfRect(),
+      { x: 0, y: -0.003125, width: 5, height: 0.003125 },
+      0.001
+    );
+    // an arc with no extremum inside the sweep is bound by its end points
+    assertAlmostDeepEqual(
+      new Konva.Path({ data: 'M0 0 A100 100 0 0 1 70.71 70.71' }).getSelfRect(),
+      { x: 0, y: 0, width: 70.71, height: 70.71 },
+      0.001
+    );
+  });
+
+  it('getSelfRect of an arc that draws nothing is an empty rect', function () {
+    // endpoints too close to each other leave a zero sweep, which draws
+    // nothing, so none of the axis extrema are inside it
+    [
+      'M0 0 A50 50 0 1 1 0 0.0000000001',
+      'M0 0 A50 50 0 1 1 0.0000001 0',
+    ].forEach((data) => {
+      assertAlmostDeepEqual(
+        new Konva.Path({ data: data }).getSelfRect(),
+        { x: 0, y: 0, width: 0, height: 0 },
+        0.001
+      );
+    });
   });
 
   it('getSelfRect of a path without data is an empty rect', function () {
@@ -1996,6 +2041,26 @@ describe('Path', function () {
     });
   });
 
+  it('an arc with negative radii uses their absolute values, per SVG', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var expected = new Konva.Path({ data: 'M10 10 A20 20 0 0 1 50 50' });
+    ['M10 10 A-20 -20 0 0 1 50 50', 'M10 10 A-20 20 0 0 1 50 50'].forEach(
+      (data) => {
+        var path = new Konva.Path({ data });
+        assertAlmostDeepEqual(
+          path.dataArray[1].points,
+          expected.dataArray[1].points,
+          0.001
+        );
+        layer.add(path);
+      }
+    );
+    layer.draw();
+  });
+
   it('an arc whose end points coincide is omitted, per SVG', function () {
     ['M10 10 A5 5 0 0 1 10 10 L20 10', 'M10 10 a5 5 0 0 1 0 0 L20 10'].forEach(
       (data) => {
@@ -2011,6 +2076,31 @@ describe('Path', function () {
   it('getPointAtLength past the end of a path ending with an arc returns the end point', function () {
     var path = new Konva.Path({ data: 'M0,0 A10,10 0 0 1 20,0' });
     assertAlmostDeepEqual(path.getPointAtLength(1000), { x: 20, y: 0 }, 0.01);
+  });
+
+  it('a quadratic whose control point sits on the chord has the length of the chord', function () {
+    // the closed form used to divide by the squared second derivative, which
+    // is float noise for a collinear control point
+    [
+      'M0 0 Q100 0 200.0000000000001 0',
+      'M0 0 Q100.00000000001 0 200 0',
+    ].forEach((data) => {
+      var path = new Konva.Path({ data });
+      assert.closeTo(path.getLength(), 200, 0.001, data);
+      assertAlmostDeepEqual(path.getPointAtLength(100), { x: 100, y: 0 }, 0.01);
+    });
+  });
+
+  it('getPointAtLength walks an elliptical arc by distance, not by angle', function () {
+    var path = new Konva.Path({ data: 'M 0 0 A 100 50 0 0 1 100 50' });
+    assert.closeTo(path.getLength(), 121.104, 0.001);
+    // the angle of an ellipse does not advance at a constant speed, so the
+    // halfway point is not at half of the sweep
+    assertAlmostDeepEqual(
+      path.getPointAtLength(path.getLength() / 2),
+      { x: 59.45, y: 9.79 },
+      0.1
+    );
   });
 
   it('getPointAtLength inside a curve is not affected by the segments before it', function () {
@@ -2036,6 +2126,17 @@ describe('Path', function () {
       path.getPointAtLength(350);
     });
     assert.equal(calls, 0);
+  });
+
+  it('getPointAtLength does not walk a circular arc', function () {
+    var path = new Konva.Path({ data: 'M 100 300 A 200 200 0 1 1 500 300' });
+    var half = path.getLength() / 2;
+    var point;
+    var calls = countCalls(Konva.Path, 'getPointOnEllipticalArc', () => {
+      point = path.getPointAtLength(half);
+    });
+    assert.equal(calls, 1);
+    assertAlmostDeepEqual(point, { x: 300, y: 100 }, 0.01);
   });
 
   it('long compressed polylines retain their bounds and endpoint', function () {

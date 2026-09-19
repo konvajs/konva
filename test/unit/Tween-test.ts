@@ -220,10 +220,8 @@ describe('Tween', function () {
       duration: duration,
       fillLinearGradientColorStops: endFill,
       onFinish: function () {
-        assert.deepEqual(
-          [0.5, 'rgba(255,0,0,1)', 1, 'rgba(0,0,0,1)'],
-          circle.fillLinearGradientColorStops()
-        );
+        // a finished tween holds the requested values, not the interpolated ones
+        assert.deepEqual(endFill, circle.fillLinearGradientColorStops());
         done();
       },
     });
@@ -670,6 +668,145 @@ describe('Tween', function () {
     tween.seek(0.5);
     assert.deepEqual(stops, [0, 'red', 1, 'blue']);
     tween.destroy();
+  });
+
+  it('pause() inside onUpdate stops the animation', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle({ x: 50, y: 50, radius: 10, fill: 'red' });
+    layer.add(circle);
+    stage.add(layer);
+
+    var tween = new Konva.Tween({
+      node: circle,
+      duration: 1,
+      x: 100,
+      onUpdate: function () {
+        tween.pause();
+      },
+    });
+    tween.play();
+    assert.equal(tween.anim.isRunning(), false);
+    assert.equal(circle.eventListeners['destroy'], undefined);
+    tween.destroy();
+  });
+
+  it('destroy() inside onUpdate is not undone, and finish() stays safe', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle({ x: 50, y: 50, radius: 10, fill: 'red' });
+    layer.add(circle);
+    stage.add(layer);
+
+    var finished = 0;
+    var tween = new Konva.Tween({
+      node: circle,
+      duration: 1,
+      x: 100,
+      onUpdate: function () {
+        tween.destroy();
+      },
+      onFinish: function () {
+        finished += 1;
+      },
+    });
+    tween.play();
+    assert.equal(tween.anim.isRunning(), false);
+    assert.equal(circle.eventListeners['destroy'], undefined);
+
+    tween.finish();
+    tween.reset();
+    assert.equal(finished, 0);
+  });
+
+  it('tweening a stroke gradient interpolates its color stops', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var rect = new Konva.Rect({
+      width: 50,
+      height: 50,
+      strokeLinearGradientStartPoint: { x: 0, y: 0 },
+      strokeLinearGradientEndPoint: { x: 50, y: 0 },
+      strokeLinearGradientColorStops: [0, 'red', 1, 'blue'],
+    });
+    layer.add(rect);
+    stage.add(layer);
+
+    var tween = new Konva.Tween({
+      node: rect,
+      duration: 1,
+      strokeLinearGradientColorStops: [0, 'green', 1, 'yellow'],
+    });
+    tween.seek(0.5);
+    assert.deepEqual(rect.strokeLinearGradientColorStops(), [
+      0,
+      'rgba(128,64,0,1)',
+      1,
+      'rgba(128,128,128,1)',
+    ]);
+    layer.draw();
+    tween.destroy();
+  });
+
+  it('tween an array attribute to a shorter one', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var rect = new Konva.Rect({
+      width: 50,
+      height: 50,
+      stroke: 'black',
+      dash: [10, 5, 2, 2],
+    });
+    layer.add(rect);
+    stage.add(layer);
+
+    var tween = new Konva.Tween({
+      node: rect,
+      duration: 1,
+      dash: [10, 5],
+    });
+    tween.seek(0.5);
+    assert.deepEqual(rect.dash(), [10, 5, 1, 1]);
+    tween.finish();
+    assert.deepEqual(rect.dash(), [10, 5]);
+    tween.reset();
+    assert.deepEqual(rect.dash(), [10, 5, 2, 2]);
+    tween.destroy();
+  });
+
+  it('tween between a scalar attribute and an array one', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var rect = new Konva.Rect({ width: 50, height: 50, cornerRadius: 5 });
+    layer.add(rect);
+    stage.add(layer);
+
+    var tween = new Konva.Tween({
+      node: rect,
+      duration: 1,
+      cornerRadius: [10, 10, 10, 10],
+    });
+    tween.seek(0.5);
+    assert.deepEqual(rect.cornerRadius(), [7.5, 7.5, 7.5, 7.5]);
+    tween.finish();
+    assert.deepEqual(rect.cornerRadius(), [10, 10, 10, 10]);
+    tween.reset();
+    assert.equal(rect.cornerRadius(), 5);
+    tween.destroy();
+
+    rect.cornerRadius([10, 20, 30, 40]);
+    var tweenBack = new Konva.Tween({
+      node: rect,
+      duration: 1,
+      cornerRadius: 10,
+    });
+    tweenBack.seek(0.5);
+    assert.deepEqual(rect.cornerRadius(), [10, 15, 20, 25]);
+    tweenBack.finish();
+    assert.equal(rect.cornerRadius(), 10);
+    tweenBack.reset();
+    assert.deepEqual(rect.cornerRadius(), [10, 20, 30, 40]);
+    tweenBack.destroy();
   });
 
   it('node.to() returns the tween', function () {

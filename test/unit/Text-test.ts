@@ -10,8 +10,9 @@ import {
   isBrowser,
   compareCanvases,
   countCalls,
+  getPixelRatio,
 } from './test-utils.ts';
-import { stringToArray } from '../../src/shapes/Text.ts';
+import { getDummyContext, stringToArray } from '../../src/shapes/Text.ts';
 
 export function getOffsetY(
   context: CanvasRenderingContext2D,
@@ -69,6 +70,14 @@ describe('Text', function () {
       'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);restore();';
 
     assert.equal(layer.getContext().getTrace(), trace);
+  });
+
+  it('text constructor does not mutate the config', function () {
+    var config = Object.freeze({ text: 'hi', fontSize: 20 });
+    var text = new Konva.Text(config);
+
+    assert.equal(text.fill(), 'black');
+    assert.equal((config as any).fill, undefined);
   });
 
   it('check text with FALSY values', function () {
@@ -1172,6 +1181,50 @@ describe('Text', function () {
     }
   });
 
+  it('text decoration uses the fill selected by fillPriority', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      text: 'hello',
+      fontSize: 80,
+      fill: 'blue',
+      fillPriority: 'color',
+      fillLinearGradientStartPoint: { x: 0, y: 0 },
+      fillLinearGradientEndPoint: { x: 0, y: 80 },
+      fillLinearGradientColorStops: [0, 'red', 1, 'yellow'],
+      textDecoration: 'underline line-through',
+    });
+    layer.add(text);
+    stage.add(layer);
+
+    const colors = function () {
+      const pixels = layer
+        .getContext()
+        .getImageData(0, 0, stage.width(), stage.height()).data;
+      const set = new Set<string>();
+      for (let i = 0; i < pixels.length; i += 4) {
+        if (pixels[i + 3] === 255)
+          set.add(`${pixels[i]},${pixels[i + 1]},${pixels[i + 2]}`);
+      }
+      return set;
+    };
+    assert.deepEqual(Array.from(colors()), ['0,0,255']);
+
+    // a radial gradient is used for the decorations too
+    text.setAttrs({
+      fill: undefined,
+      fillPriority: 'radial-gradient',
+      fillRadialGradientStartPoint: { x: 0, y: 0 },
+      fillRadialGradientEndPoint: { x: 0, y: 0 },
+      fillRadialGradientStartRadius: 0,
+      fillRadialGradientEndRadius: 200,
+      fillRadialGradientColorStops: [0, 'red', 1, 'red'],
+    });
+    layer.draw();
+    assert.deepEqual(Array.from(colors()), ['255,0,0']);
+  });
+
   it('text multi line with underline and strike and gradient vertical', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -1471,6 +1524,66 @@ describe('Text', function () {
     context.miterLimit = 2;
     context.strokeText('text', 0, getOffsetY(context));
     compareLayerAndCanvas(layer, canvas);
+  });
+
+  it('text getSelfRect includes the underline', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var text = new Konva.Text({
+      fontSize: 40,
+      fill: 'black',
+      text: 'text',
+      textDecoration: 'underline',
+    });
+    layer.add(text);
+
+    assert.isAbove(text.getSelfRect().height, text.height());
+
+    // the underline is drawn below the text height, so caching must not clip it
+    const lastInkRow = function () {
+      const pixels = layer
+        .getContext()
+        .getImageData(0, 0, stage.width(), stage.height()).data;
+      let last = -1;
+      for (let i = 3; i < pixels.length; i += 4) {
+        if (pixels[i] > 0) {
+          last = Math.floor(i / 4 / (stage.width() * getPixelRatio()));
+        }
+      }
+      return last;
+    };
+    layer.draw();
+    const withoutCache = lastInkRow();
+    text.cache();
+    layer.draw();
+    assert.equal(lastInkRow(), withoutCache);
+
+    text.textDecoration('');
+    assert.equal(text.getSelfRect().height, text.height());
+  });
+
+  it('text getSelfRect measures nothing', function () {
+    // getSelfRect runs per drag frame through getClientRect
+    var text = new Konva.Text({
+      fontSize: 40,
+      text: 'text',
+      textDecoration: 'underline',
+    });
+    var dummy = getDummyContext();
+    var measureText = dummy.measureText;
+    var calls = 0;
+    dummy.measureText = function (this: any, ...args: [string]) {
+      calls++;
+      return measureText.apply(this, args);
+    };
+    try {
+      text.getSelfRect();
+    } finally {
+      dummy.measureText = measureText;
+    }
+    assert.equal(calls, 0);
   });
 
   it('text getSelfRect', function () {
@@ -1868,7 +1981,7 @@ describe('Text', function () {
     layer.draw();
 
     var trace =
-      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);font=normal normal 12px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();fillStyle=black;fillText(ltr text,0,10);restore();restore();';
+      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);direction=ltr;font=normal normal 12px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();fillStyle=black;fillText(ltr text,0,10);restore();restore();';
 
     assert.equal(layer.getContext().getTrace(false, true), trace);
   });
@@ -1908,6 +2021,29 @@ describe('Text', function () {
 
     var trace =
       'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);direction=rtl;font=normal normal 12px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();letterSpacing=2px;fillStyle=black;fillText(rtl text,0,10);restore();restore();';
+
+    assert.equal(layer.getContext().getTrace(false, true), trace);
+  });
+
+  it('inherits rtl text direction from the canvas context', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    stage.add(layer);
+    // the browser resolves an inherited direction from the page, node-canvas
+    // needs it set on the context directly
+    layer.getContext().direction = 'rtl';
+    var text = new Konva.Text({
+      text: 'rtl text',
+      letterSpacing: 2,
+    });
+
+    layer.add(text);
+    layer.draw();
+
+    // inherited rtl must stay in one native run, not be split per character
+    var trace =
+      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);font=normal normal 12px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();letterSpacing=2px;fillStyle=black;fillText(rtl text,0,10);restore();restore();';
 
     assert.equal(layer.getContext().getTrace(false, true), trace);
   });
@@ -2158,6 +2294,19 @@ describe('Text', function () {
     assert.equal(text.getTextWidth(), text.measureSize('🇺🇸🇺🇸').width + 2 * 10);
   });
 
+  it('measures without kerning when characters are drawn one by one', function () {
+    // node-canvas ignores fontKerning, so only the measurement mode can be
+    // checked here; pixel parity is browser-only
+    new Konva.Text({ text: 'AVAV', letterSpacing: 1 });
+    assert.equal(getDummyContext().fontKerning, 'none');
+
+    new Konva.Text({ text: 'AVAV', align: 'justify' });
+    assert.equal(getDummyContext().fontKerning, 'none');
+
+    new Konva.Text({ text: 'AVAV' });
+    assert.equal(getDummyContext().fontKerning, 'auto');
+  });
+
   it('wrapping measures a bounded amount of text per line', function () {
     var text = new Konva.Text({
       text: 'lorem ipsum dolor sit amet, consectetur adipiscing elit. '.repeat(
@@ -2358,6 +2507,18 @@ describe('Text layout', function () {
     text.fontStyle('bold');
     assert.equal(tr.width(), text.width());
     assert.equal(tr.findOne('.top-right')!.x(), text.width());
+  });
+  it('Transformer follows decoration changes that change text bounds', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    stage.add(layer);
+    const text = new Konva.Text({ text: 'Hello world', fontSize: 40 });
+    const tr = new Konva.Transformer({ nodes: [text] });
+    layer.add(text, tr);
+    text.textDecoration('underline');
+    assert.equal(tr.height(), text.getSelfRect().height);
+    text.underlineOffset(30);
+    assert.equal(tr.height(), text.getSelfRect().height);
   });
   it('charRenderFunc can paint black over a colored fill', function () {
     const text = new Konva.Text({

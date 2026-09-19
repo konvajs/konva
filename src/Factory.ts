@@ -27,9 +27,10 @@ type Attr<T extends Constructor> = EnforceString<keyof InstanceType<T>>;
 type AfterFunc<T extends Constructor> = (this: InstanceType<T>) => void;
 
 /**
- * Extracts the type of a GetSet.
+ * Extracts the type a GetSet returns. The type the setter accepts can be wider,
+ * so it is matched with `any` instead of being inferred from the getter.
  */
-type ExtractGetSet<T> = T extends GetSet<infer U, any> ? U : never;
+type ExtractGetSet<T> = T extends GetSet<infer U, any, any> ? U : never;
 
 /**
  * Extracts the type of a GetSet class attribute.
@@ -70,12 +71,16 @@ export const Factory = {
   ) {
     const method = GET + Util._capitalize(attr);
 
-    constructor.prototype[method] =
-      constructor.prototype[method] ||
-      function (this: Node) {
-        const val = this.attrs[attr];
-        return val === undefined ? def : val;
-      };
+    // array defaults are shared between instances, so hand out a copy
+    const isArr = Array.isArray(def);
+    const getter: any = function (this: Node) {
+      const val = this.attrs[attr];
+      return val === undefined ? (isArr ? (def as any).slice() : def) : val;
+    };
+    // toObject() compares an attr with the default of the generated getter
+    getter._def = def;
+
+    constructor.prototype[method] = constructor.prototype[method] || getter;
   },
 
   addSetter<T extends Constructor, U extends Attr<T>>(
@@ -144,7 +149,7 @@ export const Factory = {
 
     // setter
     constructor.prototype[setter] = function (val) {
-      const oldVal = this.attrs[attr];
+      const oldVal = this[getter]();
 
       if (validator) {
         val = validator.call(this, val, attr);
@@ -194,8 +199,6 @@ export const Factory = {
       // getting
       return this[getter]();
     };
-    // marks the accessor for toObject()
-    accessor._isAttrAccessor = true;
     constructor.prototype[attr] = accessor;
   },
   backCompat<T extends Constructor>(

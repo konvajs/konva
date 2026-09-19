@@ -108,6 +108,15 @@ describe('Transformer', function () {
     assert.equal(pos.y, rect.y() + rect.height());
   });
 
+  it('mutating default enabledAnchors does not leak into another transformer', function () {
+    var tr = new Konva.Transformer();
+    tr.enabledAnchors().push('bogus');
+
+    var other = new Konva.Transformer();
+    assert.equal(other.enabledAnchors().indexOf('bogus'), -1);
+    assert.equal(other.findOne('.bogus'), undefined);
+  });
+
   it('can attach transformer into several nodes', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -5712,6 +5721,43 @@ describe('Transformer', function () {
     assertAlmostEqual(rect.rotation(), 90);
   });
 
+  it('drag rotation works with rotateAnchorAngle when angleDeg is false', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      nodes: [rect],
+      rotateAnchorAngle: 90,
+    });
+    layer.add(tr);
+    layer.draw();
+
+    var rotater = tr.findOne('.rotater')!;
+    var pos = rotater.getAbsolutePosition();
+
+    Konva.angleDeg = false;
+    try {
+      simulateMouseDown(tr, { x: pos.x, y: pos.y });
+      simulateMouseMove(tr, { x: pos.x - 100, y: pos.y + 100 });
+      simulateMouseUp(tr, { x: pos.x - 100, y: pos.y + 100 });
+    } finally {
+      Konva.angleDeg = true;
+    }
+
+    assertAlmostEqual(rect.rotation(), Math.PI / 2);
+  });
+
   it('should not allow adding external nodes as children of Transformer', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -6201,6 +6247,25 @@ describe('Transformer', function () {
     rect.scale({ x: 1, y: 1 });
     tr.nodes([group]);
     assert.deepEqual(tr.size(), { width: 10, height: 170 });
+  });
+
+  it('manual Transformer rotation survives update()', function () {
+    const { stage, tr } = setup({ useSingleNodeRotation: false });
+    const diagonal = (100 + 80) / Math.sqrt(2);
+    tr.rotation(45);
+    tr.update();
+    assert.equal(tr.rotation(), 45);
+    assertAlmostEqual(tr.width(), diagonal);
+    assertAlmostEqual(tr.height(), diagonal);
+
+    const rect2 = new Konva.Rect({ x: 60, y: 60, width: 100, height: 80 });
+    stage.getLayers()[0].add(rect2);
+    tr.nodes([tr.nodes()[0], rect2]);
+    tr.rotation(45);
+    tr.update();
+    assert.equal(tr.rotation(), 45);
+    assertAlmostEqual(tr.width(), diagonal);
+    assertAlmostEqual(tr.height(), diagonal);
   });
 
   it('Transformer follows stroke bounds when a shape or ancestor cache changes', function () {

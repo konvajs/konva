@@ -109,3 +109,40 @@ void eventBatch;
 const blob: Promise<Blob> = new Konva.Rect().toBlob();
 new Konva.Rect().toBlob({ callback: (value: Blob) => void value });
 void blob;
+
+// position(), absolutePosition() and size() read the components off the value,
+// so they take neither null nor undefined: both throw at runtime, and
+// absolutePosition() throws after it has cleared rotation, scale and offset
+const shape = new Konva.Rect();
+shape.position({ x: 10, y: 20 });
+shape.absolutePosition({ x: 10, y: 20 });
+shape.size({ width: 10, height: 20 });
+const pointer = stage.getPointerPosition();
+if (pointer) {
+  shape.absolutePosition(pointer);
+}
+// @ts-expect-error getPointerPosition() returns null when there is no pointer
+shape.absolutePosition(stage.getPointerPosition());
+// @ts-expect-error position() has nothing to read x and y from
+shape.position(null);
+// @ts-expect-error position() has nothing to read x and y from
+shape.position(undefined);
+// @ts-expect-error size() has nothing to read width and height from
+shape.size(null);
+
+// the attribute setters do reset on null and undefined, offset, scale and skew
+// included: the components go back to their defaults
+shape.offset(null);
+shape.scale(undefined);
+shape.skew(null);
+shape.fill(null);
+new Konva.Group().clip(null);
+text.width(undefined);
+text.width(null);
+line.points(undefined);
+
+// the stage container is attached to, not stored, so it takes neither
+// @ts-expect-error there is nothing to attach the stage content to
+stage.container(null);
+// @ts-expect-error there is nothing to attach the stage content to
+stage.container(undefined);

@@ -80,15 +80,15 @@ export class Arrow extends Line<ArrowConfig> {
     const points = this.points();
     const n = points.length;
     const fromTension = this.tension() !== 0 && n > 4;
-    let dx, dy;
-    if (atBeginning) {
-      const tp = fromTension ? this.getTensionPoints() : points;
-      dx = (fromTension ? (tp[0] + tp[2]) / 2 : points[2]) - points[0];
-      dy = (fromTension ? (tp[1] + tp[3]) / 2 : points[3]) - points[1];
-      dx = -dx;
-      dy = -dy;
+    const tp = fromTension ? this.getTensionPoints() : points;
+    const ex = atBeginning ? points[0] : points[n - 2],
+      ey = atBeginning ? points[1] : points[n - 1];
+    let dx = 0,
+      dy = 0;
+    if (fromTension && atBeginning) {
+      dx = ex - (tp[0] + tp[2]) / 2;
+      dy = ey - (tp[1] + tp[3]) / 2;
     } else if (fromTension) {
-      const tp = this.getTensionPoints();
       const x = tp[tp.length - 4],
         y = tp[tp.length - 3];
       const controlX = tp[tp.length - 2],
@@ -96,8 +96,8 @@ export class Arrow extends Line<ArrowConfig> {
       const lastLength = Path.calcLength(x, y, 'Q', [
         controlX,
         controlY,
-        points[n - 2],
-        points[n - 1],
+        ex,
+        ey,
       ]);
       const previous = Path.getPointOnQuadraticBezier(
         lastLength ? Math.max(0, 1 - this.pointerLength() / lastLength) : 0,
@@ -105,14 +105,21 @@ export class Arrow extends Line<ArrowConfig> {
         y,
         controlX,
         controlY,
-        points[n - 2],
-        points[n - 1]
+        ex,
+        ey
       );
-      dx = points[n - 2] - previous.x;
-      dy = points[n - 1] - previous.y;
-    } else {
-      dx = points[n - 2] - points[n - 4];
-      dy = points[n - 1] - points[n - 3];
+      dx = ex - previous.x;
+      dy = ey - previous.y;
+    }
+    // repeated endpoints give a zero tangent, so walk towards the other end
+    // of the line until a distinct point is found
+    for (
+      let i = atBeginning ? 0 : tp.length - 2;
+      !dx && !dy && i >= 0 && i < tp.length;
+      i += atBeginning ? 2 : -2
+    ) {
+      dx = ex - tp[i];
+      dy = ey - tp[i + 1];
     }
     const turn = Math.PI * 2;
     return (Math.atan2(dy, dx) + turn) % turn;

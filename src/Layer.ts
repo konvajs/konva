@@ -210,13 +210,14 @@ export class Layer extends Container<Group | Shape> {
     return this;
   }
   remove() {
-    const _canvas = this.getNativeCanvasElement();
+    super.remove();
 
-    Node.prototype.remove.call(this);
-
-    if (_canvas && _canvas.parentNode && Util._isInDocument(_canvas)) {
-      _canvas.parentNode.removeChild(_canvas);
-    }
+    // both canvases live in stage.content: the scene one always, the hit one
+    // while toggleHitCanvas() shows it
+    const scene = this.getNativeCanvasElement();
+    const hit = this.getHitCanvas()._canvas;
+    scene.parentNode?.removeChild(scene);
+    hit.parentNode?.removeChild(hit);
     return this;
   }
   getStage() {

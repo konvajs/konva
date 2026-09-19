@@ -1920,6 +1920,50 @@ describe('Caching', function () {
     assert.equal(ctx.getImageData(10, scene.height - 1, 1, 1).data[3], 255);
   });
 
+  it('a cache keeps the far edge of a child at a fractional position', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    var group = new Konva.Group();
+    layer.add(group);
+    var rect = new Konva.Rect({
+      x: 0.25,
+      y: 0.25,
+      width: 10,
+      height: 10,
+      fill: 'black',
+    });
+    group.add(rect);
+    group.cache({ pixelRatio: 1 });
+
+    var scene = group._getCanvasCache().scene;
+    assert.equal(scene.width, 11);
+    assert.equal(scene.height, 11);
+    var ctx = scene.getContext()._context;
+    assert.isAbove(ctx.getImageData(10, 5, 1, 1).data[3], 0);
+    assert.isAbove(ctx.getImageData(5, 10, 1, 1).data[3], 0);
+  });
+
+  it('a cache origin past the bounds of the node is skipped, not built with a negative size', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    var group = new Konva.Group();
+    layer.add(group);
+    group.add(
+      new Konva.Rect({
+        x: -200,
+        y: -200,
+        width: 100,
+        height: 100,
+        fill: 'red',
+      })
+    );
+    group.cache({ x: 0, y: 0 });
+
+    assert.equal(group._getCanvasCache(), undefined);
+  });
+
   it('the filter canvas of a cache has the size of the scene canvas at a fractional pixel ratio', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

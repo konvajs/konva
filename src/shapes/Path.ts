@@ -30,6 +30,7 @@ const PARAM_COUNT = {
   a: 7,
   z: 0,
 };
+const TAU = Math.PI * 2;
 /**
  * Path constructor.
  * @author Jason Follas
@@ -91,27 +92,16 @@ export class Path extends Shape<PathConfig> {
           context.quadraticCurveTo(p[0], p[1], p[2], p[3]);
           break;
         case 'A':
-          const cx = p[0],
-            cy = p[1],
-            rx = p[2],
-            ry = p[3],
-            theta = p[4],
-            dTheta = p[5],
-            psi = p[6],
-            fs = p[7];
-
-          const r = rx > ry ? rx : ry;
-          const scaleX = rx > ry ? 1 : rx / ry;
-          const scaleY = rx > ry ? ry / rx : 1;
-
-          context.translate(cx, cy);
-          context.rotate(psi);
-          context.scale(scaleX, scaleY);
-          context.arc(0, 0, r, theta, theta + dTheta, 1 - fs);
-          context.scale(1 / scaleX, 1 / scaleY);
-          context.rotate(-psi);
-          context.translate(-cx, -cy);
-
+          context.ellipse(
+            p[0],
+            p[1],
+            p[2],
+            p[3],
+            p[6],
+            p[4],
+            p[4] + p[5],
+            !p[7]
+          );
           break;
         case 'z':
           isClosed = true;
@@ -136,44 +126,31 @@ export class Path extends Shape<PathConfig> {
     const points: Array<number> = [];
     this.dataArray.forEach(function (data) {
       if (data.command === 'A') {
-        // Approximates by breaking curve into line segments
-        const start = data.points[4];
-        // 4 = theta
-        const dTheta = data.points[5];
-        // 5 = dTheta
-        const end = data.points[4] + dTheta;
-        let inc = Math.PI / 180.0;
-        // 1 degree resolution
-        if (Math.abs(start - end) < inc) {
-          inc = Math.abs(start - end);
-        }
-        if (dTheta < 0) {
-          // clockwise
-          for (let t = start - inc; t > end; t -= inc) {
-            const point = Path.getPointOnEllipticalArc(
-              data.points[0],
-              data.points[1],
-              data.points[2],
-              data.points[3],
-              t,
-              data.points[6]
-            );
+        // the two end points, plus the angles where the ellipse turns back on
+        // either axis, when they fall inside the sweep. Together they are the
+        // exact bounds of the segment
+        const [cx, cy, rx, ry, start, dTheta, psi] = data.points;
+        const cos = Math.cos(psi),
+          sin = Math.sin(psi);
+        const end = Path.getPointOnEllipticalArc(
+          cx,
+          cy,
+          rx,
+          ry,
+          start + dTheta,
+          psi
+        );
+        points.push(data.start.x, data.start.y, end.x, end.y);
+        const tx = Math.atan2(-ry * sin, rx * cos);
+        const ty = Math.atan2(ry * cos, rx * sin);
+        [tx, tx + Math.PI, ty, ty + Math.PI].forEach((t) => {
+          // how far into the sweep t is, in the direction of the sweep
+          const k = ((((t - start) * Math.sign(dTheta)) % TAU) + TAU) % TAU;
+          if (k < Math.abs(dTheta)) {
+            const point = Path.getPointOnEllipticalArc(cx, cy, rx, ry, t, psi);
             points.push(point.x, point.y);
           }
-        } else {
-          // counter-clockwise
-          for (let t = start + inc; t < end; t += inc) {
-            const point = Path.getPointOnEllipticalArc(
-              data.points[0],
-              data.points[1],
-              data.points[2],
-              data.points[3],
-              t,
-              data.points[6]
-            );
-            points.push(point.x, point.y);
-          }
-        }
+        });
       } else if (data.command === 'C') {
         // the two end points, plus the points where the curve turns back on
         // either axis. Together they are the exact bounds of the segment
@@ -289,9 +266,6 @@ export class Path extends Shape<PathConfig> {
     if (i === ii) {
       // past the end: the end of the last segment
       i--;
-      while (i > 0 && dataArray[i].points.length < 2) {
-        i--;
-      }
       length = dataArray[i].pathLength;
     }
 
@@ -315,6 +289,7 @@ export class Path extends Shape<PathConfig> {
     const p = cp.points;
     switch (cp.command) {
       case 'L':
+      case 'z':
         return Path.getPointOnLine(length, cp.start.x, cp.start.y, p[0], p[1]);
       case 'C':
         return Path.getPointOnCubicBezier(
@@ -351,15 +326,18 @@ export class Path extends Shape<PathConfig> {
           p[3]
         );
       case 'A':
-        const cx = p[0],
-          cy = p[1],
-          rx = p[2],
-          ry = p[3],
-          dTheta = p[5],
-          psi = p[6];
-        let theta = p[4];
-        theta += (dTheta * length) / cp.pathLength;
-        return Path.getPointOnEllipticalArc(cx, cy, rx, ry, theta, psi);
+        return Path.getPointOnEllipticalArc(
+          p[0],
+          p[1],
+          p[2],
+          p[3],
+          // on a circle angle is proportional to distance, so the walk is only
+          // needed for a real ellipse
+          p[2] === p[3]
+            ? p[4] + (p[5] * length) / cp.pathLength
+            : Path._walkArc(p, length).theta,
+          p[6]
+        );
     }
 
     return null;
@@ -543,6 +521,9 @@ export class Path extends Shape<PathConfig> {
     // init context point
     let cpx = 0;
     let cpy = 0;
+    // start of the current subpath: where z draws back to
+    let spx = 0;
+    let spy = 0;
 
     const re = /([-+]?((\d+\.\d+)|((\d+)|(\.\d+)))(?:e[-+]?\d+)?)/gi;
     let match;
@@ -616,22 +597,11 @@ export class Path extends Shape<PathConfig> {
             break;
           // Note: lineTo handlers need to be above this point
           case 'm':
-            const dx = p[pIndex++];
-            const dy = p[pIndex++];
-            cpx += dx;
-            cpy += dy;
+            cpx += p[pIndex++];
+            cpy += p[pIndex++];
             cmd = 'M';
-            // After closing the path move the current position
-            // to the the first point of the path (if any).
-            if (ca.length > 2 && ca[ca.length - 1].command === 'z') {
-              for (let idx = ca.length - 2; idx >= 0; idx--) {
-                if (ca[idx].command === 'M') {
-                  cpx = ca[idx].points[0] + dx;
-                  cpy = ca[idx].points[1] + dy;
-                  break;
-                }
-              }
-            }
+            spx = cpx;
+            spy = cpy;
             points.push(cpx, cpy);
             c = 'l';
             // subsequent points are treated as relative lineTo
@@ -640,6 +610,8 @@ export class Path extends Shape<PathConfig> {
             cpx = p[pIndex++];
             cpy = p[pIndex++];
             cmd = 'M';
+            spx = cpx;
+            spy = cpy;
             points.push(cpx, cpy);
             c = 'L';
             // subsequent points are treated as absolute lineTo
@@ -752,8 +724,9 @@ export class Path extends Shape<PathConfig> {
             break;
           case 'A':
           case 'a':
-            rx = p[pIndex++];
-            ry = p[pIndex++];
+            // per SVG, the radii are used as absolute values
+            rx = Math.abs(p[pIndex++]);
+            ry = Math.abs(p[pIndex++]);
             psi = p[pIndex++];
             fa = p[pIndex++];
             fs = p[pIndex++];
@@ -802,19 +775,47 @@ export class Path extends Shape<PathConfig> {
       }
 
       if (c === 'z' || c === 'Z') {
+        // per SVG, z is a line back to the start of the subpath, which then
+        // becomes the current point
         ca.push({
           command: 'z',
-          points: [],
-          start: undefined as any,
-          pathLength: 0,
+          points: [spx, spy],
+          start: { x: cpx, y: cpy },
+          pathLength: this.getLineLength(cpx, cpy, spx, spy),
         });
+        cpx = spx;
+        cpy = spy;
       }
     }
 
     return ca;
   }
+  /**
+   * Walks an arc in one degree steps, accumulating its length. Returns the
+   * angle `length` along the arc, or its end angle and total length when
+   * `length` is past the end.
+   */
+  private static _walkArc(points: number[], length: number) {
+    const [cx, cy, rx, ry, start, dTheta] = points;
+    const steps = Math.max(1, Math.ceil(Math.abs(dTheta) / (Math.PI / 180)));
+    // the arc length does not depend on the x-axis rotation psi, so it is left out
+    let p1 = Path.getPointOnEllipticalArc(cx, cy, rx, ry, start, 0);
+    let prev = start;
+    let len = 0;
+    for (let i = 1; i <= steps; i++) {
+      const t = start + (dTheta * i) / steps;
+      const p2 = Path.getPointOnEllipticalArc(cx, cy, rx, ry, t, 0);
+      const d = Path.getLineLength(p1.x, p1.y, p2.x, p2.y);
+      if (len + d >= length) {
+        return { theta: prev + (t - prev) * ((length - len) / d), length };
+      }
+      len += d;
+      p1 = p2;
+      prev = t;
+    }
+    return { theta: prev, length: len };
+  }
   static calcLength(x, y, cmd, points) {
-    let len, p1, p2, t;
     const path = Path;
 
     switch (cmd) {
@@ -833,67 +834,7 @@ export class Path extends Shape<PathConfig> {
           1
         );
       case 'A':
-        // Approximates by breaking curve into line segments
-        len = 0.0;
-        const start = points[4];
-        // 4 = theta
-        const dTheta = points[5];
-        // 5 = dTheta
-        const end = points[4] + dTheta;
-        let inc = Math.PI / 180.0;
-        // 1 degree resolution
-        if (Math.abs(start - end) < inc) {
-          inc = Math.abs(start - end);
-        }
-        // the arc length does not depend on the x-axis rotation psi, so it is left out
-        p1 = path.getPointOnEllipticalArc(
-          points[0],
-          points[1],
-          points[2],
-          points[3],
-          start,
-          0
-        );
-        if (dTheta < 0) {
-          // clockwise
-          for (t = start - inc; t > end; t -= inc) {
-            p2 = path.getPointOnEllipticalArc(
-              points[0],
-              points[1],
-              points[2],
-              points[3],
-              t,
-              0
-            );
-            len += path.getLineLength(p1.x, p1.y, p2.x, p2.y);
-            p1 = p2;
-          }
-        } else {
-          // counter-clockwise
-          for (t = start + inc; t < end; t += inc) {
-            p2 = path.getPointOnEllipticalArc(
-              points[0],
-              points[1],
-              points[2],
-              points[3],
-              t,
-              0
-            );
-            len += path.getLineLength(p1.x, p1.y, p2.x, p2.y);
-            p1 = p2;
-          }
-        }
-        p2 = path.getPointOnEllipticalArc(
-          points[0],
-          points[1],
-          points[2],
-          points[3],
-          end,
-          0
-        );
-        len += path.getLineLength(p1.x, p1.y, p2.x, p2.y);
-
-        return len;
+        return path._walkArc(points, Infinity).length;
     }
 
     return 0;

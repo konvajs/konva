@@ -1,5 +1,4 @@
 import type { Container } from './Container.ts';
-import { Konva } from './Global.ts';
 import type { Node } from './Node.ts';
 import type { Stage } from './Stage.ts';
 import type { Vector2d } from './types.ts';
@@ -162,11 +161,16 @@ export const DD = {
 
   // dragBefore and dragAfter allows us to set correct order of events
   // setup all in dragbefore, and stop dragging only after pointerup triggered.
-  _endDragBefore(evt?, win?: Window) {
+  _endDragBefore(evt?, win?: Window, only?: DragElement) {
     const drawNodes: Array<Container> = [];
     const positioned = new Set<Stage>();
     DD._dragElements.forEach((elem, key) => {
       const { node } = elem;
+      // node.stopDrag() ends only the drags of the same gesture: a Transformer
+      // drags its other nodes with the same pointer, another pointer is its own
+      if (only && elem !== only && elem.pointerId !== only.pointerId) {
+        return;
+      }
       // we need to find pointer relative to that node
       const stage = node.getStage()!;
       // a pointer released in another window ends the drag too - the pointer
@@ -179,24 +183,28 @@ export const DD = {
         stage.setPointersPositions(evt);
         positioned.add(stage);
       }
-      if (
-        evt &&
-        elem.pointerEventType &&
-        elem.pointerEventType !== Util._getEventType(evt.type)
-      ) {
-        return;
-      }
+      if (!only) {
+        if (
+          evt &&
+          elem.pointerEventType &&
+          elem.pointerEventType !== Util._getEventType(evt.type)
+        ) {
+          return;
+        }
 
-      // a drag started without an event (node.startDrag()) that has not
-      // moved yet has no pointer: any release ends it
-      const released =
-        elem.pointerId === undefined ||
-        stage._changedPointerPositions.some((pos) => pos.id === elem.pointerId);
+        // a drag started without an event (node.startDrag()) that has not
+        // moved yet has no pointer: any release ends it
+        const released =
+          elem.pointerId === undefined ||
+          stage._changedPointerPositions.some(
+            (pos) => pos.id === elem.pointerId
+          );
 
-      // that pointer is not related: a "ready" element of another pointer
-      // waits for its own release
-      if (!released) {
-        return;
+        // that pointer is not related: a "ready" element of another pointer
+        // waits for its own release
+        if (!released) {
+          return;
+        }
       }
 
       if (elem.dragStatus === 'ready') {
@@ -207,9 +215,7 @@ export const DD = {
         elem.dragStatus = 'stopped';
 
         // a node that has not moved needs no redraw
-        const drawNode =
-          elem.node.getLayer() ||
-          ((elem.node instanceof Konva['Stage'] && elem.node) as any);
+        const drawNode = node.getLayer() || stage;
         if (drawNode && drawNodes.indexOf(drawNode) === -1) {
           drawNodes.push(drawNode);
         }
@@ -222,9 +228,12 @@ export const DD = {
       drawNode.draw();
     });
   },
-  _endDragAfter(evt) {
+  _endDragAfter(evt, only?: DragElement) {
     DD._dragElements.forEach((elem, key) => {
-      if (elem.dragStatus !== 'stopped') {
+      if (
+        elem.dragStatus !== 'stopped' ||
+        (only && elem !== only && elem.pointerId !== only.pointerId)
+      ) {
         return;
       }
       elem.node.fire(

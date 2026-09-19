@@ -1,8 +1,11 @@
 // SetType widens what the setter accepts beyond what the getter returns,
-// like text.width('auto')
-export interface GetSet<Type, This, SetType = Type> {
+// like text.width('auto'). Attribute setters also take null and undefined to
+// reset the attribute, so SetType includes them by default; accessors that
+// read the value instead of storing it, like node.position(), pass a SetType
+// that leaves them out, because they throw on null and undefined.
+export interface GetSet<Type, This, SetType = Type | null | undefined> {
   (): Type;
-  (v: SetType | null | undefined): This;
+  (v: SetType): This;
 }
 
 export interface Vector2d {
