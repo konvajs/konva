@@ -25,14 +25,14 @@ const ATTR_CHANGE_LIST = [
     'pointerWidth',
     'pointerHeight',
   ],
-  CHANGE_KONVA = 'Change.konva',
+  CHANGE_EVENTS = ATTR_CHANGE_LIST.map((attr) => attr + 'Change.konva').join(
+    ' '
+  ),
   NONE = 'none',
   UP = 'up',
   RIGHT = 'right',
   DOWN = 'down',
-  LEFT = 'left',
-  // cached variables
-  attrChangeListLen = ATTR_CHANGE_LIST.length;
+  LEFT = 'left';
 
 /**
  * Label constructor.&nbsp; Labels are groups that contain a Text and Tag shape
@@ -75,8 +75,10 @@ const ATTR_CHANGE_LIST = [
 export class Label extends Group {
   constructor(config?: LabelConfig) {
     super(config);
+    this._sync = this._sync.bind(this);
     this.on('add.konva', function (evt) {
-      this._addListeners(evt.child);
+      // re-adding the same child must not stack another listener
+      evt.child!.off(CHANGE_EVENTS, this._sync).on(CHANGE_EVENTS, this._sync);
       this._sync();
     });
   }
@@ -100,18 +102,6 @@ export class Label extends Group {
    */
   getTag() {
     return this.find('Tag')[0] as Tag;
-  }
-  _addListeners(text) {
-    let that = this,
-      n;
-    const func = function () {
-      that._sync();
-    };
-
-    // update text data for certain attr changes
-    for (n = 0; n < attrChangeListLen; n++) {
-      text.on(ATTR_CHANGE_LIST[n] + CHANGE_KONVA, func);
-    }
   }
   getWidth() {
     return this.getText().width();
