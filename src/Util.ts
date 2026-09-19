@@ -612,12 +612,6 @@ export const Util = {
     ensureBrowser();
     return document.createElement('img');
   },
-  _isInDocument(el: any) {
-    // not `el.parentNode == document`, because the element may belong to
-    // another document: an iframe, or a popout window
-    return !!el.isConnected;
-  },
-
   /*
    * arg can be an image object or image data
    */
