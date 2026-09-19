@@ -7,9 +7,46 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Added `Stage.eventBatchFunc()` for framework integrations to batch native input handlers. Note: direct `fire()` calls and programmatic changes are not batched
 - Improved `Transformer` performance with many selected nodes: unchanged shape bounds are reused, and anchors are not rebuilt when the selection rectangle is unchanged
+- Improved `Path` arc performance: bounds of an arc segment are computed exactly instead of sampled every degree, and a point on a circular arc is found with a closed form instead of walking the arc
+- Improved `Text.getClientRect()` and `getSelfRect()` of underlined text, which no longer measure the font on every call
 - Fixed `touchcancel` leaving a `Transformer` active and releasing the capture of an untouched pointer. Note: cancellation now fires `pointercancel`/`touchcancel` in addition to the existing `pointerup`
 - Fixed `toBlob()` typed as `Promise<unknown>`. It resolves with a `Blob`, and rejects instead of resolving with `null` when the canvas can not be encoded
 - Fixed the `Konva.Node` JSDoc block attaching to a private helper, which dropped the `Konva.Node` page from the API reference
+- Fixed `blurRadius`, `pixelSize` and CSS filter lengths (for example `blur(8px)`) being applied in cache pixels instead of node coordinates, so a filtered node looked less blurred at a higher cache `pixelRatio`. Note: custom filter functions now receive `(imageData, pixelRatio)`; use the ratio to convert node lengths to pixels
+- Fixed a drag started from a `pointerdown` handler (`startDrag(e)`, for example react-konva `onPointerDown`) never moving or ending and leaving the node stuck as dragging
+- Fixed `stopDrag()` ending every active drag instead of only the drags of its own gesture, so a node dragged by another finger stopped too. Note: `stopDrag()` on a node that is not dragging is now a no-op
+- Fixed a `touchstart` on empty stage area reporting the `pointerId` of the oldest active touch instead of the finger that just touched down
+- Fixed `gotpointercapture` and `lostpointercapture` always reporting `pointerId` 0 instead of the captured pointer
+- Fixed `Transformer` resetting a manually set `rotation()` back to zero on the next `update()` when `useSingleNodeRotation` is off
+- Fixed `Transformer` rotating by the wrong amount when `rotateAnchorAngle` is used with `Konva.angleDeg = false`
+- Fixed `node.remove()` leaving a stale absolute transform when a listener or a `Transformer` read the node's position during removal
+- Fixed `toObject()`, `toJSON()` and `clone()` dropping an explicit `width`, `height` or `dragDistance` that happened to equal the computed value, so a restored `Text` re-flowed. Note: such attributes are now present in the serialized output
+- Fixed `Konva.Text` and `toImage()`/`toBlob()` mutating the configuration object passed by the caller, which broke frozen and reused configurations
+- Fixed mutating the array returned by an unset `points()`, `enabledAnchors()` or `rotationSnaps()` corrupting every other node that used the same default. Note: an unset array attribute now returns a new array on each read
+- Fixed compound change events such as `scaleChange`, `offsetChange` and `skewChange` reporting `oldVal` as `undefined`
+- Fixed `cache()` and `toCanvas()`/`toDataURL()`/`toImage()` cropping the last pixel row and column of content at a fractional position. Note: an automatically sized cache or export can now be one pixel larger, and a cache whose origin is past the content is skipped instead of built with a negative size
+- Fixed `layer.remove()` and `layer.destroy()` leaving the layer canvases in the stage content when the stage container is not in the document, and never removing a hit canvas shown with `toggleHitCanvas()`
+- Fixed out-of-range CSS color components, such as `rgba(0, 0, 0, 2)` or `rgb(120%, 0, 0)`, distorting shadow opacity and color tweens
+- Fixed the types of `position()`, `absolutePosition()`, `size()` and `Stage.container()` accepting `null` and `undefined`, which throw at runtime. Note: `node.absolutePosition(stage.getPointerPosition())` no longer compiles, because the pointer position can be `null`
+- Fixed `Text` reporting a width smaller than it paints with `letterSpacing`, `align: 'justify'` or `charRenderFunc`, because measurement used kerning while drawing does not
+- Fixed `Text` bounds ignoring the underline, so `cache()`, `getClientRect()` and `toDataURL()` clipped it. Note: bounds of underlined text are now taller than `height()`
+- Fixed `Text` with `direction: 'ltr'` inheriting the direction of an RTL canvas, because only `'rtl'` was applied
+- Fixed `Text` underline and line-through ignoring `fillPriority`, radial gradients and patterns instead of using the fill the text is drawn with
+- Fixed `TextPath` `kerningFunc` moving glyphs off curved and vertical paths, and not being counted in the text width
+- Fixed `TextPath` dropping its last character with `align: 'right'` and a positive `letterSpacing`, and adding a phantom trailing spacing to its bounds
+- Fixed a close command (`z`) in `Path` data not travelling back to the start of the subpath. Note: `getLength()` of a closed path now includes the closing edge, as in SVG, and a relative command after `z` starts from the subpath start
+- Fixed `Path.getSelfRect()` of an arc segment missing its end point, which reported an empty rect for a sub-degree arc
+- Fixed `Path.getPointAtLength()` on a non-circular arc interpolating the angle instead of the distance, which bunched `TextPath` glyphs on ovals and made path animations change speed
+- Fixed a negative arc radius in `Path` data throwing during a draw and aborting the layer. Note: an arc is now drawn with a single `ellipse()` call
+- Fixed the length of a quadratic curve whose control point lies on the chord, which returned `Infinity` and made `TextPath` text disappear
+- Fixed `Arrow` pointing its head horizontally when the line has repeated endpoints, for example a polyline finished by a double click
+- Fixed `Konva.Image` created from a fresh `new Image()` never redrawing when its `src` is assigned afterwards
+- Fixed `Konva.Image.fromURL()` calling its callback again, and creating a duplicate node, when the `src` of the loaded image is changed later
+- Fixed `Label` stacking a new set of listeners on a child every time it is re-added, which multiplied its internal work and kept a removed child calling a destroyed `Label`
+- Fixed `Konva.Filters.Pixelate` darkening blocks that mix opaque and transparent pixels, such as the edges of circles, text and images with alpha
+- Fixed `Tween` restarting its animation when `pause()` or `destroy()` is called from `onUpdate`, and throwing from `finish()`/`reset()` after such a `destroy()`
+- Fixed tweening `strokeLinearGradientColorStops` producing invalid colors such as `redNaN` and breaking every following draw
+- Fixed tweening an array attribute such as `dash` to a shorter array writing `NaN`, and tweening between a scalar and an array `cornerRadius` throwing
 
 ## 10.4.0 (2026-09-07)
 
