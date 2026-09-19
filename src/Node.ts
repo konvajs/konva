@@ -2245,10 +2245,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   ) {
     return new Promise<HTMLImageElement>((resolve, reject) => {
       try {
-        const callback = config?.callback;
-        if (callback) delete config.callback;
+        const { callback, ...rest } = config || {};
         Util._urlToImage(
-          this.toDataURL(config as any),
+          this.toDataURL(rest as any),
           function (img) {
             resolve(img);
             callback?.(img);
@@ -2289,8 +2288,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   ) {
     return new Promise<Blob>((resolve, reject) => {
       try {
-        const callback = config?.callback;
-        if (callback) delete config.callback;
         this.toCanvas(config).toBlob(
           (blob) => {
             // the canvas reports a failed encode by passing null
@@ -2301,7 +2298,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
               return;
             }
             resolve(blob);
-            callback?.(blob);
+            config?.callback?.(blob);
           },
           config?.mimeType,
           config?.quality

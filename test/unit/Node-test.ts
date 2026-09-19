@@ -4201,6 +4201,19 @@ describe('Serialization and export', function () {
     }
   });
 
+  it('toImage keeps the callback of a reused config', async function () {
+    const rect = new Konva.Rect({ width: 10, height: 10, fill: 'red' });
+    let calls = 0;
+    const config = { callback: () => calls++ };
+    try {
+      await rect.toImage(config);
+      await rect.toImage(config);
+      assert.equal(calls, 2);
+    } finally {
+      rect.destroy();
+    }
+  });
+
   it('function filters are omitted while CSS filters still round-trip', function () {
     const rect = new Konva.Rect({ filters: [Konva.Filters.Blur, 'invert(1)'] });
     const restored = Konva.Node.create(rect.toJSON());

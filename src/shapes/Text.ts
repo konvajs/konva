@@ -199,15 +199,13 @@ function _strokeFunc(this: Text, context: Context) {
 function checkDefaultFill(config?: TextConfig) {
   config = config || {};
 
-  // set default color to black
-  if (
-    !config.fillLinearGradientColorStops &&
-    !config.fillRadialGradientColorStops &&
-    !config.fillPatternImage
-  ) {
-    config.fill = config.fill || 'black';
-  }
-  return config;
+  // set default color to black, without mutating the caller's config
+  const hasFill =
+    config.fill ||
+    config.fillLinearGradientColorStops ||
+    config.fillRadialGradientColorStops ||
+    config.fillPatternImage;
+  return hasFill ? config : { ...config, fill: 'black' };
 }
 
 /**
