@@ -762,11 +762,14 @@ describe('PointerEvents capture wiring', function () {
     stage.content.releasePointerCapture = function (id: number) {
       released.push(id);
     };
-    circle.on('gotpointercapture', function () {
+    var capturePointerIds: number[] = [];
+    circle.on('gotpointercapture', function (e) {
       gotCapture += 1;
+      capturePointerIds.push(e.pointerId);
     });
-    circle.on('lostpointercapture', function () {
+    circle.on('lostpointercapture', function (e) {
       lostCapture += 1;
+      capturePointerIds.push(e.pointerId);
     });
 
     circle.setPointerCapture(5);
@@ -778,6 +781,7 @@ describe('PointerEvents capture wiring', function () {
     assert.deepEqual(released, [5], 'should release on the container');
     assert.equal(circle.hasPointerCapture(5), false);
     assert.equal(lostCapture, 1);
+    assert.deepEqual(capturePointerIds, [5, 5]);
   });
 
   it('capture still registers when the container throws for an inactive pointer', function () {

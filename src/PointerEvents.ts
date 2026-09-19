@@ -21,11 +21,12 @@ export function getCapturedShape(pointerId: number, stage?: Stage) {
     : undefined;
 }
 
-export function createEvent(evt: PointerEvent): KonvaPointerEvent {
-  return {
-    evt,
-    pointerId: evt.pointerId,
-  } as any;
+function fireCapture(
+  shape: Shape | Stage,
+  type: 'gotpointercapture' | 'lostpointercapture',
+  pointerId: number
+) {
+  shape._fire(type, { evt: new PointerEvent(type, { pointerId }), pointerId });
 }
 
 export function hasPointerCapture(pointerId: number, shape: Shape | Stage) {
@@ -52,10 +53,7 @@ export function setPointerCapture(pointerId: number, shape: Shape | Stage) {
       // ids of mouse and touch events (999 and touch identifiers) and
       // programmatic calls outside of a pointer event land here
     }
-    shape._fire(
-      'gotpointercapture',
-      createEvent(new PointerEvent('gotpointercapture'))
-    );
+    fireCapture(shape, 'gotpointercapture', pointerId);
   }
 }
 
@@ -80,13 +78,10 @@ export function releaseCapture(pointerId: number, target?: Shape | Stage) {
 
   if (SUPPORT_POINTER_EVENTS) {
     try {
-      stage?.content?.releasePointerCapture(pointerId);
+      stage.content?.releasePointerCapture(pointerId);
     } catch (e) {
       // same as in setPointerCapture: the pointer may not be active
     }
-    shape._fire(
-      'lostpointercapture',
-      createEvent(new PointerEvent('lostpointercapture'))
-    );
+    fireCapture(shape, 'lostpointercapture', pointerId);
   }
 }
