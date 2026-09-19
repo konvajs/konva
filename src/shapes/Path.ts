@@ -289,9 +289,6 @@ export class Path extends Shape<PathConfig> {
     if (i === ii) {
       // past the end: the end of the last segment
       i--;
-      while (i > 0 && dataArray[i].points.length < 2) {
-        i--;
-      }
       length = dataArray[i].pathLength;
     }
 
@@ -315,6 +312,7 @@ export class Path extends Shape<PathConfig> {
     const p = cp.points;
     switch (cp.command) {
       case 'L':
+      case 'z':
         return Path.getPointOnLine(length, cp.start.x, cp.start.y, p[0], p[1]);
       case 'C':
         return Path.getPointOnCubicBezier(
@@ -543,6 +541,9 @@ export class Path extends Shape<PathConfig> {
     // init context point
     let cpx = 0;
     let cpy = 0;
+    // start of the current subpath: where z draws back to
+    let spx = 0;
+    let spy = 0;
 
     const re = /([-+]?((\d+\.\d+)|((\d+)|(\.\d+)))(?:e[-+]?\d+)?)/gi;
     let match;
@@ -616,22 +617,11 @@ export class Path extends Shape<PathConfig> {
             break;
           // Note: lineTo handlers need to be above this point
           case 'm':
-            const dx = p[pIndex++];
-            const dy = p[pIndex++];
-            cpx += dx;
-            cpy += dy;
+            cpx += p[pIndex++];
+            cpy += p[pIndex++];
             cmd = 'M';
-            // After closing the path move the current position
-            // to the the first point of the path (if any).
-            if (ca.length > 2 && ca[ca.length - 1].command === 'z') {
-              for (let idx = ca.length - 2; idx >= 0; idx--) {
-                if (ca[idx].command === 'M') {
-                  cpx = ca[idx].points[0] + dx;
-                  cpy = ca[idx].points[1] + dy;
-                  break;
-                }
-              }
-            }
+            spx = cpx;
+            spy = cpy;
             points.push(cpx, cpy);
             c = 'l';
             // subsequent points are treated as relative lineTo
@@ -640,6 +630,8 @@ export class Path extends Shape<PathConfig> {
             cpx = p[pIndex++];
             cpy = p[pIndex++];
             cmd = 'M';
+            spx = cpx;
+            spy = cpy;
             points.push(cpx, cpy);
             c = 'L';
             // subsequent points are treated as absolute lineTo
@@ -802,12 +794,16 @@ export class Path extends Shape<PathConfig> {
       }
 
       if (c === 'z' || c === 'Z') {
+        // per SVG, z is a line back to the start of the subpath, which then
+        // becomes the current point
         ca.push({
           command: 'z',
-          points: [],
-          start: undefined as any,
-          pathLength: 0,
+          points: [spx, spy],
+          start: { x: cpx, y: cpy },
+          pathLength: this.getLineLength(cpx, cpy, spx, spy),
         });
+        cpx = spx;
+        cpy = spy;
       }
     }
 

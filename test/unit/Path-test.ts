@@ -611,15 +611,28 @@ describe('Path', function () {
       data: 'M0,0 L100,0 L100,100 z',
     });
 
+    // z is a line back to the start of the subpath, so it has a length
     var total = path.getLength();
+    assert.closeTo(total, 100 + 100 + Math.SQRT2 * 100, 0.001);
 
     // a length past the end of the path (e.g. from floating point drift while
     // animating along the path) must still return a real point, as it does for
     // open paths, not { x: undefined, y: undefined }
     var point = path.getPointAtLength(total + 500);
 
-    assert.equal(point.x, 100);
-    assert.equal(point.y, 100);
+    assertAlmostDeepEqual(point, { x: 0, y: 0 }, 0.001);
+  });
+
+  // ======================================================
+  it('a command after a close starts from the start of the subpath', function () {
+    var path = new Konva.Path({
+      data: 'M0,0 L100,0 L100,100 z l10,10',
+    });
+
+    var last = path.dataArray[path.dataArray.length - 1];
+    assert.equal(last.command, 'L');
+    assertAlmostDeepEqual(last.start, { x: 0, y: 0 }, 0.001);
+    assert.deepEqual(last.points, [10, 10]);
   });
 
   // ======================================================
