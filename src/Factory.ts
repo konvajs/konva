@@ -70,12 +70,14 @@ export const Factory = {
   ) {
     const method = GET + Util._capitalize(attr);
 
-    constructor.prototype[method] =
-      constructor.prototype[method] ||
-      function (this: Node) {
-        const val = this.attrs[attr];
-        return val === undefined ? def : val;
-      };
+    const getter: any = function (this: Node) {
+      const val = this.attrs[attr];
+      return val === undefined ? def : val;
+    };
+    // toObject() compares an attr with the default of the generated getter
+    getter._def = def;
+
+    constructor.prototype[method] = constructor.prototype[method] || getter;
   },
 
   addSetter<T extends Constructor, U extends Attr<T>>(
@@ -194,8 +196,6 @@ export const Factory = {
       // getting
       return this[getter]();
     };
-    // marks the accessor for toObject()
-    accessor._isAttrAccessor = true;
     constructor.prototype[attr] = accessor;
   },
   backCompat<T extends Constructor>(

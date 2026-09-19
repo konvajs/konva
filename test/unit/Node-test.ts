@@ -4242,6 +4242,23 @@ describe('Serialization and export', function () {
       Konva.Util.releaseCanvas(source);
     }
   });
+  it('an explicit text width equal to the computed one survives serialization', function () {
+    const text = new Konva.Text({ text: 'Hello world', fontSize: 20 });
+    const width = text.width();
+    text.width(width);
+
+    const restored = Konva.Node.create(text.toJSON()) as Konva.Text;
+    restored.text('much much longer text');
+
+    assert.equal(restored.width(), width);
+  });
+
+  it('a drag distance equal to the inherited one survives serialization', function () {
+    const rect = new Konva.Rect({ dragDistance: Konva.dragDistance });
+
+    assert.equal(rect.toObject().attrs.dragDistance, Konva.dragDistance);
+  });
+
   it('explicit zero brightness survives a JSON round trip', function () {
     const rect = new Konva.Rect({
       width: 10,

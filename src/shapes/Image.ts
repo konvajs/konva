@@ -147,17 +147,6 @@ export class Image extends Shape<ImageConfig> {
     context.closePath();
     context.fillStrokeShape(this);
   }
-  toObject() {
-    const object = super.toObject();
-    // The source image is not serialized, so its natural size is not a default
-    // that a restored node can recover.
-    for (const dimension of ['width', 'height'] as const) {
-      if (this.attrs[dimension] !== undefined) {
-        object.attrs[dimension] = this.attrs[dimension];
-      }
-    }
-    return object;
-  }
   getWidth() {
     const image = this.image() as any;
     return this.attrs.width ?? image?.videoWidth ?? image?.width ?? 0;
