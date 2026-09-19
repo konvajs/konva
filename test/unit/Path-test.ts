@@ -485,7 +485,7 @@ describe('Path', function () {
     var trace = layer.getContext().getTrace();
     assert.equal(
       trace,
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(100,350);lineTo(150,325);translate(175,312.5);rotate(-0.524);scale(1,1);arc(0,0,27.951,-3.082,0.06,0);scale(1,1);rotate(0.524);translate(-175,-312.5);lineTo(250,275);translate(275,262.5);rotate(-0.524);scale(0.5,1);arc(0,0,55.826,-3.112,0.03,0);scale(2,1);rotate(0.524);translate(-275,-262.5);lineTo(350,225);translate(375,212.5);rotate(-0.524);scale(0.333,1);arc(0,0,83.719,-3.122,0.02,0);scale(3,1);rotate(0.524);translate(-375,-212.5);lineTo(450,175);translate(475,162.5);rotate(-0.524);scale(0.25,1);arc(0,0,111.615,-3.127,0.015,0);scale(4,1);rotate(0.524);translate(-475,-162.5);lineTo(550,125);fillStyle=none;fill();lineWidth=1;strokeStyle=#999;stroke();restore();'
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(100,350);lineTo(150,325);ellipse(175,312.5,27.951,27.951,-0.524,-3.082,0.06,false);lineTo(250,275);ellipse(275,262.5,27.913,55.826,-0.524,-3.112,0.03,false);lineTo(350,225);ellipse(375,212.5,27.906,83.719,-0.524,-3.122,0.02,false);lineTo(450,175);ellipse(475,162.5,27.904,111.615,-0.524,-3.127,0.015,false);lineTo(550,125);fillStyle=none;fill();lineWidth=1;strokeStyle=#999;stroke();restore();'
     );
   });
 
@@ -2024,6 +2024,26 @@ describe('Path', function () {
       assert.deepEqual(path.dataArray[1].points, [30, 40], data);
       assert.equal(path.getLength(), 50, data);
     });
+  });
+
+  it('an arc with negative radii uses their absolute values, per SVG', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var expected = new Konva.Path({ data: 'M10 10 A20 20 0 0 1 50 50' });
+    ['M10 10 A-20 -20 0 0 1 50 50', 'M10 10 A-20 20 0 0 1 50 50'].forEach(
+      (data) => {
+        var path = new Konva.Path({ data });
+        assertAlmostDeepEqual(
+          path.dataArray[1].points,
+          expected.dataArray[1].points,
+          0.001
+        );
+        layer.add(path);
+      }
+    );
+    layer.draw();
   });
 
   it('an arc whose end points coincide is omitted, per SVG', function () {

@@ -92,27 +92,16 @@ export class Path extends Shape<PathConfig> {
           context.quadraticCurveTo(p[0], p[1], p[2], p[3]);
           break;
         case 'A':
-          const cx = p[0],
-            cy = p[1],
-            rx = p[2],
-            ry = p[3],
-            theta = p[4],
-            dTheta = p[5],
-            psi = p[6],
-            fs = p[7];
-
-          const r = rx > ry ? rx : ry;
-          const scaleX = rx > ry ? 1 : rx / ry;
-          const scaleY = rx > ry ? ry / rx : 1;
-
-          context.translate(cx, cy);
-          context.rotate(psi);
-          context.scale(scaleX, scaleY);
-          context.arc(0, 0, r, theta, theta + dTheta, 1 - fs);
-          context.scale(1 / scaleX, 1 / scaleY);
-          context.rotate(-psi);
-          context.translate(-cx, -cy);
-
+          context.ellipse(
+            p[0],
+            p[1],
+            p[2],
+            p[3],
+            p[6],
+            p[4],
+            p[4] + p[5],
+            !p[7]
+          );
           break;
         case 'z':
           isClosed = true;
@@ -731,8 +720,9 @@ export class Path extends Shape<PathConfig> {
             break;
           case 'A':
           case 'a':
-            rx = p[pIndex++];
-            ry = p[pIndex++];
+            // per SVG, the radii are used as absolute values
+            rx = Math.abs(p[pIndex++]);
+            ry = Math.abs(p[pIndex++]);
             psi = p[pIndex++];
             fa = p[pIndex++];
             fs = p[pIndex++];
