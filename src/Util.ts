@@ -493,8 +493,9 @@ const COLOR_COMPONENT_REGEX = new RegExp(`^(${NUMBER_SOURCE})(%?)$`, 'i');
 
 // Parse one color component. 100% is `max`: 255 for the color channels of
 // rgb(), 1 for the alpha, 100 for the saturation and the lightness of hsl().
-// CSS keeps a component in [0, max]; out of that range the canvas can not
-// read the color at all. NaN stays NaN, so a bad value still fails.
+// CSS clamps a component to [0, max], and so do we: Konva multiplies and
+// interpolates these numbers (shadowOpacity, Tween) before the canvas sees
+// them. NaN stays NaN, so a bad value still fails.
 const parseColorComponent = (value: string, max: number) => {
   const match = COLOR_COMPONENT_REGEX.exec(value);
   if (!match) {
