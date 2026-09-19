@@ -226,6 +226,17 @@ describe('TouchEvents', function () {
     simulateTouchEnd(stage, [], [b]);
     assert.deepEqual(taps, ['first:1', 'second:2']);
   });
+  it('a stage touchstart reports the touch that just started', function () {
+    const stage = addStage();
+    const pointerIds: number[] = [];
+    stage.on('touchstart', (e) => pointerIds.push(e.pointerId));
+    const a = { x: 20, y: 20, id: 0 };
+    const b = { x: 80, y: 20, id: 1 };
+    simulateTouchStart(stage, [a], [a]);
+    simulateTouchStart(stage, [a, b], [b]);
+    assert.deepEqual(pointerIds, [0, 1]);
+  });
+
   // ======================================================
   it('touchstart touchend touchmove tap dbltap', function (done) {
     var stage = addStage();
