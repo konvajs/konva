@@ -490,7 +490,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       drawBorder = conf.drawBorder || false,
       hitCanvasPixelRatio = conf.hitCanvasPixelRatio || 1;
 
-    if (!width || !height || !isFinite(x + y + width + height)) {
+    if (width <= 0 || height <= 0 || !isFinite(x + y + width + height)) {
       Util.error(
         `Can not cache the node. Its size is 0 or its bounds are not finite numbers (${x}, ${y}, ${width}x${height}). Caching is skipped.`
       );
