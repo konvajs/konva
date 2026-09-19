@@ -3,15 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 10.6.0 (2026-09-19)
 
-- Added `Stage.eventBatchFunc()` for framework integrations to batch native input handlers. Note: direct `fire()` calls and programmatic changes are not batched
-- Improved `Transformer` performance with many selected nodes: unchanged shape bounds are reused, and anchors are not rebuilt when the selection rectangle is unchanged
 - Improved `Path` arc performance: bounds of an arc segment are computed exactly instead of sampled every degree, and a point on a circular arc is found with a closed form instead of walking the arc
 - Improved `Text.getClientRect()` and `getSelfRect()` of underlined text, which no longer measure the font on every call
-- Fixed `touchcancel` leaving a `Transformer` active and releasing the capture of an untouched pointer. Note: cancellation now fires `pointercancel`/`touchcancel` in addition to the existing `pointerup`
-- Fixed `toBlob()` typed as `Promise<unknown>`. It resolves with a `Blob`, and rejects instead of resolving with `null` when the canvas can not be encoded
-- Fixed the `Konva.Node` JSDoc block attaching to a private helper, which dropped the `Konva.Node` page from the API reference
 - Fixed `blurRadius`, `pixelSize` and CSS filter lengths (for example `blur(8px)`) being applied in cache pixels instead of node coordinates, so a filtered node looked less blurred at a higher cache `pixelRatio`. Note: custom filter functions now receive `(imageData, pixelRatio)`; use the ratio to convert node lengths to pixels
 - Fixed a drag started from a `pointerdown` handler (`startDrag(e)`, for example react-konva `onPointerDown`) never moving or ending and leaving the node stuck as dragging
 - Fixed `stopDrag()` ending every active drag instead of only the drags of its own gesture, so a node dragged by another finger stopped too. Note: `stopDrag()` on a node that is not dragging is now a no-op
@@ -47,6 +42,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed `Tween` restarting its animation when `pause()` or `destroy()` is called from `onUpdate`, and throwing from `finish()`/`reset()` after such a `destroy()`
 - Fixed tweening `strokeLinearGradientColorStops` producing invalid colors such as `redNaN` and breaking every following draw
 - Fixed tweening an array attribute such as `dash` to a shorter array writing `NaN`, and tweening between a scalar and an array `cornerRadius` throwing
+
+## 10.5.0 (2026-09-08)
+
+- Added `Stage.eventBatchFunc()` for framework integrations to batch native input handlers. Note: direct `fire()` calls and programmatic changes are not batched
+- Improved `Transformer` performance with many selected nodes: unchanged shape bounds are reused, and anchors are not rebuilt when the selection rectangle is unchanged
+- Fixed `touchcancel` leaving a `Transformer` active and releasing the capture of an untouched pointer. Note: cancellation now fires `pointercancel`/`touchcancel` in addition to the existing `pointerup`
+- Fixed `toBlob()` typed as `Promise<unknown>`. It resolves with a `Blob`, and rejects instead of resolving with `null` when the canvas can not be encoded
+- Fixed the `Konva.Node` JSDoc block attaching to a private helper, which dropped the `Konva.Node` page from the API reference
 
 ## 10.4.0 (2026-09-07)
 
