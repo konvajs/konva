@@ -27,9 +27,10 @@ type Attr<T extends Constructor> = EnforceString<keyof InstanceType<T>>;
 type AfterFunc<T extends Constructor> = (this: InstanceType<T>) => void;
 
 /**
- * Extracts the type of a GetSet.
+ * Extracts the type a GetSet returns. The type the setter accepts can be wider,
+ * so it is matched with `any` instead of being inferred from the getter.
  */
-type ExtractGetSet<T> = T extends GetSet<infer U, any> ? U : never;
+type ExtractGetSet<T> = T extends GetSet<infer U, any, any> ? U : never;
 
 /**
  * Extracts the type of a GetSet class attribute.
