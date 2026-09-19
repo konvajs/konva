@@ -448,6 +448,34 @@ describe('Image', function () {
     }
   });
 
+  it('does not listen on an element that is already loaded', function () {
+    class Counting extends EventTarget {
+      listeners = 0;
+      addEventListener(type: string, listener: any) {
+        this.listeners++;
+        super.addEventListener(type, listener);
+      }
+    }
+    class Img extends Counting {
+      complete = true;
+      src = 'http://example.com/image.png';
+    }
+    class Video extends Counting {
+      videoWidth = 10;
+      readyState = 2;
+    }
+    const stage = addStage(),
+      layer = new Konva.Layer();
+    stage.add(layer);
+    const img = new Img();
+    const video = new Video();
+    // a removed node is reusable, so a listener here would pin it forever
+    layer.add(new Konva.Image({ image: img as any }));
+    layer.add(new Konva.Image({ image: video as any }));
+    assert.equal(img.listeners, 0);
+    assert.equal(video.listeners, 0);
+  });
+
   it('test image client rect without image object attached', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
