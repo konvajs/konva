@@ -335,6 +335,24 @@ describe('Image', function () {
     });
   });
 
+  it('fromURL calls back once when the image source is swapped', function (done) {
+    loadImage('darth-vader.jpg', (img) => {
+      loadImage('lion.png', (other) => {
+        let calls = 0;
+        Konva.Image.fromURL(img.src, function (image) {
+          calls++;
+          if (calls === 1) {
+            (image.image() as HTMLImageElement).src = other.src;
+            setTimeout(() => {
+              assert.equal(calls, 1);
+              done();
+            }, 50);
+          }
+        });
+      });
+    });
+  });
+
   it('check loading failure', function (done) {
     var stage = addStage();
     var layer = new Konva.Layer();

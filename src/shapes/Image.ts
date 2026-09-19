@@ -175,11 +175,9 @@ export class Image extends Shape<ImageConfig> {
     onError: OnErrorEventHandler = null
   ) {
     const img = Util.createImageElement();
-    img.onload = function () {
-      const image = new Image({
-        image: img,
-      });
-      callback(image);
+    img.onload = () => {
+      img.onload = img.onerror = null;
+      callback(new Image({ image: img }));
     };
     img.onerror = onError;
     img.crossOrigin = 'Anonymous';
