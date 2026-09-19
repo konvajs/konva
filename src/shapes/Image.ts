@@ -58,27 +58,16 @@ export class Image extends Shape<ImageConfig> {
   }
   _setImageLoad() {
     const image = this.image() as any;
-    // Check whether the image or the first video frame is already loaded.
-    if (image && image.complete) {
-      return;
-    }
-    if (image && image.readyState >= 2) {
-      return;
-    }
-    if (image && image['addEventListener']) {
-      image['addEventListener'](
-        'videoWidth' in image ? 'loadeddata' : 'load',
-        this._loadListener
-      );
-    }
+    image?.addEventListener?.(
+      'videoWidth' in image ? 'loadeddata' : 'load',
+      this._loadListener
+    );
   }
   _removeImageLoad(image: any) {
-    if (image && image['removeEventListener']) {
-      image['removeEventListener'](
-        'videoWidth' in image ? 'loadeddata' : 'load',
-        this._loadListener
-      );
-    }
+    image?.removeEventListener?.(
+      'videoWidth' in image ? 'loadeddata' : 'load',
+      this._loadListener
+    );
   }
   destroy() {
     this._removeImageLoad(this.image());

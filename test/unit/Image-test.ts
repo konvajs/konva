@@ -396,6 +396,40 @@ describe('Image', function () {
     });
   });
 
+  it('src assigned after creation redraws the image', async function () {
+    // A fresh `new Image()` with no src already reports complete === true.
+    class Img extends EventTarget {
+      complete = true;
+      width = 0;
+      height = 0;
+    }
+    const img = new Img();
+    const stage = addStage(),
+      layer = new Konva.Layer();
+    stage.add(layer);
+    const image = new Konva.Image({ image: img as any, visible: false });
+    layer.add(image);
+    const previous = Konva.autoDrawEnabled;
+    Konva.autoDrawEnabled = true;
+    const nextFrame = () =>
+      new Promise<void>((resolve) => Konva.Util.requestAnimFrame(resolve));
+    let draws = 0;
+    try {
+      await nextFrame();
+      layer.on('draw', () => {
+        draws++;
+      });
+      img.width = 320;
+      img.height = 180;
+      img.dispatchEvent(new Event('load'));
+      await nextFrame();
+      assert.equal(draws, 1);
+      assert.deepEqual(image.size(), { width: 320, height: 180 });
+    } finally {
+      Konva.autoDrawEnabled = previous;
+    }
+  });
+
   it('test image client rect without image object attached', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
