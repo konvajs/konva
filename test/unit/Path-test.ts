@@ -1934,6 +1934,21 @@ describe('Path', function () {
     );
   });
 
+  it('getSelfRect of an arc that draws nothing is an empty rect', function () {
+    // endpoints too close to each other leave a zero sweep, which draws
+    // nothing, so none of the axis extrema are inside it
+    [
+      'M0 0 A50 50 0 1 1 0 0.0000000001',
+      'M0 0 A50 50 0 1 1 0.0000001 0',
+    ].forEach((data) => {
+      assertAlmostDeepEqual(
+        new Konva.Path({ data: data }).getSelfRect(),
+        { x: 0, y: 0, width: 0, height: 0 },
+        0.001
+      );
+    });
+  });
+
   it('getSelfRect of a path without data is an empty rect', function () {
     [{}, { data: 'z' }].forEach((config) => {
       assert.deepEqual(new Konva.Path(config).getSelfRect(), {
@@ -2111,6 +2126,17 @@ describe('Path', function () {
       path.getPointAtLength(350);
     });
     assert.equal(calls, 0);
+  });
+
+  it('getPointAtLength does not walk a circular arc', function () {
+    var path = new Konva.Path({ data: 'M 100 300 A 200 200 0 1 1 500 300' });
+    var half = path.getLength() / 2;
+    var point;
+    var calls = countCalls(Konva.Path, 'getPointOnEllipticalArc', () => {
+      point = path.getPointAtLength(half);
+    });
+    assert.equal(calls, 1);
+    assertAlmostDeepEqual(point, { x: 300, y: 100 }, 0.01);
   });
 
   it('long compressed polylines retain their bounds and endpoint', function () {
