@@ -22,7 +22,6 @@ export const Pixelate: Filter = function (imageData, pixelRatio = 1) {
   let pixelSize = Math.ceil(this.pixelSize() * pixelRatio),
     width = imageData.width,
     height = imageData.height,
-    //pixelsPerBin = pixelSize * pixelSize,
     nBinsX = Math.ceil(width / pixelSize),
     nBinsY = Math.ceil(height / pixelSize),
     data = imageData.data;
@@ -42,44 +41,33 @@ export const Pixelate: Filter = function (imageData, pixelRatio = 1) {
 
       // Determine which pixels are included in this bin
       const xBinStart = xBin * pixelSize;
-      const xBinEnd = xBinStart + pixelSize;
+      const xBinEnd = Math.min(xBinStart + pixelSize, width);
       const yBinStart = yBin * pixelSize;
-      const yBinEnd = yBinStart + pixelSize;
+      const yBinEnd = Math.min(yBinStart + pixelSize, height);
 
       // Add all of the pixels to this bin!
-      let pixelsInBin = 0;
       for (let x = xBinStart; x < xBinEnd; x += 1) {
-        if (x >= width) {
-          continue;
-        }
         for (let y = yBinStart; y < yBinEnd; y += 1) {
-          if (y >= height) {
-            continue;
-          }
           const i = (width * y + x) * 4;
-          red += data[i + 0];
-          green += data[i + 1];
-          blue += data[i + 2];
-          alpha += data[i + 3];
-          pixelsInBin += 1;
+          const a = data[i + 3];
+          red += data[i + 0] * a;
+          green += data[i + 1] * a;
+          blue += data[i + 2] * a;
+          alpha += a;
         }
       }
 
-      // Make sure the channels are between 0-255
-      red = red / pixelsInBin;
-      green = green / pixelsInBin;
-      blue = blue / pixelsInBin;
-      alpha = alpha / pixelsInBin;
+      // average premultiplied colour so transparent pixels do not darken the block
+      if (alpha) {
+        red = red / alpha;
+        green = green / alpha;
+        blue = blue / alpha;
+      }
+      alpha = alpha / ((xBinEnd - xBinStart) * (yBinEnd - yBinStart));
 
       // Draw this bin
       for (let x = xBinStart; x < xBinEnd; x += 1) {
-        if (x >= width) {
-          continue;
-        }
         for (let y = yBinStart; y < yBinEnd; y += 1) {
-          if (y >= height) {
-            continue;
-          }
           const i = (width * y + x) * 4;
           data[i + 0] = red;
           data[i + 1] = green;
