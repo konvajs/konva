@@ -4217,6 +4217,21 @@ describe('Serialization and export', function () {
     }
   });
 
+  it('toBlob keeps the callback of a reused config', async function () {
+    const rect = new Konva.Rect({ width: 10, height: 10, fill: 'red' });
+    // node-canvas has no toBlob, and toBlob() only null-checks the blob
+    (rect as any).toCanvas = () => ({ toBlob: (cb) => cb({}) });
+    let calls = 0;
+    const config = { callback: () => calls++ };
+    try {
+      await rect.toBlob(config as any);
+      await rect.toBlob(config as any);
+      assert.equal(calls, 2);
+    } finally {
+      rect.destroy();
+    }
+  });
+
   it('toCanvas keeps the far edge of a shape at a fractional position', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
