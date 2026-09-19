@@ -581,14 +581,17 @@ describe('Node', function () {
 
     var offsetChange = false;
     var shadowOffsetChange = false;
+    var oldOffset;
 
     rect.on('offsetChange', function (val) {
       offsetChange = true;
+      oldOffset = (val as any).oldVal;
     });
 
     rect.offset({ x: 1, y: 2 });
 
     assert.equal(offsetChange, true);
+    assert.deepEqual(oldOffset, { x: 10, y: 10 });
   });
 
   // ======================================================
@@ -3753,6 +3756,48 @@ describe('Node', function () {
     assert.equal(rect3.getZIndex(), 0);
   });
 
+  it('remove() detaches the node before invalidating tree caches', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group({ x: 100, y: 100 });
+    layer.add(group);
+
+    var rect = new Konva.Rect({ x: 10, y: 10, width: 50, height: 50 });
+    group.add(rect);
+
+    // a listener reading the absolute transform during removal used to
+    // recache it through the old parent
+    rect.on('absoluteTransformChange', function () {
+      rect.getAbsolutePosition();
+    });
+
+    rect.remove();
+
+    assert.deepEqual(rect.getAbsolutePosition(), { x: 10, y: 10 });
+  });
+
+  it('remove() of a node attached to a transformer resets its absolute position', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group({ x: 100, y: 100 });
+    layer.add(group);
+
+    var rect = new Konva.Rect({ x: 10, y: 10, width: 50, height: 50 });
+    group.add(rect);
+
+    var tr = new Konva.Transformer({ nodes: [rect] });
+    layer.add(tr);
+    layer.draw();
+
+    rect.remove();
+
+    assert.deepEqual(rect.getAbsolutePosition(), { x: 10, y: 10 });
+  });
+
   it('show warning when we are trying to use non-objects for component setters', function () {
     if (!Konva.isUnminified) {
       return;
@@ -4159,6 +4204,39 @@ describe('Serialization and export', function () {
     }
   });
 
+  it('toImage keeps the callback of a reused config', async function () {
+    const rect = new Konva.Rect({ width: 10, height: 10, fill: 'red' });
+    let calls = 0;
+    const config = { callback: () => calls++ };
+    try {
+      await rect.toImage(config);
+      await rect.toImage(config);
+      assert.equal(calls, 2);
+    } finally {
+      rect.destroy();
+    }
+  });
+
+  it('toCanvas keeps the far edge of a shape at a fractional position', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    var rect = new Konva.Rect({
+      x: 0.25,
+      y: 0.25,
+      width: 10,
+      height: 10,
+      fill: 'black',
+    });
+    layer.add(rect);
+
+    var canvas = rect.toCanvas();
+    assert.equal(canvas.width, 11);
+    assert.equal(canvas.height, 11);
+    var ctx = canvas.getContext('2d')!;
+    assert.isAbove(ctx.getImageData(10, 5, 1, 1).data[3], 0);
+  });
+
   it('function filters are omitted while CSS filters still round-trip', function () {
     const rect = new Konva.Rect({ filters: [Konva.Filters.Blur, 'invert(1)'] });
     const restored = Konva.Node.create(rect.toJSON());
@@ -4200,6 +4278,23 @@ describe('Serialization and export', function () {
       Konva.Util.releaseCanvas(source);
     }
   });
+  it('an explicit text width equal to the computed one survives serialization', function () {
+    const text = new Konva.Text({ text: 'Hello world', fontSize: 20 });
+    const width = text.width();
+    text.width(width);
+
+    const restored = Konva.Node.create(text.toJSON()) as Konva.Text;
+    restored.text('much much longer text');
+
+    assert.equal(restored.width(), width);
+  });
+
+  it('a drag distance equal to the inherited one survives serialization', function () {
+    const rect = new Konva.Rect({ dragDistance: Konva.dragDistance });
+
+    assert.equal(rect.toObject().attrs.dragDistance, Konva.dragDistance);
+  });
+
   it('explicit zero brightness survives a JSON round trip', function () {
     const rect = new Konva.Rect({
       width: 10,

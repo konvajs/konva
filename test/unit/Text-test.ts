@@ -71,6 +71,14 @@ describe('Text', function () {
     assert.equal(layer.getContext().getTrace(), trace);
   });
 
+  it('text constructor does not mutate the config', function () {
+    var config = Object.freeze({ text: 'hi', fontSize: 20 });
+    var text = new Konva.Text(config);
+
+    assert.equal(text.fill(), 'black');
+    assert.equal((config as any).fill, undefined);
+  });
+
   it('check text with FALSY values', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
