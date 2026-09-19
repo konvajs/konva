@@ -823,6 +823,21 @@ describe('Filter', function () {
       rect.destroy();
     }
   });
+  it('Pixelate averages premultiplied colors so transparency does not darken a block', function () {
+    const node = new Konva.Rect({ pixelSize: 2 });
+    try {
+      const image = pixels([255, 0, 0, 255], 2, 1);
+      image.data.set([0, 0, 0, 0], 4);
+      Konva.Filters.Pixelate.call(node, image);
+      assert.deepEqual(
+        Array.from(image.data),
+        [255, 0, 0, 128, 255, 0, 0, 128]
+      );
+    } finally {
+      node.destroy();
+    }
+  });
+
   it('Emboss blending preserves source colors and alpha at image edges', function () {
     const node = new Konva.Rect({
       embossDirection: 'left',
