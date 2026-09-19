@@ -384,7 +384,6 @@ export class Text extends Shape<TextConfig> {
         direction !== RTL &&
         (letterSpacing !== 0 || align === JUSTIFY || charRenderFunc)
       ) {
-        //   var words = text.split(' ');
         const spacesNumber = text.split(' ').length - 1;
         const array = stringToArray(text);
         for (let li = 0; li < array.length; li++) {
@@ -392,10 +391,6 @@ export class Text extends Shape<TextConfig> {
           // skip justify for the last line
           if (letter === ' ' && !lastLine && align === JUSTIFY) {
             lineTranslateX += (totalWidth - padding * 2 - width) / spacesNumber;
-            // context.translate(
-            //   Math.floor((totalWidth - padding * 2 - width) / spacesNumber),
-            //   0
-            // );
           }
           this._partialTextX = lineTranslateX;
           this._partialTextY = translateY + lineTranslateY;
@@ -617,7 +612,17 @@ export class Text extends Shape<TextConfig> {
       shouldAddEllipsis = this.ellipsis();
 
     this.textArr = [];
-    getDummyContext().font = this._getContextFont();
+    const dummyContext = getDummyContext();
+    dummyContext.font = this._getContextFont();
+    // the per-character draw path (same condition as in _sceneFunc) advances
+    // by unkerned glyph widths, so measure the line the same way
+    dummyContext.fontKerning =
+      this.direction() !== RTL &&
+      (this.letterSpacing() !== 0 ||
+        this.align() === JUSTIFY ||
+        !!this.charRenderFunc())
+        ? 'none'
+        : 'auto';
     const additionalWidth = shouldAddEllipsis
       ? this._getTextWidth(ELLIPSIS)
       : 0;

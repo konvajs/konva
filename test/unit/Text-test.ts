@@ -11,7 +11,7 @@ import {
   compareCanvases,
   countCalls,
 } from './test-utils.ts';
-import { stringToArray } from '../../src/shapes/Text.ts';
+import { getDummyContext, stringToArray } from '../../src/shapes/Text.ts';
 
 export function getOffsetY(
   context: CanvasRenderingContext2D,
@@ -2156,6 +2156,19 @@ describe('Text', function () {
     });
     // two flags are four UTF-16 code units but only two drawn glyphs
     assert.equal(text.getTextWidth(), text.measureSize('🇺🇸🇺🇸').width + 2 * 10);
+  });
+
+  it('measures without kerning when characters are drawn one by one', function () {
+    // node-canvas ignores fontKerning, so only the measurement mode can be
+    // checked here; pixel parity is browser-only
+    new Konva.Text({ text: 'AVAV', letterSpacing: 1 });
+    assert.equal(getDummyContext().fontKerning, 'none');
+
+    new Konva.Text({ text: 'AVAV', align: 'justify' });
+    assert.equal(getDummyContext().fontKerning, 'none');
+
+    new Konva.Text({ text: 'AVAV' });
+    assert.equal(getDummyContext().fontKerning, 'auto');
   });
 
   it('wrapping measures a bounded amount of text per line', function () {
