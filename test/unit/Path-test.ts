@@ -1632,9 +1632,9 @@ describe('Path', function () {
     layer.draw();
 
     assertAlmostDeepEqual(rect, {
-      x: 8.6440882161882,
+      x: 8.64407532627729,
       y: 65.75902834,
-      width: 94.74182356762,
+      width: 94.74184934744542,
       height: 55.4919433,
     });
   });
@@ -1913,7 +1913,22 @@ describe('Path', function () {
     assertAlmostDeepEqual(
       path.getSelfRect(),
       { x: minX, y: minY, width: maxX - minX, height: maxY - minY },
-      0.5
+      0.05
+    );
+  });
+
+  it('getSelfRect of an arc includes its end point', function () {
+    // a sweep shorter than the old sampling step used to produce an empty rect
+    assertAlmostDeepEqual(
+      new Konva.Path({ data: 'M0 0 A1000 1000 0 0 1 5 0' }).getSelfRect(),
+      { x: 0, y: -0.003125, width: 5, height: 0.003125 },
+      0.001
+    );
+    // an arc with no extremum inside the sweep is bound by its end points
+    assertAlmostDeepEqual(
+      new Konva.Path({ data: 'M0 0 A100 100 0 0 1 70.71 70.71' }).getSelfRect(),
+      { x: 0, y: 0, width: 70.71, height: 70.71 },
+      0.001
     );
   });
 

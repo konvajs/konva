@@ -30,6 +30,7 @@ const PARAM_COUNT = {
   a: 7,
   z: 0,
 };
+const TAU = Math.PI * 2;
 /**
  * Path constructor.
  * @author Jason Follas
@@ -136,44 +137,31 @@ export class Path extends Shape<PathConfig> {
     const points: Array<number> = [];
     this.dataArray.forEach(function (data) {
       if (data.command === 'A') {
-        // Approximates by breaking curve into line segments
-        const start = data.points[4];
-        // 4 = theta
-        const dTheta = data.points[5];
-        // 5 = dTheta
-        const end = data.points[4] + dTheta;
-        let inc = Math.PI / 180.0;
-        // 1 degree resolution
-        if (Math.abs(start - end) < inc) {
-          inc = Math.abs(start - end);
-        }
-        if (dTheta < 0) {
-          // clockwise
-          for (let t = start - inc; t > end; t -= inc) {
-            const point = Path.getPointOnEllipticalArc(
-              data.points[0],
-              data.points[1],
-              data.points[2],
-              data.points[3],
-              t,
-              data.points[6]
-            );
+        // the two end points, plus the angles where the ellipse turns back on
+        // either axis, when they fall inside the sweep. Together they are the
+        // exact bounds of the segment
+        const [cx, cy, rx, ry, start, dTheta, psi] = data.points;
+        const cos = Math.cos(psi),
+          sin = Math.sin(psi);
+        const end = Path.getPointOnEllipticalArc(
+          cx,
+          cy,
+          rx,
+          ry,
+          start + dTheta,
+          psi
+        );
+        points.push(data.start.x, data.start.y, end.x, end.y);
+        const tx = Math.atan2(-ry * sin, rx * cos);
+        const ty = Math.atan2(ry * cos, rx * sin);
+        [tx, tx + Math.PI, ty, ty + Math.PI].forEach((t) => {
+          // how far into the sweep t is, in the direction of the sweep
+          const k = ((((t - start) * Math.sign(dTheta)) % TAU) + TAU) % TAU;
+          if (k <= Math.abs(dTheta)) {
+            const point = Path.getPointOnEllipticalArc(cx, cy, rx, ry, t, psi);
             points.push(point.x, point.y);
           }
-        } else {
-          // counter-clockwise
-          for (let t = start + inc; t < end; t += inc) {
-            const point = Path.getPointOnEllipticalArc(
-              data.points[0],
-              data.points[1],
-              data.points[2],
-              data.points[3],
-              t,
-              data.points[6]
-            );
-            points.push(point.x, point.y);
-          }
-        }
+        });
       } else if (data.command === 'C') {
         // the two end points, plus the points where the curve turns back on
         // either axis. Together they are the exact bounds of the segment
