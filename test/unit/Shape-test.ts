@@ -1265,6 +1265,16 @@ describe('Shape', function () {
     assert.equal(circle.getShadowRGBA(), undefined);
   });
 
+  it('shadow color with an out of range alpha still respects shadowOpacity', function () {
+    var circle = new Konva.Circle({
+      fill: 'green',
+      radius: 50,
+      shadowColor: 'rgba(0,0,0,2)',
+      shadowOpacity: 0.5,
+    });
+    assert.equal(circle.getShadowRGBA(), 'rgba(0,0,0,0.5)');
+  });
+
   it('shadow color as rgb() with percentages', function () {
     var circle = new Konva.Circle({
       fill: 'green',

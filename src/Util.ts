@@ -493,20 +493,20 @@ const COLOR_COMPONENT_REGEX = new RegExp(`^(${NUMBER_SOURCE})(%?)$`, 'i');
 
 // Parse one color component. 100% is `max`: 255 for the color channels of
 // rgb(), 1 for the alpha, 100 for the saturation and the lightness of hsl().
+// CSS keeps a component in [0, max]; out of that range the canvas can not
+// read the color at all. NaN stays NaN, so a bad value still fails.
 const parseColorComponent = (value: string, max: number) => {
   const match = COLOR_COMPONENT_REGEX.exec(value);
   if (!match) {
     return NaN;
   }
-  return match[2] ? (Number(match[1]) / 100) * max : Number(match[1]);
+  const n = match[2] ? (Number(match[1]) / 100) * max : Number(match[1]);
+  return Math.min(Math.max(n, 0), max);
 };
 
 // parseInt() stops at the first character it can not read, so "#0g0000" would
 // give a valid black instead of failing. The hex parsers test the shape first.
 const HEX_COLOR_REGEX = /^#[0-9a-f]+$/i;
-
-// Keep a fraction in [0, 1]. NaN stays NaN, so a bad value still fails.
-const clamp01 = (value: number) => Math.min(Math.max(value, 0), 1);
 
 // The hue of hsl() is the same number, with a CSS Color 4 angle unit
 // instead of the "%" sign. No unit means degrees.
@@ -879,11 +879,9 @@ export const Util = {
     // negative angles and angles over one full turn
     const h = (((degrees % 360) + 360) % 360) / 360;
     // the saturation and the lightness are percentages of 1, written with or
-    // without the "%" sign, so read them out of 100 and then scale them down.
-    // CSS keeps them in [0, 1]; out of that range the math gives a negative
-    // channel, which the canvas can not read at all.
-    const s = clamp01(parseColorComponent(parts[1], 100) / 100);
-    const l = clamp01(parseColorComponent(parts[2], 100) / 100);
+    // without the "%" sign, so read them out of 100 and then scale them down
+    const s = parseColorComponent(parts[1], 100) / 100;
+    const l = parseColorComponent(parts[2], 100) / 100;
     const a = parts.length > 3 ? parseColorComponent(parts[3], 1) : 1;
 
     const t2 = l < 0.5 ? l * (1 + s) : l + s - l * s;
