@@ -1061,10 +1061,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this._clearSelfAndDescendantCache(LISTENING);
   }
   _remove() {
-    // every cached attr that is calculated via node tree
-    // traversal must be cleared when removing a node
-    this._clearCaches();
-
     const parent = this.getParent();
 
     if (parent && parent.children) {
@@ -1072,6 +1068,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       parent._setChildrenIndices();
       this.parent = null;
     }
+
+    // every cached attr that is calculated via node tree
+    // traversal must be cleared when removing a node
+    this._clearCaches();
   }
   /**
    * remove and destroy a node. Kill it and delete forever! You should not reuse node after destroy().

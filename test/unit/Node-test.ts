@@ -3753,6 +3753,48 @@ describe('Node', function () {
     assert.equal(rect3.getZIndex(), 0);
   });
 
+  it('remove() detaches the node before invalidating tree caches', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group({ x: 100, y: 100 });
+    layer.add(group);
+
+    var rect = new Konva.Rect({ x: 10, y: 10, width: 50, height: 50 });
+    group.add(rect);
+
+    // a listener reading the absolute transform during removal used to
+    // recache it through the old parent
+    rect.on('absoluteTransformChange', function () {
+      rect.getAbsolutePosition();
+    });
+
+    rect.remove();
+
+    assert.deepEqual(rect.getAbsolutePosition(), { x: 10, y: 10 });
+  });
+
+  it('remove() of a node attached to a transformer resets its absolute position', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group({ x: 100, y: 100 });
+    layer.add(group);
+
+    var rect = new Konva.Rect({ x: 10, y: 10, width: 50, height: 50 });
+    group.add(rect);
+
+    var tr = new Konva.Transformer({ nodes: [rect] });
+    layer.add(tr);
+    layer.draw();
+
+    rect.remove();
+
+    assert.deepEqual(rect.getAbsolutePosition(), { x: 10, y: 10 });
+  });
+
   it('show warning when we are trying to use non-objects for component setters', function () {
     if (!Konva.isUnminified) {
       return;
