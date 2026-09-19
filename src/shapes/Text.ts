@@ -871,9 +871,11 @@ export class Text extends Shape<TextConfig> {
 Text.prototype._fillFunc = _fillFunc;
 Text.prototype._strokeFunc = _strokeFunc;
 Text.prototype.className = TEXT_UPPER;
+// the decoration attrs are not in ATTR_CHANGE_LIST: they change the bounds
+// through getSelfRect, but need no relayout
 Text.prototype._attrsAffectingSize = ATTR_CHANGE_LIST.filter(
   (attr) => attr !== 'width' && attr !== 'height'
-);
+).concat(['textDecoration', 'underlineOffset']);
 _registerNode(Text);
 
 // update text data for certain attr changes

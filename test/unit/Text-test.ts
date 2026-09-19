@@ -2486,6 +2486,18 @@ describe('Text layout', function () {
     assert.equal(tr.width(), text.width());
     assert.equal(tr.findOne('.top-right')!.x(), text.width());
   });
+  it('Transformer follows decoration changes that change text bounds', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    stage.add(layer);
+    const text = new Konva.Text({ text: 'Hello world', fontSize: 40 });
+    const tr = new Konva.Transformer({ nodes: [text] });
+    layer.add(text, tr);
+    text.textDecoration('underline');
+    assert.equal(tr.height(), text.getSelfRect().height);
+    text.underlineOffset(30);
+    assert.equal(tr.height(), text.getSelfRect().height);
+  });
   it('charRenderFunc can paint black over a colored fill', function () {
     const text = new Konva.Text({
       text: 'X',
