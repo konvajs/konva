@@ -480,11 +480,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       });
       this._isUnderCache = wasUnderCache;
     }
-    let width = Math.ceil(conf.width || rect.width),
-      height = Math.ceil(conf.height || rect.height),
-      pixelRatio = conf.pixelRatio,
-      x = conf.x === undefined ? Math.floor(rect.x) : conf.x,
+    let x = conf.x === undefined ? Math.floor(rect.x) : conf.x,
       y = conf.y === undefined ? Math.floor(rect.y) : conf.y,
+      // round the far edge, not the size, so the last row and column fit in
+      width = Math.ceil(conf.width || rect.x + rect.width - x),
+      height = Math.ceil(conf.height || rect.y + rect.height - y),
+      pixelRatio = conf.pixelRatio,
       offset = conf.offset || 0,
       drawBorder = conf.drawBorder || false,
       hitCanvasPixelRatio = conf.hitCanvasPixelRatio || 1;
@@ -496,13 +497,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       return this;
     }
 
-    // because using Math.floor on x, y position may shift drawing
-    // to avoid shift we need to increase size
-    // but we better to avoid it, for better filters flows
-    const extraPaddingX = Math.abs(Math.round(rect.x) - x) > 0.5 ? 1 : 0;
-    const extraPaddingY = Math.abs(Math.round(rect.y) - y) > 0.5 ? 1 : 0;
-    width += offset * 2 + extraPaddingX;
-    height += offset * 2 + extraPaddingY;
+    width += offset * 2;
+    height += offset * 2;
 
     x -= offset;
     y -= offset;
@@ -2119,10 +2115,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       pixelRatio = config.pixelRatio || 1,
       canvas = new SceneCanvas({
         width:
-          config.width || Math.ceil(box.width) || (stage ? stage.width() : 0),
+          config.width ||
+          Math.ceil(box.x + box.width - x) ||
+          (stage ? stage.width() : 0),
         height:
           config.height ||
-          Math.ceil(box.height) ||
+          Math.ceil(box.y + box.height - y) ||
           (stage ? stage.height() : 0),
         pixelRatio: pixelRatio,
       }),

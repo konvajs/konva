@@ -4217,6 +4217,26 @@ describe('Serialization and export', function () {
     }
   });
 
+  it('toCanvas keeps the far edge of a shape at a fractional position', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    var rect = new Konva.Rect({
+      x: 0.25,
+      y: 0.25,
+      width: 10,
+      height: 10,
+      fill: 'black',
+    });
+    layer.add(rect);
+
+    var canvas = rect.toCanvas();
+    assert.equal(canvas.width, 11);
+    assert.equal(canvas.height, 11);
+    var ctx = canvas.getContext('2d')!;
+    assert.isAbove(ctx.getImageData(10, 5, 1, 1).data[3], 0);
+  });
+
   it('function filters are omitted while CSS filters still round-trip', function () {
     const rect = new Konva.Rect({ filters: [Konva.Filters.Blur, 'invert(1)'] });
     const restored = Konva.Node.create(rect.toJSON());
