@@ -277,7 +277,6 @@ export class Text extends Shape<TextConfig> {
       charRenderFunc = this.charRenderFunc(),
       fill = this.fill(),
       textDecoration = this.textDecoration(),
-      underlineOffset = this.underlineOffset(),
       shouldUnderline = textDecoration.indexOf('underline') !== -1,
       shouldLineThrough = textDecoration.indexOf('line-through') !== -1,
       n;
@@ -355,11 +354,7 @@ export class Text extends Shape<TextConfig> {
         context.save();
         context.beginPath();
 
-        const yOffset =
-          underlineOffset ??
-          (!Konva.legacyTextRendering
-            ? Math.round(fontSize / 4)
-            : Math.round(fontSize / 2));
+        const yOffset = this._getUnderlineOffset();
         const x = lineTranslateX;
         const y = translateY + lineTranslateY + yOffset;
         context.moveTo(x, y);
@@ -471,6 +466,39 @@ export class Text extends Shape<TextConfig> {
         translateY += lineHeightPx;
       }
     }
+  }
+  _getUnderlineOffset() {
+    return (
+      this.underlineOffset() ??
+      Math.round(this.fontSize() / (!Konva.legacyTextRendering ? 4 : 2))
+    );
+  }
+  getSelfRect() {
+    const rect = super.getSelfRect();
+    const lines = this.textArr.length;
+    if (!lines || this.textDecoration().indexOf('underline') === -1) {
+      return rect;
+    }
+    // the underline of the last line is drawn below the text block
+    const fontSize = this.fontSize(),
+      lineHeightPx = this.lineHeight() * fontSize,
+      padding = this.padding(),
+      verticalAlign = this.verticalAlign(),
+      blockHeight = lines * lineHeightPx + padding * 2;
+    let bottom = lines * lineHeightPx - lineHeightPx / 2 + padding;
+    if (!Konva.legacyTextRendering) {
+      const metrics = this.measureSize('M');
+      bottom +=
+        (metrics.fontBoundingBoxAscent - metrics.fontBoundingBoxDescent) / 2;
+    }
+    if (verticalAlign === MIDDLE) {
+      bottom += (rect.height - blockHeight) / 2;
+    } else if (verticalAlign === BOTTOM) {
+      bottom += rect.height - blockHeight;
+    }
+    bottom += this._getUnderlineOffset() + getDecorationLineWidth(fontSize) / 2;
+    rect.height = Math.max(rect.height, bottom);
+    return rect;
   }
   _hitFunc(context: Context) {
     const width = this.getWidth(),

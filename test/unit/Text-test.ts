@@ -10,6 +10,7 @@ import {
   isBrowser,
   compareCanvases,
   countCalls,
+  getPixelRatio,
 } from './test-utils.ts';
 import { getDummyContext, stringToArray } from '../../src/shapes/Text.ts';
 
@@ -1471,6 +1472,44 @@ describe('Text', function () {
     context.miterLimit = 2;
     context.strokeText('text', 0, getOffsetY(context));
     compareLayerAndCanvas(layer, canvas);
+  });
+
+  it('text getSelfRect includes the underline', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var text = new Konva.Text({
+      fontSize: 40,
+      fill: 'black',
+      text: 'text',
+      textDecoration: 'underline',
+    });
+    layer.add(text);
+
+    assert.isAbove(text.getSelfRect().height, text.height());
+
+    // the underline is drawn below the text height, so caching must not clip it
+    const lastInkRow = function () {
+      const pixels = layer
+        .getContext()
+        .getImageData(0, 0, stage.width(), stage.height()).data;
+      let last = -1;
+      for (let i = 3; i < pixels.length; i += 4) {
+        if (pixels[i] > 0) {
+          last = Math.floor(i / 4 / (stage.width() * getPixelRatio()));
+        }
+      }
+      return last;
+    };
+    layer.draw();
+    const withoutCache = lastInkRow();
+    text.cache();
+    layer.draw();
+    assert.equal(lastInkRow(), withoutCache);
+
+    text.textDecoration('');
+    assert.equal(text.getSelfRect().height, text.height());
   });
 
   it('text getSelfRect', function () {
