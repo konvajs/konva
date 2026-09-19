@@ -342,7 +342,8 @@ export class TextPath extends Shape<TextPathConfig> {
       if (!charStartPoint) return;
 
       const char = chars[i].char;
-      let glyphWidth = chars[i].width + letterSpacing;
+      let glyphWidth =
+        chars[i].width + (i < chars.length - 1 ? letterSpacing : 0);
       if (char === ' ' && align === 'justify') {
         glyphWidth += (this.pathLength - textWidth) / numberOfSpaces;
       }
