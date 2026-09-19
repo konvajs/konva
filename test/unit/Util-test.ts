@@ -282,6 +282,27 @@ describe('Util', function () {
     });
   });
 
+  it('colorToRGBA() - keeps the RGB channels and the alpha in range', function () {
+    assert.deepEqual(Konva.Util.colorToRGBA('rgba(300,-5,0,2)'), {
+      r: 255,
+      g: 0,
+      b: 0,
+      a: 1,
+    });
+    assert.deepEqual(Konva.Util.colorToRGBA('rgb(120%,0,0)'), {
+      r: 255,
+      g: 0,
+      b: 0,
+      a: 1,
+    });
+    assert.deepEqual(Konva.Util.colorToRGBA('hsl(0,50%,50%,2)'), {
+      r: 191,
+      g: 64,
+      b: 64,
+      a: 1,
+    });
+  });
+
   it('colorToRGBA() - every valid number form of a component', function () {
     assert.deepEqual(Konva.Util.colorToRGBA('rgb(1e2, .5, +10)'), {
       r: 100,
