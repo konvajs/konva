@@ -87,8 +87,6 @@ function _strokeFunc(this: TextPath, context) {
 export class TextPath extends Shape<TextPathConfig> {
   dataArray: PathSegment[] = [];
   glyphInfo: Array<{
-    transposeX: number;
-    transposeY: number;
     text: string;
     rotation: number;
     p0: Vector2d;
@@ -273,14 +271,23 @@ export class TextPath extends Shape<TextPathConfig> {
     if (this.direction() === 'rtl') {
       charArr.reverse();
     }
-    const chars: { char: string; width: number }[] = [];
+    const kerningFunc = this.kerningFunc();
+    const chars: { char: string; width: number; kern: number }[] = [];
     let width = 0;
     for (let i = 0; i < charArr.length; i++) {
+      let kern = 0;
+      if (kerningFunc && i > 0) {
+        try {
+          // kerningFunc is a user provided getter. Make sure it never breaks our logic
+          kern = kerningFunc(charArr[i - 1], charArr[i]) * this.fontSize();
+        } catch (e) {}
+      }
       chars.push({
         char: charArr[i],
         width: this._getTextSize(charArr[i]).width,
+        kern: kern,
       });
-      width += chars[i].width;
+      width += chars[i].width + kern;
     }
     const { width: fullTextWidth, height } = this._getTextSize(this.attrs.text);
     this.textWidth = width;
@@ -295,7 +302,6 @@ export class TextPath extends Shape<TextPathConfig> {
     const align = this.align();
     const numberOfSpaces =
       align === 'justify' ? this.text().split(' ').length - 1 : 0;
-    const kerningFunc = this.kerningFunc();
 
     // The sum of individual character widths can exceed the whole-string width
     // due to kerning (browsers place adjacent glyphs closer together than the
@@ -331,11 +337,13 @@ export class TextPath extends Shape<TextPathConfig> {
       ? undefined
       : { index: 0, offset: 0 };
     for (let i = 0; i < chars.length; i++) {
+      offsetToGlyph += chars[i].kern;
       const charStartPoint = this._getPointAtLength(offsetToGlyph, cursor);
       if (!charStartPoint) return;
 
       const char = chars[i].char;
-      let glyphWidth = chars[i].width + letterSpacing;
+      let glyphWidth =
+        chars[i].width + (i < chars.length - 1 ? letterSpacing : 0);
       if (char === ' ' && align === 'justify') {
         glyphWidth += (this.pathLength - textWidth) / numberOfSpaces;
       }
@@ -363,35 +371,11 @@ export class TextPath extends Shape<TextPathConfig> {
         charEndPoint.y
       );
 
-      let kern = 0;
-      if (kerningFunc && i > 0) {
-        try {
-          // getKerning is a user provided getter. Make sure it never breaks our logic
-          kern = kerningFunc(chars[i - 1].char, char) * this.fontSize();
-        } catch (e) {
-          kern = 0;
-        }
-      }
-
-      charStartPoint.x += kern;
-      charEndPoint.x += kern;
-      this.textWidth += kern;
-
-      const midpoint = Path.getPointOnLine(
-        kern + width / 2.0,
-        charStartPoint.x,
-        charStartPoint.y,
-        charEndPoint.x,
-        charEndPoint.y
-      );
-
       const rotation = Math.atan2(
         charEndPoint.y - charStartPoint.y,
         charEndPoint.x - charStartPoint.x
       );
       this.glyphInfo.push({
-        transposeX: midpoint.x,
-        transposeY: midpoint.y,
         text: charArr[i],
         rotation: rotation,
         p0: charStartPoint,
