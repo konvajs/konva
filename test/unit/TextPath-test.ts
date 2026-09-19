@@ -837,6 +837,54 @@ describe('TextPath', function () {
     assert.equal(called, true);
   });
 
+  it('kerning accumulates along the path', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var fontSize = 50;
+    var kern = -0.2 * fontSize;
+    var textpath = new Konva.TextPath({
+      text: 'AVA',
+      fontSize: fontSize,
+      fontFamily: 'Arial',
+      data: 'M0,0 L300,0',
+      kerningFunc: function () {
+        return -0.2;
+      },
+    });
+    layer.add(textpath);
+
+    var glyphs = textpath.glyphInfo;
+    assert.equal(glyphs.length, 3);
+    assertAlmostEqual(glyphs[1].p0.x, glyphs[0].p1.x + kern);
+    assertAlmostEqual(glyphs[2].p0.x, glyphs[1].p1.x + kern);
+    assertAlmostEqual(glyphs[2].p1.x, textpath.getTextWidth());
+  });
+
+  it('kerning keeps glyphs on a vertical path', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var textpath = new Konva.TextPath({
+      text: 'AV',
+      fontSize: 50,
+      fontFamily: 'Arial',
+      data: 'M0,0 L0,300',
+      kerningFunc: function () {
+        return -0.2;
+      },
+    });
+    layer.add(textpath);
+
+    assert.equal(textpath.glyphInfo[1].p0.x, 0);
+    assertAlmostEqual(
+      textpath.glyphInfo[1].p0.y,
+      textpath.glyphInfo[0].p1.y - 0.2 * 50
+    );
+  });
+
   it('linear gradient for path', function () {
     var stage = addStage();
 
