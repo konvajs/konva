@@ -34,6 +34,29 @@ function colorToRGBA(color: string) {
   );
 }
 
+function colorDiff(start, end) {
+  return {
+    r: end.r - start.r,
+    g: end.g - start.g,
+    b: end.b - start.b,
+    a: end.a - start.a,
+  };
+}
+
+function tweenColor(start, diff, i) {
+  return (
+    'rgba(' +
+    Math.round(start.r + diff.r * i) +
+    ',' +
+    Math.round(start.g + diff.g * i) +
+    ',' +
+    Math.round(start.b + diff.b * i) +
+    ',' +
+    (start.a + diff.a * i) +
+    ')'
+  );
+}
+
 class TweenEngine {
   prop: string;
   propFunc: Function;
@@ -117,15 +140,15 @@ class TweenEngine {
   play() {
     this.state = PLAYING;
     this._startTime = this.getTimer() - this._time;
-    this.onEnterFrame();
     this.fire('onPlay');
+    this.onEnterFrame();
   }
   reverse() {
     this.state = REVERSING;
     this._time = this.duration - this._time;
     this._startTime = this.getTimer() - this._time;
-    this.onEnterFrame();
     this.fire('onReverse');
+    this.onEnterFrame();
   }
   seek(t) {
     this.pause();
@@ -299,7 +322,7 @@ export class Tween {
     }
     const node = this.node,
       nodeId = node._id;
-    let diff, len, trueEnd, trueStart, endRGBA;
+    let diff, len, trueEnd, trueStart;
 
     // remove conflict from tween map if it exists
     const tweenId = Tween.tweens[nodeId][key];
@@ -311,11 +334,21 @@ export class Tween {
     // add to tween map
     let start = node.getAttr(key);
 
-    if (Util._isArray(end)) {
+    if (Util._isArray(end) || Util._isArray(start)) {
       diff = [];
-      // an attribute the node does not have yet starts from zeros. A copy,
-      // as the colour stops are replaced by RGBA objects below
-      start = (start || []).slice();
+      // only normalized arrays are interpolated, so the values the user asked
+      // for are restored when the tween ends
+      trueStart = start;
+      trueEnd = end;
+      // an attribute the node does not have yet starts from zeros, a scalar
+      // side tweens every entry. A copy of start, as the colour stops are
+      // replaced by RGBA objects below
+      start = Util._isArray(start)
+        ? start.slice()
+        : new Array(end.length).fill(start || 0);
+      if (!Util._isArray(end)) {
+        end = new Array(start.length).fill(end);
+      }
       len = Math.max(end.length, start.length);
 
       if (key === 'points' && end.length !== start.length) {
@@ -323,7 +356,6 @@ export class Tween {
         // Util._prepareArrayForTween thinking that end.length > start.length
         if (end.length > start.length) {
           // so in this case we will increase number of starting points
-          trueStart = start;
           start = Util._prepareArrayForTween(
             start,
             end,
@@ -331,41 +363,28 @@ export class Tween {
           );
         } else {
           // in this case we will increase number of eding points
-          trueEnd = end;
           end = Util._prepareArrayForTween(end, start, (node as Line).closed());
         }
       }
 
-      if (key.indexOf('fill') === 0) {
+      if (key.endsWith('ColorStops')) {
         for (let n = 0; n < len; n++) {
           if (n % 2 === 0) {
-            diff.push(end[n] - (start[n] || 0));
+            diff.push((end[n] || 0) - (start[n] || 0));
           } else {
             const startRGBA = colorToRGBA(start[n]);
-            endRGBA = colorToRGBA(end[n]);
             start[n] = startRGBA;
-            diff.push({
-              r: endRGBA.r - startRGBA.r,
-              g: endRGBA.g - startRGBA.g,
-              b: endRGBA.b - startRGBA.b,
-              a: endRGBA.a - startRGBA.a,
-            });
+            diff.push(colorDiff(startRGBA, colorToRGBA(end[n])));
           }
         }
       } else {
         for (let n = 0; n < len; n++) {
-          diff.push(end[n] - (start[n] || 0));
+          diff.push((end[n] || 0) - (start[n] || 0));
         }
       }
     } else if (colorAttrs.indexOf(key) !== -1) {
       start = colorToRGBA(start);
-      endRGBA = colorToRGBA(end);
-      diff = {
-        r: endRGBA.r - start.r,
-        g: endRGBA.g - start.g,
-        b: endRGBA.b - start.b,
-        a: endRGBA.a - start.a,
-      };
+      diff = colorDiff(start, colorToRGBA(end));
     } else {
       diff = end - start;
     }
@@ -381,7 +400,7 @@ export class Tween {
   }
   _tweenFunc(i) {
     const node = this.node,
-      attrs = Tween.attrs[node._id][this._id];
+      attrs = Tween.attrs[node._id]?.[this._id];
     let key, attr, start, diff, newVal, n, len, end;
 
     for (key in attrs) {
@@ -393,22 +412,12 @@ export class Tween {
       if (Util._isArray(start)) {
         newVal = [];
         len = Math.max(start.length, end.length);
-        if (key.indexOf('fill') === 0) {
+        if (key.endsWith('ColorStops')) {
           for (n = 0; n < len; n++) {
             if (n % 2 === 0) {
               newVal.push((start[n] || 0) + diff[n] * i);
             } else {
-              newVal.push(
-                'rgba(' +
-                  Math.round(start[n].r + diff[n].r * i) +
-                  ',' +
-                  Math.round(start[n].g + diff[n].g * i) +
-                  ',' +
-                  Math.round(start[n].b + diff[n].b * i) +
-                  ',' +
-                  (start[n].a + diff[n].a * i) +
-                  ')'
-              );
+              newVal.push(tweenColor(start[n], diff[n], i));
             }
           }
         } else {
@@ -417,16 +426,7 @@ export class Tween {
           }
         }
       } else if (colorAttrs.indexOf(key) !== -1) {
-        newVal =
-          'rgba(' +
-          Math.round(start.r + diff.r * i) +
-          ',' +
-          Math.round(start.g + diff.g * i) +
-          ',' +
-          Math.round(start.b + diff.b * i) +
-          ',' +
-          (start.a + diff.a * i) +
-          ')';
+        newVal = tweenColor(start, diff, i);
       } else {
         newVal = start + diff * i;
       }
@@ -452,31 +452,21 @@ export class Tween {
       this.node.off(destroyEvent);
       this.anim.stop();
     };
-    this.tween.onFinish = () => {
-      const node = this.node as Node;
-
-      // after tweening  points of line we need to set original end
-      const attrs = Tween.attrs[node._id][this._id];
-      if (attrs.points && attrs.points.trueEnd) {
-        node.setAttr('points' as any, attrs.points.trueEnd);
+    const end = (edge: 'trueEnd' | 'trueStart', callback?: Function) => {
+      // no attributes means the tween was destroyed inside the last onUpdate
+      const attrs = Tween.attrs[this.node._id]?.[this._id];
+      if (!attrs) {
+        return;
       }
-
-      if (this.onFinish) {
-        this.onFinish.call(this);
+      for (const key in attrs) {
+        if (attrs[key][edge] !== undefined) {
+          this.node.setAttr(key as any, attrs[key][edge]);
+        }
       }
+      callback?.call(this);
     };
-    this.tween.onReset = () => {
-      const node = this.node as any;
-      // after tweening  points of line we need to set original start
-      const attrs = Tween.attrs[node._id][this._id];
-      if (attrs.points && attrs.points.trueStart) {
-        node.points(attrs.points.trueStart);
-      }
-
-      if (this.onReset) {
-        this.onReset();
-      }
-    };
+    this.tween.onFinish = () => end('trueEnd', this.onFinish);
+    this.tween.onReset = () => end('trueStart', this.onReset);
     this.tween.onUpdate = () => {
       if (this.onUpdate) {
         this.onUpdate.call(this);
