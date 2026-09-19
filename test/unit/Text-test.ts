@@ -2003,6 +2003,29 @@ describe('Text', function () {
     assert.equal(layer.getContext().getTrace(false, true), trace);
   });
 
+  it('inherits rtl text direction from the canvas context', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    stage.add(layer);
+    // the browser resolves an inherited direction from the page, node-canvas
+    // needs it set on the context directly
+    layer.getContext().direction = 'rtl';
+    var text = new Konva.Text({
+      text: 'rtl text',
+      letterSpacing: 2,
+    });
+
+    layer.add(text);
+    layer.draw();
+
+    // inherited rtl must stay in one native run, not be split per character
+    var trace =
+      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);font=normal normal 12px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();letterSpacing=2px;fillStyle=black;fillText(rtl text,0,10);restore();restore();';
+
+    assert.equal(layer.getContext().getTrace(false, true), trace);
+  });
+
   it('try fixed render', () => {
     var stage = addStage();
     var layer = new Konva.Layer();

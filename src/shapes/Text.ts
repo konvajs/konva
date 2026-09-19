@@ -294,6 +294,10 @@ export class Text extends Shape<TextConfig> {
 
     if (direction !== INHERIT) {
       context.setAttr('direction', direction);
+    } else {
+      // 'inherit' resolves to the direction the canvas already has, so that
+      // an inherited rtl still takes the single native run below
+      direction = context.direction;
     }
 
     context.setAttr('font', this._getContextFont());
