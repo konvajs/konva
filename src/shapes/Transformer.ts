@@ -328,6 +328,8 @@ export class Transformer extends Group {
       if (event.type === 'ignoreStrokeChange') this._resetTransformCache();
       this.update();
     });
+    // the memoized rect bakes in our own rotation, so a manual rotation must drop it
+    this.on(`rotationChange.${EVENTS_NAME}`, () => this._clearCache(NODES_RECT));
 
     if (this.getNode()) {
       this.update();
@@ -1411,7 +1413,6 @@ export class Transformer extends Group {
       return;
     }
     this._lastNodeRect = { ...attrs };
-    this.rotation(Util._getRotation(attrs.rotation));
     const width = attrs.width;
     const height = attrs.height;
 

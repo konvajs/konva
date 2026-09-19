@@ -6203,6 +6203,25 @@ describe('Transformer', function () {
     assert.deepEqual(tr.size(), { width: 10, height: 170 });
   });
 
+  it('manual Transformer rotation survives update()', function () {
+    const { stage, tr } = setup({ useSingleNodeRotation: false });
+    const diagonal = (100 + 80) / Math.sqrt(2);
+    tr.rotation(45);
+    tr.update();
+    assert.equal(tr.rotation(), 45);
+    assertAlmostEqual(tr.width(), diagonal);
+    assertAlmostEqual(tr.height(), diagonal);
+
+    const rect2 = new Konva.Rect({ x: 60, y: 60, width: 100, height: 80 });
+    stage.getLayers()[0].add(rect2);
+    tr.nodes([tr.nodes()[0], rect2]);
+    tr.rotation(45);
+    tr.update();
+    assert.equal(tr.rotation(), 45);
+    assertAlmostEqual(tr.width(), diagonal);
+    assertAlmostEqual(tr.height(), diagonal);
+  });
+
   it('Transformer follows stroke bounds when a shape or ancestor cache changes', function () {
     const { rect, tr, stage } = setup();
     rect.setAttrs({
