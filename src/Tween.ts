@@ -117,15 +117,15 @@ class TweenEngine {
   play() {
     this.state = PLAYING;
     this._startTime = this.getTimer() - this._time;
-    this.onEnterFrame();
     this.fire('onPlay');
+    this.onEnterFrame();
   }
   reverse() {
     this.state = REVERSING;
     this._time = this.duration - this._time;
     this._startTime = this.getTimer() - this._time;
-    this.onEnterFrame();
     this.fire('onReverse');
+    this.onEnterFrame();
   }
   seek(t) {
     this.pause();
@@ -381,7 +381,7 @@ export class Tween {
   }
   _tweenFunc(i) {
     const node = this.node,
-      attrs = Tween.attrs[node._id][this._id];
+      attrs = Tween.attrs[node._id]?.[this._id];
     let key, attr, start, diff, newVal, n, len, end;
 
     for (key in attrs) {
@@ -452,31 +452,20 @@ export class Tween {
       this.node.off(destroyEvent);
       this.anim.stop();
     };
-    this.tween.onFinish = () => {
-      const node = this.node as Node;
-
-      // after tweening  points of line we need to set original end
-      const attrs = Tween.attrs[node._id][this._id];
-      if (attrs.points && attrs.points.trueEnd) {
-        node.setAttr('points' as any, attrs.points.trueEnd);
+    const end = (edge: 'trueEnd' | 'trueStart', callback?: Function) => {
+      // no attributes means the tween was destroyed inside the last onUpdate
+      const attrs = Tween.attrs[this.node._id]?.[this._id];
+      if (!attrs) {
+        return;
       }
-
-      if (this.onFinish) {
-        this.onFinish.call(this);
+      // after tweening points of line we need to set original values
+      if (attrs.points?.[edge]) {
+        this.node.setAttr('points' as any, attrs.points[edge]);
       }
+      callback?.call(this);
     };
-    this.tween.onReset = () => {
-      const node = this.node as any;
-      // after tweening  points of line we need to set original start
-      const attrs = Tween.attrs[node._id][this._id];
-      if (attrs.points && attrs.points.trueStart) {
-        node.points(attrs.points.trueStart);
-      }
-
-      if (this.onReset) {
-        this.onReset();
-      }
-    };
+    this.tween.onFinish = () => end('trueEnd', this.onFinish);
+    this.tween.onReset = () => end('trueStart', this.onReset);
     this.tween.onUpdate = () => {
       if (this.onUpdate) {
         this.onUpdate.call(this);

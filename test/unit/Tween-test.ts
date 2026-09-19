@@ -672,6 +672,55 @@ describe('Tween', function () {
     tween.destroy();
   });
 
+  it('pause() inside onUpdate stops the animation', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle({ x: 50, y: 50, radius: 10, fill: 'red' });
+    layer.add(circle);
+    stage.add(layer);
+
+    var tween = new Konva.Tween({
+      node: circle,
+      duration: 1,
+      x: 100,
+      onUpdate: function () {
+        tween.pause();
+      },
+    });
+    tween.play();
+    assert.equal(tween.anim.isRunning(), false);
+    assert.equal(circle.eventListeners['destroy'], undefined);
+    tween.destroy();
+  });
+
+  it('destroy() inside onUpdate is not undone, and finish() stays safe', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle({ x: 50, y: 50, radius: 10, fill: 'red' });
+    layer.add(circle);
+    stage.add(layer);
+
+    var finished = 0;
+    var tween = new Konva.Tween({
+      node: circle,
+      duration: 1,
+      x: 100,
+      onUpdate: function () {
+        tween.destroy();
+      },
+      onFinish: function () {
+        finished += 1;
+      },
+    });
+    tween.play();
+    assert.equal(tween.anim.isRunning(), false);
+    assert.equal(circle.eventListeners['destroy'], undefined);
+
+    tween.finish();
+    tween.reset();
+    assert.equal(finished, 0);
+  });
+
   it('node.to() returns the tween', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
