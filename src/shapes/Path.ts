@@ -146,7 +146,7 @@ export class Path extends Shape<PathConfig> {
         [tx, tx + Math.PI, ty, ty + Math.PI].forEach((t) => {
           // how far into the sweep t is, in the direction of the sweep
           const k = ((((t - start) * Math.sign(dTheta)) % TAU) + TAU) % TAU;
-          if (k <= Math.abs(dTheta)) {
+          if (k < Math.abs(dTheta)) {
             const point = Path.getPointOnEllipticalArc(cx, cy, rx, ry, t, psi);
             points.push(point.x, point.y);
           }

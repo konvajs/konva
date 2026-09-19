@@ -1934,6 +1934,21 @@ describe('Path', function () {
     );
   });
 
+  it('getSelfRect of an arc that draws nothing is an empty rect', function () {
+    // endpoints too close to each other leave a zero sweep, which draws
+    // nothing, so none of the axis extrema are inside it
+    [
+      'M0 0 A50 50 0 1 1 0 0.0000000001',
+      'M0 0 A50 50 0 1 1 0.0000001 0',
+    ].forEach((data) => {
+      assertAlmostDeepEqual(
+        new Konva.Path({ data: data }).getSelfRect(),
+        { x: 0, y: 0, width: 0, height: 0 },
+        0.001
+      );
+    });
+  });
+
   it('getSelfRect of a path without data is an empty rect', function () {
     [{}, { data: 'z' }].forEach((config) => {
       assert.deepEqual(new Konva.Path(config).getSelfRect(), {
