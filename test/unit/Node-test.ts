@@ -4237,6 +4237,24 @@ describe('Serialization and export', function () {
     assert.isAbove(ctx.getImageData(10, 5, 1, 1).data[3], 0);
   });
 
+  it('toCanvas falls back to the stage size when the export origin is past the shape', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    var rect = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100,
+      fill: 'red',
+    });
+    layer.add(rect);
+
+    var canvas = rect.toCanvas({ x: 500, y: 500 });
+    assert.equal(canvas.width, stage.width());
+    assert.equal(canvas.height, stage.height());
+  });
+
   it('function filters are omitted while CSS filters still round-trip', function () {
     const rect = new Konva.Rect({ filters: [Konva.Filters.Blur, 'invert(1)'] });
     const restored = Konva.Node.create(rect.toJSON());

@@ -2116,11 +2116,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       canvas = new SceneCanvas({
         width:
           config.width ||
-          Math.ceil(box.x + box.width - x) ||
+          Math.max(0, Math.ceil(box.x + box.width - x)) ||
           (stage ? stage.width() : 0),
         height:
           config.height ||
-          Math.ceil(box.y + box.height - y) ||
+          Math.max(0, Math.ceil(box.y + box.height - y)) ||
           (stage ? stage.height() : 0),
         pixelRatio: pixelRatio,
       }),
