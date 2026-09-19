@@ -323,6 +323,31 @@ describe('Arrow bounds', function () {
     }
   });
 
+  it('repeated endpoints keep the head on the real line direction', function () {
+    const arrow = new Konva.Arrow({
+      points: [0, 0, 0, 100, 0, 100],
+      pointerLength: 20,
+      pointerWidth: 20,
+    });
+    try {
+      assert.equal(arrow._getPointerAngle(false), Math.PI / 2);
+      assertAlmostDeepEqual(arrow.getSelfRect(), {
+        x: -10,
+        y: 0,
+        width: 20,
+        height: 100,
+      });
+      arrow.tension(1);
+      assert.equal(arrow._getPointerAngle(false), Math.PI / 2);
+      arrow.points([0, 0, 0, 0, 0, 100]).pointerAtBeginning(true);
+      assert.equal(arrow._getPointerAngle(true), (Math.PI * 3) / 2);
+      arrow.tension(0);
+      assert.equal(arrow._getPointerAngle(true), (Math.PI * 3) / 2);
+    } finally {
+      arrow.destroy();
+    }
+  });
+
   it('a short final quadratic segment keeps the head on its incoming direction', function () {
     const arrow = new Konva.Arrow({
       points: [0, 0, 100, 100, 101, 100],
