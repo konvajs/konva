@@ -34,6 +34,29 @@ function colorToRGBA(color: string) {
   );
 }
 
+function colorDiff(start, end) {
+  return {
+    r: end.r - start.r,
+    g: end.g - start.g,
+    b: end.b - start.b,
+    a: end.a - start.a,
+  };
+}
+
+function tweenColor(start, diff, i) {
+  return (
+    'rgba(' +
+    Math.round(start.r + diff.r * i) +
+    ',' +
+    Math.round(start.g + diff.g * i) +
+    ',' +
+    Math.round(start.b + diff.b * i) +
+    ',' +
+    (start.a + diff.a * i) +
+    ')'
+  );
+}
+
 class TweenEngine {
   prop: string;
   propFunc: Function;
@@ -299,7 +322,7 @@ export class Tween {
     }
     const node = this.node,
       nodeId = node._id;
-    let diff, len, trueEnd, trueStart, endRGBA;
+    let diff, len, trueEnd, trueStart;
 
     // remove conflict from tween map if it exists
     const tweenId = Tween.tweens[nodeId][key];
@@ -336,20 +359,14 @@ export class Tween {
         }
       }
 
-      if (key.indexOf('fill') === 0) {
+      if (key.endsWith('ColorStops')) {
         for (let n = 0; n < len; n++) {
           if (n % 2 === 0) {
             diff.push(end[n] - (start[n] || 0));
           } else {
             const startRGBA = colorToRGBA(start[n]);
-            endRGBA = colorToRGBA(end[n]);
             start[n] = startRGBA;
-            diff.push({
-              r: endRGBA.r - startRGBA.r,
-              g: endRGBA.g - startRGBA.g,
-              b: endRGBA.b - startRGBA.b,
-              a: endRGBA.a - startRGBA.a,
-            });
+            diff.push(colorDiff(startRGBA, colorToRGBA(end[n])));
           }
         }
       } else {
@@ -359,13 +376,7 @@ export class Tween {
       }
     } else if (colorAttrs.indexOf(key) !== -1) {
       start = colorToRGBA(start);
-      endRGBA = colorToRGBA(end);
-      diff = {
-        r: endRGBA.r - start.r,
-        g: endRGBA.g - start.g,
-        b: endRGBA.b - start.b,
-        a: endRGBA.a - start.a,
-      };
+      diff = colorDiff(start, colorToRGBA(end));
     } else {
       diff = end - start;
     }
@@ -393,22 +404,12 @@ export class Tween {
       if (Util._isArray(start)) {
         newVal = [];
         len = Math.max(start.length, end.length);
-        if (key.indexOf('fill') === 0) {
+        if (key.endsWith('ColorStops')) {
           for (n = 0; n < len; n++) {
             if (n % 2 === 0) {
               newVal.push((start[n] || 0) + diff[n] * i);
             } else {
-              newVal.push(
-                'rgba(' +
-                  Math.round(start[n].r + diff[n].r * i) +
-                  ',' +
-                  Math.round(start[n].g + diff[n].g * i) +
-                  ',' +
-                  Math.round(start[n].b + diff[n].b * i) +
-                  ',' +
-                  (start[n].a + diff[n].a * i) +
-                  ')'
-              );
+              newVal.push(tweenColor(start[n], diff[n], i));
             }
           }
         } else {
@@ -417,16 +418,7 @@ export class Tween {
           }
         }
       } else if (colorAttrs.indexOf(key) !== -1) {
-        newVal =
-          'rgba(' +
-          Math.round(start.r + diff.r * i) +
-          ',' +
-          Math.round(start.g + diff.g * i) +
-          ',' +
-          Math.round(start.b + diff.b * i) +
-          ',' +
-          (start.a + diff.a * i) +
-          ')';
+        newVal = tweenColor(start, diff, i);
       } else {
         newVal = start + diff * i;
       }

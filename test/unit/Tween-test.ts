@@ -721,6 +721,35 @@ describe('Tween', function () {
     assert.equal(finished, 0);
   });
 
+  it('tweening a stroke gradient interpolates its color stops', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var rect = new Konva.Rect({
+      width: 50,
+      height: 50,
+      strokeLinearGradientStartPoint: { x: 0, y: 0 },
+      strokeLinearGradientEndPoint: { x: 50, y: 0 },
+      strokeLinearGradientColorStops: [0, 'red', 1, 'blue'],
+    });
+    layer.add(rect);
+    stage.add(layer);
+
+    var tween = new Konva.Tween({
+      node: rect,
+      duration: 1,
+      strokeLinearGradientColorStops: [0, 'green', 1, 'yellow'],
+    });
+    tween.seek(0.5);
+    assert.deepEqual(rect.strokeLinearGradientColorStops(), [
+      0,
+      'rgba(128,64,0,1)',
+      1,
+      'rgba(128,128,128,1)',
+    ]);
+    layer.draw();
+    tween.destroy();
+  });
+
   it('node.to() returns the tween', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
