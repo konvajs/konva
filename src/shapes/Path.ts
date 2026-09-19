@@ -331,7 +331,11 @@ export class Path extends Shape<PathConfig> {
           p[1],
           p[2],
           p[3],
-          Path._walkArc(p, length).theta,
+          // on a circle angle is proportional to distance, so the walk is only
+          // needed for a real ellipse
+          p[2] === p[3]
+            ? p[4] + (p[5] * length) / cp.pathLength
+            : Path._walkArc(p, length).theta,
           p[6]
         );
     }

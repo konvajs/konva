@@ -2113,6 +2113,17 @@ describe('Path', function () {
     assert.equal(calls, 0);
   });
 
+  it('getPointAtLength does not walk a circular arc', function () {
+    var path = new Konva.Path({ data: 'M 100 300 A 200 200 0 1 1 500 300' });
+    var half = path.getLength() / 2;
+    var point;
+    var calls = countCalls(Konva.Path, 'getPointOnEllipticalArc', () => {
+      point = path.getPointAtLength(half);
+    });
+    assert.equal(calls, 1);
+    assertAlmostDeepEqual(point, { x: 300, y: 100 }, 0.01);
+  });
+
   it('long compressed polylines retain their bounds and endpoint', function () {
     const points = Array.from({ length: 10000 }, (_, i) => `${i + 1} ${i + 1}`);
     const path = new Konva.Path({ data: 'M0 0 L' + points.join(' ') });
