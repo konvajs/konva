@@ -581,14 +581,17 @@ describe('Node', function () {
 
     var offsetChange = false;
     var shadowOffsetChange = false;
+    var oldOffset;
 
     rect.on('offsetChange', function (val) {
       offsetChange = true;
+      oldOffset = (val as any).oldVal;
     });
 
     rect.offset({ x: 1, y: 2 });
 
     assert.equal(offsetChange, true);
+    assert.deepEqual(oldOffset, { x: 10, y: 10 });
   });
 
   // ======================================================

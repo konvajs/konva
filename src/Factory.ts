@@ -148,7 +148,7 @@ export const Factory = {
 
     // setter
     constructor.prototype[setter] = function (val) {
-      const oldVal = this.attrs[attr];
+      const oldVal = this[getter]();
 
       if (validator) {
         val = validator.call(this, val, attr);
