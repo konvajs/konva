@@ -1282,7 +1282,7 @@ describe('Path', function () {
 
       // the arc is walked by distance, so these match native SVG
       // getPointAtLength, which the browser branch above checks directly
-      assert.deepEqual(points, [
+      const expected = [
         { x: 300, y: 10 },
         { x: 290.28714137642737, y: 27.483145522430753 },
         { x: 280.57428275285474, y: 44.96629104486151 },
@@ -1312,7 +1312,14 @@ describe('Path', function () {
         { x: 273.2842746667945, y: 121.66513987378802 },
         { x: 290.0188216211262, y: 132.5215511283174 },
         { x: 299.89574070737524, y: 149.50043318120947 },
-      ]);
+      ];
+
+      // compared with a tolerance: the last digits of these coordinates
+      // differ between platforms, and the geometry does not.
+      assert.equal(points.length, expected.length);
+      points.forEach((point, index) =>
+        assertAlmostDeepEqual(point, expected[index], 0.000001)
+      );
     }
   });
 
@@ -1445,7 +1452,7 @@ describe('Path', function () {
         layer.add(circle);
       }
 
-      assert.deepEqual(points, [
+      const expected = [
         { x: 100, y: 250 },
         { x: 88.81046942782547, y: 261.9261696948044 },
         { x: 296.43785000464806, y: 105.03863655128791 },
@@ -1454,7 +1461,14 @@ describe('Path', function () {
         { x: 377.44353207496624, y: 316.156567955128 },
         { x: 391.99447172783215, y: 484.6253299038601 },
         { x: 570.9713505795695, y: 450.9214513173592 },
-      ]);
+      ];
+
+      // compared with a tolerance: the last digits of these coordinates
+      // differ between platforms, and the geometry does not.
+      assert.equal(points.length, expected.length);
+      points.forEach((point, index) =>
+        assertAlmostDeepEqual(point, expected[index], 0.000001)
+      );
     }
     stage.add(layer);
   });
