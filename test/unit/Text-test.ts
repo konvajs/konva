@@ -1564,6 +1564,28 @@ describe('Text', function () {
     assert.equal(text.getSelfRect().height, text.height());
   });
 
+  it('text getSelfRect measures nothing', function () {
+    // getSelfRect runs per drag frame through getClientRect
+    var text = new Konva.Text({
+      fontSize: 40,
+      text: 'text',
+      textDecoration: 'underline',
+    });
+    var dummy = getDummyContext();
+    var measureText = dummy.measureText;
+    var calls = 0;
+    dummy.measureText = function (this: any, ...args: [string]) {
+      calls++;
+      return measureText.apply(this, args);
+    };
+    try {
+      text.getSelfRect();
+    } finally {
+      dummy.measureText = measureText;
+    }
+    assert.equal(calls, 0);
+  });
+
   it('text getSelfRect', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

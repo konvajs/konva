@@ -250,6 +250,8 @@ export class Text extends Shape<TextConfig> {
 
   textWidth: number;
   textHeight: number;
+  // distance from the line box center to the baseline, see _setTextData
+  _baselineShift = 0;
   constructor(config?: TextConfig) {
     super(checkDefaultFill(config));
     this._setTextData();
@@ -484,9 +486,7 @@ export class Text extends Shape<TextConfig> {
       blockHeight = lines * lineHeightPx + padding * 2;
     let bottom = lines * lineHeightPx - lineHeightPx / 2 + padding;
     if (!Konva.legacyTextRendering) {
-      const metrics = this.measureSize('M');
-      bottom +=
-        (metrics.fontBoundingBoxAscent - metrics.fontBoundingBoxDescent) / 2;
+      bottom += this._baselineShift;
     }
     if (verticalAlign === MIDDLE) {
       bottom += (rect.height - blockHeight) / 2;
@@ -635,6 +635,12 @@ export class Text extends Shape<TextConfig> {
       shouldWrap = wrap !== NONE,
       wrapAtWord = wrap !== CHAR && shouldWrap,
       shouldAddEllipsis = this.ellipsis();
+
+    // measured here so getSelfRect, which runs per drag frame, needs no
+    // measureText of its own
+    const sample = this.measureSize('M');
+    this._baselineShift =
+      (sample.fontBoundingBoxAscent - sample.fontBoundingBoxDescent) / 2;
 
     this.textArr = [];
     const dummyContext = getDummyContext();
