@@ -1173,6 +1173,50 @@ describe('Text', function () {
     }
   });
 
+  it('text decoration uses the fill selected by fillPriority', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      text: 'hello',
+      fontSize: 80,
+      fill: 'blue',
+      fillPriority: 'color',
+      fillLinearGradientStartPoint: { x: 0, y: 0 },
+      fillLinearGradientEndPoint: { x: 0, y: 80 },
+      fillLinearGradientColorStops: [0, 'red', 1, 'yellow'],
+      textDecoration: 'underline line-through',
+    });
+    layer.add(text);
+    stage.add(layer);
+
+    const colors = function () {
+      const pixels = layer
+        .getContext()
+        .getImageData(0, 0, stage.width(), stage.height()).data;
+      const set = new Set<string>();
+      for (let i = 0; i < pixels.length; i += 4) {
+        if (pixels[i + 3] === 255)
+          set.add(`${pixels[i]},${pixels[i + 1]},${pixels[i + 2]}`);
+      }
+      return set;
+    };
+    assert.deepEqual(Array.from(colors()), ['0,0,255']);
+
+    // a radial gradient is used for the decorations too
+    text.setAttrs({
+      fill: undefined,
+      fillPriority: 'radial-gradient',
+      fillRadialGradientStartPoint: { x: 0, y: 0 },
+      fillRadialGradientEndPoint: { x: 0, y: 0 },
+      fillRadialGradientStartRadius: 0,
+      fillRadialGradientEndRadius: 200,
+      fillRadialGradientColorStops: [0, 'red', 1, 'red'],
+    });
+    layer.draw();
+    assert.deepEqual(Array.from(colors()), ['255,0,0']);
+  });
+
   it('text multi line with underline and strike and gradient vertical', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

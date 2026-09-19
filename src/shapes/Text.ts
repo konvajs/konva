@@ -275,7 +275,6 @@ export class Text extends Shape<TextConfig> {
       totalWidth = this.getWidth(),
       letterSpacing = this.letterSpacing(),
       charRenderFunc = this.charRenderFunc(),
-      fill = this.fill(),
       textDecoration = this.textDecoration(),
       shouldUnderline = textDecoration.indexOf('underline') !== -1,
       shouldLineThrough = textDecoration.indexOf('line-through') !== -1,
@@ -362,8 +361,7 @@ export class Text extends Shape<TextConfig> {
 
         context.lineWidth = getDecorationLineWidth(fontSize);
 
-        const gradient = this._getLinearGradient();
-        context.strokeStyle = gradient || fill;
+        context.strokeStyle = context._getFillStyle(this)!;
         context.stroke();
         context.restore();
       }
@@ -453,8 +451,7 @@ export class Text extends Shape<TextConfig> {
           translateY + lineTranslateY + yOffset
         );
         context.lineWidth = getDecorationLineWidth(fontSize);
-        const gradient = this._getLinearGradient();
-        context.strokeStyle = gradient || fill;
+        context.strokeStyle = context._getFillStyle(this)!;
         context.stroke();
         context.restore();
       }
