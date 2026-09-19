@@ -337,15 +337,14 @@ export class Path extends Shape<PathConfig> {
           p[3]
         );
       case 'A':
-        const cx = p[0],
-          cy = p[1],
-          rx = p[2],
-          ry = p[3],
-          dTheta = p[5],
-          psi = p[6];
-        let theta = p[4];
-        theta += (dTheta * length) / cp.pathLength;
-        return Path.getPointOnEllipticalArc(cx, cy, rx, ry, theta, psi);
+        return Path.getPointOnEllipticalArc(
+          p[0],
+          p[1],
+          p[2],
+          p[3],
+          Path._walkArc(p, length).theta,
+          p[6]
+        );
     }
 
     return null;
@@ -797,8 +796,32 @@ export class Path extends Shape<PathConfig> {
 
     return ca;
   }
+  /**
+   * Walks an arc in one degree steps, accumulating its length. Returns the
+   * angle `length` along the arc, or its end angle and total length when
+   * `length` is past the end.
+   */
+  private static _walkArc(points: number[], length: number) {
+    const [cx, cy, rx, ry, start, dTheta] = points;
+    const steps = Math.max(1, Math.ceil(Math.abs(dTheta) / (Math.PI / 180)));
+    // the arc length does not depend on the x-axis rotation psi, so it is left out
+    let p1 = Path.getPointOnEllipticalArc(cx, cy, rx, ry, start, 0);
+    let prev = start;
+    let len = 0;
+    for (let i = 1; i <= steps; i++) {
+      const t = start + (dTheta * i) / steps;
+      const p2 = Path.getPointOnEllipticalArc(cx, cy, rx, ry, t, 0);
+      const d = Path.getLineLength(p1.x, p1.y, p2.x, p2.y);
+      if (len + d >= length) {
+        return { theta: prev + (t - prev) * ((length - len) / d), length };
+      }
+      len += d;
+      p1 = p2;
+      prev = t;
+    }
+    return { theta: prev, length: len };
+  }
   static calcLength(x, y, cmd, points) {
-    let len, p1, p2, t;
     const path = Path;
 
     switch (cmd) {
@@ -817,67 +840,7 @@ export class Path extends Shape<PathConfig> {
           1
         );
       case 'A':
-        // Approximates by breaking curve into line segments
-        len = 0.0;
-        const start = points[4];
-        // 4 = theta
-        const dTheta = points[5];
-        // 5 = dTheta
-        const end = points[4] + dTheta;
-        let inc = Math.PI / 180.0;
-        // 1 degree resolution
-        if (Math.abs(start - end) < inc) {
-          inc = Math.abs(start - end);
-        }
-        // the arc length does not depend on the x-axis rotation psi, so it is left out
-        p1 = path.getPointOnEllipticalArc(
-          points[0],
-          points[1],
-          points[2],
-          points[3],
-          start,
-          0
-        );
-        if (dTheta < 0) {
-          // clockwise
-          for (t = start - inc; t > end; t -= inc) {
-            p2 = path.getPointOnEllipticalArc(
-              points[0],
-              points[1],
-              points[2],
-              points[3],
-              t,
-              0
-            );
-            len += path.getLineLength(p1.x, p1.y, p2.x, p2.y);
-            p1 = p2;
-          }
-        } else {
-          // counter-clockwise
-          for (t = start + inc; t < end; t += inc) {
-            p2 = path.getPointOnEllipticalArc(
-              points[0],
-              points[1],
-              points[2],
-              points[3],
-              t,
-              0
-            );
-            len += path.getLineLength(p1.x, p1.y, p2.x, p2.y);
-            p1 = p2;
-          }
-        }
-        p2 = path.getPointOnEllipticalArc(
-          points[0],
-          points[1],
-          points[2],
-          points[3],
-          end,
-          0
-        );
-        len += path.getLineLength(p1.x, p1.y, p2.x, p2.y);
-
-        return len;
+        return path._walkArc(points, Infinity).length;
     }
 
     return 0;
