@@ -251,6 +251,8 @@ export class TextPath extends Shape<TextPathConfig> {
     _context.save();
 
     _context.font = this._getContextFont();
+    // Text leaves its own kerning mode on the shared dummy context
+    _context.fontKerning = 'auto';
     const metrics = _context.measureText(text);
 
     _context.restore();

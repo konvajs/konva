@@ -10,8 +10,9 @@ import {
   isBrowser,
   compareCanvases,
   countCalls,
+  getPixelRatio,
 } from './test-utils.ts';
-import { stringToArray } from '../../src/shapes/Text.ts';
+import { getDummyContext, stringToArray } from '../../src/shapes/Text.ts';
 
 export function getOffsetY(
   context: CanvasRenderingContext2D,
@@ -1180,6 +1181,50 @@ describe('Text', function () {
     }
   });
 
+  it('text decoration uses the fill selected by fillPriority', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      text: 'hello',
+      fontSize: 80,
+      fill: 'blue',
+      fillPriority: 'color',
+      fillLinearGradientStartPoint: { x: 0, y: 0 },
+      fillLinearGradientEndPoint: { x: 0, y: 80 },
+      fillLinearGradientColorStops: [0, 'red', 1, 'yellow'],
+      textDecoration: 'underline line-through',
+    });
+    layer.add(text);
+    stage.add(layer);
+
+    const colors = function () {
+      const pixels = layer
+        .getContext()
+        .getImageData(0, 0, stage.width(), stage.height()).data;
+      const set = new Set<string>();
+      for (let i = 0; i < pixels.length; i += 4) {
+        if (pixels[i + 3] === 255)
+          set.add(`${pixels[i]},${pixels[i + 1]},${pixels[i + 2]}`);
+      }
+      return set;
+    };
+    assert.deepEqual(Array.from(colors()), ['0,0,255']);
+
+    // a radial gradient is used for the decorations too
+    text.setAttrs({
+      fill: undefined,
+      fillPriority: 'radial-gradient',
+      fillRadialGradientStartPoint: { x: 0, y: 0 },
+      fillRadialGradientEndPoint: { x: 0, y: 0 },
+      fillRadialGradientStartRadius: 0,
+      fillRadialGradientEndRadius: 200,
+      fillRadialGradientColorStops: [0, 'red', 1, 'red'],
+    });
+    layer.draw();
+    assert.deepEqual(Array.from(colors()), ['255,0,0']);
+  });
+
   it('text multi line with underline and strike and gradient vertical', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -1479,6 +1524,44 @@ describe('Text', function () {
     context.miterLimit = 2;
     context.strokeText('text', 0, getOffsetY(context));
     compareLayerAndCanvas(layer, canvas);
+  });
+
+  it('text getSelfRect includes the underline', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var text = new Konva.Text({
+      fontSize: 40,
+      fill: 'black',
+      text: 'text',
+      textDecoration: 'underline',
+    });
+    layer.add(text);
+
+    assert.isAbove(text.getSelfRect().height, text.height());
+
+    // the underline is drawn below the text height, so caching must not clip it
+    const lastInkRow = function () {
+      const pixels = layer
+        .getContext()
+        .getImageData(0, 0, stage.width(), stage.height()).data;
+      let last = -1;
+      for (let i = 3; i < pixels.length; i += 4) {
+        if (pixels[i] > 0) {
+          last = Math.floor(i / 4 / (stage.width() * getPixelRatio()));
+        }
+      }
+      return last;
+    };
+    layer.draw();
+    const withoutCache = lastInkRow();
+    text.cache();
+    layer.draw();
+    assert.equal(lastInkRow(), withoutCache);
+
+    text.textDecoration('');
+    assert.equal(text.getSelfRect().height, text.height());
   });
 
   it('text getSelfRect', function () {
@@ -1876,7 +1959,7 @@ describe('Text', function () {
     layer.draw();
 
     var trace =
-      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);font=normal normal 12px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();fillStyle=black;fillText(ltr text,0,10);restore();restore();';
+      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);direction=ltr;font=normal normal 12px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();fillStyle=black;fillText(ltr text,0,10);restore();restore();';
 
     assert.equal(layer.getContext().getTrace(false, true), trace);
   });
@@ -2164,6 +2247,19 @@ describe('Text', function () {
     });
     // two flags are four UTF-16 code units but only two drawn glyphs
     assert.equal(text.getTextWidth(), text.measureSize('🇺🇸🇺🇸').width + 2 * 10);
+  });
+
+  it('measures without kerning when characters are drawn one by one', function () {
+    // node-canvas ignores fontKerning, so only the measurement mode can be
+    // checked here; pixel parity is browser-only
+    new Konva.Text({ text: 'AVAV', letterSpacing: 1 });
+    assert.equal(getDummyContext().fontKerning, 'none');
+
+    new Konva.Text({ text: 'AVAV', align: 'justify' });
+    assert.equal(getDummyContext().fontKerning, 'none');
+
+    new Konva.Text({ text: 'AVAV' });
+    assert.equal(getDummyContext().fontKerning, 'auto');
   });
 
   it('wrapping measures a bounded amount of text per line', function () {
