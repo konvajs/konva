@@ -1564,6 +1564,28 @@ describe('Text', function () {
     assert.equal(text.getSelfRect().height, text.height());
   });
 
+  it('text getSelfRect measures nothing', function () {
+    // getSelfRect runs per drag frame through getClientRect
+    var text = new Konva.Text({
+      fontSize: 40,
+      text: 'text',
+      textDecoration: 'underline',
+    });
+    var dummy = getDummyContext();
+    var measureText = dummy.measureText;
+    var calls = 0;
+    dummy.measureText = function (this: any, ...args: [string]) {
+      calls++;
+      return measureText.apply(this, args);
+    };
+    try {
+      text.getSelfRect();
+    } finally {
+      dummy.measureText = measureText;
+    }
+    assert.equal(calls, 0);
+  });
+
   it('text getSelfRect', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -1999,6 +2021,29 @@ describe('Text', function () {
 
     var trace =
       'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);direction=rtl;font=normal normal 12px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();letterSpacing=2px;fillStyle=black;fillText(rtl text,0,10);restore();restore();';
+
+    assert.equal(layer.getContext().getTrace(false, true), trace);
+  });
+
+  it('inherits rtl text direction from the canvas context', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    stage.add(layer);
+    // the browser resolves an inherited direction from the page, node-canvas
+    // needs it set on the context directly
+    layer.getContext().direction = 'rtl';
+    var text = new Konva.Text({
+      text: 'rtl text',
+      letterSpacing: 2,
+    });
+
+    layer.add(text);
+    layer.draw();
+
+    // inherited rtl must stay in one native run, not be split per character
+    var trace =
+      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);font=normal normal 12px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();letterSpacing=2px;fillStyle=black;fillText(rtl text,0,10);restore();restore();';
 
     assert.equal(layer.getContext().getTrace(false, true), trace);
   });
@@ -2462,6 +2507,18 @@ describe('Text layout', function () {
     text.fontStyle('bold');
     assert.equal(tr.width(), text.width());
     assert.equal(tr.findOne('.top-right')!.x(), text.width());
+  });
+  it('Transformer follows decoration changes that change text bounds', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    stage.add(layer);
+    const text = new Konva.Text({ text: 'Hello world', fontSize: 40 });
+    const tr = new Konva.Transformer({ nodes: [text] });
+    layer.add(text, tr);
+    text.textDecoration('underline');
+    assert.equal(tr.height(), text.getSelfRect().height);
+    text.underlineOffset(30);
+    assert.equal(tr.height(), text.getSelfRect().height);
   });
   it('charRenderFunc can paint black over a colored fill', function () {
     const text = new Konva.Text({
