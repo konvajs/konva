@@ -372,6 +372,36 @@ describe('Label', function () {
     assert.equal(counter, 7);
   });
 
+  it('re-adding text keeps exactly one set of label listeners', function () {
+    var label = new Konva.Label();
+    label.add(new Konva.Tag());
+
+    var counter = 0;
+    var oldSync = label._sync;
+    label._sync = () => {
+      oldSync.call(label);
+      counter += 1;
+    };
+
+    var text = new Konva.Text({ text: 'hello' });
+    label.add(text);
+
+    counter = 0;
+    text.width(100);
+    var syncsPerChange = counter;
+
+    for (var i = 0; i < 5; i++) {
+      text.remove();
+      label.add(text);
+    }
+
+    assert.equal(text.eventListeners['widthChange'].length, 1);
+
+    counter = 0;
+    text.width(200);
+    assert.equal(counter, syncsPerChange);
+  });
+
   it('Tag.getSelfRect() grows by exactly the pointer on every side', function () {
     var tag = new Konva.Tag({
       width: 100,
