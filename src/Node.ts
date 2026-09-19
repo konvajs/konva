@@ -2870,9 +2870,15 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   embossWhiteLevel: GetSet<number, this>;
   enhance: GetSet<number, this>;
   filters: GetSet<Filters, this>;
-  position: GetSet<Vector2d, this>;
-  absolutePosition: GetSet<Vector2d, this>;
-  size: GetSet<{ width: number; height: number }, this>;
+  // these setters read the components off the value, so, unlike the attribute
+  // setters, they throw on null and undefined instead of resetting
+  position: GetSet<Vector2d, this, Vector2d>;
+  absolutePosition: GetSet<Vector2d, this, Vector2d>;
+  size: GetSet<
+    { width: number; height: number },
+    this,
+    { width: number; height: number }
+  >;
 
   id: GetSet<string, this>;
 

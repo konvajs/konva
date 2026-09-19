@@ -379,7 +379,7 @@ export class Line<
   closed: GetSet<boolean, this>;
   bezier: GetSet<boolean, this>;
   tension: GetSet<number, this>;
-  points: GetSet<number[], this, LinePoints>;
+  points: GetSet<number[], this, LinePoints | null | undefined>;
 }
 
 Line.prototype.className = 'Line';

@@ -860,8 +860,8 @@ export class Text extends Shape<TextConfig> {
   ellipsis: GetSet<boolean, this>;
   charRenderFunc: GetSet<null | ((props: CharRenderProps) => void), this>;
   // 'auto' resets the fixed size; the getters return the measured size
-  width: GetSet<number, this, number | 'auto'>;
-  height: GetSet<number, this, number | 'auto'>;
+  width: GetSet<number, this, number | 'auto' | null | undefined>;
+  height: GetSet<number, this, number | 'auto' | null | undefined>;
 }
 
 Text.prototype._fillFunc = _fillFunc;
