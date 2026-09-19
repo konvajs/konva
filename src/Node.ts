@@ -2732,11 +2732,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
    */
   stopDrag(evt?) {
     const elem = DD._dragElements.get(this._id);
-    if (elem) {
-      elem.dragStatus = 'stopped';
+    if (!elem) {
+      return;
     }
-    DD._endDragBefore(evt);
-    DD._endDragAfter(evt);
+    elem.dragStatus = 'stopped';
+    DD._endDragBefore(evt, undefined, this);
+    DD._endDragAfter(evt, this);
   }
 
   setDraggable(draggable) {
