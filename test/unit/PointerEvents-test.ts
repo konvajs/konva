@@ -102,6 +102,67 @@ describe('PointerEvents', function () {
     });
   }
 
+  for (const withEvent of [true, false]) {
+    it(`a drag started in a pointerdown handler ${withEvent ? 'with' : 'without'} its event follows the mouse`, function () {
+      const stage = addStage();
+      const layer = new Konva.Layer();
+      const rect = new Konva.Rect({ width: 40, height: 40, fill: 'red' });
+      stage.add(layer);
+      layer.add(rect);
+      layer.draw();
+      const events: string[] = [];
+      rect.on('pointerdown', (e) => rect.startDrag(withEvent ? e : undefined));
+      rect.on('dragstart dragmove dragend', (e) => events.push(e.type));
+      simulateMouseDown(stage, { x: 20, y: 20 });
+      simulateMouseMove(stage, { x: 30, y: 25 });
+      simulateMouseUp(stage, { x: 30, y: 25 });
+      assert.deepEqual(rect.position(), { x: 10, y: 5 });
+      assert.deepEqual(events, ['dragstart', 'dragmove', 'dragend']);
+      assert.isFalse(rect.isDragging());
+      assert.equal(Konva.DD._dragElements.size, 0);
+    });
+  }
+
+  it('a drag started in a pointerdown handler follows touch events', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    const rect = new Konva.Rect({ width: 40, height: 40, fill: 'red' });
+    stage.add(layer);
+    layer.add(rect);
+    layer.draw();
+    const events: string[] = [];
+    rect.on('pointerdown', (e) => rect.startDrag(e));
+    rect.on('dragstart dragmove dragend', (e) => events.push(e.type));
+    const touch = { x: 20, y: 20, id: 0, pointerId: 10, pointerType: 'touch' };
+    const moved = { ...touch, x: 30, y: 25 };
+    simulatePointerDown(stage, touch);
+    simulateTouchStart(stage, [touch], [touch]);
+    simulateTouchMove(stage, [moved], [moved]);
+    simulateTouchEnd(stage, [], [moved]);
+    assert.deepEqual(rect.position(), { x: 10, y: 5 });
+    assert.deepEqual(events, ['dragstart', 'dragmove', 'dragend']);
+    assert.isFalse(rect.isDragging());
+    assert.equal(Konva.DD._dragElements.size, 0);
+  });
+
+  it('a drag started in a pointerdown handler ends without movement and cancels the click', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    const rect = new Konva.Rect({ width: 40, height: 40, fill: 'red' });
+    stage.add(layer);
+    layer.add(rect);
+    layer.draw();
+    const clicks: string[] = [];
+    stage.on('click pointerclick', (e) => clicks.push(e.type));
+    rect.on('pointerdown', (e) => rect.startDrag(e));
+    simulateMouseDown(stage, { x: 20, y: 20 });
+    simulateMouseUp(stage, { x: 20, y: 20 });
+    assert.deepEqual(rect.position(), { x: 0, y: 0 });
+    assert.deepEqual(clicks, []);
+    assert.isFalse(rect.isDragging());
+    assert.equal(Konva.DD._dragElements.size, 0);
+  });
+
   it('delivers deferred hover exits after a drag leaves and reenters the stage', function () {
     const stage = addStage();
     const layer = new Konva.Layer();

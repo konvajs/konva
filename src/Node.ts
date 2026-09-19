@@ -2636,6 +2636,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       stage._getPointerById(pointerId) ||
       stage._changedPointerPositions[0] ||
       ap;
+    const type = evt?.evt?.type
+      ? Util._getEventType(evt.evt.type)
+      : stage._pointerEventType;
+    // drags follow mouse and touch window events only, so a drag started from
+    // a pointer event stays unbound until such an event attaches its pointer
+    const bound = type !== 'pointer';
     DD._dragElements.set(this._id, {
       node: this,
       startPointerPos: pos,
@@ -2644,10 +2650,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
         y: pos.y - ap.y,
       },
       dragStatus: 'ready',
-      pointerId: pointerId ?? ('id' in pos ? pos.id : undefined),
-      pointerEventType: evt?.evt?.type
-        ? Util._getEventType(evt.evt.type)
-        : stage._pointerEventType,
+      pointerId: bound
+        ? (pointerId ?? ('id' in pos ? pos.id : undefined))
+        : undefined,
+      pointerEventType: bound ? type : undefined,
       startEvent: evt,
     });
   }
