@@ -4217,6 +4217,21 @@ describe('Serialization and export', function () {
     }
   });
 
+  it('toBlob keeps the callback of a reused config', async function () {
+    const rect = new Konva.Rect({ width: 10, height: 10, fill: 'red' });
+    // node-canvas has no toBlob, and toBlob() only null-checks the blob
+    (rect as any).toCanvas = () => ({ toBlob: (cb) => cb({}) });
+    let calls = 0;
+    const config = { callback: () => calls++ };
+    try {
+      await rect.toBlob(config as any);
+      await rect.toBlob(config as any);
+      assert.equal(calls, 2);
+    } finally {
+      rect.destroy();
+    }
+  });
+
   it('toCanvas keeps the far edge of a shape at a fractional position', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -4235,6 +4250,24 @@ describe('Serialization and export', function () {
     assert.equal(canvas.height, 11);
     var ctx = canvas.getContext('2d')!;
     assert.isAbove(ctx.getImageData(10, 5, 1, 1).data[3], 0);
+  });
+
+  it('toCanvas falls back to the stage size when the export origin is past the shape', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    var rect = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100,
+      fill: 'red',
+    });
+    layer.add(rect);
+
+    var canvas = rect.toCanvas({ x: 500, y: 500 });
+    assert.equal(canvas.width, stage.width());
+    assert.equal(canvas.height, stage.height());
   });
 
   it('function filters are omitted while CSS filters still round-trip', function () {

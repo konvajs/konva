@@ -490,7 +490,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       drawBorder = conf.drawBorder || false,
       hitCanvasPixelRatio = conf.hitCanvasPixelRatio || 1;
 
-    if (!width || !height || !isFinite(x + y + width + height)) {
+    if (width <= 0 || height <= 0 || !isFinite(x + y + width + height)) {
       Util.error(
         `Can not cache the node. Its size is 0 or its bounds are not finite numbers (${x}, ${y}, ${width}x${height}). Caching is skipped.`
       );
@@ -2116,11 +2116,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       canvas = new SceneCanvas({
         width:
           config.width ||
-          Math.ceil(box.x + box.width - x) ||
+          Math.max(0, Math.ceil(box.x + box.width - x)) ||
           (stage ? stage.width() : 0),
         height:
           config.height ||
-          Math.ceil(box.y + box.height - y) ||
+          Math.max(0, Math.ceil(box.y + box.height - y)) ||
           (stage ? stage.height() : 0),
         pixelRatio: pixelRatio,
       }),
