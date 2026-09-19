@@ -1907,7 +1907,7 @@ describe('Text', function () {
     layer.draw();
 
     var trace =
-      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);font=normal normal 12px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();fillStyle=black;fillText(ltr text,0,10);restore();restore();';
+      'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);direction=ltr;font=normal normal 12px Arial;textBaseline=alphabetic;textAlign=left;translate(0,0);save();fillStyle=black;fillText(ltr text,0,10);restore();restore();';
 
     assert.equal(layer.getContext().getTrace(false, true), trace);
   });

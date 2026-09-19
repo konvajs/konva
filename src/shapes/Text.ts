@@ -281,8 +281,6 @@ export class Text extends Shape<TextConfig> {
       shouldLineThrough = textDecoration.indexOf('line-through') !== -1,
       n;
 
-    direction = direction === INHERIT ? context.direction : direction;
-
     let translateY = lineHeightPx / 2;
     let baseline = MIDDLE;
     if (!Konva.legacyTextRendering) {
@@ -297,7 +295,7 @@ export class Text extends Shape<TextConfig> {
       translateY = (ascent - descent) / 2 + lineHeightPx / 2;
     }
 
-    if (direction === RTL) {
+    if (direction !== INHERIT) {
       context.setAttr('direction', direction);
     }
 
