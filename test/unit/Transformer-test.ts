@@ -108,6 +108,15 @@ describe('Transformer', function () {
     assert.equal(pos.y, rect.y() + rect.height());
   });
 
+  it('mutating default enabledAnchors does not leak into another transformer', function () {
+    var tr = new Konva.Transformer();
+    tr.enabledAnchors().push('bogus');
+
+    var other = new Konva.Transformer();
+    assert.equal(other.enabledAnchors().indexOf('bogus'), -1);
+    assert.equal(other.findOne('.bogus'), undefined);
+  });
+
   it('can attach transformer into several nodes', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

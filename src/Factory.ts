@@ -70,9 +70,11 @@ export const Factory = {
   ) {
     const method = GET + Util._capitalize(attr);
 
+    // array defaults are shared between instances, so hand out a copy
+    const isArr = Array.isArray(def);
     const getter: any = function (this: Node) {
       const val = this.attrs[attr];
-      return val === undefined ? def : val;
+      return val === undefined ? (isArr ? (def as any).slice() : def) : val;
     };
     // toObject() compares an attr with the default of the generated getter
     getter._def = def;

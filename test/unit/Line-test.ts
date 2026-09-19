@@ -72,6 +72,12 @@ describe('Line', function () {
     assert.equal(redLine.points()[0], 4);
   });
 
+  it('mutating the default points array does not leak into another line', function () {
+    new Konva.Line().points().push(1, 2);
+
+    assert.deepEqual(new Konva.Line().points(), []);
+  });
+
   // ======================================================
   it('add dashed line', function () {
     var stage = addStage();
