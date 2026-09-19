@@ -58,27 +58,16 @@ export class Image extends Shape<ImageConfig> {
   }
   _setImageLoad() {
     const image = this.image() as any;
-    // Check whether the image or the first video frame is already loaded.
-    if (image && image.complete) {
-      return;
-    }
-    if (image && image.readyState >= 2) {
-      return;
-    }
-    if (image && image['addEventListener']) {
-      image['addEventListener'](
-        'videoWidth' in image ? 'loadeddata' : 'load',
-        this._loadListener
-      );
-    }
+    image?.addEventListener?.(
+      'videoWidth' in image ? 'loadeddata' : 'load',
+      this._loadListener
+    );
   }
   _removeImageLoad(image: any) {
-    if (image && image['removeEventListener']) {
-      image['removeEventListener'](
-        'videoWidth' in image ? 'loadeddata' : 'load',
-        this._loadListener
-      );
-    }
+    image?.removeEventListener?.(
+      'videoWidth' in image ? 'loadeddata' : 'load',
+      this._loadListener
+    );
   }
   destroy() {
     this._removeImageLoad(this.image());
@@ -175,11 +164,9 @@ export class Image extends Shape<ImageConfig> {
     onError: OnErrorEventHandler = null
   ) {
     const img = Util.createImageElement();
-    img.onload = function () {
-      const image = new Image({
-        image: img,
-      });
-      callback(image);
+    img.onload = () => {
+      img.onload = img.onerror = null;
+      callback(new Image({ image: img }));
     };
     img.onerror = onError;
     img.crossOrigin = 'Anonymous';
