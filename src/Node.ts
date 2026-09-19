@@ -2725,8 +2725,8 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       return;
     }
     elem.dragStatus = 'stopped';
-    DD._endDragBefore(evt, undefined, this);
-    DD._endDragAfter(evt, this);
+    DD._endDragBefore(evt, undefined, elem);
+    DD._endDragAfter(evt, elem);
   }
 
   setDraggable(draggable) {

@@ -1006,6 +1006,59 @@ describe('DragAndDrop', function () {
     assert.deepEqual(dragend, ['rect1', 'rect2']);
   });
 
+  it('stopDrag stops the whole gesture of a transformer', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect1 = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100,
+      fill: 'green',
+      draggable: true,
+    });
+    layer.add(rect1);
+
+    var rect2 = new Konva.Rect({
+      x: 100,
+      y: 0,
+      width: 100,
+      height: 100,
+      fill: 'red',
+      draggable: true,
+    });
+    layer.add(rect2);
+
+    var tr = new Konva.Transformer({ nodes: [rect1, rect2] });
+    layer.add(tr);
+    layer.draw();
+
+    var dragstart = 0;
+    rect1.on('dragstart', function () {
+      dragstart += 1;
+    });
+
+    simulateMouseDown(stage, { x: 20, y: 20 });
+    simulateMouseMove(stage, { x: 40, y: 30 });
+    assert.deepEqual(rect1.position(), { x: 20, y: 10 });
+    assert.deepEqual(rect2.position(), { x: 120, y: 10 });
+
+    // the transformer drags itself and the other node with the same pointer,
+    // all of them must stop
+    rect1.stopDrag();
+    assert.equal(Konva.isDragging(), false);
+
+    simulateMouseMove(stage, { x: 80, y: 60 });
+    assert.deepEqual(rect1.position(), { x: 20, y: 10 });
+    assert.deepEqual(rect2.position(), { x: 120, y: 10 });
+    assert.equal(dragstart, 1);
+
+    simulateMouseUp(stage, { x: 80, y: 60 });
+    assert.equal(Konva.isDragging(), false);
+  });
+
   it('stopDrag of an idle node does not stop another drag', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

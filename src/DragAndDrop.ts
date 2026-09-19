@@ -161,13 +161,14 @@ export const DD = {
 
   // dragBefore and dragAfter allows us to set correct order of events
   // setup all in dragbefore, and stop dragging only after pointerup triggered.
-  _endDragBefore(evt?, win?: Window, only?: Node) {
+  _endDragBefore(evt?, win?: Window, only?: DragElement) {
     const drawNodes: Array<Container> = [];
     const positioned = new Set<Stage>();
     DD._dragElements.forEach((elem, key) => {
       const { node } = elem;
-      // node.stopDrag() ends only its own drag
-      if (only && node !== only) {
+      // node.stopDrag() ends only the drags of the same gesture: a Transformer
+      // drags its other nodes with the same pointer, another pointer is its own
+      if (only && elem !== only && elem.pointerId !== only.pointerId) {
         return;
       }
       // we need to find pointer relative to that node
@@ -227,9 +228,12 @@ export const DD = {
       drawNode.draw();
     });
   },
-  _endDragAfter(evt, only?: Node) {
+  _endDragAfter(evt, only?: DragElement) {
     DD._dragElements.forEach((elem, key) => {
-      if (elem.dragStatus !== 'stopped' || (only && elem.node !== only)) {
+      if (
+        elem.dragStatus !== 'stopped' ||
+        (only && elem !== only && elem.pointerId !== only.pointerId)
+      ) {
         return;
       }
       elem.node.fire(
