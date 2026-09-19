@@ -334,11 +334,21 @@ export class Tween {
     // add to tween map
     let start = node.getAttr(key);
 
-    if (Util._isArray(end)) {
+    if (Util._isArray(end) || Util._isArray(start)) {
       diff = [];
-      // an attribute the node does not have yet starts from zeros. A copy,
-      // as the colour stops are replaced by RGBA objects below
-      start = (start || []).slice();
+      // only normalized arrays are interpolated, so the values the user asked
+      // for are restored when the tween ends
+      trueStart = start;
+      trueEnd = end;
+      // an attribute the node does not have yet starts from zeros, a scalar
+      // side tweens every entry. A copy of start, as the colour stops are
+      // replaced by RGBA objects below
+      start = Util._isArray(start)
+        ? start.slice()
+        : new Array(end.length).fill(start || 0);
+      if (!Util._isArray(end)) {
+        end = new Array(start.length).fill(end);
+      }
       len = Math.max(end.length, start.length);
 
       if (key === 'points' && end.length !== start.length) {
@@ -346,7 +356,6 @@ export class Tween {
         // Util._prepareArrayForTween thinking that end.length > start.length
         if (end.length > start.length) {
           // so in this case we will increase number of starting points
-          trueStart = start;
           start = Util._prepareArrayForTween(
             start,
             end,
@@ -354,7 +363,6 @@ export class Tween {
           );
         } else {
           // in this case we will increase number of eding points
-          trueEnd = end;
           end = Util._prepareArrayForTween(end, start, (node as Line).closed());
         }
       }
@@ -362,7 +370,7 @@ export class Tween {
       if (key.endsWith('ColorStops')) {
         for (let n = 0; n < len; n++) {
           if (n % 2 === 0) {
-            diff.push(end[n] - (start[n] || 0));
+            diff.push((end[n] || 0) - (start[n] || 0));
           } else {
             const startRGBA = colorToRGBA(start[n]);
             start[n] = startRGBA;
@@ -371,7 +379,7 @@ export class Tween {
         }
       } else {
         for (let n = 0; n < len; n++) {
-          diff.push(end[n] - (start[n] || 0));
+          diff.push((end[n] || 0) - (start[n] || 0));
         }
       }
     } else if (colorAttrs.indexOf(key) !== -1) {
@@ -450,9 +458,10 @@ export class Tween {
       if (!attrs) {
         return;
       }
-      // after tweening points of line we need to set original values
-      if (attrs.points?.[edge]) {
-        this.node.setAttr('points' as any, attrs.points[edge]);
+      for (const key in attrs) {
+        if (attrs[key][edge] !== undefined) {
+          this.node.setAttr(key as any, attrs[key][edge]);
+        }
       }
       callback?.call(this);
     };

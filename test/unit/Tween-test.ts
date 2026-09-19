@@ -220,10 +220,8 @@ describe('Tween', function () {
       duration: duration,
       fillLinearGradientColorStops: endFill,
       onFinish: function () {
-        assert.deepEqual(
-          [0.5, 'rgba(255,0,0,1)', 1, 'rgba(0,0,0,1)'],
-          circle.fillLinearGradientColorStops()
-        );
+        // a finished tween holds the requested values, not the interpolated ones
+        assert.deepEqual(endFill, circle.fillLinearGradientColorStops());
         done();
       },
     });
@@ -748,6 +746,67 @@ describe('Tween', function () {
     ]);
     layer.draw();
     tween.destroy();
+  });
+
+  it('tween an array attribute to a shorter one', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var rect = new Konva.Rect({
+      width: 50,
+      height: 50,
+      stroke: 'black',
+      dash: [10, 5, 2, 2],
+    });
+    layer.add(rect);
+    stage.add(layer);
+
+    var tween = new Konva.Tween({
+      node: rect,
+      duration: 1,
+      dash: [10, 5],
+    });
+    tween.seek(0.5);
+    assert.deepEqual(rect.dash(), [10, 5, 1, 1]);
+    tween.finish();
+    assert.deepEqual(rect.dash(), [10, 5]);
+    tween.reset();
+    assert.deepEqual(rect.dash(), [10, 5, 2, 2]);
+    tween.destroy();
+  });
+
+  it('tween between a scalar attribute and an array one', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var rect = new Konva.Rect({ width: 50, height: 50, cornerRadius: 5 });
+    layer.add(rect);
+    stage.add(layer);
+
+    var tween = new Konva.Tween({
+      node: rect,
+      duration: 1,
+      cornerRadius: [10, 10, 10, 10],
+    });
+    tween.seek(0.5);
+    assert.deepEqual(rect.cornerRadius(), [7.5, 7.5, 7.5, 7.5]);
+    tween.finish();
+    assert.deepEqual(rect.cornerRadius(), [10, 10, 10, 10]);
+    tween.reset();
+    assert.equal(rect.cornerRadius(), 5);
+    tween.destroy();
+
+    rect.cornerRadius([10, 20, 30, 40]);
+    var tweenBack = new Konva.Tween({
+      node: rect,
+      duration: 1,
+      cornerRadius: 10,
+    });
+    tweenBack.seek(0.5);
+    assert.deepEqual(rect.cornerRadius(), [10, 15, 20, 25]);
+    tweenBack.finish();
+    assert.equal(rect.cornerRadius(), 10);
+    tweenBack.reset();
+    assert.deepEqual(rect.cornerRadius(), [10, 20, 30, 40]);
+    tweenBack.destroy();
   });
 
   it('node.to() returns the tween', function () {
