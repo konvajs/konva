@@ -58,6 +58,11 @@ export class Image extends Shape<ImageConfig> {
   }
   _setImageLoad() {
     const image = this.image() as any;
+    // A fresh `new Image()` with no src already reports complete === true,
+    // so it still needs the listener.
+    if ((image?.complete && image.src) || image?.readyState >= 2) {
+      return;
+    }
     image?.addEventListener?.(
       'videoWidth' in image ? 'loadeddata' : 'load',
       this._loadListener
