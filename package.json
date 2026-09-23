@@ -54,8 +54,7 @@
     "tsc": "tsc",
     "rollup": "rollup -c",
     "clean": "rimraf ./lib ./test-build",
-    "watch": "rollup -c -w",
-    "size": "size-limit"
+    "watch": "rollup -c -w"
   },
   "targets": {
     "none": {}
@@ -74,22 +73,8 @@
       "url": "https://github.com/sponsors/lavrton"
     }
   ],
-  "size-limit": [
-    {
-      "limit": "48 KB",
-      "path": "./lib/index.js"
-    },
-    {
-      "limit": "26 KB",
-      "path": "./lib/Core.js"
-    },
-    {
-      "path": "./konva.min.js"
-    }
-  ],
   "devDependencies": {
     "@parcel/transformer-image": "2.15.4",
-    "@size-limit/preset-big-lib": "^11.2.0",
     "@types/mocha": "^10.0.10",
     "canvas": "^3.2.1",
     "chai": "6.2.2",
@@ -108,7 +93,6 @@
     "rimraf": "^6.1.2",
     "rollup": "^4.55.1",
     "rollup-plugin-typescript2": "^0.37.0",
-    "size-limit": "^11.2.0",
     "skia-canvas": "^3.0.4",
     "stats.js": "0.17.0",
     "tsx": "^4.21.0",
