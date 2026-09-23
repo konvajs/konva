@@ -32,6 +32,9 @@ export interface EllipseConfig extends ShapeConfig {
  * });
  */
 export class Ellipse extends Shape<EllipseConfig> {
+  _getStrokePadding() {
+    return super._getStrokePadding(1);
+  }
   _sceneFunc(context: Context) {
     const rx = Math.abs(this.radiusX()),
       ry = Math.abs(this.radiusY());
@@ -62,7 +65,7 @@ export class Ellipse extends Shape<EllipseConfig> {
 Ellipse.prototype.className = 'Ellipse';
 Ellipse.prototype._centroid = true;
 Ellipse.prototype._attrsAffectingSize = ['radiusX', 'radiusY'];
-_registerNode(Ellipse);
+_registerNode(Ellipse, true);
 
 // add getters setters
 Factory.addComponentsGetterSetter(Ellipse, 'radius', ['x', 'y']);

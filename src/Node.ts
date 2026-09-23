@@ -223,6 +223,8 @@ export interface KonvaEventObject<EventType, This = Node> {
 }
 
 export interface GetClientRectConfig {
+  // Internal: conservative painted bounds for live isolation.
+  _forDrawing?: boolean;
   skipTransform?: boolean;
   skipShadow?: boolean;
   skipStroke?: boolean;
@@ -248,21 +250,6 @@ export type ImageConfig = CanvasConfig & {
   mimeType?: string;
   quality?: number;
 };
-
-// "perfect drawing" buffer for cache() and toCanvas(): it mirrors the target
-// canvas and is drawn back at (x, y) in the target's coordinate space.
-// It starts empty and Shape.drawScene sizes it on first use, so nodes
-// without buffered shapes never allocate it.
-function createBufferCanvas(target: SceneCanvas, x: number, y: number) {
-  const bufferCanvas = new SceneCanvas({
-    width: 0,
-    height: 0,
-    pixelRatio: target.pixelRatio,
-  });
-  bufferCanvas.x = x;
-  bufferCanvas.y = y;
-  return bufferCanvas;
-}
 
 /**
  * Node constructor. Nodes are entities that can be transformed, layered,
@@ -516,8 +503,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       }),
       sceneContext = cachedSceneCanvas.getContext();
 
-    const bufferCanvas = createBufferCanvas(cachedSceneCanvas, x, y);
-
     cachedSceneCanvas.isCache = true;
 
     this._releaseCanvasCache();
@@ -536,7 +521,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
 
     try {
-      this.drawScene(cachedSceneCanvas, this, bufferCanvas);
+      this.drawScene(cachedSceneCanvas, this);
     } catch (e) {
       Util.releaseCanvas(cachedSceneCanvas._canvas);
       throw e;
@@ -545,8 +530,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       // descendants cached their opacity relative to this node while drawing
       this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
       sceneContext.restore();
-      // the buffer is only needed while drawing
-      Util.releaseCanvas(bufferCanvas._canvas);
+      cachedSceneCanvas._releaseIsolationCanvas();
     }
 
     // this will draw a red border around the cached box for
@@ -620,7 +604,7 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     return !!this._canvasCache;
   }
 
-  abstract drawScene(canvas?: Canvas, top?: Node, bufferCanvas?: Canvas): void;
+  abstract drawScene(canvas?: Canvas, top?: Node): void;
   abstract drawHit(canvas?: Canvas, top?: Node): void;
   /**
    * Return client rectangle {x, y, width, height} of node. This rectangle also include all styling (strokes, shadows, etc).
@@ -665,31 +649,22 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     // redefine in Container and Shape
     throw new Error('abstract "getClientRect" method call');
   }
-  _transformedRect(rect: IRect, top?: Node | null) {
-    const points = [
-      { x: rect.x, y: rect.y },
-      { x: rect.x + rect.width, y: rect.y },
-      { x: rect.x + rect.width, y: rect.y + rect.height },
-      { x: rect.x, y: rect.y + rect.height },
-    ];
-    let minX: number = Infinity,
-      minY: number = Infinity,
-      maxX: number = -Infinity,
-      maxY: number = -Infinity;
-    const trans = this.getAbsoluteTransform(top);
-    points.forEach(function (point) {
-      const transformed = trans.point(point);
-      minX = Math.min(minX, transformed.x);
-      minY = Math.min(minY, transformed.y);
-      maxX = Math.max(maxX, transformed.x);
-      maxY = Math.max(maxY, transformed.y);
-    });
-    return {
-      x: minX,
-      y: minY,
-      width: maxX - minX,
-      height: maxY - minY,
+  _getCachedSceneRect(config: GetClientRectConfig) {
+    const cache =
+      config._forDrawing && !this._isUnderCache && this._getCanvasCache();
+    if (!cache) return;
+    const rect = {
+      x: cache.x,
+      y: cache.y,
+      width: cache.scene.width / cache.scene.pixelRatio,
+      height: cache.scene.height / cache.scene.pixelRatio,
     };
+    return config.skipTransform
+      ? rect
+      : this._transformedRect(rect, config.relativeTo);
+  }
+  _transformedRect(rect: IRect, top?: Node | null) {
+    return this.getAbsoluteTransform(top)._getTransformedRect(rect);
   }
   _drawCachedSceneCanvas(context: Context) {
     context.save();
@@ -2126,8 +2101,6 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       }),
       context = canvas.getContext();
 
-    const bufferCanvas = createBufferCanvas(canvas, x, y);
-
     if (config.imageSmoothingEnabled === false) {
       context._context.imageSmoothingEnabled = false;
     }
@@ -2137,10 +2110,9 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       context.translate(-1 * x, -1 * y);
     }
 
-    this.drawScene(canvas, undefined, bufferCanvas);
+    this.drawScene(canvas);
     context.restore();
-    // the buffer is only needed while drawing
-    Util.releaseCanvas(bufferCanvas._canvas);
+    canvas._releaseIsolationCanvas();
 
     return canvas;
   }

@@ -113,6 +113,9 @@ export class Sprite extends Shape<SpriteConfig> {
       offsetY: offset[index * 2 + 1] || 0,
     };
   }
+  _getStrokePadding() {
+    return super._getStrokePadding(this.strokeScaleEnabled() ? 1 : undefined);
+  }
   _sceneFunc(context: Context) {
     const frame = this._getFrame();
     if (!frame) {
@@ -161,8 +164,8 @@ export class Sprite extends Shape<SpriteConfig> {
       : { x: 0, y: 0, width: 0, height: 0 };
   }
 
-  _useBufferCanvas() {
-    return super._useBufferCanvas(true);
+  _useBufferCanvas(forceFill?: boolean, opacity = this.getAbsoluteOpacity()) {
+    return super._useBufferCanvas(true, opacity);
   }
 
   _setInterval() {
@@ -227,7 +230,7 @@ export class Sprite extends Shape<SpriteConfig> {
 }
 
 Sprite.prototype.className = 'Sprite';
-_registerNode(Sprite);
+_registerNode(Sprite, true);
 
 // add getters setters
 Factory.addGetterSetter(Sprite, 'animation');

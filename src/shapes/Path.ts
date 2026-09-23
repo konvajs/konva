@@ -915,7 +915,7 @@ export class Path extends Shape<PathConfig> {
 
 Path.prototype.className = 'Path';
 Path.prototype._attrsAffectingSize = ['data'];
-_registerNode(Path);
+_registerNode(Path, true);
 
 /**
  * get/set SVG path data string.  This method

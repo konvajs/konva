@@ -10,6 +10,33 @@ import {
 } from './test-utils.ts';
 
 describe('TextPath', function () {
+  it('keeps a non-scaling stroke on the path', function () {
+    const stage = addStage({ width: 400, height: 300 });
+    const layer = new Konva.Layer();
+    stage.add(layer);
+    layer.add(
+      new Konva.TextPath({
+        x: 250,
+        y: 200,
+        data: 'M0 0 L 120 0',
+        text: 'WWW',
+        fontSize: 30,
+        stroke: 'black',
+        strokeWidth: 3,
+        strokeScaleEnabled: false,
+      })
+    );
+    layer.draw();
+    const ink = (x: number, y: number, width: number, height: number) => {
+      const data = layer.getContext().getImageData(x, y, width, height).data;
+      let count = 0;
+      for (let i = 3; i < data.length; i += 4) if (data[i]) count++;
+      return count;
+    };
+    assert.equal(ink(0, 0, 200, 150), 0, 'ink far from the path');
+    assert.isAbove(ink(250, 170, 120, 30), 0, 'ink along the path');
+  });
+
   // ======================================================
   it('Render Text Along Line', function () {
     var stage = addStage();

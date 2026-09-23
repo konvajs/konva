@@ -497,6 +497,50 @@ export class Text extends Shape<TextConfig> {
     rect.height = Math.max(rect.height, bottom);
     return rect;
   }
+  _getSelfRectForDrawing() {
+    // Lines can be wider than the box, negative spacing moves the pen back,
+    // and glyph ink passes the advance box (italics, accents): up to 0.6em
+    // in common fonts, so pad by 1em.
+    const rect = this.getSelfRect(),
+      fontSize = this.fontSize(),
+      padding = this.padding(),
+      lineHeightPx = this.lineHeight() * fontSize,
+      available = this.getWidth() - padding * 2,
+      align = this.align(),
+      blockHeight = this.textArr.length * lineHeightPx;
+    let top = padding;
+    if (this.verticalAlign() === MIDDLE) {
+      top += (this.getHeight() - blockHeight - padding * 2) / 2;
+    } else if (this.verticalAlign() === BOTTOM) {
+      top += this.getHeight() - blockHeight - padding * 2;
+    }
+    let left = rect.x,
+      right = rect.x + rect.width;
+    for (const { text, width } of this.textArr) {
+      const x =
+        padding +
+        (align === RIGHT
+          ? available - width
+          : align === CENTER
+            ? (available - width) / 2
+            : 0);
+      const back = Math.min(0, this.letterSpacing()) * text.length;
+      left = Math.min(left, x + back);
+      right = Math.max(right, x + width - back);
+    }
+    const underline = this.textDecoration().includes('underline');
+    const y = Math.min(
+      rect.y,
+      top + (underline ? Math.min(0, this._getUnderlineOffset()) : 0)
+    );
+    return {
+      x: left - fontSize,
+      y: y - fontSize,
+      width: right - left + fontSize * 2,
+      height:
+        Math.max(rect.y + rect.height, top + blockHeight) - y + fontSize * 2,
+    };
+  }
   _hitFunc(context: Context) {
     const width = this.getWidth(),
       height = this.getHeight();
@@ -838,7 +882,11 @@ export class Text extends Shape<TextConfig> {
     return true;
   }
 
-  _useBufferCanvas() {
+  _getStrokePadding() {
+    // _strokeFunc uses a miter limit of two for glyph outlines.
+    return super._getStrokePadding(2);
+  }
+  _useBufferCanvas(forceFill?: boolean, opacity = this.getAbsoluteOpacity()) {
     if (this.attrs.perfectDrawEnabled === false) return false;
     const hasLine =
       this.textDecoration().indexOf('underline') !== -1 ||
@@ -847,10 +895,10 @@ export class Text extends Shape<TextConfig> {
     if (hasLine && hasShadow) {
       return true;
     }
-    if (hasShadow && this.getAbsoluteOpacity() !== 1 && hasShadowOpacityBug()) {
+    if (hasShadow && opacity !== 1 && hasShadowOpacityBug()) {
       return true;
     }
-    return super._useBufferCanvas();
+    return super._useBufferCanvas(forceFill, opacity);
   }
 
   direction: GetSet<string, this>;
@@ -882,7 +930,7 @@ Text.prototype.className = TEXT_UPPER;
 Text.prototype._attrsAffectingSize = ATTR_CHANGE_LIST.filter(
   (attr) => attr !== 'width' && attr !== 'height'
 ).concat(['textDecoration', 'underlineOffset']);
-_registerNode(Text);
+_registerNode(Text, true);
 
 // update text data for certain attr changes
 Text.prototype.on(

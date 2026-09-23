@@ -117,7 +117,7 @@ export class RegularPolygon extends Shape<RegularPolygonConfig> {
 RegularPolygon.prototype.className = 'RegularPolygon';
 RegularPolygon.prototype._centroid = true;
 RegularPolygon.prototype._attrsAffectingSize = ['radius', 'sides'];
-_registerNode(RegularPolygon);
+_registerNode(RegularPolygon, true);
 
 /**
  * get/set radius

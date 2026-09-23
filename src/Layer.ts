@@ -426,7 +426,7 @@ export class Layer extends Container<Group | Shape> {
     }
     return {};
   }
-  drawScene(can?: SceneCanvas, top?: Node, bufferCanvas?: SceneCanvas) {
+  drawScene(can?: SceneCanvas, top?: Node) {
     const layer = this.getLayer(),
       canvas = can || (layer && layer.getCanvas());
 
@@ -438,7 +438,8 @@ export class Layer extends Container<Group | Shape> {
       canvas.getContext().clear();
     }
 
-    Container.prototype.drawScene.call(this, canvas, top, bufferCanvas);
+    Container.prototype.drawScene.call(this, canvas, top);
+    canvas._trimIsolationCanvas();
 
     this._fire(DRAW, {
       node: this,
@@ -538,6 +539,7 @@ export class Layer extends Container<Group | Shape> {
   }
 
   destroy(): this {
+    this.getCanvas()._releaseIsolationCanvas();
     Util.releaseCanvas(
       this.getNativeCanvasElement(),
       this.getHitCanvas()._canvas

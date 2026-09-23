@@ -198,8 +198,12 @@ export const Konva = {
   },
 };
 
-export const _registerNode = (NodeClass: any) => {
+// Konva's own shapes whose bounds cover everything they paint. Plugins can
+// import _registerNode, so they opt in explicitly.
+export const _boundedShapes = new Set<unknown>();
+export const _registerNode = (NodeClass: any, boundsCoverPaint = false) => {
   Konva[NodeClass.prototype.getClassName()] = NodeClass;
+  if (boundsCoverPaint) _boundedShapes.add(NodeClass);
 };
 
 Konva._injectGlobal(Konva);

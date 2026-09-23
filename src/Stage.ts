@@ -186,7 +186,6 @@ export class Stage extends Container<Layer, StageConfig> {
   _pointerStates = new Map<string, PointerState>();
   _lastClicks: Partial<Record<EventType, Click>> = {};
 
-  bufferCanvas: SceneCanvas;
   bufferHitCanvas: HitCanvas;
 
   constructor(config: StageConfig) {
@@ -308,7 +307,7 @@ export class Stage extends Container<Layer, StageConfig> {
       stages.splice(index, 1);
     }
 
-    Util.releaseCanvas(this.bufferCanvas._canvas, this.bufferHitCanvas._canvas);
+    Util.releaseCanvas(this.bufferHitCanvas._canvas);
 
     return this;
   }
@@ -429,13 +428,6 @@ export class Stage extends Container<Layer, StageConfig> {
       layer._setSize({ width, height });
       layer.draw();
     });
-  }
-  // "perfect drawing" uses bufferCanvas, shape.intersects() uses
-  // bufferHitCanvas; both are lazy - created at 0x0 and sized to the stage
-  // on first use
-  _syncBufferSize<T extends SceneCanvas | HitCanvas>(canvas: T): T {
-    canvas.setSizeIfChanged(this.width(), this.height());
-    return canvas;
   }
   add(layer: Layer, ...rest) {
     if (arguments.length > 1) {
@@ -1064,12 +1056,8 @@ export class Stage extends Container<Layer, StageConfig> {
     };
   }
   _buildDOM() {
-    // lazy buffer canvases, see _syncBufferSize
+    // lazy buffer canvas, sized by Shape.intersects() on first use
     // https://github.com/konvajs/konva/issues/2009
-    this.bufferCanvas = new SceneCanvas({
-      width: 0,
-      height: 0,
-    });
     this.bufferHitCanvas = new HitCanvas({
       pixelRatio: 1,
       width: 0,

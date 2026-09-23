@@ -12,7 +12,7 @@ import {
 } from './Validators.ts';
 
 import type { Context, SceneContext } from './Context.ts';
-import { _registerNode } from './Global.ts';
+import { _boundedShapes, _registerNode } from './Global.ts';
 import * as PointerEvents from './PointerEvents.ts';
 
 import type { GetSet, Vector2d } from './types.ts';
@@ -438,7 +438,9 @@ export class Shape<
     if (!stage) {
       return false;
     }
-    const bufferHitCanvas = stage._syncBufferSize(stage.bufferHitCanvas);
+    const bufferHitCanvas = stage.bufferHitCanvas;
+    // lazy: allocated at stage size on first use
+    bufferHitCanvas.setSizeIfChanged(stage.width(), stage.height());
 
     bufferHitCanvas.getContext().clear();
     this.drawHit(bufferHitCanvas);
@@ -460,7 +462,10 @@ export class Shape<
   // why do we need buffer canvas?
   // it give better result when a shape has
   // stroke with fill and with some opacity
-  _useBufferCanvas(forceFill?: boolean): boolean {
+  _useBufferCanvas(
+    forceFill?: boolean,
+    opacity = this.getAbsoluteOpacity()
+  ): boolean {
     // image and sprite still has "fill" as image
     // so they use that method with forced fill
     // it probably will be simpler, then copy/paste the code
@@ -472,8 +477,7 @@ export class Shape<
     }
     const hasFill = forceFill || this.hasFill();
     const hasStroke = this.hasStroke();
-    const isTransparent =
-      !this._isUnderCache && this.getAbsoluteOpacity() !== 1;
+    const isTransparent = !this._isUnderCache && opacity !== 1;
 
     if (hasFill && hasStroke && isTransparent) {
       return true;
@@ -524,18 +528,35 @@ export class Shape<
       height: size.height,
     };
   }
+  _getSelfRectForDrawing() {
+    return this.getSelfRect();
+  }
   getClientRect(config: ShapeGetClientRectConfig = {}) {
+    const cachedRect = this._getCachedSceneRect(config);
+    if (cachedRect) return cachedRect;
     const skipTransform = config.skipTransform;
     const relativeTo = config.relativeTo;
 
-    const fillRect = this.getSelfRect();
+    const forDrawing = config._forDrawing;
+    // Painted bounds are measured in the canvas that draws the shape
+    // (relativeTo): non-scaling strokes and shadows use that canvas's axes.
+    // The identity transform normalizes negative sizes.
+    const fillRect = !forDrawing
+      ? this.getSelfRect()
+      : this.strokeScaleEnabled()
+        ? new Transform()._getTransformedRect(this._getSelfRectForDrawing())
+        : this._transformedRect(this._getSelfRectForDrawing(), relativeTo);
 
     const applyStroke = !config.skipStroke && this.hasStroke();
-    const strokeWidth: number = (applyStroke && this.strokeWidth()) || 0;
+    const strokeWidth = applyStroke
+      ? forDrawing
+        ? this._getStrokePadding() * 2
+        : this.strokeWidth()
+      : 0;
     let strokeWidthX = strokeWidth;
     let strokeWidthY = strokeWidth;
     let collapsedStroke: Transform | undefined;
-    if (strokeWidth && !this.strokeScaleEnabled()) {
+    if (!forDrawing && strokeWidth && !this.strokeScaleEnabled()) {
       // Strokes are constant in the canvas they are drawn into. A cached
       // ancestor supplies that coordinate space until its bitmap is rebuilt.
       let top: Node | null = this;
@@ -565,33 +586,30 @@ export class Shape<
       }
     }
 
-    const fillAndStrokeWidth = fillRect.width + strokeWidthX;
-    const fillAndStrokeHeight = fillRect.height + strokeWidthY;
-
-    const applyShadow = !config.skipShadow && this.hasShadow();
-    const shadowOffsetX = applyShadow ? this.shadowOffsetX() : 0;
-    const shadowOffsetY = applyShadow ? this.shadowOffsetY() : 0;
-
-    const preWidth = fillAndStrokeWidth + Math.abs(shadowOffsetX);
-    const preHeight = fillAndStrokeHeight + Math.abs(shadowOffsetY);
-
-    const blurRadius = (applyShadow && this.shadowBlur()) || 0;
-
-    const width = preWidth + blurRadius * 2;
-    const height = preHeight + blurRadius * 2;
-
-    const rect = {
-      width: width,
-      height: height,
-      x:
-        -(strokeWidthX / 2 + blurRadius) +
-        Math.min(shadowOffsetX, 0) +
-        fillRect.x,
-      y:
-        -(strokeWidthY / 2 + blurRadius) +
-        Math.min(shadowOffsetY, 0) +
-        fillRect.y,
+    let rect = {
+      x: fillRect.x - strokeWidthX / 2,
+      y: fillRect.y - strokeWidthY / 2,
+      width: fillRect.width + strokeWidthX,
+      height: fillRect.height + strokeWidthY,
     };
+    if (forDrawing && this.strokeScaleEnabled()) {
+      rect = this._transformedRect(rect, relativeTo);
+    }
+    if (!config.skipShadow && this.hasShadow()) {
+      const scale = forDrawing ? this.getAbsoluteScale() : { x: 1, y: 1 };
+      const dx = this.shadowOffsetX() * scale.x;
+      const dy = this.shadowOffsetY() * scale.y;
+      const blur =
+        this.shadowBlur() *
+        (forDrawing ? 2 * Math.min(Math.abs(scale.x), Math.abs(scale.y)) : 1);
+      rect.x += Math.min(0, dx) - blur;
+      rect.y += Math.min(0, dy) - blur;
+      rect.width += Math.abs(dx) + blur * 2;
+      rect.height += Math.abs(dy) + blur * 2;
+    }
+    if (forDrawing) {
+      return rect;
+    }
     if (!skipTransform) {
       const transformed = this._transformedRect(rect, relativeTo);
       if (collapsedStroke) {
@@ -607,7 +625,18 @@ export class Shape<
     }
     return rect;
   }
-  drawScene(can?: SceneCanvas, top?: Node, bufferCanvas?: SceneCanvas) {
+  _getStrokePadding(miterLimit = this.miterLimit() || 10) {
+    // Custom paths can have sharper joins than the built-in geometry.
+    if (this.attrs.sceneFunc) miterLimit = this.miterLimit() || 10;
+    return (
+      (Math.abs(this.strokeWidth()) / 2) *
+      Math.max(
+        this.lineCap() === 'square' ? Math.SQRT2 : 1,
+        (this.lineJoin() || 'miter') === 'miter' ? miterLimit : 1
+      )
+    );
+  }
+  drawScene(can?: SceneCanvas, top?: Node) {
     // basically there are 3 drawing modes
     // 1 - simple drawing when nothing is cached.
     // 2 - when we are caching current
@@ -619,7 +648,6 @@ export class Shape<
       cachedCanvas = this._getCanvasCache(),
       drawFunc = this.getSceneFunc(),
       hasShadow = this.hasShadow();
-    let stage;
 
     const cachingSelf = top === this;
 
@@ -642,76 +670,76 @@ export class Shape<
     }
 
     context.save();
-    // if buffer canvas is needed
-    if (this._useBufferCanvas()) {
-      stage = this.getStage();
-      const bc = bufferCanvas || stage._syncBufferSize(stage.bufferCanvas);
-      const bufferContext = bc.getContext();
-      if (!bufferCanvas) {
-        bufferContext.clear();
-      } else if (!bc.width) {
-        // cache() and toCanvas() hand over an empty buffer: size it to the
-        // destination on first use and shift it to the buffer origin
-        bc.setSize(canvas._logicalWidth, canvas._logicalHeight);
-        bufferContext.translate(-bc.x, -bc.y);
-      } else {
-        // the buffer is translated, so reset the transform before clearing
+    try {
+      // if buffer canvas is needed; an empty canvas has nothing to draw into
+      if (
+        canvas.width &&
+        canvas.height &&
+        this._useBufferCanvas(undefined, context._getOpacity(this))
+      ) {
+        // Built-in shapes and isolated groups use a buffer the size of the
+        // painted bounds. Custom drawing (sceneFunc, charRenderFunc, own
+        // classes) gets the whole canvas, since it can paint outside its bounds.
+        // The shadow is applied when the buffer is drawn, not inside it.
+        const bounded =
+          !!context._opacityRoot ||
+          (!this.attrs.sceneFunc &&
+            !this.attrs.charRenderFunc &&
+            _boundedShapes.has(this.constructor));
+        const bc = canvas._prepareIsolationCanvas(
+          bounded
+            ? this.getClientRect({
+                _forDrawing: true,
+                relativeTo: top,
+                skipShadow: true,
+              })
+            : undefined
+        );
+        const bufferContext = bc.getContext();
         bufferContext.save();
-        bufferContext.setTransform(1, 0, 0, 1, 0, 0);
-        bufferContext.clearRect(0, 0, bc.width, bc.height);
-        bufferContext.restore();
-      }
-      bufferContext.save();
-      // the buffer canvas is a separate context that does not inherit the
-      // destination `imageSmoothingEnabled` flag, so propagate it to keep
-      // pattern/image smoothing consistent with the target context.
-      bufferContext.imageSmoothingEnabled = context.imageSmoothingEnabled;
-      bufferContext._applyLineJoin(this);
-      bufferContext._applyMiterLimit(this);
-      // layer might be undefined if we are using cache before adding to layer
-      const o = this.getAbsoluteTransform(top).getMatrix();
-      bufferContext.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
-
-      drawFunc.call(this, bufferContext, this);
-      bufferContext.restore();
-
-      const ratio = bc.pixelRatio;
-
-      if (hasShadow) {
-        context._applyShadow(this);
-      }
-      // if we are caching self, we don't need to apply opacity and global composite operation
-      // because it will be applied in the cache
-      if (!cachingSelf) {
-        context._applyOpacity(this);
-        context._applyGlobalCompositeOperation(this);
-      }
-
-      context.drawImage(
-        bc._canvas,
-        bc.x,
-        bc.y,
-        bc.width / ratio,
-        bc.height / ratio
-      );
-    } else {
-      context._applyLineJoin(this);
-      context._applyMiterLimit(this);
-
-      if (!cachingSelf) {
+        bufferContext._applyLineJoin(this);
+        bufferContext._applyMiterLimit(this);
+        // layer might be undefined if we are using cache before adding to layer
         const o = this.getAbsoluteTransform(top).getMatrix();
-        context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
-        context._applyOpacity(this);
-        context._applyGlobalCompositeOperation(this);
-      }
+        bufferContext.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
 
-      if (hasShadow) {
-        context._applyShadow(this);
-      }
+        drawFunc.call(this, bufferContext, this);
+        bufferContext.restore();
 
-      drawFunc.call(this, context, this);
+        if (hasShadow) {
+          context._applyShadow(this);
+        }
+        // if we are caching self, we don't need to apply opacity and global composite operation
+        // because it will be applied in the cache
+        if (!cachingSelf) {
+          context._applyOpacity(this);
+          context._applyGlobalCompositeOperation(this);
+        }
+        context._drawDeviceBuffer(bc);
+      } else {
+        context._applyLineJoin(this);
+        context._applyMiterLimit(this);
+
+        if (!cachingSelf) {
+          const o = this.getAbsoluteTransform(top).getMatrix();
+          context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
+          context._applyOpacity(this);
+          context._applyGlobalCompositeOperation(this);
+        }
+
+        if (hasShadow) {
+          context._applyShadow(this);
+        }
+
+        drawFunc.call(this, context, this);
+      }
+    } catch (error) {
+      // A throwing sceneFunc can leave a clip on the shared buffer.
+      canvas._releaseIsolationCanvas();
+      throw error;
+    } finally {
+      context.restore();
     }
-    context.restore();
     return this;
   }
   drawHit(can?: HitCanvas, top?: Node) {
@@ -753,8 +781,11 @@ export class Shape<
       const o = this.getAbsoluteTransform(top).getMatrix();
       context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
     }
-    drawFunc.call(this, context, this);
-    context.restore();
+    try {
+      drawFunc.call(this, context, this);
+    } finally {
+      context.restore();
+    }
     return this;
   }
   /**
@@ -1594,7 +1625,7 @@ Factory.addGetterSetter(Shape, 'dashEnabled', true);
 Factory.addGetterSetter(Shape, 'strokeScaleEnabled', true);
 
 /**
- * get/set strokeScale enabled flag
+ * get/set strokeScale enabled flag. Text and TextPath always scale their stroke.
  * @name Konva.Shape#strokeScaleEnabled
  * @method
  * @param {Boolean} enabled

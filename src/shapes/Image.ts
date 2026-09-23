@@ -79,14 +79,17 @@ export class Image extends Shape<ImageConfig> {
     super.destroy();
     return this;
   }
-  _useBufferCanvas() {
+  _useBufferCanvas(forceFill?: boolean, opacity = this.getAbsoluteOpacity()) {
     if (this.attrs.perfectDrawEnabled === false) return false;
     const hasCornerRadius = !!this.cornerRadius();
     const hasShadow = this.hasShadow();
     if (hasCornerRadius && hasShadow) {
       return true;
     }
-    return super._useBufferCanvas(true);
+    return super._useBufferCanvas(true, opacity);
+  }
+  _getStrokePadding() {
+    return super._getStrokePadding(this.strokeScaleEnabled() ? 1 : undefined);
   }
   _sceneFunc(context: Context) {
     const width = this.getWidth();
@@ -189,7 +192,7 @@ export class Image extends Shape<ImageConfig> {
 
 Image.prototype.className = 'Image';
 Image.prototype._attrsAffectingSize = ['image'];
-_registerNode(Image);
+_registerNode(Image, true);
 
 /**
  * get/set corner radius

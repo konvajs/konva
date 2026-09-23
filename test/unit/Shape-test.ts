@@ -1,3 +1,4 @@
+import { _registerNode } from '../../src/Global.ts';
 import { assert } from 'chai';
 
 import {
@@ -805,13 +806,13 @@ describe('Shape', function () {
       var trace = layer.getContext().getTrace();
       assert.equal(
         trace,
-        'clearRect(0,0,578,200);save();shadowColor=rgba(128,128,128,1);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;drawImage([object HTMLCanvasElement],0,0,578,200);restore();'
+        'clearRect(0,0,578,200);save();shadowColor=rgba(128,128,128,1);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;setTransform(1,0,0,1,0,0);drawImage([object HTMLCanvasElement],0,0,112,62,94,44,112,62);restore();'
       );
     } else {
       var trace = layer.getContext().getTrace(true);
       assert.equal(
         trace,
-        'clearRect();save();shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;drawImage();restore();'
+        'clearRect();save();shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;setTransform();drawImage();restore();'
       );
     }
   });
@@ -848,13 +849,13 @@ describe('Shape', function () {
       var trace = layer.getContext().getTrace();
       assert.equal(
         trace,
-        'clearRect(0,0,578,200);save();shadowColor=rgba(128,128,128,1);shadowBlur=5;shadowOffsetX=20;shadowOffsetY=20;globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();'
+        'clearRect(0,0,578,200);save();shadowColor=rgba(128,128,128,1);shadowBlur=5;shadowOffsetX=20;shadowOffsetY=20;globalAlpha=0.5;setTransform(1,0,0,1,0,0);drawImage([object HTMLCanvasElement],0,0,112,62,94,44,112,62);restore();'
       );
     } else {
       var trace = layer.getContext().getTrace(true);
       assert.equal(
         trace,
-        'clearRect();save();shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;globalAlpha;drawImage();restore();'
+        'clearRect();save();shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;globalAlpha;setTransform();drawImage();restore();'
       );
     }
   });
@@ -1464,14 +1465,14 @@ describe('Shape', function () {
 
       assert.equal(
         trace,
-        'clearRect(0,0,578,200);save();globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();'
+        'clearRect(0,0,578,200);save();globalAlpha=0.5;setTransform(1,0,0,1,0,0);drawImage([object HTMLCanvasElement],0,0,112,62,94,44,112,62);restore();'
       );
     } else {
       var trace = layer.getContext().getTrace(true);
 
       assert.equal(
         trace,
-        'clearRect();save();globalAlpha;drawImage();restore();'
+        'clearRect();save();globalAlpha;setTransform();drawImage();restore();'
       );
     }
   });
@@ -2399,6 +2400,110 @@ describe('Shape', function () {
 
     const hitShape = layer.getIntersection({ x: 150, y: 150 });
     assert.equal(hitShape, null);
+  });
+
+  it('recovers the layer after a sceneFunc throws', function () {
+    const stage = addStage({ width: 200, height: 200 });
+    const layer = new Konva.Layer();
+    stage.add(layer);
+    let fail = true;
+    for (const opacity of [1, 0.5]) {
+      layer.destroyChildren();
+      layer.add(
+        new Konva.Shape({
+          x: 50,
+          y: 50,
+          fill: 'red',
+          stroke: 'black',
+          opacity,
+          sceneFunc(ctx, shape) {
+            ctx.rect(0, 0, 10, 10);
+            ctx.clip();
+            if (fail) throw new Error('drawing failed');
+            ctx.fillStrokeShape(shape);
+          },
+        }),
+        new Konva.Rect({
+          x: 150,
+          y: 150,
+          width: 20,
+          height: 20,
+          fill: 'blue',
+          stroke: 'blue',
+          opacity: 0.5,
+        })
+      );
+      fail = true;
+      assert.throws(() => layer.draw(), 'drawing failed');
+      fail = false;
+      layer.draw();
+      const data = layer.getContext().getImageData(160, 160, 1, 1).data;
+      assert.closeTo(data[3], 128, 2);
+    }
+  });
+
+  it('keeps _useBufferCanvas(forceFill) working for subclasses', function () {
+    class ImageLike extends Konva.Rect {
+      _useBufferCanvas() {
+        return super._useBufferCanvas(true);
+      }
+    }
+    const shape = new ImageLike({ width: 10, height: 10, stroke: 'black' });
+    assert.isFalse(shape._useBufferCanvas());
+    shape.opacity(0.5);
+    assert.isTrue(shape._useBufferCanvas());
+  });
+
+  it('does not clip text moved by charRenderFunc in buffer canvas', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    layer.add(
+      new Konva.Text({
+        text: 'HELLO',
+        fontSize: 30,
+        fill: 'red',
+        stroke: 'black',
+        opacity: 0.5,
+        charRenderFunc: ({ context }) => context.translate(0, 150),
+      })
+    );
+    stage.add(layer);
+    const data = layer.getContext().getImageData(0, 150, 200, 50).data;
+    let painted = 0;
+    for (let i = 3; i < data.length; i += 4) if (data[i]) painted++;
+    assert.isAbove(painted, 0);
+  });
+
+  it('does not clip custom shape classes registered on Konva in buffer canvas', function () {
+    class Square extends Konva.Shape {
+      _sceneFunc(context) {
+        context.beginPath();
+        context.rect(0, 0, 100, 100);
+        context.closePath();
+        context.fillStrokeShape(this);
+      }
+    }
+    Square.prototype.className = 'Square';
+    _registerNode(Square);
+    try {
+      const stage = addStage();
+      const layer = new Konva.Layer();
+      layer.add(
+        new Square({
+          x: 50,
+          y: 50,
+          fill: 'red',
+          stroke: 'black',
+          strokeWidth: 4,
+          opacity: 0.5,
+        })
+      );
+      stage.add(layer);
+      const alpha = layer.getContext().getImageData(100, 100, 1, 1).data[3];
+      assert.closeTo(alpha, 128, 2);
+    } finally {
+      delete (Konva as any).Square;
+    }
   });
 
   it('miterLimit with buffer canvas', function () {

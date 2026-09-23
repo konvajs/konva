@@ -227,6 +227,11 @@ export class Line<
       );
     }
   }
+  _getStrokePadding(
+    miterLimit = this.points().length === 4 && !this.closed() ? 1 : undefined
+  ) {
+    return super._getStrokePadding(miterLimit);
+  }
   _sceneFunc(context: Context) {
     const points = this.points(),
       length = points.length,
@@ -384,7 +389,7 @@ export class Line<
 
 Line.prototype.className = 'Line';
 Line.prototype._attrsAffectingSize = ['points', 'bezier', 'tension', 'closed'];
-_registerNode(Line);
+_registerNode(Line, true);
 
 // add getters setters
 Factory.addGetterSetter(Line, 'closed', false);

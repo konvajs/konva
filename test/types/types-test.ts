@@ -16,6 +16,17 @@ group.clipFunc((ctx, container) => {
   container.getChildren();
 });
 
+// Isolation is a Group property with a boolean accessor and chainable setter.
+const isolatedGroup = new Konva.Group({ isolated: true });
+const isolation: boolean = isolatedGroup.isolated();
+const chainedGroup: Konva.Group = isolatedGroup.isolated(false);
+// @ts-expect-error isolation accepts a boolean only
+isolatedGroup.isolated('isolate');
+// @ts-expect-error the constructor also requires a boolean
+new Konva.Group({ isolated: 'isolate' });
+// @ts-expect-error layers do not expose group isolation
+new Konva.Layer().isolated(true);
+
 // points accept the typed arrays the config accepts, the getter stays an array
 const line = new Konva.Line({ points: new Float32Array([0, 0, 10, 10]) });
 line.points(new Float32Array(4));

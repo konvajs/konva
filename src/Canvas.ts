@@ -1,4 +1,5 @@
-import { Util } from './Util.ts';
+import { Transform, Util } from './Util.ts';
+import type { IRect } from './types.ts';
 import type { Context } from './Context.ts';
 import { SceneContext, HitContext } from './Context.ts';
 import { Konva } from './Global.ts';
@@ -33,10 +34,6 @@ export class Canvas {
   _logicalHeight = 0;
 
   isCache = false;
-  // origin of a buffer canvas in the coordinate space of the canvas it is
-  // drawn back into, see Shape.drawScene
-  x = 0;
-  y = 0;
 
   constructor(config: ICanvasConfig) {
     const conf = config || {};
@@ -179,6 +176,102 @@ export class Canvas {
 }
 
 export class SceneCanvas extends Canvas {
+  private _isolationCanvas?: SceneCanvas;
+  // The device pixels of the parent canvas this surface currently holds.
+  _isolationRect?: IRect;
+  // The largest width and height requested since the last trim.
+  private _isolationPeak = { width: 0, height: 0 };
+  // Consecutive frames that used less than a quarter of the surface.
+  private _isolationLowFrames = 0;
+
+  // A cleared surface over `rect` (in the current drawing space), or over the
+  // whole canvas, in this canvas's device pixels. Siblings reuse it; nested
+  // groups borrow from the surface itself, so they cannot clear a parent's
+  // unfinished image.
+  _prepareIsolationCanvas(rect?: IRect) {
+    const { a, b, c, d, e, f } = this.getContext()._context.getTransform();
+    const view = this._isolationRect || this;
+    let x = 0,
+      y = 0,
+      width = view.width,
+      height = view.height;
+    if (rect) {
+      const box = new Transform([a, b, c, d, e, f])._getTransformedRect(rect);
+      // Round outwards, with a pixel for antialiasing.
+      x = Math.max(0, Math.floor(box.x) - 1);
+      y = Math.max(0, Math.floor(box.y) - 1);
+      width = Math.min(width, Math.ceil(box.x + box.width) + 1) - x;
+      height = Math.min(height, Math.ceil(box.y + box.height) + 1) - y;
+    }
+    if (!(width > 0 && height > 0)) {
+      // An empty source must still composite for copy/destination-in/etc.
+      x = y = 0;
+      width = height = 1;
+    }
+    const surface = (this._isolationCanvas ||= new SceneCanvas({
+      width: 0,
+      height: 0,
+      pixelRatio: this.pixelRatio,
+    }));
+    if (surface.width < width || surface.height < height) {
+      // Headroom on a short side, so a growing group does not reallocate
+      // every frame.
+      const ratio = this.pixelRatio;
+      const grow = (need: number, have: number, max: number) =>
+        Math.min(
+          max,
+          Math.ceil((have < need ? Math.max(need, have * 1.5) : have) / ratio)
+        );
+      surface.setSize(
+        grow(width, surface.width, this._logicalWidth),
+        grow(height, surface.height, this._logicalHeight)
+      );
+    }
+    surface._isolationRect = { x, y, width, height };
+    const peak = surface._isolationPeak;
+    peak.width = Math.max(peak.width, width);
+    peak.height = Math.max(peak.height, height);
+    const context = surface.getContext();
+    context.setTransform(1, 0, 0, 1, 0, 0);
+    context.clearRect(0, 0, width, height);
+    context.setTransform(a, b, c, d, e - x, f - y);
+    context.imageSmoothingEnabled = this.getContext().imageSmoothingEnabled;
+    context.direction = this.getContext().direction;
+    return surface;
+  }
+
+  // After a frame, free surfaces that ten frames in a row did not use or used
+  // a small part of. Content that changes size keeps its surface.
+  _trimIsolationCanvas() {
+    const surface = this._isolationCanvas;
+    if (!surface) return;
+    const peak = surface._isolationPeak;
+    const low = surface.width * surface.height > 4 * peak.width * peak.height;
+    surface._isolationLowFrames = low ? surface._isolationLowFrames + 1 : 0;
+    if (surface._isolationLowFrames >= 10) {
+      this._releaseIsolationCanvas();
+    } else {
+      peak.width = peak.height = 0;
+      surface._trimIsolationCanvas();
+    }
+  }
+
+  _releaseIsolationCanvas() {
+    const surface = this._isolationCanvas;
+    if (surface) {
+      surface._releaseIsolationCanvas();
+      Util.releaseCanvas(surface._canvas);
+      this._isolationCanvas = undefined;
+    }
+  }
+
+  setSize(width, height) {
+    // A bitmap reset also resets its origin-clean state. A surface from the
+    // previous lifetime may be tainted even after clearing its pixels.
+    this._releaseIsolationCanvas();
+    super.setSize(width, height);
+  }
+
   constructor(
     config: ICanvasConfig = { width: 0, height: 0, willReadFrequently: false }
   ) {

@@ -1283,7 +1283,7 @@ describe('Text', function () {
     stage.add(layer);
 
     var trace =
-      'clearRect();save();shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;drawImage();restore();';
+      'clearRect();save();shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;setTransform();drawImage();restore();';
 
     assert.equal(layer.getContext().getTrace(true), trace);
 
@@ -1317,7 +1317,7 @@ describe('Text', function () {
     stage.add(layer);
 
     var trace =
-      'clearRect();save();shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;drawImage();restore();';
+      'clearRect();save();shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;setTransform();drawImage();restore();';
 
     assert.equal(layer.getContext().getTrace(true), trace);
 

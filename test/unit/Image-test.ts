@@ -273,7 +273,7 @@ describe('Image', function () {
 
       assert.equal(
         trace,
-        'clearRect(0,0,578,200);save();shadowColor=rgba(0,0,0,0.5);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();'
+        'clearRect(0,0,578,200);save();shadowColor=rgba(0,0,0,0.5);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;globalAlpha=0.5;setTransform(1,0,0,1,0,0);drawImage([object HTMLCanvasElement],0,0,122,122,139,19,122,122);restore();'
       );
 
       done();
@@ -514,7 +514,7 @@ describe('Image', function () {
 
       assert.equal(
         layer.getContext().getTrace(true),
-        'clearRect();save();shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;drawImage();restore();'
+        'clearRect();save();shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;setTransform();drawImage();restore();'
       );
 
       done();

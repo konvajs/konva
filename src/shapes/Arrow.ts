@@ -41,6 +41,14 @@ export interface ArrowConfig extends LineConfig {
  * });
  */
 export class Arrow extends Line<ArrowConfig> {
+  _getStrokePadding() {
+    // Arrowheads have joins even when the shaft is a single straight line.
+    return super._getStrokePadding(
+      this.pointerAtBeginning() || this.pointerAtEnding()
+        ? this.miterLimit() || 10
+        : undefined
+    );
+  }
   _sceneFunc(ctx: Context) {
     super._sceneFunc(ctx);
     const points = this.points();
@@ -186,7 +194,7 @@ Arrow.prototype._attrsAffectingSize = [
   'pointerAtBeginning',
   'pointerAtEnding',
 ];
-_registerNode(Arrow);
+_registerNode(Arrow, true);
 
 /**
  * get/set pointerLength

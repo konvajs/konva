@@ -32,6 +32,9 @@ const PIx2 = Math.PI * 2;
  * });
  */
 export class Ring extends Shape<RingConfig> {
+  _getStrokePadding() {
+    return super._getStrokePadding(1);
+  }
   _sceneFunc(context: Context) {
     const innerRadius = Math.abs(this.innerRadius()),
       outerRadius = Math.abs(this.outerRadius());
@@ -41,6 +44,13 @@ export class Ring extends Shape<RingConfig> {
     context.arc(0, 0, outerRadius, PIx2, 0, true);
     context.closePath();
     context.fillStrokeShape(this);
+  }
+  getSelfRect() {
+    const radius = Math.max(
+      Math.abs(this.innerRadius()),
+      Math.abs(this.outerRadius())
+    );
+    return { x: -radius, y: -radius, width: radius * 2, height: radius * 2 };
   }
   getWidth() {
     return Math.abs(this.outerRadius()) * 2;
@@ -62,7 +72,7 @@ export class Ring extends Shape<RingConfig> {
 Ring.prototype.className = 'Ring';
 Ring.prototype._centroid = true;
 Ring.prototype._attrsAffectingSize = ['innerRadius', 'outerRadius'];
-_registerNode(Ring);
+_registerNode(Ring, true);
 
 /**
  * get/set innerRadius

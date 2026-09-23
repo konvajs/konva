@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+- Added `Group.isolated()`. An isolated group draws its children into a transparent canvas, then applies its `opacity` and `globalCompositeOperation` once to the result, like SVG `<g opacity>`. Child blend modes and erasing stay inside the group. Unlike `cache()`, the content stays live
+- Improved performance and memory of translucent shapes with fill and stroke ("perfect drawing"): built-in shapes use a buffer the size of the shape instead of the whole stage, and the buffer is freed when no longer used. Glyphs with many stacked marks can be clipped in this mode
+- Fixed a crash when a translucent shape with fill and stroke is drawn on a stage without size
+- Fixed translucent shapes with fill and stroke rendered at the wrong resolution when a layer pixel ratio differs from `Konva.pixelRatio`
+- Fixed `getClientRect()` of `Arc`, `Ring` and `Star` when the inner radius is larger than the outer radius or a radius is negative
+- Fixed `TextPath` with `strokeScaleEnabled(false)` drawing its stroke near the canvas origin. Like `Text`, it now always scales its stroke
+- Fixed `Tag` bounds when its pointer is wider than its side
+- Fixed a layer staying clipped in every later draw after a `sceneFunc` threw
+- Removed `Stage.bufferCanvas` and the third `bufferCanvas` argument of `drawScene()`
+
 ## 10.6.0 (2026-09-19)
 
 - Improved `Path` arc performance: bounds of an arc segment are computed exactly instead of sampled every degree, and a point on a circular arc is found with a closed form instead of walking the arc

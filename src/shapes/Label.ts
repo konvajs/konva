@@ -264,31 +264,29 @@ export class Tag extends Shape<TagConfig> {
     context.fillStrokeShape(this);
   }
   getSelfRect() {
-    let x = 0,
-      y = 0,
-      pointerWidth = this.pointerWidth(),
+    const pointerWidth = this.pointerWidth(),
       pointerHeight = this.pointerHeight(),
       direction = this.pointerDirection(),
       width = this.width(),
       height = this.height();
-
-    if (direction === UP) {
-      y -= pointerHeight;
-      height += pointerHeight;
-    } else if (direction === DOWN) {
-      height += pointerHeight;
-    } else if (direction === LEFT) {
-      x -= pointerWidth;
-      width += pointerWidth;
-    } else if (direction === RIGHT) {
-      width += pointerWidth;
+    // The pointer base is centred on its side and can be longer than it.
+    if (direction === UP || direction === DOWN) {
+      return {
+        x: Math.min(0, (width - pointerWidth) / 2),
+        y: direction === UP ? -pointerHeight : 0,
+        width: Math.max(width, pointerWidth),
+        height: height + pointerHeight,
+      };
     }
-    return {
-      x: x,
-      y: y,
-      width: width,
-      height: height,
-    };
+    if (direction === LEFT || direction === RIGHT) {
+      return {
+        x: direction === LEFT ? -pointerWidth : 0,
+        y: Math.min(0, (height - pointerHeight) / 2),
+        width: width + pointerWidth,
+        height: Math.max(height, pointerHeight),
+      };
+    }
+    return { x: 0, y: 0, width, height };
   }
 
   pointerDirection: GetSet<
@@ -301,7 +299,7 @@ export class Tag extends Shape<TagConfig> {
 }
 
 Tag.prototype.className = 'Tag';
-_registerNode(Tag);
+_registerNode(Tag, true);
 
 /**
  * get/set pointer direction

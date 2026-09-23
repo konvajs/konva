@@ -93,6 +93,34 @@ export class Transform {
       y: m[1] * point.x + m[3] * point.y + m[5],
     };
   }
+  // Axis-aligned bounds of a rectangle after this transform.
+  _getTransformedRect(rect: IRect): IRect {
+    const [a, b, c, d, e, f] = this.m;
+    const x1 = rect.x,
+      y1 = rect.y,
+      x2 = rect.x + rect.width,
+      y2 = rect.y + rect.height;
+    const xs = [
+      a * x1 + c * y1 + e,
+      a * x2 + c * y1 + e,
+      a * x2 + c * y2 + e,
+      a * x1 + c * y2 + e,
+    ];
+    const ys = [
+      b * x1 + d * y1 + f,
+      b * x2 + d * y1 + f,
+      b * x2 + d * y2 + f,
+      b * x1 + d * y2 + f,
+    ];
+    const minX = Math.min(xs[0], xs[1], xs[2], xs[3]);
+    const minY = Math.min(ys[0], ys[1], ys[2], ys[3]);
+    return {
+      x: minX,
+      y: minY,
+      width: Math.max(xs[0], xs[1], xs[2], xs[3]) - minX,
+      height: Math.max(ys[0], ys[1], ys[2], ys[3]) - minY,
+    };
+  }
   /**
    * Apply translation
    * @method

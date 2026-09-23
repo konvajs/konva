@@ -8,6 +8,19 @@ import {
 } from './test-utils.ts';
 
 describe('Label', function () {
+  it('tag bounds include a pointer longer than its side', function () {
+    const tag = (direction: string) =>
+      new Konva.Tag({
+        width: 10,
+        height: 20,
+        pointerDirection: direction,
+        pointerWidth: 40,
+        pointerHeight: 30,
+      }).getSelfRect();
+    assert.deepEqual(tag('up'), { x: -15, y: -30, width: 40, height: 50 });
+    assert.deepEqual(tag('left'), { x: -40, y: -5, width: 50, height: 30 });
+  });
+
   // ======================================================
   it('add label', function () {
     var stage = addStage();

@@ -55,6 +55,13 @@ export class Star extends Shape<StarConfig> {
 
     context.fillStrokeShape(this);
   }
+  getSelfRect() {
+    const radius = Math.max(
+      Math.abs(this.innerRadius()),
+      Math.abs(this.outerRadius())
+    );
+    return { x: -radius, y: -radius, width: radius * 2, height: radius * 2 };
+  }
   getWidth() {
     return this.outerRadius() * 2;
   }
@@ -76,7 +83,7 @@ export class Star extends Shape<StarConfig> {
 Star.prototype.className = 'Star';
 Star.prototype._centroid = true;
 Star.prototype._attrsAffectingSize = ['innerRadius', 'outerRadius'];
-_registerNode(Star);
+_registerNode(Star, true);
 
 /**
  * get/set number of points

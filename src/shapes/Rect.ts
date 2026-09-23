@@ -31,6 +31,9 @@ export type RectConfig = ShapeConfig & {
  * });
  */
 export class Rect extends Shape<RectConfig> {
+  _getStrokePadding() {
+    return super._getStrokePadding(this.strokeScaleEnabled() ? 1 : undefined);
+  }
   _sceneFunc(context: Context) {
     const cornerRadius = this.cornerRadius(),
       width = this.width(),
@@ -52,7 +55,7 @@ export class Rect extends Shape<RectConfig> {
 }
 
 Rect.prototype.className = 'Rect';
-_registerNode(Rect);
+_registerNode(Rect, true);
 
 /**
  * get/set corner radius

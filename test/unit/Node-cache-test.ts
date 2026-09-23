@@ -14,6 +14,68 @@ import {
 } from './test-utils.ts';
 
 describe('Caching', function () {
+  it('preserves default cache and export sizes for ordinary styled shapes', function () {
+    for (const [node, width, height] of [
+      [
+        new Konva.Rect({
+          width: 100,
+          height: 100,
+          stroke: 'red',
+          strokeWidth: 10,
+        }),
+        110,
+        110,
+      ],
+      [
+        new Konva.Circle({ radius: 50, stroke: 'red', strokeWidth: 10 }),
+        110,
+        110,
+      ],
+      [
+        new Konva.Line({
+          points: [0, 0, 180, 100],
+          stroke: 'red',
+          strokeWidth: 20,
+        }),
+        200,
+        120,
+      ],
+      [
+        new Konva.Text({
+          text: 'Hello',
+          width: 100,
+          fontSize: 40,
+          stroke: 'red',
+          strokeWidth: 4,
+        }),
+        104,
+        44,
+      ],
+      [
+        new Konva.Rect({
+          width: 100,
+          height: 100,
+          fill: 'red',
+          shadowColor: 'black',
+          shadowBlur: 10,
+        }),
+        120,
+        120,
+      ],
+    ] as const) {
+      const exported = node.toCanvas({ pixelRatio: 1 });
+      assert.deepEqual([exported.width, exported.height], [width, height]);
+      const allocations = collectCanvasAllocations(() =>
+        node.cache({ pixelRatio: 1 })
+      );
+      assert.deepEqual(
+        [allocations[0].width, allocations[0].height],
+        [width, height]
+      );
+      node.destroy();
+    }
+  });
+
   it('cache() with non-finite bounds is skipped, with an error, and stays chainable', function () {
     // a NaN position would draw nothing into the cache canvas
     var rect = new Konva.Rect({ x: 10, y: 10, width: 100, height: 50 });

@@ -1,6 +1,6 @@
 import { Transform, Util } from './Util.ts';
 import { Konva } from './Global.ts';
-import type { Canvas } from './Canvas.ts';
+import type { Canvas, SceneCanvas } from './Canvas.ts';
 import type { Shape } from './Shape.ts';
 import type { IRect } from './types.ts';
 import type { Node } from './Node.ts';
@@ -297,14 +297,36 @@ export class Context {
       );
     }
   }
+  // Copy a buffer already rasterized in destination pixels. The caller owns
+  // save/restore, opacity, compositing and the destination clip.
+  _drawDeviceBuffer(canvas: SceneCanvas) {
+    const { x, y, width, height } = canvas._isolationRect!;
+    this.setTransform(1, 0, 0, 1, 0, 0);
+    this.imageSmoothingEnabled = false;
+    this.drawImage(canvas._canvas, 0, 0, width, height, x, y, width, height);
+  }
   _applyLineCap(shape: Shape) {
     const lineCap = shape.attrs.lineCap;
     if (lineCap) {
       this.setAttr('lineCap', lineCap);
     }
   }
+  // Opacity above this node belongs to the completed isolated image.
+  _opacityRoot: Node | undefined;
+  _getOpacity(shape: Node) {
+    if (!this._opacityRoot) {
+      return shape.getAbsoluteOpacity();
+    }
+    let opacity = shape.opacity();
+    let parent = shape.parent;
+    while (parent && parent !== this._opacityRoot) {
+      opacity *= parent.opacity();
+      parent = parent.parent;
+    }
+    return opacity;
+  }
   _applyOpacity(shape: Node) {
-    const absOpacity = shape.getAbsoluteOpacity();
+    const absOpacity = this._getOpacity(shape);
     if (absOpacity !== 1) {
       this.setAttr('globalAlpha', absOpacity);
     }

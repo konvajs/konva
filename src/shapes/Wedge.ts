@@ -72,7 +72,7 @@ export class Wedge extends Shape<WedgeConfig> {
 Wedge.prototype.className = 'Wedge';
 Wedge.prototype._centroid = true;
 Wedge.prototype._attrsAffectingSize = ['radius'];
-_registerNode(Wedge);
+_registerNode(Wedge, true);
 
 /**
  * get/set radius

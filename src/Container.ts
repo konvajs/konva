@@ -347,7 +347,7 @@ export abstract class Container<
     });
     this._requestDraw();
   }
-  drawScene(can?: SceneCanvas, top?: Node, bufferCanvas?: SceneCanvas) {
+  drawScene(can?: SceneCanvas, top?: Node) {
     const layer = this.getLayer()!,
       canvas = can || (layer && layer.getCanvas()),
       context = canvas && canvas.getContext(),
@@ -366,7 +366,7 @@ export abstract class Container<
       this._drawCachedSceneCanvas(context);
       context.restore();
     } else {
-      this._drawChildren('drawScene', canvas, top, bufferCanvas);
+      this._drawChildren('drawScene', canvas, top);
     }
     return this;
   }
@@ -391,7 +391,7 @@ export abstract class Container<
     }
     return this;
   }
-  _drawChildren(drawMethod, canvas, top, bufferCanvas?) {
+  _drawChildren(drawMethod, canvas, top) {
     const context = canvas && canvas.getContext(),
       clipWidth = this.clipWidth(),
       clipHeight = this.clipHeight(),
@@ -431,24 +431,33 @@ export abstract class Container<
       context._applyGlobalCompositeOperation(this);
     }
 
-    this.children?.forEach(function (child) {
-      child[drawMethod](canvas, top, bufferCanvas);
-    });
-    if (hasComposition) {
-      context.restore();
-    }
-
-    if (hasClip) {
-      context.restore();
+    try {
+      this._drawChildNodes(drawMethod, canvas, top);
+    } finally {
+      if (hasComposition) {
+        context.restore();
+      }
+      if (hasClip) {
+        context.restore();
+      }
     }
   }
 
+  _drawChildNodes(drawMethod, canvas, top?: Node) {
+    this.children?.forEach(function (child) {
+      child[drawMethod](canvas, top);
+    });
+  }
+
   getClientRect(config: GetClientRectConfig = {}): IRect {
+    const cachedRect = this._getCachedSceneRect(config);
+    if (cachedRect) return cachedRect;
     const skipTransform = config.skipTransform;
     const relativeTo = config.relativeTo;
     const [a, b, c, d] = this.getAbsoluteTransform().getMatrix();
     // A zero scale cannot project local padding for a non-scaling stroke.
-    const measureTransformed = !skipTransform && a * d - b * c === 0;
+    const measureTransformed =
+      !skipTransform && (config._forDrawing || a * d - b * c === 0);
 
     let minX, minY, maxX, maxY;
     let selfRect = {
@@ -466,6 +475,7 @@ export abstract class Container<
 
       const rect = child.getClientRect({
         relativeTo: measureTransformed ? relativeTo : that,
+        _forDrawing: config._forDrawing,
         skipShadow: config.skipShadow,
         skipStroke: config.skipStroke,
       });

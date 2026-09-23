@@ -132,7 +132,6 @@ describe('Stage', function () {
       height: 200,
     });
 
-    assert.equal(stage.bufferCanvas.getPixelRatio(), 2);
     assert.equal(stage.bufferHitCanvas.getPixelRatio(), 1);
 
     // reset
@@ -1650,7 +1649,8 @@ describe('Stage', function () {
     layer.add(rect);
     layer.draw();
 
-    assert.equal(stage.bufferCanvas.width, 0, 'buffer canvas not allocated');
+    const buffer = () => layer.getCanvas()._isolationCanvas;
+    assert.isUndefined(buffer(), 'buffer canvas not allocated');
     assert.equal(
       stage.bufferHitCanvas.width,
       0,
@@ -1665,13 +1665,14 @@ describe('Stage', function () {
       'buffer hit canvas allocated by intersects()'
     );
 
-    // "perfect drawing" (fill + stroke + opacity) needs the buffer canvas
+    // "perfect drawing" (fill + stroke + opacity) needs a buffer the size of
+    // the shape, not the stage
     rect.stroke('black');
     rect.opacity(0.5);
     layer.draw();
-    assert.equal(
-      stage.bufferCanvas.width,
-      stage.width() * stage.bufferCanvas.pixelRatio,
+    assert.isAtMost(
+      buffer()!.width,
+      60 * layer.getCanvas().getPixelRatio(),
       'buffer canvas allocated by perfect drawing'
     );
 
@@ -1682,6 +1683,30 @@ describe('Stage', function () {
       stage.bufferHitCanvas.width,
       stage.width(),
       'buffer hit canvas follows the stage size'
+    );
+  });
+
+  it('draws buffered shapes on a stage without size', function () {
+    var stage = addStage({ width: 0, height: 0 });
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    layer.add(
+      new Konva.Rect({
+        width: 50,
+        height: 50,
+        fill: 'red',
+        stroke: 'black',
+        opacity: 0.5,
+      })
+    );
+    layer.draw();
+    stage.size({ width: 100, height: 100 });
+    layer.draw();
+    assert.closeTo(
+      layer.getContext().getImageData(25, 25, 1, 1).data[3],
+      128,
+      2,
+      'drawn once the stage has a size'
     );
   });
 

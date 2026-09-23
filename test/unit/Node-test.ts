@@ -2347,16 +2347,19 @@ describe('Node', function () {
     var sceneTrace = layer.getContext().getTrace();
     //console.log(sceneTrace);
 
-    var bufferTrace = stage.bufferCanvas.getContext().getTrace();
+    var bufferTrace = layer
+      .getCanvas()
+      ._isolationCanvas!.getContext()
+      .getTrace();
 
     assert.equal(
       sceneTrace,
-      'clearRect(0,0,578,200);save();globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();'
+      'clearRect(0,0,578,200);save();globalAlpha=0.5;setTransform(1,0,0,1,0,0);drawImage([object HTMLCanvasElement],0,0,162,162,208,19,162,162);restore();'
     );
 
     assert.equal(
       bufferTrace,
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,289,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=20;strokeStyle=black;stroke();restore();'
+      'setTransform(1,0,0,1,0,0);clearRect(0,0,162,162);setTransform(1,0,0,1,-208,-19);save();transform(1,0,0,1,289,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=20;strokeStyle=black;stroke();restore();'
     );
   });
 

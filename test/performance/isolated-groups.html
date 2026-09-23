@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Isolated group rendering cost</title>
+  </head>
+  <body>
+    <p>
+      Run <code>npm run compile</code> before opening this file. This benchmark
+      draws at 1920 × 1080 with pixel ratio 2. Each sample includes a one-pixel
+      readback to force rendering. Results are draw times, not frame rates.
+    </p>
+    <p>
+      Ordinary groups apply opacity to each child. Cached groups use frozen
+      content. These rows show the cost of each rendering mode. All isolated
+      content uses shared paint bounds. The shadow-and-stroke case also
+      exercises the intermediate buffer for perfect drawing. The paragraphs case
+      draws six justified blocks of 640 characters.
+    </p>
+    <button id="run">Run benchmark</button>
+    <pre id="results"></pre>
+    <script src="../../konva.js"></script>
+    <script>
+      const button = document.getElementById('run');
+      const results = document.getElementById('results');
+      Konva.autoDrawEnabled = false;
+      Konva.enableTrace = false;
+
+      button.onclick = async () => {
+        button.disabled = true;
+        results.textContent =
+          'Case\tGroups\tMode\tMedian draw + readback (ms)\n';
+        try {
+          for (const kind of [
+            'rectangles',
+            'rotation',
+            'stroke',
+            'shadow',
+            'shadow-and-stroke',
+            'text',
+            'paragraphs',
+          ]) {
+            for (const count of kind === 'paragraphs'
+              ? [6]
+              : [1, 10, 25, 100]) {
+              for (const mode of ['ordinary', 'isolated', 'cached']) {
+                const stage = new Konva.Stage({
+                  container: document.createElement('div'),
+                  width: 1920,
+                  height: 1080,
+                });
+                try {
+                  const layer = new Konva.Layer({ listening: false });
+                  layer.getCanvas().setPixelRatio(2);
+                  for (let i = 0; i < count; i++) {
+                    const group = new Konva.Group({
+                      x:
+                        kind === 'paragraphs'
+                          ? 40 + (i % 3) * 620
+                          : (i % 10) * 180,
+                      y:
+                        kind === 'paragraphs'
+                          ? 30 + Math.floor(i / 3) * 510
+                          : Math.floor(i / 10) * 100,
+                      isolated: mode === 'isolated',
+                      opacity: 0.5,
+                      rotation: kind === 'rotation' ? 17 : 0,
+                    });
+                    const decoration = {
+                      ...(kind.includes('stroke')
+                        ? { stroke: 'black', strokeWidth: 4 }
+                        : {}),
+                      ...(kind.includes('shadow')
+                        ? {
+                            shadowColor: 'black',
+                            shadowBlur: 6,
+                            shadowOffsetX: 5,
+                            shadowOffsetY: 5,
+                          }
+                        : {}),
+                    };
+                    if (kind === 'paragraphs') {
+                      group.add(
+                        new Konva.Text({
+                          text: 'Live isolated groups keep child blending and erasing inside each group. Text layout must remain accurate during animations and changing fonts. '
+                            .repeat(5)
+                            .slice(0, 640),
+                          width: 560,
+                          fontSize: 24,
+                          lineHeight: 1.25,
+                          fontFamily: 'Arial',
+                          align: 'justify',
+                          fill: 'black',
+                        })
+                      );
+                    } else
+                      group.add(
+                        new Konva.Rect({
+                          width: 70,
+                          height: 70,
+                          fill: 'red',
+                          ...decoration,
+                        }),
+                        new Konva.Rect({
+                          x: 20,
+                          y: 20,
+                          width: 70,
+                          height: 70,
+                          fill: 'blue',
+                          ...decoration,
+                        })
+                      );
+                    if (kind === 'text')
+                      group.add(
+                        new Konva.Text({ text: 'Small group', fontSize: 16 })
+                      );
+                    if (mode === 'cached') group.cache({ pixelRatio: 2 });
+                    layer.add(group);
+                  }
+                  stage.add(layer);
+                  const samples = [];
+                  for (let i = 0; i < 25; i++) {
+                    await new Promise(requestAnimationFrame);
+                    const start = performance.now();
+                    layer.drawScene();
+                    layer
+                      .getNativeCanvasElement()
+                      .getContext('2d')
+                      .getImageData(0, 0, 1, 1);
+                    // Discard the first five draws to warm up the renderer.
+                    if (i >= 5) samples.push(performance.now() - start);
+                  }
+                  samples.sort((a, b) => a - b);
+                  const median = samples[Math.floor(samples.length / 2)];
+                  results.textContent += `${kind}\t${count}\t${mode}\t${median.toFixed(2)}\n`;
+                } finally {
+                  stage.destroy();
+                }
+              }
+            }
+          }
+        } finally {
+          button.disabled = false;
+        }
+      };
+    </script>
+  </body>
+</html>

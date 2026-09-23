@@ -63,8 +63,10 @@ export class Arc extends Shape<ArcConfig> {
   }
 
   getSelfRect() {
-    const innerRadius = Math.abs(this.innerRadius());
-    const outerRadius = Math.abs(this.outerRadius());
+    const r1 = Math.abs(this.innerRadius()),
+      r2 = Math.abs(this.outerRadius());
+    const innerRadius = Math.min(r1, r2),
+      outerRadius = Math.max(r1, r2);
     const clockwise = this.clockwise();
 
     // canvas draws a full circle for any non-zero full-turn end angle regardless
@@ -123,7 +125,7 @@ Arc.prototype._attrsAffectingSize = [
   'angle',
   'clockwise',
 ];
-_registerNode(Arc);
+_registerNode(Arc, true);
 
 // add getters setters
 Factory.addGetterSetter(Arc, 'innerRadius', 0, getNumberValidator());

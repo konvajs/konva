@@ -414,3 +414,39 @@ export const assertAlmostDeepEqual = function (obj1, obj2, tol?) {
     assertAlmostEqual(obj1[key1], obj2[key1], tol);
   }
 };
+
+// Tight surfaces can change native edge coverage. Compare premultiplied colors
+// so RGB rounding in nearly transparent pixels does not hide the actual error.
+// Allow 4/255 of rounding noise and a small total edge error, capped per pixel.
+export function compareCanvasEdges(
+  actual: HTMLCanvasElement,
+  expected: HTMLCanvasElement
+) {
+  assert.equal(actual.width, expected.width);
+  assert.equal(actual.height, expected.height);
+  const a = actual
+    .getContext('2d')!
+    .getImageData(0, 0, actual.width, actual.height).data;
+  const b = expected
+    .getContext('2d')!
+    .getImageData(0, 0, expected.width, expected.height).data;
+  let totalError = 0;
+  let max = 0;
+  for (let i = 0; i < a.length; i += 4) {
+    let error = Math.abs(a[i + 3] - b[i + 3]);
+    for (let c = 0; c < 3; c++) {
+      error = Math.max(
+        error,
+        Math.abs(a[i + c] * a[i + 3] - b[i + c] * b[i + 3]) / 255
+      );
+    }
+    max = Math.max(max, error);
+    totalError += Math.max(0, error - 4);
+  }
+  assert.isAtMost(max, 64, 'maximum premultiplied pixel error');
+  assert.isAtMost(
+    totalError / (actual.width * actual.height),
+    0.25,
+    'average edge error'
+  );
+}

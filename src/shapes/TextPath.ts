@@ -412,6 +412,22 @@ export class TextPath extends Shape<TextPathConfig> {
       height: rect.height + fontSize,
     };
   }
+  // Like Text: a glyph stroke is drawn with the text, so it always scales.
+  getStrokeScaleEnabled() {
+    return true;
+  }
+  _getSelfRectForDrawing() {
+    // getSelfRect() pads glyph anchors by half the font size; ascenders,
+    // accents and other baselines reach further from the path.
+    const rect = this.getSelfRect(),
+      pad = this.fontSize();
+    return {
+      x: rect.x - pad,
+      y: rect.y - pad,
+      width: rect.width + pad * 2,
+      height: rect.height + pad * 2,
+    };
+  }
   fontFamily: GetSet<string, this>;
   fontSize: GetSet<number, this>;
   fontStyle: GetSet<string, this>;
@@ -444,7 +460,7 @@ TextPath.prototype._attrsAffectingSize = [
   'fontVariant',
   'direction',
 ];
-_registerNode(TextPath);
+_registerNode(TextPath, true);
 
 TextPath.prototype.on('dataChange.konva', function () {
   this._readDataAttribute();

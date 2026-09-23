@@ -29,6 +29,9 @@ export interface CircleConfig extends ShapeConfig {
  * });
  */
 export class Circle extends Shape<CircleConfig> {
+  _getStrokePadding() {
+    return super._getStrokePadding(1);
+  }
   _sceneFunc(context: Context) {
     context.beginPath();
     context.arc(0, 0, Math.abs(this.attrs.radius || 0), 0, Math.PI * 2, false);
@@ -54,7 +57,7 @@ export class Circle extends Shape<CircleConfig> {
 Circle.prototype._centroid = true;
 Circle.prototype.className = 'Circle';
 Circle.prototype._attrsAffectingSize = ['radius'];
-_registerNode(Circle);
+_registerNode(Circle, true);
 
 /**
  * get/set radius
