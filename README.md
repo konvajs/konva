@@ -30,12 +30,12 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
 
 ## Framework integrations
 
-| Framework | Package | Documentation |
-|---|---|---|
-| React | [`react-konva`](https://www.npmjs.com/package/react-konva) | [React guide](https://konvajs.org/docs/react/index.html) |
-| Vue | [`vue-konva`](https://www.npmjs.com/package/vue-konva) | [Vue guide](https://konvajs.org/docs/vue/index.html) |
-| Svelte | [`svelte-konva`](https://www.npmjs.com/package/svelte-konva) | [Svelte guide](https://konvajs.org/docs/svelte/index.html) |
-| Angular | [`ng2-konva`](https://www.npmjs.com/package/ng2-konva) | [Angular guide](https://konvajs.org/docs/angular/index.html) |
+| Framework | Package                                                      | Documentation                                                |
+| --------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| React     | [`react-konva`](https://www.npmjs.com/package/react-konva)   | [React guide](https://konvajs.org/docs/react/index.html)     |
+| Vue       | [`vue-konva`](https://www.npmjs.com/package/vue-konva)       | [Vue guide](https://konvajs.org/docs/vue/index.html)         |
+| Svelte    | [`svelte-konva`](https://www.npmjs.com/package/svelte-konva) | [Svelte guide](https://konvajs.org/docs/svelte/index.html)   |
+| Angular   | [`ng2-konva`](https://www.npmjs.com/package/ng2-konva)       | [Angular guide](https://konvajs.org/docs/angular/index.html) |
 
 # Quick Look
 
@@ -48,8 +48,12 @@ document.body.appendChild(container);
 const stage = new Konva.Stage({ container, width: 600, height: 400 });
 const layer = new Konva.Layer();
 const box = new Konva.Rect({
-  x: 50, y: 50, width: 120, height: 80,
-  fill: '#00a8e8', draggable: true,
+  x: 50,
+  y: 50,
+  width: 120,
+  height: 80,
+  fill: '#00a8e8',
+  draggable: true,
 });
 
 layer.add(box);

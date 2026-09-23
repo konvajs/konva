@@ -8,9 +8,7 @@ import type { GetSet, IRect } from './types.ts';
 import { getNumberValidator } from './Validators.ts';
 
 export type ClipFuncOutput =
-  | void
-  | [Path2D | CanvasFillRule]
-  | [Path2D, CanvasFillRule];
+  void | [Path2D | CanvasFillRule] | [Path2D, CanvasFillRule];
 
 export interface ContainerConfig extends NodeConfig {
   clearBeforeDraw?: boolean;

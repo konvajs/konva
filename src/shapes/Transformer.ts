@@ -363,7 +363,9 @@ export class Transformer extends Group {
       this.update();
     });
     // the memoized rect bakes in our own rotation, so a manual rotation must drop it
-    this.on(`rotationChange.${EVENTS_NAME}`, () => this._clearCache(NODES_RECT));
+    this.on(`rotationChange.${EVENTS_NAME}`, () =>
+      this._clearCache(NODES_RECT)
+    );
 
     if (this.getNode()) {
       this.update();

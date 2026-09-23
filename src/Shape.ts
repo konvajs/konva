@@ -95,9 +95,7 @@ export type ShapeConfig = NodeConfig & {
 export type ShapeGetClientRectConfig = GetClientRectConfig;
 
 export type FillFuncOutput =
-  | void
-  | [Path2D | CanvasFillRule]
-  | [Path2D, CanvasFillRule];
+  void | [Path2D | CanvasFillRule] | [Path2D, CanvasFillRule];
 
 const HAS_SHADOW = 'hasShadow';
 const HAS_FILL = 'hasFill';

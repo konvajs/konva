@@ -112,7 +112,7 @@ function equal(a, b, tolerance, secondTol) {
 
   let count = 0;
   if (!equalDimensions(a, b)) return false;
-  for (let i = length; i--; ) {
+  for (let i = length; i--;) {
     const d = Math.abs(aData[i] - bData[i]);
     if (aData[i] !== bData[i] && d > tolerance) {
       if (!secondTol) {
@@ -169,8 +169,8 @@ function diffUnequal(a, b, options) {
 
   // Add First Image
   offsets(a);
-  for (let row = a.height; row--; ) {
-    for (let column = a.width; column--; ) {
+  for (let row = a.height; row--;) {
+    for (let column = a.width; column--;) {
       const i = 4 * ((row + rowOffset) * width + (column + columnOffset));
       const j = 4 * (row * a.width + column);
       cData[i + 0] = aData[j + 0]; // r
@@ -182,8 +182,8 @@ function diffUnequal(a, b, options) {
 
   // Subtract Second Image
   offsets(b);
-  for (let row = b.height; row--; ) {
-    for (let column = b.width; column--; ) {
+  for (let row = b.height; row--;) {
+    for (let column = b.width; column--;) {
       const i = 4 * ((row + rowOffset) * width + (column + columnOffset));
       const j = 4 * (row * b.width + column);
       cData[i + 0] = Math.abs(cData[i + 0] - bData[j + 0]); // r

@@ -196,7 +196,11 @@ describe('DragAndDrop', function () {
       y: 112,
     });
 
-    assert.equal(dragStartButton, 2, 'dragstart event should have button=2 for right-click');
+    assert.equal(
+      dragStartButton,
+      2,
+      'dragstart event should have button=2 for right-click'
+    );
     assert(circle.isDragging(), 'circle should be dragging');
 
     simulateMouseUp(stage, {
@@ -219,7 +223,11 @@ describe('DragAndDrop', function () {
       y: 112,
     });
 
-    assert.equal(dragStartButton, 0, 'dragstart event should have button=0 for left-click');
+    assert.equal(
+      dragStartButton,
+      0,
+      'dragstart event should have button=0 for left-click'
+    );
 
     simulateMouseUp(stage, {
       x: 311,
@@ -605,7 +613,11 @@ describe('DragAndDrop', function () {
     layer.remove();
 
     // the circle is still registered as dragging but has no stage
-    assert.equal(circle.getStage(), null, 'circle should have no stage after parent removal');
+    assert.equal(
+      circle.getStage(),
+      null,
+      'circle should have no stage after parent removal'
+    );
 
     // this triggers DD._endDragBefore which crashes accessing null stage
     simulateMouseUp(stage, { x: 311, y: 112 });
