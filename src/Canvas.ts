@@ -235,8 +235,10 @@ export class SceneCanvas extends Canvas {
     context.setTransform(1, 0, 0, 1, 0, 0);
     context.clearRect(0, 0, width, height);
     context.setTransform(a, b, c, d, e - x, f - y);
-    context.imageSmoothingEnabled = this.getContext().imageSmoothingEnabled;
-    context.direction = this.getContext().direction;
+    const parent = this.getContext();
+    context.imageSmoothingEnabled = parent.imageSmoothingEnabled;
+    context.imageSmoothingQuality = parent.imageSmoothingQuality;
+    context.direction = parent.direction;
     return surface;
   }
 

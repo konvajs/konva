@@ -87,6 +87,7 @@ const CONTEXT_PROPERTIES = [
   'globalAlpha',
   'globalCompositeOperation',
   'imageSmoothingEnabled',
+  'imageSmoothingQuality',
   'filter',
 ] as const;
 

@@ -164,6 +164,34 @@ describe('Isolated groups', function () {
     stage.destroy();
   });
 
+  it('surfaces follow the destination image smoothing quality', function () {
+    const stage = addStage({ width: 300, height: 300 });
+    const layer = new Konva.Layer();
+    const buffered = new Konva.Rect({
+      width: 40,
+      height: 40,
+      fill: 'red',
+      stroke: 'black',
+      opacity: 0.5,
+    });
+    const inner = new Konva.Group({ isolated: true }).add(buffered);
+    stage.add(layer.add(new Konva.Group({ isolated: true }).add(inner)));
+    for (const quality of ['high', 'low', 'high'] as const) {
+      layer.getContext()._context.imageSmoothingQuality = quality;
+      layer.drawScene();
+      // outer group surface, inner group surface, perfect-draw buffer
+      let canvas = layer.getCanvas();
+      for (let depth = 0; depth < 3; depth++) {
+        canvas = canvas._isolationCanvas!;
+        assert.equal(
+          canvas.getContext()._context.imageSmoothingQuality,
+          quality
+        );
+      }
+    }
+    stage.destroy();
+  });
+
   it('frees surfaces a layer no longer uses or uses a small part of', function () {
     const stage = addStage({ width: 600, height: 600 });
     const layer = new Konva.Layer();
