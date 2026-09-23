@@ -2442,6 +2442,127 @@ describe('Shape', function () {
     }
   });
 
+  it('selfRectFunc sets the self rect the client rect builds on', function () {
+    let received: unknown[] = [];
+    const shape = new Konva.Shape({
+      x: 100,
+      y: 50,
+      scaleX: 2,
+      width: 20,
+      height: 20,
+      stroke: 'black',
+      strokeWidth: 4,
+      shadowColor: 'black',
+      shadowOffsetX: 10,
+      sceneFunc() {},
+      selfRectFunc(this: unknown, target: unknown) {
+        received = [this, target];
+        return { x: -10, y: -5, width: 40, height: 30 };
+      },
+    });
+    assert.deepEqual(shape.getSelfRect(), {
+      x: -10,
+      y: -5,
+      width: 40,
+      height: 30,
+    });
+    assert.deepEqual(received, [shape, shape]);
+    assert.deepEqual(shape.getClientRect(), {
+      x: 76,
+      y: 43,
+      width: 108,
+      height: 34,
+    });
+
+    shape.selfRectFunc(undefined);
+    assert.deepEqual(shape.getSelfRect(), {
+      x: 0,
+      y: 0,
+      width: 20,
+      height: 20,
+    });
+  });
+
+  it('cache() includes paint declared by selfRectFunc', function () {
+    const stage = addStage({ width: 200, height: 200 });
+    const layer = new Konva.Layer();
+    layer.getCanvas().setPixelRatio(1);
+    stage.add(layer);
+    const shape = new Konva.Shape({
+      x: 100,
+      y: 100,
+      width: 20,
+      height: 20,
+      selfRectFunc: () => ({ x: -60, y: -60, width: 80, height: 80 }),
+      sceneFunc(ctx) {
+        ctx.setAttr('fillStyle', 'red');
+        ctx.fillRect(-60, -60, 10, 10);
+        ctx.fillRect(0, 0, 20, 20);
+      },
+    });
+    layer.add(shape);
+    shape.cache({ pixelRatio: 1 });
+    layer.draw();
+    const data = layer.getContext().getImageData(45, 45, 1, 1).data;
+    assert.deepEqual(Array.from(data), [255, 0, 0, 255]);
+  });
+
+  it('sizes the perfect-draw buffer of a custom shape to its selfRectFunc', function () {
+    const stage = addStage({ width: 400, height: 400 });
+    const layer = new Konva.Layer();
+    layer.getCanvas().setPixelRatio(1);
+    stage.add(layer);
+    layer.add(
+      new Konva.Shape({
+        x: 200,
+        y: 200,
+        width: 20,
+        height: 20,
+        fill: 'red',
+        stroke: 'black',
+        strokeWidth: 2,
+        opacity: 0.5,
+        selfRectFunc: () => ({ x: -60, y: -60, width: 80, height: 80 }),
+        sceneFunc(ctx, shape) {
+          ctx.beginPath();
+          ctx.rect(-60, -60, 10, 10);
+          ctx.rect(0, 0, 20, 20);
+          ctx.fillStrokeShape(shape);
+        },
+      })
+    );
+    layer.draw();
+    assert.isAtMost(layer.getCanvas()._isolationCanvas!.width, 120);
+    const data = layer.getContext().getImageData(145, 145, 1, 1).data;
+    assert.closeTo(data[3], 128, 2, 'paint outside the size box is kept');
+  });
+
+  it('keeps the whole-canvas buffer for shapes that ignore selfRectFunc', function () {
+    const stage = addStage({ width: 300, height: 300 });
+    const layer = new Konva.Layer();
+    layer.getCanvas().setPixelRatio(1);
+    stage.add(layer);
+    layer.add(
+      new Konva.Line({
+        x: 150,
+        y: 150,
+        points: [0, 0, 20, 20],
+        fill: 'red',
+        stroke: 'black',
+        opacity: 0.5,
+        selfRectFunc: () => ({ x: -60, y: -60, width: 80, height: 80 }),
+        sceneFunc(ctx, shape) {
+          ctx.beginPath();
+          ctx.rect(-60, -60, 10, 10);
+          ctx.fillStrokeShape(shape);
+        },
+      })
+    );
+    layer.draw();
+    const data = layer.getContext().getImageData(95, 95, 1, 1).data;
+    assert.closeTo(data[3], 128, 2);
+  });
+
   it('keeps _useBufferCanvas(forceFill) working for subclasses', function () {
     class ImageLike extends Konva.Rect {
       _useBufferCanvas() {

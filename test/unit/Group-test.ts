@@ -217,6 +217,54 @@ describe('Isolated groups', function () {
     stage.destroy();
   });
 
+  it('keeps custom paint declared by selfRectFunc in nested isolation', function () {
+    const stage = addStage({ width: 200, height: 200 });
+    const layer = new Konva.Layer();
+    layer.getCanvas().setPixelRatio(1);
+    const shape = new Konva.Shape({
+      x: 100,
+      y: 100,
+      width: 20,
+      height: 20,
+      selfRectFunc: () => ({ x: -60, y: -60, width: 80, height: 80 }),
+      sceneFunc(ctx) {
+        ctx.setAttr('fillStyle', 'red');
+        ctx.fillRect(-60, -60, 10, 10);
+        ctx.fillRect(0, 0, 20, 20);
+      },
+    });
+    const inner = new Konva.Group({ isolated: true }).add(shape);
+    stage.add(layer.add(new Konva.Group({ isolated: true }).add(inner)));
+    layer.draw();
+    assert.deepEqual(
+      pixel(layer.getNativeCanvasElement(), 45, 45),
+      [255, 0, 0, 255]
+    );
+    stage.destroy();
+  });
+
+  it('keeps text moved by charRenderFunc when selfRectFunc declares it', function () {
+    const stage = addStage({ width: 300, height: 300 });
+    const layer = new Konva.Layer();
+    layer.getCanvas().setPixelRatio(1);
+    const text = new Konva.Text({
+      x: 20,
+      y: 20,
+      text: 'HELLO',
+      fontSize: 30,
+      fill: 'red',
+      charRenderFunc: ({ context }) => context.translate(0, 150),
+      selfRectFunc: () => ({ x: 0, y: 0, width: 150, height: 200 }),
+    });
+    stage.add(layer.add(new Konva.Group({ isolated: true }).add(text)));
+    layer.draw();
+    const data = layer.getContext().getImageData(20, 170, 150, 40).data;
+    let painted = 0;
+    for (let i = 3; i < data.length; i += 4) if (data[i]) painted++;
+    assert.isAbove(painted, 0);
+    stage.destroy();
+  });
+
   it('keeps stroke padding tight when paths have no sharp joins', function () {
     for (const [shape, maxWidth, maxHeight] of [
       [new Konva.Rect({ width: 100, height: 100 }), 114, 114],

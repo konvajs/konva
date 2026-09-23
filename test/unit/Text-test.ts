@@ -55,6 +55,24 @@ export function getOffsetY(
 }
 
 describe('Text', function () {
+  it('adds its underline to the rect from selfRectFunc', function () {
+    const config = {
+      text: 'Hello',
+      fontSize: 20,
+      height: 200,
+      verticalAlign: 'bottom',
+      textDecoration: 'underline',
+    };
+    const plain = new Konva.Text(config).getSelfRect();
+    const rect = new Konva.Text({
+      ...config,
+      selfRectFunc: () => ({ x: 0, y: 10, width: 50, height: 20 }),
+    }).getSelfRect();
+    assert.isAbove(plain.height, 200, 'underline below the box');
+    assert.equal(rect.y, 10);
+    assert.closeTo(rect.y + rect.height, plain.height, 0.001);
+  });
+
   // ======================================================
   it('text with empty config is allowed', function () {
     var stage = addStage();

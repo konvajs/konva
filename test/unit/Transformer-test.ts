@@ -72,6 +72,44 @@ const rejectNegativeBox = (oldBox: any, newBox: any) =>
   newBox.width < 0 || newBox.height < 0 ? oldBox : newBox;
 
 describe('Transformer', function () {
+  it('updates when selfRectFunc is set or removed', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    stage.add(layer);
+    const shape = new Konva.Shape({
+      width: 20,
+      height: 20,
+      sceneFunc() {},
+    });
+    const tr = new Konva.Transformer({ nodes: [shape] });
+    layer.add(shape, tr);
+    assert.equal(tr.width(), 20);
+    shape.selfRectFunc(() => ({ x: 0, y: 0, width: 70, height: 20 }));
+    assert.equal(tr.width(), 70);
+    shape.selfRectFunc(undefined);
+    assert.equal(tr.width(), 20);
+  });
+
+  it('re-measures a selfRectFunc shape when another selected node changes', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    stage.add(layer);
+    let size = 50;
+    const custom = new Konva.Shape({
+      x: 10,
+      y: 10,
+      sceneFunc() {},
+      selfRectFunc: () => ({ x: 0, y: 0, width: size, height: size }),
+    });
+    const other = new Konva.Rect({ x: 200, y: 10, width: 20, height: 20 });
+    const tr = new Konva.Transformer({ nodes: [custom, other] });
+    layer.add(custom, other, tr);
+    assert.equal(tr.height(), 50);
+    size = 80;
+    other.x(201);
+    assert.equal(tr.height(), 80);
+  });
+
   // ======================================================
   it('init transformer on simple rectangle', function () {
     var stage = addStage();

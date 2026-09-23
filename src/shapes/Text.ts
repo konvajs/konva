@@ -268,9 +268,7 @@ export class Text extends Shape<TextConfig> {
     let padding = this.padding(),
       fontSize = this.fontSize(),
       lineHeightPx = this.lineHeight() * fontSize,
-      verticalAlign = this.verticalAlign(),
       direction = this.direction(),
-      alignY = 0,
       align = this.align(),
       totalWidth = this.getWidth(),
       letterSpacing = this.letterSpacing(),
@@ -308,14 +306,7 @@ export class Text extends Shape<TextConfig> {
 
     context.setAttr('textAlign', LEFT);
 
-    // handle vertical alignment
-    if (verticalAlign === MIDDLE) {
-      alignY = (this.getHeight() - textArrLen * lineHeightPx - padding * 2) / 2;
-    } else if (verticalAlign === BOTTOM) {
-      alignY = this.getHeight() - textArrLen * lineHeightPx - padding * 2;
-    }
-
-    context.translate(padding, alignY + padding);
+    context.translate(padding, this._getTextTop());
 
     // Start the callback with the same fill that normal drawing would use.
     // Assigning that color again then needs no override, including black.
@@ -466,6 +457,17 @@ export class Text extends Shape<TextConfig> {
       }
     }
   }
+  _getTextTop() {
+    const padding = this.padding(),
+      free =
+        this.getHeight() -
+        this.textArr.length * this.lineHeight() * this.fontSize() -
+        padding * 2,
+      verticalAlign = this.verticalAlign();
+    if (verticalAlign === MIDDLE) return padding + free / 2;
+    if (verticalAlign === BOTTOM) return padding + free;
+    return padding;
+  }
   _getUnderlineOffset() {
     return (
       this.underlineOffset() ??
@@ -480,21 +482,13 @@ export class Text extends Shape<TextConfig> {
     }
     // the underline of the last line is drawn below the text block
     const fontSize = this.fontSize(),
-      lineHeightPx = this.lineHeight() * fontSize,
-      padding = this.padding(),
-      verticalAlign = this.verticalAlign(),
-      blockHeight = lines * lineHeightPx + padding * 2;
-    let bottom = lines * lineHeightPx - lineHeightPx / 2 + padding;
+      lineHeightPx = this.lineHeight() * fontSize;
+    let bottom = this._getTextTop() + lines * lineHeightPx - lineHeightPx / 2;
     if (!Konva.legacyTextRendering) {
       bottom += this._baselineShift;
     }
-    if (verticalAlign === MIDDLE) {
-      bottom += (rect.height - blockHeight) / 2;
-    } else if (verticalAlign === BOTTOM) {
-      bottom += rect.height - blockHeight;
-    }
     bottom += this._getUnderlineOffset() + getDecorationLineWidth(fontSize) / 2;
-    rect.height = Math.max(rect.height, bottom);
+    rect.height = Math.max(rect.y + rect.height, bottom) - rect.y;
     return rect;
   }
   _getSelfRectForDrawing() {
@@ -507,13 +501,8 @@ export class Text extends Shape<TextConfig> {
       lineHeightPx = this.lineHeight() * fontSize,
       available = this.getWidth() - padding * 2,
       align = this.align(),
-      blockHeight = this.textArr.length * lineHeightPx;
-    let top = padding;
-    if (this.verticalAlign() === MIDDLE) {
-      top += (this.getHeight() - blockHeight - padding * 2) / 2;
-    } else if (this.verticalAlign() === BOTTOM) {
-      top += this.getHeight() - blockHeight - padding * 2;
-    }
+      blockHeight = this.textArr.length * lineHeightPx,
+      top = this._getTextTop();
     let left = rect.x,
       right = rect.x + rect.width;
     for (const { text, width } of this.textArr) {

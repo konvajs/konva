@@ -80,7 +80,8 @@ export class Group extends Container<Group | Shape, GroupConfig> {
  * Moving the buffer origin changes native edge coverage. A few edge pixels
  * can differ substantially; isolation does not promise pixel-identical antialiasing.
  * Like cache(), isolation requires custom drawing (sceneFunc, charRenderFunc) to provide accurate
- * getSelfRect() or getClientRect() bounds, including any pixels it paints outside its size.
+ * bounds, including any pixels it paints outside its size: selfRectFunc or a
+ * getSelfRect() override.
  * Text is bounded by its lines plus one font size, so a glyph with many stacked
  * marks can be clipped. node-canvas shadows can change with bitmap origin.
  * Siblings reuse a buffer; unused or oversized buffers are freed after each layer draw.

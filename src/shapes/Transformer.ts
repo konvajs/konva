@@ -91,6 +91,7 @@ const TRANSFORM_CHANGE_STR = [
   'transformsEnabledChange',
   'strokeWidthChange',
   'strokeChange',
+  'selfRectFuncChange',
   'strokeLinearGradientColorStopsChange',
   'strokeScaleEnabledChange',
   'strokeEnabledChange',
@@ -591,14 +592,15 @@ export class Transformer extends Group {
       // Bounds may only be reused when they are a pure function of the node's
       // own size: then every change reaches us either through _setAttr or
       // through the size probe below. A shape with its own getSelfRect - Line
-      // mutates its points array in place, and a user subclass can measure
-      // anything at all - may change with no signal, so it is measured every
-      // time. Groups depend on their descendants, and a cached ancestor
-      // suppresses descendant transform-change notifications, so both are
-      // measured too.
+      // mutates its points array in place, and a user subclass or selfRectFunc
+      // can measure anything at all - may change with no signal, so it is
+      // measured every time. Groups depend on their descendants, and a cached
+      // ancestor suppresses descendant transform-change notifications, so
+      // both are measured too.
       const cacheable =
         node instanceof Shape &&
         node.getSelfRect === Shape.prototype.getSelfRect &&
+        !node.attrs.selfRectFunc &&
         !node._hasCachedAncestor();
       // width() and height() are the only inputs of the default getSelfRect and
       // they can come from outside the attrs (an Image source that loads or

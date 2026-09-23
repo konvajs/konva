@@ -15,7 +15,7 @@ import type { Context, SceneContext } from './Context.ts';
 import { _boundedShapes, _registerNode } from './Global.ts';
 import * as PointerEvents from './PointerEvents.ts';
 
-import type { GetSet, Vector2d } from './types.ts';
+import type { GetSet, Vector2d, IRect } from './types.ts';
 import type { HitCanvas, SceneCanvas } from './Canvas.ts';
 
 // hack from here https://stackoverflow.com/questions/52667959/what-is-the-purpose-of-bivariancehack-in-typescript-types/52668133#52668133
@@ -77,6 +77,7 @@ export type ShapeConfig = NodeConfig & {
   miterLimit?: number;
   sceneFunc?: (con: Context, shape: Shape) => void;
   hitFunc?: (con: Context, shape: Shape) => void;
+  selfRectFunc?: (shape: Shape) => IRect;
   shadowColor?: string;
   shadowBlur?: number;
   shadowOffset?: Vector2d;
@@ -519,7 +520,9 @@ export class Shape<
    * circle.getSelfRect();  // return {x: - circle.width() / 2, y: - circle.height() / 2, width:circle.width(), height:circle.height()}
    *
    */
-  getSelfRect() {
+  getSelfRect(): IRect {
+    const selfRectFunc = this.attrs.selfRectFunc;
+    if (selfRectFunc) return { ...selfRectFunc.call(this, this) };
     const size = this.size();
     return {
       x: this._centroid ? -size.width / 2 : 0,
@@ -677,12 +680,15 @@ export class Shape<
         canvas.height &&
         this._useBufferCanvas(undefined, context._getOpacity(this))
       ) {
-        // Built-in shapes and isolated groups use a buffer the size of the
-        // painted bounds. Custom drawing (sceneFunc, charRenderFunc, own
-        // classes) gets the whole canvas, since it can paint outside its bounds.
-        // The shadow is applied when the buffer is drawn, not inside it.
+        // Built-in shapes, custom shapes with a selfRectFunc and isolated
+        // groups use a buffer the size of the painted bounds. Other custom
+        // drawing (sceneFunc, charRenderFunc, own classes) gets the whole
+        // canvas, since it can paint outside its bounds. The shadow is
+        // applied when the buffer is drawn, not inside it.
         const bounded =
           !!context._opacityRoot ||
+          (!!this.attrs.selfRectFunc &&
+            this.getSelfRect === Shape.prototype.getSelfRect) ||
           (!this.attrs.sceneFunc &&
             !this.attrs.charRenderFunc &&
             _boundedShapes.has(this.constructor));
@@ -899,6 +905,7 @@ export class Shape<
   miterLimit: GetSet<number, this>;
   perfectDrawEnabled: GetSet<boolean, this>;
   sceneFunc: GetSet<ShapeConfigHandler<this>, this>;
+  selfRectFunc: GetSet<((shape: Shape) => IRect) | undefined, this>;
   shadowColor: GetSet<string, this>;
   shadowEnabled: GetSet<boolean, this>;
   shadowForStrokeEnabled: GetSet<boolean, this>;
@@ -1218,6 +1225,26 @@ Factory.addGetterSetter(Shape, 'hitFunc');
  *   // important Konva method that fill and stroke shape from its properties
  *   context.fillStrokeShape(shape);
  * });
+ */
+
+Factory.addGetterSetter(Shape, 'selfRectFunc');
+
+/**
+ * get/set the function that returns the self rectangle of a custom shape: the
+ * local, untransformed area its sceneFunc paints, before the stroke and shadow
+ * Konva adds. Use it when drawing goes outside the width and height box, so
+ * bounds, cache(), isolated groups and perfect drawing include that paint.
+ * Paint outside the returned rectangle can be clipped. Meant for custom
+ * shapes, and for Text drawn with charRenderFunc; built-in shapes that compute
+ * their own bounds may ignore it.
+ * @name Konva.Shape#selfRectFunc
+ * @method
+ * @param {Function} selfRectFunc function returning {x, y, width, height}
+ * @returns {Function}
+ * @example
+ * shape.selfRectFunc(() => ({ x: -10, y: -10, width: 120, height: 120 }));
+ * // back to the automatic width and height box
+ * shape.selfRectFunc(undefined);
  */
 
 Factory.addGetterSetter(Shape, 'dash');

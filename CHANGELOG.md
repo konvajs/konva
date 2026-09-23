@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Unreleased
 
 - Added `Group.isolated()`. An isolated group draws its children into a transparent canvas, then applies its `opacity` and `globalCompositeOperation` once to the result, like SVG `<g opacity>`. Child blend modes and erasing stay inside the group. Unlike `cache()`, the content stays live
+- Added `Shape.selfRectFunc()` for custom shapes: returns the local area its `sceneFunc` paints, so bounds, `cache()`, isolated groups and perfect drawing include paint outside `width` and `height`
 - Improved performance and memory of translucent shapes with fill and stroke ("perfect drawing"): built-in shapes use a buffer the size of the shape instead of the whole stage, and the buffer is freed when no longer used. Glyphs with many stacked marks can be clipped in this mode
 - Fixed a crash when a translucent shape with fill and stroke is drawn on a stage without size
 - Fixed translucent shapes with fill and stroke rendered at the wrong resolution when a layer pixel ratio differs from `Konva.pixelRatio`
