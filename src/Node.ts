@@ -12,7 +12,7 @@ import type { Shape } from './Shape.ts';
 import type { Stage } from './Stage.ts';
 import type { Tween, TweenConfig } from './Tween.ts';
 import type { GetSet, IRect, Vector2d } from './types.ts';
-import { Transform, Util, type AnyString } from './Util.ts';
+import { Transform, TypedArray, Util, type AnyString } from './Util.ts';
 import {
   getBooleanValidator,
   getNumberValidator,
@@ -1650,6 +1650,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
 
     for (key in attrs) {
       val = attrs[key];
+      // JSON has no typed arrays, so typed line points are written as an array
+      if (val instanceof TypedArray) {
+        val = Array.from(val);
+      }
       // if value is object and object is not plain
       // like class instance, we should skip it and to not include
       nonPlainObject =
