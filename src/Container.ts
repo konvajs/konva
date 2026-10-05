@@ -79,6 +79,7 @@ export abstract class Container<
     });
     this.children = [];
     // because all children were detached from parent, request draw via container
+    this._notifySubtreeChange();
     this._requestDraw();
     return this;
   }
@@ -96,6 +97,7 @@ export abstract class Container<
     });
     this.children = [];
     // because all children were detached from parent, request draw via container
+    this._notifySubtreeChange();
     this._requestDraw();
     return this;
   }
@@ -135,6 +137,7 @@ export abstract class Container<
     this._fire('add', {
       child: child,
     });
+    this._notifySubtreeChange();
     this._requestDraw();
     // chainable
     return this;
@@ -343,6 +346,7 @@ export abstract class Container<
     this.children?.forEach(function (child, n) {
       child.index = n;
     });
+    this._notifySubtreeChange();
     this._requestDraw();
   }
   drawScene(can?: SceneCanvas, top?: Node) {

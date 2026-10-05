@@ -1235,6 +1235,97 @@ describe('Transformer', function () {
     assert.equal(tr.rotation(), 0);
   });
 
+  it('follows size changes of group children', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    var group = new Konva.Group({ x: 10, y: 10 });
+    var rect = new Konva.Rect({ width: 100, height: 100, fill: 'red' });
+    group.add(rect);
+    layer.add(group);
+    var tr = new Konva.Transformer({ nodes: [group] });
+    layer.add(tr);
+    layer.draw();
+
+    rect.width(200);
+    assert.equal(tr.width(), 200);
+    layer.draw();
+    assert.equal(tr.findOne('.bottom-right')!.x(), 200);
+
+    var child = new Konva.Rect({ y: 100, width: 50, height: 50 });
+    group.add(child);
+    assert.equal(tr.height(), 150);
+    child.remove();
+    assert.equal(tr.height(), 100);
+    layer.draw();
+    assert.equal(tr.findOne('.bottom-right')!.y(), 100);
+
+    var count = (Konva.Node as any)._subtreeObserverCount;
+    tr.nodes([]);
+    assert.equal(group._subtreeObservers!.size, 0);
+    assert.equal((Konva.Node as any)._subtreeObserverCount, count - 1);
+  });
+
+  it('measures a group once for a burst of child changes', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    var group = new Konva.Group();
+    var rects: Rect[] = [];
+    for (var i = 0; i < 10; i++) {
+      rects.push(new Konva.Rect({ x: i * 10, width: 10, height: 10 }));
+    }
+    group.add(...rects);
+    layer.add(group);
+    var tr = new Konva.Transformer({ nodes: [group] });
+    layer.add(tr);
+    layer.draw();
+
+    var measures = countCalls(tr, '__getNodeRect', () => {
+      rects.forEach((rect) => rect.height(20));
+      layer.draw();
+    });
+    assert.equal(measures, 1);
+    assert.equal(tr.findOne('.bottom-right')!.y(), 20);
+
+    // the group's own change is not reported a second time as a child change
+    measures = countCalls(tr, '__getNodeRect', () => {
+      group.x(5);
+      layer.draw();
+    });
+    assert.equal(measures, 1);
+    tr.destroy();
+  });
+
+  it('scales a group from its current size when children change between transform steps', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    var group = new Konva.Group();
+    var rect = new Konva.Rect({ width: 100, height: 100, fill: 'red' });
+    group.add(rect);
+    layer.add(group);
+    var tr = new Konva.Transformer({ nodes: [group], rotateEnabled: false });
+    layer.add(tr);
+    layer.draw();
+
+    // the app resets the scale at once but resizes the child later, as a
+    // deferred state update does
+    var pendingScale = 1;
+    group.on('transform', () => {
+      pendingScale = group.scaleX();
+      group.scaleX(1);
+    });
+    simulateMouseDown(tr, { x: 100, y: 50 });
+    for (const x of [120, 140, 160]) {
+      simulateMouseMove(tr, { x, y: 50 });
+      rect.width(rect.width() * pendingScale);
+      assertAlmostEqual(rect.width(), x);
+    }
+    simulateMouseUp(tr, { x: 160, y: 50 });
+    tr.destroy();
+  });
+
   it('fit group', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

@@ -27,6 +27,7 @@ export type FilterFunction = (
 ) => void;
 export type Filter = FilterFunction | string;
 type Filters = Array<FilterFunction | string>;
+type SubtreeObserver = { _onSubtreeChange(node: Node): void };
 
 // CSS filter parser for fallback to function filters.
 function parseCSSFilters(cssFilter: string): FilterFunction {
@@ -282,6 +283,12 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   // Enabled lazily by Transformer so arbitrary custom shape attrs can invalidate
   // its per-node bounds. Never-selected nodes do not maintain a revision counter.
   _attrsVersion?: number;
+  // Told about every change below this node (see _notifySubtreeChange).
+  // Transformer observes attached containers here: their bounds come from
+  // descendants, which fire no change events on the container.
+  _subtreeObservers?: Set<SubtreeObserver>;
+  // Number of registered observers. The ancestor walk is skipped while it is 0.
+  static _subtreeObserverCount = 0;
   _batchingTransformChange = false;
   _needClearTransformCache = false;
 
@@ -2443,7 +2450,28 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
     return this;
   }
+  _addSubtreeObserver(observer: SubtreeObserver) {
+    (this._subtreeObservers ??= new Set()).add(observer);
+    Node._subtreeObserverCount++;
+  }
+  _removeSubtreeObserver(observer: SubtreeObserver) {
+    if (this._subtreeObservers?.delete(observer)) {
+      Node._subtreeObserverCount--;
+    }
+  }
+  // Tells the observers of this node and of its ancestors that something below
+  // them changed. A node's own changes reach its observers through its change
+  // events, so a draw request starts at the parent. A container calls this
+  // itself when its child list changes.
+  _notifySubtreeChange() {
+    if (!Node._subtreeObserverCount) return;
+    for (let node: Node | null = this; node; node = node.parent) {
+      const observers = node._subtreeObservers;
+      if (observers) for (const o of observers) o._onSubtreeChange(node);
+    }
+  }
   _requestDraw() {
+    this.parent?._notifySubtreeChange();
     if (Konva.autoDrawEnabled) {
       const drawNode = this.getLayer() || this.getStage();
       drawNode?.batchDraw();

@@ -4,12 +4,13 @@ import { Node } from '../Node.ts';
 import { Shape } from '../Shape.ts';
 import { Rect } from './Rect.ts';
 import { Group } from '../Group.ts';
-import type { ContainerConfig } from '../Container.ts';
+import { Container, type ContainerConfig } from '../Container.ts';
 import { Konva } from '../Global.ts';
 import { getBooleanValidator, getNumberValidator } from '../Validators.ts';
 import { _registerNode } from '../Global.ts';
 
 import type { GetSet, IRect, Vector2d } from '../types.ts';
+import type { HitCanvas, SceneCanvas } from '../Canvas.ts';
 
 export interface Box extends IRect {
   rotation: number;
@@ -329,6 +330,8 @@ export class Transformer extends Group {
   _elementsCreated = false;
   _updateScheduled = false;
   _lastNodeRect?: Readonly<Box>;
+  // an attached container's descendants changed after the last layout
+  _subtreeChanged = false;
 
   static isTransforming = () => {
     return activeTransformers.size > 0;
@@ -462,6 +465,7 @@ export class Transformer extends Group {
         onChange
       );
       node.on(`absoluteTransformChange.${this._getEventNamespace()}`, onChange);
+      if (node instanceof Container) node._addSubtreeObserver(this);
       node.on(`destroy.${this._getEventNamespace()}`, () => {
         // a destroyed node has nothing left to transform
         this.setNodes(this._nodes.filter((n) => n !== node));
@@ -539,6 +543,7 @@ export class Transformer extends Group {
     if (this._nodes) {
       this._nodes.forEach((node) => {
         node.off('.' + this._getEventNamespace());
+        node._removeSubtreeObserver(this);
       });
     }
     this._nodes = [];
@@ -564,6 +569,41 @@ export class Transformer extends Group {
     this._clearCache(NODES_RECT);
     this._clearCache('transform');
     this._clearSelfAndDescendantCache('absoluteTransform');
+  }
+  // Called for every change below an attached container. A burst of child
+  // changes only drops cached values here. The new bounds are measured once,
+  // before the next frame, or earlier if a draw or transform step comes first
+  // (_syncSubtreeChange).
+  _onSubtreeChange(node: Node) {
+    if (this._fitting) return;
+    // nothing was measured since the last change, so nothing cached is stale
+    if (this._subtreeChanged && !this._cache[NODES_RECT]) return;
+    this._resetTransformCache(node);
+    if (!this._subtreeChanged) {
+      this._subtreeChanged = true;
+      // queued ahead of the draw the change requests, so that draw shows the
+      // new layout. Updating inside the draw would request one more frame.
+      Util.requestAnimFrame(
+        () => this._syncSubtreeChange(),
+        this.getStage()?._getOwnerWindow()
+      );
+      // the transformer can be on another layer than the changed node
+      this.getLayer()?.batchDraw();
+    }
+  }
+  _syncSubtreeChange() {
+    // while dragging, the dragmove handler updates the layout
+    if (this._subtreeChanged && this._nodes?.length && !this.isDragging()) {
+      this._update();
+    }
+  }
+  drawScene(can?: SceneCanvas, top?: Node) {
+    this._syncSubtreeChange();
+    return super.drawScene(can, top);
+  }
+  drawHit(can?: HitCanvas, top?: Node) {
+    this._syncSubtreeChange();
+    return super.drawHit(can, top);
   }
   _getNodeRect() {
     return this._getCache(NODES_RECT, this.__getNodeRect);
@@ -841,6 +881,8 @@ export class Transformer extends Group {
     this.getStage()?._batchEvents(() => this._moveTransform(e));
   }
   _moveTransform(e) {
+    // anchors must show the current bounds before they are measured against
+    this._syncSubtreeChange();
     let x, y, newHypotenuse;
     const anchorNode = this._anchors[this._movingAnchorName!];
     const stage = anchorNode.getStage()!;
@@ -1372,7 +1414,9 @@ export class Transformer extends Group {
   }
   /**
    * force update of Konva.Transformer.
-   * Use it when you updated attached Konva.Group and now you need to reset transformer size
+   * The transformer follows attribute changes of attached nodes and, for an attached group, any change of its descendants.
+   * Use it after a change that sets no attribute, for example a `Line` points array mutated in place
+   * or a custom `getSelfRect()` that depends on outside state.
    * @method
    * @name Konva.Transformer#forceUpdate
    */
@@ -1389,6 +1433,7 @@ export class Transformer extends Group {
   }
 
   _update() {
+    this._subtreeChanged = false;
     const attrs = this._getNodeRect();
     this._updateElements(attrs);
     const draggable = this.nodes().some((node) => node.draggable());
