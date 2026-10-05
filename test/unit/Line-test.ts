@@ -78,6 +78,24 @@ describe('Line', function () {
     assert.deepEqual(new Konva.Line().points(), []);
   });
 
+  it('typed array points survive serialization', function () {
+    for (var points of [
+      [0, 0.5, 10, 20, 30, 40],
+      new Float32Array([0, 0.5, 10, 20, 30, 40]),
+      new Float64Array([0, 0.5, 10, 20, 30, 40]),
+      new Int16Array([0, -5, 10, 20, 30, 40]),
+      new Uint8ClampedArray([0, 5, 10, 20, 30, 40]),
+    ]) {
+      var line = new Konva.Line({ points: points, stroke: 'red' });
+      var expected = Array.from(points);
+
+      assert.deepEqual(line.toObject().attrs.points, expected);
+      var restored = Konva.Node.create(line.toJSON()) as Konva.Line;
+      assert.deepEqual(restored.points(), expected);
+      assert.strictEqual(line.points(), points);
+    }
+  });
+
   // ======================================================
   it('add dashed line', function () {
     var stage = addStage();
