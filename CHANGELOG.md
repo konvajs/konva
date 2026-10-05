@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 10.7.1 (2026-10-05)
+
+- Fixed `Transformer` attached to a `Group` keeping its old size when a child of the group changed size, or a child was added or removed. During a transform, a child resized after the `transform` event made the next step jump
+- Fixed `Line` points given as a typed array (for example `Float32Array`) being dropped by `toObject()` and `toJSON()`. Thanks [@giaBaoJS](https://github.com/giaBaoJS)
+
 ## 10.7.0 (2026-09-23)
 
 - Added `Group.isolated()`. An isolated group draws its children into a transparent canvas, then applies its `opacity` and `globalCompositeOperation` once to the result, like SVG `<g opacity>`. Child blend modes and erasing stay inside the group. Unlike `cache()`, the content stays live
