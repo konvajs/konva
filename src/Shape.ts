@@ -541,12 +541,15 @@ export class Shape<
     const forDrawing = config._forDrawing;
     // Painted bounds are measured in the canvas that draws the shape
     // (relativeTo): non-scaling strokes and shadows use that canvas's axes.
-    // The identity transform normalizes negative sizes.
-    const fillRect = !forDrawing
-      ? this.getSelfRect()
-      : this.strokeScaleEnabled()
-        ? new Transform()._getTransformedRect(this._getSelfRectForDrawing())
-        : this._transformedRect(this._getSelfRectForDrawing(), relativeTo);
+    let fillRect = forDrawing
+      ? this._getSelfRectForDrawing()
+      : this.getSelfRect();
+    if (forDrawing && !this.strokeScaleEnabled()) {
+      fillRect = this._transformedRect(fillRect, relativeTo);
+    } else if (fillRect.width < 0 || fillRect.height < 0) {
+      // The identity transform normalizes negative sizes.
+      fillRect = new Transform()._getTransformedRect(fillRect);
+    }
 
     const applyStroke = !config.skipStroke && this.hasStroke();
     const strokeWidth = applyStroke

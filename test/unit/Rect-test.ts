@@ -256,6 +256,83 @@ describe('Rect', function () {
     );
   });
 
+  it('negative width and height have the bounds of the drawn rect', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    var attrs = {
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 10,
+      shadowColor: 'black',
+      shadowOffsetX: 5,
+      shadowBlur: 4,
+    };
+    var mirrored = new Konva.Rect({
+      ...attrs,
+      x: 50,
+      y: 100,
+      width: 100,
+      height: 50,
+    });
+    layer.add(mirrored);
+    for (var [width, height] of [
+      [-100, -50],
+      [-100, 50],
+      [100, -50],
+    ]) {
+      var rect = new Konva.Rect({
+        ...attrs,
+        x: width < 0 ? 150 : 50,
+        y: height < 0 ? 150 : 100,
+        width,
+        height,
+      });
+      layer.add(rect);
+      assert.deepEqual(rect.getClientRect(), mirrored.getClientRect());
+      assert.deepEqual(
+        rect.getClientRect({ skipShadow: true, skipStroke: true }),
+        { x: 50, y: 100, width: 100, height: 50 }
+      );
+    }
+
+    var atOrigin = new Konva.Rect({ ...attrs, width: -100, height: -50 });
+    assert.deepEqual(atOrigin.getClientRect({ skipTransform: true }), {
+      x: -109,
+      y: -59,
+      width: 123,
+      height: 68,
+    });
+  });
+
+  it('negative width and height can be cached and exported', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var layer2 = new Konva.Layer();
+    var attrs = { fill: 'green', stroke: 'black', strokeWidth: 10 };
+    var rect = new Konva.Rect({
+      ...attrs,
+      x: 150,
+      y: 150,
+      width: -100,
+      height: -50,
+    });
+    layer.add(rect);
+    layer2.add(
+      new Konva.Rect({ ...attrs, x: 50, y: 100, width: 100, height: 50 })
+    );
+    stage.add(layer, layer2);
+
+    var canvas = rect.toCanvas({ pixelRatio: 1 });
+    assert.equal(canvas.width, 110);
+    assert.equal(canvas.height, 60);
+
+    rect.cache();
+    assert.equal(rect.isCached(), true);
+    layer.draw();
+    compareLayers(layer, layer2, 10);
+  });
+
   it('negative cornerRadius draws as no rounding', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
