@@ -68,7 +68,10 @@ Konva works in modern mobile and desktop browsers that support ES2018.
 
 # Debugging
 
-The Chrome inspector simply shows the canvas element. To see the Konva objects and their details, install the konva-dev extension at https://github.com/konvajs/konva-devtool.
+The Chrome inspector simply shows the canvas element. To inspect the Konva scene graph, try one of these browser extensions:
+
+- [konva-devtool](https://github.com/konvajs/konva-devtool) (official)
+- [Konva DevTools](https://github.com/maitrungduc1410/konva-inspector) ([Chrome](https://chrome.google.com/webstore/detail/konvajs-devtools/aleknfecbpmpnkfoaohgpffcjenmjjfi) / [Firefox](https://addons.mozilla.org/en-US/firefox/addon/konvajs-devtools/) / [Edge](https://microsoftedge.microsoft.com/addons/detail/konvajs-devtools/noiamlkeehkigdfegcnnfanplidpmeaa))
 
 # Loading and installing Konva
 
