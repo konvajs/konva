@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+- Added `Transformer.rotateMode()`: `'corners'` rotates from invisible zones just outside the box corners, with a cursor that follows the corner direction. `'both'` keeps the rotate anchor too. Default is `'handle'`
+- Added rotation snapping to 15 degree steps while Shift is pressed in `Transformer`. `shiftBehavior('none')` turns it off
+- Changed `Transformer` rotation to follow the angle the pointer turns around the center, so a rotate anchor grabbed off its center no longer drifts from the pointer
+
 ## 10.7.1 (2026-10-05)
 
 - Fixed `Transformer` attached to a `Group` keeping its old size when a child of the group changed size, or a child was added or removed. During a transform, a child resized after the `transform` event made the next step jump

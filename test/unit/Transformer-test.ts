@@ -32,6 +32,7 @@ function simulateMouseMove(
     y: number;
     button?: number;
     altKey?: boolean;
+    shiftKey?: boolean;
   }
 ) {
   const stage = tr.getStage()!;
@@ -5814,7 +5815,7 @@ describe('Transformer', function () {
     simulateMouseMove(tr, { x: pos.x + 100, y: pos.y - 100 });
     simulateMouseUp(tr, { x: pos.x + 100, y: pos.y - 100 });
 
-    assert.equal(rect.rotation(), 90);
+    assertAlmostEqual(rect.rotation(), 90);
   });
 
   it('drag rotation works with rotateAnchorAngle at 180 (bottom)', function () {
@@ -6290,6 +6291,133 @@ describe('Transformer', function () {
     });
     simulateMouseUp(tr);
     assertAlmostEqual(rect.rotation(), 0);
+  });
+
+  it('rotateMode switches between the rotate anchor and corner zones', function () {
+    const { stage, tr } = setup();
+    const rotater = tr.findOne('.rotater')!;
+    const zone = tr.findOne('.rotater-top-right')!;
+    assert.equal(tr.rotateMode(), 'handle');
+    assert.equal(rotater.visible(), true);
+    assert.equal(zone.visible(), false);
+
+    tr.rotateMode('corners');
+    stage.draw();
+    assert.equal(rotater.visible(), false);
+    assert.equal(zone.visible(), true);
+    // just outside the top-right corner (160, 60)
+    assert.strictEqual(stage.getIntersection({ x: 170, y: 50 }), zone);
+    // the resize anchor keeps the corner itself
+    assert.strictEqual(
+      stage.getIntersection({ x: 162, y: 58 }),
+      tr.findOne('.top-right')
+    );
+
+    tr.rotateMode('both');
+    assert.equal(rotater.visible(), true);
+    assert.equal(zone.visible(), true);
+
+    tr.rotateEnabled(false);
+    assert.equal(rotater.visible(), false);
+    assert.equal(zone.visible(), false);
+  });
+
+  it('corner zone rotates the box by the angle the pointer turns', function () {
+    const { rect, tr } = setup({ rotateMode: 'corners' });
+    // the center is (110, 100), the grabbed point is not on the box diagonal
+    simulateMouseDown(tr, { x: 170, y: 50 });
+    // the same point turned by 90 degrees around the center
+    simulateMouseMove(tr, { x: 160, y: 160 });
+    simulateMouseUp(tr);
+    assertAlmostEqual(rect.rotation(), 90);
+    // rotated around the center
+    const box = rect.getClientRect();
+    assertAlmostEqual(box.x + box.width / 2, 110);
+    assertAlmostEqual(box.y + box.height / 2, 100);
+  });
+
+  it('rotation follows the box when the stage pans during the drag', function () {
+    const { stage, rect, tr } = setup();
+    const start = tr.findOne('.rotater')!.getAbsolutePosition();
+    const r = 100 - start.y;
+    simulateMouseDown(tr, start);
+    stage.y(50);
+    // a quarter turn around the moved center (110, 150)
+    simulateMouseMove(tr, { x: 110 + r, y: 150 });
+    simulateMouseUp(tr);
+    assertAlmostEqual(rect.rotation(), 90);
+  });
+
+  it('rotation anchor grabbed off its center does not jump', function () {
+    const { rect, tr } = setup();
+    const pos = tr.findOne('.rotater')!.getAbsolutePosition();
+    simulateMouseDown(tr, { x: pos.x + 4, y: pos.y });
+    simulateMouseMove(tr, { x: pos.x + 4, y: pos.y + 1 });
+    simulateMouseUp(tr);
+    assert.isBelow(Math.abs(rect.rotation()), 1);
+  });
+
+  it('Shift snaps the rotation to 15 degree steps', function () {
+    // rotate the anchor by 20 degrees around the center (110, 100)
+    const rotate20 = (shiftKey: boolean, shiftBehavior = 'default') => {
+      const { rect, tr } = setup({ rotationSnaps: [0, 90], shiftBehavior });
+      const start = tr.findOne('.rotater')!.getAbsolutePosition();
+      const angle = Konva.Util.degToRad(20);
+      const r = 100 - start.y;
+      simulateMouseDown(tr, start);
+      simulateMouseMove(tr, {
+        x: 110 + r * Math.sin(angle),
+        y: 100 - r * Math.cos(angle),
+        shiftKey,
+      });
+      simulateMouseUp(tr);
+      return rect.rotation();
+    };
+    assertAlmostEqual(rotate20(true), 15);
+    assertAlmostEqual(rotate20(false), 20);
+    assertAlmostEqual(rotate20(true, 'none'), 20);
+  });
+
+  it('rotate line stays when anchorStyleFunc hides the rotate anchor', function () {
+    const { layer } = setup({
+      anchorStyleFunc: (anchor) => {
+        if (anchor.hasName('rotater')) anchor.visible(false);
+      },
+    });
+    layer.getContext().clearTrace();
+    layer.draw();
+    assert.include(layer.getContext().getTrace(), 'lineTo(');
+  });
+
+  it('rotation keeps a cursor set during the transform', function () {
+    if (isNode) return;
+    for (const [rotateMode, anchorName] of [
+      ['handle', '.rotater'],
+      ['corners', '.rotater-top-right'],
+    ]) {
+      const { stage, tr } = setup({ rotateMode });
+      tr.on('transform', () => (stage.content.style.cursor = 'grabbing'));
+      const pos = tr.findOne(anchorName)!.getAbsolutePosition();
+      simulateMouseDown(tr, pos);
+      simulateMouseMove(tr, { x: pos.x + 20, y: pos.y + 5 });
+      simulateMouseMove(tr, { x: pos.x + 40, y: pos.y + 10 });
+      const cursor = stage.content.style.cursor;
+      simulateMouseUp(tr);
+      assert.equal(cursor, 'grabbing', rotateMode);
+    }
+  });
+
+  it('anchorStyleFunc does not style the rotate zones', function () {
+    const styled: string[] = [];
+    setup({
+      rotateMode: 'corners',
+      anchorStyleFunc: (anchor) => styled.push(anchor.name()),
+    });
+    assert.isAbove(styled.length, 0);
+    assert.equal(
+      styled.some((name) => name.includes('_rotate-zone')),
+      false
+    );
   });
 
   it('ignored mouse buttons do not start a transform', function () {

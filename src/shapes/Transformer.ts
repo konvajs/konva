@@ -26,6 +26,7 @@ export interface TransformerConfig extends ContainerConfig {
   rotateAnchorOffset?: number;
   rotateAnchorAngle?: number;
   rotateAnchorCursor?: string;
+  rotateMode?: 'handle' | 'corners' | 'both';
   borderEnabled?: boolean;
   borderStroke?: string;
   borderStrokeWidth?: number;
@@ -59,6 +60,7 @@ const ATTR_CHANGE_LIST = [
   'rotateAnchorOffsetChange',
   'rotateAnchorAngleChange',
   'rotateEnabledChange',
+  'rotateModeChange',
   'enabledAnchorsChange',
   'anchorSizeChange',
   'borderEnabledChange',
@@ -112,9 +114,41 @@ const ANGLES = {
 
 const TOUCH_DEVICE = 'ontouchstart' in Konva._global;
 
+// invisible zones just outside the corners, the rotate area of rotateMode 'corners'
+const ROTATE_ZONE_NAMES = [
+  'rotater-top-left',
+  'rotater-top-right',
+  'rotater-bottom-left',
+  'rotater-bottom-right',
+];
+
+function isRotateAnchor(anchorName: string) {
+  return anchorName.startsWith('rotater');
+}
+
+// with Shift pressed the rotation snaps to this step
+const SHIFT_ROTATION_STEP = Math.PI / 12;
+
+// curved double arrow drawn for the top-right corner, rotated for others
+function getRotateZoneCursor(deg: number, fallback: string) {
+  const svg =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">' +
+    `<g transform="rotate(${deg} 12 12)" stroke-linejoin="round">` +
+    '<path d="M5 8 A11 11 0 0 1 16 19" fill="none" stroke="white" stroke-width="4"/>' +
+    '<path d="M2 8 L6 4.5 L6 11.5 Z M16 22 L12.5 18 L19.5 18 Z" fill="black" stroke="white"/>' +
+    '<path d="M5 8 A11 11 0 0 1 16 19" fill="none" stroke="black" stroke-width="1.5"/>' +
+    '</g></svg>';
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}") 12 12, ${fallback}`;
+}
+
 function getCursor(anchorName, rad, rotateCursor) {
   if (anchorName === 'rotater') {
     return rotateCursor;
+  }
+  if (isRotateAnchor(anchorName)) {
+    const corner = anchorName.slice('rotater-'.length);
+    const deg = Math.round(Util.radToDeg(rad) + ANGLES[corner] - 45);
+    return getRotateZoneCursor(deg, rotateCursor);
   }
 
   rad += Util.degToRad(ANGLES[anchorName] || 0);
@@ -265,6 +299,7 @@ const activeTransformers = new Set<Transformer>();
  * @param {Number} [config.rotateAnchorOffset] Default is 50
  * @param {Number} [config.rotateAnchorAngle] Angle of the rotate anchor around the box, in degrees. Default is 0 (top)
  * @param {String} [config.rotateAnchorCursor] Default is crosshair
+ * @param {String} [config.rotateMode] How the user rotates: 'handle' (the rotate anchor), 'corners' (invisible zones just outside the corners) or 'both'. Default is 'handle'
  * @param {Number} [config.padding] Default is 0
  * @param {Boolean} [config.borderEnabled] Should we draw border? Default is true
  * @param {String} [config.borderStroke] Border stroke color
@@ -276,7 +311,7 @@ const activeTransformers = new Set<Transformer>();
  * @param {Number} [config.anchorStrokeWidth] Anchor stroke size
  * @param {Number} [config.anchorSize] Default is 10
  * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
- * @param {String} [config.shiftBehavior] How does transformer react on shift key press when we are moving edges? Default is 'default'
+ * @param {String} [config.shiftBehavior] How does transformer react on shift key press when we are moving edges? 'none' also turns off the Shift rotation snap. Default is 'default'
  * @param {Boolean} [config.centeredScaling] Should we resize relative to node's center? Default is false
  * @param {Array} [config.enabledAnchors] Array of names of enabled handles
  * @param {Boolean} [config.flipEnabled] Can we flip/mirror shape on transform?. True by default
@@ -324,6 +359,8 @@ export class Transformer extends Group {
   // rendered in another window than the one Konva was imported into
   _transformWindow: Window | null = null;
   _anchorDragOffset: Vector2d;
+  // pointer angle around the box center and box rotation when a rotation starts
+  _rotateStart?: { pointerAngle: number; rotation: number };
   sin: number;
   cos: number;
   _cursorChange: boolean;
@@ -725,6 +762,16 @@ export class Transformer extends Group {
   _createElements() {
     this._createBack();
 
+    // below the resize anchors, so a resize anchor wins where they overlap
+    ROTATE_ZONE_NAMES.forEach((name) => {
+      // invisible, but its fill keeps it in the hit graph
+      this._createAnchor(name, '_rotate-zone').setAttrs({
+        fill: 'transparent',
+        strokeEnabled: false,
+        visible: false,
+      });
+    });
+
     ANCHORS_NAMES.forEach((name) => {
       this._createAnchor(name);
     });
@@ -732,12 +779,12 @@ export class Transformer extends Group {
     this._createAnchor('rotater');
     this._elementsCreated = true;
   }
-  _createAnchor(name) {
+  _createAnchor(name: string, className = '_anchor') {
     const anchor = new Rect({
       stroke: 'rgb(0, 161, 255)',
       fill: 'white',
       strokeWidth: 1,
-      name: name + ' _anchor',
+      name: name + ' ' + className,
       dragDistance: 0,
       // make it draggable,
       // so activating the anchor will not start drag&drop of any parent
@@ -760,11 +807,7 @@ export class Transformer extends Group {
     // add hover styling
     anchor.on('mouseenter', () => {
       if (this.isTransforming()) return;
-      const rad = Konva.getAngle(this.rotation());
-      const rotateCursor = this.rotateAnchorCursor();
-      const cursor = getCursor(name, rad, rotateCursor);
-      anchor.getStage()!.content &&
-        (anchor.getStage()!.content.style.cursor = cursor);
+      this._setAnchorCursor(name);
       this._cursorChange = true;
     });
     anchor.on('mouseout', () => {
@@ -774,6 +817,13 @@ export class Transformer extends Group {
         (anchor.getStage()!.content.style.cursor = '');
     });
     this.add(anchor);
+    return anchor;
+  }
+  _setAnchorCursor(name: string, rad = Konva.getAngle(this.rotation())) {
+    const content = this.getStage()?.content;
+    if (content) {
+      content.style.cursor = getCursor(name, rad, this.rotateAnchorCursor());
+    }
   }
   _createBack() {
     const back = new Shape({
@@ -790,7 +840,11 @@ export class Transformer extends Group {
         ctx.beginPath();
         ctx.rect(-padding, -padding, width + padding * 2, height + padding * 2);
 
-        if (tr.rotateEnabled() && tr.rotateLineVisible()) {
+        if (
+          tr.rotateEnabled() &&
+          tr.rotateLineVisible() &&
+          tr.rotateMode() !== 'corners'
+        ) {
           const line = getRotaterLine(tr, width, height);
           ctx.moveTo(line.edgeX, line.edgeY);
           ctx.lineTo(line.endX, line.endY);
@@ -871,6 +925,13 @@ export class Transformer extends Group {
       x: pos.x - ap.x,
       y: pos.y - ap.y,
     };
+    if (isRotateAnchor(this._movingAnchorName!)) {
+      const center = getCenter(attrs);
+      this._rotateStart = {
+        pointerAngle: Math.atan2(pos.y - center.y, pos.x - center.x),
+        rotation: attrs.rotation,
+      };
+    }
     activeTransformers.add(this);
     this._fire('transformstart', { evt: e.evt, target: this.getNode() });
     this._nodes.forEach((target) => {
@@ -911,22 +972,34 @@ export class Transformer extends Group {
       return;
     }
 
-    // rotater is working very differently, so do it first
-    if (this._movingAnchorName === 'rotater') {
+    // rotation is working very differently, so do it first
+    if (isRotateAnchor(this._movingAnchorName!)) {
       const attrs = this._getNodeRect();
-      x = anchorNode.x() - attrs.width / 2;
-      y = -anchorNode.y() + attrs.height / 2;
+      const center = getCenter(attrs);
+      const start = this._rotateStart!;
+      // the grabbed point turns around the center by as much as the box,
+      // so the box follows the pointer wherever it was grabbed
+      const point = {
+        x: newAbs.x + this._anchorDragOffset.x,
+        y: newAbs.y + this._anchorDragOffset.y,
+      };
+      const pointerAngle = Math.atan2(point.y - center.y, point.x - center.x);
+      const newRotation = start.rotation + pointerAngle - start.pointerAngle;
 
-      // Calculate angle from center to current anchor position
-      // Offset by rotateAnchorAngle so we measure rotation from the anchor's starting position
-      const rotateAnchorAngleRad = Util.degToRad(this.rotateAnchorAngle());
-      let delta = Math.atan2(-y, x) + Math.PI / 2 - rotateAnchorAngleRad;
+      let snappedRot: number;
+      if (e.shiftKey && this.shiftBehavior() !== 'none') {
+        snappedRot =
+          Math.round(newRotation / SHIFT_ROTATION_STEP) * SHIFT_ROTATION_STEP;
+      } else {
+        const tol = Konva.getAngle(this.rotationSnapTolerance());
+        snappedRot = getSnap(this.rotationSnaps(), newRotation, tol);
+      }
 
-      const oldRotation = Konva.getAngle(this.rotation());
-      const newRotation = oldRotation + delta;
-
-      const tol = Konva.getAngle(this.rotationSnapTolerance());
-      const snappedRot = getSnap(this.rotationSnaps(), newRotation, tol);
+      // a corner zone cursor shows the direction of the turned corner,
+      // set before the transform event so its handlers can override it
+      if (this._movingAnchorName !== 'rotater') {
+        this._setAnchorCursor(this._movingAnchorName!, snappedRot);
+      }
 
       const diff = snappedRot - attrs.rotation;
 
@@ -1442,7 +1515,9 @@ export class Transformer extends Group {
     }
     const styleFunc = this.anchorStyleFunc();
     if (styleFunc) {
-      Object.values(this._anchors).forEach((node) => styleFunc(node));
+      Object.values(this._anchors).forEach(
+        (node) => node.hasName('_anchor') && styleFunc(node)
+      );
     }
     this.getLayer()?.batchDraw();
   }
@@ -1471,7 +1546,9 @@ export class Transformer extends Group {
     const padding = this.padding();
 
     const anchorSize = this.anchorSize();
-    const anchors = Object.values(this._anchors);
+    const anchors = Object.values(this._anchors).filter((node) =>
+      node.hasName('_anchor')
+    );
     anchors.forEach((node) => {
       node.setAttrs({
         width: anchorSize,
@@ -1538,11 +1615,26 @@ export class Transformer extends Group {
       visible: resizeEnabled && enabledAnchors.indexOf('bottom-right') >= 0,
     });
 
+    const rotateMode = this.rotateMode();
     const rotaterLine = getRotaterLine(this, width, height);
     this._anchors['rotater'].setAttrs({
       x: rotaterLine.endX,
       y: rotaterLine.endY,
-      visible: this.rotateEnabled(),
+      visible: this.rotateEnabled() && rotateMode !== 'corners',
+    });
+
+    // each zone is a square that touches its corner from the outside
+    const zoneSize = anchorSize * 2;
+    const zonesVisible = this.rotateEnabled() && rotateMode !== 'handle';
+    const near = -padding - zoneSize;
+    ROTATE_ZONE_NAMES.forEach((name) => {
+      this._anchors[name].setAttrs({
+        x: name.includes('left') ? near : width + padding,
+        y: name.includes('top') ? near : height + padding,
+        width: zoneSize,
+        height: zoneSize,
+        visible: zonesVisible,
+      });
     });
 
     this._back.setAttrs({
@@ -1630,6 +1722,7 @@ export class Transformer extends Group {
   rotateAnchorAngle: GetSet<number, this>;
   rotationSnapTolerance: GetSet<number, this>;
   rotateAnchorCursor: GetSet<string, this>;
+  rotateMode: GetSet<'handle' | 'corners' | 'both', this>;
   padding: GetSet<number, this>;
   borderEnabled: GetSet<boolean, this>;
   borderStroke: GetSet<string, this>;
@@ -1848,6 +1941,24 @@ Factory.addGetterSetter(
  * transformer.rotateAnchorCursor('grab');
  */
 Factory.addGetterSetter(Transformer, 'rotateAnchorCursor', 'crosshair');
+
+/**
+ * get/set how the user rotates the nodes. 'handle' shows the rotate anchor,
+ * 'corners' makes invisible zones just outside the box corners rotate,
+ * 'both' enables both. Hold Shift while rotating to snap to 15 degree steps, unless shiftBehavior is 'none'.
+ * While a corner zone rotates, `getActiveAnchor()` returns its name, such as 'rotater-top-left'.
+ * @name Konva.Transformer#rotateMode
+ * @method
+ * @param {String} mode
+ * @returns {String}
+ * @example
+ * // get
+ * var rotateMode = transformer.rotateMode();
+ *
+ * // set
+ * transformer.rotateMode('corners');
+ */
+Factory.addGetterSetter(Transformer, 'rotateMode', 'handle');
 
 /**
  * get/set distance for rotation tolerance
