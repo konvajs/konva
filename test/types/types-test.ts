@@ -4,6 +4,9 @@
 import Konva from '../../src/index.ts';
 import type { GetClientRectConfig } from '../../src/Node.ts';
 
+const finishUpdateBatch: () => void = Konva.beginUpdateBatch();
+finishUpdateBatch();
+
 // clipFunc receives the Konva context and the container
 const group = new Konva.Group({
   clipFunc: (ctx) => {

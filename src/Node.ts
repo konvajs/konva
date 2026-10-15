@@ -377,18 +377,45 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
   }
 
-  // Perf: lets a listener inside an absoluteTransform cascade (e.g. Konva
-  // .Transformer reacting to a stage drag fan-out across N attached nodes)
-  // defer work until the cascade ends — collapses O(N) listener-driven calls
-  // into one. Counter is mutated by Container's _clearSelfAndDescendantCache.
-  static _absTransformCascadeDepth = 0;
-  static _pendingAfterCascade: Array<() => void> = [];
-  static _runAfterAbsTransformCascade(cb: () => void) {
-    if (Node._absTransformCascadeDepth > 0) {
-      Node._pendingAfterCascade.push(cb);
+  // Perf: while a batch is open, work that depends on many nodes (a Konva
+  // .Transformer refresh) is queued and runs once when the outermost scope
+  // ends, instead of once per node change. Scopes are the callers of
+  // _updateBatch() and _beginUpdateBatch().
+  static _updateBatchDepth = 0;
+  // a Set, so a callback queued once per change runs once per batch
+  static _pendingUpdates = new Set<() => void>();
+  static _runAfterUpdateBatch(cb: () => void) {
+    if (Node._updateBatchDepth > 0) {
+      Node._pendingUpdates.add(cb);
     } else {
       cb();
     }
+  }
+  static _flushUpdateBatch() {
+    if (Node._updateBatchDepth > 0) return;
+    const callbacks = Node._pendingUpdates;
+    if (!callbacks.size) return;
+    Node._pendingUpdates = new Set();
+    callbacks.forEach((callback) => callback());
+  }
+  static _updateBatch<T>(fn: () => T): T {
+    Node._updateBatchDepth++;
+    try {
+      return fn();
+    } finally {
+      Node._updateBatchDepth--;
+      Node._flushUpdateBatch();
+    }
+  }
+  static _beginUpdateBatch(): () => void {
+    Node._updateBatchDepth++;
+    let finished = false;
+    return () => {
+      if (finished) return;
+      finished = true;
+      Node._updateBatchDepth--;
+      Node._flushUpdateBatch();
+    };
   }
   /**
    * clear cached canvas
@@ -1315,17 +1342,19 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       func();
       return;
     }
-    this._batchingTransformChange = true;
-    try {
-      func();
-    } finally {
-      this._batchingTransformChange = false;
-      if (this._needClearTransformCache) {
-        this._needClearTransformCache = false;
-        this._clearCache(TRANSFORM);
-        this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
+    Node._updateBatch(() => {
+      this._batchingTransformChange = true;
+      try {
+        func();
+      } finally {
+        this._batchingTransformChange = false;
+        if (this._needClearTransformCache) {
+          this._needClearTransformCache = false;
+          this._clearCache(TRANSFORM);
+          this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
+        }
       }
-    }
+    });
   }
 
   setPosition(pos: Vector2d) {

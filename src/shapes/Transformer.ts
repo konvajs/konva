@@ -365,10 +365,9 @@ export class Transformer extends Group {
   cos: number;
   _cursorChange: boolean;
   _elementsCreated = false;
-  _updateScheduled = false;
   _lastNodeRect?: Readonly<Box>;
-  // an attached container's descendants changed after the last layout
-  _subtreeChanged = false;
+  // the layout is stale; the next sync point runs _update() (see _syncUpdate)
+  _updatePending = false;
 
   static isTransforming = () => {
     return activeTransformers.size > 0;
@@ -396,6 +395,7 @@ export class Transformer extends Group {
     this._handleMouseMove = this._handleMouseMove.bind(this);
     this._handleMouseUp = this._handleMouseUp.bind(this);
     this.update = this.update.bind(this);
+    this._syncUpdate = this._syncUpdate.bind(this);
 
     // update transformer data for certain attr changes
     this.on(ATTR_CHANGE_LIST, (event) => {
@@ -461,11 +461,7 @@ export class Transformer extends Group {
     });
 
     this._nodes = nodes = filteredNodes;
-    if (nodes.length === 1 && this.useSingleNodeRotation()) {
-      this.rotation(nodes[0].getAbsoluteRotation());
-    } else {
-      this.rotation(0);
-    }
+    this._resetRotation();
     this._nodes.forEach((node) => {
       const onChange = () => {
         // Perf: skip the changes _fitNodesInto makes itself — it does the
@@ -476,6 +472,7 @@ export class Transformer extends Group {
           this._nodeRectCache?.delete(node);
           return;
         }
+        // unlike _resetRotation, a multi-node box keeps its rotation here
         if (this.nodes().length === 1 && this.useSingleNodeRotation()) {
           this.rotation(this.nodes()[0].getAbsoluteRotation());
         }
@@ -504,8 +501,7 @@ export class Transformer extends Group {
       node.on(`absoluteTransformChange.${this._getEventNamespace()}`, onChange);
       if (node instanceof Container) node._addSubtreeObserver(this);
       node.on(`destroy.${this._getEventNamespace()}`, () => {
-        // a destroyed node has nothing left to transform
-        this.setNodes(this._nodes.filter((n) => n !== node));
+        this._removeNode(node);
       });
       this._proxyDrag(node);
     });
@@ -553,6 +549,26 @@ export class Transformer extends Group {
     });
   }
 
+  _detachNode(node: Node) {
+    node.off('.' + this._getEventNamespace());
+    node._removeSubtreeObserver(this);
+  }
+
+  _resetRotation() {
+    const single = this._nodes.length === 1 && this.useSingleNodeRotation();
+    this.rotation(single ? this._nodes[0].getAbsoluteRotation() : 0);
+  }
+
+  // Drops one destroyed node. Re-attaching the survivors instead costs
+  // O(N) listener rebinds per destroyed node, O(N^2) for a deleted selection.
+  _removeNode(node: Node) {
+    this._detachNode(node);
+    this._nodes = this._nodes.filter((n) => n !== node);
+    this._resetRotation();
+    this._resetTransformCache(node);
+    this._scheduleUpdate();
+  }
+
   getNodes() {
     return this._nodes || [];
   }
@@ -576,14 +592,9 @@ export class Transformer extends Group {
    * transformer.detach();
    */
   detach() {
-    // remove events
-    if (this._nodes) {
-      this._nodes.forEach((node) => {
-        node.off('.' + this._getEventNamespace());
-        node._removeSubtreeObserver(this);
-      });
-    }
+    this._nodes?.forEach((node) => this._detachNode(node));
     this._nodes = [];
+    this._updatePending = false;
     this._resetTransformCache();
     this.getLayer()?.batchDraw();
   }
@@ -610,36 +621,42 @@ export class Transformer extends Group {
   // Called for every change below an attached container. A burst of child
   // changes only drops cached values here. The new bounds are measured once,
   // before the next frame, or earlier if a draw or transform step comes first
-  // (_syncSubtreeChange).
+  // (_syncUpdate).
   _onSubtreeChange(node: Node) {
     if (this._fitting) return;
     // nothing was measured since the last change, so nothing cached is stale
-    if (this._subtreeChanged && !this._cache[NODES_RECT]) return;
-    this._resetTransformCache(node);
-    if (!this._subtreeChanged) {
-      this._subtreeChanged = true;
+    const measured = !this._updatePending || !!this._cache[NODES_RECT];
+    if (measured) this._resetTransformCache(node);
+    if (Node._updateBatchDepth > 0) {
+      // the batch flush lays the new bounds out, no frame needed
+      this._scheduleUpdate();
+      return;
+    }
+    if (!this._updatePending) {
+      this._updatePending = true;
       // queued ahead of the draw the change requests, so that draw shows the
       // new layout. Updating inside the draw would request one more frame.
       Util.requestAnimFrame(
-        () => this._syncSubtreeChange(),
+        this._syncUpdate,
         this.getStage()?._getOwnerWindow()
       );
       // the transformer can be on another layer than the changed node
       this.getLayer()?.batchDraw();
     }
   }
-  _syncSubtreeChange() {
+  // Runs a deferred update before anything draws or measures the anchors.
+  _syncUpdate() {
     // while dragging, the dragmove handler updates the layout
-    if (this._subtreeChanged && this._nodes?.length && !this.isDragging()) {
+    if (this._updatePending && !this._fitting && !this.isDragging()) {
       this._update();
     }
   }
   drawScene(can?: SceneCanvas, top?: Node) {
-    this._syncSubtreeChange();
+    this._syncUpdate();
     return super.drawScene(can, top);
   }
   drawHit(can?: HitCanvas, top?: Node) {
-    this._syncSubtreeChange();
+    this._syncUpdate();
     return super.drawHit(can, top);
   }
   _getNodeRect() {
@@ -943,7 +960,7 @@ export class Transformer extends Group {
   }
   _moveTransform(e) {
     // anchors must show the current bounds before they are measured against
-    this._syncSubtreeChange();
+    this._syncUpdate();
     let x, y, newHypotenuse;
     const anchorNode = this._anchors[this._movingAnchorName!];
     const stage = anchorNode.getStage()!;
@@ -1471,19 +1488,10 @@ export class Transformer extends Group {
     layersToDraw.add(this.getLayer());
     layersToDraw.forEach((layer) => layer && layer.batchDraw());
   }
-  // Inside an absoluteTransform cascade, queue a single update to run when
-  // the cascade ends; outside a cascade, run synchronously so reads of
-  // transformer state stay consistent.
+  // deferred to the batch flush when one is open, else synchronous
   _scheduleUpdate() {
-    if (this._updateScheduled) return;
-    this._updateScheduled = true;
-    Node._runAfterAbsTransformCascade(() => {
-      this._updateScheduled = false;
-      if (!this._nodes?.length || this._fitting || this.isDragging()) {
-        return;
-      }
-      this._update();
-    });
+    this._updatePending = true;
+    Node._runAfterUpdateBatch(this._syncUpdate);
   }
   /**
    * force update of Konva.Transformer.
@@ -1506,7 +1514,7 @@ export class Transformer extends Group {
   }
 
   _update() {
-    this._subtreeChanged = false;
+    this._updatePending = false;
     const attrs = this._getNodeRect();
     this._updateElements(attrs);
     const draggable = this.nodes().some((node) => node.draggable());
@@ -1702,6 +1710,7 @@ export class Transformer extends Group {
     return node as this;
   }
   getClientRect(config?: Parameters<Group['getClientRect']>[0]) {
+    this._syncUpdate();
     if (this.nodes().length > 0) {
       return super.getClientRect(config);
     } else {

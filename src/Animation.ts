@@ -1,5 +1,6 @@
 import { glob } from './Global.ts';
 import type { Layer } from './Layer.ts';
+import { Node } from './Node.ts';
 import type { IFrame, AnimationFn } from './types.ts';
 import { Util } from './Util.ts';
 
@@ -144,16 +145,18 @@ export class Animation {
     const layersToDraw = new Set<Layer>();
     // an animation may stop or restart itself, or another one, inside its
     // function: each one runs at most once per frame, a stopped one not at all
-    Array.from(this.animations).forEach((anim) => {
-      if (!this.animations.has(anim)) {
-        return;
-      }
-      anim._updateFrameObject(now());
-      // the function returns false to skip the redraw
-      if (anim.func && anim.func.call(anim, anim.frame) === false) {
-        return;
-      }
-      anim.layers.forEach((layer) => layer && layersToDraw.add(layer));
+    Node._updateBatch(() => {
+      Array.from(this.animations).forEach((anim) => {
+        if (!this.animations.has(anim)) {
+          return;
+        }
+        anim._updateFrameObject(now());
+        // the function returns false to skip the redraw
+        if (anim.func && anim.func.call(anim, anim.frame) === false) {
+          return;
+        }
+        anim.layers.forEach((layer) => layer && layersToDraw.add(layer));
+      });
     });
     layersToDraw.forEach((layer) => layer.batchDraw());
   }

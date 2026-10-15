@@ -28,7 +28,7 @@ function countAnchorWrites(tr: Transformer, mutate: () => void) {
 describe('TransformerPerfInvariants', function () {
   // ---------- Group 1: correctness invariants of the cascade machinery ----------
 
-  it('Node._absTransformCascadeDepth returns to 0 after a normal cascade', function () {
+  it('Node._updateBatchDepth returns to 0 after a normal cascade', function () {
     const stage = addStage();
     const layer = new Konva.Layer();
     stage.add(layer);
@@ -37,13 +37,13 @@ describe('TransformerPerfInvariants', function () {
     stage.x(5); // triggers a full absoluteTransform cascade
 
     assert.equal(
-      (Konva.Node as any)._absTransformCascadeDepth,
+      (Konva.Node as any)._updateBatchDepth,
       0,
       'depth must be 0 after a clean cascade'
     );
   });
 
-  it('Node._absTransformCascadeDepth returns to 0 even if a listener throws', function () {
+  it('Node._updateBatchDepth returns to 0 even if a listener throws', function () {
     const stage = addStage();
     const layer = new Konva.Layer();
     stage.add(layer);
@@ -66,13 +66,13 @@ describe('TransformerPerfInvariants', function () {
 
     assert.isNotNull(caught, 'listener exception should propagate');
     assert.equal(
-      (Konva.Node as any)._absTransformCascadeDepth,
+      (Konva.Node as any)._updateBatchDepth,
       0,
       'depth must be 0 even when a listener throws — global state must not leak'
     );
   });
 
-  it('_runAfterAbsTransformCascade defers callback while inside a cascade and runs it once at depth 0', function () {
+  it('_runAfterUpdateBatch defers callback while inside a cascade and runs it once at depth 0', function () {
     const stage = addStage();
     const layer = new Konva.Layer();
     stage.add(layer);
@@ -82,8 +82,8 @@ describe('TransformerPerfInvariants', function () {
     let runCount = 0;
     let depthWhenScheduled = -1;
     const listener = () => {
-      depthWhenScheduled = (Konva.Node as any)._absTransformCascadeDepth;
-      (Konva.Node as any)._runAfterAbsTransformCascade(() => {
+      depthWhenScheduled = (Konva.Node as any)._updateBatchDepth;
+      (Konva.Node as any)._runAfterUpdateBatch(() => {
         runCount++;
       });
     };
@@ -103,15 +103,15 @@ describe('TransformerPerfInvariants', function () {
     );
     assert.equal(runCount, 1, 'pending callback runs exactly once after flush');
     assert.equal(
-      (Konva.Node as any)._absTransformCascadeDepth,
+      (Konva.Node as any)._updateBatchDepth,
       0,
       'depth back to 0 after flush'
     );
   });
 
-  it('_runAfterAbsTransformCascade runs synchronously when called outside a cascade', function () {
+  it('_runAfterUpdateBatch runs synchronously when called outside a cascade', function () {
     let runCount = 0;
-    (Konva.Node as any)._runAfterAbsTransformCascade(() => {
+    (Konva.Node as any)._runAfterUpdateBatch(() => {
       runCount++;
     });
     assert.equal(
@@ -166,7 +166,7 @@ describe('TransformerPerfInvariants', function () {
     ContainerProto._clearSelfAndDescendantCache = function (attr: string) {
       if (
         attr === 'absoluteTransform' &&
-        (Konva.Node as any)._absTransformCascadeDepth === 0
+        (Konva.Node as any)._updateBatchDepth === 0
       ) {
         outerCascades++;
       }

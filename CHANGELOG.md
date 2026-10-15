@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+- Added `Konva.beginUpdateBatch()`: defers automatic `Transformer` updates across many synchronous node changes and runs them once when the returned function is called. A React commit or an undo that touches N selected nodes costs one update instead of N
+- `setAttrs()`, `destroyChildren()`, `removeChildren()` and each `Konva.Animation` frame (so every `Tween` step) batch `Transformer` updates on their own: one update per call or frame instead of one per attribute, child or tweened node
+- Fixed destroying attached nodes re-attaching every surviving node of the `Transformer`. Deleting a selection of N nodes was O(N²)
+
 ## 10.8.0 (2026-10-12)
 
 - Added `Transformer.rotateMode()`: `'corners'` rotates from invisible zones just outside the box corners, with a cursor that follows the corner direction. `'both'` keeps the rotate anchor too. Default is `'handle'`

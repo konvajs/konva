@@ -71,17 +71,7 @@ export abstract class Container<
    * @name Konva.Container#removeChildren
    */
   removeChildren() {
-    this.children.forEach((child) => {
-      // reset parent to prevent many _setChildrenIndices calls
-      child.parent = null;
-      child.index = 0;
-      child.remove();
-    });
-    this.children = [];
-    // because all children were detached from parent, request draw via container
-    this._notifySubtreeChange();
-    this._requestDraw();
-    return this;
+    return this._clearChildren('remove');
   }
   /**
    * destroy all children nodes.
@@ -89,17 +79,22 @@ export abstract class Container<
    * @name Konva.Container#destroyChildren
    */
   destroyChildren() {
-    this.children.forEach((child) => {
-      // reset parent to prevent many _setChildrenIndices calls
-      child.parent = null;
-      child.index = 0;
-      child.destroy();
+    return this._clearChildren('destroy');
+  }
+  _clearChildren(dispose: 'remove' | 'destroy') {
+    return Node._updateBatch(() => {
+      this.children.forEach((child) => {
+        // reset parent to prevent many _setChildrenIndices calls
+        child.parent = null;
+        child.index = 0;
+        child[dispose]();
+      });
+      this.children = [];
+      // because all children were detached from parent, request draw via container
+      this._notifySubtreeChange();
+      this._requestDraw();
+      return this;
     });
-    this.children = [];
-    // because all children were detached from parent, request draw via container
-    this._notifySubtreeChange();
-    this._requestDraw();
-    return this;
   }
   abstract _validateAdd(node: Node): void;
   /**
@@ -318,11 +313,11 @@ export abstract class Container<
     return arr;
   }
   _clearSelfAndDescendantCache(attr?: string) {
-    // Perf: bracket absoluteTransform cascades with a depth counter so
-    // Node._runAfterAbsTransformCascade can defer work until the outermost
-    // walk returns. try/finally so depth/flush survive listener exceptions.
+    // Perf: an absoluteTransform cascade is an update batch, so a listener on
+    // one of N descendants defers its work until the outermost walk returns.
+    // try/finally so depth/flush survive listener exceptions.
     const isAbsTransform = attr === undefined || attr === 'absoluteTransform';
-    if (isAbsTransform) Node._absTransformCascadeDepth++;
+    if (isAbsTransform) Node._updateBatchDepth++;
     try {
       super._clearSelfAndDescendantCache(attr);
       // a cached container is drawn from its bitmap, so its descendants keep
@@ -333,12 +328,8 @@ export abstract class Container<
         node._clearSelfAndDescendantCache(attr);
       });
     } finally {
-      if (isAbsTransform && --Node._absTransformCascadeDepth === 0) {
-        const callbacks = Node._pendingAfterCascade;
-        if (callbacks.length) {
-          Node._pendingAfterCascade = [];
-          for (let i = 0; i < callbacks.length; i++) callbacks[i]();
-        }
+      if (isAbsTransform && --Node._updateBatchDepth === 0) {
+        Node._flushUpdateBatch();
       }
     }
   }
