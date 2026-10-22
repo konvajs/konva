@@ -753,6 +753,47 @@ describe('Filter', function () {
     }
   });
 
+  it('Emboss lights the side named by embossDirection', function () {
+    const rect = new Konva.Rect();
+    try {
+      // gray of the middle pixel of each edge of a white square on black
+      const edges = (direction: string) => {
+        rect.embossDirection(direction);
+        const data = pixels([0, 0, 0, 255], 8, 8);
+        for (let y = 2; y < 6; y++) {
+          for (let x = 2; x < 6; x++) {
+            data.data.set([255, 255, 255, 255], (y * 8 + x) * 4);
+          }
+        }
+        Konva.Filters.Emboss.call(rect, data);
+        const gray = (x: number, y: number) => data.data[(y * 8 + x) * 4];
+        return {
+          top: gray(3, 2),
+          bottom: gray(3, 5),
+          left: gray(2, 3),
+          right: gray(5, 3),
+        };
+      };
+      for (const [direction, lit, shaded] of [
+        ['top', 'top', 'bottom'],
+        ['bottom', 'bottom', 'top'],
+        ['left', 'left', 'right'],
+        ['right', 'right', 'left'],
+        ['top-left', 'top', 'bottom'],
+        ['top-left', 'left', 'right'],
+      ]) {
+        const gray = edges(direction);
+        assert.isAbove(
+          gray[lit],
+          gray[shaded],
+          `${direction}: the ${lit} edge is lighter than the ${shaded} edge`
+        );
+      }
+    } finally {
+      rect.destroy();
+    }
+  });
+
   it('CSS fallback applies a chain without changing node attributes', function () {
     const rect = new Konva.Rect({
       width: 10,
