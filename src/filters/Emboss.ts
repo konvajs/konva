@@ -48,7 +48,8 @@ export const Emboss: Filter = function (imageData) {
   const bias = whiteLevel01 * 255;
   const dirRad = (directionDeg * Math.PI) / 180;
   const cx = Math.cos(dirRad);
-  const cy = Math.sin(dirRad);
+  // the angles above are measured with y up, but image rows go down
+  const cy = -Math.sin(dirRad);
   const SCALE = (128 / 1020) * strength; // ≈0.1255 * strength
 
   // Precompute luminance (Rec.709)
