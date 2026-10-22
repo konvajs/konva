@@ -7,6 +7,7 @@ import {
   assertAlmostEqual,
   createCanvasAndContext,
   compareLayerAndCanvas,
+  compareLayers,
 } from './test-utils.ts';
 
 describe('RegularPolygon', function () {
@@ -261,6 +262,34 @@ describe('RegularPolygon', function () {
       trace,
       'clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();moveTo(26.18,80.979);arcTo(0,100,-26.18,80.979,32.361);lineTo(-68.925,49.923);arcTo(-95.106,30.902,-85.106,0.125,32.361);lineTo(-68.779,-50.125);arcTo(-58.779,-80.902,-26.418,-80.902,32.361);lineTo(26.418,-80.902);arcTo(58.779,-80.902,68.779,-50.125,32.361);lineTo(85.106,0.125);arcTo(95.106,30.902,68.925,49.923,32.361);closePath();fillStyle=black;fill();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();moveTo(26.18,80.979);arcTo(0,100,-26.18,80.979,32.361);lineTo(-68.925,49.923);arcTo(-95.106,30.902,-85.106,0.125,32.361);lineTo(-68.779,-50.125);arcTo(-58.779,-80.902,-26.418,-80.902,32.361);lineTo(26.418,-80.902);arcTo(58.779,-80.902,68.779,-50.125,32.361);lineTo(85.106,0.125);arcTo(95.106,30.902,68.925,49.923,32.361);closePath();fillStyle=black;fill();restore();'
     );
+  });
+
+  it('negative cornerRadius draws as no rounding', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var layer2 = new Konva.Layer();
+    var attrs = { x: 100, y: 100, sides: 5, radius: 50, fill: 'green' };
+    layer.add(new Konva.RegularPolygon({ ...attrs, cornerRadius: 0 }));
+    layer.add(
+      new Konva.RegularPolygon({
+        ...attrs,
+        x: 250,
+        cornerRadius: [0, 10, 0, 10, 0],
+      })
+    );
+    layer2.add(new Konva.RegularPolygon({ ...attrs, cornerRadius: -10 }));
+    layer2.add(
+      new Konva.RegularPolygon({
+        ...attrs,
+        x: 250,
+        cornerRadius: [-5, 10, -5, 10, -5],
+      })
+    );
+    stage.add(layer);
+    stage.add(layer2);
+
+    assert.doesNotThrow(() => layer2.draw());
+    compareLayers(layer, layer2, 10);
   });
 
   it('a polygon without sides draws nothing and has an empty rect', function () {
