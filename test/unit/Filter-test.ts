@@ -774,22 +774,56 @@ describe('Filter', function () {
           right: gray(5, 3),
         };
       };
-      for (const [direction, lit, shaded] of [
-        ['top', 'top', 'bottom'],
-        ['bottom', 'bottom', 'top'],
-        ['left', 'left', 'right'],
-        ['right', 'right', 'left'],
-        ['top-left', 'top', 'bottom'],
-        ['top-left', 'left', 'right'],
+      const opposite = {
+        top: 'bottom',
+        bottom: 'top',
+        left: 'right',
+        right: 'left',
+      };
+      for (const direction of [
+        'top',
+        'bottom',
+        'left',
+        'right',
+        'top-left',
+        'top-right',
+        'bottom-left',
+        'bottom-right',
       ]) {
         const gray = edges(direction);
-        assert.isAbove(
-          gray[lit],
-          gray[shaded],
-          `${direction}: the ${lit} edge is lighter than the ${shaded} edge`
-        );
+        for (const lit of direction.split('-')) {
+          const shaded = opposite[lit];
+          assert.isAbove(
+            gray[lit],
+            gray[shaded],
+            `${direction}: the ${lit} edge is lighter than the ${shaded} edge`
+          );
+        }
       }
     } finally {
+      rect.destroy();
+    }
+  });
+
+  it('Emboss warns on an unknown direction and falls back to top-left', function () {
+    const rect = new Konva.Rect({ embossDirection: 'topleft' });
+    const oldWarn = Konva.Util.warn;
+    const warnings: string[] = [];
+    Konva.Util.warn = (str: string) => warnings.push(str);
+    try {
+      const run = () => {
+        const data = pixels([0, 0, 0, 255], 4, 4);
+        data.data.set([255, 255, 255, 255], (1 * 4 + 1) * 4);
+        return Konva.Filters.Emboss.call(rect, data).data;
+      };
+      const unknown = run();
+      assert.lengthOf(warnings, 1);
+      assert.include(warnings[0], 'topleft');
+      rect.embossDirection('top-left');
+      assert.deepEqual(Array.from(unknown), Array.from(run()));
+      assert.lengthOf(warnings, 1);
+    } finally {
+      Konva.Util.warn = oldWarn;
       rect.destroy();
     }
   });

@@ -1,4 +1,5 @@
 import { Factory } from '../Factory.ts';
+import { Util } from '../Util.ts';
 import type { Filter } from '../Node.ts';
 import { Node } from '../Node.ts';
 import { getNumberValidator } from '../Validators.ts';
@@ -37,8 +38,14 @@ export const Emboss: Filter = function (imageData) {
     'bottom-left': 45,
     left: 0,
   };
-  const directionDeg =
-    directionMap[this.embossDirection?.() ?? 'top-left'] ?? 315; // degrees
+  const direction = this.embossDirection?.() ?? 'top-left';
+  let directionDeg = directionMap[direction]; // degrees
+  if (directionDeg === undefined) {
+    Util.warn(
+      'Unknown emboss direction: "' + direction + '". Using "top-left".'
+    );
+    directionDeg = directionMap['top-left'];
+  }
   const blend = !!(this.embossBlend?.() ?? false);
 
   // Internal mapping:
