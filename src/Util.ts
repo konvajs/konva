@@ -1305,6 +1305,8 @@ export const Util = {
       } else {
         currCornerRadius = i < cornerRadius.length ? cornerRadius[i] : 0;
       }
+      // a negative corner radius would throw in context.arcTo()
+      currCornerRadius = Math.max(currCornerRadius, 0);
       const maxCornerRadius = radius * Math.cos(Math.PI / sides);
       // cornerRadius creates perfect circle at 1/2 radius
       currCornerRadius =
