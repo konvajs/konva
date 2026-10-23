@@ -726,6 +726,43 @@ describe('TextPath', function () {
     assert.equal(layer.getContext().getTrace(true), trace);
   });
 
+  it('text decoration uses the fill selected by fillPriority', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var textpath = new Konva.TextPath({
+      text: 'hello',
+      fontSize: 60,
+      data: 'M10,80 L400,80',
+      fill: 'blue',
+      fillPriority: 'linear-gradient',
+      fillLinearGradientStartPoint: { x: 0, y: 0 },
+      fillLinearGradientEndPoint: { x: 400, y: 0 },
+      fillLinearGradientColorStops: [0, 'red', 1, 'red'],
+      textDecoration: 'underline line-through',
+    });
+    layer.add(textpath);
+    stage.add(layer);
+
+    const colors = function () {
+      const pixels = layer
+        .getContext()
+        .getImageData(0, 0, stage.width(), stage.height()).data;
+      const set = new Set<string>();
+      for (let i = 0; i < pixels.length; i += 4) {
+        if (pixels[i + 3] === 255)
+          set.add(`${pixels[i]},${pixels[i + 1]},${pixels[i + 2]}`);
+      }
+      return set;
+    };
+    assert.deepEqual(Array.from(colors()), ['255,0,0']);
+
+    // with no color fill at all, the decorations still use the gradient
+    textpath.fill(undefined);
+    layer.draw();
+    assert.deepEqual(Array.from(colors()), ['255,0,0']);
+  });
+
   it('Text with baseline', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
