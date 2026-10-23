@@ -138,6 +138,7 @@ export class TextPath extends Shape<TextPathConfig> {
     context.save();
 
     const textDecoration = this.textDecoration();
+    const fill = context._getFillStyle(this)!;
     const fontSize = this.fontSize();
 
     const glyphInfo = this.glyphInfo;
@@ -175,7 +176,7 @@ export class TextPath extends Shape<TextPathConfig> {
       // context.stroke();
     }
     if (hasUnderline) {
-      context.strokeStyle = context._getFillStyle(this)!;
+      context.strokeStyle = fill;
       context.lineWidth = getDecorationLineWidth(fontSize);
       context.stroke();
     }
@@ -197,7 +198,7 @@ export class TextPath extends Shape<TextPathConfig> {
         context.lineTo(glyphInfo[i].width, 0);
         context.restore();
       }
-      context.strokeStyle = context._getFillStyle(this)!;
+      context.strokeStyle = fill;
       context.lineWidth = getDecorationLineWidth(fontSize);
       context.stroke();
     }
