@@ -1024,11 +1024,16 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
   _delegate(event: string, selector: string, handler: (e: Event) => void) {
     const stopNode = this;
     this.on(event, function (evt) {
+      const original = evt;
       const targets = evt.target.findAncestors(selector, true, stopNode);
       for (let i = 0; i < targets.length; i++) {
         evt = Util.cloneObject(evt);
         evt.currentTarget = targets[i] as any;
         handler.call(targets[i], evt as any);
+      }
+      // handlers get copies, so pass a cancelled bubble back
+      if (evt.cancelBubble) {
+        original.cancelBubble = true;
       }
     });
     return this;
