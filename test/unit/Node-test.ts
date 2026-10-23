@@ -2225,6 +2225,36 @@ describe('Node', function () {
     circle.fire('click', undefined, true);
     assert.equal(fired, true);
   });
+
+  it('cancel event bubble in a delegated handler', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    var circle = new Konva.Circle({
+      x: stage.width() / 2,
+      y: stage.height() / 2,
+      radius: 70,
+      fill: 'green',
+    });
+    var group = new Konva.Group({ name: 'item' });
+    group.add(circle);
+    layer.add(group);
+    layer.draw();
+
+    var clicks: string[] = [];
+    layer.on('click', '.item', function (e) {
+      e.cancelBubble = true;
+      clicks.push('item');
+    });
+    stage.on('click', function () {
+      clicks.push('stage');
+    });
+
+    simulateMouseDown(stage, { x: stage.width() / 2, y: stage.height() / 2 });
+    simulateMouseUp(stage, { x: stage.width() / 2, y: stage.height() / 2 });
+
+    assert.deepEqual(clicks, ['item']);
+  });
   // ======================================================
   it('move shape, group, and layer, and then get absolute position', function () {
     var stage = addStage();
