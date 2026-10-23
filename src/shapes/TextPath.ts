@@ -1,6 +1,6 @@
 import { Util } from '../Util.ts';
 import { Factory } from '../Factory.ts';
-import type { Context } from '../Context.ts';
+import type { Context, SceneContext } from '../Context.ts';
 import type { ShapeConfig } from '../Shape.ts';
 import { Shape } from '../Shape.ts';
 import { Path } from './Path.ts';
@@ -131,14 +131,13 @@ export class TextPath extends Shape<TextPathConfig> {
     this.pathLength = this._getTextPathLength();
   }
 
-  _sceneFunc(context: Context) {
+  _sceneFunc(context: SceneContext) {
     context.setAttr('font', this._getContextFont());
     context.setAttr('textBaseline', this.textBaseline());
     context.setAttr('textAlign', 'left');
     context.save();
 
     const textDecoration = this.textDecoration();
-    const fill = this.fill();
     const fontSize = this.fontSize();
 
     const glyphInfo = this.glyphInfo;
@@ -176,7 +175,7 @@ export class TextPath extends Shape<TextPathConfig> {
       // context.stroke();
     }
     if (hasUnderline) {
-      context.strokeStyle = fill;
+      context.strokeStyle = context._getFillStyle(this)!;
       context.lineWidth = getDecorationLineWidth(fontSize);
       context.stroke();
     }
@@ -198,7 +197,7 @@ export class TextPath extends Shape<TextPathConfig> {
         context.lineTo(glyphInfo[i].width, 0);
         context.restore();
       }
-      context.strokeStyle = fill;
+      context.strokeStyle = context._getFillStyle(this)!;
       context.lineWidth = getDecorationLineWidth(fontSize);
       context.stroke();
     }
