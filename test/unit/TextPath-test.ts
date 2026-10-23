@@ -867,6 +867,46 @@ describe('TextPath', function () {
       assert(worst <= 3, `${name}: colors in one column differ by ${worst}`);
     }
   });
+
+  it('bounds include the underline, so cache() does not clip it', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    for (const data of ['M10,80 L400,80', 'M10,130 L390,30']) {
+      layer.destroyChildren();
+      const textpath = new Konva.TextPath({
+        text: 'hello',
+        fontSize: 60,
+        data,
+        fill: 'red',
+      });
+      layer.add(textpath);
+      const plain = textpath.getClientRect();
+      textpath.textDecoration('underline');
+      const underlined = textpath.getClientRect();
+      assert(
+        underlined.y + underlined.height > plain.y + plain.height,
+        data + ': the underline extends the bounds'
+      );
+
+      const rows = function () {
+        layer.draw();
+        const width = stage.width();
+        const pixels = layer
+          .getContext()
+          .getImageData(0, 0, width, stage.height()).data;
+        let bottom = -1;
+        for (let i = 3; i < pixels.length; i += 4) {
+          if (pixels[i] === 255) bottom = Math.floor(i / 4 / width);
+        }
+        return bottom;
+      };
+      const expected = rows();
+      textpath.cache();
+      assert.equal(rows(), expected, data + ': lowest opaque row');
+    }
+  });
   it('Text with baseline', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

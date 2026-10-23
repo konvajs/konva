@@ -412,12 +412,28 @@ export class TextPath extends Shape<TextPathConfig> {
     });
     const rect = Util._getPointsRect(points);
     const fontSize = this.fontSize();
-    return {
-      x: rect.x - fontSize / 2,
-      y: rect.y - fontSize / 2,
-      width: rect.width + fontSize,
-      height: rect.height + fontSize,
-    };
+    let x = rect.x - fontSize / 2,
+      y = rect.y - fontSize / 2,
+      right = rect.x + rect.width + fontSize / 2,
+      bottom = rect.y + rect.height + fontSize / 2;
+    if (this.textDecoration().indexOf('underline') !== -1) {
+      // the underline is drawn below the glyphs, past the padding
+      const offset = fontSize / 2 + 1,
+        half = getDecorationLineWidth(fontSize) / 2;
+      this.glyphInfo.forEach(function (info) {
+        const tr = new Transform()
+          .translate(info.p0.x, info.p0.y)
+          .rotate(info.rotation);
+        for (const end of [0, info.width]) {
+          const point = tr.point({ x: end, y: offset });
+          x = Math.min(x, point.x - half);
+          y = Math.min(y, point.y - half);
+          right = Math.max(right, point.x + half);
+          bottom = Math.max(bottom, point.y + half);
+        }
+      });
+    }
+    return { x, y, width: right - x, height: bottom - y };
   }
   // Like Text: a glyph stroke is drawn with the text, so it always scales.
   getStrokeScaleEnabled() {
@@ -455,7 +471,9 @@ TextPath.prototype._strokeFunc = _strokeFunc;
 TextPath.prototype._fillFuncHit = _fillFunc;
 TextPath.prototype._strokeFuncHit = _strokeFunc;
 TextPath.prototype.className = 'TextPath';
+// textDecoration changes the bounds through getSelfRect, but needs no relayout
 TextPath.prototype._attrsAffectingSize = [
+  'textDecoration',
   'text',
   'fontSize',
   'data',
@@ -476,7 +494,7 @@ TextPath.prototype.on('dataChange.konva', function () {
 // update text data for certain attr changes
 TextPath.prototype.on(
   TextPath.prototype._attrsAffectingSize
-    .filter((attr) => attr !== 'data')
+    .filter((attr) => attr !== 'data' && attr !== 'textDecoration')
     .map((attr) => attr + 'Change.konva')
     .join(' '),
   function () {
