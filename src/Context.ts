@@ -873,8 +873,8 @@ export class SceneContext extends Context {
     }
   }
   _strokeLinearGradient(shape) {
-    let start = shape.getStrokeLinearGradientStartPoint(),
-      end = shape.getStrokeLinearGradientEndPoint();
+    let start = shape._toStyleSpace(shape.getStrokeLinearGradientStartPoint()),
+      end = shape._toStyleSpace(shape.getStrokeLinearGradientEndPoint());
     if (!shape.getStrokeScaleEnabled()) {
       const { a, b, c, d, e, f } = this._context.getTransform();
       const transform = new Transform([a, b, c, d, e, f]);

@@ -7,6 +7,7 @@ import {
   assertAlmostEqual,
   assertAlmostDeepEqual,
   countCalls,
+  createCanvasAndContext,
 } from './test-utils.ts';
 
 describe('TextPath', function () {
@@ -763,7 +764,6 @@ describe('TextPath', function () {
     assert.deepEqual(Array.from(colors()), ['255,0,0']);
   });
 
-
   it('text decoration of outlined text uses the stroke', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -801,6 +801,71 @@ describe('TextPath', function () {
     text.strokeEnabled(false);
     layer.draw();
     assert.deepEqual(Array.from(colors()), []);
+  });
+
+  it('gradients and patterns are fixed to the shape, not to each glyph', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    // each style below changes color only along x
+    const { canvas: image, context: imageContext } = createCanvasAndContext();
+    image.width = 400;
+    image.height = 1;
+    imageContext.fillStyle = 'red';
+    imageContext.fillRect(0, 0, 200, 1);
+    imageContext.fillStyle = 'blue';
+    imageContext.fillRect(200, 0, 200, 1);
+    const gradient = {
+      StartPoint: { x: 0, y: 0 },
+      EndPoint: { x: 400, y: 0 },
+      ColorStops: [0, 'red', 1, 'blue'],
+    };
+    const styles = {
+      'linear fill': {
+        fillLinearGradientStartPoint: gradient.StartPoint,
+        fillLinearGradientEndPoint: gradient.EndPoint,
+        fillLinearGradientColorStops: gradient.ColorStops,
+      },
+      'pattern fill': { fillPatternImage: image },
+      'linear stroke': {
+        strokeWidth: 2,
+        strokeLinearGradientStartPoint: gradient.StartPoint,
+        strokeLinearGradientEndPoint: gradient.EndPoint,
+        strokeLinearGradientColorStops: gradient.ColorStops,
+      },
+    };
+    stage.add(layer);
+
+    for (const [name, style] of Object.entries(styles)) {
+      layer.destroyChildren();
+      // rotated glyphs along a diagonal, with decorations in shape space
+      layer.add(
+        new Konva.TextPath({
+          text: 'MMMMMMMMMM',
+          fontSize: 30,
+          data: 'M10,170 L390,30',
+          textDecoration: 'underline line-through',
+          ...style,
+        })
+      );
+      layer.draw();
+
+      const width = stage.width();
+      const pixels = layer
+        .getContext()
+        .getImageData(0, 0, width, stage.height()).data;
+      let worst = 0;
+      for (let x = 0; x < width; x++) {
+        let min = 255;
+        let max = 0;
+        for (let i = x * 4; i < pixels.length; i += width * 4) {
+          if (pixels[i + 3] !== 255) continue;
+          min = Math.min(min, pixels[i]);
+          max = Math.max(max, pixels[i]);
+        }
+        worst = Math.max(worst, max - min);
+      }
+      assert(worst <= 3, `${name}: colors in one column differ by ${worst}`);
+    }
   });
   it('Text with baseline', function () {
     var stage = addStage();

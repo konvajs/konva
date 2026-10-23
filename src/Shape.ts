@@ -192,6 +192,10 @@ export class Shape<
   _strokeFunc: (ctx: Context) => void;
   _fillFuncHit: (ctx: Context) => void;
   _strokeFuncHit: (ctx: Context) => void;
+  // Set while drawing in a space moved rigidly from the shape's own one
+  // (TextPath glyphs). Gradients and patterns are mapped into that space, so
+  // the style stays fixed to the shape.
+  _styleTransform?: Transform;
 
   constructor(config?: Config) {
     super(config);
@@ -261,7 +265,11 @@ export class Shape<
       )
     );
   }
+  _toStyleSpace(point: Vector2d) {
+    return this._styleTransform ? this._styleTransform.point(point) : point;
+  }
   _getFillPattern() {
+    if (this._styleTransform) return this.__getFillPattern();
     return this._getCache(patternImage, this.__getFillPattern);
   }
   __getFillPattern() {
@@ -272,7 +280,7 @@ export class Shape<
         this.fillPatternRepeat() || 'repeat'
       );
       if (pattern && pattern.setTransform) {
-        const tr = new Transform();
+        const tr = this._styleTransform?.copy() || new Transform();
 
         tr.translate(this.fillPatternX(), this.fillPatternY());
         tr.rotate(Konva.getAngle(this.fillPatternRotation()));
@@ -302,6 +310,7 @@ export class Shape<
     }
   }
   _getLinearGradient() {
+    if (this._styleTransform) return this.__getLinearGradient();
     return this._getCache(linearGradient, this.__getLinearGradient);
   }
   __getLinearGradient() {
@@ -309,8 +318,8 @@ export class Shape<
     if (colorStops) {
       const ctx = getDummyContext();
 
-      const start = this.fillLinearGradientStartPoint();
-      const end = this.fillLinearGradientEndPoint();
+      const start = this._toStyleSpace(this.fillLinearGradientStartPoint());
+      const end = this._toStyleSpace(this.fillLinearGradientEndPoint());
       const grd = ctx.createLinearGradient(start.x, start.y, end.x, end.y);
 
       // build color stops
@@ -322,6 +331,7 @@ export class Shape<
   }
 
   _getRadialGradient() {
+    if (this._styleTransform) return this.__getRadialGradient();
     return this._getCache(radialGradient, this.__getRadialGradient);
   }
   __getRadialGradient() {
@@ -329,8 +339,9 @@ export class Shape<
     if (colorStops) {
       const ctx = getDummyContext();
 
-      const start = this.fillRadialGradientStartPoint();
-      const end = this.fillRadialGradientEndPoint();
+      // a rigid transform keeps the radii
+      const start = this._toStyleSpace(this.fillRadialGradientStartPoint());
+      const end = this._toStyleSpace(this.fillRadialGradientEndPoint());
       const grd = ctx.createRadialGradient(
         start.x,
         start.y,

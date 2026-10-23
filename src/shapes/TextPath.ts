@@ -1,4 +1,4 @@
-import { Util } from '../Util.ts';
+import { Transform, Util } from '../Util.ts';
 import { Factory } from '../Factory.ts';
 import type { Context, SceneContext } from '../Context.ts';
 import type { ShapeConfig } from '../Shape.ts';
@@ -151,12 +151,18 @@ export class TextPath extends Shape<TextPathConfig> {
       context.save();
 
       const p0 = glyphInfo[i].p0;
+      const rotation = glyphInfo[i].rotation;
 
       context.translate(p0.x, p0.y);
-      context.rotate(glyphInfo[i].rotation);
+      context.rotate(rotation);
       this.partialText = glyphInfo[i].text;
 
+      // keep gradients and patterns in the shape's space, not the glyph's
+      this._styleTransform = new Transform()
+        .rotate(-rotation)
+        .translate(-p0.x, -p0.y);
       context.fillStrokeShape(this);
+      this._styleTransform = undefined;
       if (hasUnderline) {
         if (i === 0) {
           context.moveTo(0, fontSize / 2 + 1);

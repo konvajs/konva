@@ -1243,7 +1243,6 @@ describe('Text', function () {
     assert.deepEqual(Array.from(colors()), ['255,0,0']);
   });
 
-
   it('text decoration of outlined text uses the stroke', function () {
     var stage = addStage();
     var layer = new Konva.Layer();
