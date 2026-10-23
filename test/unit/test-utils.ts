@@ -117,6 +117,20 @@ export function compareCanvases(canvas1, canvas2, tol = 1, secondTol?) {
   );
 }
 
+// the distinct colors of fully opaque pixels, as 'r,g,b', in pixel order
+export function opaqueColors(layer: Layer) {
+  const canvas = layer.getCanvas()._canvas;
+  const pixels = layer
+    .getContext()
+    .getImageData(0, 0, canvas.width, canvas.height).data;
+  const colors = new Set<string>();
+  for (let i = 0; i < pixels.length; i += 4) {
+    if (pixels[i + 3] === 255)
+      colors.add(`${pixels[i]},${pixels[i + 1]},${pixels[i + 2]}`);
+  }
+  return Array.from(colors);
+}
+
 export function compareLayerAndCanvas(layer: Layer, canvas, tol?, secondTol?) {
   compareCanvases(layer.getNativeCanvasElement(), canvas, tol, secondTol);
 }

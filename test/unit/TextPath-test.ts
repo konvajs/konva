@@ -8,6 +8,7 @@ import {
   assertAlmostDeepEqual,
   countCalls,
   createCanvasAndContext,
+  opaqueColors,
 } from './test-utils.ts';
 
 describe('TextPath', function () {
@@ -745,23 +746,12 @@ describe('TextPath', function () {
     layer.add(textpath);
     stage.add(layer);
 
-    const colors = function () {
-      const pixels = layer
-        .getContext()
-        .getImageData(0, 0, stage.width(), stage.height()).data;
-      const set = new Set<string>();
-      for (let i = 0; i < pixels.length; i += 4) {
-        if (pixels[i + 3] === 255)
-          set.add(`${pixels[i]},${pixels[i + 1]},${pixels[i + 2]}`);
-      }
-      return set;
-    };
-    assert.deepEqual(Array.from(colors()), ['255,0,0']);
+    assert.deepEqual(opaqueColors(layer), ['255,0,0']);
 
     // with no color fill at all, the decorations still use the gradient
     textpath.fill(undefined);
     layer.draw();
-    assert.deepEqual(Array.from(colors()), ['255,0,0']);
+    assert.deepEqual(opaqueColors(layer), ['255,0,0']);
   });
 
   it('text decoration of outlined text uses the stroke', function () {
@@ -779,28 +769,17 @@ describe('TextPath', function () {
     layer.add(text);
     stage.add(layer);
 
-    const colors = function () {
-      const pixels = layer
-        .getContext()
-        .getImageData(0, 0, stage.width(), stage.height()).data;
-      const set = new Set<string>();
-      for (let i = 0; i < pixels.length; i += 4) {
-        if (pixels[i + 3] === 255)
-          set.add(`${pixels[i]},${pixels[i + 1]},${pixels[i + 2]}`);
-      }
-      return set;
-    };
-    assert.deepEqual(Array.from(colors()), ['0,128,0']);
+    assert.deepEqual(opaqueColors(layer), ['0,128,0']);
 
     // a disabled fill is not drawn, so the decorations do not use it
     text.setAttrs({ fill: 'red', fillEnabled: false });
     layer.draw();
-    assert.deepEqual(Array.from(colors()), ['0,128,0']);
+    assert.deepEqual(opaqueColors(layer), ['0,128,0']);
 
     // text that paints nothing gets no decorations
     text.strokeEnabled(false);
     layer.draw();
-    assert.deepEqual(Array.from(colors()), []);
+    assert.deepEqual(opaqueColors(layer), []);
   });
 
   it('gradients and patterns are fixed to the shape, not to each glyph', function () {
@@ -814,23 +793,21 @@ describe('TextPath', function () {
     imageContext.fillRect(0, 0, 200, 1);
     imageContext.fillStyle = 'blue';
     imageContext.fillRect(200, 0, 200, 1);
-    const gradient = {
-      StartPoint: { x: 0, y: 0 },
-      EndPoint: { x: 400, y: 0 },
-      ColorStops: [0, 'red', 1, 'blue'],
-    };
+    const start = { x: 0, y: 0 },
+      end = { x: 400, y: 0 },
+      stops = [0, 'red', 1, 'blue'];
     const styles = {
       'linear fill': {
-        fillLinearGradientStartPoint: gradient.StartPoint,
-        fillLinearGradientEndPoint: gradient.EndPoint,
-        fillLinearGradientColorStops: gradient.ColorStops,
+        fillLinearGradientStartPoint: start,
+        fillLinearGradientEndPoint: end,
+        fillLinearGradientColorStops: stops,
       },
       'pattern fill': { fillPatternImage: image },
       'linear stroke': {
         strokeWidth: 2,
-        strokeLinearGradientStartPoint: gradient.StartPoint,
-        strokeLinearGradientEndPoint: gradient.EndPoint,
-        strokeLinearGradientColorStops: gradient.ColorStops,
+        strokeLinearGradientStartPoint: start,
+        strokeLinearGradientEndPoint: end,
+        strokeLinearGradientColorStops: stops,
       },
     };
     stage.add(layer);

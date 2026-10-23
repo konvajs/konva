@@ -268,46 +268,49 @@ export class Shape<
   _toStyleSpace(point: Vector2d) {
     return this._styleTransform ? this._styleTransform.point(point) : point;
   }
+  // Unlike a gradient, a pattern can be moved after it is created, so one
+  // pattern serves every space it is drawn in (see _styleTransform).
   _getFillPattern() {
-    if (this._styleTransform) return this.__getFillPattern();
-    return this._getCache(patternImage, this.__getFillPattern);
+    const pattern = this._getCache(patternImage, this._createFillPattern);
+    return pattern && this._setFillPatternTransform(pattern);
   }
-  __getFillPattern() {
+  _createFillPattern() {
     if (this.fillPatternImage()) {
-      const ctx = getDummyContext();
-      const pattern = ctx.createPattern(
+      return getDummyContext().createPattern(
         this.fillPatternImage(),
         this.fillPatternRepeat() || 'repeat'
       );
-      if (pattern && pattern.setTransform) {
-        const tr = this._styleTransform?.copy() || new Transform();
-
-        tr.translate(this.fillPatternX(), this.fillPatternY());
-        tr.rotate(Konva.getAngle(this.fillPatternRotation()));
-        tr.scale(this.fillPatternScaleX(), this.fillPatternScaleY());
-        tr.translate(
-          -1 * this.fillPatternOffsetX(),
-          -1 * this.fillPatternOffsetY()
-        );
-
-        const m = tr.getMatrix();
-
-        const matrix =
-          typeof DOMMatrix === 'undefined'
-            ? {
-                a: m[0], // Horizontal scaling. A value of 1 results in no scaling.
-                b: m[1], // Vertical skewing.
-                c: m[2], // Horizontal skewing.
-                d: m[3],
-                e: m[4], // Horizontal translation (moving).
-                f: m[5], // Vertical translation (moving).
-              }
-            : new DOMMatrix(m);
-
-        pattern.setTransform(matrix);
-      }
-      return pattern;
     }
+  }
+  _setFillPatternTransform(pattern: CanvasPattern) {
+    if (pattern.setTransform) {
+      const tr = this._styleTransform?.copy() || new Transform();
+
+      tr.translate(this.fillPatternX(), this.fillPatternY());
+      tr.rotate(Konva.getAngle(this.fillPatternRotation()));
+      tr.scale(this.fillPatternScaleX(), this.fillPatternScaleY());
+      tr.translate(
+        -1 * this.fillPatternOffsetX(),
+        -1 * this.fillPatternOffsetY()
+      );
+
+      const m = tr.getMatrix();
+
+      const matrix =
+        typeof DOMMatrix === 'undefined'
+          ? {
+              a: m[0], // Horizontal scaling. A value of 1 results in no scaling.
+              b: m[1], // Vertical skewing.
+              c: m[2], // Horizontal skewing.
+              d: m[3],
+              e: m[4], // Horizontal translation (moving).
+              f: m[5], // Vertical translation (moving).
+            }
+          : new DOMMatrix(m);
+
+      pattern.setTransform(matrix);
+    }
+    return pattern;
   }
   _getLinearGradient() {
     if (this._styleTransform) return this.__getLinearGradient();

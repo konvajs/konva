@@ -11,6 +11,7 @@ import {
   compareCanvases,
   countCalls,
   getPixelRatio,
+  opaqueColors,
 } from './test-utils.ts';
 import { getDummyContext, stringToArray } from '../../src/shapes/Text.ts';
 
@@ -1216,18 +1217,7 @@ describe('Text', function () {
     layer.add(text);
     stage.add(layer);
 
-    const colors = function () {
-      const pixels = layer
-        .getContext()
-        .getImageData(0, 0, stage.width(), stage.height()).data;
-      const set = new Set<string>();
-      for (let i = 0; i < pixels.length; i += 4) {
-        if (pixels[i + 3] === 255)
-          set.add(`${pixels[i]},${pixels[i + 1]},${pixels[i + 2]}`);
-      }
-      return set;
-    };
-    assert.deepEqual(Array.from(colors()), ['0,0,255']);
+    assert.deepEqual(opaqueColors(layer), ['0,0,255']);
 
     // a radial gradient is used for the decorations too
     text.setAttrs({
@@ -1240,7 +1230,7 @@ describe('Text', function () {
       fillRadialGradientColorStops: [0, 'red', 1, 'red'],
     });
     layer.draw();
-    assert.deepEqual(Array.from(colors()), ['255,0,0']);
+    assert.deepEqual(opaqueColors(layer), ['255,0,0']);
   });
 
   it('text decoration of outlined text uses the stroke', function () {
@@ -1259,28 +1249,17 @@ describe('Text', function () {
     layer.add(text);
     stage.add(layer);
 
-    const colors = function () {
-      const pixels = layer
-        .getContext()
-        .getImageData(0, 0, stage.width(), stage.height()).data;
-      const set = new Set<string>();
-      for (let i = 0; i < pixels.length; i += 4) {
-        if (pixels[i + 3] === 255)
-          set.add(`${pixels[i]},${pixels[i + 1]},${pixels[i + 2]}`);
-      }
-      return set;
-    };
-    assert.deepEqual(Array.from(colors()), ['0,128,0']);
+    assert.deepEqual(opaqueColors(layer), ['0,128,0']);
 
     // a disabled fill is not drawn, so the decorations do not use it
     text.setAttrs({ fill: 'red', fillEnabled: false });
     layer.draw();
-    assert.deepEqual(Array.from(colors()), ['0,128,0']);
+    assert.deepEqual(opaqueColors(layer), ['0,128,0']);
 
     // text that paints nothing gets no decorations
     text.strokeEnabled(false);
     layer.draw();
-    assert.deepEqual(Array.from(colors()), []);
+    assert.deepEqual(opaqueColors(layer), []);
   });
   it('text multi line with underline and strike and gradient vertical', function () {
     var stage = addStage();
@@ -2188,14 +2167,7 @@ describe('Text', function () {
     layer.add(text);
     layer.draw();
 
-    const pixels = layer
-      .getContext()
-      .getImageData(0, 0, stage.width(), stage.height()).data;
-    const colors = new Set<string>();
-    for (let i = 0; i < pixels.length; i += 4) {
-      if (pixels[i + 3] === 255)
-        colors.add(`${pixels[i]},${pixels[i + 1]},${pixels[i + 2]}`);
-    }
+    const colors = new Set(opaqueColors(layer));
     for (const color of ['0,0,0', '0,0,255', '255,0,0', '0,128,0'])
       assert.isTrue(colors.has(color), `draws ${color}`);
   });

@@ -139,6 +139,7 @@ export class TextPath extends Shape<TextPathConfig> {
 
     const textDecoration = this.textDecoration();
     const fontSize = this.fontSize();
+    const underlineOffset = this._getUnderlineOffset();
 
     const glyphInfo = this.glyphInfo;
     const hasUnderline = textDecoration.indexOf('underline') !== -1;
@@ -147,44 +148,45 @@ export class TextPath extends Shape<TextPathConfig> {
     if (hasUnderline) {
       context.beginPath();
     }
-    for (let i = 0; i < glyphInfo.length; i++) {
-      context.save();
+    try {
+      for (let i = 0; i < glyphInfo.length; i++) {
+        context.save();
 
-      const p0 = glyphInfo[i].p0;
-      const rotation = glyphInfo[i].rotation;
+        const p0 = glyphInfo[i].p0;
+        const rotation = glyphInfo[i].rotation;
 
-      context.translate(p0.x, p0.y);
-      context.rotate(rotation);
-      this.partialText = glyphInfo[i].text;
+        context.translate(p0.x, p0.y);
+        context.rotate(rotation);
+        this.partialText = glyphInfo[i].text;
 
-      // keep gradients and patterns in the shape's space, not the glyph's
-      this._styleTransform = new Transform()
-        .rotate(-rotation)
-        .translate(-p0.x, -p0.y);
-      context.fillStrokeShape(this);
-      this._styleTransform = undefined;
-      if (hasUnderline) {
-        if (i === 0) {
-          context.moveTo(0, fontSize / 2 + 1);
+        // keep gradients and patterns in the shape's space, not the glyph's
+        this._styleTransform = new Transform()
+          .rotate(-rotation)
+          .translate(-p0.x, -p0.y);
+        context.fillStrokeShape(this);
+        if (hasUnderline) {
+          if (i === 0) {
+            context.moveTo(0, underlineOffset);
+          }
+          context.lineTo(glyphInfo[i].width, underlineOffset);
         }
-        context.lineTo(glyphInfo[i].width, fontSize / 2 + 1);
-      }
-      context.restore();
+        context.restore();
 
-      //// To assist with debugging visually, uncomment following
-      //
-      // if (i % 2) context.strokeStyle = 'cyan';
-      // else context.strokeStyle = 'green';
-      // var p1 = glyphInfo[i].p1;
-      // context.moveTo(p0.x, p0.y);
-      // context.lineTo(p1.x, p1.y);
-      // context.stroke();
-    }
-    if (hasUnderline) {
-      if (context._applyDecorationStyle(this)) {
-        context.lineWidth = getDecorationLineWidth(fontSize);
-        context.stroke();
+        //// To assist with debugging visually, uncomment following
+        //
+        // if (i % 2) context.strokeStyle = 'cyan';
+        // else context.strokeStyle = 'green';
+        // var p1 = glyphInfo[i].p1;
+        // context.moveTo(p0.x, p0.y);
+        // context.lineTo(p1.x, p1.y);
+        // context.stroke();
       }
+    } finally {
+      this._styleTransform = undefined;
+    }
+    context.lineWidth = getDecorationLineWidth(fontSize);
+    if (hasUnderline && context._applyDecorationStyle(this)) {
+      context.stroke();
     }
 
     if (hasLineThrough) {
@@ -204,10 +206,7 @@ export class TextPath extends Shape<TextPathConfig> {
         context.lineTo(glyphInfo[i].width, 0);
         context.restore();
       }
-      if (context._applyDecorationStyle(this)) {
-        context.lineWidth = getDecorationLineWidth(fontSize);
-        context.stroke();
-      }
+      if (context._applyDecorationStyle(this)) context.stroke();
     }
 
     context.restore();
@@ -418,22 +417,28 @@ export class TextPath extends Shape<TextPathConfig> {
       bottom = rect.y + rect.height + fontSize / 2;
     if (this.textDecoration().indexOf('underline') !== -1) {
       // the underline is drawn below the glyphs, past the padding
-      const offset = fontSize / 2 + 1,
-        half = getDecorationLineWidth(fontSize) / 2;
+      const lineWidth = getDecorationLineWidth(fontSize),
+        lineY = this._getUnderlineOffset() - lineWidth / 2;
       this.glyphInfo.forEach(function (info) {
-        const tr = new Transform()
+        const line = new Transform()
           .translate(info.p0.x, info.p0.y)
-          .rotate(info.rotation);
-        for (const end of [0, info.width]) {
-          const point = tr.point({ x: end, y: offset });
-          x = Math.min(x, point.x - half);
-          y = Math.min(y, point.y - half);
-          right = Math.max(right, point.x + half);
-          bottom = Math.max(bottom, point.y + half);
-        }
+          .rotate(info.rotation)
+          ._getTransformedRect({
+            x: 0,
+            y: lineY,
+            width: info.width,
+            height: lineWidth,
+          });
+        x = Math.min(x, line.x);
+        y = Math.min(y, line.y);
+        right = Math.max(right, line.x + line.width);
+        bottom = Math.max(bottom, line.y + line.height);
       });
     }
     return { x, y, width: right - x, height: bottom - y };
+  }
+  _getUnderlineOffset() {
+    return this.fontSize() / 2 + 1;
   }
   // Like Text: a glyph stroke is drawn with the text, so it always scales.
   getStrokeScaleEnabled() {
@@ -471,12 +476,9 @@ TextPath.prototype._strokeFunc = _strokeFunc;
 TextPath.prototype._fillFuncHit = _fillFunc;
 TextPath.prototype._strokeFuncHit = _strokeFunc;
 TextPath.prototype.className = 'TextPath';
-// textDecoration changes the bounds through getSelfRect, but needs no relayout
-TextPath.prototype._attrsAffectingSize = [
-  'textDecoration',
+const ATTR_CHANGE_LIST = [
   'text',
   'fontSize',
-  'data',
   'align',
   'letterSpacing',
   'kerningFunc',
@@ -485,6 +487,12 @@ TextPath.prototype._attrsAffectingSize = [
   'fontVariant',
   'direction',
 ];
+// data relayouts in its own listener; textDecoration changes the bounds
+// through getSelfRect, but needs no relayout
+TextPath.prototype._attrsAffectingSize = ATTR_CHANGE_LIST.concat(
+  'data',
+  'textDecoration'
+);
 _registerNode(TextPath, true);
 
 TextPath.prototype.on('dataChange.konva', function () {
@@ -493,10 +501,7 @@ TextPath.prototype.on('dataChange.konva', function () {
 });
 // update text data for certain attr changes
 TextPath.prototype.on(
-  TextPath.prototype._attrsAffectingSize
-    .filter((attr) => attr !== 'data' && attr !== 'textDecoration')
-    .map((attr) => attr + 'Change.konva')
-    .join(' '),
+  ATTR_CHANGE_LIST.map((attr) => attr + 'Change.konva').join(' '),
   function () {
     this._setTextData();
   }
