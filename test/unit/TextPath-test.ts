@@ -763,6 +763,45 @@ describe('TextPath', function () {
     assert.deepEqual(Array.from(colors()), ['255,0,0']);
   });
 
+
+  it('text decoration of outlined text uses the stroke', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.TextPath({
+      text: 'hello',
+      fontSize: 60,
+      data: 'M10,80 L400,80',
+      stroke: 'green',
+      strokeWidth: 2,
+      textDecoration: 'underline line-through',
+    });
+    layer.add(text);
+    stage.add(layer);
+
+    const colors = function () {
+      const pixels = layer
+        .getContext()
+        .getImageData(0, 0, stage.width(), stage.height()).data;
+      const set = new Set<string>();
+      for (let i = 0; i < pixels.length; i += 4) {
+        if (pixels[i + 3] === 255)
+          set.add(`${pixels[i]},${pixels[i + 1]},${pixels[i + 2]}`);
+      }
+      return set;
+    };
+    assert.deepEqual(Array.from(colors()), ['0,128,0']);
+
+    // a disabled fill is not drawn, so the decorations do not use it
+    text.setAttrs({ fill: 'red', fillEnabled: false });
+    layer.draw();
+    assert.deepEqual(Array.from(colors()), ['0,128,0']);
+
+    // text that paints nothing gets no decorations
+    text.strokeEnabled(false);
+    layer.draw();
+    assert.deepEqual(Array.from(colors()), []);
+  });
   it('Text with baseline', function () {
     var stage = addStage();
     var layer = new Konva.Layer();

@@ -356,8 +356,7 @@ export class Text extends Shape<TextConfig> {
 
         context.lineWidth = getDecorationLineWidth(fontSize);
 
-        context.strokeStyle = context._getFillStyle(this)!;
-        context.stroke();
+        if (context._applyDecorationStyle(this)) context.stroke();
         context.restore();
       }
 
@@ -446,8 +445,7 @@ export class Text extends Shape<TextConfig> {
           translateY + lineTranslateY + yOffset
         );
         context.lineWidth = getDecorationLineWidth(fontSize);
-        context.strokeStyle = context._getFillStyle(this)!;
-        context.stroke();
+        if (context._applyDecorationStyle(this)) context.stroke();
         context.restore();
       }
 

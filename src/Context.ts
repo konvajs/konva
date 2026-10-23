@@ -912,6 +912,18 @@ export class SceneContext extends Context {
       this.setAttr('strokeStyle', shape.stroke());
     }
   }
+  // Text decorations are drawn like the glyphs: with the fill, or with the
+  // stroke when the text is only outlined. False when the glyphs paint nothing.
+  _applyDecorationStyle(shape: Shape) {
+    if (shape.hasFill()) {
+      this.strokeStyle = this._getFillStyle(shape)!;
+    } else if (shape.hasStroke()) {
+      this._applyStrokeStyle(shape);
+    } else {
+      return false;
+    }
+    return true;
+  }
   _stroke(shape) {
     const dash = shape.dash(),
       // ignore strokeScaleEnabled for Text
