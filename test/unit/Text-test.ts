@@ -2511,6 +2511,24 @@ describe('Text layout', function () {
     }
   });
 
+  it('word wrap does not start a line with a dash', function () {
+    const text = new Konva.Text({ text: 'a real-time', fontSize: 20 });
+    const lines = () => text.textArr.map((line) => line.text);
+    try {
+      // "a real" fits, the dash after it does not
+      text.width(text.measureSize('a real').width + 1);
+      assert.deepEqual(lines(), ['a', 'real-', 'time']);
+      // a dash that fits still ends its line
+      text.width(text.measureSize('a real-').width + 1);
+      assert.deepEqual(lines(), ['a real-', 'time']);
+      // the line does not break between the dashes of a double dash
+      text.text('a real--time');
+      assert.deepEqual(lines(), ['a', 'real--', 'time']);
+    } finally {
+      text.destroy();
+    }
+  });
+
   it('Label follows text spacing and wrapping changes', function () {
     const label = new Konva.Label();
     const tag = new Konva.Tag();

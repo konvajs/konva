@@ -701,7 +701,10 @@ export class Text extends Shape<TextConfig> {
         const length = graphemes.length;
         let start = 0;
         const text = (end: number) => graphemes.slice(start, end).join('');
-        const isBreak = (char: string) => char === SPACE || char === DASH;
+        // a line can end at a space or after a dash, never before a dash
+        const isBreak = (i: number) =>
+          graphemes[i] === SPACE ||
+          (graphemes[i] === DASH && graphemes[i + 1] !== DASH);
         // graphemes per line, estimated from the average grapheme width
         const perLine = Math.max(1, Math.ceil((length * maxWidth) / lineWidth));
         while (start < length) {
@@ -761,10 +764,10 @@ export class Text extends Shape<TextConfig> {
             }
             break;
           }
-          if (wrapAtWord && !isBreak(graphemes[low])) {
+          if (wrapAtWord && graphemes[low] !== SPACE) {
             // wrap at the last space or dash of the line instead
             let wrapIndex = low - 1;
-            while (wrapIndex >= start && !isBreak(graphemes[wrapIndex])) {
+            while (wrapIndex >= start && !isBreak(wrapIndex)) {
               wrapIndex--;
             }
             if (wrapIndex >= start) {
