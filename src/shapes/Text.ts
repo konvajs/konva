@@ -94,6 +94,12 @@ const AUTO = 'auto',
   CHAR = 'char',
   NONE = 'none',
   ELLIPSIS = '…',
+  // Chinese and Japanese have no spaces between words, so a line can break next
+  // to any of their characters. Korean does use spaces, so it is left out
+  CJK = /[\p{Script=Han}\u3000-\u30FF\uFF00-\uFF9F]/u,
+  // except where punctuation has to stay with the text it belongs to
+  NO_LINE_START = /[\p{Pe}\p{Pf}\p{Pd}、。，．！？：；…・,.!?:;]/u,
+  NO_LINE_END = /[\p{Ps}\p{Pi}]/u,
   ATTR_CHANGE_LIST = [
     'direction',
     'fontFamily',
@@ -701,10 +707,14 @@ export class Text extends Shape<TextConfig> {
         const length = graphemes.length;
         let start = 0;
         const text = (end: number) => graphemes.slice(start, end).join('');
-        // a line can end at a space or after a dash, never before a dash
+        // a line can end at a space or after a dash, never before a dash,
+        // and next to a Chinese or Japanese character
         const isBreak = (i: number) =>
           graphemes[i] === SPACE ||
-          (graphemes[i] === DASH && graphemes[i + 1] !== DASH);
+          (graphemes[i] === DASH && graphemes[i + 1] !== DASH) ||
+          ((CJK.test(graphemes[i]) || CJK.test(graphemes[i + 1])) &&
+            !NO_LINE_START.test(graphemes[i + 1]) &&
+            !NO_LINE_END.test(graphemes[i]));
         // graphemes per line, estimated from the average grapheme width
         const perLine = Math.max(1, Math.ceil((length * maxWidth) / lineWidth));
         while (start < length) {
@@ -765,7 +775,7 @@ export class Text extends Shape<TextConfig> {
             break;
           }
           if (wrapAtWord && graphemes[low] !== SPACE) {
-            // wrap at the last space or dash of the line instead
+            // wrap at the last break opportunity of the line instead
             let wrapIndex = low - 1;
             while (wrapIndex >= start && !isBreak(wrapIndex)) {
               wrapIndex--;
@@ -1118,7 +1128,7 @@ Factory.addGetterSetter(Text, 'lineHeight', 1, getNumberValidator());
 /**
  * get/set wrap.  Can be "word", "char", or "none". Default is "word".
  * In "word" wrapping any word still can be wrapped if it can't be placed in the required width
- * without breaks.
+ * without breaks. Chinese and Japanese text can wrap between any two characters.
  * @name Konva.Text#wrap
  * @method
  * @param {String} wrap
