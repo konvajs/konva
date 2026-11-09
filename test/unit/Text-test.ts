@@ -2540,9 +2540,10 @@ describe('Text layout', function () {
       text.text('畫布Konva');
       text.width(text.measureSize('畫布Ko').width + 1);
       assert.deepEqual(lines(), ['畫布', 'Konva']);
-      text.text('Konva日本語');
+      // a line can end between a latin word and them
+      text.text('Konva日。');
       text.width(text.measureSize('Konva日').width + 1);
-      assert.deepEqual(lines(), ['Konva日', '本語']);
+      assert.deepEqual(lines(), ['Konva', '日。']);
       // a line ends after the punctuation that follows a latin word
       text.text('你好，Konva');
       text.width(text.measureSize('你好，Ko').width + 1);
@@ -2556,8 +2557,22 @@ describe('Text layout', function () {
     const text = new Konva.Text({ fontSize: 20 });
     const firstLine = () => text.textArr[0].text;
     try {
-      // closing punctuation does not start a line
-      for (const mark of ['，', '。', '！', '）', '」', '”', ',', '——', '…']) {
+      // closing punctuation and iteration marks like 々 do not start a line
+      for (const mark of [
+        '，',
+        '。',
+        '！',
+        '）',
+        '」',
+        '”',
+        ',',
+        '——',
+        '…',
+        '々',
+        'ゝ',
+        '％',
+        '｡',
+      ]) {
         text.text('你好' + mark + '世界');
         text.width(text.measureSize('你好').width + 1);
         assert.equal(firstLine(), '你', 'before ' + mark);
@@ -2568,27 +2583,29 @@ describe('Text layout', function () {
         text.width(text.measureSize('你好' + mark).width + 1);
         assert.equal(firstLine(), '你好', 'after ' + mark);
       }
+      // text without any break opportunity is still cut where it stops fitting
+      text.text('！！！！');
+      text.width(text.measureSize('！！').width + 1);
+      assert.deepEqual(
+        text.textArr.map((line) => line.text),
+        ['！！', '！！']
+      );
     } finally {
       text.destroy();
     }
   });
 
-  it('word wrap still breaks Korean and latin text at spaces', function () {
+  it('word wrap still breaks Korean text only at spaces', function () {
     const text = new Konva.Text({
       text: '안녕하세요 세계입니다',
       fontSize: 20,
     });
-    const lines = () => text.textArr.map((line) => line.text);
     try {
       text.width(text.measureSize('안녕하세요 세계').width + 1);
-      assert.deepEqual(lines(), ['안녕하세요', '세계입니다']);
-      text.text('hello world');
-      text.width(text.measureSize('hello wo').width + 1);
-      assert.deepEqual(lines(), ['hello', 'world']);
-      // text without any break opportunity is still cut where it stops fitting
-      text.text('！！！！');
-      text.width(text.measureSize('！！').width + 1);
-      assert.deepEqual(lines(), ['！！', '！！']);
+      assert.deepEqual(
+        text.textArr.map((line) => line.text),
+        ['안녕하세요', '세계입니다']
+      );
     } finally {
       text.destroy();
     }
