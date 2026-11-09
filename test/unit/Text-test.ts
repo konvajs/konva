@@ -2549,6 +2549,94 @@ describe('Text layout', function () {
     }
   });
 
+  it('word wrap breaks next to Chinese and Japanese characters', function () {
+    const text = new Konva.Text({ text: 'Konva 是畫布函式庫', fontSize: 20 });
+    const lines = () => text.textArr.map((line) => line.text);
+    // wide enough for each sample. CJK glyphs can be narrower than latin ones
+    // (placeholder boxes where no CJK font is installed) or wider
+    const fit = (...samples: string[]) =>
+      text.width(
+        Math.max(...samples.map((s) => text.measureSize(s).width)) + 1
+      );
+    try {
+      // the line is filled, not cut at the only space
+      fit('Konva 是畫');
+      assert.equal(lines()[0], 'Konva 是畫');
+      // a latin word next to them stays whole
+      text.text('畫布Konva');
+      fit('畫布Ko', 'Konva');
+      assert.deepEqual(lines(), ['畫布', 'Konva']);
+      // a line can end between a latin word and them
+      text.text('Konva日。');
+      fit('Konva日');
+      assert.deepEqual(lines(), ['Konva', '日。']);
+      // a line ends after the punctuation that follows a latin word
+      text.text('你好，Konva');
+      fit('你好，Ko', 'Konva');
+      assert.deepEqual(lines(), ['你好，', 'Konva']);
+    } finally {
+      text.destroy();
+    }
+  });
+
+  it('word wrap keeps punctuation with Chinese and Japanese text', function () {
+    const text = new Konva.Text({ fontSize: 20 });
+    const firstLine = () => text.textArr[0].text;
+    try {
+      // closing punctuation and iteration marks like 々 do not start a line
+      for (const mark of [
+        '，',
+        '。',
+        '！',
+        '）',
+        '」',
+        '”',
+        ',',
+        '——',
+        '…',
+        '々',
+        'ゝ',
+        '％',
+        '｡',
+      ]) {
+        text.text('你好' + mark + '世界');
+        text.width(text.measureSize('你好').width + 1);
+        assert.equal(firstLine(), '你', 'before ' + mark);
+      }
+      // opening punctuation does not end a line
+      for (const mark of ['（', '「', '“', '(']) {
+        text.text('你好' + mark + '世界');
+        text.width(text.measureSize('你好' + mark).width + 1);
+        assert.equal(firstLine(), '你好', 'after ' + mark);
+      }
+      // text without any break opportunity is still cut where it stops fitting
+      text.text('！！！！');
+      text.width(text.measureSize('！！').width + 1);
+      assert.deepEqual(
+        text.textArr.map((line) => line.text),
+        ['！！', '！！']
+      );
+    } finally {
+      text.destroy();
+    }
+  });
+
+  it('word wrap still breaks Korean text only at spaces', function () {
+    const text = new Konva.Text({
+      text: '안녕하세요 세계입니다',
+      fontSize: 20,
+    });
+    try {
+      text.width(text.measureSize('안녕하세요 세계').width + 1);
+      assert.deepEqual(
+        text.textArr.map((line) => line.text),
+        ['안녕하세요', '세계입니다']
+      );
+    } finally {
+      text.destroy();
+    }
+  });
+
   it('Label follows text spacing and wrapping changes', function () {
     const label = new Konva.Label();
     const tag = new Konva.Tag();
