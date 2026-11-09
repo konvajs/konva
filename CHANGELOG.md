@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+- Fixed `Text` word wrap for Chinese and Japanese: lines break between characters, not only at spaces. Thanks [@b84330808](https://github.com/b84330808)
+- Fixed `Text` word wrap starting a line with a dash. Thanks [@nk-batman21](https://github.com/nk-batman21)
+- Fixed `\r\n` line endings making `Text` lines one space wider. Thanks [@b84330808](https://github.com/b84330808)
+
 ## 10.9.1 (2026-10-31)
 
 - Fixed the fallback for CSS `blur()`, used where the canvas has no `filter` (Safari) and for CSS strings mixed with function filters: it blurred about 4× less than the native filter and did not fade the edges of a tightly cached node. It now closely matches the native blur
