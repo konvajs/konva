@@ -2532,21 +2532,27 @@ describe('Text layout', function () {
   it('word wrap breaks next to Chinese and Japanese characters', function () {
     const text = new Konva.Text({ text: 'Konva 是畫布函式庫', fontSize: 20 });
     const lines = () => text.textArr.map((line) => line.text);
+    // wide enough for each sample. CJK glyphs can be narrower than latin ones
+    // (placeholder boxes where no CJK font is installed) or wider
+    const fit = (...samples: string[]) =>
+      text.width(
+        Math.max(...samples.map((s) => text.measureSize(s).width)) + 1
+      );
     try {
       // the line is filled, not cut at the only space
-      text.width(text.measureSize('Konva 是畫').width + 1);
-      assert.deepEqual(lines(), ['Konva 是畫', '布函式庫']);
+      fit('Konva 是畫');
+      assert.equal(lines()[0], 'Konva 是畫');
       // a latin word next to them stays whole
       text.text('畫布Konva');
-      text.width(text.measureSize('畫布Ko').width + 1);
+      fit('畫布Ko', 'Konva');
       assert.deepEqual(lines(), ['畫布', 'Konva']);
       // a line can end between a latin word and them
       text.text('Konva日。');
-      text.width(text.measureSize('Konva日').width + 1);
+      fit('Konva日');
       assert.deepEqual(lines(), ['Konva', '日。']);
       // a line ends after the punctuation that follows a latin word
       text.text('你好，Konva');
-      text.width(text.measureSize('你好，Ko').width + 1);
+      fit('你好，Ko', 'Konva');
       assert.deepEqual(lines(), ['你好，', 'Konva']);
     } finally {
       text.destroy();
