@@ -2455,6 +2455,26 @@ describe('Text layout', function () {
     }
   });
 
+  it('CRLF line endings lay out like LF', function () {
+    const lf = new Konva.Text({ text: 'hello world\nfoo', fontSize: 20 });
+    const crlf = new Konva.Text({ text: 'hello world\r\nfoo', fontSize: 20 });
+    try {
+      assert.deepEqual(crlf.textArr, lf.textArr);
+      assert.equal(crlf.width(), lf.width());
+      assert.equal(crlf.text(), 'hello world\r\nfoo');
+
+      // a line that just fits does not wrap because of the \r
+      const fitting = lf.width() + 1;
+      lf.width(fitting);
+      crlf.width(fitting);
+      assert.deepEqual(crlf.textArr, lf.textArr);
+      assert.equal(crlf.height(), lf.height());
+    } finally {
+      lf.destroy();
+      crlf.destroy();
+    }
+  });
+
   it('ellipsis preserves graphemes and fits the available width', function () {
     for (const sample of [
       '😀'.repeat(12),

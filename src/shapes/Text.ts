@@ -650,7 +650,7 @@ export class Text extends Shape<TextConfig> {
     return getDummyContext().measureText(text).width + spacing;
   }
   _setTextData() {
-    let lines = this.text().split('\n'),
+    let lines = this.text().split(/\r?\n/),
       fontSize = +this.fontSize(),
       lineHeightPx = this.lineHeight() * fontSize,
       width = this.attrs.width,
