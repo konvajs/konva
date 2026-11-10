@@ -8,6 +8,7 @@ import {
   isNode,
   isBrowser,
   createCanvasAndContext,
+  nextFrames,
 } from './test-utils.ts';
 
 describe('Image', function () {
@@ -429,18 +430,16 @@ describe('Image', function () {
     layer.add(image);
     const previous = Konva.autoDrawEnabled;
     Konva.autoDrawEnabled = true;
-    const nextFrame = () =>
-      new Promise<void>((resolve) => Konva.Util.requestAnimFrame(resolve));
     let draws = 0;
     try {
-      await nextFrame();
+      await nextFrames();
       layer.on('draw', () => {
         draws++;
       });
       img.width = 320;
       img.height = 180;
       img.dispatchEvent(new Event('load'));
-      await nextFrame();
+      await nextFrames();
       assert.equal(draws, 1);
       assert.deepEqual(image.size(), { width: 320, height: 180 });
     } finally {
@@ -540,11 +539,9 @@ describe('Video image', function () {
     layer.add(image);
     const previous = Konva.autoDrawEnabled;
     Konva.autoDrawEnabled = true;
-    const nextFrame = () =>
-      new Promise<void>((resolve) => Konva.Util.requestAnimFrame(resolve));
     let draws = 0;
     try {
-      await nextFrame();
+      await nextFrames();
       layer.on('draw', () => {
         draws++;
       });
@@ -552,16 +549,16 @@ describe('Video image', function () {
       video.videoHeight = 180;
       video.readyState = 2;
       video.dispatchEvent(new Event('loadeddata'));
-      await nextFrame();
+      await nextFrames();
       assert.equal(draws, 1);
       assert.deepEqual(image.size(), { width: 320, height: 180 });
       image.width(50);
       assert.equal(image.width(), 50);
       image.image(undefined);
-      await nextFrame();
+      await nextFrames();
       const before = draws;
       video.dispatchEvent(new Event('loadeddata'));
-      await nextFrame();
+      await nextFrames();
       assert.equal(draws, before);
     } finally {
       Konva.autoDrawEnabled = previous;
