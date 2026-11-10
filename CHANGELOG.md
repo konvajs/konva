@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- Added experimental `Konva.Html`: draws a live DOM element as a shape with the HTML-in-Canvas API (Chrome 157+). The element follows the order, transforms, clipping, caching, filters and export of other nodes, and with `interactive: true` it takes clicks and typing. Without the API the node draws nothing
 - Fixed `Text` word wrap for Chinese and Japanese: lines break between characters, not only at spaces. Thanks [@b84330808](https://github.com/b84330808)
 - Fixed `Text` word wrap starting a line with a dash. Thanks [@nk-batman21](https://github.com/nk-batman21)
 - Fixed `\r\n` line endings making `Text` lines one space wider. Thanks [@b84330808](https://github.com/b84330808)

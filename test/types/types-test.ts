@@ -160,3 +160,10 @@ line.points(undefined);
 stage.container(null);
 // @ts-expect-error there is nothing to attach the stage content to
 stage.container(undefined);
+
+// Html takes a DOM element and a boolean `interactive`
+const html = new Konva.Html({ element: document.createElement('div') });
+const htmlElement: HTMLElement | undefined = html.element();
+const interactiveHtml: Konva.Html = html.interactive(true);
+// @ts-expect-error interactive accepts a boolean only
+html.interactive('yes');

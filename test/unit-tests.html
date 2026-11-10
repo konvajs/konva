@@ -35,6 +35,7 @@
       import './unit/Rect-test.ts';
       import './unit/Circle-test.ts';
       import './unit/Image-test.ts';
+      import './unit/Html-test.ts';
       import './unit/Line-test.ts';
       import './unit/Text-test.ts';
       import './unit/Blob-test.ts';
@@ -59,9 +60,9 @@
       import './unit/MouseEvents-test.ts';
       import './unit/TouchEvents-test.ts';
       import './unit/PointerEvents-test.ts';
-    </script>
 
-    <script>
+      // a module script runs after the plain scripts of the page, so the
+      // tests are started here, when all of them are registered
       mocha.run();
     </script>
     <div id="konva-container"></div>
