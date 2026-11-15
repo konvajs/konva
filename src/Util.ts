@@ -297,8 +297,13 @@ export class Transform {
       result.skewY = 0;
     } else if (c != 0 || d != 0) {
       const s = Math.sqrt(c * c + d * d);
-      result.rotation =
-        Math.PI / 2 - (d > 0 ? Math.acos(-c / s) : -Math.acos(c / s));
+      // scaleY is positive in this branch, so the second column is the scaled
+      // unit vector (-sin, cos) and the angle can be read straight off it. The
+      // acos form dropped the sign of c when d was not positive, which turned a
+      // 150 degree rotation into 210 and flipped m[2] on every rebuild.
+      const rotation = Math.atan2(-c, d);
+      // atan2 returns -0 for a zero angle, and -0 survives a deepEqual check
+      result.rotation = rotation === 0 ? 0 : rotation;
       result.scaleX = delta / s;
       result.scaleY = s;
       result.skewX = 0;
