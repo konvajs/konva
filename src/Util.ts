@@ -296,18 +296,11 @@ export class Transform {
       result.skewX = delta && (a * c + b * d) / delta;
       result.skewY = 0;
     } else if (c != 0 || d != 0) {
-      const s = Math.sqrt(c * c + d * d);
-      // scaleY is positive in this branch, so the second column is the scaled
-      // unit vector (-sin, cos) and the angle can be read straight off it. The
-      // acos form dropped the sign of c when d was not positive, which turned a
-      // 150 degree rotation into 210 and flipped m[2] on every rebuild.
-      const rotation = Math.atan2(-c, d);
-      // atan2 returns -0 for a zero angle, and -0 survives a deepEqual check
-      result.rotation = rotation === 0 ? 0 : rotation;
-      result.scaleX = delta / s;
-      result.scaleY = s;
-      result.skewX = 0;
-      result.skewY = delta && (a * c + b * d) / delta;
+      // a = b = 0: the x axis is collapsed, so scaleX and the skew stay 0 and
+      // only the y axis, the scaled unit vector (-sin, cos), carries the
+      // rotation. "+ 0" turns the -0 that atan2 gives for a zero angle into 0
+      result.rotation = Math.atan2(-c, d) + 0;
+      result.scaleY = Math.sqrt(c * c + d * d);
     } else {
       // a = b = c = d = 0
     }
