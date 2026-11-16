@@ -296,13 +296,11 @@ export class Transform {
       result.skewX = delta && (a * c + b * d) / delta;
       result.skewY = 0;
     } else if (c != 0 || d != 0) {
-      const s = Math.sqrt(c * c + d * d);
-      result.rotation =
-        Math.PI / 2 - (d > 0 ? Math.acos(-c / s) : -Math.acos(c / s));
-      result.scaleX = delta / s;
-      result.scaleY = s;
-      result.skewX = 0;
-      result.skewY = delta && (a * c + b * d) / delta;
+      // a = b = 0: the x axis is collapsed, so scaleX and the skew stay 0 and
+      // only the y axis, the scaled unit vector (-sin, cos), carries the
+      // rotation. "+ 0" turns the -0 that atan2 gives for a zero angle into 0
+      result.rotation = Math.atan2(-c, d) + 0;
+      result.scaleY = Math.sqrt(c * c + d * d);
     } else {
       // a = b = c = d = 0
     }

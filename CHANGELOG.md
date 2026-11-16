@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed `Text` word wrap for Chinese and Japanese: lines break between characters, not only at spaces. Thanks [@b84330808](https://github.com/b84330808)
 - Fixed `Text` word wrap starting a line with a dash. Thanks [@nk-batman21](https://github.com/nk-batman21)
 - Fixed `\r\n` line endings making `Text` lines one space wider. Thanks [@b84330808](https://github.com/b84330808)
+- Fixed `Transform.decompose()` , `getAbsoluteRotation()` and `Transformer` mirroring the rotation of a node with `scaleX` of `0` rotated past 90 degrees. Thanks [@abd1rahmane](https://github.com/abd1rahmane)
 
 ## 10.9.1 (2026-10-31)
 

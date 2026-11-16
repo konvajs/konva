@@ -543,6 +543,34 @@ describe('Util', function () {
     assert.equal(collapsed.skewY, 0);
   });
 
+  it('Transform.decompose() keeps the rotation when scaleX is 0', function () {
+    // once the rotation passes 90 degrees the second column points the other
+    // way, and the acos form dropped the sign of c there, so a 150 degree
+    // rotation came back as 210 and a rebuilt matrix had m[2] negated. With
+    // scaleX at 0 the decomposition is only defined up to half a turn, so the
+    // angle is compared modulo 360 and the matrix is compared entry by entry
+    for (const degrees of [30, 120, 150, 210, 330]) {
+      const t = new Konva.Transform();
+      t.rotate((degrees * Math.PI) / 180);
+      t.scale(0, 2);
+
+      const d = t.decompose();
+      const delta = ((((d.rotation - degrees) % 360) + 540) % 360) - 180;
+      assert.closeTo(delta, 0, 1e-9, `rotation for ${degrees} degrees`);
+      assert.closeTo(d.scaleX, 0, 1e-12);
+      assert.closeTo(d.scaleY, 2, 1e-12);
+
+      const rebuilt = new Konva.Transform();
+      rebuilt.rotate((d.rotation * Math.PI) / 180);
+      rebuilt.scale(d.scaleX, d.scaleY);
+      const original = t.getMatrix();
+      const again = rebuilt.getMatrix();
+      for (let i = 0; i < 4; i++) {
+        assert.closeTo(again[i], original[i], 1e-9, `m[${i}] for ${degrees}`);
+      }
+    }
+  });
+
   it('_prepareToStringify does not mutate its input', function () {
     var o: any = { a: 1 };
     o.c = {
