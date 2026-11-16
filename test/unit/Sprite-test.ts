@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { addStage, Konva, loadImage } from './test-utils.ts';
+import { addStage, Konva, loadImage, nextFrames } from './test-utils.ts';
 
 describe('Sprite', function () {
   // ======================================================
@@ -63,13 +63,7 @@ describe('Sprite', function () {
       );
       const autoDraw = Konva.autoDrawEnabled;
       Konva.autoDrawEnabled = false;
-      const advanceDrawing = async () => {
-        for (let i = 0; i < 3; i++) {
-          await new Promise<void>((resolve) =>
-            Konva.Util.requestAnimFrame(resolve)
-          );
-        }
-      };
+      const advanceDrawing = () => nextFrames(3);
       try {
         layer.add(...sprites);
         sprites.forEach((sprite) => sprite.start());

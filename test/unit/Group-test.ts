@@ -6,6 +6,7 @@ import {
   compareCanvasEdges,
   isNode,
   Konva,
+  nextFrames,
 } from './test-utils.ts';
 import { assert } from 'chai';
 
@@ -1366,18 +1367,14 @@ describe('Isolated groups', function () {
     group.add(new Konva.Image({ image, x: 10, y: 10 }));
     layer.add(group);
     stage.add(layer);
-    const nextFrame = () =>
-      new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-    await nextFrame();
-    await nextFrame();
+    await nextFrames(2);
     assert.equal(pixel(layer.getNativeCanvasElement(), 15, 15)[3], 0);
     await new Promise<void>((resolve, reject) => {
       image.onload = () => resolve();
       image.onerror = reject;
       image.src = source.toDataURL();
     });
-    await nextFrame();
-    await nextFrame();
+    await nextFrames(2);
     assert.deepEqual(
       pixel(layer.getNativeCanvasElement(), 15, 15),
       [255, 0, 0, 255]

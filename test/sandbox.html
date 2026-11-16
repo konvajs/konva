@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>KonvaJS Blur Comparison Sandbox</title>
+    <title>KonvaJS Html Sandbox</title>
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, user-scalable=1.0, minimum-scale=1.0, maximum-scale=1.0"
@@ -10,45 +10,343 @@
     <style>
       body {
         margin: 0;
-        padding: 20px;
         font-family: Arial, sans-serif;
         background: #f0f0f0;
+      }
+      #controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 18px;
+        align-items: center;
+        padding: 10px 16px;
+        background: #fff;
+        border-bottom: 1px solid #ccc;
+        font-size: 13px;
+      }
+      #controls b {
+        margin-right: 4px;
+      }
+      #note {
+        padding: 6px 16px;
+        font-size: 12px;
+        color: #555;
+      }
+      #container {
+        background: #fff;
+      }
+
+      /* the elements drawn by Konva.Html */
+      .card {
+        padding: 12px;
+        border-radius: 10px;
+        border: 2px solid #4a6cf7;
+        background: #fff;
+        font:
+          14px Arial,
+          sans-serif;
+      }
+      .card h3 {
+        margin: 0 0 8px;
+      }
+      .card input,
+      .card select,
+      .card button {
+        font: inherit;
+        margin: 3px 0;
+      }
+      .card input[type='text'] {
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .sticker {
+        padding: 10px;
+        background: #ffe066;
+        font:
+          15px Georgia,
+          serif;
+        box-shadow: inset 0 0 0 1px #d4b106;
+      }
+      .sticker .clock {
+        font: bold 20px monospace;
+      }
+      .sticker .dot {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #e03131;
+        animation: pulse 1s infinite alternate;
+      }
+      @keyframes pulse {
+        to {
+          transform: scale(0.3);
+        }
       }
     </style>
   </head>
 
   <body>
+    <div id="controls">
+      <span>
+        <b>Card</b>
+        <label><input type="checkbox" id="interactive" /> interactive</label>
+        <button id="toTop">to top</button>
+        <button id="toBottom">to bottom</button>
+        <button id="toggleVisible">hide / show</button>
+      </span>
+      <span>
+        <b>Group</b>
+        <label><input type="checkbox" id="cache" /> cache</label>
+        <select id="filter">
+          <option value="">no filter</option>
+          <option>Blur</option>
+          <option>Grayscale</option>
+          <option>Invert</option>
+          <option>Sepia</option>
+          <option>Pixelate</option>
+        </select>
+        <label>
+          opacity
+          <input
+            type="range"
+            id="opacity"
+            min="0.1"
+            max="1"
+            step="0.05"
+            value="1"
+          />
+        </label>
+        <label>
+          rotation
+          <input type="range" id="rotation" min="-180" max="180" value="-8" />
+        </label>
+        <label><input type="checkbox" id="clip" /> clip</label>
+      </span>
+      <span>
+        <b>Stage</b>
+        <label>
+          zoom
+          <input
+            type="range"
+            id="zoom"
+            min="0.5"
+            max="3"
+            step="0.05"
+            value="1"
+          />
+        </label>
+        <button id="export">export PNG (2x)</button>
+      </span>
+    </div>
+    <div id="note">
+      Click a node to select it, drag to move, use the handles to scale.
+      Double-click the card to type into it; click elsewhere to stop. Filters
+      cache the group, and a cached group is a frozen picture: the clock stops
+      until the cache is turned off.
+    </div>
     <div id="container"></div>
+
     <script type="module">
       import Konva from '../src/index.ts';
 
       const stage = new Konva.Stage({
         container: 'container',
         width: window.innerWidth,
-        height: window.innerHeight,
-        draggable: true,
+        height: window.innerHeight - 110,
       });
-
       const layer = new Konva.Layer();
-      stage.add(layer);
+      const topLayer = new Konva.Layer();
+      stage.add(layer, topLayer);
 
-      for (let i = 0; i < 1000; i++) {
-        const rect = new Konva.Rect({
-          x: Math.random() * (window.innerWidth - 300) + 100,
-          y: Math.random() * (window.innerHeight - 300) + 100,
-          fill: Konva.Util.getRandomColor(),
-          width: 100,
-          height: 100,
-          draggable: true,
-        });
-        layer.add(rect);
+      function element(className, html) {
+        const el = document.createElement('div');
+        el.className = className;
+        el.innerHTML = html;
+        return el;
       }
 
-      const transformer = new Konva.Transformer({
-        nodes: layer.find('Rect'),
-        rotateMode: 'corners'
+      // --- shapes below the card
+      layer.add(
+        new Konva.Rect({
+          x: 40,
+          y: 40,
+          width: 220,
+          height: 160,
+          fill: '#b2f2bb',
+          stroke: '#2f9e44',
+          name: 'selectable',
+          draggable: true,
+        })
+      );
+
+      // --- an Html node on its own: a form
+      const card = new Konva.Html({
+        x: 120,
+        y: 90,
+        width: 260,
+        name: 'selectable',
+        draggable: true,
+        shadowColor: 'black',
+        shadowBlur: 12,
+        shadowOpacity: 0.3,
+        shadowOffsetY: 4,
+        element: element(
+          'card',
+          `<h3>Konva.Html card</h3>
+           A real <b>DOM</b> form, drawn <i>inside</i> the canvas.
+           <input type="text" placeholder="double-click the card, then type" />
+           <select><option>one</option><option>two</option><option>three</option></select>
+           <label><input type="checkbox" checked /> checkbox</label>
+           <button>Add a line</button>`
+        ),
       });
-      layer.add(transformer);
+      layer.add(card);
+      // the node grows with its element
+      card
+        .element()
+        .querySelector('button')
+        .addEventListener('click', () => {
+          card
+            .element()
+            .insertAdjacentHTML('beforeend', '<div>one more line</div>');
+        });
+
+      // --- a shape above the card
+      layer.add(
+        new Konva.Star({
+          x: 400,
+          y: 110,
+          numPoints: 5,
+          innerRadius: 30,
+          outerRadius: 60,
+          fill: '#ff8787',
+          opacity: 0.85,
+          stroke: '#c92a2a',
+          name: 'selectable',
+          draggable: true,
+        })
+      );
+
+      // --- nested groups: shapes and an Html node, transformed together
+      const group = new Konva.Group({
+        x: 560,
+        y: 120,
+        rotation: -8,
+        name: 'selectable',
+        draggable: true,
+      });
+      const inner = new Konva.Group({ x: 30, y: 40, scaleX: 1.2, scaleY: 1.2 });
+      group.add(
+        new Konva.Rect({
+          width: 340,
+          height: 260,
+          fill: '#d0ebff',
+          stroke: '#1971c2',
+          cornerRadius: 12,
+        })
+      );
+      const sticker = new Konva.Html({
+        rotation: 6,
+        width: 200,
+        element: element(
+          'sticker',
+          `<span class="dot"></span> Html in a <b>nested group</b><br />
+           <span class="clock"></span><br />
+           <small>with a CSS animation</small>`
+        ),
+      });
+      inner.add(sticker);
+      inner.add(
+        new Konva.Circle({
+          x: 200,
+          y: 120,
+          radius: 40,
+          fill: '#9775fa',
+          opacity: 0.8,
+        })
+      );
+      group.add(inner);
+      layer.add(group);
+
+      const clock = sticker.element().querySelector('.clock');
+      const tick = () => (clock.textContent = new Date().toLocaleTimeString());
+      tick();
+      setInterval(tick, 1000);
+
+      // --- another layer, above everything
+      topLayer.add(
+        new Konva.Circle({
+          x: 400,
+          y: 250,
+          radius: 45,
+          fill: '#ffa94d',
+          stroke: '#d9480f',
+          opacity: 0.9,
+          name: 'selectable',
+          draggable: true,
+        })
+      );
+
+      // --- selection
+      const tr = new Konva.Transformer({ rotateMode: 'corners' });
+      topLayer.add(tr);
+
+      const $ = (id) => document.getElementById(id);
+      function setInteractive(on) {
+        card.interactive(on);
+        // a drag inside the element must not move the node
+        card.draggable(!on);
+        $('interactive').checked = on;
+      }
+
+      stage.on('click tap', (e) => {
+        const node = e.target.findAncestor('.selectable', true);
+        tr.nodes(node ? [node] : []);
+        if (node !== card) {
+          setInteractive(false);
+        }
+      });
+      card.on('dblclick dbltap', () => setInteractive(true));
+
+      // --- controls
+      $('interactive').onchange = (e) => setInteractive(e.target.checked);
+      $('toTop').onclick = () => card.moveToTop();
+      $('toBottom').onclick = () => card.moveToBottom();
+      $('toggleVisible').onclick = () => card.visible(!card.visible());
+
+      function updateGroup() {
+        const filter = $('filter').value;
+        if (filter) {
+          $('cache').checked = true;
+        }
+        group.clearCache();
+        group.filters(filter ? [Konva.Filters[filter]] : []);
+        if ($('cache').checked) {
+          group.cache();
+        }
+      }
+      $('cache').onchange = updateGroup;
+      $('filter').onchange = updateGroup;
+      group.blurRadius(4);
+      group.pixelSize(6);
+      $('opacity').oninput = (e) => group.opacity(Number(e.target.value));
+      $('rotation').oninput = (e) => {
+        group.rotation(Number(e.target.value));
+      };
+      $('clip').onchange = (e) => {
+        inner.clip(
+          e.target.checked ? { x: 0, y: 0, width: 150, height: 300 } : {}
+        );
+        updateGroup();
+      };
+      $('zoom').oninput = (e) => {
+        const scale = Number(e.target.value);
+        stage.scale({ x: scale, y: scale });
+      };
+      $('export').onclick = async () => {
+        const blob = await stage.toBlob({ pixelRatio: 2 });
+        window.open(URL.createObjectURL(blob));
+      };
     </script>
   </body>
 </html>

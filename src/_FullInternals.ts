@@ -7,6 +7,7 @@ import { Arc } from './shapes/Arc.ts';
 import { Arrow } from './shapes/Arrow.ts';
 import { Circle } from './shapes/Circle.ts';
 import { Ellipse } from './shapes/Ellipse.ts';
+import { Html } from './shapes/Html.ts';
 import { Image } from './shapes/Image.ts';
 import { Label, Tag } from './shapes/Label.ts';
 import { Line } from './shapes/Line.ts';
@@ -48,6 +49,7 @@ export const Konva = Core.Util._assign(Core, {
   Arrow,
   Circle,
   Ellipse,
+  Html,
   Image,
   Label,
   Tag,
@@ -143,6 +145,8 @@ export namespace Konva {
   export type CircleConfig = import('./shapes/Circle.ts').CircleConfig;
   export type Ellipse = import('./shapes/Ellipse.ts').Ellipse;
   export type EllipseConfig = import('./shapes/Ellipse.ts').EllipseConfig;
+  export type Html = import('./shapes/Html.ts').Html;
+  export type HtmlConfig = import('./shapes/Html.ts').HtmlConfig;
   export type Image = import('./shapes/Image.ts').Image;
   export type ImageConfig = import('./shapes/Image.ts').ImageConfig;
   export type Label = import('./shapes/Label.ts').Label;

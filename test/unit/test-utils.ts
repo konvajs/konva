@@ -63,6 +63,13 @@ export function loadImage(url, callback) {
   image.src = url;
 }
 
+// waits for the next animation frames of Konva
+export async function nextFrames(count = 1) {
+  while (count-- > 0) {
+    await new Promise<void>((resolve) => Konva.Util.requestAnimFrame(resolve));
+  }
+}
+
 export function getPixelRatio() {
   return (typeof window !== 'undefined' && window.devicePixelRatio) || 1;
 }
