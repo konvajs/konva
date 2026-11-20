@@ -831,9 +831,10 @@ export class SceneContext extends Context {
     return shape._getFillPattern();
   }
   _getFillStyle(shape: Shape) {
-    switch (shape._getFillType()) {
+    const color = shape.fill();
+    switch (shape._getFillType(color)) {
       case 'color':
-        return shape.fill();
+        return color;
       case 'pattern':
         return this._getFillPattern(shape);
       case 'linear-gradient':

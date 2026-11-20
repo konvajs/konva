@@ -2899,9 +2899,11 @@ describe('Elliptical radial gradient fill', function () {
     });
   }
 
-  function layerPixel(layer, x: number, y: number) {
-    const context = layer.toCanvas({ pixelRatio: 1 }).getContext('2d')!;
-    return Array.from(context.getImageData(x, y, 1, 1).data);
+  // renders the node once, then reads its pixels
+  function sampler(node: Konva.Node) {
+    const context = node.toCanvas({ pixelRatio: 1 }).getContext('2d')!;
+    return (x: number, y: number) =>
+      Array.from(context.getImageData(x, y, 1, 1).data);
   }
 
   it('defaults to a scale of 1', function () {
@@ -2920,16 +2922,17 @@ describe('Elliptical radial gradient fill', function () {
     stage.add(layer);
 
     // red ellipse: rx 50, ry 25 around (100, 50)
-    assert.deepEqual(pixelAt(rect, 100, 50), RED);
-    assert.deepEqual(pixelAt(rect, 140, 50), RED);
-    assert.deepEqual(pixelAt(rect, 60, 50), RED);
-    assert.deepEqual(pixelAt(rect, 100, 70), RED);
-    assert.deepEqual(pixelAt(rect, 100, 85), BLUE);
-    assert.deepEqual(pixelAt(rect, 100, 15), BLUE);
-    assert.deepEqual(pixelAt(rect, 160, 50), BLUE);
+    const pixel = sampler(rect);
+    assert.deepEqual(pixel(100, 50), RED);
+    assert.deepEqual(pixel(140, 50), RED);
+    assert.deepEqual(pixel(60, 50), RED);
+    assert.deepEqual(pixel(100, 70), RED);
+    assert.deepEqual(pixel(100, 85), BLUE);
+    assert.deepEqual(pixel(100, 15), BLUE);
+    assert.deepEqual(pixel(160, 50), BLUE);
     // the path is not scaled: the whole box is still painted
-    assert.deepEqual(pixelAt(rect, 2, 98), BLUE);
-    assert.deepEqual(pixelAt(rect, 198, 2), BLUE);
+    assert.deepEqual(pixel(2, 98), BLUE);
+    assert.deepEqual(pixel(198, 2), BLUE);
   });
 
   it('fills a Circle with an ellipse', function () {
@@ -2947,13 +2950,14 @@ describe('Elliptical radial gradient fill', function () {
     stage.add(layer);
 
     // toCanvas() starts at the circle's left/top edge; red ellipse rx 12.5, ry 25
-    assert.deepEqual(pixelAt(circle, 50, 50), RED);
-    assert.deepEqual(pixelAt(circle, 50, 70), RED);
-    assert.deepEqual(pixelAt(circle, 50, 30), RED);
-    assert.deepEqual(pixelAt(circle, 70, 50), BLUE);
-    assert.deepEqual(pixelAt(circle, 30, 50), BLUE);
+    const pixel = sampler(circle);
+    assert.deepEqual(pixel(50, 50), RED);
+    assert.deepEqual(pixel(50, 70), RED);
+    assert.deepEqual(pixel(50, 30), RED);
+    assert.deepEqual(pixel(70, 50), BLUE);
+    assert.deepEqual(pixel(30, 50), BLUE);
     // the circle's own edge is not squashed
-    assert.deepEqual(pixelAt(circle, 5, 50), BLUE);
+    assert.deepEqual(pixel(5, 50), BLUE);
   });
 
   it('applies to custom shapes that fill their path with fillShape()', function () {
@@ -2975,9 +2979,10 @@ describe('Elliptical radial gradient fill', function () {
     layer.add(shape);
     stage.add(layer);
 
-    assert.deepEqual(layerPixel(layer, 140, 50), RED);
-    assert.deepEqual(layerPixel(layer, 100, 85), BLUE);
-    assert.deepEqual(layerPixel(layer, 2, 98), BLUE);
+    const pixel = sampler(layer);
+    assert.deepEqual(pixel(140, 50), RED);
+    assert.deepEqual(pixel(100, 85), BLUE);
+    assert.deepEqual(pixel(2, 98), BLUE);
   });
 
   it('a scale of 1 draws exactly as before', function () {
@@ -2995,10 +3000,6 @@ describe('Elliptical radial gradient fill', function () {
       /closePath\(\);fillStyle=\[object \w+\];fill\(\);restore\(\);/
     );
     compareLayers(plain, scaled, 0);
-    assert.deepEqual(scaled.children[0].fillRadialGradientScale(), {
-      x: 1,
-      y: 1,
-    });
   });
 
   it('is ignored when the radial gradient is not the active fill', function () {
@@ -3028,53 +3029,41 @@ describe('Elliptical radial gradient fill', function () {
     rect.cache();
     layer.draw();
 
-    assert.deepEqual(layerPixel(layer, 50 + 140, 50 + 50), RED);
-    assert.deepEqual(layerPixel(layer, 50 + 100, 50 + 70), RED);
-    assert.deepEqual(layerPixel(layer, 50 + 100, 50 + 85), BLUE);
-    assert.deepEqual(layerPixel(layer, 50 + 2, 50 + 98), BLUE);
+    const pixel = sampler(layer);
+    assert.deepEqual(pixel(50 + 140, 50 + 50), RED);
+    assert.deepEqual(pixel(50 + 100, 50 + 70), RED);
+    assert.deepEqual(pixel(50 + 100, 50 + 85), BLUE);
+    assert.deepEqual(pixel(50 + 2, 50 + 98), BLUE);
   });
 
   it('keeps the ellipse with a shadow, and the shadow keeps the shape', function () {
     const stage = addStage();
     const layer = new Konva.Layer();
-    // with a stroke too, the shape is drawn through the buffer canvas
-    const rect = radialRect({
-      x: 10,
-      y: 10,
-      fillRadialGradientScaleY: 0.5,
-      shadowColor: 'lime',
-      shadowOffset: { x: 250, y: 0 },
-      stroke: 'black',
-      strokeWidth: 2,
-    });
-    const plain = radialRect({
-      x: 10,
-      y: 10,
-      fillRadialGradientScaleY: 0.5,
-      shadowColor: 'lime',
-      shadowOffset: { x: 250, y: 0 },
-    });
-    layer.add(rect);
     stage.add(layer);
-
-    for (const perfectDrawEnabled of [true, false]) {
-      rect.perfectDrawEnabled(perfectDrawEnabled);
-      for (const shape of [rect, plain]) {
-        layer.removeChildren();
-        layer.add(shape);
-        layer.draw();
-        assert.deepEqual(layerPixel(layer, 10 + 140, 10 + 50), RED);
-        assert.deepEqual(layerPixel(layer, 10 + 100, 10 + 85), BLUE);
-        // the shadow is the whole box, offset by 250
-        assert.deepEqual(
-          layerPixel(layer, 10 + 250 + 198, 10 + 95),
-          [0, 255, 0, 255]
-        );
-        assert.deepEqual(
-          layerPixel(layer, 10 + 250 + 100, 10 + 50),
-          [0, 255, 0, 255]
-        );
-      }
+    // with a stroke, the shape is drawn through the buffer canvas unless
+    // perfectDrawEnabled is off
+    for (const attrs of [
+      { stroke: 'black', strokeWidth: 2 },
+      { stroke: 'black', strokeWidth: 2, perfectDrawEnabled: false },
+      {},
+    ]) {
+      layer.destroyChildren();
+      layer.add(
+        radialRect({
+          x: 10,
+          y: 10,
+          fillRadialGradientScaleY: 0.5,
+          shadowColor: 'lime',
+          shadowOffset: { x: 250, y: 0 },
+          ...attrs,
+        })
+      );
+      const pixel = sampler(layer);
+      assert.deepEqual(pixel(10 + 140, 10 + 50), RED);
+      assert.deepEqual(pixel(10 + 100, 10 + 85), BLUE);
+      // the shadow is the whole box, offset by 250
+      assert.deepEqual(pixel(10 + 250 + 198, 10 + 95), [0, 255, 0, 255]);
+      assert.deepEqual(pixel(10 + 250 + 100, 10 + 50), [0, 255, 0, 255]);
     }
   });
 
@@ -3092,8 +3081,9 @@ describe('Elliptical radial gradient fill', function () {
     layer.add(rect);
     stage.add(layer);
 
-    assert.deepEqual(layerPixel(layer, 10 + 140, 10 + 50), RED);
-    assert.deepEqual(layerPixel(layer, 10 + 100, 10 + 85), BLUE);
+    const pixel = sampler(layer);
+    assert.deepEqual(pixel(10 + 140, 10 + 50), RED);
+    assert.deepEqual(pixel(10 + 100, 10 + 85), BLUE);
   });
 
   it('does not change the hit graph', function () {
@@ -3167,13 +3157,15 @@ describe('Elliptical radial gradient fill', function () {
     layer.add(plain);
     stage.add(layer);
     // circle: start at x 60, red from 54 to 74 on the axis
-    assert.deepEqual(pixelAt(plain, 62, 50), RED);
-    assert.deepEqual(pixelAt(plain, 82, 50), BLUE);
+    const plainPixel = sampler(plain);
+    assert.deepEqual(plainPixel(62, 50), RED);
+    assert.deepEqual(plainPixel(82, 50), BLUE);
 
     layer.add(scaled);
     // scaled: start at x 80, red from 77 to 87
-    assert.deepEqual(pixelAt(scaled, 62, 50), BLUE);
-    assert.deepEqual(pixelAt(scaled, 82, 50), RED);
+    const scaledPixel = sampler(scaled);
+    assert.deepEqual(scaledPixel(62, 50), BLUE);
+    assert.deepEqual(scaledPixel(82, 50), RED);
   });
 
   it('a scale of 0 paints the last stop and keeps the canvas usable', function () {

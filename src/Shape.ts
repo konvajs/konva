@@ -110,7 +110,7 @@ const radialGradient = 'radialGradient';
 
 export const shapes: { [key: string]: Shape } = {};
 
-function _fillFuncHit(this: Node, context) {
+function fillPath(this: Node, context) {
   const fillRule = this.attrs.fillRule;
   if (fillRule) {
     context.fill(fillRule);
@@ -139,7 +139,7 @@ function _fillFunc(this: Shape, context: Context) {
     (scaleX === 1 && scaleY === 1) ||
     this._getFillType() !== 'radial-gradient'
   ) {
-    _fillFuncHit.call(this, context);
+    fillPath.call(this, context);
     return;
   }
   scaleX = nonZeroScale(scaleX);
@@ -148,7 +148,7 @@ function _fillFunc(this: Shape, context: Context) {
   context.save();
   try {
     context.transform(scaleX, 0, 0, scaleY, x - scaleX * x, y - scaleY * y);
-    _fillFuncHit.call(this, context);
+    fillPath.call(this, context);
   } finally {
     context.restore();
   }
@@ -295,8 +295,7 @@ export class Shape<
     );
   }
   // The fill the shape paints with, by fillPriority, then the first one set.
-  _getFillType() {
-    const color = this.fill();
+  _getFillType(color = this.fill()) {
     const priority = this.fillPriority();
     if (color && priority === 'color') return 'color';
     const pattern = this.fillPatternImage();
@@ -982,9 +981,7 @@ export class Shape<
 
 Shape.prototype._fillFunc = _fillFunc;
 Shape.prototype._strokeFunc = _strokeFunc;
-// the hit graph is filled and stroked the same way as the scene, without
-// fill styles
-Shape.prototype._fillFuncHit = _fillFuncHit;
+Shape.prototype._fillFuncHit = fillPath;
 Shape.prototype._strokeFuncHit = _strokeFunc;
 
 Shape.prototype._centroid = false;
