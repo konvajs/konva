@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
-- Added `fillRadialGradientScale` (`fillRadialGradientScaleX`, `fillRadialGradientScaleY`): scales a radial gradient fill about its end point, so it can be an ellipse, as in CSS `radial-gradient(ellipse …)`. It applies to shapes that fill a path, including custom shapes that call `context.fillShape()`. `Text` and `TextPath` ignore it
+- Added `fillRadialGradientScale` (`fillRadialGradientScaleX`, `fillRadialGradientScaleY`): scales a radial gradient fill about its end point, so it can be an ellipse, as in CSS `radial-gradient(ellipse …)`. A scale of 0 paints the last color stop. It applies to shapes that fill a path, including custom shapes that call `context.fillShape()`. `Text` and `TextPath` ignore it
 
 ## 10.10.0 (2026-11-19)
 

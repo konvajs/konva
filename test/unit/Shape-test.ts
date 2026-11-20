@@ -2989,6 +2989,11 @@ describe('Elliptical radial gradient fill', function () {
     stage.add(plain, scaled);
 
     assert.equal(scaled.getContext().getTrace(), plain.getContext().getTrace());
+    // the plain fill: no save() or transform() around it
+    assert.match(
+      scaled.getContext().getTrace(),
+      /closePath\(\);fillStyle=\[object \w+\];fill\(\);restore\(\);/
+    );
     compareLayers(plain, scaled, 0);
     assert.deepEqual(scaled.children[0].fillRadialGradientScale(), {
       x: 1,
@@ -3138,5 +3143,128 @@ describe('Elliptical radial gradient fill', function () {
 
     assert.equal(scaled.getContext().getTrace(), plain.getContext().getTrace());
     compareLayers(plain, scaled, 0);
+  });
+
+  it('scales the start point about the end point too', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    // red where t < 0.1, near the start point
+    const attrs = {
+      fillRadialGradientStartPoint: { x: 60, y: 50 },
+      fillRadialGradientColorStops: [
+        0,
+        'red',
+        0.1,
+        'red',
+        0.1,
+        'blue',
+        1,
+        'blue',
+      ],
+    };
+    const plain = radialRect(attrs);
+    const scaled = radialRect({ ...attrs, fillRadialGradientScaleX: 0.5 });
+    layer.add(plain);
+    stage.add(layer);
+    // circle: start at x 60, red from 54 to 74 on the axis
+    assert.deepEqual(pixelAt(plain, 62, 50), RED);
+    assert.deepEqual(pixelAt(plain, 82, 50), BLUE);
+
+    layer.add(scaled);
+    // scaled: start at x 80, red from 77 to 87
+    assert.deepEqual(pixelAt(scaled, 62, 50), BLUE);
+    assert.deepEqual(pixelAt(scaled, 82, 50), RED);
+  });
+
+  it('a scale of 0 paints the last stop and keeps the canvas usable', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    const rect = radialRect({ fillRadialGradientScaleX: 0 });
+    const sibling = new Konva.Rect({
+      x: 300,
+      width: 50,
+      height: 50,
+      fill: 'lime',
+    });
+    layer.add(rect, sibling);
+    stage.add(layer);
+
+    // read the layer's own canvas, which a singular transform could break
+    const ratio = layer.getCanvas().getPixelRatio();
+    const own = (x: number, y: number) =>
+      Array.from(
+        layer.getContext().getImageData(x * ratio, y * ratio, 1, 1).data
+      );
+    assert.deepEqual(own(100, 50), BLUE);
+    assert.deepEqual(own(140, 50), BLUE);
+    assert.deepEqual(own(320, 20), [0, 255, 0, 255]);
+
+    rect.fillRadialGradientScale({ x: -0, y: 0 });
+    layer.draw();
+    assert.deepEqual(own(100, 50), BLUE);
+    assert.deepEqual(own(320, 20), [0, 255, 0, 255]);
+
+    rect.fillRadialGradientScaleX(1);
+    rect.fillRadialGradientScaleY(1);
+    layer.draw();
+    assert.deepEqual(own(100, 50), RED);
+    assert.deepEqual(own(320, 20), [0, 255, 0, 255]);
+  });
+
+  it('does not change a blurred shadow', function () {
+    const stage = addStage();
+    const shadowPixels = (scaleY: number) => {
+      const layer = new Konva.Layer();
+      stage.add(layer);
+      const rect = radialRect({
+        x: 20,
+        y: 20,
+        // one color: only the shadow can differ
+        fillRadialGradientColorStops: [0, 'red', 1, 'red'],
+        fillRadialGradientScaleY: scaleY,
+        shadowColor: 'lime',
+        shadowBlur: 10,
+        shadowOffset: { x: 250, y: 0 },
+      });
+      layer.add(rect);
+      layer.draw();
+      const context = layer.toCanvas({ pixelRatio: 1 }).getContext('2d')!;
+      const points = [
+        [274, 24],
+        [270, 70],
+        [468, 116],
+        [262, 125],
+      ];
+      return points.map(([x, y]) => context.getImageData(x, y, 1, 1).data[3]);
+    };
+    const plain = shadowPixels(1);
+    const scaled = shadowPixels(0.5);
+    assert.isAbove(plain[0], 0);
+    for (let i = 0; i < plain.length; i++) {
+      // skia-canvas renders the blur edge up to ~12/255 apart under the
+      // scaled transform; a blur that followed the scale would be far off
+      assert.closeTo(scaled[i], plain[i], 16, 'shadow pixel ' + i);
+    }
+  });
+
+  it('restores the context when the fill throws', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    const rect = radialRect({ x: 40, y: 20, fillRadialGradientScaleY: 0.5 });
+    layer.add(rect);
+    stage.add(layer);
+
+    const context = layer.getContext();
+    const before = JSON.stringify(context._context.getTransform());
+    const fill = context.fill;
+    context.fill = function () {
+      throw new Error('fill failed');
+    };
+    try {
+      assert.throws(() => layer.draw(), 'fill failed');
+    } finally {
+      context.fill = fill;
+    }
+    assert.equal(JSON.stringify(context._context.getTransform()), before);
   });
 });

@@ -118,12 +118,23 @@ function _fillFuncHit(this: Node, context) {
     context.fill();
   }
 }
+// A zero scale would be a singular transform, which breaks the context for
+// good on node-canvas. A tiny one draws what a zero-width ellipse should: the
+// last color stop.
+const MIN_GRADIENT_SCALE = 1e-6;
+function nonZeroScale(scale: number) {
+  return Math.abs(scale) < MIN_GRADIENT_SCALE
+    ? scale < 0
+      ? -MIN_GRADIENT_SCALE
+      : MIN_GRADIENT_SCALE
+    : scale;
+}
 // Fills the current path. A canvas maps the path when it is built and the
 // fill style when it is painted, so a transform set here moves only the
 // gradient: that is how fillRadialGradientScale makes an ellipse.
 function _fillFunc(this: Shape, context: Context) {
-  const scaleX = this.fillRadialGradientScaleX();
-  const scaleY = this.fillRadialGradientScaleY();
+  let scaleX = this.fillRadialGradientScaleX();
+  let scaleY = this.fillRadialGradientScaleY();
   if (
     (scaleX === 1 && scaleY === 1) ||
     this._getFillType() !== 'radial-gradient'
@@ -131,11 +142,16 @@ function _fillFunc(this: Shape, context: Context) {
     _fillFuncHit.call(this, context);
     return;
   }
+  scaleX = nonZeroScale(scaleX);
+  scaleY = nonZeroScale(scaleY);
   const { x, y } = this.fillRadialGradientEndPoint();
   context.save();
-  context.transform(scaleX, 0, 0, scaleY, x - scaleX * x, y - scaleY * y);
-  _fillFuncHit.call(this, context);
-  context.restore();
+  try {
+    context.transform(scaleX, 0, 0, scaleY, x - scaleX * x, y - scaleY * y);
+    _fillFuncHit.call(this, context);
+  } finally {
+    context.restore();
+  }
 }
 function _strokeFunc(context) {
   context.stroke();
@@ -1593,9 +1609,11 @@ Factory.addComponentsGetterSetter(Shape, 'fillRadialGradientScale', ['x', 'y']);
 /**
  * get/set fill radial gradient scale. The whole gradient, both of its circles,
  * is scaled about the end point, so a scale that differs on the two axes makes
- * an elliptical gradient. Applies to shapes that fill a path: built-in shapes
- * and custom shapes that call `context.fillShape()` or `context.fillStrokeShape()`.
- * `Konva.Text` and `Konva.TextPath` ignore it.
+ * an elliptical gradient. A scale of 0 paints the last color stop. Applies to
+ * the path a shape builds and fills with `context.fillShape()` or
+ * `context.fillStrokeShape()`: built-in shapes and custom `sceneFunc` shapes.
+ * Shapes with their own fill function ignore it, among them `Konva.Text` and
+ * `Konva.TextPath`, which fill glyphs.
  * @name Konva.Shape#fillRadialGradientScale
  * @method
  * @param {Object} scale
