@@ -832,20 +832,16 @@ export class SceneContext extends Context {
   }
   _getFillStyle(shape: Shape) {
     const color = shape.fill();
-    const priority = shape.fillPriority();
-    if (color && priority === 'color') return color;
-    const pattern = shape.fillPatternImage();
-    if (pattern && priority === 'pattern') return this._getFillPattern(shape);
-    const linear = shape.fillLinearGradientColorStops();
-    if (linear && priority === 'linear-gradient')
-      return shape._getLinearGradient();
-    const radial = shape.fillRadialGradientColorStops();
-    if (radial && priority === 'radial-gradient')
-      return shape._getRadialGradient();
-    if (color) return color;
-    if (pattern) return this._getFillPattern(shape);
-    if (linear) return shape._getLinearGradient();
-    if (radial) return shape._getRadialGradient();
+    switch (shape._getFillType(color)) {
+      case 'color':
+        return color;
+      case 'pattern':
+        return this._getFillPattern(shape);
+      case 'linear-gradient':
+        return shape._getLinearGradient();
+      case 'radial-gradient':
+        return shape._getRadialGradient();
+    }
   }
   _fill(shape: Shape) {
     const style = this._getFillStyle(shape);

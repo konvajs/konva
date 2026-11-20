@@ -62,6 +62,9 @@ export type ShapeConfig = NodeConfig & {
   fillRadialGradientStartRadius?: number;
   fillRadialGradientEndRadius?: number;
   fillRadialGradientColorStops?: Array<number | string>;
+  fillRadialGradientScale?: Vector2d;
+  fillRadialGradientScaleX?: number;
+  fillRadialGradientScaleY?: number;
   fillEnabled?: boolean;
   fillPriority?: string;
   fillRule?: CanvasFillRule;
@@ -107,12 +110,47 @@ const radialGradient = 'radialGradient';
 
 export const shapes: { [key: string]: Shape } = {};
 
-function _fillFunc(this: Node, context) {
+function fillPath(this: Node, context) {
   const fillRule = this.attrs.fillRule;
   if (fillRule) {
     context.fill(fillRule);
   } else {
     context.fill();
+  }
+}
+// A zero scale would be a singular transform, which breaks the context for
+// good on node-canvas. A tiny one draws what a zero-width ellipse should: the
+// last color stop.
+const MIN_GRADIENT_SCALE = 1e-6;
+function nonZeroScale(scale: number) {
+  return Math.abs(scale) < MIN_GRADIENT_SCALE
+    ? scale < 0
+      ? -MIN_GRADIENT_SCALE
+      : MIN_GRADIENT_SCALE
+    : scale;
+}
+// Fills the current path. A canvas maps the path when it is built and the
+// fill style when it is painted, so a transform set here moves only the
+// gradient: that is how fillRadialGradientScale makes an ellipse.
+function _fillFunc(this: Shape, context: Context) {
+  let scaleX = this.fillRadialGradientScaleX();
+  let scaleY = this.fillRadialGradientScaleY();
+  if (
+    (scaleX === 1 && scaleY === 1) ||
+    this._getFillType() !== 'radial-gradient'
+  ) {
+    fillPath.call(this, context);
+    return;
+  }
+  scaleX = nonZeroScale(scaleX);
+  scaleY = nonZeroScale(scaleY);
+  const { x, y } = this.fillRadialGradientEndPoint();
+  context.save();
+  try {
+    context.transform(scaleX, 0, 0, scaleY, x - scaleX * x, y - scaleY * y);
+    fillPath.call(this, context);
+  } finally {
+    context.restore();
   }
 }
 function _strokeFunc(context) {
@@ -255,6 +293,21 @@ export class Shape<
         this.shadowOffsetY()
       )
     );
+  }
+  // The fill the shape paints with, by fillPriority, then the first one set.
+  _getFillType(color = this.fill()) {
+    const priority = this.fillPriority();
+    if (color && priority === 'color') return 'color';
+    const pattern = this.fillPatternImage();
+    if (pattern && priority === 'pattern') return 'pattern';
+    const linear = this.fillLinearGradientColorStops();
+    if (linear && priority === 'linear-gradient') return 'linear-gradient';
+    const radial = this.fillRadialGradientColorStops();
+    if (radial && priority === 'radial-gradient') return 'radial-gradient';
+    if (color) return 'color';
+    if (pattern) return 'pattern';
+    if (linear) return 'linear-gradient';
+    if (radial) return 'radial-gradient';
   }
   _toStyleSpace(point: Vector2d) {
     return this._styleTransform ? this._styleTransform.point(point) : point;
@@ -880,6 +933,9 @@ export class Shape<
   fillRadialGradientEndPoint: GetSet<Vector2d, this>;
   fillRadialGradientEndPointX: GetSet<number, this>;
   fillRadialGradientEndPointY: GetSet<number, this>;
+  fillRadialGradientScale: GetSet<Vector2d, this>;
+  fillRadialGradientScaleX: GetSet<number, this>;
+  fillRadialGradientScaleY: GetSet<number, this>;
   fillPatternOffset: GetSet<Vector2d, this>;
   fillPatternOffsetX: GetSet<number, this>;
   fillPatternOffsetY: GetSet<number, this>;
@@ -925,8 +981,7 @@ export class Shape<
 
 Shape.prototype._fillFunc = _fillFunc;
 Shape.prototype._strokeFunc = _strokeFunc;
-// the hit graph is filled and stroked the same way as the scene
-Shape.prototype._fillFuncHit = _fillFunc;
+Shape.prototype._fillFuncHit = fillPath;
 Shape.prototype._strokeFuncHit = _strokeFunc;
 
 Shape.prototype._centroid = false;
@@ -1544,6 +1599,75 @@ Factory.addGetterSetter(Shape, 'fillRadialGradientColorStops');
  * // create a radial gradient that starts with red, changes to blue
  * // halfway through, and then changes to green
  * shape.fillRadialGradientColorStops(0, 'red', 0.5, 'blue', 1, 'green');
+ */
+
+Factory.addComponentsGetterSetter(Shape, 'fillRadialGradientScale', ['x', 'y']);
+
+/**
+ * get/set fill radial gradient scale. The whole gradient, both of its circles,
+ * is scaled about the end point, so a scale that differs on the two axes makes
+ * an elliptical gradient. A scale of 0 paints the last color stop. Applies to
+ * the path a shape builds and fills with `context.fillShape()` or
+ * `context.fillStrokeShape()`: built-in shapes and custom `sceneFunc` shapes.
+ * Shapes with their own fill function ignore it, among them `Konva.Text` and
+ * `Konva.TextPath`, which fill glyphs.
+ * @name Konva.Shape#fillRadialGradientScale
+ * @method
+ * @param {Object} scale
+ * @param {Number} scale.x
+ * @param {Number} scale.y
+ * @returns {Object}
+ * @example
+ * // get fill radial gradient scale
+ * var gradientScale = shape.fillRadialGradientScale();
+ *
+ * // an ellipse half as tall as it is wide
+ * shape.fillRadialGradientScale({
+ *   x: 1,
+ *   y: 0.5
+ * });
+ */
+
+Factory.addGetterSetter(
+  Shape,
+  'fillRadialGradientScaleX',
+  1,
+  getNumberValidator()
+);
+
+/**
+ * get/set fill radial gradient scale x
+ * @name Konva.Shape#fillRadialGradientScaleX
+ * @method
+ * @param {Number} x
+ * @returns {Number}
+ * @example
+ * // get fill radial gradient scale x
+ * var gradientScaleX = shape.fillRadialGradientScaleX();
+ *
+ * // set fill radial gradient scale x
+ * shape.fillRadialGradientScaleX(2);
+ */
+
+Factory.addGetterSetter(
+  Shape,
+  'fillRadialGradientScaleY',
+  1,
+  getNumberValidator()
+);
+
+/**
+ * get/set fill radial gradient scale y
+ * @name Konva.Shape#fillRadialGradientScaleY
+ * @method
+ * @param {Number} y
+ * @returns {Number}
+ * @example
+ * // get fill radial gradient scale y
+ * var gradientScaleY = shape.fillRadialGradientScaleY();
+ *
+ * // set fill radial gradient scale y
+ * shape.fillRadialGradientScaleY(0.5);
  */
 
 Factory.addGetterSetter(Shape, 'fillPatternRepeat', 'repeat');
