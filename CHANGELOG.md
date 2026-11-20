@@ -5,6 +5,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+- Added `Konva.setCanvasBackend()` and `Konva.getCanvasBackend()`: choose the canvas library Konva draws with, and ask which one is active. A backend set after Konva was used also replaces the context Konva measures text and makes gradients with, and its feature checks. Assigning `Konva.Util.createCanvasElement` directly still works and has the same effect
+- Added `Konva.Util.createDOMMatrix()` and `Konva.Util.createPath2D()`: make these objects for the active canvas library, without the globals. Pattern transforms use it, so node-canvas no longer throws `Expected DOMMatrix` when another library set the global `DOMMatrix`
+- Added `konva/napi-backend` for [`@napi-rs/canvas`](https://github.com/Brooooooklyn/canvas)
+- `konva/skia-backend` supports skia-canvas 4. Note that skia-canvas 4 ignores the `grey` spelling of color names (`gray` works)
+- Konva works in a Web Worker without setup: it draws on `OffscreenCanvas`, and `toBlob()` encodes it. `toDataURL()` and image loading throw an explicit error there
+- `konva/skia-backend` no longer replaces `toString()` of skia-canvas `Canvas`, `Image` and `Path2D` objects
+- An imported Konva sets `window.Konva` only in a browser, and no longer replaces one that is already there. It no longer sets the global `Konva` in Node.js or in a worker. The `konva.js` script build still sets `window.Konva` itself
+- Removed the private `Konva._renderBackend`. Use `Konva.getCanvasBackend()`
 - Fixed `Text` word wrap for Chinese and Japanese: lines break between characters, not only at spaces. Thanks [@b84330808](https://github.com/b84330808)
 - Fixed `Text` word wrap starting a line with a dash. Thanks [@nk-batman21](https://github.com/nk-batman21)
 - Fixed `\r\n` line endings making `Text` lines one space wider. Thanks [@b84330808](https://github.com/b84330808)

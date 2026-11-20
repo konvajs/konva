@@ -1,6 +1,5 @@
 import { assert } from 'chai';
 import { addStage, Konva } from './test-utils.ts';
-import { isCSSFiltersSupported } from '../../src/Context.ts';
 
 describe('Context', function () {
   // ======================================================
@@ -115,26 +114,6 @@ describe('Context', function () {
     // test set
     context.globalAlpha = 0.5;
     assert.equal(context.globalAlpha, 0.5);
-  });
-
-  it('isCSSFiltersSupported creates at most one probe canvas and releases it', function () {
-    const created: any[] = [];
-    const original = Konva.Util.createCanvasElement;
-    Konva.Util.createCanvasElement = function () {
-      const canvas = original.call(this);
-      created.push(canvas);
-      return canvas;
-    };
-    try {
-      isCSSFiltersSupported();
-      isCSSFiltersSupported();
-    } finally {
-      Konva.Util.createCanvasElement = original;
-    }
-    assert.isAtMost(created.length, 1, 'result is memoized');
-    created.forEach((canvas) => {
-      assert.equal(canvas.width, 0, 'probe canvas is released');
-    });
   });
 });
 

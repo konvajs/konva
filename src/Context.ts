@@ -93,24 +93,6 @@ const CONTEXT_PROPERTIES = [
 
 const traceArrMax = 100;
 
-// Check if CSS filters are supported in the current browser
-let _cssFiltersSupported: boolean | null = null;
-export function isCSSFiltersSupported(): boolean {
-  if (_cssFiltersSupported !== null) {
-    return _cssFiltersSupported;
-  }
-
-  try {
-    const canvas = Util.createCanvasElement();
-    const ctx = canvas.getContext('2d');
-    _cssFiltersSupported = !!ctx && 'filter' in ctx;
-    Util.releaseCanvas(canvas);
-  } catch (e) {
-    _cssFiltersSupported = false;
-  }
-  return _cssFiltersSupported;
-}
-
 interface ExtendedCanvasRenderingContext2D extends CanvasRenderingContext2D {
   letterSpacing: string;
 }

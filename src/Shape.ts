@@ -1,5 +1,5 @@
 import { Konva } from './Global.ts';
-import { Transform, Util } from './Util.ts';
+import { Transform, Util, getDummyContext } from './Util.ts';
 import { Factory } from './Factory.ts';
 import type { GetClientRectConfig, NodeConfig } from './Node.ts';
 import { Node } from './Node.ts';
@@ -104,15 +104,6 @@ const SHADOW_RGBA = 'shadowRGBA';
 const patternImage = 'patternImage';
 const linearGradient = 'linearGradient';
 const radialGradient = 'radialGradient';
-
-let dummyContext: CanvasRenderingContext2D;
-function getDummyContext(): CanvasRenderingContext2D {
-  if (dummyContext) {
-    return dummyContext;
-  }
-  dummyContext = Util.createCanvasElement().getContext('2d')!;
-  return dummyContext;
-}
 
 export const shapes: { [key: string]: Shape } = {};
 
@@ -294,21 +285,7 @@ export class Shape<
         -1 * this.fillPatternOffsetY()
       );
 
-      const m = tr.getMatrix();
-
-      const matrix =
-        typeof DOMMatrix === 'undefined'
-          ? {
-              a: m[0], // Horizontal scaling. A value of 1 results in no scaling.
-              b: m[1], // Vertical skewing.
-              c: m[2], // Horizontal skewing.
-              d: m[3],
-              e: m[4], // Horizontal translation (moving).
-              f: m[5], // Vertical translation (moving).
-            }
-          : new DOMMatrix(m);
-
-      pattern.setTransform(matrix);
+      pattern.setTransform(Util.createDOMMatrix(tr.getMatrix()));
     }
     return pattern;
   }

@@ -1,15 +1,10 @@
-import { Transform, Util } from '../Util.ts';
+import { Transform, Util, getDummyContext } from '../Util.ts';
 import { Factory } from '../Factory.ts';
 import type { Context, SceneContext } from '../Context.ts';
 import type { ShapeConfig } from '../Shape.ts';
 import { Shape } from '../Shape.ts';
 import { Path } from './Path.ts';
-import {
-  Text,
-  getDecorationLineWidth,
-  getDummyContext,
-  stringToArray,
-} from './Text.ts';
+import { Text, getDecorationLineWidth, stringToArray } from './Text.ts';
 import { getNumberValidator } from '../Validators.ts';
 import { _registerNode } from '../Global.ts';
 

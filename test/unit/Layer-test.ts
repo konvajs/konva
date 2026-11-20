@@ -334,7 +334,7 @@ describe('Layer', function () {
       quality: 0.2,
     });
 
-    if (Konva._renderBackend === 'skia-canvas') {
+    if (Konva.getCanvasBackend() === 'skia-canvas') {
       return;
     }
 

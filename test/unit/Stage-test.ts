@@ -1534,7 +1534,8 @@ describe('Stage', function () {
 
     stage.add(layer);
 
-    if (isBrowser) {
+    // node-canvas and skia-canvas make no Blob
+    if (isBrowser || Konva.getCanvasBackend() === 'napi-rs-canvas') {
       try {
         const blob = await stage.toBlob({
           mimeType: 'image/jpeg',

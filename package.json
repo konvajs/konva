@@ -31,30 +31,32 @@
       "types": "./lib/skia-backend.d.ts",
       "default": "./lib/skia-backend.js"
     },
+    "./napi-backend": {
+      "types": "./lib/napi-backend.d.ts",
+      "default": "./lib/napi-backend.js"
+    },
     "./package.json": "./package.json"
   },
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
     "start": "npm run test:watch",
-    "compile": "npm run clean && npm run tsc && npm run rollup",
+    "compile": "npm run clean && tsc && rollup lib/index.js --file konva.js --format umd --name Konva --no-freeze",
     "prepublishOnly": "npm run build",
-    "build": "npm run compile && gulp build",
+    "build": "npm run compile && node build.mjs",
     "fmt": "prettier --write .",
     "fmt:check": "prettier --check .",
     "test:import": "npm run build  && node ./test/import-test.cjs && node ./test/import-test.mjs",
     "test": "npm run test:types && npm run test:browser && npm run test:node && npm run test:import",
     "test:types": "tsc -p test/types/tsconfig.json",
     "test:build": "rimraf ./.parcel-cache && PARCEL_WORKER_BACKEND=process parcel build ./test/unit-tests.html --dist-dir ./test-build --target none --public-url ./ --no-source-maps",
-    "test:browser": "npm run test:build && mocha-headless-chrome -f ./test-build/unit-tests.html -a disable-web-security -a no-sandbox -a disable-setuid-sandbox",
+    "test:browser": "npm run test:build && mocha-headless-chrome -f ./test-build/unit-tests.html -a disable-web-security -a allow-file-access-from-files -a no-sandbox -a disable-setuid-sandbox",
     "test:watch": "rimraf ./.parcel-cache && PARCEL_WORKERS=0  parcel serve ./test/unit-tests.html ./test/manual-tests.html ./test/sandbox.html ./test/text-paths.html ./test/bunnies.html",
-    "test:node:canvas": "mocha -r tsx -r ./test/node-canvas-global-setup.mjs --file ./test/setup.ts --extension ts --recursive './test/unit/'",
-    "test:node:skia": "mocha -r tsx -r ./test/node-skia-global-setup.mjs --file ./test/setup.ts --extension ts --recursive './test/unit/'",
-    "test:node": "npm run test:node:canvas && npm run test:node:skia",
-    "tsc": "tsc",
-    "rollup": "rollup -c",
-    "clean": "rimraf ./lib ./test-build",
-    "watch": "rollup -c -w"
+    "test:node:canvas": "mocha -r tsx --file ./test/node-canvas-setup.ts --file ./test/setup.ts --extension ts --recursive './test/unit/'",
+    "test:node:skia": "mocha -r tsx --file ./test/node-skia-setup.ts --file ./test/setup.ts --extension ts --recursive './test/unit/'",
+    "test:node:napi": "mocha -r tsx --file ./test/node-napi-setup.ts --file ./test/setup.ts --extension ts --recursive './test/unit/'",
+    "test:node": "npm run test:node:canvas && npm run test:node:skia && npm run test:node:napi",
+    "clean": "rimraf ./lib ./test-build"
   },
   "targets": {
     "none": {}
@@ -74,35 +76,30 @@
     }
   ],
   "devDependencies": {
-    "@parcel/transformer-image": "2.15.4",
-    "@types/mocha": "^10.0.10",
-    "canvas": "^3.2.1",
-    "chai": "6.2.2",
-    "gulp": "^5.0.1",
-    "gulp-connect": "^5.7.0",
-    "gulp-jsdoc3": "^3.0.0",
-    "gulp-rename": "^2.1.0",
-    "gulp-replace": "^1.1.4",
-    "gulp-uglify-es": "^3.0.0",
-    "gulp-util": "^3.0.8",
-    "mocha": "^10",
-    "mocha-headless-chrome": "^4.0.0",
-    "parcel": "2.15.4",
-    "prettier": "^3.7.4",
-    "process": "^0.11.10",
-    "rimraf": "^6.1.2",
-    "rollup": "^4.55.1",
-    "rollup-plugin-typescript2": "^0.37.0",
-    "skia-canvas": "^3.0.4",
+    "@napi-rs/canvas": "^1.1.1",
+    "canvas": "^3.2.3",
+    "chai": "6.3.0",
+    "mocha": "^12.0.3",
+    "mocha-headless-chrome": "^5.1.0",
+    "parcel": "2.16.4",
+    "prettier": "^3.10.1",
+    "rimraf": "^6.1.4",
+    "rollup": "^4.68.7",
+    "skia-canvas": "^4.0.1",
     "stats.js": "0.17.0",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "terser": "^5.51.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
   },
   "peerDependencies": {
+    "@napi-rs/canvas": "^1.1.0",
     "canvas": "^3.0.0",
-    "skia-canvas": "^3.0.0"
+    "skia-canvas": "^3.0.0 || ^4.0.0"
   },
   "peerDependenciesMeta": {
+    "@napi-rs/canvas": {
+      "optional": true
+    },
     "canvas": {
       "optional": true
     },

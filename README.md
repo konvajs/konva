@@ -128,20 +128,17 @@ import { Blur } from 'konva/lib/filters/Blur';
 
 ### 4 NodeJS env
 
-In order to run `konva` in nodejs environment you also need to install `canvas` or `skia-canvas` package manually for rendering backend.
+In order to run `konva` in nodejs environment you also need to install `canvas`, `skia-canvas` or `@napi-rs/canvas` package manually for rendering backend.
 
 ```bash
-# node-canvas backend
-npm install konva canvas
-# skia-canvas backend
-npm install konva skia-canvas
+npm install konva canvas # or skia-canvas, or @napi-rs/canvas
 ```
 
 Use the same scene graph API for server-side rendering and omit the stage's `container` attribute. DOM events require a browser, and canvas feature support depends on the selected backend.
 
 ```js
 import Konva from 'konva';
-import 'konva/canvas-backend'; // or import 'konva/skia-backend';
+import 'konva/canvas-backend'; // or 'konva/skia-backend', or 'konva/napi-backend'
 
 const stage = new Konva.Stage({
   width: 500,
@@ -149,6 +146,25 @@ const stage = new Konva.Stage({
 });
 // Add shapes and export the stage with the usual Konva drawing API.
 ```
+
+A backend module also sets the global `DOMMatrix` and `Path2D`. To leave globals alone, or to use another canvas library, pass it to `Konva.setCanvasBackend()`. `Konva.getCanvasBackend()` returns the name of the active one:
+
+```js
+import { Canvas, Image, Path2D } from '@napi-rs/canvas';
+
+Konva.setCanvasBackend({
+  name: 'my-canvas',
+  createCanvas: () => new Canvas(300, 150),
+  createImage: () => new Image(), // optional, to load images
+  createPath2D: (path) => new Path2D(path), // optional, for Konva.Util.createPath2D()
+});
+```
+
+Create stages and nodes again after the call: ones created before keep the canvases, gradients and patterns of the old library.
+
+### 5 Web Worker
+
+Konva draws on `OffscreenCanvas` in a Web Worker without setup. Export with `toBlob()`, since `toDataURL()` is not available there, and pass images as `ImageBitmap`. DOM events do not reach a worker; forward them from the page.
 
 # Backers
 
@@ -177,10 +193,6 @@ Konva uses Mocha for testing.
 
 Konva is covered with hundreds of tests and well over a thousand assertions.
 For each feature or bug fix, write a failing test first, implement the behavior, then verify that the test passes (test-driven development).
-
-## Generate documentation
-
-Run `npm run build`, then `npx gulp api` to generate documentation from the current bundle in the `api` folder.
 
 # Pull Requests
 

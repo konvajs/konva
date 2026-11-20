@@ -88,7 +88,7 @@ describe('Filter', function () {
     // skia-canvas (3.0.8 to 4.0.0) blurs drawImage() with half the deviation
     // of ctx.filter, and the native path draws the cache with drawImage().
     const nativeSkia = () =>
-      !rest.length && Konva._renderBackend === 'skia-canvas';
+      !rest.length && Konva.getCanvasBackend() === 'skia-canvas';
 
     it(`CSS blur(σ) is a Gaussian of deviation σ ${name}`, function () {
       if (nativeSkia()) this.skip();

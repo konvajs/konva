@@ -2,7 +2,6 @@ import type { Canvas } from './Canvas.ts';
 import { HitCanvas, SceneCanvas } from './Canvas.ts';
 import type { Container } from './Container.ts';
 import type { Context } from './Context.ts';
-import { isCSSFiltersSupported } from './Context.ts';
 import { DD } from './DragAndDrop.ts';
 import * as PointerEvents from './PointerEvents.ts';
 import { Factory } from './Factory.ts';
@@ -753,13 +752,10 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
       return filterCanvas;
     }
 
-    let useNativeOnly = true;
-    for (let i = 0; i < filters.length; i++) {
-      if (typeof filters[i] !== 'string' || !isCSSFiltersSupported()) {
-        useNativeOnly = false;
-        break;
-      }
-    }
+    // node-canvas has no ctx.filter, so CSS filter strings take the fallback
+    const useNativeOnly =
+      'filter' in filterContext._context &&
+      filters.every((filter) => typeof filter === 'string');
 
     const ratio = sceneCanvas.pixelRatio;
     filterCanvas.setSizeIfChanged(
@@ -2303,22 +2299,28 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     }
   ) {
     return new Promise<Blob>((resolve, reject) => {
+      const done = (blob: Blob | null) => {
+        // the canvas reports a failed encode by passing null
+        if (!blob) {
+          reject(
+            new Error('Konva: toBlob() failed, the canvas was not encoded')
+          );
+          return;
+        }
+        resolve(blob);
+        config?.callback?.(blob);
+      };
       try {
-        this.toCanvas(config).toBlob(
-          (blob) => {
-            // the canvas reports a failed encode by passing null
-            if (!blob) {
-              reject(
-                new Error('Konva: toBlob() failed, the canvas was not encoded')
-              );
-              return;
-            }
-            resolve(blob);
-            config?.callback?.(blob);
-          },
-          config?.mimeType,
-          config?.quality
-        );
+        const canvas = this.toCanvas(config) as HTMLCanvasElement &
+          Partial<OffscreenCanvas>;
+        // an OffscreenCanvas, as in a Web Worker, has no toBlob()
+        if (canvas.convertToBlob) {
+          canvas
+            .convertToBlob({ type: config?.mimeType, quality: config?.quality })
+            .then(done, reject);
+        } else {
+          canvas.toBlob(done, config?.mimeType, config?.quality);
+        }
       } catch (err) {
         reject(err);
       }

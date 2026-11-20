@@ -362,7 +362,7 @@ describe('Shape', function () {
     // skia-canvas never smooths pattern fills (regardless of
     // imageSmoothingEnabled), so the smoothing sanity check below
     // can't pass on that backend.
-    if (Konva._renderBackend === 'skia-canvas') {
+    if (Konva.getCanvasBackend() === 'skia-canvas') {
       return;
     }
 
@@ -1655,7 +1655,8 @@ describe('Shape', function () {
     context.rect(100, 50, 100, 50);
     context.closePath();
     context.fillStyle = 'green';
-    context.shadowColor = 'grey';
+    // skia-canvas 4 does not know the 'grey' spelling
+    context.shadowColor = 'gray';
     context.shadowBlur = 10 * Konva.pixelRatio;
     context.shadowOffsetX = 20 * Konva.pixelRatio;
     context.shadowOffsetY = 20 * Konva.pixelRatio;

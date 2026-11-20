@@ -1,7 +1,7 @@
 // what is core parts of Konva?
 import { Konva as Global } from './Global.ts';
 
-import { Util, Transform } from './Util.ts';
+import { Util, Transform, setCanvasBackend, getCanvasBackend } from './Util.ts';
 import { Node } from './Node.ts';
 import { Container } from './Container.ts';
 
@@ -49,6 +49,8 @@ export const Konva = Util._assign(Global, {
    * }
    */
   beginUpdateBatch: Node._beginUpdateBatch,
+  setCanvasBackend,
+  getCanvasBackend,
   Util,
   Transform,
   Node,
@@ -70,6 +72,7 @@ export const Konva = Util._assign(Global, {
 
 export namespace Konva {
   export type Vector2d = import('./types.ts').Vector2d;
+  export type CanvasBackend = import('./Util.ts').CanvasBackend;
   export type IRect = import('./types.ts').IRect;
   export type GetSet<Type, This> = import('./types.ts').GetSet<Type, This>;
   export type Filter = import('./Node.ts').Filter;

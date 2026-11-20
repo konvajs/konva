@@ -48,6 +48,8 @@ export class Canvas {
     this.pixelRatio = pixelRatio;
 
     this._canvas = Util.createCanvasElement();
+    // a canvas outside the DOM (OffscreenCanvas, Node.js backends) has no style
+    (this._canvas as { style?: object }).style ??= {};
     // set inline styles
     this._canvas.style.padding = '0';
     this._canvas.style.margin = '0';
@@ -157,6 +159,12 @@ export class Canvas {
    * @returns {String} data url string
    */
   toDataURL(mimeType, quality) {
+    if (!this._canvas.toDataURL) {
+      // an OffscreenCanvas, as in a Web Worker, only encodes asynchronously
+      throw new Error(
+        'Konva: this canvas can not make a data URL. In a Web Worker, use toBlob() instead.'
+      );
+    }
     try {
       // If the requested encoding fails, retry with the default PNG encoding.
       return this._canvas.toDataURL(mimeType, quality);

@@ -3,9 +3,20 @@
 // type-check; the checks below go through the accessors where it matters
 import Konva from '../../src/index.ts';
 import type { GetClientRectConfig } from '../../src/Node.ts';
+import { Canvas as NapiCanvas, Image as NapiImage } from '@napi-rs/canvas';
 
 const finishUpdateBatch: () => void = Konva.beginUpdateBatch();
 finishUpdateBatch();
+
+// a canvas library's own classes fit the backend without casts
+Konva.setCanvasBackend({
+  name: 'napi-rs',
+  createCanvas: () => new NapiCanvas(300, 150),
+  createImage: () => new NapiImage(),
+});
+const backendName: string = Konva.getCanvasBackend();
+// @ts-expect-error a backend needs a name
+Konva.setCanvasBackend({ createCanvas: () => new NapiCanvas(300, 150) });
 
 // clipFunc receives the Konva context and the container
 const group = new Konva.Group({

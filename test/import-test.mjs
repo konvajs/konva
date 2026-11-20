@@ -76,3 +76,22 @@ equal(
   true,
   'The deep cubic length export matches the analytic curve'
 );
+
+// another backend through the exports map takes over the same Konva object
+await import('konva/napi-backend');
+equal(
+  Konva.getCanvasBackend(),
+  'napi-rs-canvas',
+  'napi-backend sets the backend'
+);
+const napiRect = new Rect({ width: 2, height: 2, fill: '#804020' });
+equal(
+  Array.from(
+    napiRect
+      .toCanvas({ pixelRatio: 1 })
+      .getContext('2d')
+      .getImageData(0, 0, 1, 1).data
+  ).join(','),
+  '128,64,32,255',
+  'napi-backend draws'
+);

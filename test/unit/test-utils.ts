@@ -9,6 +9,8 @@ Konva.showWarnings = true;
 import { imagediff } from './imagediff.ts';
 import type { Layer } from '../../src/Layer.ts';
 import type { Stage } from '../../src/Stage.ts';
+import type { Node } from '../../src/Node.ts';
+import type { CanvasBackend } from '../../src/Util.ts';
 
 export const isNode = typeof global.document === 'undefined';
 export const isBrowser = !isNode;
@@ -190,6 +192,43 @@ export function createCanvasAndContext() {
   const context = canvas.getContext('2d')!;
   context.scale(Konva.pixelRatio, Konva.pixelRatio);
   return { canvas, context };
+}
+
+// saves the canvas backend before each test of the calling describe() and
+// restores it after
+export function restoreCanvasBackend() {
+  const saved = {} as CanvasBackend;
+  beforeEach(function () {
+    Object.assign(saved, {
+      name: Konva.getCanvasBackend(),
+      createCanvas: Konva.Util.createCanvasElement,
+      createImage: Konva.Util.createImageElement,
+      createDOMMatrix: Konva.Util.createDOMMatrix,
+      createPath2D: Konva.Util.createPath2D,
+    });
+  });
+  afterEach(function () {
+    Konva.setCanvasBackend(saved);
+  });
+  return saved;
+}
+
+// a 10x10 pattern image: left half red, right half blue
+export function stripesCanvas() {
+  const canvas = Konva.Util.createCanvasElement();
+  canvas.width = canvas.height = 10;
+  const context = canvas.getContext('2d')!;
+  context.fillStyle = 'red';
+  context.fillRect(0, 0, 5, 10);
+  context.fillStyle = 'blue';
+  context.fillRect(5, 0, 5, 10);
+  return canvas;
+}
+
+// the color of one pixel of node.toCanvas()
+export function pixelAt(node: Node, x: number, y: number) {
+  const context = node.toCanvas({ pixelRatio: 1 }).getContext('2d')!;
+  return Array.from(context.getImageData(x, y, 1, 1).data);
 }
 
 export function showHit(layer) {

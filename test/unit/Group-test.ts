@@ -1106,7 +1106,7 @@ describe('Isolated groups', function () {
 
   for (const clipType of ['rectangle', 'function', 'Path2D']) {
     it(`limits group compositing to its ${clipType} clip, including transparent source pixels`, function () {
-      if (clipType === 'Path2D' && Konva._renderBackend === 'node-canvas') {
+      if (clipType === 'Path2D' && Konva.getCanvasBackend() === 'node-canvas') {
         // This backend provides a Path2D stub, not native path rendering.
         this.skip();
       }
@@ -1235,7 +1235,8 @@ describe('Isolated groups', function () {
     it(`preserves transformed strokes and perfect drawing on export (shadow=${shadowEnabled})`, function () {
       // Cairo's image shadows depend on bitmap origin and size. Cropped
       // buffers deliberately use browser rendering rules without a fallback.
-      if (shadowEnabled && Konva._renderBackend === 'node-canvas') this.skip();
+      if (shadowEnabled && Konva.getCanvasBackend() === 'node-canvas')
+        this.skip();
       const parent = new Konva.Group({
         x: 110,
         y: 30,

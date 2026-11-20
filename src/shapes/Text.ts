@@ -1,4 +1,4 @@
-import { Util } from '../Util.ts';
+import { Util, _perCanvasBackend, getDummyContext } from '../Util.ts';
 import type { Context, SceneContext } from '../Context.ts';
 import { Factory } from '../Factory.ts';
 import type { ShapeConfig } from '../Shape.ts';
@@ -124,12 +124,8 @@ const AUTO = 'auto',
 // This feature check detects that bug so we can work around it with a buffer canvas.
 // Not covered by automated tests (our CI doesn't run Safari).
 // Once Safari fixes the issue this check can be removed.
-let _shadowOpacityBuggy: boolean | null = null;
-function hasShadowOpacityBug(): boolean {
-  if (_shadowOpacityBuggy !== null) {
-    return _shadowOpacityBuggy;
-  }
-  _shadowOpacityBuggy = false;
+const hasShadowOpacityBug = _perCanvasBackend(() => {
+  let buggy = false;
   let c;
   try {
     c = Util.createCanvasElement();
@@ -148,7 +144,7 @@ function hasShadowOpacityBug(): boolean {
       const data = ctx.getImageData(0, 0, 10, 10).data;
       for (let i = 3; i < data.length; i += 4) {
         if (data[i] > 0) {
-          _shadowOpacityBuggy = true;
+          buggy = true;
           break;
         }
       }
@@ -160,8 +156,8 @@ function hasShadowOpacityBug(): boolean {
       Util.releaseCanvas(c);
     }
   }
-  return _shadowOpacityBuggy;
-}
+  return buggy;
+});
 
 function normalizeFontFamily(fontFamily: string) {
   return fontFamily
@@ -176,17 +172,6 @@ function normalizeFontFamily(fontFamily: string) {
       return family;
     })
     .join(', ');
-}
-
-let dummyContext: CanvasRenderingContext2D;
-export function getDummyContext() {
-  if (dummyContext) {
-    return dummyContext;
-  }
-  dummyContext = Util.createCanvasElement().getContext(
-    CONTEXT_2D
-  ) as CanvasRenderingContext2D;
-  return dummyContext;
 }
 
 function _fillFunc(this: Text, context: Context) {

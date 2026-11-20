@@ -1504,13 +1504,14 @@ describe('TextPath', function () {
   });
 
   it('does not allocate a measurement canvas per instance', function () {
-    // the shared measurement context is created on first use
-    new Konva.TextPath({ text: 'abc', data: 'M0,0 L100,0' });
-    var canvases = countCalls(Konva.Util, 'createCanvasElement', () => {
-      new Konva.TextPath({ text: 'abc', data: 'M0,0 L100,0' });
-      new Konva.TextPath({ text: 'abc', data: 'M0,0 L100,0' });
-    });
-    assert.equal(canvases, 0);
+    const canvases = (instances: number) =>
+      countCalls(Konva.Util, 'createCanvasElement', () => {
+        for (let i = 0; i < instances; i++) {
+          new Konva.TextPath({ text: 'abc', data: 'M0,0 L100,0' });
+        }
+      });
+    // a replaced factory makes its shared canvases once, not per instance
+    assert.equal(canvases(3), canvases(1));
   });
 
   it('relayouts on fontStyle and fontVariant changes and keeps its listeners on the prototype', function () {

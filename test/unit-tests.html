@@ -2,8 +2,8 @@
   <body>
     <div id="mocha"></div>
     <!-- Keep the browser runner at the version in package-lock.json. -->
-    <link rel="stylesheet" href="https://unpkg.com/mocha@10.8.2/mocha.css" />
-    <script src="https://unpkg.com/mocha@10.8.2/mocha.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/mocha@12.0.3/mocha.css" />
+    <script src="https://unpkg.com/mocha@12.0.3/mocha.js"></script>
     <script>
       mocha.setup('bdd');
     </script>
@@ -14,6 +14,7 @@
       import './unit/Animation-test.ts';
       import './unit/Tween-test.ts';
       import './unit/Canvas-test.ts';
+      import './unit/CanvasBackend-test.ts';
       import './unit/Container-test.ts';
       import './unit/Context-test.ts';
       import './unit/DragAndDrop-test.ts';
@@ -59,9 +60,8 @@
       import './unit/MouseEvents-test.ts';
       import './unit/TouchEvents-test.ts';
       import './unit/PointerEvents-test.ts';
-    </script>
 
-    <script>
+      // after the imports above, so every test is registered
       mocha.run();
     </script>
     <div id="konva-container"></div>

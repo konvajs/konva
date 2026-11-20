@@ -92,6 +92,7 @@ export const Konva = Core.Util._assign(Core, {
 
 export namespace Konva {
   export type Vector2d = Core.Vector2d;
+  export type CanvasBackend = Core.CanvasBackend;
   export type IRect = Core.IRect;
   export type GetSet<Type, This> = Core.GetSet<Type, This>;
   export type Filter = Core.Filter;

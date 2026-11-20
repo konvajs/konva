@@ -25,6 +25,7 @@ function detectBrowser() {
 }
 
 declare const WorkerGlobalScope: any;
+declare const global: any;
 
 export const glob: any =
   typeof global !== 'undefined'
@@ -81,7 +82,6 @@ export const Konva = {
    */
   capturePointerEventsEnabled: false,
 
-  _renderBackend: 'web', // web, node-canvas, skia-canvas
   /**
    * Use legacy text rendering. with "middle" baseline by default.
    * @property legacyTextRendering
@@ -186,13 +186,15 @@ export const Konva = {
    */
   releaseCanvasOnDestroy: true,
   document: glob.document,
-  // insert Konva into global namespace (window)
-  // it is required for npm packages
+  // window.Konva is how konva-devtool and browser tests find the stages, so
+  // the first copy keeps it. A second copy in one page is usually a bundling
+  // mistake that splits stages and settings between the copies
   _injectGlobal(Konva) {
     if (typeof glob.Konva !== 'undefined') {
       console.error(
         'Several Konva instances detected. It is not recommended to use multiple Konva instances in the same environment.'
       );
+      return;
     }
     glob.Konva = Konva;
   },
@@ -206,4 +208,8 @@ export const _registerNode = (NodeClass: any, boundsCoverPaint = false) => {
   if (boundsCoverPaint) _boundedShapes.add(NodeClass);
 };
 
-Konva._injectGlobal(Konva);
+// devtools and browser tests can not see a copy in Node.js or a worker, such
+// as a library's private copy for server rendering, so it stays quiet
+if (Konva.isBrowser) {
+  Konva._injectGlobal(Konva);
+}

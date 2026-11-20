@@ -2,20 +2,8 @@ import { Konva } from './Global.ts';
 import type { Context } from './Context.ts';
 import type { IRect, RGB, Vector2d } from './types.ts';
 
-const NODE_ERROR = `Konva.js unsupported environment.
-
-Looks like you are trying to use Konva.js in Node.js environment (or in a Web Worker), because "document" object is undefined.
-
-To use Konva.js in Node.js environment, you need to use the "canvas-backend" or "skia-backend" module.
-
-bash: npm install canvas
-js: import "konva/canvas-backend";
-
-or
-
-bash: npm install skia-canvas
-js: import "konva/skia-backend";
-`;
+const NODE_ERROR =
+  'Konva needs a canvas outside the browser. Import "konva/canvas-backend", "konva/skia-backend" or "konva/napi-backend", or call Konva.setCanvasBackend().';
 const ensureBrowser = () => {
   if (typeof document === 'undefined') {
     throw new Error(NODE_ERROR);
@@ -474,8 +462,6 @@ const OBJECT_ARRAY = '[object Array]',
     yellow: [255, 255, 0],
     yellowgreen: [154, 205, 50],
   };
-// Cache for canvas farbling detection
-let _isCanvasFarblingActive: boolean | null = null;
 
 // A stage may be rendered in another window than the one Konva was imported
 // into, and a window that is not visible gives almost no frames. So frames are
@@ -628,16 +614,35 @@ export const Util = {
   },
   createCanvasElement() {
     ensureBrowser();
-    const canvas = document.createElement('canvas');
-    // on some environments canvas.style is readonly
-    try {
-      (canvas as any).style = canvas.style || {};
-    } catch (e) {}
-    return canvas;
+    return document.createElement('canvas');
   },
   createImageElement() {
     ensureBrowser();
     return document.createElement('img');
+  },
+  /**
+   * Make a DOMMatrix of the canvas library Konva draws with. Without a createDOMMatrix
+   * in Konva.setCanvasBackend(), the class comes from the library's own context.
+   * @method
+   * @memberof Konva.Util
+   * @param {Array} [init] the six numbers a, b, c, d, e, f
+   * @returns {DOMMatrix}
+   */
+  createDOMMatrix(init?: number[]): DOMMatrix {
+    // node-canvas accepts only its own DOMMatrix, so the global one may not fit
+    const Matrix = getDummyContext().getTransform().constructor;
+    return new (Matrix as typeof DOMMatrix)(init);
+  },
+  /**
+   * Make a Path2D of the canvas library Konva draws with, for example for a clipFunc.
+   * Without a createPath2D in Konva.setCanvasBackend(), it is the global Path2D.
+   * @method
+   * @memberof Konva.Util
+   * @param {String} [path] SVG path data
+   * @returns {Path2D}
+   */
+  createPath2D(path?: string): Path2D {
+    return new Path2D(path);
   },
   /*
    * arg can be an image object or image data
@@ -691,17 +696,14 @@ export const Util = {
    * @memberof Konva.Util
    * @returns {Boolean}
    */
-  isCanvasFarblingActive() {
-    if (_isCanvasFarblingActive !== null) {
-      return _isCanvasFarblingActive;
-    }
-
-    if (typeof document === 'undefined') {
-      _isCanvasFarblingActive = false;
+  isCanvasFarblingActive: _perCanvasBackend((): boolean => {
+    let c: HTMLCanvasElement;
+    try {
+      c = Util.createCanvasElement();
+    } catch (e) {
+      // no canvas to read, e.g. Node.js without a backend
       return false;
     }
-
-    const c = this.createCanvasElement();
     c.width = 10;
     c.height = 10;
     const ctx = c.getContext('2d', {
@@ -725,11 +727,9 @@ export const Util = {
         break;
       }
     }
-
-    _isCanvasFarblingActive = isFarbling;
-    this.releaseCanvas(c);
-    return _isCanvasFarblingActive;
-  },
+    Util.releaseCanvas(c);
+    return isFarbling;
+  }),
   /**
    * Get a random color for hit detection (snapped to the hit color grid)
    * @method
@@ -1328,5 +1328,107 @@ export const Util = {
     }
   },
 };
+
+export interface CanvasBackend {
+  /** what Konva.getCanvasBackend() reports */
+  name: string;
+  /** makes a canvas with a 2d context; Konva sets its size */
+  createCanvas: () => object;
+  /** makes an image that loads from its src; without it Konva can not load images */
+  createImage?: () => object;
+  /** makes a DOMMatrix; by default its class comes from the canvas */
+  createDOMMatrix?: (init?: number[]) => object;
+  /** makes a Path2D; by default the global Path2D */
+  createPath2D?: (path?: string) => object;
+}
+
+let activeBackend = { name: 'web', createCanvas: Util.createCanvasElement };
+const { createDOMMatrix, createPath2D } = Util;
+
+/**
+ * Set the canvas library Konva draws with: Konva makes every canvas and image through it.
+ * Applies to everything Konva creates afterwards, including the context it measures text
+ * and makes gradients with. Stages and nodes created before keep their canvases, so
+ * create them again after a switch.
+ * @method
+ * @name Konva.setCanvasBackend
+ * @param {Object} backend
+ * @param {String} backend.name reported by Konva.getCanvasBackend()
+ * @param {Function} backend.createCanvas returns a new canvas
+ * @param {Function} [backend.createImage] returns a new image
+ * @param {Function} [backend.createDOMMatrix] returns a new DOMMatrix, see Konva.Util.createDOMMatrix
+ * @param {Function} [backend.createPath2D] returns a new Path2D, see Konva.Util.createPath2D
+ * @example
+ * import { Canvas, Image } from '@napi-rs/canvas';
+ * Konva.setCanvasBackend({
+ *   name: 'my-napi-rs',
+ *   createCanvas: () => new Canvas(300, 150),
+ *   createImage: () => new Image(),
+ * });
+ */
+export function setCanvasBackend(backend: CanvasBackend) {
+  const { name, createCanvas, createImage } = backend;
+  Util.createCanvasElement = createCanvas as () => HTMLCanvasElement;
+  Util.createDOMMatrix = (backend.createDOMMatrix ??
+    createDOMMatrix) as typeof createDOMMatrix;
+  Util.createPath2D = (backend.createPath2D ??
+    createPath2D) as typeof createPath2D;
+  Util.createImageElement = createImage
+    ? (createImage as () => HTMLImageElement)
+    : () => {
+        throw new Error(
+          `Konva: the "${name}" canvas backend has no createImage(), so it can not load images.`
+        );
+      };
+  activeBackend = { name, createCanvas: Util.createCanvasElement };
+}
+
+/**
+ * The name of the canvas backend Konva draws with: "web" by default ("offscreen-canvas" in a
+ * Web Worker), the name given to Konva.setCanvasBackend(), or "custom" when
+ * Konva.Util.createCanvasElement was replaced directly.
+ * @method
+ * @name Konva.getCanvasBackend
+ * @returns {String}
+ */
+export function getCanvasBackend(): string {
+  return Util.createCanvasElement === activeBackend.createCanvas
+    ? activeBackend.name
+    : 'custom';
+}
+
+// a Web Worker has no document, but it has OffscreenCanvas
+if (typeof document === 'undefined' && typeof OffscreenCanvas !== 'undefined') {
+  setCanvasBackend({
+    name: 'offscreen-canvas',
+    createCanvas: () => new OffscreenCanvas(300, 150),
+    createImage: () => {
+      throw new Error(
+        'Konva: a Web Worker has no image element. Load the image with createImageBitmap() and pass the ImageBitmap to Konva.Image.'
+      );
+    },
+  });
+}
+
+// A value Konva computes from a canvas, such as a feature check, belongs to
+// the library that made the canvas. It is recomputed when the canvas factory
+// changes, by setCanvasBackend() or by assigning Util.createCanvasElement
+export function _perCanvasBackend<T>(compute: () => T): () => T {
+  let factory: unknown;
+  let value: T;
+  return () => {
+    if (factory !== Util.createCanvasElement) {
+      value = compute();
+      factory = Util.createCanvasElement;
+    }
+    return value;
+  };
+}
+
+// The context Konva measures text and makes gradients and patterns with. A
+// gradient from one canvas library is ignored by the context of another
+export const getDummyContext = _perCanvasBackend(
+  () => Util.createCanvasElement().getContext('2d') as CanvasRenderingContext2D
+);
 
 export type AnyString<T> = T | (string & {});
