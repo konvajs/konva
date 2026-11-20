@@ -14,7 +14,7 @@ Konva.setCanvasBackend({
   createCanvas: () => new NapiCanvas(300, 150),
   createImage: () => new NapiImage(),
 });
-const backendName: string = Konva.getCanvasBackend();
+const backendName: string | null = Konva.getCanvasBackend();
 // @ts-expect-error a backend needs a name
 Konva.setCanvasBackend({ createCanvas: () => new NapiCanvas(300, 150) });
 

@@ -1384,17 +1384,22 @@ export function setCanvasBackend(backend: CanvasBackend) {
 }
 
 /**
- * The name of the canvas backend Konva draws with: "web" by default ("offscreen-canvas" in a
- * Web Worker), the name given to Konva.setCanvasBackend(), or "custom" when
- * Konva.Util.createCanvasElement was replaced directly.
+ * The name of the canvas backend Konva draws with: "web" in a browser, "offscreen-canvas" in a
+ * Web Worker, the name given to Konva.setCanvasBackend(), "custom" when
+ * Konva.Util.createCanvasElement was replaced directly, or null when there is none, as in
+ * Node.js before a backend is set.
  * @method
  * @name Konva.getCanvasBackend
- * @returns {String}
+ * @returns {String|null}
  */
-export function getCanvasBackend(): string {
-  return Util.createCanvasElement === activeBackend.createCanvas
-    ? activeBackend.name
-    : 'custom';
+export function getCanvasBackend(): string | null {
+  if (Util.createCanvasElement !== activeBackend.createCanvas) {
+    return 'custom';
+  }
+  // checked on each call: a document can appear after Konva loads (jsdom)
+  return activeBackend.name === 'web' && typeof document === 'undefined'
+    ? null
+    : activeBackend.name;
 }
 
 // a Web Worker has no document, but it has OffscreenCanvas

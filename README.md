@@ -147,7 +147,7 @@ const stage = new Konva.Stage({
 // Add shapes and export the stage with the usual Konva drawing API.
 ```
 
-A backend module also sets the global `DOMMatrix` and `Path2D`. To leave globals alone, or to use another canvas library, pass it to `Konva.setCanvasBackend()`. `Konva.getCanvasBackend()` returns the name of the active one:
+A backend module also sets the global `DOMMatrix` and `Path2D`. To leave globals alone, or to use another canvas library, pass it to `Konva.setCanvasBackend()`. `Konva.getCanvasBackend()` returns the name of the active one, or `null` before one is set:
 
 ```js
 import { Canvas, Image, Path2D } from '@napi-rs/canvas';

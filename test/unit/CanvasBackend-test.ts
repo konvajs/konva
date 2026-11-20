@@ -23,6 +23,13 @@ describe('Canvas backend', function () {
     };
   }
 
+  it('reports "web" in a browser', function () {
+    if (isNode) {
+      return this.skip();
+    }
+    assert.equal(Konva.getCanvasBackend(), 'web');
+  });
+
   it('reports the name given to setCanvasBackend()', function () {
     Konva.setCanvasBackend({
       name: 'test-backend',
