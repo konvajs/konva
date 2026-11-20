@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+- Added `fillRadialGradientScale` (`fillRadialGradientScaleX`, `fillRadialGradientScaleY`): scales a radial gradient fill about its end point, so it can be an ellipse, as in CSS `radial-gradient(ellipse …)`. It applies to shapes that fill a path, including custom shapes that call `context.fillShape()`. `Text` and `TextPath` ignore it
+
 ## 10.10.0 (2026-11-19)
 
 - Added `Konva.setCanvasBackend()` and `Konva.getCanvasBackend()`: choose the canvas library Konva draws with, and ask which one is active (`null` in Node.js before one is set). A backend set after Konva was used also replaces the context Konva measures text and makes gradients with, and its feature checks. Assigning `Konva.Util.createCanvasElement` directly still works and has the same effect
