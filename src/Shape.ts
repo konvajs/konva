@@ -123,11 +123,7 @@ function fillPath(this: Node, context) {
 // last color stop.
 const MIN_GRADIENT_SCALE = 1e-6;
 function nonZeroScale(scale: number) {
-  return Math.abs(scale) < MIN_GRADIENT_SCALE
-    ? scale < 0
-      ? -MIN_GRADIENT_SCALE
-      : MIN_GRADIENT_SCALE
-    : scale;
+  return (scale < 0 ? -1 : 1) * Math.max(Math.abs(scale), MIN_GRADIENT_SCALE);
 }
 // Fills the current path. A canvas maps the path when it is built and the
 // fill style when it is painted, so a transform set here moves only the

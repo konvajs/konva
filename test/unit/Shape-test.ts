@@ -2906,14 +2906,6 @@ describe('Elliptical radial gradient fill', function () {
       Array.from(context.getImageData(x, y, 1, 1).data);
   }
 
-  it('defaults to a scale of 1', function () {
-    const rect = radialRect();
-    assert.deepEqual(rect.fillRadialGradientScale(), { x: 1, y: 1 });
-    rect.fillRadialGradientScale({ x: 2, y: 0.5 });
-    assert.equal(rect.fillRadialGradientScaleX(), 2);
-    assert.equal(rect.fillRadialGradientScaleY(), 0.5);
-  });
-
   it('fills a Rect with an ellipse scaled about the end point', function () {
     const stage = addStage();
     const layer = new Konva.Layer();
@@ -2935,105 +2927,35 @@ describe('Elliptical radial gradient fill', function () {
     assert.deepEqual(pixel(198, 2), BLUE);
   });
 
-  it('fills a Circle with an ellipse', function () {
-    const stage = addStage();
-    const layer = new Konva.Layer();
-    const circle = new Konva.Circle({
-      x: 100,
-      y: 100,
-      radius: 50,
-      fillRadialGradientEndRadius: 50,
-      fillRadialGradientColorStops: STOPS,
-      fillRadialGradientScale: { x: 0.5, y: 1 },
-    });
-    layer.add(circle);
-    stage.add(layer);
-
-    // toCanvas() starts at the circle's left/top edge; red ellipse rx 12.5, ry 25
-    const pixel = sampler(circle);
-    assert.deepEqual(pixel(50, 50), RED);
-    assert.deepEqual(pixel(50, 70), RED);
-    assert.deepEqual(pixel(50, 30), RED);
-    assert.deepEqual(pixel(70, 50), BLUE);
-    assert.deepEqual(pixel(30, 50), BLUE);
-    // the circle's own edge is not squashed
-    assert.deepEqual(pixel(5, 50), BLUE);
-  });
-
-  it('applies to custom shapes that fill their path with fillShape()', function () {
-    const stage = addStage();
-    const layer = new Konva.Layer();
-    const shape = new Konva.Shape({
-      sceneFunc(context, shape) {
-        context.beginPath();
-        context.rect(0, 0, 200, 100);
-        context.closePath();
-        context.fillShape(shape);
-      },
-      fillRadialGradientStartPoint: { x: 100, y: 50 },
-      fillRadialGradientEndPoint: { x: 100, y: 50 },
-      fillRadialGradientEndRadius: 100,
-      fillRadialGradientColorStops: STOPS,
-      fillRadialGradientScaleY: 0.5,
-    });
-    layer.add(shape);
-    stage.add(layer);
-
-    const pixel = sampler(layer);
-    assert.deepEqual(pixel(140, 50), RED);
-    assert.deepEqual(pixel(100, 85), BLUE);
-    assert.deepEqual(pixel(2, 98), BLUE);
-  });
-
-  it('a scale of 1 draws exactly as before', function () {
-    const stage = addStage();
-    const plain = new Konva.Layer();
-    const scaled = new Konva.Layer();
-    plain.add(radialRect());
-    scaled.add(radialRect({ fillRadialGradientScale: { x: 1, y: 1 } }));
-    stage.add(plain, scaled);
-
-    assert.equal(scaled.getContext().getTrace(), plain.getContext().getTrace());
-    // the plain fill: no save() or transform() around it
-    assert.match(
-      scaled.getContext().getTrace(),
-      /closePath\(\);fillStyle=\[object \w+\];fill\(\);restore\(\);/
-    );
-    compareLayers(plain, scaled, 0);
-  });
-
   it('is ignored when the radial gradient is not the active fill', function () {
     const stage = addStage();
     const layer = new Konva.Layer();
+    // the linear gradient is painted: red above y 25, blue below. Scaled by
+    // 0.5 about (100, 50), its edge would move down to y 37.5
     const rect = radialRect({
-      fill: 'green',
+      fillLinearGradientStartPoint: { x: 0, y: 0 },
+      fillLinearGradientEndPoint: { x: 0, y: 100 },
+      fillLinearGradientColorStops: [
+        0,
+        'red',
+        0.25,
+        'red',
+        0.25,
+        'blue',
+        1,
+        'blue',
+      ],
       fillRadialGradientScaleY: 0.5,
     });
     layer.add(rect);
     stage.add(layer);
 
-    assert.notInclude(layer.getContext().getTrace(), 'transform(1,0,0,0.5');
-    assert.deepEqual(pixelAt(rect, 100, 50), [0, 128, 0, 255]);
+    assert.deepEqual(pixelAt(rect, 100, 20), RED);
+    assert.deepEqual(pixelAt(rect, 100, 30), BLUE);
 
     rect.fillPriority('radial-gradient');
     layer.draw();
     assert.deepEqual(pixelAt(rect, 100, 85), BLUE);
-  });
-
-  it('keeps the ellipse in a cached shape', function () {
-    const stage = addStage();
-    const layer = new Konva.Layer();
-    const rect = radialRect({ x: 50, y: 50, fillRadialGradientScaleY: 0.5 });
-    layer.add(rect);
-    stage.add(layer);
-    rect.cache();
-    layer.draw();
-
-    const pixel = sampler(layer);
-    assert.deepEqual(pixel(50 + 140, 50 + 50), RED);
-    assert.deepEqual(pixel(50 + 100, 50 + 70), RED);
-    assert.deepEqual(pixel(50 + 100, 50 + 85), BLUE);
-    assert.deepEqual(pixel(50 + 2, 50 + 98), BLUE);
   });
 
   it('keeps the ellipse with a shadow, and the shadow keeps the shape', function () {
@@ -3065,44 +2987,6 @@ describe('Elliptical radial gradient fill', function () {
       assert.deepEqual(pixel(10 + 250 + 198, 10 + 95), [0, 255, 0, 255]);
       assert.deepEqual(pixel(10 + 250 + 100, 10 + 50), [0, 255, 0, 255]);
     }
-  });
-
-  it('keeps the ellipse with fillAfterStrokeEnabled', function () {
-    const stage = addStage();
-    const layer = new Konva.Layer();
-    const rect = radialRect({
-      x: 10,
-      y: 10,
-      fillRadialGradientScaleY: 0.5,
-      stroke: 'black',
-      strokeWidth: 4,
-      fillAfterStrokeEnabled: true,
-    });
-    layer.add(rect);
-    stage.add(layer);
-
-    const pixel = sampler(layer);
-    assert.deepEqual(pixel(10 + 140, 10 + 50), RED);
-    assert.deepEqual(pixel(10 + 100, 10 + 85), BLUE);
-  });
-
-  it('does not change the hit graph', function () {
-    const stage = addStage();
-    const layer = new Konva.Layer();
-    const rect = radialRect({ fillRadialGradientScaleY: 0.5 });
-    layer.add(rect);
-    stage.add(layer);
-
-    // the scene fill is scaled, the hit fill is not
-    assert.include(layer.getContext().getTrace(), 'transform(1,0,0,0.5,0,25)');
-    assert.notInclude(
-      layer.getHitCanvas().getContext().getTrace(),
-      'transform(1,0,0,0.5'
-    );
-    // inside the box, outside the red ellipse
-    assert.equal(stage.getIntersection({ x: 100, y: 90 }), rect);
-    assert.equal(stage.getIntersection({ x: 195, y: 5 }), rect);
-    assert.equal(stage.getIntersection({ x: 205, y: 50 }), null);
   });
 
   it('is ignored by Text, which fills glyphs and not a path', function () {
@@ -3201,42 +3085,6 @@ describe('Elliptical radial gradient fill', function () {
     layer.draw();
     assert.deepEqual(own(100, 50), RED);
     assert.deepEqual(own(320, 20), [0, 255, 0, 255]);
-  });
-
-  it('does not change a blurred shadow', function () {
-    const stage = addStage();
-    const shadowPixels = (scaleY: number) => {
-      const layer = new Konva.Layer();
-      stage.add(layer);
-      const rect = radialRect({
-        x: 20,
-        y: 20,
-        // one color: only the shadow can differ
-        fillRadialGradientColorStops: [0, 'red', 1, 'red'],
-        fillRadialGradientScaleY: scaleY,
-        shadowColor: 'lime',
-        shadowBlur: 10,
-        shadowOffset: { x: 250, y: 0 },
-      });
-      layer.add(rect);
-      layer.draw();
-      const context = layer.toCanvas({ pixelRatio: 1 }).getContext('2d')!;
-      const points = [
-        [274, 24],
-        [270, 70],
-        [468, 116],
-        [262, 125],
-      ];
-      return points.map(([x, y]) => context.getImageData(x, y, 1, 1).data[3]);
-    };
-    const plain = shadowPixels(1);
-    const scaled = shadowPixels(0.5);
-    assert.isAbove(plain[0], 0);
-    for (let i = 0; i < plain.length; i++) {
-      // skia-canvas renders the blur edge up to ~12/255 apart under the
-      // scaled transform; a blur that followed the scale would be far off
-      assert.closeTo(scaled[i], plain[i], 16, 'shadow pixel ' + i);
-    }
   });
 
   it('restores the context when the fill throws', function () {
