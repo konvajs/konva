@@ -205,6 +205,10 @@ const ABSOLUTE_OPACITY = 'absoluteOpacity',
 
 let idCounter = 1;
 
+// find() matches every node against the same selector, so keep the last parsed one
+let lastSelector = '',
+  lastSelectorArr: string[] = [''];
+
 // create all the events here
 type NodeEventMap = GlobalEventHandlersEventMap & {
   [index: string]: any;
@@ -1800,7 +1804,11 @@ export abstract class Node<Config extends NodeConfig = NodeConfig> {
     if (typeof selector === 'function') {
       return selector(this);
     }
-    let selectorArr = selector.replace(/ /g, '').split(','),
+    if (selector !== lastSelector) {
+      lastSelector = selector;
+      lastSelectorArr = selector.replace(/ /g, '').split(',');
+    }
+    let selectorArr = lastSelectorArr,
       len = selectorArr.length,
       n,
       sel;
