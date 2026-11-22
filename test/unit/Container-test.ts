@@ -1550,43 +1550,36 @@ describe('Container', function () {
     layer.draw();
   });
 
-  it('warn on invalid selector', function () {
-    var stage = addStage();
-    var layer = new Konva.Layer({
-      name: 'layerName',
-      id: 'layerId',
-    });
-    var group = new Konva.Group({
-      name: 'groupName',
-      id: 'groupId',
-    });
-    var rect = new Konva.Rect({
-      x: 200,
-      y: 20,
-      width: 100,
-      height: 50,
-      fill: 'red',
-      stroke: 'black',
-      strokeWidth: 4,
-      name: 'rectName',
-      id: 'rectId',
-    });
-
-    stage.add(layer);
-    layer.add(group);
-    group.add(rect);
-    layer.draw();
-
-    var counter = 0;
-    var oldWarn = Konva.Util.warn;
-    Konva.Util.warn = function () {
-      counter += 1;
-    };
+  it('warns about an invalid selector once per call, not once per node', function () {
+    var one = new Konva.Group();
+    one.add(new Konva.Rect({ name: 'rectName' }));
+    var many = new Konva.Group();
+    for (var i = 0; i < 10; i++) {
+      many.add(new Konva.Rect({ name: 'rectName' }));
+    }
 
     // forgot dot
-    group.find('rectName');
-    assert.equal(counter > 0, true);
+    var forOne = countCalls(Konva.Util, 'warn', () => one.find('rectName'));
+    var forMany = countCalls(Konva.Util, 'warn', () => many.find('rectName'));
+
+    assert.isAbove(forOne, 0);
+    assert.equal(forMany, forOne);
+  });
+
+  it('an empty part of a selector matches nothing', function () {
+    var group = new Konva.Group();
+    var circle = new Konva.Circle();
+    var rect = new Konva.Rect();
+    group.add(circle, rect);
+
+    var oldWarn = Konva.Util.warn;
+    Konva.Util.warn = function () {};
+    var found = group.find('Rect,');
+    var foundBlank = group.find(' ');
     Konva.Util.warn = oldWarn;
+
+    assert.deepEqual(found, [rect]);
+    assert.deepEqual(foundBlank, []);
   });
 
   // ======================================================

@@ -2,7 +2,7 @@ import type { HitCanvas, SceneCanvas } from './Canvas.ts';
 import type { SceneContext } from './Context.ts';
 import { Factory } from './Factory.ts';
 import type { GetClientRectConfig, NodeConfig } from './Node.ts';
-import { Node } from './Node.ts';
+import { Node, _parseSelector } from './Node.ts';
 import type { Shape } from './Shape.ts';
 import type { GetSet, IRect } from './types.ts';
 import { getNumberValidator } from './Validators.ts';
@@ -218,9 +218,10 @@ export abstract class Container<
     findOne: boolean
   ) {
     const retArr: Array<ChildNode> = [];
+    const match = _parseSelector(selector);
 
     this._descendants((node) => {
-      const valid = node._isMatch(selector);
+      const valid = match(node);
       if (valid) {
         retArr.push(node as ChildNode);
       }

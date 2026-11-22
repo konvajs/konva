@@ -574,7 +574,7 @@ export const Util = {
     return val instanceof Object;
   },
   isValidSelector(selector: any) {
-    if (typeof selector !== 'string') {
+    if (typeof selector !== 'string' || !selector) {
       return false;
     }
     const firstChar = selector[0];

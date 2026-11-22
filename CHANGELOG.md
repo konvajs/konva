@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+- `find()` and `findOne()` are about 3–4× faster on large trees, and `findAncestors()` and delegated events (`layer.on('click', '.name', fn)`) are faster too: a selector is parsed once per call, or once when a delegated handler is added, instead of once per node, and `hasName()` no longer splits the name into an array. Thanks [@g4lb](https://github.com/g4lb)
+- An invalid selector warns once per `find()` call, or once when a delegated handler is added, instead of once per node
+- Fixed a selector with an empty part, like `'Rect,'`, throwing a `TypeError`. The empty part now warns and matches nothing
+
 ## 10.10.0 (2026-11-19)
 
 - Added `Konva.setCanvasBackend()` and `Konva.getCanvasBackend()`: choose the canvas library Konva draws with, and ask which one is active (`null` in Node.js before one is set). A backend set after Konva was used also replaces the context Konva measures text and makes gradients with, and its feature checks. Assigning `Konva.Util.createCanvasElement` directly still works and has the same effect

@@ -1264,6 +1264,20 @@ describe('Node', function () {
     assert.equal(layer.find('.foo').length, 0);
   });
 
+  it('hasName() matches whole names separated by any whitespace', function () {
+    var rect = new Konva.Rect({ name: 'kind10 kind1\tred  shape\nbig' });
+
+    assert.equal(rect.hasName('kind10'), true);
+    assert.equal(rect.hasName('kind1'), true);
+    assert.equal(rect.hasName('red'), true);
+    assert.equal(rect.hasName('shape'), true);
+    assert.equal(rect.hasName('big'), true);
+
+    assert.equal(rect.hasName('kind'), false);
+    assert.equal(rect.hasName('ind1'), false);
+    assert.equal(rect.hasName('red  shape'), false);
+  });
+
   // ======================================================
   it('test setting shadow offset', function () {
     var stage = addStage();
@@ -2224,6 +2238,24 @@ describe('Node', function () {
     });
     circle.fire('click', undefined, true);
     assert.equal(fired, true);
+  });
+
+  it('event delegation warns about an invalid selector when added, not on every event', function () {
+    var group = new Konva.Group();
+    var rect = new Konva.Rect();
+    group.add(rect);
+
+    // forgot dot
+    var onAdd = countCalls(Konva.Util, 'warn', () =>
+      group.on('click', 'rectName', function () {})
+    );
+    var onEvents = countCalls(Konva.Util, 'warn', () => {
+      rect.fire('click', undefined, true);
+      rect.fire('click', undefined, true);
+    });
+
+    assert.isAbove(onAdd, 0);
+    assert.equal(onEvents, 0);
   });
 
   it('cancel event bubble in a delegated handler', function () {
