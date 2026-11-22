@@ -118,19 +118,15 @@ function fillPath(this: Node, context) {
     context.fill();
   }
 }
-// A zero scale would be a singular transform, which breaks the context for
-// good on node-canvas. A tiny one draws what a zero-width ellipse should: the
-// last color stop.
+// Below this scale the ellipse is under a millionth of its radius across, so
+// only its last color stop shows.
 const MIN_GRADIENT_SCALE = 1e-6;
-function nonZeroScale(scale: number) {
-  return (scale < 0 ? -1 : 1) * Math.max(Math.abs(scale), MIN_GRADIENT_SCALE);
-}
 // Fills the current path. A canvas maps the path when it is built and the
 // fill style when it is painted, so a transform set here moves only the
 // gradient: that is how fillRadialGradientScale makes an ellipse.
 function _fillFunc(this: Shape, context: Context) {
-  let scaleX = this.fillRadialGradientScaleX();
-  let scaleY = this.fillRadialGradientScaleY();
+  const scaleX = this.fillRadialGradientScaleX();
+  const scaleY = this.fillRadialGradientScaleY();
   if (
     (scaleX === 1 && scaleY === 1) ||
     this._getFillType() !== 'radial-gradient'
@@ -138,12 +134,25 @@ function _fillFunc(this: Shape, context: Context) {
     fillPath.call(this, context);
     return;
   }
-  scaleX = nonZeroScale(scaleX);
-  scaleY = nonZeroScale(scaleY);
-  const { x, y } = this.fillRadialGradientEndPoint();
+  const min = Math.min(Math.abs(scaleX), Math.abs(scaleY));
   context.save();
   try {
-    context.transform(scaleX, 0, 0, scaleY, x - scaleX * x, y - scaleY * y);
+    if (min < MIN_GRADIENT_SCALE) {
+      const stops = this.fillRadialGradientColorStops()!;
+      context.setAttr('fillStyle', stops[stops.length - 1]);
+    } else {
+      // The smaller scale of the transform is made 1 and the gradient shrinks
+      // by that factor instead. It is the same ellipse, but a pixel far from
+      // it stays close to it in gradient space: node-canvas on Linux (Cairo
+      // fixed point) paints nothing, or breaks the context, past ~32k there.
+      const sx = scaleX / min;
+      const sy = scaleY / min;
+      const { x, y } = this.fillRadialGradientEndPoint();
+      context.transform(sx, 0, 0, sy, x - sx * x, y - sy * y);
+      if (min !== 1) {
+        context.setAttr('fillStyle', this.__getRadialGradient(min));
+      }
+    }
     fillPath.call(this, context);
   } finally {
     context.restore();
@@ -363,7 +372,8 @@ export class Shape<
     if (this._styleTransform) return this.__getRadialGradient();
     return this._getCache(radialGradient, this.__getRadialGradient);
   }
-  __getRadialGradient() {
+  // shrink scales the gradient about its end point (see _fillFunc)
+  __getRadialGradient(shrink = 1) {
     const colorStops = this.fillRadialGradientColorStops();
     if (colorStops) {
       const ctx = getDummyContext();
@@ -372,12 +382,12 @@ export class Shape<
       const start = this._toStyleSpace(this.fillRadialGradientStartPoint());
       const end = this._toStyleSpace(this.fillRadialGradientEndPoint());
       const grd = ctx.createRadialGradient(
-        start.x,
-        start.y,
-        this.fillRadialGradientStartRadius(),
+        end.x + (start.x - end.x) * shrink,
+        end.y + (start.y - end.y) * shrink,
+        this.fillRadialGradientStartRadius() * shrink,
         end.x,
         end.y,
-        this.fillRadialGradientEndRadius()
+        this.fillRadialGradientEndRadius() * shrink
       );
 
       // build color stops

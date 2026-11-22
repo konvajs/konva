@@ -3052,6 +3052,27 @@ describe('Elliptical radial gradient fill', function () {
     assert.deepEqual(scaledPixel(82, 50), RED);
   });
 
+  it('keeps a narrow ellipse far from the edge of the shape', function () {
+    const stage = addStage();
+    const layer = new Konva.Layer();
+    // red ellipse 20 wide and 1000 tall around (1000, 50); node-canvas on
+    // Linux painted nothing here when its centre was far from the edge
+    const rect = radialRect({
+      width: 2000,
+      fillRadialGradientStartPoint: { x: 1000, y: 50 },
+      fillRadialGradientEndPoint: { x: 1000, y: 50 },
+      fillRadialGradientEndRadius: 1000,
+      fillRadialGradientScaleX: 0.02,
+    });
+    layer.add(rect);
+    stage.add(layer);
+
+    const pixel = sampler(rect);
+    assert.deepEqual(pixel(1005, 50), RED);
+    assert.deepEqual(pixel(1015, 50), BLUE);
+    assert.deepEqual(pixel(5, 50), BLUE);
+  });
+
   it('a scale of 0 paints the last stop and keeps the canvas usable', function () {
     const stage = addStage();
     const layer = new Konva.Layer();
@@ -3076,6 +3097,12 @@ describe('Elliptical radial gradient fill', function () {
     assert.deepEqual(own(320, 20), [0, 255, 0, 255]);
 
     rect.fillRadialGradientScale({ x: -0, y: 0 });
+    layer.draw();
+    assert.deepEqual(own(100, 50), BLUE);
+    assert.deepEqual(own(320, 20), [0, 255, 0, 255]);
+
+    // tiny but not 0: node-canvas on Linux broke the context here
+    rect.fillRadialGradientScale({ x: 1e-5, y: 1 });
     layer.draw();
     assert.deepEqual(own(100, 50), BLUE);
     assert.deepEqual(own(320, 20), [0, 255, 0, 255]);
