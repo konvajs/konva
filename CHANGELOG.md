@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 10.11.0 (2026-11-23)
 
 - Added `fillRadialGradientScale` (`fillRadialGradientScaleX`, `fillRadialGradientScaleY`): scales a radial gradient fill about its end point, so it can be an ellipse, as in CSS `radial-gradient(ellipse …)`. A scale of 0 paints the last color stop. It applies to shapes that fill a path, including custom shapes that call `context.fillShape()`. `Text` and `TextPath` ignore it. Thanks [@nikigan](https://github.com/nikigan)
 - `find()` and `findOne()` are about 3–4× faster on large trees, and `findAncestors()` and delegated events (`layer.on('click', '.name', fn)`) are faster too: a selector is parsed once per call, or once when a delegated handler is added, instead of once per node, and `hasName()` no longer splits the name into an array. Thanks [@g4lb](https://github.com/g4lb)
