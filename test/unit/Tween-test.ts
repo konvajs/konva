@@ -195,6 +195,42 @@ describe('Tween', function () {
     tween.play();
   });
 
+  it('a finished or reset color tween holds the requested colors, not the interpolated ones', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle({
+      radius: 70,
+      fill: 'blue',
+      stroke: '#00ff00',
+      shadowColor: 'hsl(0, 100%, 50%)',
+    });
+    layer.add(circle);
+    stage.add(layer);
+
+    var tween = new Konva.Tween({
+      node: circle,
+      duration: 0.1,
+      fill: 'green',
+      stroke: 'hsl(120, 50%, 50%)',
+      shadowColor: '#0000ff80',
+    });
+    assert.equal(circle.fill(), 'blue');
+
+    tween.seek(0.05);
+    assert.equal(circle.fill(), 'rgba(0,64,128,1)');
+
+    tween.finish();
+    assert.equal(circle.fill(), 'green');
+    assert.equal(circle.stroke(), 'hsl(120, 50%, 50%)');
+    assert.equal(circle.shadowColor(), '#0000ff80');
+
+    tween.reset();
+    assert.equal(circle.fill(), 'blue');
+    assert.equal(circle.stroke(), '#00ff00');
+    assert.equal(circle.shadowColor(), 'hsl(0, 100%, 50%)');
+    tween.destroy();
+  });
+
   it('gradient tweening', function (done) {
     var stage = addStage();
 

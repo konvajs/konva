@@ -383,6 +383,10 @@ export class Tween {
         }
       }
     } else if (colorAttrs.indexOf(key) !== -1) {
+      // colors are interpolated as RGBA, so, as for arrays, the colors the
+      // user asked for are restored when the tween ends
+      trueStart = start;
+      trueEnd = end;
       start = colorToRGBA(start);
       diff = colorDiff(start, colorToRGBA(end));
     } else {
