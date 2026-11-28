@@ -79,6 +79,10 @@ const AUTO = 'auto',
   CHANGE_KONVA = 'Change.konva',
   CONTEXT_2D = '2d',
   DASH = '-',
+  // invisible break opportunities: a soft hyphen shows a dash only when a
+  // line ends at it, a zero-width space never shows
+  SOFT_HYPHEN = '\u00AD',
+  ZERO_WIDTH_SPACE = '\u200B',
   LEFT = 'left',
   TEXT = 'text',
   TEXT_UPPER = 'Text',
@@ -695,10 +699,13 @@ export class Text extends Shape<TextConfig> {
         let start = 0;
         const text = (end: number) => graphemes.slice(start, end).join('');
         // a line can end before or at a space, after a dash (never before
-        // one), or next to a Chinese or Japanese character
+        // one), at a soft hyphen or a zero-width space, or next to a Chinese
+        // or Japanese character
         const isBreak = (i: number) =>
           graphemes[i] === SPACE ||
           graphemes[i + 1] === SPACE ||
+          graphemes[i] === SOFT_HYPHEN ||
+          graphemes[i] === ZERO_WIDTH_SPACE ||
           (graphemes[i] === DASH && graphemes[i + 1] !== DASH) ||
           ((CJK.test(graphemes[i]) || CJK.test(graphemes[i + 1])) &&
             !NO_LINE_START.test(graphemes[i + 1]) &&
@@ -762,17 +769,31 @@ export class Text extends Shape<TextConfig> {
             }
             break;
           }
+          let hyphenated = false;
           if (wrapAtWord) {
+            // a line that ends at a soft hyphen shows a dash, which must fit too
+            const hyphenFits = (i: number) =>
+              this._getTextWidth(text(i) + DASH, i - start + 1) + extraWidth <=
+              maxWidth;
             // end the line at its last break opportunity
             let wrapIndex = low - 1;
-            while (wrapIndex >= start && !isBreak(wrapIndex)) {
+            while (
+              wrapIndex >= start &&
+              !(
+                isBreak(wrapIndex) &&
+                (graphemes[wrapIndex] !== SOFT_HYPHEN || hyphenFits(wrapIndex))
+              )
+            ) {
               wrapIndex--;
             }
             if (wrapIndex >= start) {
               low = wrapIndex + 1;
+              hyphenated = graphemes[wrapIndex] === SOFT_HYPHEN;
             }
           }
-          this._addTextLine(text(low).trimRight());
+          this._addTextLine(
+            hyphenated ? text(low - 1) + DASH : text(low).trimRight()
+          );
           currentHeightPx += lineHeightPx;
 
           if (this._shouldHandleEllipsis(currentHeightPx)) {

@@ -2639,6 +2639,28 @@ describe('Text layout', function () {
     }
   });
 
+  it('word wrap breaks at a soft hyphen and a zero-width space', function () {
+    const text = new Konva.Text({ text: 'Donau\u00ADdampf', fontSize: 20 });
+    const lines = () => text.textArr.map((line) => line.text);
+    try {
+      // a line that ends at a soft hyphen shows a dash
+      text.width(text.measureSize('Donau-').width + 1);
+      assert.deepEqual(lines(), ['Donau-', 'dampf']);
+      // the dash must fit too, else the word breaks by character
+      text.width(text.measureSize('Donau').width + 1);
+      assert.equal(lines()[0].indexOf('-'), -1);
+      // a soft hyphen that is not at a line end stays invisible
+      text.width(1000);
+      assert.deepEqual(lines(), ['Donau\u00ADdampf']);
+      // a zero-width space is a break opportunity that never shows
+      text.text('Donau\u200Bdampf');
+      text.width(text.measureSize('Donau').width + 1);
+      assert.deepEqual(lines(), ['Donau\u200B', 'dampf']);
+    } finally {
+      text.destroy();
+    }
+  });
+
   it('Label follows text spacing and wrapping changes', function () {
     const label = new Konva.Label();
     const tag = new Konva.Tag();
