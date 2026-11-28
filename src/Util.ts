@@ -1311,13 +1311,14 @@ export const Util = {
         maxCornerRadius * Math.min(1, (currCornerRadius / radius) * 2);
       const normalVec1 = { x: vec1.x / len1, y: vec1.y / len1 };
       const normalVec2 = { x: vec2.x / len2, y: vec2.y / len2 };
+      const tangentLength = currCornerRadius * Math.tan(Math.PI / sides);
       const p1 = {
-        x: curr.x - normalVec1.x * currCornerRadius,
-        y: curr.y - normalVec1.y * currCornerRadius,
+        x: curr.x - normalVec1.x * tangentLength,
+        y: curr.y - normalVec1.y * tangentLength,
       };
       const p2 = {
-        x: curr.x + normalVec2.x * currCornerRadius,
-        y: curr.y + normalVec2.y * currCornerRadius,
+        x: curr.x + normalVec2.x * tangentLength,
+        y: curr.y + normalVec2.y * tangentLength,
       };
       if (i === 0) {
         context.moveTo(p1.x, p1.y);

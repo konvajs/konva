@@ -239,6 +239,34 @@ describe('RegularPolygon', function () {
     compareLayerAndCanvas(layer, canvas, 200);
   });
 
+  it('a stroked polygon with the largest corner radius is a plain circle', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var sides = 6;
+    var radius = 45;
+
+    layer.add(
+      new Konva.RegularPolygon({
+        x: 100,
+        y: 100,
+        sides: sides,
+        radius: radius,
+        stroke: 'black',
+        strokeWidth: 2,
+        cornerRadius: radius / 2,
+      })
+    );
+    stage.add(layer);
+
+    const { canvas, context } = createCanvasAndContext();
+    context.beginPath();
+    context.arc(100, 100, radius * Math.cos(Math.PI / sides), 0, Math.PI * 2);
+    context.strokeStyle = 'black';
+    context.lineWidth = 2;
+    context.stroke();
+    compareLayerAndCanvas(layer, canvas, 200);
+  });
+
   // ======================================================
   it('negative polygon radius with cornerRadius', function () {
     var stage = addStage();
@@ -260,7 +288,7 @@ describe('RegularPolygon', function () {
     var trace = layer.getContext().getTrace();
     assert.equal(
       trace,
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();moveTo(26.18,80.979);arcTo(0,100,-26.18,80.979,32.361);lineTo(-68.925,49.923);arcTo(-95.106,30.902,-85.106,0.125,32.361);lineTo(-68.779,-50.125);arcTo(-58.779,-80.902,-26.418,-80.902,32.361);lineTo(26.418,-80.902);arcTo(58.779,-80.902,68.779,-50.125,32.361);lineTo(85.106,0.125);arcTo(95.106,30.902,68.925,49.923,32.361);closePath();fillStyle=black;fill();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();moveTo(26.18,80.979);arcTo(0,100,-26.18,80.979,32.361);lineTo(-68.925,49.923);arcTo(-95.106,30.902,-85.106,0.125,32.361);lineTo(-68.779,-50.125);arcTo(-58.779,-80.902,-26.418,-80.902,32.361);lineTo(26.418,-80.902);arcTo(58.779,-80.902,68.779,-50.125,32.361);lineTo(85.106,0.125);arcTo(95.106,30.902,68.925,49.923,32.361);closePath();fillStyle=black;fill();restore();'
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();moveTo(19.021,86.18);arcTo(0,100,-19.021,86.18,32.361);lineTo(-76.085,44.721);arcTo(-95.106,30.902,-87.84,8.541,32.361);lineTo(-66.044,-58.541);arcTo(-58.779,-80.902,-35.267,-80.902,32.361);lineTo(35.267,-80.902);arcTo(58.779,-80.902,66.044,-58.541,32.361);lineTo(87.84,8.541);arcTo(95.106,30.902,76.085,44.721,32.361);closePath();fillStyle=black;fill();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();moveTo(19.021,86.18);arcTo(0,100,-19.021,86.18,32.361);lineTo(-76.085,44.721);arcTo(-95.106,30.902,-87.84,8.541,32.361);lineTo(-66.044,-58.541);arcTo(-58.779,-80.902,-35.267,-80.902,32.361);lineTo(35.267,-80.902);arcTo(58.779,-80.902,66.044,-58.541,32.361);lineTo(87.84,8.541);arcTo(95.106,30.902,76.085,44.721,32.361);closePath();fillStyle=black;fill();restore();'
     );
   });
 
